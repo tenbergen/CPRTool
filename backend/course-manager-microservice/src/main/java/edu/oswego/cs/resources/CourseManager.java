@@ -13,7 +13,8 @@ public class CourseManager {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}/courses/create/{courseName}/{section}")
-    public Response createCourse(@PathParam("id") int id, @PathParam("courseName") String courseName, @PathParam("section") int courseSection){
+    public Response createCourse(@PathParam("id") int id,
+                                 @PathParam("courseName") String courseName, @PathParam("section") int courseSection) {
         return Response.status(Response.Status.OK).build();
     }
 
@@ -21,7 +22,9 @@ public class CourseManager {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}/courses/delete/{courseName}/{section}")
-    public Response deleteCourse(){
+    public Response deleteCourse(@PathParam("id") int id,
+                                 @PathParam("courseName") String courseName, @PathParam("section") int courseSection) {
         return Response.status(Response.Status.OK).build();
+
     }
 }
