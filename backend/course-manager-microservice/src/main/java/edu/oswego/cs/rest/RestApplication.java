@@ -3,7 +3,7 @@ package edu.oswego.cs.rest;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 
-@ApplicationPath("/api")
+@ApplicationPath("/")
 public class RestApplication extends Application {
 
 }
