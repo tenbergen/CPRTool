@@ -1,25 +1,20 @@
 package edu.oswego.cs.daos;
 
-import lombok.Getter;
+import lombok.*;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-@Getter
+@RequiredArgsConstructor
+@NoArgsConstructor
+@Getter @ToString
 public class CourseDAO {
 
     @Id
-    private int ID;
-    private String courseName;
-    private int courseSection;
-    private String professor;
+    private @ToString.Exclude int ID;
+    private @NonNull String courseName;
+    private @NonNull int courseSection;
+    private @ToString.Exclude String professor;
 
-    public CourseDAO(int ID, String courseName, int courseSection, String professor) {
-        this.ID = ID;
-        this.courseName = courseName;
-        this.courseSection = courseSection;
-        this.professor = professor;
-    }
-
-    public CourseDAO() { }
 }

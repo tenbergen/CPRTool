@@ -3,21 +3,31 @@
 
     <!-- Enable features -->
     <featureManager>
-         <feature>jakartaee-9.1</feature>
-        <feature>microProfile-5.0</feature>
+        <feature>microProfile-4.1</feature>
+        <feature>jaxrs-2.1</feature>
+        <feature>cdi-2.0</feature>
+        <feature>mpConfig-2.0</feature>
+
     </featureManager>
 
-    <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
-    <httpEndpoint id="defaultHttpEndpoint"
-                  httpPort="9080"
-                  httpsPort="9443" />
+    <variable name="default.http.port" defaultValue="9080"/>
+    <variable name="default.https.port" defaultValue="9443"/>
+    <variable name="app.context.root" defaultValue="/"/>
+
+    <httpEndpoint
+            host="*"
+            httpPort="${default.http.port}"
+            httpsPort="${default.https.port}"
+            id="defaultHttpEndpoint"
+    />
 
     <!-- Automatically expand WAR files and EAR files -->
     <applicationManager autoExpand="true"/>
 
     <!-- Configures the application on a specified context root -->
-    <webApplication contextRoot="/course-manager-microservice" location="course-manager-microservice.war" />
+    <webApplication contextRoot="${app.context.root}" location="course-manager-microservice.war" />
 
     <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
     <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
+
 </server>
