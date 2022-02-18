@@ -3,16 +3,23 @@
 
     <!-- Enable features -->
     <featureManager>
-        <feature>jakartaee-9.1</feature>
-        <feature>microProfile-5.0</feature>
+        <feature>jaxrs-2.1</feature>
+        <feature>cdi-2.0</feature>
+        <feature>mpConfig-2.0</feature>
+        <feature>jakartaee-8.0</feature>
         <feature>socialLogin-1.0</feature>
     </featureManager>
 
+    <variable name="default.http.port" defaultValue="13127"/>
+    <variable name="default.https.port" defaultValue="9444"/>
+    <variable name="app.context.root" defaultValue="/"/>
+
     <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
-    <httpEndpoint id="defaultHttpEndpoint"
-                  httpPort="13127"
-                  httpsPort="9443"
-                  host="*"/>
+    <httpEndpoint host="*"
+                  httpPort="${default.http.port}"
+                  httpsPort="${default.https.port}"
+                  id="defaultHttpEndpoint"
+    />
               
     <!-- Google Login -->
     <googleLogin clientId="952282231282-i2ekjq864k1g7kpu7udfn5ecjqgkgu21.apps.googleusercontent.com" clientSecret="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" />
