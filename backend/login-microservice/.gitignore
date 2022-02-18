@@ -1,5 +1,8 @@
+<<<<<<< HEAD
+=======
 .idea/
 .DS_Store
+>>>>>>> 1829bf507f9dba4a8333879f34f27f3d3e22e0a7
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -10,4 +13,11 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
+<<<<<<< HEAD
 .mvn/wrapper/maven-wrapper.jar
+=======
+.mvn/wrapper/maven-wrapper.jar
+>>>>>>> 1829bf507f9dba4a8333879f34f27f3d3e22e0a7
+.mvn/
+.vscode
+target/
