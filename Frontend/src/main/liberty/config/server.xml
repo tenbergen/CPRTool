@@ -1,0 +1,21 @@
+<server description="Sample Liberty server">
+
+    <featureManager>
+        <feature>jaxrs-2.1</feature>
+        <feature>jsonp-1.1</feature>
+    </featureManager>
+
+    <variable name="default.http.port" defaultValue="9080"/>
+    <variable name="default.https.port" defaultValue="9443"/>
+
+    <httpEndpoint host="*" httpPort="${default.http.port}" httpsPort="${default.https.port}" id="defaultHttpEndpoint" />
+
+    <cors domain="/"
+          allowedOrigins="*"
+          allowedMethods="GET, POST"
+          allowCredentials="true"
+          allowedHeaders="Content-Type"
+          exposeHeaders="Content-Type"/>
+
+    <webApplication location="Frontend.war" contextRoot="/"/>
+</server>
