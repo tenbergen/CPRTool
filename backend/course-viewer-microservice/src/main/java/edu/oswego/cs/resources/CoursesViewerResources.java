@@ -1,5 +1,7 @@
 package edu.oswego.cs.resources;
 
+import edu.oswego.cs.database.CourseInterface;
+
 import javax.ws.rs.*;
 
 @Path("/viewcourses")
