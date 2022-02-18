@@ -1,9 +1,8 @@
 package edu.oswego.cs.resources;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import edu.oswego.cs.daos.CourseDAO;
+
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -14,7 +13,7 @@ public class CourseManager {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}/courses/create/{courseName}/{section}")
-    public Response createCourse(){
+    public Response createCourse(@PathParam("id") int id, @PathParam("courseName") String courseName, @PathParam("section") int courseSection){
         return Response.status(Response.Status.OK).build();
     }
 
