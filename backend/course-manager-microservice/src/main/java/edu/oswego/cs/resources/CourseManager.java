@@ -2,7 +2,6 @@ package edu.oswego.cs.resources;
 
 import edu.oswego.cs.daos.CourseDAO;
 
-import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -27,5 +26,10 @@ public class CourseManager {
     public Response deleteCourse(@PathParam("id") int id,
                                  @PathParam("courseName") String courseName, @PathParam("section") int courseSection) {
         return Response.status(Response.Status.OK).build();
+    }
+
+    @GET
+    public String ProfessorPage() {
+        return "Professor Page";
     }
 }
