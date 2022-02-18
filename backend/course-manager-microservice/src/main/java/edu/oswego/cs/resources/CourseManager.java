@@ -25,13 +25,5 @@ public class CourseManager {
     public Response deleteCourse(@PathParam("id") int id,
                                  @PathParam("courseName") String courseName, @PathParam("section") int courseSection) {
         return Response.status(Response.Status.OK).build();
-
     }
-
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("{id}/courses/add")
-
-
 }
