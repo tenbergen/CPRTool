@@ -13,9 +13,8 @@ public class CourseManager {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    @Path("{id}/courses/create/{courseName}/{section}")
-    public Response createCourse(@PathParam("id") int id,
-                                 @PathParam("courseName") String courseName, @PathParam("section") int courseSection) {
+    @Path("{professorName}/courses/create/{courseName}/{section}")
+    public Response createCourse( @PathParam("professorName") String professorName, @PathParam("courseName") String courseName, @PathParam("section") int courseSection) {
         CourseDAO course = new CourseDAO(courseName, courseSection);
         return Response.status(Response.Status.CREATED).entity(course.toString()).build();
     }
@@ -23,8 +22,8 @@ public class CourseManager {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("{id}/courses/delete/{courseName}/{section}")
-    public Response deleteCourse(@PathParam("id") int id,
+    @Path("{professorName}/courses/delete/{courseName}/{section}")
+    public Response deleteCourse(@PathParam("professorName") String professorName,
                                  @PathParam("courseName") String courseName, @PathParam("section") int courseSection) {
         return Response.status(Response.Status.OK).build();
     }
