@@ -1,8 +1,10 @@
-package edu.oswego.cs.rest;
+package edu.oswego.cs.resources;
 
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @RequestScoped
 @Path("/login")
