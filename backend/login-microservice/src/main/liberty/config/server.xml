@@ -8,6 +8,16 @@
         <feature>mpConfig-2.0</feature>
         <feature>jakartaee-8.0</feature>
         <feature>socialLogin-1.0</feature>
+        <!-- for login -->
+        <feature>jsp-2.3</feature>
+        <feature>appSecurity-3.0</feature>
+        <feature>transportSecurity-1.0</feature>
+        <feature>mpConfig-2.0</feature>
+        <feature>jaxrsClient-2.1</feature>
+        <feature>cdi-2.0</feature>
+        <feature>jsonb-1.0</feature>
+        <feature>jwt-1.0</feature>
+        <!-- end for login -->
     </featureManager>
 
     <variable name="default.http.port" defaultValue="13126"/>
