@@ -1,6 +1,7 @@
 #sidebar {
-    position: fixed;
-    width: 220px;
+    position: absolute;
+    width: fit-content;
+    display:flex;
 }
 #sidebar .pro-sidebar {
     height: 100vh;

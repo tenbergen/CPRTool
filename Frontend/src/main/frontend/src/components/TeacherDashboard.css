@@ -1,0 +1,30 @@
+#teacher {
+    position: absolute;
+    text-align:center;
+    display:inline-flex;
+    justify-content: center;
+    width: min-content;
+    height: 100%;
+}
+
+#addClass {
+    position:absolute;
+    justify-content: center;
+    display: flex;
+    height: 100%;
+    width:min-content;
+    align-items: center;
+}
+
+#addButton {
+    background-color: lightgrey;
+    color: black;
+    font-size: 20px;
+    padding: 10px 60px;
+    margin: 10px 0px;
+    border: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+
