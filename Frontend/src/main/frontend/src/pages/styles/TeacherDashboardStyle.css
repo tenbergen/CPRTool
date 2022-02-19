@@ -1,18 +1,17 @@
+.TeacherDashboard {
+    display: flex;
+}
+
 #teacher {
-    position: absolute;
-    text-align:center;
-    display:inline-flex;
-    justify-content: center;
+    text-align: center;
     width: min-content;
-    height: 100%;
+    flex-grow: 1;
 }
 
 #addClass {
-    position:absolute;
-    justify-content: center;
     display: flex;
-    height: 100%;
-    width:min-content;
+    justify-content: center;
+    margin-top: 20%;
     align-items: center;
 }
 
@@ -21,10 +20,10 @@
     color: black;
     font-size: 20px;
     padding: 10px 60px;
-    margin: 10px 0px;
+    margin: 10px 0;
     border: white;
     font-weight: bold;
     cursor: pointer;
+    justify-self: center;
 }
-
 

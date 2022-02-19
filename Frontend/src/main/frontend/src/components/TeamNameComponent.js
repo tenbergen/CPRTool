@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const TeamName = () => {
+const TeamNameComponent = () => {
   const [formData, setFormData] = useState({
     nameA: '',
     nameB: '',
@@ -27,7 +27,7 @@ const TeamName = () => {
     };
     console.log(data);
     await axios.post(url, data);
-    getTeamName();
+    await getTeamName();
   };
 
   const getTeamName = async () => {
@@ -86,4 +86,4 @@ const TeamName = () => {
   );
 };
 
-export default TeamName;
+export default TeamNameComponent;

@@ -1,11 +1,8 @@
-#sidebar {
-    position: absolute;
-    width: fit-content;
-    display:flex;
-}
+
 #sidebar .pro-sidebar {
     height: 100vh;
 }
+
 #sidebar .closemenu {
     color: #000;
     position: absolute;
@@ -18,6 +15,7 @@
     top: 55px;
     cursor: pointer;
 }
+
 #sidebar .pro-sidebar {
     width: 100%;
     min-width: 100%;
