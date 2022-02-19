@@ -17,13 +17,12 @@ import { FiHome, FiLogOut, FiArrowLeftCircle, FiArrowRightCircle } from "react-i
 import { RiPencilLine } from "react-icons/ri";
 import { BiCog } from "react-icons/bi";
 
-
 //import sidebar css from react-pro-sidebar module and our custom css
 import "react-pro-sidebar/dist/css/styles.css";
-import "./Sidebar.css";
+import "./styles/Sidebar.css";
 
 
-const Sidebar = () => {
+const SidebarComponent = () => {
     return (
         <>
             <div id="sidebar">
@@ -49,4 +48,4 @@ const Sidebar = () => {
     );
 };
 
-export default Sidebar;
+export default SidebarComponent;

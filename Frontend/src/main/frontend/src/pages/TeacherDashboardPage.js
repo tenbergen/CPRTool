@@ -1,12 +1,12 @@
 import React from 'react';
 
-import Sidebar from "./Sidebar";
-import "./TeacherDashboard.css"
+import SidebarComponent from "../components/SidebarComponent";
+import "./styles/TeacherDashboardStyle.css"
 
-function TeacherDashboard(){
+function TeacherDashboardPage(){
     return (
         <div className={"TeacherDashboard"}>
-                <Sidebar />
+                <SidebarComponent />
             <div id="teacher">
                 <h1>
                     Teacher Dashboard
@@ -23,4 +23,4 @@ function TeacherDashboard(){
     );
 }
 
-export default  TeacherDashboard;
+export default  TeacherDashboardPage;

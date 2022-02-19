@@ -1,10 +1,11 @@
-import './App.css';
-import TeacherDashboard from "./components/TeacherDashboard";
+import TeacherDashboardPage from "./pages/TeacherDashboardPage";
+import CreateCoursePage from "./pages/CreateCoursePage";
 
 function App() {
   return (
-    <div className="App">
-        <TeacherDashboard />
+    <div>
+        <TeacherDashboardPage />
+        {/*<CreateCoursePage />*/}
     </div>
   );
 }
