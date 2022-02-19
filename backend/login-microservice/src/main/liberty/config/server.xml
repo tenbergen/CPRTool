@@ -31,11 +31,12 @@
                   id="defaultHttpEndpoint"
     />
               
+    <keyStore id="defaultKeyStore" password="keyspass" />
     <!-- Google Login -->
     <googleLogin clientId="952282231282-i2ekjq864k1g7kpu7udfn5ecjqgkgu21.apps.googleusercontent.com" clientSecret="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" />
 
-
-
+   <cdi12 enableImplicitBeanArchives="false"/>
+   
     <!-- Automatically expand WAR files and EAR files -->
     <applicationManager autoExpand="true"/>
     
@@ -46,6 +47,9 @@
     <webApplication type="war" id="login-microservice" name="login-microservice" contextRoot="/" location="login-microservice.war">
         <application-bnd>
             <security-role name="Professor">
+                <special-subject type="ALL_AUTHENTICATED_USERS" />
+            </security-role>
+            <security-role name="Student">
                 <special-subject type="ALL_AUTHENTICATED_USERS" />
             </security-role>
         </application-bnd>

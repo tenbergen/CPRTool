@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <html>
   <head>
-    <title>Social Media Login Guide</title>
+    <title>Calibrated Peer Review</title>
   </head>
   <body>
     <h1>Login Page</h1>
