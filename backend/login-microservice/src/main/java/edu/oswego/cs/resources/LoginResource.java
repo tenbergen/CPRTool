@@ -5,7 +5,7 @@ import jakarta.enterprise.context.RequestScoped;
 import javax.ws.rs.*;
 
 @RequestScoped
-@Path("/login")
+@Path("/loginpage")
 public class LoginResource {
     
     @GET
