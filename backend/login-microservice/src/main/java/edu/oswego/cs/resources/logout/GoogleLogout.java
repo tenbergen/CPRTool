@@ -17,10 +17,12 @@ public class GoogleLogout implements ILogout {
     @Inject
     @ConfigProperty(name="google.client-id")
     private String clientId;
+    // "952282231282-62vjdtdi9gdqcf3cbru3i278cqgiov2e.apps.googleusercontent.com"
 
     @Inject
     @ConfigProperty(name="google.client-pwd")
-    private String clientSecret;
+    private String clientSecret; //"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"
+
 
     public Response logout() {
         // final String unauthorizeUrl = "https://api.github.com/applications/{client_id}/grant";
@@ -40,6 +42,10 @@ public class GoogleLogout implements ILogout {
                 .getUserProfile()
                 .getAccessToken();
 
+        final String unauthorizeUrl5 = "https://accounts.google.com/o/oauth2/revoke?token="+accessToken;
+        final String unauthorizeUrl6 = "https://appengine.google.com/_ah/logout?continue=https://namnguyen31.com";
+
+
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("access_token", accessToken);
 
@@ -50,7 +56,7 @@ public class GoogleLogout implements ILogout {
 
         return ClientBuilder
                 .newClient()
-                .target(unauthorizeUrl3)
+                .target(unauthorizeUrl6)
                 .resolveTemplate("client_id", clientId)
                 .request()
                 .header("Authorization", "Basic " + encodedAuth)

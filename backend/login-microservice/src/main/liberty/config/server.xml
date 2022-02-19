@@ -33,7 +33,7 @@
               
     <keyStore id="defaultKeyStore" password="keyspass" />
     <!-- Google Login -->
-    <googleLogin clientId="952282231282-i2ekjq864k1g7kpu7udfn5ecjqgkgu21.apps.googleusercontent.com" clientSecret="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" />
+    <googleLogin clientId="952282231282-62vjdtdi9gdqcf3cbru3i278cqgiov2e.apps.googleusercontent.com" clientSecret="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" />
 
    <cdi12 enableImplicitBeanArchives="false"/>
    

@@ -2,6 +2,7 @@ package edu.oswego.cs.resources;
 
 import java.io.IOException;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.HttpConstraint;
@@ -17,9 +18,9 @@ import java.util.logging.Logger;
 
 import edu.oswego.cs.resources.logout.ILogout;
 import edu.oswego.cs.resources.logout.LogoutHandler;
-
+@ApplicationScoped
 @WebServlet(name = "LogoutServlet", urlPatterns = "/logout")
-@ServletSecurity(value = @HttpConstraint(rolesAllowed = {"users"},
+@ServletSecurity(value = @HttpConstraint(rolesAllowed = {"Professor", "Student"},
         transportGuarantee = ServletSecurity.TransportGuarantee.CONFIDENTIAL))
 
 public class LogoutServlet extends HttpServlet {
@@ -35,9 +36,8 @@ public class LogoutServlet extends HttpServlet {
                 ILogout logout = logoutHandler.getLogout();
                 Response logoutResponse = logout.logout();
         
-                Response.Status.Family responseCodeFamily = logoutResponse
-                        .getStatusInfo()
-                        .getFamily();
+                Response.Status.Family responseCodeFamily = logoutResponse.getStatusInfo().getFamily();
+
                 if (!responseCodeFamily.equals(Response.Status.Family.SUCCESSFUL)) {
                     Logger.getLogger("LogoutServlet").log(Level.SEVERE,
                             logoutResponse.readEntity(Map.class).toString());
@@ -46,6 +46,6 @@ public class LogoutServlet extends HttpServlet {
         
                 request.logout();
         
-                response.sendRedirect("login.html");
+                response.sendRedirect("https://namnguyen31.com");
             }
 }
