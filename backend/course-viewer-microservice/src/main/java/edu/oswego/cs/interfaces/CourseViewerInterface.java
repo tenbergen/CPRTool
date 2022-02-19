@@ -1,14 +1,13 @@
-package edu.oswego.cs.database;
+package edu.oswego.cs.interfaces;
 
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import jakarta.inject.Inject;
+import edu.oswego.cs.database.database;
 import org.bson.Document;
 import java.util.ArrayList;
 
 public class CourseViewerInterface {
     //Inject for hte database
-    @Inject
     MongoDatabase database;
 
     //Collection names
@@ -22,6 +21,8 @@ public class CourseViewerInterface {
     CourseInterface selectedCourse;
 
     public CourseViewerInterface(String Id){
+       edu.oswego.cs.database.database x = new database();
+       MongoDatabase database = x.getDB(x.createMongoClient());
         courses = new ArrayList<>();
         try{
             ArrayList temp_courses;

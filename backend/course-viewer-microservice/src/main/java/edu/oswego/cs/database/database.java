@@ -17,11 +17,11 @@ public class database {
         String hostname = "127.0.0.1";
         int port = 27017;
         //Database name
-        database = "Bastian";
+        database = "cpr";
         //Database user name
-        String user = "***";
+        String user = "admin";
         //Database password for user
-        String password = "*****";
+        String password = "Admin";
 
         MongoCredential credential = MongoCredential.createCredential(user,database,password.toCharArray());
         return new MongoClient(

@@ -1,6 +1,7 @@
-package edu.oswego.cs.database;
+package edu.oswego.cs.interfaces;
 
 import com.mongodb.client.MongoDatabase;
+import edu.oswego.cs.database.database;
 import jakarta.inject.Inject;
 import org.bson.Document;
 
@@ -21,11 +22,13 @@ public class CourseInterface {
     private String courseCollection = "courses";
 
     //Inject the database
-    @Inject
+
     MongoDatabase database;
 
     //Generate a course from the Course ID(Stored in the sudents courses)
     public CourseInterface(String Course_ID){
+        edu.oswego.cs.database.database x = new database();
+        MongoDatabase database = x.getDB(x.createMongoClient());
         CID = Course_ID;
         students = new ArrayList<String>();
         teams = new ArrayList<String>();

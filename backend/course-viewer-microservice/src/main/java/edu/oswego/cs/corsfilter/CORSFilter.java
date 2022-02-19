@@ -2,6 +2,8 @@ package edu.oswego.cs.corsfilter;
 
 import java.io.IOException;
 
+import com.mongodb.client.MongoDatabase;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerResponseContext;
 import jakarta.ws.rs.container.ContainerResponseFilter;
