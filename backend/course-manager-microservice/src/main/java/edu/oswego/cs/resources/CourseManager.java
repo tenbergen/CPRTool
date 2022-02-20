@@ -18,6 +18,7 @@ public class CourseManager {
         return Response.status(Response.Status.CREATED).entity(course.toString()).build();
     }
 
+    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/delete/")
