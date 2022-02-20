@@ -1,7 +1,9 @@
 package edu.oswego.cs.resources.logout;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.ws.rs.Produces;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
@@ -11,18 +13,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+
+
 import com.ibm.websphere.security.social.UserProfileManager;
 
+@ApplicationScoped
 public class GoogleLogout implements ILogout {
-    @Inject
-    @ConfigProperty(name="google.client-id")
-    private String clientId;
-    // "952282231282-62vjdtdi9gdqcf3cbru3i278cqgiov2e.apps.googleusercontent.com"
+    // @Inject
+    // @ConfigProperty(name="google.client-id")
+    private String clientId = "952282231282-62vjdtdi9gdqcf3cbru3i278cqgiov2e.apps.googleusercontent.com";
 
-    @Inject
-    @ConfigProperty(name="google.client-pwd")
-    private String clientSecret; //"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"
-
+    // @Inject
+    // @ConfigProperty(name="google.client-pwd")
+    private String clientSecret = "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";
 
     public Response logout() {
         // final String unauthorizeUrl = "https://api.github.com/applications/{client_id}/grant";

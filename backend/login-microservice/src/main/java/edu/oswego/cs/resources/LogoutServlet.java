@@ -2,6 +2,7 @@ package edu.oswego.cs.resources;
 
 import java.io.IOException;
 
+import javax.decorator.Decorator;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -18,6 +19,7 @@ import java.util.logging.Logger;
 
 import edu.oswego.cs.resources.logout.ILogout;
 import edu.oswego.cs.resources.logout.LogoutHandler;
+
 @ApplicationScoped
 @WebServlet(name = "LogoutServlet", urlPatterns = "/logout")
 @ServletSecurity(value = @HttpConstraint(rolesAllowed = {"Professor", "Student"},
@@ -39,13 +41,15 @@ public class LogoutServlet extends HttpServlet {
                 Response.Status.Family responseCodeFamily = logoutResponse.getStatusInfo().getFamily();
 
                 if (!responseCodeFamily.equals(Response.Status.Family.SUCCESSFUL)) {
-                    Logger.getLogger("LogoutServlet").log(Level.SEVERE,
-                            logoutResponse.readEntity(Map.class).toString());
-                    throw new ServletException("Could not delete OAuth2 application grant");
+                    // Logger.getLogger("LogoutServlet").log(Level.SEVERE,
+                    //         logoutResponse.readEntity(Map.class).toString());
+                    // throw new ServletException("Could not delete OAuth2 application grant");
+                   
                 }
-        
+                
+                
                 request.logout();
-        
                 response.sendRedirect("https://namnguyen31.com");
+        
             }
 }
