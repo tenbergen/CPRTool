@@ -2,10 +2,14 @@ package edu.oswego.cs.resources.logout;
 
 import com.ibm.websphere.security.social.UserProfileManager;
 
+import jakarta.enterprise.inject.Produces;
+
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
-@RequestScoped
+
+@ApplicationScoped
 public class LogoutHandler {
     @Inject
     private GoogleLogout googleLogout;
