@@ -9,18 +9,22 @@ import javax.persistence.Id;
 
 @Entity
 @NoArgsConstructor
-@Getter @ToString
+@Getter
 public class CourseDAO {
 
     @Id
     public @JsonbProperty("courseName") @NonNull String courseName;
     public @JsonbProperty("courseSection") @NonNull int courseSection;
-    public @ToString.Exclude String professor;
+    public String professor;
 
     @JsonbCreator
     public CourseDAO(@JsonbProperty("courseName") String courseName,
                      @JsonbProperty("courseSection") int courseSection) {
         this.courseName = courseName;
         this.courseSection = courseSection;
+    }
+
+    public String toString() {
+        return String.format("{\"courseName\":\"%s\",\"courseSection\":%d}", courseName, courseSection);
     }
 }
