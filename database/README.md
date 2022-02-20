@@ -1,4 +1,4 @@
-# Calibrated Peer Review Demo
+# Calibrated Peer Review Deployment Guide
 
 ## Getting Started
 
