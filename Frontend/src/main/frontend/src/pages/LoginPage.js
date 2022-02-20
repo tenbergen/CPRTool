@@ -1,82 +1,27 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import GoogleLogin from 'react-google-login';
-import { GoogleLogout } from 'react-google-login';
-import { useGoogleLogout } from 'react-google-login'
-import { useGoogleLogin } from 'react-google-login'
+import "./styles/LoginPage.css"
+import {useNavigate} from "react-router-dom";
 
-//Need to install "npm install react-google-login"
+function LoginPage() {
+    let navigate = useNavigate()
 
-const responseGoogle = (response) => {
-    console.log(response);
+    const handleClick = (e) => {
+        // e.preventDefault();
+        // window.location.href = 'localhost:13126/login';
+        navigate("/teacherDashboard")
+    }
+
+    return (
+        <div id="box">
+            <div className="googleButton">
+                <button
+                    type="button"
+                    onClick={handleClick}
+                >
+                    <img className = {"google"} src={require('./img/Google__G__Logo.svg.png')}/> Login With Google</button>
+            </div>
+        </div>
+    );
 }
 
-ReactDOM.render(
-    <GoogleLogin
-        clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
-        render={renderProps => (
-            <button onClick={renderProps.onClick} disabled={renderProps.disabled}>This is my custom Google button</button>
-        )}
-        buttonText="Login"
-        onSuccess={responseGoogle}
-        onFailure={responseGoogle}
-        cookiePolicy={'single_host_origin'}
-    />,
-    document.getElementById('googleButton')
-);
-
-//Log in
-const { signIn, loaded } = useGoogleLogin({
-    onSuccess,
-    onAutoLoadFinished,
-    clientId,
-    cookiePolicy,
-    loginHint,
-    hostedDomain,
-    autoLoad,
-    isSignedIn,
-    fetchBasicProfile,
-    redirectUri,
-    discoveryDocs,
-    onFailure,
-    uxMode,
-    scope,
-    accessType,
-    responseType,
-    jsSrc,
-    onRequest,
-    prompt
-})
-
-//Stay logged in
-<GoogleLogin
-    clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
-    onSuccess={responseGoogle}
-    isSignedIn={true}
-/>
-
-
-//Logout
-
-const { signOut, loaded } = useGoogleLogout({
-    jsSrc,
-    onFailure,
-    clientId,
-    cookiePolicy,
-    loginHint,
-    hostedDomain,
-    fetchBasicProfile,
-    discoveryDocs,
-    uxMode,
-    redirectUri,
-    scope,
-    accessType,
-    onLogoutSuccess
-})
-
-<GoogleLogout
-    clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
-    buttonText="Logout"
-    onLogoutSuccess={logout}
-/>
-//</GoogleLogout>
+export default LoginPage;

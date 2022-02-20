@@ -3,11 +3,22 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import TeacherDashboardPage from "./pages/TeacherDashboardPage";
+import CreateCoursePage from "./pages/CreateCoursePage";
+import EditCoursePage from "./pages/EditCoursePage";
+import LoginPage from "./pages/LoginPage";
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <BrowserRouter>
+        <Routes>
+            <Route path="/" element={<LoginPage />} />
+            {/*<Route path="login" element={<LoginPage />} />*/}
+            <Route path="createCourse" element={<CreateCoursePage />} />
+            <Route path="teacherDashboard" element={<TeacherDashboardPage />} />
+            <Route path="editCourse" element={<EditCoursePage />} />
+        </Routes>
+    </BrowserRouter>,
   document.getElementById('root')
 );
 

@@ -1,0 +1,10 @@
+.EditCourse {
+    display: flex;
+}
+
+#editCourseDiv {
+    text-align: center;
+    width: min-content;
+    flex-grow: 1;
+    margin: auto;
+}

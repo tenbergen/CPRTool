@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import "./styles/CreateCourseStyle.css"
 import SidebarComponent from "../components/SidebarComponent";
+import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 const CreateCoursePage = () => {
+    const submitCourseUrl = ""
+    let navigate = useNavigate()
+
     const [formData, setFormData] = useState({
         courseName: '',
         courseDescription: ''
@@ -12,10 +17,21 @@ const CreateCoursePage = () => {
 
     const OnChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-    const handleSubmit = () => {
+    const handleSubmit = async (e) => {
         if (courseName === '' || courseDescription === '') alert("Fields can't be empty!")
         else {
-            alert("Success!")
+            e.preventDefault()
+
+            const data = {
+                "Bastian Tenbergen":[
+                    {"courseName" : courseName},
+                    {"courseDescription" : courseDescription}
+                ]
+            }
+            console.log(data)
+
+            navigate("/teacherDashboard")
+            await axios.post(submitCourseUrl, data);
         }
     }
 
