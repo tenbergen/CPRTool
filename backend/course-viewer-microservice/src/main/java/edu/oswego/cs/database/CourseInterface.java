@@ -1,48 +1,68 @@
 package edu.oswego.cs.database;
 
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
 import java.util.ArrayList;
 
 public class CourseInterface {
-    private final String professor;
-    private final ArrayList<Document> courseDocuments = new ArrayList<>();
+    //Course Fields
+    private ArrayList<String> students;
+    private ArrayList<String> teams;
+    private ArrayList<String>tas;
+    private String professor;
+    private String Course_Name;
+    private String CID;
 
-    public CourseInterface(String professor) {
-        this.professor = professor;
-    }
+    //Collections
+    private String studentCollection = "students";
+    private String teamCollection = "teams";
+    private String courseCollection = "courses";
 
-    public ArrayList<Document> getCourses() {
+    //Inject the database
+
+    MongoDatabase database;
+
+    //Generate a course from the Course ID(Stored in the sudents courses)
+    public CourseInterface(String Course_ID){
         DatabaseManager databaseManager = new DatabaseManager();
-        MongoDatabase database = databaseManager.getDB();
+        database = databaseManager.getDB();
 
-        String professors = "professors";
-        boolean professorCollectionExists = database.listCollectionNames().into(new ArrayList<>()).contains(professors);
-        if (!professorCollectionExists) {
-            database.createCollection(professors);
+        CID = Course_ID;
+        students = new ArrayList<String>();
+        teams = new ArrayList<String>();
+        tas = new ArrayList<String>();
+        try{
+            Document Selected_Course = database.getCollection(courseCollection).find(new Document("CourseID", CID)).first();
+            for(Object o:(ArrayList) Selected_Course.get("Students")){
+                students.add(o.toString());
+            }
+            for(Object o:(ArrayList)Selected_Course.get("Teams")){
+                teams.add(o.toString());
+            }
+            for(Object o:(ArrayList)Selected_Course.get("TAs")){
+                tas.add(o.toString());
+            }
+            professor = Selected_Course.get("Professor").toString();
+            Course_Name = Selected_Course.get("Course").toString();
+        }catch(Exception e){
+            e.printStackTrace(System.out);
         }
-
-        String students = "students";
-        boolean studentsCollectionExists = database.listCollectionNames().into(new ArrayList<>()).contains(students);
-        if (!studentsCollectionExists) {
-            database.createCollection(students);
-        }
-
-        String courses = "courses";
-        boolean coursesCollectionExists = database.listCollectionNames().into(new ArrayList<>()).contains(courses);
-        if (!coursesCollectionExists) {
-            database.createCollection(courses);
-        }
-
-        Document professorDocument = database.getCollection(professors).find(new Document("professor_id", professor)).first();
-        MongoCollection<Document> courseCollection = database.getCollection(courses);
-        for (Object o : (ArrayList) professorDocument.get("courses")) {
-            Document courseDocument = courseCollection.find(new Document("course_id", o.toString())).first();
-            courseDocuments.add(courseDocument);
-        }
-
-        return courseDocuments;
+    }
+    //Getters for the various fields within the course
+    public ArrayList<String> getTeams(){
+        return teams;
+    }
+    public ArrayList<String> getStudnts(){
+        return students;
+    }
+    public ArrayList<String> getTAs(){
+        return tas;
+    }
+    public String getProfessor(){
+        return professor;
+    }
+    public String getCourse_Name(){
+        return getCourse_Name();
     }
 }
