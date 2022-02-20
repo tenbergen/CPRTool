@@ -51,11 +51,11 @@ public class LogoutServlet extends HttpServlet {
 
                     Logger.getLogger("LogoutServlet").log(Level.SEVERE, logoutResponse.readEntity(Map.class).toString());
                     
-                    response.sendRedirect("https://namnguyen31.com");
                 }
                 
                 
-                request.logout();
+                request.logout(); // not working, request already committed
+                // response.sendRedirect("REDIRECT_URL");
         
             }
 }

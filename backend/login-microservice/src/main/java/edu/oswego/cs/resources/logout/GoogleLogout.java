@@ -19,13 +19,15 @@ import com.ibm.websphere.security.social.UserProfileManager;
 
 @ApplicationScoped
 public class GoogleLogout implements ILogout {
-    // @Inject
-    // @ConfigProperty(name="google.client-id")
-    private String clientId = "952282231282-62vjdtdi9gdqcf3cbru3i278cqgiov2e.apps.googleusercontent.com";
+    @Inject
+    @ConfigProperty(name="google.client-id")
+    private String clientId;
+    //"952282231282-62vjdtdi9gdqcf3cbru3i278cqgiov2e.apps.googleusercontent.com";
 
-    // @Inject
-    // @ConfigProperty(name="google.client-pwd")
-    private String clientSecret = "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";
+    @Inject
+    @ConfigProperty(name="google.client-pwd")
+    private String clientSecret;
+    //"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";
 
     public Response logout() {
         // final String unauthorizeUrl = "https://api.github.com/applications/{client_id}/grant";

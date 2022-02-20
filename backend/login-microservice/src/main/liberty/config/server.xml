@@ -5,7 +5,6 @@
     <featureManager>
         <feature>jaxrs-2.1</feature>
         <feature>cdi-2.0</feature>
-        <feature>mpConfig-2.0</feature>
         <feature>jakartaee-8.0</feature>
         <feature>socialLogin-1.0</feature>
         <!-- for login -->
@@ -16,8 +15,14 @@
         <feature>jaxrsClient-2.1</feature>
         <feature>cdi-2.0</feature>
         <feature>jsonb-1.0</feature>
-        <feature>jwt-1.0</feature>
         <!-- end for login -->
+
+        <!-- for jwt -->
+        <feature>jwt-1.0</feature>
+        <feature>mpJwt-1.2</feature>
+        <feature>mpRestClient-2.0</feature>
+        <feature>servlet-4.0</feature>
+        <!-- end for jwt -->
     </featureManager>
 
     <variable name="default.http.port" defaultValue="13126"/>
