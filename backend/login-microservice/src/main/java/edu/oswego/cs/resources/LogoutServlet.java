@@ -2,6 +2,7 @@ package edu.oswego.cs.resources;
 
 import java.io.IOException;
 
+import javax.decorator.Decorator;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -18,6 +19,7 @@ import java.util.logging.Logger;
 
 import edu.oswego.cs.resources.logout.ILogout;
 import edu.oswego.cs.resources.logout.LogoutHandler;
+
 @ApplicationScoped
 @WebServlet(name = "LogoutServlet", urlPatterns = "/logout")
 @ServletSecurity(value = @HttpConstraint(rolesAllowed = {"Professor", "Student"},
@@ -33,19 +35,27 @@ public class LogoutServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
-                ILogout logout = logoutHandler.getLogout();
-                Response logoutResponse = logout.logout();
+                // ILogout logout = logoutHandler.getLogout();
+                Response logoutResponse = logoutHandler.getLogout().logout();
+
+               
         
                 Response.Status.Family responseCodeFamily = logoutResponse.getStatusInfo().getFamily();
 
+                // The responseCodeFamily is now REDIRECTION means 3xx http error
+                
                 if (!responseCodeFamily.equals(Response.Status.Family.SUCCESSFUL)) {
-                    Logger.getLogger("LogoutServlet").log(Level.SEVERE,
-                            logoutResponse.readEntity(Map.class).toString());
-                    throw new ServletException("Could not delete OAuth2 application grant");
+                    // Logger.getLogger("LogoutServlet").log(Level.SEVERE,
+                    // logoutResponse.readEntity(Map.class).toString());
+                    // throw new ServletException("Could not delete OAuth2 application grant");
+
+                    Logger.getLogger("LogoutServlet").log(Level.SEVERE, logoutResponse.readEntity(Map.class).toString());
+                    
+                    response.sendRedirect("https://namnguyen31.com");
                 }
-        
+                
+                
                 request.logout();
         
-                response.sendRedirect("https://namnguyen31.com");
             }
 }
