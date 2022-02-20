@@ -7,7 +7,6 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Disposes;
 
 @ApplicationScoped
 public class DatabaseManager {
@@ -28,9 +27,6 @@ public class DatabaseManager {
         return client.getDatabase(database);
     }
 
-    public void close(@Disposes MongoClient toClose) {
-        toClose.close();
+    public DatabaseManager() {
     }
-
-    public DatabaseManager() {}
 }
