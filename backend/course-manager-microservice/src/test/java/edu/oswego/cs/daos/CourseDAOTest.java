@@ -1,6 +1,5 @@
-package daos;
+package edu.oswego.cs.daos;
 
-import edu.oswego.cs.daos.CourseDAO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
