@@ -10,9 +10,9 @@ public class CourseInterface {
     private ArrayList<String> students;
     private ArrayList<String> teams;
     private ArrayList<String>tas;
-    private String professor;
-    private String Course_Name;
+    private String CourseName;
     private String CID;
+    private String CourseSection;
 
     //Collections
     private String studentCollection = "students";
@@ -43,8 +43,8 @@ public class CourseInterface {
             for(Object o:(ArrayList)Selected_Course.get("TAs")){
                 tas.add(o.toString());
             }
-            professor = Selected_Course.get("Professor").toString();
-            Course_Name = Selected_Course.get("Course").toString();
+            CourseSection = Selected_Course.get("CourseSection").toString();
+            CourseName = Selected_Course.get("CourseName").toString();
         }catch(Exception e){
             e.printStackTrace(System.out);
         }
@@ -59,10 +59,8 @@ public class CourseInterface {
     public ArrayList<String> getTAs(){
         return tas;
     }
-    public String getProfessor(){
-        return professor;
-    }
-    public String getCourse_Name(){
-        return getCourse_Name();
+    public String getCourseSection(){return CourseSection;}
+    public String getCourseName(){
+        return getCourseName();
     }
 }
