@@ -1,0 +1,78 @@
+version: "3.8"
+services:
+  frontend:
+    build: frontend
+    container_name: cpr-frontend
+    restart: unless-stopped
+    ports:
+      - "80:13129"
+      - "443:9447"
+
+  login:
+    build:
+      context: ./backend/login-microservice
+    container_name: cpr-login
+    restart: unless-stopped
+    ports:
+      - "80:13126"
+      - "443:9444"
+    environment:
+        MONGO_HOSTNAME: ${MONGO_HOSTNAME}
+        MONGO_PORT: ${MONGO_PORT}
+        MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
+        MONGO_USERNAME: ${MONGO_USERNAME}
+        MONGO_PASSWORD: ${MONGO_PASSWORD}
+
+  course-manager:
+    build:
+      context: ./backend/course-manager-microservice
+    container_name: cpr-course-manager
+    restart: unless-stopped
+    ports:
+      - "80:13127"
+      - "443:9445"
+    environment:
+      MONGO_HOSTNAME: ${MONGO_HOSTNAME}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+
+  course-viewer:
+    build:
+      context: ./backend/course-viewer-microservice
+    container_name: cpr-course-viewer
+    restart: unless-stopped
+    ports:
+      - "80:13128"
+      - "443:9446"
+    environment:
+      MONGO_HOSTNAME: ${MONGO_HOSTNAME}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+
+  mongo:
+    image: mongo:5.0.6
+    container_name: cpr-mongo
+    restart: unless-stopped
+    volumes:
+      - ${DATABASE_FOLDER}:/data/db
+      - ${INITIALIZE_SCRIPT}:/docker-entrypoint-initdb.d/mongo-init.sh
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+
+  nginx:
+    image: nginx:1.21.6
+    restart: unless-stopped
+    container_name: cpr-nginx
+    volumes:
+      - ${NGINX}:/etc/nginx/conf.d/default.conf:rw
+    ports:
+      - "80:80"
+      - "443:443"

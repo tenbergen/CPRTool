@@ -1,13 +1,17 @@
+
 package edu.oswego.cs.resources;
 
+
+import edu.oswego.cs.database.CourseViewerInterface;
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import java.util.List;
 
 @Path("/viewcourses")
 public class CoursesViewerResources {
+
     @GET
     public String ViewCourses() {
+        CourseViewerInterface test = new CourseViewerInterface("bastian.tenbergen");
+        System.out.println(test.getCourses());
         return "View Courses Page";
     }
 }
