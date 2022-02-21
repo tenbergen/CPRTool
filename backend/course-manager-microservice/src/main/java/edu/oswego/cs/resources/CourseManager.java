@@ -1,11 +1,13 @@
 package edu.oswego.cs.resources;
 
+import edu.oswego.cs.daos.StudentDAO;
 import edu.oswego.cs.daos.CourseDAO;
-import edu.oswego.cs.daos.UserDAO;
+import edu.oswego.cs.database.CourseManagerInterface;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 
 @Path("professor")
 public class CourseManager {
@@ -13,35 +15,55 @@ public class CourseManager {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("courses/create/")
+    @Path("courses/course/create")
     public Response createCourse(CourseDAO course) {
-        return Response.status(Response.Status.CREATED).entity(course.toString()).build();
+        try {
+            new CourseManagerInterface().addCourse(course);
+        } catch (IOException e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.status(Response.Status.OK).build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("courses/delete/")
+    @Path("courses/course/delete")
     public Response deleteCourse(CourseDAO course) {
-        return Response.status(Response.Status.OK).entity(course.toString()).build();
+        try {
+            new CourseManagerInterface().removeCourse(course);
+        } catch (IOException e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.status(Response.Status.OK).build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/student/add")
-    public Response addStudent(UserDAO user, CourseDAO course) {
-        return Response.status(Response.Status.CREATED).entity(user.toString()).build();
-
-
+    public Response addStudent(StudentDAO studentDAO) {
+        try {
+            CourseDAO course = new CourseDAO(studentDAO.courseName, studentDAO.courseSection);
+            new CourseManagerInterface().addStudent(studentDAO.email, course);
+        } catch (IOException e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.status(Response.Status.OK).build();
     }
 
-
+    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/student/delete")
-    public Response deleteStudent(UserDAO user,CourseDAO course) {
-        return Response.status(Response.Status.OK).entity(user.toString()).build();
+    public Response deleteStudent(StudentDAO studentDAO) {
+        try {
+            CourseDAO course = new CourseDAO(studentDAO.courseName, studentDAO.courseSection);
+            new CourseManagerInterface().removeStudent(studentDAO.email, course);
+        } catch (IOException e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.status(Response.Status.OK).entity(studentDAO.email).build();
 
     }
 }
