@@ -1,15 +1,15 @@
 import TeacherDashboardPage from "./pages/TeacherDashboardPage";
-import EditCoursePage from "./pages/EditCoursePage"
-import CreateCoursePage from "./pages/CreateCoursePage";
 import LoginPage from "./pages/LoginPage";
+import { useSelector } from "react-redux";
 
 function App() {
-  return (
-    <div>
-        {LoginPage}
-        {/*<TeacherDashboardPage />*/}
-        {/*<CreateCoursePage />*/}
-    </div>
+    const authentication = useSelector((state) => state);
+    const isAuthenticated = authentication.authReducer.isAuthenticated;
+
+    return (
+      <div>
+          {isAuthenticated? <TeacherDashboardPage/> : <LoginPage />}
+      </div>
   );
 }
 
