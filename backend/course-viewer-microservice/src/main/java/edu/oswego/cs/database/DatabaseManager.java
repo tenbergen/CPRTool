@@ -12,11 +12,11 @@ import javax.enterprise.inject.Disposes;
 @ApplicationScoped
 public class DatabaseManager {
 
-    String hostname = "127.0.0.1"; //System.getenv("MONGO_HOSTNAME");
-    int port = 27017;//Integer.parseInt(System.getenv("MONGO_PORT"));
+    String hostname = "moxie.cs.oswego.edu";//System.getenv("MONGO_HOSTNAME");
+    int port = 27027;//Integer.parseInt(System.getenv("MONGO_PORT"));
     String database = "cpr";//System.getenv("MONGO_DATABASE");
-    String user = "admin";//System.getenv("MONGO_USERNAME");
-    String password ="Admin" ;//System.getenv("MONGO_PASSWORD");
+    String user = "root";//System.getenv("MONGO_USERNAME");
+    String password = "toor";//System.getenv("MONGO_PASSWORD");
 
     public MongoDatabase getDB() {
         MongoCredential credentials = MongoCredential.createCredential(user, database, password.toCharArray());
