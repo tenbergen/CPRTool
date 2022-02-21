@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 @Path("professor")
-public class CourseManager {
+public class CourseManagerResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -63,7 +63,15 @@ public class CourseManager {
         } catch (IOException e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        return Response.status(Response.Status.OK).entity(studentDAO.email).build();
+        return Response.status(Response.Status.OK).build();
 
     }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response post(String str) {
+        return Response.status(Response.Status.OK).entity(str).build();
+    }
+
 }
