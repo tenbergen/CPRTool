@@ -1,6 +1,7 @@
 package edu.oswego.cs.daos;
 
-import lombok.*;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;
@@ -9,22 +10,18 @@ import javax.persistence.Id;
 
 @Entity
 @NoArgsConstructor
-@Getter
-public class CourseDAO {
-
+public class StudentDAO {
     @Id
+    public @JsonbProperty("email") @NonNull String email;
     public @JsonbProperty("courseName") @NonNull String courseName;
     public @JsonbProperty("courseSection") @NonNull int courseSection;
-    private String professor;
 
     @JsonbCreator
-    public CourseDAO(@JsonbProperty("courseName") String courseName,
-                     @JsonbProperty("courseSection") int courseSection) {
+    public StudentDAO(@JsonbProperty("email") String email,
+                      @JsonbProperty("courseName") String courseName,
+                      @JsonbProperty("courseSection") int courseSection) {
+        this.email = email;
         this.courseName = courseName;
         this.courseSection = courseSection;
-    }
-
-    public String toString() {
-        return String.format("{\"courseName\":\"%s\",\"courseSection\":%d}", courseName, courseSection);
     }
 }

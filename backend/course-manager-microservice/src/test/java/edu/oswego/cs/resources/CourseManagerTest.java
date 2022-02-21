@@ -1,7 +1,6 @@
 package edu.oswego.cs.resources;
 
 import edu.oswego.cs.daos.CourseDAO;
-import edu.oswego.cs.daos.UserDAO;
 import org.junit.jupiter.api.*;
 
 import javax.json.bind.Jsonb;
@@ -11,7 +10,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.client.Client;
-import java.util.ArrayList;
 
 class CourseMangerTest {
     private static String port;
@@ -53,22 +51,22 @@ class CourseMangerTest {
             Assertions.assertEquals(expectedCourse.toString(), response,"Course was not created properly.");
     }
 
-    @Test
-    public void testAddStudent(){
-        int ID = 123480;
-        String email = "user@oswego.edu";
-        String name = "UserFirst";
-
-        UserDAO expectedUser = new UserDAO(ID,email,name);
-        targetUrl = "/courses/course/student/add/";
-        WebTarget target = client.target(baseUrl + targetUrl);
-
-        String response = target.request(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .post(Entity.entity(jsonb.toJson(expectedUser), MediaType.APPLICATION_JSON), String.class);
-        Assertions.assertEquals(expectedUser.toString(), response,"A new student user has been created");
-
-    }
+//    @Test
+//    public void testAddStudent(){
+//        int ID = 123480;
+//        String email = "user@oswego.edu";
+//        String name = "UserFirst";
+//
+//        //UserDAO expectedUser = new UserDAO(ID,email,name);
+//        targetUrl = "/courses/course/student/add/";
+//        WebTarget target = client.target(baseUrl + targetUrl);
+//
+//        String response = target.request(MediaType.APPLICATION_JSON)
+//                .accept(MediaType.APPLICATION_JSON)
+//                .post(Entity.entity(jsonb.toJson(expectedUser), MediaType.APPLICATION_JSON), String.class);
+//        Assertions.assertEquals(expectedUser.toString(), response,"Student was not added properly.");
+//
+//    }
 
     @Test
     public void testDeleteStudent(){
