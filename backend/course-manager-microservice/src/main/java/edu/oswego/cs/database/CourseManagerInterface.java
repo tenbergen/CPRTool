@@ -71,8 +71,10 @@ public class CourseManagerInterface {
             if(tempStudent.hasNext()){
                 Document cursor = tempStudent.next();
                 ArrayList StudentCourses = (ArrayList)cursor.get("courses");
-                StudentCourses.add(MakeCID(courseDAO));
-                database.getCollection(stud).updateOne(cursor,(Document)cursor.put("courses",StudentCourses));
+                if(!StudentCourses.contains(MakeCID(courseDAO)))StudentCourses.add(MakeCID(courseDAO));
+                database.getCollection(stud).deleteOne(new Document("StudentId",StudentID));
+                cursor.put("courses",StudentCourses);
+                database.getCollection(stud).insertOne(cursor);
             }else{
                 ArrayList<String> newCourseList = new ArrayList<>();
                 newCourseList.add(MakeCID(courseDAO));
@@ -83,7 +85,7 @@ public class CourseManagerInterface {
             }
             Document tempCourse = database.getCollection(course).find(new Document("CourseID",MakeCID(courseDAO))).first();
             ArrayList tempList =(ArrayList) tempCourse.get("Students");
-            tempList.add(StudentID);
+            if(!tempList.contains(StudentID))tempList.add(StudentID);
             tempCourse.put("Students",tempList);
             database.getCollection(course).deleteOne(new Document("CourseID",MakeCID(courseDAO)));
             tempCourse.put("Students",tempList);
@@ -130,7 +132,6 @@ public class CourseManagerInterface {
         return new StudentInterface(StudID);
     }
 
-
     public boolean removeStudent(CourseDAO courseDAO,String StudentName) throws IOException {
         String StudentID = StudentName.split("@")[0];
         try{
@@ -142,6 +143,13 @@ public class CourseManagerInterface {
             database.getCollection(stud).deleteOne((new Document("StudentId", StudentID)));
             tempStudent.put("courses",tempList);
             database.getCollection(stud).insertOne(tempStudent);
+
+            Document tempCourse = database.getCollection(course).find(new Document("CourseID",MakeCID(courseDAO))).first();
+            database.getCollection(course).deleteOne(new Document("CourseID",MakeCID(courseDAO)));
+            ArrayList tempStudentList = (ArrayList) tempCourse.get("Students");
+            tempStudentList.remove(StudentID);
+            tempCourse.put("Students",tempStudentList);
+            database.getCollection(course).insertOne(tempCourse);
         }catch(Exception e){
             e.printStackTrace(System.out);
             throw new IOException();
