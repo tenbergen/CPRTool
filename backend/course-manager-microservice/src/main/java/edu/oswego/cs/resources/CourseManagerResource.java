@@ -64,14 +64,5 @@ public class CourseManagerResource {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         return Response.status(Response.Status.OK).build();
-
     }
-
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response post(String str) {
-        return Response.status(Response.Status.OK).entity(str).build();
-    }
-
 }
