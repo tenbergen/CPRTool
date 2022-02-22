@@ -16,15 +16,48 @@ function EditCoursePage() {
     }
 
     return (
-        <div className={"EditCourse"}>
+        <div className={"parent"}>
             <SidebarComponent/>
-            <h1>CSC 480</h1>
-            <div id={"editCourseDiv"}>
-                <label>Course description:</label>
-                <br/>
-                <label>lorem ipsum or hwatevefsfd thi sis some tedt oh sdifnsojf sojsdoj;fsdf</label>
-                <br/>
-                <label>Add course CSV</label>
+            <div className="container">
+                <h1> Editing Course </h1>
+                <form>
+                    <div className="course-name">
+                        <label> <b> Name of course: </b> </label>
+                        <input
+                            type="text"
+                            name="courseName"
+                            value={courseName}
+                            required
+                            //onChange={(e) => OnChange(e)}
+                        />
+                    </div>
+
+                    <div className="course-csv">
+                        <label> <b> Add course CSV: </b> </label>
+                        <input
+                            type="file"
+                            name="courseCSV"
+                            required
+                        />
+                    </div>
+
+                    <div className="team-size">
+                        <label> <b> Select peer review team size: </b> </label>
+                        <input
+                            type="number"
+                            min="1"
+                            value="3"
+                            name="teamSize"
+                            required 
+                        />
+                    </div>
+
+                    <div className="button">
+                        <button> Submit </button>
+                        <a href="default.asp" target="_blank"> Delete course </a>
+                    </div>
+
+                </form>
             </div>
         </div>
     )
