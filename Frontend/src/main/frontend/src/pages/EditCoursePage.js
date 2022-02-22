@@ -52,7 +52,7 @@ function EditCoursePage() {
                         />
                     </div>
 
-                    <div className="button">
+                    <div className="editCourseButton">
                         <button> Submit </button>
                         <a href="default.asp" target="_blank"> Delete course </a>
                     </div>
