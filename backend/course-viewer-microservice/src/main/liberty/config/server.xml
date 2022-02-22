@@ -22,7 +22,7 @@
     
      <cors domain="/"
           allowedOrigins="*"
-          allowedMethods="GET, POST"
+          allowedMethods="GET, DELETE, POST, PUT"
           allowCredentials="true"
           allowedHeaders="Content-Type"
           exposeHeaders="Content-Type"/>
