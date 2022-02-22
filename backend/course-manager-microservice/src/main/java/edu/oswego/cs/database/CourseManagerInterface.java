@@ -46,7 +46,7 @@ public class CourseManagerInterface {
         return new CourseInterface(CID);
     }
 
-    public void addCourse(CourseDAO courseDAO){
+    public void addCourse(CourseDAO courseDAO) throws IOException {
         Document courseToAdd = new Document()
                 .append("CourseName",courseDAO.courseName)
                 .append("CourseSection",courseDAO.courseSection)
@@ -62,10 +62,11 @@ public class CourseManagerInterface {
             database.getCollection(prof).insertOne(professorDoc);
         }catch(Exception e){
             e.printStackTrace(System.out);
+            throw new IOException();
         }
     }
-    public boolean addStudent(String StudentName,CourseDAO courseDAO) throws IOException {
-        String StudentID = StudentName.split("@")[0];
+    public boolean addStudent(String studentEmail,CourseDAO courseDAO) throws IOException {
+        String StudentID = studentEmail.split("@")[0];
         try{
             MongoCursor<Document> tempStudent = database.getCollection(stud).find(new Document("StudentId", StudentID)).iterator();
             if(tempStudent.hasNext()){
@@ -132,7 +133,9 @@ public class CourseManagerInterface {
         return new StudentInterface(StudID);
     }
 
-    public boolean removeStudent(CourseDAO courseDAO,String StudentName) throws IOException {
+
+
+    public boolean removeStudent(String StudentName, CourseDAO courseDAO) throws IOException {
         String StudentID = StudentName.split("@")[0];
         try{
             Document tempStudent = database.getCollection(stud).find(new Document("StudentId", StudentID)).first();
