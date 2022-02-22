@@ -44,7 +44,7 @@ public class CourseManagerResource {
     @Path("courses/course/student/add")
     public Response addStudent(StudentDAO studentDAO) {
         try {
-            CourseDAO course = new CourseDAO(studentDAO.courseName, studentDAO.courseSection);
+            CourseDAO course = new CourseDAO(studentDAO.abbreviation, studentDAO.courseSection, studentDAO.semester);
             new CourseManagerInterface().addStudent(studentDAO.email, course);
         } catch (IOException e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -58,7 +58,7 @@ public class CourseManagerResource {
     @Path("courses/course/student/delete")
     public Response deleteStudent(StudentDAO studentDAO) {
         try {
-            CourseDAO course = new CourseDAO(studentDAO.courseName, studentDAO.courseSection);
+            CourseDAO course = new CourseDAO(studentDAO.abbreviation, studentDAO.courseSection, studentDAO.semester);
             new CourseManagerInterface().removeStudent(studentDAO.email, course);
         } catch (IOException e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
