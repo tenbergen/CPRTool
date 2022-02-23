@@ -16,14 +16,18 @@ public class StudentDAO {
     public @JsonbProperty("Abbreviation") @NonNull String abbreviation;
     public @JsonbProperty("CourseSection") @NonNull int courseSection;
     public @JsonbProperty("Semester") @NonNull String semester;
+    public @JsonbProperty("CourseName") @NonNull String courseName;
 
     @JsonbCreator
     public StudentDAO(@JsonbProperty("Email") String email,
+                      @JsonbProperty("CourseName") String courseName,
                       @JsonbProperty("Abbreviation") String abbreviation,
                       @JsonbProperty("CourseSection") int courseSection,
                       @JsonbProperty("Semester") String semester) {
         this.email = email;
         this.courseSection = courseSection;
         this.semester = semester;
+        this.abbreviation = abbreviation;
+        this.courseName = courseName;
     }
 }
