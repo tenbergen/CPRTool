@@ -4,8 +4,6 @@ import edu.oswego.cs.daos.StudentDAO;
 import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.database.CourseInterface;
 
-
-
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -42,7 +40,6 @@ public class CourseManagerResource {
     @Path("courses/course/student/add")
     public Response addStudent(StudentDAO studentDAO) throws IOException {
         CourseDAO course = new CourseDAO(studentDAO.courseName, studentDAO.courseSection, studentDAO.semester ,studentDAO.abbreviation);
-        System.out.println(course.toString());
         new CourseInterface().addStudent(studentDAO.email, course);
         return Response.status(Response.Status.OK).build();
     }

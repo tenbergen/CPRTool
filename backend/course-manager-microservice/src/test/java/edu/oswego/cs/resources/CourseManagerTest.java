@@ -11,7 +11,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.client.Client;
 
-class CourseMangerTest {
+public class CourseManagerTest {
 //    private static String port;
 //    private static String baseUrl;
 //    private static String targetUrl;
