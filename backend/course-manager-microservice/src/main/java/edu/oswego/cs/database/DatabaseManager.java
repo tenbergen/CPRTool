@@ -14,13 +14,13 @@ public class DatabaseManager {
 
     String hostname = "moxie.cs.oswego.edu";//System.getenv("MONGO_HOSTNAME");
 
-    int ProfessorPort = 27027;//Integer.parseInt(System.getenv("MONGO_PORT"));
+    int ProfessorPort = 27028;//Integer.parseInt(System.getenv("MONGO_PORT"));
     String ProfessorDatabase = "cpr";//System.getenv("MONGO_DATABASE");
     String ProfessorUser = "root";//System.getenv("MONGO_USERNAME");
     String ProfessorPassword = "toor";//System.getenv("MONGO_PASSWORD");
 
 
-    int Studentport = 27028;//Integer.parseInt(System.getenv("MONGO_PORT"));
+    int Studentport = 27027;//Integer.parseInt(System.getenv("MONGO_PORT"));
     String Studentdatabase = "cpr";//System.getenv("MONGO_DATABASE");
     String Studentuser = "root";//System.getenv("MONGO_USERNAME");
     String Studentpassword = "toor";//System.getenv("MONGO_PASSWORD");
