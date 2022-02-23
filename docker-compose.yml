@@ -2,7 +2,7 @@ version: "3.8"
 services:
   frontend:
     build:
-      context: ./frontend
+      context: ./Frontend
     container_name: cpr-frontend
     restart: unless-stopped
     ports:
