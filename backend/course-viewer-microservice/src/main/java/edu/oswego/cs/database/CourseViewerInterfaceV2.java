@@ -18,8 +18,8 @@ public class CourseViewerInterfaceV2 {
     private String students = "Students";
     private String tas = "Tas";
 
-    private String studentCollection = "NewStudent";
-    private String professorCollection = "NewProfessor";
+    private String studentCollection = "Student";
+    private String professorCollection = "Professor";
 
     MongoDatabase userDatabase;
     private ArrayList<CourseDAO>courseList = new ArrayList<>();
