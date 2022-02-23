@@ -1,0 +1,88 @@
+.parent {
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
+}
+
+.container {
+    margin-top: 3%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: 5%;
+    margin-left: 5%;
+    flex-grow: 1;
+}
+
+form {
+    margin-top: 3%;
+    background-color: lightgray;
+    padding: 4% 3% 3% 3%;
+}
+
+.course-name {
+    width: 100%;
+    margin-bottom: 3%;
+    display: flex;
+}
+
+.course-name label {
+    margin-right: 2%;
+}
+
+.course-name input {
+    flex-grow: 1;
+    padding: 5px 0 5px 0;
+}
+
+.course-csv {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 3%;
+}
+
+.course-csv label {
+    margin-bottom: 1%;
+}
+
+.course-csv input[type=file]::file-selector-button {
+    padding: 10px 45px 10px 45px;
+    border: none;
+    font-size: medium;
+    font-weight: bold;
+}
+
+.team-size {
+    width: 100%;
+    margin-bottom: 3%;
+    display: flex;
+}
+
+.team-size label {
+    margin-right: 2%;
+}
+
+.editCourseButton {
+    display: flex;
+    justify-content: center;
+    margin-top: 7%;
+
+    margin-left: 30%;
+    padding: 10px 45px 10px 45px;
+    border: none;
+    font-size: medium;
+    font-weight: bold;
+}
+
+/*editCourseButton {*/
+/*    margin-left: 40%;*/
+/*    padding: 10px 45px 10px 45px;*/
+/*    border: none;*/
+/*    font-size: medium;*/
+/*    font-weight: bold;*/
+/*}*/
+
+.editCourseButton a {
+    margin-left: 30%;
+    text-decoration: underline;
+    color: black;
+}
