@@ -1,39 +1,37 @@
 import React, { useState } from "react";
 import "./styles/CreateCourseStyle.css"
 import SidebarComponent from "../components/SidebarComponent";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const CreateCoursePage = () => {
-    // put the ulr of the endpoint here!
-    const submitCourseUrl = ""
+    const submitCourseUrl = "http://moxie.cs.oswego.edu:13127/professor/courses/course/create/"
     let navigate = useNavigate()
 
     const [formData, setFormData] = useState({
+        courseId: '',
         courseName: '',
-        courseDescription: ''
+        courseSection: undefined,
+        courseAbbreviation: '',
+        semester: ''
     });
 
-    const { courseName, courseDescription } = formData;
+    const { courseName, courseSection,  courseAbbreviation, semester } = formData;
 
     const OnChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
     const handleSubmit = async (e) => {
-        if (courseName === '' || courseDescription === '') alert("Fields can't be empty!")
+        if (courseName === '' || courseSection === undefined) alert("Fields can't be empty!")
         else {
             e.preventDefault()
-
-            // construct JSON to send here!
             const data = {
-                "professor":[
-                    {"courseName" : courseName},
-                    {"courseDescription" : courseDescription}
-                ]
-            }
-            console.log(data)
-
-            navigate("/teacherDashboard")
+                courseName: courseName,
+                courseSection: courseSection,
+                // courseAbbreviation: courseAbbreviation,
+                // semester: semester,
+            };
             await axios.post(submitCourseUrl, data);
+            navigate("/teacherDashboard")
         }
     }
 
@@ -44,7 +42,7 @@ const CreateCoursePage = () => {
                 <h1> New course </h1>
                 <form>
                     <div className="course-name">
-                        <label> <b> Name of course: </b> </label>
+                        <label> <b> Course name: </b> </label>
                         <input
                             type="text"
                             name="courseName"
@@ -54,12 +52,34 @@ const CreateCoursePage = () => {
                         />
                     </div>
 
-                    <div className="course-description">
-                        <label> <b> Course description: </b> </label>
+                    <div className="course-name">
+                        <label> <b> Course section: </b> </label>
+                        <input
+                            type="number"
+                            name="courseSection"
+                            value={courseSection}
+                            required
+                            onChange={(e) => OnChange(e)}
+                        />
+                    </div>
+
+                    <div className="course-name">
+                        <label> <b> Course abbreviation: </b> </label>
                         <input
                             type="text"
-                            name="courseDescription"
-                            value={courseDescription}
+                            name="courseAbbreviation"
+                            value={courseAbbreviation}
+                            required
+                            onChange={(e) => OnChange(e)}
+                        />
+                    </div>
+
+                    <div className="course-name">
+                        <label> <b> Semester: </b> </label>
+                        <input
+                            type="text"
+                            name="semester"
+                            value={semester}
                             required
                             onChange={(e) => OnChange(e)}
                         />
