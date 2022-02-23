@@ -13,13 +13,19 @@ import javax.persistence.Id;
 public class CourseDAO {
 
     @Id
+    public String courseID;
     public @JsonbProperty("courseName") @NonNull String courseName;
     public @JsonbProperty("courseSection") @NonNull int courseSection;
-    private String professor;
+    public @JsonbProperty("CRN") @NonNull String CRN;
+    public @JsonbProperty("semester") @NonNull String semester;
+    public @JsonbProperty("abbreviation") @NonNull String abbreviation;
 
     @JsonbCreator
     public CourseDAO(@JsonbProperty("courseName") String courseName,
-                     @JsonbProperty("courseSection") int courseSection) {
+                     @JsonbProperty("courseSection") int courseSection,
+                     @JsonbProperty("CRN") String CRN,
+                     @JsonbProperty("semester") String semester
+                     ) {
         this.courseName = courseName;
         this.courseSection = courseSection;
     }
