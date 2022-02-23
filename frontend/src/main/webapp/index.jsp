@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
 * Licensed to the Apache Software Foundation (ASF) under one
 * or more contributor license agreements. See the NOTICE file
@@ -17,25 +16,7 @@
 * specific language governing permissions and limitations
 * under the License.
 -->
-
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html">
-
-
-<h:body bgcolor="white">
-    <f:view>
-        <h:form>
-            <h:panelGrid columns="2">
-                <h:outputText value='Enter book title'/>
-                <h:inputText value='#{bookBean.bookTitle}'/>
-                <h:outputText value='Add'/>
-                <h:commandButton action="#{bookBean.add}" value="Add"/>
-            </h:panelGrid>
-        </h:form>
-    </f:view>
-</h:body>
-</html>
+<%@ page session="false" %>
+<%
+    response.sendRedirect("book.jsf");
+%>
