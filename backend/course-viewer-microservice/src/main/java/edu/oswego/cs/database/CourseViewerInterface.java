@@ -31,7 +31,7 @@ public class CourseViewerInterface {
             if(info.hasNext()){
                 temp_courses = (ArrayList) info.next().get("Courses");
             }else{
-                temp_courses = (ArrayList)database.getCollection(stud).find(new Document("StudentID", Id)).first().get("Courses");
+                temp_courses = (ArrayList)database.getCollection(stud).find(new Document("StudentID", Id)).first().get("courses");
             }
             for(Object o : temp_courses){
                 courses.add(o.toString());
@@ -44,6 +44,13 @@ public class CourseViewerInterface {
         return courses;
     }
 
+    public ArrayList<String> getToughtCourses(){
+        ArrayList<String> ToughtCourses = new ArrayList<>();
+        for(Object o: (ArrayList) database.getCollection(prof).find().first().get("Courses")){
+            ToughtCourses.add(o.toString());
+        }
+        return  ToughtCourses;
+    }
     public CourseInterface getCourse(String CID){
             selectedCourse = new CourseInterface(CID);
             return selectedCourse;
