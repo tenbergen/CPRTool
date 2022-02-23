@@ -1,0 +1,59 @@
+.parent {
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
+}
+
+.container {
+    margin-top: 3%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: 5%;
+    margin-left: 5%;
+    flex-grow: 1;
+}
+
+form {
+    margin-top: 3%;
+    background-color: lightgray;
+    padding: 4% 3% 3% 3%;
+}
+
+.course-name {
+    width: 100%;
+    margin-bottom: 3%;
+    display: flex;
+}
+
+.course-name label {
+    margin-right: 2%;
+}
+
+.course-name input {
+    flex-grow: 1;
+    padding: 5px 0 5px 0;
+}
+
+.course-description {
+    display: flex;
+    flex-direction: column;
+}
+
+.course-description input {
+    margin-top: 1%;
+    padding-bottom: 10%;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    margin-top: 7%;
+}
+
+button {
+    padding: 10px 45px 10px 45px;
+    border: none;
+    font-size: medium;
+    font-weight: bold;
+}
+
