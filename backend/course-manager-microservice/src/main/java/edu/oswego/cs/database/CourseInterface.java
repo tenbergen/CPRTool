@@ -17,9 +17,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class CourseInterface {
-    private String professorCollection = "NewProfessor";
-    private String courseCollection = "NewCourses";
-    private String studentCollection = "NewStudent";
+    private String professorCollection = "Professor";
+    private String courseCollection = "Courses";
+    private String studentCollection = "Student";
 
     private String Courses = "Courses";
     private String SID = "StudentID";
