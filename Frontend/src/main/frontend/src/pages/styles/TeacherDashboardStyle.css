@@ -27,3 +27,10 @@
     justify-self: center;
 }
 
+.courseListItem {
+    background-color: #eee;
+    list-style-type: none;
+    font-size: 25px;
+    padding: 10px;
+    margin: 10px;
+}

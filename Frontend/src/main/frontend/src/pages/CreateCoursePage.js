@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 import axios from "axios";
 
 const CreateCoursePage = () => {
+    // put the ulr of the endpoint here!
     const submitCourseUrl = ""
     let navigate = useNavigate()
 
@@ -22,8 +23,9 @@ const CreateCoursePage = () => {
         else {
             e.preventDefault()
 
+            // construct JSON to send here!
             const data = {
-                "Bastian Tenbergen":[
+                "professor":[
                     {"courseName" : courseName},
                     {"courseDescription" : courseDescription}
                 ]
