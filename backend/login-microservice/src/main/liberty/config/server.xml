@@ -28,7 +28,8 @@
     <variable name="default.http.port" defaultValue="13126"/>
     <variable name="default.https.port" defaultValue="9444"/>
     <variable name="app.context.root" defaultValue="/"/>
-
+    <variable name="googleLogin_ClientID" defaultValue="952282231282-62vjdtdi9gdqcf3cbru3i278cqgiov2e.apps.googleusercontent.com"/>
+    <variable name="googleLogin_clientSecret" defaultValue="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"/>
     <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
     <httpEndpoint host="*"
                   httpPort="${default.http.port}"
@@ -38,7 +39,7 @@
               
     <keyStore id="defaultKeyStore" password="keyspass" />
     <!-- Google Login -->
-    <googleLogin clientId="952282231282-62vjdtdi9gdqcf3cbru3i278cqgiov2e.apps.googleusercontent.com" clientSecret="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" />
+    <googleLogin clientId="${googleLogin_ClientID}" clientSecret="${googleLogin_clientSecret}" />
 
    <cdi12 enableImplicitBeanArchives="false"/>
    

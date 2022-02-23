@@ -13,18 +13,28 @@ import javax.persistence.Id;
 public class CourseDAO {
 
     @Id
-    public @JsonbProperty("courseName") @NonNull String courseName;
-    public @JsonbProperty("courseSection") @NonNull int courseSection;
-    public String professor;
+    public String courseID;
+    public @JsonbProperty("CourseName") @NonNull String courseName;
+    public @JsonbProperty("CourseSection") @NonNull int courseSection;
+    public @JsonbProperty("Semester") @NonNull String semester;
+    public @JsonbProperty("Abbreviation") @NonNull String abbreviation;
 
     @JsonbCreator
-    public CourseDAO(@JsonbProperty("courseName") String courseName,
-                     @JsonbProperty("courseSection") int courseSection) {
+    public CourseDAO(@JsonbProperty("CourseName") String courseName,
+                     @JsonbProperty("CourseSection") int courseSection,
+                     @JsonbProperty("Semester") String semester,
+                     @JsonbProperty("Abbreviation") String abbreviation) {
         this.courseName = courseName;
         this.courseSection = courseSection;
+        this.semester = semester;
+        this.abbreviation = abbreviation;
+        this.courseID = this.abbreviation + "-" + this.courseSection + "-" + this.semester;
     }
 
-    public String toString() {
-        return String.format("{\"courseName\":\"%s\",\"courseSection\":%d}", courseName, courseSection);
+    public CourseDAO(String abbreviation, int courseSection, String semester) {
+        this.abbreviation = abbreviation;
+        this.courseSection = courseSection;
+        this.semester = semester;
+        this.courseName = "";
     }
 }
