@@ -3,11 +3,21 @@ import {useState} from "react";
 import "./styles/EditCourseStyle.css"
 import SidebarComponent from "../components/SidebarComponent";
 import axios from "axios";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 
 function EditCoursePage() {
     // put the url of the endpoint here! but delete/edit is will not work as we need a way
     // to pass around courseIDs (probably with redux)
-    const deleteUrl = ""
+    const deleteUrl = "http://moxie.cs.oswego.edu:13127/manage/professor/courses/course/delete"
+    const {from} = useLocation().state
+    let currentCourse = Object()
+    currentCourse.CourseName = from.CourseName
+    currentCourse.CourseSection = from.CourseSection
+    currentCourse.Semester = from.Semester
+    currentCourse.Abbreviation = from.Abbreviation
+
+    let navigate = useNavigate()
+    console.log(currentCourse)
 
     const [courseDescription, setCourseDescription] = useState()
     const [courseName, setCourseName] = useState()
@@ -20,8 +30,11 @@ function EditCoursePage() {
         setIsFilePicked(true)
     }
 
-    const deleteCourse = () => {
-        axios.post(deleteUrl, "$classIDHere")
+    const deleteCourse = async () => {
+        await axios.post(deleteUrl, currentCourse).then((response) => {
+            console.log(response)
+        })
+        navigate("/teacherDashboard")
     }
 
     return (
@@ -63,7 +76,7 @@ function EditCoursePage() {
 
                     <div className="editCourseButton">
                         <button> Submit </button>
-                        <a href="default.asp" target="_blank"> Delete course </a>
+                        <a onClick={deleteCourse} target="_blank"> Delete course </a>
                     </div>
 
                 </form>
