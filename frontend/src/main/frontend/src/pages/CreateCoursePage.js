@@ -23,10 +23,7 @@ const CreateCoursePage = () => {
         if (Abbreviation === '' || CourseName === '' || CourseSection === undefined || Semester === '') alert("Fields can't be empty!")
         else {
             e.preventDefault()
-            const courseID = Abbreviation + "-" + CourseSection + "-" + Semester + new Date().getFullYear();
-
             const data = {
-                courseID: courseID,
                 CourseName: CourseName,
                 CourseSection: CourseSection,
                 Semester: Semester,
