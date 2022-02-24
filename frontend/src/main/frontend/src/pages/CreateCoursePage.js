@@ -5,30 +5,29 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const CreateCoursePage = () => {
-    const submitCourseUrl = "http://moxie.cs.oswego.edu:13127/professor/courses/course/create/"
+    const submitCourseUrl = "http://moxie.cs.oswego.edu:13127/manage/professor/courses/course/create"
     let navigate = useNavigate()
 
     const [formData, setFormData] = useState({
-        courseId: '',
-        courseName: '',
-        courseSection: undefined,
-        courseAbbreviation: '',
-        semester: ''
+        CourseName: '',
+        CourseSection: undefined,
+        Semester: '',
+        Abbreviation: ''
     });
 
-    const { courseName, courseSection,  courseAbbreviation, semester } = formData;
+    const { CourseName, CourseSection, Semester, Abbreviation } = formData;
 
     const OnChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
     const handleSubmit = async (e) => {
-        if (courseName === '' || courseSection === undefined) alert("Fields can't be empty!")
+        if (Abbreviation === '' || CourseName === '' || CourseSection === undefined || Semester === '') alert("Fields can't be empty!")
         else {
             e.preventDefault()
             const data = {
-                courseName: courseName,
-                courseSection: courseSection,
-                // courseAbbreviation: courseAbbreviation,
-                // semester: semester,
+                CourseName: CourseName,
+                CourseSection: CourseSection,
+                Semester: Semester,
+                Abbreviation: Abbreviation
             };
             await axios.post(submitCourseUrl, data);
             navigate("/teacherDashboard")
@@ -45,8 +44,8 @@ const CreateCoursePage = () => {
                         <label> <b> Course name: </b> </label>
                         <input
                             type="text"
-                            name="courseName"
-                            value={courseName}
+                            name="CourseName"
+                            value={CourseName}
                             required
                             onChange={(e) => OnChange(e)}
                         />
@@ -56,19 +55,8 @@ const CreateCoursePage = () => {
                         <label> <b> Course section: </b> </label>
                         <input
                             type="number"
-                            name="courseSection"
-                            value={courseSection}
-                            required
-                            onChange={(e) => OnChange(e)}
-                        />
-                    </div>
-
-                    <div className="course-name">
-                        <label> <b> Course abbreviation: </b> </label>
-                        <input
-                            type="text"
-                            name="courseAbbreviation"
-                            value={courseAbbreviation}
+                            name="CourseSection"
+                            value={CourseSection}
                             required
                             onChange={(e) => OnChange(e)}
                         />
@@ -78,8 +66,19 @@ const CreateCoursePage = () => {
                         <label> <b> Semester: </b> </label>
                         <input
                             type="text"
-                            name="semester"
-                            value={semester}
+                            name="Semester"
+                            value={Semester}
+                            required
+                            onChange={(e) => OnChange(e)}
+                        />
+                    </div>
+
+                    <div className="course-name">
+                        <label> <b> Course abbreviation: </b> </label>
+                        <input
+                            type="text"
+                            name="Abbreviation"
+                            value={Abbreviation}
                             required
                             onChange={(e) => OnChange(e)}
                         />

@@ -8,7 +8,7 @@ import axios from "axios";
 function TeacherDashboardPage() {
     // put the url of the endpoint here!
     const [isLoading, setLoading] = useState(true)
-    const getCourseUrl = "http://moxie.cs.oswego.edu:13128/professor/courses"
+    const getCourseUrl = "http://moxie.cs.oswego.edu:13128/view/professor/courses"
     const courseList = []
     const [listComp, setListComp] = useState()
 
@@ -17,15 +17,16 @@ function TeacherDashboardPage() {
         axios.get(getCourseUrl).then( (response) => {
             //parse JSON into a array of strings here!
             console.log(response)
+            console.log("DATA: " + response.data)
             for(let i = 0; i < response.data.length; i++)
             {
-                courseList.push(response.data[i].courseName)
-
+                courseList.push(response.data[i])
             }
 
-            setListComp( courseList.map((string) =>
-                <Link to="/editCourse">
-                    <li className="courseListItem">{string}</li>
+
+            setListComp( courseList.map((object) =>
+                <Link to="/editCourse" state={{from: object}}>
+                    <li className="courseListItem" value={object}>{object.CourseName}</li>
                 </Link>
             ));
             setLoading(false)
@@ -33,12 +34,9 @@ function TeacherDashboardPage() {
     }, []);
 
 
+    // this allows the courses to be received and rendered, hence this and useEffect
     if(isLoading) {
-        console.log(listComp)
         return <div><h1>LOADING</h1></div>
-    }
-    else {
-        console.log(listComp)
     }
 
     return (
