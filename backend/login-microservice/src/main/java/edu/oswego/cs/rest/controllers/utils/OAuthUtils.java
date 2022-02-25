@@ -1,4 +1,4 @@
-package edu.oswego.cs.rest.controllers;
+package edu.oswego.cs.rest.controllers.utils;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -23,9 +23,7 @@ public class OAuthUtils {
 
     public static GoogleAuthorizationCodeFlow flow;
 
-    public OAuthUtils() {
-        
-    }
+   
     public static GoogleAuthorizationCodeFlow newFlow() throws IOException {
         flow = new GoogleAuthorizationCodeFlow.Builder(
             // Sends requests to the OAuth server

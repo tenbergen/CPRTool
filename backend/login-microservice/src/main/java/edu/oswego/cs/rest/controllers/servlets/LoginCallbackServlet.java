@@ -1,10 +1,12 @@
-package edu.oswego.cs.rest.controllers;
+package edu.oswego.cs.rest.controllers.servlets;
 
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
 import com.google.api.client.auth.oauth2.AuthorizationCodeResponseUrl;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.servlet.auth.oauth2.AbstractAuthorizationCodeCallbackServlet;
 import com.google.api.client.http.GenericUrl;
+
+import edu.oswego.cs.rest.controllers.utils.OAuthUtils;
 
 import java.io.IOException;
 import javax.servlet.ServletException;

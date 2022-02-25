@@ -1,20 +1,18 @@
-package edu.oswego.cs.rest.controllers;
+package edu.oswego.cs.rest.controllers.authentication;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.HttpConstraint;
 import javax.servlet.annotation.ServletSecurity;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleBrowserClientRequestUrl;
 import com.google.api.services.oauth2.model.Userinfo;
-import com.ibm.websphere.security.social.UserProfileManager;
+
+import edu.oswego.cs.rest.controllers.utils.OAuthUtils;
 
 @WebServlet("/authenticated")
 @ServletSecurity()
@@ -36,7 +34,7 @@ public class Authenticated extends HttpServlet{
             response.getWriter().println("First name: " + userInfo.getGivenName());
             response.getWriter().println("Last name: " + userInfo.getFamilyName());
             response.getWriter().println("Full name: " + userInfo.getName());
-
+            
 
         } else{
             pwriter.println("Not authenticated");
