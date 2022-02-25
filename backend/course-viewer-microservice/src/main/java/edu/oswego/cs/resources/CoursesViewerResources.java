@@ -2,16 +2,23 @@
 package edu.oswego.cs.resources;
 
 
-import edu.oswego.cs.database.CourseViewerInterface;
-import javax.ws.rs.*;
+import edu.oswego.cs.daos.CourseDAO;
+import edu.oswego.cs.database.CourseViewerInterfaceV2;
 
-@Path("/viewcourses")
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
+@Path("professor")
 public class CoursesViewerResources {
 
     @GET
-    public String ViewCourses() {
-        CourseViewerInterface test = new CourseViewerInterface("bastian.tenbergen");
-        System.out.println(test.getCourses());
-        return "View Courses Page";
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("courses")
+    public ArrayList<CourseDAO> ViewCourses() throws IOException {
+        CourseViewerInterfaceV2 courses = new CourseViewerInterfaceV2("bastian.tenbergen");
+        return courses.getCourses();
     }
 }

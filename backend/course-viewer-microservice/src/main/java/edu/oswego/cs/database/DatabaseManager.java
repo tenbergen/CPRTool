@@ -19,7 +19,7 @@ public class DatabaseManager {
     String ProfessorPassword = "toor";//System.getenv("MONGO_PASSWORD");
 
 
-    int Studentport = 27027;//Integer.parseInt(System.getenv("MONGO_PORT"));
+    int Studentport = 27028;//Integer.parseInt(System.getenv("MONGO_PORT"));
     String Studentdatabase = "cpr";//System.getenv("MONGO_DATABASE");
     String Studentuser = "root";//System.getenv("MONGO_USERNAME");
     String Studentpassword = "toor";//System.getenv("MONGO_PASSWORD");
