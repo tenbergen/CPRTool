@@ -1,4 +1,4 @@
-package edu.oswego.cs.rest.controllers.authentication;
+package edu.oswego.cs.rest.controllers.resources;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,7 +21,6 @@ import com.google.api.services.oauth2.model.Tokeninfo;
 import edu.oswego.cs.rest.controllers.utils.OAuthUtils;
 
 @WebServlet("/authenticated")
-
 public class AuthtedInformation extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
@@ -58,16 +57,18 @@ public class AuthtedInformation extends HttpServlet {
                 pwriter.println("User ID: " +userInfo.getId());
 
 
-                // JWT testing.. again
 
                 try {
-                    String jwt = OAuthUtils.buildJWT(sessionId);
+                    String jwtToken = OAuthUtils.buildJWT(sessionId);
+                    
                     pwriter.println();
-                    pwriter.println("JWT: " +jwt);
+                    pwriter.println("JWT: " +jwtToken);
+
+
                 } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
+
               
 
 
