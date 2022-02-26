@@ -10,6 +10,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.MemoryDataStoreFactory;
 import com.google.api.services.oauth2.Oauth2;
+import com.google.api.services.oauth2.model.Tokeninfo;
 import com.google.api.services.oauth2.model.Userinfo;
 
 public class OAuthUtils {
@@ -62,6 +63,19 @@ public class OAuthUtils {
       
         Userinfo userInfo = oauth2Client.userinfo().get().execute();
         return userInfo;
+      }
+
+      public static Tokeninfo getTokenInfo(String sessionId, String accessToken) throws IOException {
+        String appName = System.getenv("APP_NAME");
+
+        Credential credential = newFlow().loadCredential(sessionId);
+        Oauth2 oauth2Client =
+            new Oauth2.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), credential)
+                .setApplicationName(appName)
+                .build();
+         
+        Tokeninfo tokenInfo = oauth2Client.tokeninfo().setAccessToken(accessToken).execute();
+        return tokenInfo;
       }
 
 
