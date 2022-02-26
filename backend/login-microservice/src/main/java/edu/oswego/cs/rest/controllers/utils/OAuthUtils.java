@@ -47,6 +47,7 @@ public class OAuthUtils {
           return flow;
     }
 
+    // make sure if the user is logged in
     public static boolean isUserLoggedIn(String sessionID) {
         try {
             return newFlow().loadCredential(sessionID) != null;
@@ -54,6 +55,8 @@ public class OAuthUtils {
             return false;
         }
     }
+
+    
 
     public static Userinfo getUserInfo(String sessionId) throws IOException {
         String appName = System.getenv("APP_NAME");
@@ -79,6 +82,17 @@ public class OAuthUtils {
         Tokeninfo tokenInfo = oauth2Client.tokeninfo().setAccessToken(accessToken).execute();
         return tokenInfo;
       }
+
+    // make sure the logged in user is an @oswego.edu account
+    public static boolean isOswego(String sessionId) {
+        try {
+            Userinfo userinfo = getUserInfo(sessionId);
+            return userinfo.getHd().equals("oswego.edu");
+        } catch (Exception e) {
+            return false;
+
+        }
+    }
 
 
 }
