@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.services.oauth2.model.Userinfo;
+import com.ibm.websphere.security.jwt.InvalidBuilderException;
+import com.ibm.websphere.security.jwt.InvalidClaimException;
+import com.ibm.websphere.security.jwt.JwtException;
 import com.google.api.services.oauth2.model.Tokeninfo;
 
 
@@ -38,12 +41,10 @@ public class AuthtedInformation extends HttpServlet {
             String accessToken = cred.getAccessToken();
             Tokeninfo tokenInfo = OAuthUtils.getTokenInfo(sessionId, accessToken);
 
-
             boolean isOswego = OAuthUtils.isOswego(sessionId);
 
             if (isOswego) {
                 pwriter.println("User Info:"+userInfo.toPrettyString());
-
                 pwriter.println();
                 pwriter.println("Access Token: " +accessToken);
                 pwriter.println();
@@ -55,8 +56,23 @@ public class AuthtedInformation extends HttpServlet {
                 pwriter.println("Session ID: " +request.getSession().getId());
                 pwriter.println();
                 pwriter.println("User ID: " +userInfo.getId());
+
+
+                // JWT testing.. again
+
+                try {
+                    String jwt = OAuthUtils.buildJWT(sessionId);
+                    pwriter.println();
+                    pwriter.println("JWT: " +jwt);
+                } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+              
+
+
             } else {
-                pwriter.println("Not authenticated");
+                pwriter.println("401 Not Authenticated!");
                 pwriter.println("Please log in using your @oswego.edu account!");
 
                 // do a logout in the react page and redirect to login page
