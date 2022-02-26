@@ -13,11 +13,12 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.services.oauth2.model.Userinfo;
 import com.google.api.services.oauth2.model.Tokeninfo;
+import com.ibm.websphere.security.social.UserProfileManager;
+
 
 import edu.oswego.cs.rest.controllers.utils.OAuthUtils;
 
 @WebServlet("/authenticated")
-@ServletSecurity()
 public class Authenticated extends HttpServlet{
     
     @Override
@@ -42,9 +43,8 @@ public class Authenticated extends HttpServlet{
             // response.getWriter().println("Full name: " + userInfo.getName());
             pwriter.println("User Info:"+userInfo.toPrettyString());
 
-            String accessToken = cred.getAccessToken();
-           
 
+            String accessToken = cred.getAccessToken();
             pwriter.println();
             pwriter.println("Access Token: " +accessToken);
             pwriter.println();
@@ -57,12 +57,8 @@ public class Authenticated extends HttpServlet{
 
             pwriter.println();
             pwriter.println("Session ID: " +request.getSession().getId());
-
-
-
-            
-
-
+            pwriter.println();
+            pwriter.println("User ID: " +userInfo.getId());
 
         } else{
             pwriter.println("Not authenticated");

@@ -24,6 +24,7 @@ public class OAuthUtils {
 
     public static GoogleAuthorizationCodeFlow flow;
 
+
    
     public static GoogleAuthorizationCodeFlow newFlow() throws IOException {
         flow = new GoogleAuthorizationCodeFlow.Builder(
@@ -38,6 +39,7 @@ public class OAuthUtils {
             // Tells the user what permissions they're giving you
             scopes)
           // Stores the user's credential in memory 
+          // @TODO Need to change this to DataStoreFactory with StoredCredential
           .setDataStoreFactory(MemoryDataStoreFactory.getDefaultInstance())
           .setAccessType("offline")
           .build();
