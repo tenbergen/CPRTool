@@ -57,6 +57,15 @@
       <version>5.8.1</version>
       <scope>test</scope>
     </dependency>
+
+<!--    Added by team QA -->
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-java</artifactId>
+      <version>4.1.1</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
