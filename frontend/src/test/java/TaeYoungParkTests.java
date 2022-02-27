@@ -1,11 +1,12 @@
-import org.junit.Assert;
-import org.junit.Test;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+
 import java.util.concurrent.TimeUnit;
 
 public class TaeYoungParkTests {
@@ -71,7 +72,7 @@ public class TaeYoungParkTests {
         Alert simpleAlert = driver.switchTo().alert();
 
         // simpleAlert.accept();
-        Assert.assertEquals("Fields can't be empty!",simpleAlert.getText());
+        Assertions.assertEquals("Fields can't be empty!",simpleAlert.getText());
         //Thread.sleep(2000);
        // driver.quit();
 
