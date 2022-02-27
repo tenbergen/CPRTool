@@ -8,7 +8,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class SeleniumTests {
+public class LiamMcMahanTests {
 
     private static WebDriver cDriver;
 
@@ -23,26 +23,30 @@ public class SeleniumTests {
     public void LoginTest(){
 
         // enter the front end app
-        cDriver.get("http://lawnboy:13129");
-
+        cDriver.get("http://129.3.168.61:13129/");
         // maximize the window
         cDriver.manage().window().maximize();
 
         // click the login button
-        cDriver.findElement(By.className("google")).click();
+        WebDriverWait wait = new WebDriverWait(cDriver,10);
+        WebElement loginButton = wait.until(
+                ExpectedConditions.presenceOfElementLocated(By.cssSelector(".googleButton > button:nth-child(1)")));
+        loginButton.click();
 
     }
 
     @Test
     public void openEditCourseTest(){
 
-        cDriver.get("http://lawnboy:13129");
+        cDriver.get("http://129.3.168.61:13129/");
         cDriver.manage().window().maximize();
-        cDriver.findElement(By.className("google")).click();
+        WebDriverWait wait = new WebDriverWait(cDriver,10);
+        WebElement loginButton = wait.until(
+                ExpectedConditions.presenceOfElementLocated(By.cssSelector(".googleButton > button:nth-child(1)")));
+        loginButton.click();
 
         // wait for our desired element to appear
         // in this case, that's the first course element
-        WebDriverWait wait = new WebDriverWait(cDriver,10);
         WebElement createCourseButton = wait.until(
                 ExpectedConditions.presenceOfElementLocated(By.cssSelector("#courseList > ul:nth-child(1) > a:nth-child(1) > li:nth-child(1)")));
 
