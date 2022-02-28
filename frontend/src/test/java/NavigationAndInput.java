@@ -9,8 +9,9 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.util.concurrent.TimeUnit;
 
-public class TaeYoungParkTests {
+public class NavigationAndInput {
 
+    // web driver to control broswer
     private static WebDriver driver;
 
     @BeforeAll
