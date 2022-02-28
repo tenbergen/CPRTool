@@ -9,7 +9,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class LiamMcMahanTests {
+public class LoginAndMultiBrowser {
 
     private static WebDriver cDriver;
     private static WebDriver fDriver;
