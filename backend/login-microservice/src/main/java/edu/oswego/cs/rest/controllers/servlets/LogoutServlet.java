@@ -1,5 +1,4 @@
-package edu.oswego.cs.rest.controllers;
-
+package edu.oswego.cs.rest.controllers.servlets;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
