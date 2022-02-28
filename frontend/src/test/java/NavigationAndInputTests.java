@@ -9,7 +9,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.util.concurrent.TimeUnit;
 
-public class TaeYoungParkTests {
+public class NavigationAndInputTests {
 
     private static WebDriver driver;
 
