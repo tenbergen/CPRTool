@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class LoginAndMultiBrowser {
 
+    // drivers for multiple browsers
     private static WebDriver cDriver;
     private static WebDriver fDriver;
 
