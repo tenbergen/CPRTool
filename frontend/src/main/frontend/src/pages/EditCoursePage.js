@@ -50,7 +50,7 @@ function EditCoursePage() {
         <div className={"parent"}>
             <SidebarComponent/>
             <div className="container">
-                <h1> Editing Course </h1>
+                <h1> Editing {courseName} </h1>
                 <form>
                     <div className="course-name">
                         <label> <b> Name of course: </b> </label>
@@ -77,7 +77,6 @@ function EditCoursePage() {
                         <input
                             type="number"
                             min="1"
-                            value="3"
                             name="teamSize"
                             required 
                         />
@@ -87,7 +86,6 @@ function EditCoursePage() {
                         <button> Submit </button>
                         <a onClick={deleteCourse} target="_blank"> Delete course </a>
                     </div>
-
                 </form>
             </div>
         </div>
