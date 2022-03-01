@@ -9,8 +9,10 @@ function EditCoursePage() {
     // put the url of the endpoint here! but delete/edit is will not work as we need a way
     // to pass around courseIDs (probably with redux)
     const deleteUrl = "http://moxie.cs.oswego.edu:13127/manage/professor/courses/course/delete"
+    const editUrl = ""
     const {from} = useLocation().state
     let currentCourse = Object()
+
     currentCourse.CourseName = from.CourseName
     currentCourse.CourseSection = from.CourseSection
     currentCourse.Semester = from.Semester
@@ -20,7 +22,7 @@ function EditCoursePage() {
     console.log(currentCourse)
 
     const [courseDescription, setCourseDescription] = useState()
-    const [courseName, setCourseName] = useState()
+    const [courseName, setCourseName] = useState(currentCourse.CourseName)
 
     let [selectedFile, setSelectedFile] = useState()
     let [isFilePicked, setIsFilePicked] = useState(false)
@@ -35,6 +37,13 @@ function EditCoursePage() {
             console.log(response)
         })
         navigate("/teacherDashboard")
+    }
+
+    const editCourse = async () => {
+        // add
+        await axios.post(editUrl, currentCourse).then((response) =>{
+            console.log(response)
+        })
     }
 
     return (
