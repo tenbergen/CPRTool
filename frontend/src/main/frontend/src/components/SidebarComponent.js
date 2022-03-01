@@ -28,17 +28,14 @@ const SidebarComponent = () => {
             <div id="sidebar">
                 <ProSidebar>
                     <SidebarContent>
-                        <Menu iconShape="square">
-                            <MenuItem icon={<FiHome />}>
-                                Home
-                            </MenuItem>
+                        <Menu iconShape="circle">
                             <MenuItem icon={<FaList />}>
                                 Courses
                             </MenuItem>
                         </Menu>
                     </SidebarContent>
                     <SidebarFooter>
-                        <Menu iconShape="square">
+                        <Menu iconShape="circle">
                             <MenuItem icon={<FiLogOut />}>Logout</MenuItem>
                         </Menu>
                     </SidebarFooter>

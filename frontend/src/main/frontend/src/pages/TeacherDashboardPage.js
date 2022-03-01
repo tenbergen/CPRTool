@@ -43,9 +43,7 @@ function TeacherDashboardPage() {
         <div className={"TeacherDashboard"}>
                 <SidebarComponent />
             <div id="teacher">
-                <h1>
-                    Teacher Dashboard
-                </h1>
+                <h1>Hello Teacher</h1>
                 <div id="courseList">
                     {/*{courseList.length !== 0 ? {listComp}: null}*/}
                     <ul>{listComp}</ul>
@@ -53,7 +51,7 @@ function TeacherDashboardPage() {
                 <div id="addClass">
                     <Link to="/createCourse">
                         <button id="addButton">
-                            Create Course
+                            Create new course
                         </button>
                     </Link>
                 </div>
