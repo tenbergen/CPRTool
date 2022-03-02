@@ -1,29 +1,34 @@
 import React from 'react';
-import "./styles/LoginPage.css"
-import {useDispatch} from "react-redux";
-import {authenticateUser} from "../redux/slices/authSlice";
+import './styles/LoginPage.css';
+import { useDispatch } from 'react-redux';
+import { authenticateUser } from '../redux/slices/authSlice';
 
 function LoginPage() {
-    const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-    const handleClick = () => {
-        dispatch(authenticateUser())
-    }
+  const handleClick = () => {
+    // dispatch(authenticateUser());
+  };
 
-    // useEffect() -- checks for url param using useSearchParams() from React-Router
-        // check for token param
-            // if not null -- authenticateUser(token)
+  // useEffect() -- checks for url param using useSearchParams() from React-Router
+  // check for token param
+  // if not null -- authenticateUser(token)
 
-    return (
-        <div id="box">
-            <div className="googleButton">
-                <button
-                    type="button"
-                    onClick={handleClick}>
-                    <img className = {"google"} src={require('./img/Google__G__Logo.svg.png')}/> Login With Google</button>
-            </div>
-        </div>
-    );
+  return (
+    <div id='box'>
+      <div className='googleButton'>
+        <a href='http://moxie.cs.oswego.edu:13126/login'>
+          <button type='button' onClick={handleClick}>
+            <img
+              className={'google'}
+              src={require('./img/Google__G__Logo.svg.png')}
+            />{' '}
+            Login With Google
+          </button>
+        </a>
+      </div>
+    </div>
+  );
 }
 
 export default LoginPage;
