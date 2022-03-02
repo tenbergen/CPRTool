@@ -22,7 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/login-callback")
 public class LoginCallbackServlet extends AbstractAuthorizationCodeCallbackServlet{
 
-
     @Override
     protected AuthorizationCodeFlow initializeFlow() throws ServletException, IOException {
         return OAuthUtils.newFlow();
@@ -31,7 +30,7 @@ public class LoginCallbackServlet extends AbstractAuthorizationCodeCallbackServl
     @Override
     protected String getRedirectUri(HttpServletRequest request) throws ServletException, IOException {
         GenericUrl url = new GenericUrl(request.getRequestURL().toString());
-        url.setRawPath("/api/login-callback");
+        url.setRawPath("/login-callback");
         return url.build();
     }
 
@@ -42,30 +41,44 @@ public class LoginCallbackServlet extends AbstractAuthorizationCodeCallbackServl
 
     @Override
     protected void onSuccess(HttpServletRequest request, HttpServletResponse response, Credential credential)
-        throws IOException {
-            String sessionId = request.getSession().getId();
+            throws IOException {
+
+        String sessionId = request.getSession().getId();
+        boolean isUserLoggedIn = OAuthUtils.isUserLoggedIn(sessionId);
+        boolean isOswego = OAuthUtils.isOswego(sessionId);
 
 
-            try {
-                String jwtToken = OAuthUtils.buildJWT(sessionId);
-                
-               
-                Cookie jwtCookie = new Cookie("JWT_token", jwtToken);
+        if (isUserLoggedIn) {
+            if (isOswego) {
+                try {
+                    String jwtToken = OAuthUtils.buildJWT(sessionId);
 
-                response.addCookie(jwtCookie);
+                    Cookie cookie = new Cookie("jwt_token", jwtToken);
+                    response.addCookie(cookie);
+                    response.setStatus(200);
 
-
-            } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
-                e.printStackTrace();
+                    response.sendRedirect("http://moxie.cs.oswego.edu:13129?token="+jwtToken);
+                } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                response.sendRedirect("http://moxie.cs.oswego.edu:13129/unauthenticated");
+                response.getWriter().println("Not Authenticated");
+                response.sendError(401, "Not authenticated");
             }
+        } else {
+            response.sendRedirect("http://moxie.cs.oswego.edu:13129/unauthenticated");
+            // response.sendError(401, "Not authenticated");
+            response.getWriter().println("Not Authenticated");
+        }
 
-        response.sendRedirect("/api/authenticated");
     }
+
     @Override
     protected void onError(
-        HttpServletRequest request, HttpServletResponse response, AuthorizationCodeResponseUrl errorResponse)
-        throws IOException {
+            HttpServletRequest request, HttpServletResponse response, AuthorizationCodeResponseUrl errorResponse)
+            throws IOException {
         response.getWriter().print("Error");
     }
-    
+
 }

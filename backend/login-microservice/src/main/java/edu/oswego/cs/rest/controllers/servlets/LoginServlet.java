@@ -16,8 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 @WebServlet("/login")
 public class LoginServlet extends AbstractAuthorizationCodeServlet{
 
-   
-
     @Override
     protected AuthorizationCodeFlow initializeFlow() throws ServletException, IOException {
         return OAuthUtils.newFlow();
@@ -26,7 +24,7 @@ public class LoginServlet extends AbstractAuthorizationCodeServlet{
     @Override
     protected String getRedirectUri(HttpServletRequest request) throws ServletException, IOException {
         GenericUrl url = new GenericUrl(request.getRequestURL().toString());
-        url.setRawPath("/api/login-callback");
+        url.setRawPath("/login-callback");
         return url.build();
 
     }

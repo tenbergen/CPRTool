@@ -25,12 +25,12 @@ public class AuthtedInformation extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
         PrintWriter pwriter = response.getWriter();
-        
+
 
         String sessionId = request.getSession().getId();
         boolean isUserLoggedIn = OAuthUtils.isUserLoggedIn(sessionId);
-        
-        
+
+
         if (isUserLoggedIn) {
             // Google credentials
             Credential cred = OAuthUtils.newFlow().loadCredential(sessionId);
@@ -47,10 +47,10 @@ public class AuthtedInformation extends HttpServlet {
                 pwriter.println();
                 pwriter.println("Access Token: " +accessToken);
                 pwriter.println();
-                  
+
                 pwriter.println("Token Info: " + tokenInfo.toPrettyString());
-    
-    
+
+
                 pwriter.println();
                 pwriter.println("Session ID: " +request.getSession().getId());
                 pwriter.println();
@@ -60,7 +60,7 @@ public class AuthtedInformation extends HttpServlet {
 
                 try {
                     String jwtToken = OAuthUtils.buildJWT(sessionId);
-                    
+
                     pwriter.println();
                     pwriter.println("JWT: " +jwtToken);
 
@@ -68,9 +68,6 @@ public class AuthtedInformation extends HttpServlet {
                 } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
                     e.printStackTrace();
                 }
-
-              
-
 
             } else {
                 pwriter.println("401 Not Authenticated!");
