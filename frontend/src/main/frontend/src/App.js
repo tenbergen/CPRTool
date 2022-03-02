@@ -1,7 +1,7 @@
 import TeacherDashboardPage from "./pages/TeacherDashboardPage";
 import LoginPage from "./pages/LoginPage";
 import { useSelector } from "react-redux";
-import "./global_styles/global.css
+import "./global_styles/global.css";
 
 function App() {
   const authentication = useSelector((state) => state);
