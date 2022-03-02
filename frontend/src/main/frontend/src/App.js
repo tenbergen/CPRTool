@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 
 function App() {
     const authentication = useSelector((state) => state);
-    const isAuthenticated = authentication.authReducer.isAuthenticated;
+    const isAuthenticated = authentication.auth.isAuthenticated;
 
     return (
       <div>

@@ -1,41 +1,21 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect } from 'react';
 import { Link } from "react-router-dom";
 
 import SidebarComponent from "../components/SidebarComponent";
 import "./styles/TeacherDashboardStyle.css"
-import axios from "axios";
+import {useDispatch, useSelector} from "react-redux";
+import { getCoursesAsync } from "../redux/slices/courseSlice";
 
 function TeacherDashboardPage() {
-    // put the url of the endpoint here!
-    const [isLoading, setLoading] = useState(true)
-    const getCourseUrl = "http://moxie.cs.oswego.edu:13128/view/professor/courses"
-    const courseList = []
-    const [listComp, setListComp] = useState()
-
+    const dispatch = useDispatch()
+    const courses = useSelector((state) => state.courses)
 
     useEffect(() => {
-        axios.get(getCourseUrl).then( (response) => {
-            //parse JSON into a array of strings here!
-            console.log(response)
-            console.log("DATA: " + response.data)
-            for(let i = 0; i < response.data.length; i++)
-            {
-                courseList.push(response.data[i])
-            }
-
-
-            setListComp( courseList.map((object) =>
-                <Link to="/editCourse" state={{from: object}}>
-                    <li className="courseListItem" value={object}>{object.CourseName}</li>
-                </Link>
-            ));
-            setLoading(false)
-        })
+        dispatch(getCoursesAsync())
     }, []);
 
-
     // this allows the courses to be received and rendered, hence this and useEffect
-    if(isLoading) {
+    if (!courses) {
         return <div><h1>LOADING</h1></div>
     }
 
@@ -45,8 +25,10 @@ function TeacherDashboardPage() {
             <div id="teacher">
                 <h1>Hello Teacher</h1>
                 <div id="courseList">
-                    {/*{courseList.length !== 0 ? {listComp}: null}*/}
-                    <ul>{listComp}</ul>
+                    {courses.map(course =>
+                    <Link to="/editCourse" state={{from: course}}>
+                        <li className="courseListItem" value={course}>{course.CourseName}</li>
+                    </Link>)}
                 </div>
                 <div id="addClass">
                     <Link to="/createCourse">

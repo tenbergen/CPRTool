@@ -1,18 +1,18 @@
 import React from 'react';
 import "./styles/LoginPage.css"
 import {useDispatch} from "react-redux";
-import {bindActionCreators} from "redux";
-import { authCreators } from '../redux/index.js'
-import {authenticateUser} from "../redux/actions/authActions";
+import {authenticateUser} from "../redux/slices/authSlice";
 
 function LoginPage() {
     const dispatch = useDispatch()
 
-    const { authenticateUser } = bindActionCreators(authCreators, dispatch)
-
     const handleClick = () => {
-        authenticateUser()
+        dispatch(authenticateUser())
     }
+
+    // useEffect() -- checks for url param using useSearchParams() from React-Router
+        // check for token param
+            // if not null -- authenticateUser(token)
 
     return (
         <div id="box">
