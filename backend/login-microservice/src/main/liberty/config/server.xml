@@ -3,21 +3,32 @@
 
     <!-- Enable features -->
     <featureManager>
-         <feature>jakartaee-8.0</feature>
+        <feature>jakartaee-8.0</feature>
         <feature>microProfile-4.1</feature>
         <feature>socialLogin-1.0</feature>
+        <feature>appSecurity-3.0</feature>
+        <feature>jwt-1.0</feature>
+
     </featureManager>
 
     <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
-    <httpEndpoint id="defaultHttpEndpoint"
-                  httpPort="13126"
-                  httpsPort="9444" />
+    <variable name="default.http.port" defaultValue="13126"/>
+    <variable name="default.https.port" defaultValue="9444"/>
+    <variable name="app.context.root" defaultValue="/"/>
 
+    <httpEndpoint
+            host="*"
+            httpPort="${default.http.port}"
+            httpsPort="${default.https.port}"
+            id="defaultHttpEndpoint"
+    />
     <!-- Automatically expand WAR files and EAR files -->
     <applicationManager autoExpand="true"/>
 
+    <basicRegistry id="basic" realm="cprRealm"></basicRegistry>
+
     <!-- Configures the application on a specified context root -->
-    <webApplication contextRoot="/api" location="login-microservice.war">
+    <webApplication contextRoot="${app.context.root}" location="login-microservice.war">
         <application-bnd>
             <security-role name="users">
                 <special-subject type="ALL_AUTHENTICATED_USERS"/>
@@ -27,4 +38,10 @@
 
     <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
     <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
+    <cors domain="/"
+          allowedOrigins="*"
+          allowedMethods="GET, POST, DELETE, PUT"
+          allowCredentials="true"
+          exposeHeaders="MyHeader"
+    />
 </server>
