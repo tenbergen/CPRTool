@@ -11,11 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 public class LogoutServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        request.getSession().invalidate(); // using this would invalidate the user's session
+        request.getSession().invalidate(); // invalidate the user's session
 
         response.sendRedirect("http://moxie.cs.oswego.edu:13129");
 
-        //this right here would completely log the users out with all google devices
+        // completely log the users out with all google devices
         // response.sendRedirect("https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:3000");
     }
 }
