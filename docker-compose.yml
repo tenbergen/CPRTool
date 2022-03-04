@@ -5,18 +5,13 @@ services:
       context: ./frontend
     container_name: cpr-frontend
     restart: unless-stopped
-    ports:
-      - "13129:13129"
-      - "9447:9447"
+
 
   login:
     build:
       context: ./backend/login-microservice
     container_name: cpr-login
     restart: unless-stopped
-    ports:
-      - "13126:13126"
-      - "9444:9444"
     environment:
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
@@ -30,9 +25,6 @@ services:
       context: ./backend/course-manager-microservice
     container_name: cpr-course-manager
     restart: unless-stopped
-    ports:
-      - "13127:13127"
-      - "9445:9445"
     environment:
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
@@ -46,9 +38,6 @@ services:
       context: ./backend/course-viewer-microservice
     container_name: cpr-course-viewer
     restart: unless-stopped
-    ports:
-      - "13128:13128"
-      - "9446:9446"
     environment:
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
@@ -97,4 +86,3 @@ services:
       - ${NGINX}:/etc/nginx/nginx.conf:rw
     ports:
       - "80:80"
-      - "443:443"
