@@ -9,6 +9,7 @@ import { getCoursesAsync } from "../redux/slices/courseSlice";
 function TeacherDashboardPage() {
     const dispatch = useDispatch()
     const courses = useSelector((state) => state.courses)
+    const user = useSelector((state) => state.auth.user)
 
     useEffect(() => {
         dispatch(getCoursesAsync())
@@ -23,7 +24,7 @@ function TeacherDashboardPage() {
         <div className={"TeacherDashboard"}>
                 <SidebarComponent />
             <div id="teacher">
-                <h1>Hello Teacher</h1>
+                <h1>Hello {user}</h1>
                 <div id="courseList">
                     {courses.map(course =>
                     <Link to="/editCourse" state={{from: course}}>
