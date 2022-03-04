@@ -11,14 +11,14 @@ function LoginPage() {
     const token = queryParams.get('token');
     if (token != null) {
       localStorage.setItem("jwt_token", token)
-      dispatch(authenticateUser(token))
+      dispatch(authenticateUser())
     }
   },[])
 
   return (
     <div id='box'>
       <div className='googleButton'>
-        <a href='http://moxie.cs.oswego.edu:13126/login'>
+        <a href='http://moxie.cs.oswego.edu:80/login'>
           <button type='button'>
             <img
                 className={'google'}

@@ -1,24 +1,26 @@
 import TeacherDashboardPage from "./pages/TeacherDashboardPage";
 import LoginPage from "./pages/LoginPage";
-import { useSelector } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import "./global_styles/global.css";
+import {useEffect} from "react";
+import {authenticateUser} from "./redux/slices/authSlice";
 
 function App() {
+  const dispatch = useDispatch()
   const authentication = useSelector((state) => state);
   const isAuthenticated = authentication.auth.isAuthenticated;
+
+  useEffect(() => {
+    const token = localStorage.getItem("jwt_token")
+    if (token != null) {
+      dispatch(authenticateUser())
+    }
+  }, [])
 
   return (
     <div>
         {isAuthenticated? <TeacherDashboardPage/> : <LoginPage />}
     </div>
-
-    // <div>
-    //   {/token/.test(window.location.href) ? (
-    //     <TeacherDashboardPage />
-    //   ) : (
-    //     <LoginPage />
-    //   )}
-    // </div>
   );
 }
 
