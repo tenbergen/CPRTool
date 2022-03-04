@@ -1,29 +1,36 @@
-import React from 'react';
-import "./styles/LoginPage.css"
-import {useDispatch} from "react-redux";
-import {bindActionCreators} from "redux";
-import { authCreators } from '../redux/index.js'
-import {authenticateUser} from "../redux/actions/authActions";
+import React, {useEffect} from 'react';
+import './styles/LoginPage.css';
+import { useDispatch } from 'react-redux';
+import { authenticateUser } from '../redux/slices/authSlice';
 
 function LoginPage() {
-    const dispatch = useDispatch()
+  const loginURL = `${window.location.protocol}//${window.location.host}/login`
+  const dispatch = useDispatch();
+  const queryParams = new URLSearchParams(window.location.search);
 
-    const { authenticateUser } = bindActionCreators(authCreators, dispatch)
-
-    const handleClick = () => {
-        authenticateUser()
+  useEffect(() => {
+    const token = queryParams.get('token');
+    if (token != null) {
+      localStorage.setItem("jwt_token", token)
+      dispatch(authenticateUser())
     }
+  },[])
 
-    return (
-        <div id="box">
-            <div className="googleButton">
-                <button
-                    type="button"
-                    onClick={handleClick}>
-                    <img className = {"google"} src={require('./img/Google__G__Logo.svg.png')}/> Login With Google</button>
-            </div>
-        </div>
-    );
+  return (
+    <div id='box'>
+      <div className='googleButton'>
+        <a href={loginURL}>
+          <button type='button'>
+            <img
+                className={'google'}
+                src={require('./img/Google__G__Logo.svg.png')}
+            />{' '}
+            Login With Google
+          </button>
+        </a>
+      </div>
+    </div>
+  );
 }
 
 export default LoginPage;
