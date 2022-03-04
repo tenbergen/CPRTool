@@ -57,17 +57,17 @@ public class LoginCallbackServlet extends AbstractAuthorizationCodeCallbackServl
                     response.addCookie(cookie);
                     response.setStatus(200);
 
-                    response.sendRedirect("http://moxie.cs.oswego.edu:13129?token="+jwtToken);
+                    response.sendRedirect("http://moxie.cs.oswego.edu:80?token="+jwtToken);
                 } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
                     e.printStackTrace();
                 }
             } else {
-                response.sendRedirect("http://moxie.cs.oswego.edu:13129/unauthenticated");
+                response.sendRedirect("http://moxie.cs.oswego.edu:80/unauthenticated");
                 response.getWriter().println("Not Authenticated");
                 response.sendError(401, "Not authenticated");
             }
         } else {
-            response.sendRedirect("http://moxie.cs.oswego.edu:13129/unauthenticated");
+            response.sendRedirect("http://moxie.cs.oswego.edu:80/unauthenticated");
             // response.sendError(401, "Not authenticated");
             response.getWriter().println("Not Authenticated");
         }
