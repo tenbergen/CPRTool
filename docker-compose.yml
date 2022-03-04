@@ -6,7 +6,6 @@ services:
     container_name: cpr-frontend
     restart: unless-stopped
 
-
   login:
     build:
       context: ./backend/login-microservice
