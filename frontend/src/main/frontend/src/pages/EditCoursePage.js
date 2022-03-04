@@ -8,7 +8,7 @@ import {Link, useLocation, useNavigate} from "react-router-dom";
 function EditCoursePage() {
     // put the url of the endpoint here! but delete/edit is will not work as we need a way
     // to pass around courseIDs (probably with redux)
-    const deleteUrl = "http://moxie.cs.oswego.edu:13127/manage/professor/courses/course/delete"
+    const deleteUrl = `${window.location.protocol}//${window.location.host}/manage/professor/courses/course/delete`
     const editUrl = ""
     const {from} = useLocation().state
     let currentCourse = Object()

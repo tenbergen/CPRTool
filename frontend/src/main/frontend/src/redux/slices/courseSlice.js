@@ -2,10 +2,11 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from "axios";
 import React from "react";
 
+const viewCourseURL = `${window.location.protocol}//${window.location.host}/view/professor/courses`
 export const getCoursesAsync = createAsyncThunk(
     'courses/getCoursesAsync',
     async () => {
-        const courses = await axios.get("http://moxie.cs.oswego.edu:13128/view/professor/courses").then(res => {
+        const courses = await axios.get(viewCourseURL).then(res => {
             return res.data
         })
         return { courses }

@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { authenticateUser } from '../redux/slices/authSlice';
 
 function LoginPage() {
+  const loginURL = `${window.location.protocol}//${window.location.host}/login`
   const dispatch = useDispatch();
   const queryParams = new URLSearchParams(window.location.search);
 
@@ -18,7 +19,7 @@ function LoginPage() {
   return (
     <div id='box'>
       <div className='googleButton'>
-        <a href='http://moxie.cs.oswego.edu:13126/login'>
+        <a href={loginURL}>
           <button type='button'>
             <img
                 className={'google'}
