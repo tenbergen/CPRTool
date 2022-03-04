@@ -26,6 +26,10 @@ import { BiCog } from 'react-icons/bi';
 import 'react-pro-sidebar/dist/css/styles.css';
 import './styles/Sidebar.css';
 
+const handleLogout = () => {
+  localStorage.clear();
+}
+
 const SidebarComponent = () => {
   return (
     <>
@@ -37,7 +41,7 @@ const SidebarComponent = () => {
             </Menu>
           </SidebarContent>
           <SidebarFooter>
-            <a href='http://moxie.cs.oswego.edu:13126/logout'>
+            <a href='http://moxie.cs.oswego.edu:13126/logout' onClick={handleLogout}>
               <Menu iconShape='circle'>
                 <MenuItem icon={<FiLogOut />}>Logout</MenuItem>
               </Menu>

@@ -8,17 +8,17 @@ function App() {
   const isAuthenticated = authentication.auth.isAuthenticated;
 
   return (
-    // <div>
-    //     {isAuthenticated? <TeacherDashboardPage/> : <LoginPage />}
-    // </div>
-
     <div>
-      {/token/.test(window.location.href) ? (
-        <TeacherDashboardPage />
-      ) : (
-        <LoginPage />
-      )}
+        {isAuthenticated? <TeacherDashboardPage/> : <LoginPage />}
     </div>
+
+    // <div>
+    //   {/token/.test(window.location.href) ? (
+    //     <TeacherDashboardPage />
+    //   ) : (
+    //     <LoginPage />
+    //   )}
+    // </div>
   );
 }
 
