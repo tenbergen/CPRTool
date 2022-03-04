@@ -12,7 +12,7 @@ function LoginPage() {
     const token = queryParams.get('token');
     if (token != null) {
       localStorage.setItem("jwt_token", token)
-      dispatch(authenticateUser(token))
+      dispatch(authenticateUser())
     }
   },[])
 
