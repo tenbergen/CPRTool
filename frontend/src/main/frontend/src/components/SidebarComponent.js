@@ -30,6 +30,7 @@ const handleLogout = () => {
   localStorage.clear();
 }
 
+const logoutURL = `${window.location.protocol}//${window.location.host}/logout`
 const SidebarComponent = () => {
   return (
     <>
@@ -41,7 +42,7 @@ const SidebarComponent = () => {
             </Menu>
           </SidebarContent>
           <SidebarFooter>
-            <a href='http://moxie.cs.oswego.edu:13126/logout' onClick={handleLogout}>
+            <a href={logoutURL} onClick={handleLogout}>
               <Menu iconShape='circle'>
                 <MenuItem icon={<FiLogOut />}>Logout</MenuItem>
               </Menu>

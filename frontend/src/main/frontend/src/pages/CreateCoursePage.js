@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const CreateCoursePage = () => {
-    const submitCourseUrl = "http://moxie.cs.oswego.edu:13127/manage/professor/courses/course/create"
+    const submitCourseUrl = `${window.location.protocol}//${window.location.host}/manage/professor/courses/course/create`
     let navigate = useNavigate()
 
     const [formData, setFormData] = useState({

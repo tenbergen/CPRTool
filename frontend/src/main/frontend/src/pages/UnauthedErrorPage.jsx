@@ -1,10 +1,11 @@
+const logoutURL = `${window.location.protocol}//${window.location.host}/logout`
 const UnauthedErrorPage = () => {
   return (
     <div>
       <div>401 Not Authenticated</div>
       <div>Please log in using your @oswego.edu account!</div>
 
-      <a href='http://moxie.cs.oswego.edu:13126/logout'>Go Back</a>
+      <a href={logoutURL}>Go Back</a>
     </div>
   );
 };

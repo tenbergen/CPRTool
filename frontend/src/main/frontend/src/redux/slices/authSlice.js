@@ -10,7 +10,7 @@ const authSlice = createSlice({
         user: null,
     },
     reducers: {
-        authenticateUser: (state, action) => {
+        authenticateUser: () => {
             try {
                 let decoded = jwtDecode(localStorage.getItem("jwt_token"))
                 return {
