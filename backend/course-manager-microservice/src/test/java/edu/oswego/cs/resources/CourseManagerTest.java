@@ -2,19 +2,16 @@ package edu.oswego.cs.resources;
 
 import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.daos.StudentDAO;
-import edu.oswego.cs.database.CourseInterface;
 import org.junit.jupiter.api.*;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
-import javax.print.attribute.standard.Media;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 
 public class CourseManagerTest {
     private static String port;
@@ -33,10 +30,17 @@ public class CourseManagerTest {
     public static void oneTimeSetup() {
         port = "13127";
         baseUrl = "http://moxie.cs.oswego.edu:" + port + "/manage/professor/";
+<<<<<<< HEAD
         String courseName = "Software No Design";
         int courseSection = 800;
+=======
+        String courseName = "Software Engineering";
+        int courseSection = 9000;
+        int badCourseSection = -1;
+>>>>>>> 94a33e4acba60eed73b190e1eb3501870727174d
         String semester = "Spring";
-        String abbreviation = "CSC480T";
+        String wrongSemester = "Apple Juice";
+        String abbreviation = "CSC480";
         course = new CourseDAO(courseName, courseSection, semester, abbreviation);
     }
 
@@ -85,7 +89,21 @@ public class CourseManagerTest {
 
     @Test
     public void testAddStudent() {
-        String email = "timmyTest@oswego.edu";
+        String email = "timmyTest@Oswego.edu";
+        StudentDAO studentDAO = new StudentDAO(email, course.courseName, course.abbreviation, course.courseSection, course.semester);
+
+        targetUrl = "courses/course/student/add/";
+        WebTarget target = client.target(baseUrl + targetUrl);
+        Response response = target.request(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .post(Entity.entity(jsonb.toJson(studentDAO), MediaType.APPLICATION_JSON));
+
+        Assertions.assertEquals(Response.Status.OK, Response.Status.fromStatusCode(response.getStatus()), "Student was not added properly.");
+    }
+
+    @Test
+    public void testAddStudentIncorrectEmail() {
+        String email = "thisStringIsNotAnEmail";
         StudentDAO studentDAO = new StudentDAO(email, course.courseName, course.abbreviation, course.courseSection, course.semester);
 
         targetUrl = "courses/course/student/add/";
@@ -116,5 +134,4 @@ public class CourseManagerTest {
 
         Assertions.assertEquals(Response.Status.OK, Response.Status.fromStatusCode(response.getStatus()), "Student was not deleted properly.");
     }
-
 }
