@@ -32,9 +32,9 @@ public class CourseManagerTest {
     @BeforeAll
     public static void oneTimeSetup() {
         port = "13127";
-        baseUrl = "http://localhost:" + port + "/manage/professor/";
-        String courseName = "Software-Design-Create-Test";
-        int courseSection = 9000;
+        baseUrl = "http://moxie.cs.oswego.edu:" + port + "/manage/professor/";
+        String courseName = "Software No Design";
+        int courseSection = 800;
         String semester = "Spring";
         String abbreviation = "CSC480T";
         course = new CourseDAO(courseName, courseSection, semester, abbreviation);
