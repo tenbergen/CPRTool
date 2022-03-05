@@ -30,9 +30,14 @@ public class CourseManagerTest {
     public static void oneTimeSetup() {
         port = "13127";
         baseUrl = "http://moxie.cs.oswego.edu:" + port + "/manage/professor/";
+<<<<<<< HEAD
+        String courseName = "Software No Design";
+        int courseSection = 800;
+=======
         String courseName = "Software Engineering";
         int courseSection = 9000;
         int badCourseSection = -1;
+>>>>>>> 94a33e4acba60eed73b190e1eb3501870727174d
         String semester = "Spring";
         String wrongSemester = "Apple Juice";
         String abbreviation = "CSC480";
