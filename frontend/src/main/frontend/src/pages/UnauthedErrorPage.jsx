@@ -1,4 +1,4 @@
-const logoutURL = `${window.location.protocol}//${window.location.host}/logout`
+const logoutURL = `${process.env.REACT_APP_URL}/logout`
 const UnauthedErrorPage = () => {
   return (
     <div>
