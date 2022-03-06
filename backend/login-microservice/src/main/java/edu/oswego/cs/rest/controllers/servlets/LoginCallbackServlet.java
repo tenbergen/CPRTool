@@ -12,6 +12,7 @@ import com.ibm.websphere.security.jwt.JwtException;
 import edu.oswego.cs.rest.controllers.utils.OAuthUtils;
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -57,17 +58,20 @@ public class LoginCallbackServlet extends AbstractAuthorizationCodeCallbackServl
                     response.addCookie(cookie);
                     response.setStatus(200);
 
-                    response.sendRedirect("http://moxie.cs.oswego.edu:80?token="+jwtToken);
+                        response.sendRedirect("http://localhost:3000/?token="+jwtToken);
                 } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
                     e.printStackTrace();
                 }
             } else {
-                response.sendRedirect("http://moxie.cs.oswego.edu:80/unauthenticated");
+                // response.sendRedirect("http://moxie.cs.oswego.edu:80/unauthenticated");
+                response.sendRedirect("http://localhost:13126/authenticated?token");
                 response.getWriter().println("Not Authenticated");
                 response.sendError(401, "Not authenticated");
             }
         } else {
-            response.sendRedirect("http://moxie.cs.oswego.edu:80/unauthenticated");
+            // response.sendRedirect("http://moxie.cs.oswego.edu:80/unauthenticated");
+            response.sendRedirect("http://localhost:13126/authenticated?token");
+
             // response.sendError(401, "Not authenticated");
             response.getWriter().println("Not Authenticated");
         }
