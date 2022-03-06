@@ -45,7 +45,6 @@ function EditCoursePage() {
             console.log(response)
         })
     }
-
     return (
         <div className={"parent"}>
             <SidebarComponent/>
@@ -80,6 +79,9 @@ function EditCoursePage() {
                             name="teamSize"
                             required 
                         />
+                        <Link to="rosterPage" state={{from: currentCourse}}>
+                        <button id="rosterButton">Roster</button>
+                        </Link>
                     </div>
 
                     <div className="editCourseButton">
