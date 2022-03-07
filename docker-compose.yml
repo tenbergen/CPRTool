@@ -5,6 +5,8 @@ services:
       context: ./frontend
     container_name: cpr-frontend
     restart: unless-stopped
+    environment:
+      REACT_APP_URL: ${REACT_APP_URL}
 
   login:
     build:
@@ -12,12 +14,11 @@ services:
     container_name: cpr-login
     restart: unless-stopped
     environment:
-      MONGO_HOSTNAME: ${MONGO_HOSTNAME}
-      MONGO_PORT: ${MONGO_PORT}
-      MONGO2_PORT: ${MONGO2_PORT}
-      MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
-      MONGO_USERNAME: ${MONGO_USERNAME}
-      MONGO_PASSWORD: ${MONGO_PASSWORD}
+      APP_NAME: ${APP_NAME}
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
+      EMAIL_DOMAIN: ${EMAIL_DOMAIN}
+      REACT_APP_URL: ${REACT_APP_URL}
 
   course-manager:
     build:
