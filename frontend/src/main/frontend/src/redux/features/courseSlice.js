@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from "axios";
 import React from "react";
 
-const viewCourseURL = `${window.location.protocol}//${window.location.host}/view/professor/courses`
+const viewCourseURL = `${process.env.REACT_APP_URL}/view/professor/courses`
 export const getCoursesAsync = createAsyncThunk(
     'courses/getCoursesAsync',
     async () => {

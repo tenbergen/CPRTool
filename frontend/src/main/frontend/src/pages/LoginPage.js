@@ -1,10 +1,10 @@
 import React, {useEffect} from 'react';
 import './styles/LoginPage.css';
 import { useDispatch } from 'react-redux';
-import { authenticateUser } from '../redux/slices/authSlice';
+import { authenticateUser } from '../redux/features/authSlice';
 
 function LoginPage() {
-  const loginURL = `${window.location.protocol}//${window.location.host}/login`
+  const loginURL = `${process.env.REACT_APP_LOCAL}/login`
   const dispatch = useDispatch();
   const queryParams = new URLSearchParams(window.location.search);
 
@@ -22,6 +22,7 @@ function LoginPage() {
         <a href={loginURL}>
           <button type='button'>
             <img
+                alt="google login img"
                 className={'google'}
                 src={require('./img/Google__G__Logo.svg.png')}
             />{' '}

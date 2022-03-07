@@ -3,12 +3,12 @@ import {useState} from "react";
 import "./styles/EditCourseStyle.css"
 import SidebarComponent from "../components/SidebarComponent";
 import axios from "axios";
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 function EditCoursePage() {
     // put the url of the endpoint here! but delete/edit is will not work as we need a way
     // to pass around courseIDs (probably with redux)
-    const deleteUrl = `${window.location.protocol}//${window.location.host}/manage/professor/courses/course/delete`
+    const deleteUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/delete`
     const editUrl = ""
     const csvUrl = ""
     const {from} = useLocation().state
@@ -86,7 +86,7 @@ function EditCoursePage() {
                             required 
                         />
                         <Link to="rosterPage" state={{from: currentCourse}}>
-                        <button id="rosterButton">Roster</button>
+                            <button id="rosterButton">Roster</button>
                         </Link>
                     </div>
 
