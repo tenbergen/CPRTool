@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import SidebarComponent from "../components/SidebarComponent";
 import "./styles/TeacherDashboardStyle.css"
 import { useDispatch, useSelector } from "react-redux";
-import { getCoursesAsync } from "../redux/slices/courseSlice";
+import { getCoursesAsync } from "../redux/features/courseSlice";
 
 function TeacherDashboardPage() {
     const dispatch = useDispatch()

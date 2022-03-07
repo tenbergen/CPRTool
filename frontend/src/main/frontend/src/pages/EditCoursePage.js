@@ -3,7 +3,7 @@ import {useState} from "react";
 import "./styles/EditCourseStyle.css"
 import SidebarComponent from "../components/SidebarComponent";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 function EditCoursePage() {
     // put the url of the endpoint here! but delete/edit is will not work as we need a way
@@ -80,7 +80,7 @@ function EditCoursePage() {
                             required 
                         />
                         <Link to="rosterPage" state={{from: currentCourse}}>
-                        <button id="rosterButton">Roster</button>
+                            <button id="rosterButton">Roster</button>
                         </Link>
                     </div>
 
