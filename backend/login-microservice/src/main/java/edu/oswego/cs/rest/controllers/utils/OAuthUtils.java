@@ -25,11 +25,7 @@ public class OAuthUtils {
             "https://www.googleapis.com/auth/userinfo.profile",
             "https://www.googleapis.com/auth/userinfo.email");
 
-    private static final String protocol = System.getenv("PROTOCOL");
-    private static final String domain = System.getenv("DOMAIN");
-    private static final String port = System.getenv("PORT");
-    private static final String fullURL = protocol + "://" + domain + ":" + port;
-
+    private static final String fullURL = System.getenv("REACT_APP_URL");
     private static final String oauthClientId = System.getenv("CLIENT_ID");
     private static final String oauthClientSecret = System.getenv("CLIENT_SECRET");
     private static final String oauthAppName = System.getenv("APP_NAME");
