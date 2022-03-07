@@ -20,24 +20,23 @@ public class CourseManagerResource {
         try {
 
             new CourseInterface().addCourse(course);
-        } catch (IOException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Course Already Added").build();
         }
-        return Response.status(Response.Status.OK).build();
+        return Response.status(Response.Status.OK).entity("Course Successfully Added").build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/delete")
-    public Response deleteCourse(CourseDAO course) throws IOException {
+    public Response deleteCourse(CourseDAO course) {
         try {
-
             new CourseInterface().removeCourse(course);
-        } catch (IOException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Course Does Not Exist").build();
         }
-        return Response.status(Response.Status.OK).build();
+        return Response.status(Response.Status.OK).entity("Course Successfully Deleted").build();
     }
 
     @POST
@@ -46,8 +45,12 @@ public class CourseManagerResource {
     @Path("courses/course/student/add")
     public Response addStudent(StudentDAO studentDAO) throws Exception {
         CourseDAO course = new CourseDAO(studentDAO.courseName, studentDAO.courseSection, studentDAO.semester ,studentDAO.abbreviation);
-        new CourseInterface().addStudent(studentDAO.email, course);
-        return Response.status(Response.Status.OK).build();
+        try {
+            new CourseInterface().addStudent(studentDAO.email, course);
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Student/Course Does Not Exist").build();
+        }
+        return Response.status(Response.Status.OK).entity("Student Successfully Added").build();
     }
 
     @POST
@@ -56,8 +59,12 @@ public class CourseManagerResource {
     @Path("courses/course/student/delete")
     public Response deleteStudent(StudentDAO studentDAO) throws Exception {
         CourseDAO course = new CourseDAO(studentDAO.courseName, studentDAO.courseSection, studentDAO.semester,studentDAO.abbreviation);
-        new CourseInterface().removeStudent(studentDAO.email, course);
-        return Response.status(Response.Status.OK).build();
+        try {
+            new CourseInterface().removeStudent(studentDAO.email, course);
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Student/Course Does Not Exist").build();
+        }
+        return Response.status(Response.Status.OK).entity("Student Successfully Removed").build();
     }
 
 }
