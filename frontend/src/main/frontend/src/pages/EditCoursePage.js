@@ -10,6 +10,7 @@ function EditCoursePage() {
     // to pass around courseIDs (probably with redux)
     const deleteUrl = `${window.location.protocol}//${window.location.host}/manage/professor/courses/course/delete`
     const editUrl = ""
+    const csvUrl = ""
     const {from} = useLocation().state
     let currentCourse = Object()
 
@@ -27,10 +28,14 @@ function EditCoursePage() {
     let [selectedFile, setSelectedFile] = useState()
     let [isFilePicked, setIsFilePicked] = useState(false)
 
-    const changeHandler = (event) => {
-        setSelectedFile(event.target.files[0])
-        setIsFilePicked(true)
-    }
+    // const changeHandler = async (event) => {
+    //     setSelectedFile(event.target.files[0])
+    //     setIsFilePicked(true)
+    //
+    //     await axios.post(csvUrl, selectedFile).then( (response) => {
+    //         console.log(response)
+    //     })
+    // }
 
     const deleteCourse = async () => {
         await axios.post(deleteUrl, currentCourse).then((response) => {
@@ -65,6 +70,7 @@ function EditCoursePage() {
                     <div className="course-csv">
                         <label> <b> Add course CSV: </b> </label>
                         <input
+                            //onChange={changeHandler}
                             type="file"
                             name="courseCSV"
                             required
