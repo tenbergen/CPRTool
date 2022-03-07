@@ -1,11 +1,19 @@
-const logoutURL = `${process.env.REACT_APP_URL}/logout`
+import './styles/UnauthedStyle.css'
+
+const logoutURL = `${window.location.protocol}//${window.location.host}/logout`
 const UnauthedErrorPage = () => {
   return (
-    <div>
-      <div>401 Not Authenticated</div>
-      <div>Please log in using your @oswego.edu account!</div>
+    <div id="unauth">
+        <div id="unauthDiv">
+          <div className="unauthContent">401 Not Authenticated
+              <span id="emoji">&#128542;</span>
+          </div>
+      <div className="unauthContent">Please log in using your @oswego.edu account!
+        <br/>
+        <a href={logoutURL}>Go Back</a>
+      </div>
 
-      <a href={logoutURL}>Go Back</a>
+    </div>
     </div>
   );
 };
