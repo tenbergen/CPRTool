@@ -3,10 +3,11 @@
 
     <!-- Enable features -->
     <featureManager>
+<!--        App runs normally without these features? If needed, bring them back -->
         <feature>microProfile-4.1</feature>
         <feature>jaxrs-2.1</feature>
-        <feature>cdi-2.0</feature>
-        <feature>mpConfig-2.0</feature>
+<!--        <feature>cdi-2.0</feature>-->
+<!--        <feature>mpConfig-2.0</feature>-->
 
     </featureManager>
 
