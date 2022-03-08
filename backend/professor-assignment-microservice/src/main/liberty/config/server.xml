@@ -16,7 +16,7 @@
     <applicationManager autoExpand="true"/>
 
     <!-- Configures the application on a specified context root -->
-    <webApplication contextRoot="/professor-assignment-microservice" location="professor-assignment-microservice.war" />
+    <webApplication contextRoot="/" location="professor-assignment-microservice.war" />
 
     <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
     <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
