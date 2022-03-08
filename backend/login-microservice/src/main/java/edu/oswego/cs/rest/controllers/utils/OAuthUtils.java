@@ -121,14 +121,25 @@ public class OAuthUtils {
     // JWTbuilder
     public static String buildJWT(String sessionId) throws IOException, JwtException, InvalidBuilderException, InvalidClaimException {
 
+        // init
         String accessToken = newFlow().loadCredential(sessionId).getAccessToken();
-
         Userinfo userinfo = getUserInfo(sessionId);
-
         Set<String> roles = new HashSet<String>();
         roles.add("students");
+        
 
-        Key jwtSecret = new SecretKeySpec("SecretKey".getBytes(), "RS256");
+        // Generate RSA Keys
+        Map<String, Object> rsaKeys = null;
+        
+        try {
+            rsaKeys = getRSAKeys();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // get public/private key
+        PublicKey publicKey = (PublicKey) rsaKeys.get("public");
+        PrivateKey privateKey = (PrivateKey) rsaKeys.get("private");
 
         String jwtToken;
         try {
@@ -143,7 +154,7 @@ public class OAuthUtils {
                     .claim("first_name", userinfo.getGivenName())
                     .claim("last_name", userinfo.getFamilyName())
                     .claim("userID", userinfo.getId())
-                    .signWith("HS256", "jwtSecret") // signWith won't work with key yet
+                    .signWith("RS512", privateKey) // signWith won't work with key yet
                     .buildJwt().compact();
             return jwtToken;
         } catch (KeyException e) {
