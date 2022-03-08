@@ -20,13 +20,6 @@
             httpsPort="${default.https.port}"
             id="defaultHttpEndpoint"
     />
-    
-     <cors domain="/"
-          allowedOrigins="*"
-          allowedMethods="GET, DELETE, POST, PUT"
-          allowCredentials="true"
-          allowedHeaders="Content-Type"
-          exposeHeaders="Content-Type"/>
 
     <!-- Automatically expand WAR files and EAR files -->
     <applicationManager autoExpand="true"/>
