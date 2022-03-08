@@ -11,31 +11,34 @@ function EditCoursePage() {
     const deleteUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/delete`
     const editUrl = ""
     const csvUrl = ""
-    // const {from} = useLocation().state
+    const {from} = useLocation().state
     let currentCourse = Object()
 
-    // currentCourse.CourseName = from.CourseName
-    // currentCourse.CourseSection = from.CourseSection
-    // currentCourse.Semester = from.Semester
-    // currentCourse.Abbreviation = from.Abbreviation
+    currentCourse.CourseName = from.CourseName
+    currentCourse.CourseSection = from.CourseSection
+    currentCourse.Semester = from.Semester
+    currentCourse.Abbreviation = from.Abbreviation
 
     let navigate = useNavigate()
     console.log(currentCourse)
 
     const [courseDescription, setCourseDescription] = useState()
-    // const [courseName, setCourseName] = useState(currentCourse.CourseName)
+    const [courseName, setCourseName] = useState(currentCourse.CourseName)
 
     let [selectedFile, setSelectedFile] = useState()
     let [isFilePicked, setIsFilePicked] = useState(false)
 
-    // const changeHandler = async (event) => {
-    //     setSelectedFile(event.target.files[0])
-    //     setIsFilePicked(true)
-    //
-    //     await axios.post(csvUrl, selectedFile).then( (response) => {
-    //         console.log(response)
-    //     })
-    // }
+     // TODO move post request to submit button handler
+     // const changeHandler = async (event) => {
+     //     setSelectedFile(event.target.files[0])
+     //     setIsFilePicked(true)
+     //     const formData = new FormData()
+     //     formData.append("File", event.target.files[0])
+     //
+     //     await axios.post(csvUrl, formData).then( (response) => {
+     //         console.log(response)
+     //     })
+     // }
 
     const deleteCourse = async () => {
         await axios.post(deleteUrl, currentCourse).then((response) => {
@@ -54,14 +57,14 @@ function EditCoursePage() {
         <div className={"parent"}>
             <SidebarComponent/>
             <div className="container">
-                <h1> Editing $courseName$ </h1>
+                <h1> Editing {courseName} </h1>
                 <form>
                     <div className="course-name">
                         <label> <b> Name of course: </b> </label>
                         <input
                             type="text"
                             name="courseName"
-                            // value={courseName}
+                            value={courseName}
                             required
                             //onChange={(e) => OnChange(e)}
                         />
