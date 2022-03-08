@@ -1,10 +1,19 @@
 package edu.oswego.cs.rest.controllers.utils;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Key;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -142,6 +151,30 @@ public class OAuthUtils {
             return "JWT Token is not available!";
         }
 
+    }
+
+    public static Map<String, Object> getRSAKeys() throws Exception {
+        // Key pair Generator 
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        keyPairGenerator.initialize(2048);
+        
+        KeyPair keyPair = keyPairGenerator.generateKeyPair();// generate key pair
+        
+        PrivateKey privateKey = keyPair.getPrivate(); // generate private
+        String privateKeyString = (String) keyPair.getPrivate().toString(); // generate private
+        
+        PublicKey publicKey = keyPair.getPublic(); // generate public
+        String publicKeyString = keyPair.getPublic().toString(); // generate public
+
+        Path privatePath = Paths.get("/Users/logan/coding/CPR-480-22S/CSC480-22S-BE/backend/login-microservice/src/main/java/edu/oswego/cs/rest/controllers/utils/privateKey.txt");
+        Path publicPath = Paths.get("/Users/logan/coding/CPR-480-22S/CSC480-22S-BE/backend/login-microservice/src/main/java/edu/oswego/cs/rest/controllers/utils/publicKey.txt");
+        Files.write(privatePath, privateKeyString.getBytes());
+        Files.write(publicPath, publicKeyString.getBytes());
+
+        Map<String, Object> keys = new HashMap<String, Object>();
+        keys.put("private", privateKey);
+        keys.put("public", publicKey);
+        return keys;
     }
 
 
