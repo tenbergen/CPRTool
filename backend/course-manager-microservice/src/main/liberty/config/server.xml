@@ -4,10 +4,7 @@
     <!-- Enable features -->
     <featureManager>
         <feature>microProfile-4.1</feature>
-        <feature>jaxrs-2.1</feature>
-        <feature>cdi-2.0</feature>
         <feature>mpConfig-2.0</feature>
-
     </featureManager>
 
     <variable name="default.http.port" defaultValue="13127"/>
