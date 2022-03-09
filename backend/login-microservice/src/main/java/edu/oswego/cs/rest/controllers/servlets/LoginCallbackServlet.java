@@ -30,7 +30,7 @@ public class LoginCallbackServlet extends AbstractAuthorizationCodeCallbackServl
     @Override
     protected String getRedirectUri(HttpServletRequest request) throws ServletException, IOException {
         GenericUrl url = new GenericUrl(request.getRequestURL().toString());
-        url.setRawPath(fullURL + "/login-callback");
+        url.setRawPath("/login-callback");
         return url.build();
     }
 
