@@ -31,13 +31,13 @@ public class FileDAO {
 
             if (fileName != null) {
                 InputStream stream = attachment.getDataHandler().getInputStream();
-                BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
                 String line = "";
                 try {
-                    while ((line = br.readLine()) != null)
+                    while ((line = reader.readLine()) != null)
                         if (!line.isEmpty()) csvLines.add(line);
                     if (csvLines.size() == 0) continue;
-                    br.close();
+                    reader.close();
                     return new FileDAO(fileName, csvLines);
                 } catch (IOException ignored) {}
             }
