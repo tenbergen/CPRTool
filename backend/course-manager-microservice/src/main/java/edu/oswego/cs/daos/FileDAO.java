@@ -21,7 +21,7 @@ public class FileDAO {
      * @return FileDAO Instance
      * @throws Exception File Corruption Exception
      */
-    public static FileDAO FileFactory(List<IAttachment> attachments) throws Exception {
+    public static FileDAO FileFactory(List<IAttachment> attachments, String modifiedFilename) throws Exception {
         ArrayList<String> csvLines = new ArrayList<>();
 
         for (IAttachment attachment : attachments) {
@@ -38,7 +38,7 @@ public class FileDAO {
                         if (!line.isEmpty()) csvLines.add(line);
                     if (csvLines.size() == 0) continue;
                     reader.close();
-                    return new FileDAO(fileName, csvLines);
+                    return new FileDAO(modifiedFilename, csvLines);
                 } catch (IOException ignored) {}
             }
         }

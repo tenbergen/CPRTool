@@ -1,7 +1,12 @@
 package edu.oswego.cs.util;
 
+import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.daos.StudentDAO;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +25,18 @@ public class CSVUtil {
             students.add( new StudentDAO(fullname, email) );
         });
         return students;
+    }
+
+    public static String getModifiedFileName(IAttachment attachment) throws IOException {
+        String modifiedFileName = "";
+        InputStream inStream = attachment.getDataHandler().getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
+        String line = "";
+        try {
+            while ((line = reader.readLine()) != null) { modifiedFileName = line; }
+            reader.close();
+        } catch (IOException ignored) {}
+        return modifiedFileName;
     }
 
 
