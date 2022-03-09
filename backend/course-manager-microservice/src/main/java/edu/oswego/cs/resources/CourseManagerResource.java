@@ -6,15 +6,19 @@ import edu.oswego.cs.daos.FileDAO;
 import edu.oswego.cs.daos.StudentDAO;
 import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.database.CourseInterface;
-import edu.oswego.cs.util.CSVUtil;
+//import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
+import javax.activation.DataHandler;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
 
 @Path("professor")
 public class CourseManagerResource {
@@ -86,13 +90,14 @@ public class CourseManagerResource {
         }
 
         System.out.println("Modified FileName: " + modifiedFileName );
+            fileDAO = FileDAO.FileFactory(body.getAllAttachments());
+            fileDAO.getCsvLines().forEach(System.out::println);
 
-        try {
-            FileDAO fileDAO = FileDAO.FileFactory(body.getAllAttachments(), modifiedFileName);
-            CSVUtil.parseStudentCSV(fileDAO.getCsvLines()).forEach(System.out::println);
+
         } catch (Exception e) {
          return Response.status(Response.Status.BAD_REQUEST).entity("File Corrupted. Try Again").build();
         }
+        new CourseInterface().addStudentsFromCSV(fileDAO);
         return Response.status(Response.Status.OK).build();
     }
 
