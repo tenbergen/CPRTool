@@ -6,7 +6,7 @@ import edu.oswego.cs.daos.FileDAO;
 import edu.oswego.cs.daos.StudentDAO;
 import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.database.CourseInterface;
-//import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
 import javax.activation.DataHandler;
 import javax.ws.rs.*;
@@ -80,7 +80,7 @@ public class CourseManagerResource {
     @Consumes({MediaType.MULTIPART_FORM_DATA})
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/student/massadd")
-    public Response addStudentByCSVFile( IMultipartBody body) {
+    public Response addStudentByCSVFile(@RequestBody IMultipartBody body) {
 
         // Checking for if the submitting file is the right file type, only accepting csv files.
         for (IAttachment attachment : body.getAllAttachments()) {
