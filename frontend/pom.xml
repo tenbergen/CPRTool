@@ -32,7 +32,6 @@
       <type>pom</type>
       <scope>provided</scope>
     </dependency>
-
   </dependencies>
 
   <build>
