@@ -21,7 +21,7 @@ function LoginPage() {
                 <div id='box'>
                     <div className='welcome'>Welcome!</div>
                     <a href={loginURL}>
-                        <button className='googleButton' type='login' onClick={handleClick}>
+                        <button className='googleButton' type='login'>
                             <img
                                 alt="google login img"
                                 className={'google'}
