@@ -6,7 +6,7 @@ import edu.oswego.cs.daos.FileDAO;
 import edu.oswego.cs.daos.StudentDAO;
 import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.database.CourseInterface;
-import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+//import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
 import javax.activation.DataHandler;
 import javax.ws.rs.*;
@@ -80,8 +80,8 @@ public class CourseManagerResource {
     @Consumes({MediaType.MULTIPART_FORM_DATA})
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/student/massadd")
-    public Response addStudentByCSVFile(@RequestBody IMultipartBody body) {
-
+    public Response addStudentByCSVFile(IMultipartBody body) throws Exception {
+        FileDAO fileDAO;
         // Checking for if the submitting file is the right file type, only accepting csv files.
         for (IAttachment attachment : body.getAllAttachments()) {
             String filename = attachment.getDataHandler().getName();
@@ -92,11 +92,13 @@ public class CourseManagerResource {
         }
 
         try {
-            FileDAO fileDAO = FileDAO.FileFactory(body.getAllAttachments());
+            fileDAO = FileDAO.FileFactory(body.getAllAttachments());
             fileDAO.getCsvLines().forEach(System.out::println);
+
         } catch (Exception e) {
          return Response.status(Response.Status.BAD_REQUEST).entity("File Corrupted. Try Again").build();
         }
+        new CourseInterface().addStudentsFromCSV(fileDAO);
         return Response.status(Response.Status.OK).build();
     }
 
