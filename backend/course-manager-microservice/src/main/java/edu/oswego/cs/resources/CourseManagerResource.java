@@ -11,6 +11,10 @@ import edu.oswego.cs.util.CSVUtil;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 @Path("professor")
 public class CourseManagerResource {
@@ -73,19 +77,18 @@ public class CourseManagerResource {
     @Consumes({MediaType.MULTIPART_FORM_DATA})
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/student/massadd")
-    public Response addStudentByCSVFile(IMultipartBody body) {
-
+    public Response addStudentByCSVFile(IMultipartBody body) throws IOException {
+        String modifiedFileName = "";
         // Checking for if the submitting file is the right file type, only accepting csv files.
         for (IAttachment attachment : body.getAllAttachments()) {
-            String filename = attachment.getDataHandler().getName();
-            if (filename != null) {
-                if (filename.endsWith(".csv")) continue;
-                return Response.status(Response.Status.BAD_REQUEST).entity("Wrong File Type/Extension").build();
-            }
+            String name = attachment.getDataHandler().getName();
+            if (name.contains("Cloud_name")) modifiedFileName = CSVUtil.getModifiedFileName(attachment);
         }
 
+        System.out.println("Modified FileName: " + modifiedFileName );
+
         try {
-            FileDAO fileDAO = FileDAO.FileFactory(body.getAllAttachments());
+            FileDAO fileDAO = FileDAO.FileFactory(body.getAllAttachments(), modifiedFileName);
             CSVUtil.parseStudentCSV(fileDAO.getCsvLines()).forEach(System.out::println);
         } catch (Exception e) {
          return Response.status(Response.Status.BAD_REQUEST).entity("File Corrupted. Try Again").build();
