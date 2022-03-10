@@ -1,24 +1,5 @@
 package edu.oswego.cs.rest.controllers.utils;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.security.Key;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.crypto.spec.SecretKeySpec;
-import javax.enterprise.context.ApplicationScoped;
-
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -27,12 +8,16 @@ import com.google.api.client.util.store.MemoryDataStoreFactory;
 import com.google.api.services.oauth2.Oauth2;
 import com.google.api.services.oauth2.model.Tokeninfo;
 import com.google.api.services.oauth2.model.Userinfo;
-import com.ibm.websphere.security.jwt.Claims;
-import com.ibm.websphere.security.jwt.InvalidBuilderException;
-import com.ibm.websphere.security.jwt.InvalidClaimException;
-import com.ibm.websphere.security.jwt.JwtBuilder;
-import com.ibm.websphere.security.jwt.JwtException;
-import com.ibm.websphere.security.jwt.KeyException;
+import com.ibm.websphere.security.jwt.*;
+
+import javax.crypto.spec.SecretKeySpec;
+import javax.enterprise.context.ApplicationScoped;
+import java.io.IOException;
+import java.security.Key;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @ApplicationScoped
 public class OAuthUtils {
@@ -40,16 +25,13 @@ public class OAuthUtils {
             "https://www.googleapis.com/auth/userinfo.profile",
             "https://www.googleapis.com/auth/userinfo.email");
 
-
-    private static String oauthClientId = "952282231282-ned8emonjrqbhj8v5b8efcr94d3nh13j.apps.googleusercontent.com";
-    // private static String oauthClientId = System.getenv("CLIENT_ID");
-
-    private static String oauthClientSecret = "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";
-    // private static String oauthClientSecret = System.getenv("CLIENT_SECRET");
+    private static final String fullURL = System.getenv("REACT_APP_URL");
+    private static final String oauthClientId = System.getenv("CLIENT_ID");
+    private static final String oauthClientSecret = System.getenv("CLIENT_SECRET");
+    private static final String oauthAppName = System.getenv("APP_NAME");
+    private static final String emailDomain = System.getenv("EMAIL_DOMAIN");
 
     public static GoogleAuthorizationCodeFlow flow;
-
-
 
     public static GoogleAuthorizationCodeFlow newFlow() throws IOException {
         flow = new GoogleAuthorizationCodeFlow.Builder(
@@ -68,7 +50,6 @@ public class OAuthUtils {
                 .setDataStoreFactory(MemoryDataStoreFactory.getDefaultInstance())
                 .setAccessType("offline")
                 .build();
-
         return flow;
     }
 
@@ -81,40 +62,33 @@ public class OAuthUtils {
         }
     }
 
-
     public static Userinfo getUserInfo(String sessionId) throws IOException {
-        String appName = "CPR480S22";
         Credential credential = newFlow().loadCredential(sessionId);
         Oauth2 oauth2Client =
                 new Oauth2.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), credential)
-                        .setApplicationName(appName)
+                        .setApplicationName(oauthAppName)
                         .build();
 
-        Userinfo userInfo = oauth2Client.userinfo().get().execute();
-        return userInfo;
+        return oauth2Client.userinfo().get().execute();
     }
 
     public static Tokeninfo getTokenInfo(String sessionId, String accessToken) throws IOException {
-        String appName = "CPR480S22";
-
         Credential credential = newFlow().loadCredential(sessionId);
         Oauth2 oauth2Client =
                 new Oauth2.Builder(new NetHttpTransport(), JacksonFactory.getDefaultInstance(), credential)
-                        .setApplicationName(appName)
+                        .setApplicationName(oauthAppName)
                         .build();
 
-        Tokeninfo tokenInfo = oauth2Client.tokeninfo().setAccessToken(accessToken).execute();
-        return tokenInfo;
+        return oauth2Client.tokeninfo().setAccessToken(accessToken).execute();
     }
 
     // make sure the logged in user is an @oswego.edu account
     public static boolean isOswego(String sessionId) {
         try {
             Userinfo userinfo = getUserInfo(sessionId);
-            return userinfo.getHd().equals("oswego.edu");
+            return userinfo.getHd().equals(emailDomain);
         } catch (Exception e) {
             return false;
-
         }
     }
 
@@ -148,7 +122,7 @@ public class OAuthUtils {
                     .claim("upn", userinfo.getEmail()) // user principle name
                     .claim("roles", roles.toArray(new String[roles.size()])) // group
                     // .claim("aud", "http://localhost:13126") // audience
-                    .claim("aud", "http://moxie.cs.oswego.edu:13126") // audience
+                    .claim("aud", fullURL) // audience
                     .claim("access_token", accessToken) // access token from google
                     .claim("hd", userinfo.getHd())
                     .claim("first_name", userinfo.getGivenName())
@@ -161,32 +135,5 @@ public class OAuthUtils {
             e.printStackTrace();
             return "JWT Token is not available!";
         }
-
     }
-
-    public static Map<String, Object> getRSAKeys() throws Exception {
-        // Key pair Generator 
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-        keyPairGenerator.initialize(2048);
-        
-        KeyPair keyPair = keyPairGenerator.generateKeyPair();// generate key pair
-        
-        PrivateKey privateKey = keyPair.getPrivate(); // generate private
-        String privateKeyString = (String) keyPair.getPrivate().toString(); // generate private
-        
-        PublicKey publicKey = keyPair.getPublic(); // generate public
-        String publicKeyString = keyPair.getPublic().toString(); // generate public
-
-        Path privatePath = Paths.get("/Users/logan/coding/CPR-480-22S/CSC480-22S-BE/backend/login-microservice/src/main/java/edu/oswego/cs/rest/controllers/utils/privateKey.txt");
-        Path publicPath = Paths.get("/Users/logan/coding/CPR-480-22S/CSC480-22S-BE/backend/login-microservice/src/main/java/edu/oswego/cs/rest/controllers/utils/publicKey.txt");
-        Files.write(privatePath, privateKeyString.getBytes());
-        Files.write(publicPath, publicKeyString.getBytes());
-
-        Map<String, Object> keys = new HashMap<String, Object>();
-        keys.put("private", privateKey);
-        keys.put("public", publicKey);
-        return keys;
-    }
-
-
 }

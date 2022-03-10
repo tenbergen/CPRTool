@@ -22,8 +22,7 @@
 }
 
 #sidebar .pro-sidebar-inner {
-    background-color: white;
-    box-shadow: 0.5px 0.866px 2px 0px rgba(0, 0, 0, 0.15);
+    background-color: transparent;
 }
 #sidebar .pro-sidebar-inner .pro-sidebar-layout {
     overflow-y: hidden;
@@ -43,7 +42,7 @@
     font-weight: bold;
 }
 #sidebar .pro-sidebar-inner .pro-sidebar-layout ul .pro-inner-item .pro-icon-wrapper {
-    background-color: #f8f7f4;
+    background-color: rgba(255, 255, 255, 0.5);
     color: #000;
     border-radius: 3px;
 }

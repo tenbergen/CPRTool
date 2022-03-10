@@ -1,14 +1,10 @@
-import { createStore, applyMiddleware } from "redux";
-import thunk from "redux-thunk";
-import reducers from "./reducers";
+import { configureStore } from "@reduxjs/toolkit";
+import courseReducer from './slices/courseSlice'
+import authReducer from "./slices/authSlice";
 
-const initialState = {};
-
-const store = createStore(
-    reducers,
-    initialState,
-    applyMiddleware(thunk)
-)
-
-export default store;
-
+export default configureStore({
+    reducer: {
+        courses: courseReducer,
+        auth: authReducer
+    }
+})
