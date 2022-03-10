@@ -4,6 +4,9 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.daos.CourseDAO;
+import edu.oswego.cs.daos.FileDAO;
+import edu.oswego.cs.daos.StudentDAO;
+import edu.oswego.cs.util.CSVUtil;
 import org.bson.Document;
 
 import javax.json.bind.Jsonb;
@@ -15,6 +18,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
+import static edu.oswego.cs.util.CSVUtil.parseStudentCSV;
 
 public class CourseInterface {
     private String professorCollection = "Professor";
@@ -77,8 +83,10 @@ public class CourseInterface {
         }
 
     }
-    public void addStudent(String StudentName,CourseDAO dao) throws Exception {
+    public void addStudent(String StudentName,CourseDAO temp) throws Exception {
+        CourseDAO dao = new CourseDAO(temp.courseName,temp.courseSection,temp.semester,temp.abbreviation);
         dao.courseID = dao.courseID + "-" +  DateTimeFormatter.ofPattern("yyyy").format(LocalDateTime.now());
+
         String courseName = dao.courseID;
         String StudentID = StudentName.split("@")[0];
 
@@ -159,6 +167,7 @@ public class CourseInterface {
 
     }
     public void removeCourse(CourseDAO dao){
+
         dao.courseID = dao.courseID + "-" +  DateTimeFormatter.ofPattern("yyyy").format(LocalDateTime.now());
         String courseName = dao.courseID;
         //If student database is up then remove the refrence to this class from each student that has one
@@ -183,7 +192,8 @@ public class CourseInterface {
         //delete the course from courses
         courseDatabase.getCollection(courseCollection).findOneAndDelete(new Document(CID,courseName));
     }
-    public void removeStudent(String StudentName,CourseDAO dao) throws Exception {
+    public void removeStudent(String StudentName,CourseDAO temp) throws Exception {
+        CourseDAO dao = new CourseDAO(temp.courseName,temp.courseSection,temp.semester,temp.abbreviation);
         dao.courseID = dao.courseID + "-" +  DateTimeFormatter.ofPattern("yyyy").format(LocalDateTime.now());
         String courseName = dao.courseID;
         String StudentID = StudentName.split("@")[0];
@@ -255,6 +265,45 @@ public class CourseInterface {
     }
     //Feature to sync the changes that occured in courses while the students db was offline
     public void syncWithStudents(){
+
+    }
+    public void addStudentsFromCSV(FileDAO f) throws Exception {
+        List<StudentDAO> allStudents = parseStudentCSV(f.getCsvLines());
+
+        String cid = f.getFilename();
+        cid = cid.substring(0,cid.length()-4);
+        System.out.println(cid);
+        Document course = courseDatabase.getCollection(courseCollection).find(new Document(CID,cid)).first();
+        CourseDAO courseDAO = new CourseDAO(course.get("CourseName").toString(),Integer.parseInt(course.get("CourseSection").toString()),course.get("Semester").toString(),course.get("Abbreviation").toString());
+        ArrayList oldStudentList = (ArrayList) course.get("Students");
+        ArrayList<String> newStudentList = new ArrayList<>();
+        ArrayList<String> studentsToRemove = new ArrayList<>();
+        ArrayList<String> studentsToAdd = new ArrayList<>();
+        System.out.println(oldStudentList);
+        for(StudentDAO s:allStudents){
+            newStudentList.add(s.email.split("@")[0]);
+        }
+        for(Object d : oldStudentList){
+            if(!newStudentList.contains(d.toString())){
+               studentsToRemove.add(d.toString());
+            }
+        }
+        for(String s: newStudentList){
+            if(!oldStudentList.contains(s)){
+                studentsToAdd.add(s);
+            }
+        }
+        for(String s: studentsToRemove){
+            removeStudent(s,courseDAO);
+        }
+        for(String s:studentsToAdd){
+            addStudent(s,courseDAO);
+        }
+
+
+
+
+
 
     }
 }
