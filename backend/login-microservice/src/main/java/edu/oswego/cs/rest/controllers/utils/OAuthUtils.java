@@ -39,31 +39,25 @@ public class OAuthUtils {
             "https://www.googleapis.com/auth/userinfo.profile",
             "https://www.googleapis.com/auth/userinfo.email");
 
-    private static final String fullURL = System.getenv("REACT_APP_URL");
-    private static final String oauthClientId = System.getenv("CLIENT_ID");
-    private static final String oauthClientSecret = System.getenv("CLIENT_SECRET");
-    private static final String oauthAppName = System.getenv("APP_NAME");
-    private static final String emailDomain = System.getenv("EMAIL_DOMAIN");
+    private static final String fullURL = "http://localhost:13126"; //System.getenv("REACT_APP_URL");
+    private static final String oauthClientId = "952282231282-ned8emonjrqbhj8v5b8efcr94d3nh13j.apps.googleusercontent.com";//System.getenv("CLIENT_ID");
+    private static final String oauthClientSecret = "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";//System.getenv("CLIENT_SECRET");
+    private static final String oauthAppName = "cpr"; //System.getenv("APP_NAME");
+    private static final String emailDomain = "oswego.edu"; //System.getenv("EMAIL_DOMAIN");
 
     public static GoogleAuthorizationCodeFlow flow;
 
     public static GoogleAuthorizationCodeFlow newFlow() throws IOException {
         flow = new GoogleAuthorizationCodeFlow.Builder(
-                // Sends requests to the OAuth server
-                new NetHttpTransport(),
-                // Converts between JSON and Java
-                JacksonFactory.getDefaultInstance(),
-                // Your OAuth client ID
+                new NetHttpTransport(), // Sends requests to the OAuth server
+                JacksonFactory.getDefaultInstance(), // Converts between JSON and Java
                 oauthClientId,
-                // Your OAuth client secret
                 oauthClientSecret,
-                // Tells the user what permissions they're giving you
-                scopes)
-                // Stores the user's credential in memory
-                // @TODO Need to change this to DataStoreFactory with StoredCredential
-                .setDataStoreFactory(MemoryDataStoreFactory.getDefaultInstance())
-                .setAccessType("offline")
+                scopes) // Tells the user what permissions they're giving you
+                .setDataStoreFactory(MemoryDataStoreFactory.getDefaultInstance()) // Stores the user's credential in memor
+                .setAccessType("offline")                                         // @TODO Need to change this to DataStoreFactory with StoredCredential
                 .build();
+
         return flow;
     }
 
@@ -76,6 +70,7 @@ public class OAuthUtils {
         }
     }
 
+    // userInfo
     public static Userinfo getUserInfo(String sessionId) throws IOException {
         Credential credential = newFlow().loadCredential(sessionId);
         Oauth2 oauth2Client =
@@ -86,6 +81,7 @@ public class OAuthUtils {
         return oauth2Client.userinfo().get().execute();
     }
 
+    //tokenInfo
     public static Tokeninfo getTokenInfo(String sessionId, String accessToken) throws IOException {
         Credential credential = newFlow().loadCredential(sessionId);
         Oauth2 oauth2Client =
@@ -135,7 +131,6 @@ public class OAuthUtils {
                     .claim(Claims.SUBJECT, userinfo.getEmail()) // subject (the user)
                     .claim("upn", userinfo.getEmail()) // user principle name
                     .claim("roles", roles.toArray(new String[roles.size()])) // group
-                    // .claim("aud", "http://localhost:13126") // audience
                     .claim("aud", fullURL) // audience
                     .claim("access_token", accessToken) // access token from google
                     .claim("hd", userinfo.getHd())
@@ -150,6 +145,7 @@ public class OAuthUtils {
             return "JWT Token is not available!";
         }
     }
+    // getRSAKeys()
     public static Map<String, Object> getRSAKeys() throws Exception {
         // Key pair Generator 
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
@@ -157,17 +153,13 @@ public class OAuthUtils {
         
         KeyPair keyPair = keyPairGenerator.generateKeyPair();// generate key pair
         
+        // gen privateKey
         PrivateKey privateKey = keyPair.getPrivate(); // generate private
-        String privateKeyString = (String) keyPair.getPrivate().toString(); // generate private
-        
+
+        // gen publicKey        
         PublicKey publicKey = keyPair.getPublic(); // generate public
-        String publicKeyString = keyPair.getPublic().toString(); // generate public
 
-        Path privatePath = Paths.get("/Users/logan/coding/CPR-480-22S/CSC480-22S-BE/backend/login-microservice/src/main/java/edu/oswego/cs/rest/controllers/utils/privateKey.txt");
-        Path publicPath = Paths.get("/Users/logan/coding/CPR-480-22S/CSC480-22S-BE/backend/login-microservice/src/main/java/edu/oswego/cs/rest/controllers/utils/publicKey.txt");
-        Files.write(privatePath, privateKeyString.getBytes());
-        Files.write(publicPath, publicKeyString.getBytes());
-
+        // store into a keys:map
         Map<String, Object> keys = new HashMap<String, Object>();
         keys.put("private", privateKey);
         keys.put("public", publicKey);

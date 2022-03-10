@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/login-callback")
 public class LoginCallbackServlet extends AbstractAuthorizationCodeCallbackServlet {
-    private static final String fullURL = System.getenv("REACT_APP_URL");
+    private static final String fullURL = "http://localhost:13126"; //System.getenv("REACT_APP_URL");
 
     @Override
     protected AuthorizationCodeFlow initializeFlow() throws ServletException, IOException {
@@ -52,25 +52,26 @@ public class LoginCallbackServlet extends AbstractAuthorizationCodeCallbackServl
         if (isUserLoggedIn) {
             if (isOswego) {
                 try {
+                    // get token
                     String jwtToken = OAuthUtils.buildJWT(sessionId);
 
+                    // add to cookie
                     Cookie cookie = new Cookie("jwt_token", jwtToken);
                     response.addCookie(cookie);
                     response.setStatus(200);
 
-                    // response.sendRedirect("http://localhost:3000/?token="+jwtToken);
-                    response.sendRedirect(fullURL + "/?token=" + jwtToken);
+                    // response.sendRedirect(fullURL + "/?token=" + jwtToken); // >>> production <<<
+                    response.sendRedirect(fullURL + "/authenticated?token=" + jwtToken); // >>> local branch<<<
                 } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
                     e.printStackTrace();
                 }
             } else {
-                // response.sendRedirect("http://localhost:13126/authenticated?token");
-                response.getWriter().println("Not Authenticated");
+                // set status to unAuthed
                 response.sendError(401, "Not authenticated");
+
             }
         } else {
-            response.sendRedirect(fullURL + "/unauthenticated");
-            // response.sendError(401, "Not authenticated");
+            response.sendError(401, "Not authenticated");
             response.getWriter().println("Not Authenticated");
         }
     }
