@@ -39,11 +39,11 @@ public class OAuthUtils {
             "https://www.googleapis.com/auth/userinfo.profile",
             "https://www.googleapis.com/auth/userinfo.email");
 
-    private static final String fullURL = "http://localhost:13126"; //System.getenv("REACT_APP_URL");
-    private static final String oauthClientId = "952282231282-ned8emonjrqbhj8v5b8efcr94d3nh13j.apps.googleusercontent.com";//System.getenv("CLIENT_ID");
-    private static final String oauthClientSecret = "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";//System.getenv("CLIENT_SECRET");
-    private static final String oauthAppName = "cpr"; //System.getenv("APP_NAME");
-    private static final String emailDomain = "oswego.edu"; //System.getenv("EMAIL_DOMAIN");
+    private static final String fullURL = System.getenv("REACT_APP_URL");
+    private static final String oauthClientId = System.getenv("CLIENT_ID");
+    private static final String oauthClientSecret = System.getenv("CLIENT_SECRET");
+    private static final String oauthAppName = System.getenv("APP_NAME");
+    private static final String emailDomain = System.getenv("EMAIL_DOMAIN");
 
     public static GoogleAuthorizationCodeFlow flow;
 

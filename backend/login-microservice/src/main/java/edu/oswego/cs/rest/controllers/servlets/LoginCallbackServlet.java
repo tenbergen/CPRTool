@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/login-callback")
 public class LoginCallbackServlet extends AbstractAuthorizationCodeCallbackServlet {
-    private static final String fullURL = "http://localhost:13126"; //System.getenv("REACT_APP_URL");
+    private static final String fullURL = System.getenv("REACT_APP_URL");
 
     @Override
     protected AuthorizationCodeFlow initializeFlow() throws ServletException, IOException {
@@ -60,8 +60,8 @@ public class LoginCallbackServlet extends AbstractAuthorizationCodeCallbackServl
                     response.addCookie(cookie);
                     response.setStatus(200);
 
-                    // response.sendRedirect(fullURL + "/?token=" + jwtToken); // >>> production <<<
-                    response.sendRedirect(fullURL + "/authenticated?token=" + jwtToken); // >>> local branch<<<
+                    response.sendRedirect(fullURL + "/?token=" + jwtToken); // >>> production <<<
+                    // response.sendRedirect(fullURL + "/authenticated?token=" + jwtToken); // >>> local branch<<<
                 } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
                     e.printStackTrace();
                 }
