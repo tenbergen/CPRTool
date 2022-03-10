@@ -17,9 +17,6 @@ public class LogoutServlet extends HttpServlet {
         // invalidate the user's session
         request.getSession().invalidate();
         
-        response.sendRedirect("http://localhost:3000");
-        // response.sendRedirect("http://localhost:13126/authenticated");
-
         response.sendRedirect(fullURL);
 
         //this right here would completely log the users out with all google devices

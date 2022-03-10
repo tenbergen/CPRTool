@@ -10,12 +10,13 @@ import com.ibm.websphere.security.jwt.InvalidClaimException;
 import com.ibm.websphere.security.jwt.JwtException;
 import edu.oswego.cs.rest.controllers.utils.OAuthUtils;
 
+import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 
 @WebServlet("/login-callback")
@@ -30,7 +31,7 @@ public class LoginCallbackServlet extends AbstractAuthorizationCodeCallbackServl
     @Override
     protected String getRedirectUri(HttpServletRequest request) throws ServletException, IOException {
         GenericUrl url = new GenericUrl(request.getRequestURL().toString());
-        url.setRawPath(fullURL + "/login-callback");
+        url.setRawPath("/login-callback");
         return url.build();
     }
 
@@ -57,12 +58,13 @@ public class LoginCallbackServlet extends AbstractAuthorizationCodeCallbackServl
                     response.addCookie(cookie);
                     response.setStatus(200);
 
+                    // response.sendRedirect("http://localhost:3000/?token="+jwtToken);
                     response.sendRedirect(fullURL + "/?token=" + jwtToken);
                 } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
                     e.printStackTrace();
                 }
             } else {
-                response.sendRedirect(fullURL + "/unauthenticated");
+                // response.sendRedirect("http://localhost:13126/authenticated?token");
                 response.getWriter().println("Not Authenticated");
                 response.sendError(401, "Not authenticated");
             }
