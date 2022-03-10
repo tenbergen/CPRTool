@@ -52,23 +52,18 @@ public class LoginCallbackServlet extends AbstractAuthorizationCodeCallbackServl
         if (isUserLoggedIn) {
             if (isOswego) {
                 try {
-                    // get token
                     String jwtToken = OAuthUtils.buildJWT(sessionId);
 
-                    // add to cookie
                     Cookie cookie = new Cookie("jwt_token", jwtToken);
                     response.addCookie(cookie);
                     response.setStatus(200);
 
-                    response.sendRedirect(fullURL + "/?token=" + jwtToken); // >>> production <<<
-                    // response.sendRedirect(fullURL + "/authenticated?token=" + jwtToken); // >>> local branch<<<
+                    response.sendRedirect(fullURL + "/?token=" + jwtToken); 
                 } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
                     e.printStackTrace();
                 }
             } else {
-                // set status to unAuthed
                 response.sendError(401, "Not authenticated");
-
             }
         } else {
             response.sendError(401, "Not authenticated");

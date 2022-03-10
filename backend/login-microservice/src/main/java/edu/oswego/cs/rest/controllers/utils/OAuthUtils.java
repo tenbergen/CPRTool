@@ -61,7 +61,6 @@ public class OAuthUtils {
         return flow;
     }
 
-    // make sure if the user is logged in
     public static boolean isUserLoggedIn(String sessionID) {
         try {
             return newFlow().loadCredential(sessionID) != null;
@@ -70,7 +69,6 @@ public class OAuthUtils {
         }
     }
 
-    // userInfo
     public static Userinfo getUserInfo(String sessionId) throws IOException {
         Credential credential = newFlow().loadCredential(sessionId);
         Oauth2 oauth2Client =
@@ -81,7 +79,6 @@ public class OAuthUtils {
         return oauth2Client.userinfo().get().execute();
     }
 
-    //tokenInfo
     public static Tokeninfo getTokenInfo(String sessionId, String accessToken) throws IOException {
         Credential credential = newFlow().loadCredential(sessionId);
         Oauth2 oauth2Client =
@@ -92,7 +89,6 @@ public class OAuthUtils {
         return oauth2Client.tokeninfo().setAccessToken(accessToken).execute();
     }
 
-    // make sure the logged in user is an @oswego.edu account
     public static boolean isOswego(String sessionId) {
         try {
             Userinfo userinfo = getUserInfo(sessionId);
@@ -102,17 +98,13 @@ public class OAuthUtils {
         }
     }
 
-    // JWTbuilder
     public static String buildJWT(String sessionId) throws IOException, JwtException, InvalidBuilderException, InvalidClaimException {
 
-        // init
         String accessToken = newFlow().loadCredential(sessionId).getAccessToken();
         Userinfo userinfo = getUserInfo(sessionId);
         Set<String> roles = new HashSet<String>();
         roles.add("students");
         
-
-        // Generate RSA Keys
         Map<String, Object> rsaKeys = null;
         
         try {
@@ -121,7 +113,6 @@ public class OAuthUtils {
             e.printStackTrace();
         }
 
-        // get public/private key
         PublicKey publicKey = (PublicKey) rsaKeys.get("public");
         PrivateKey privateKey = (PrivateKey) rsaKeys.get("private");
 
@@ -145,21 +136,16 @@ public class OAuthUtils {
             return "JWT Token is not available!";
         }
     }
-    // getRSAKeys()
+
+
     public static Map<String, Object> getRSAKeys() throws Exception {
-        // Key pair Generator 
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(2048);
         
         KeyPair keyPair = keyPairGenerator.generateKeyPair();// generate key pair
-        
-        // gen privateKey
         PrivateKey privateKey = keyPair.getPrivate(); // generate private
-
-        // gen publicKey        
         PublicKey publicKey = keyPair.getPublic(); // generate public
 
-        // store into a keys:map
         Map<String, Object> keys = new HashMap<String, Object>();
         keys.put("private", privateKey);
         keys.put("public", publicKey);
