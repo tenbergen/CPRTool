@@ -29,7 +29,11 @@
     <applicationManager autoExpand="true"/>
 
     <!-- Configures the application on a specified context root -->
+<<<<<<< HEAD
     <webApplication contextRoot="${app.context.root}" location="professor-assignment-microservice.war" />
+=======
+    <webApplication contextRoot="/" location="professor-assignment-microservice.war" />
+>>>>>>> faee0953067ae33cfcf309a1046fa914a7513fd2
 
     <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
     <ssl id="defaultSSLConfig" trustDefaultCerts="true" />

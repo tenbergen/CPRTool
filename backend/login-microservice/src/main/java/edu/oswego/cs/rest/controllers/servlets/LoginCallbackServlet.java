@@ -10,20 +10,18 @@ import com.ibm.websphere.security.jwt.InvalidClaimException;
 import com.ibm.websphere.security.jwt.JwtException;
 import edu.oswego.cs.rest.controllers.utils.OAuthUtils;
 
+import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 
 @WebServlet("/login-callback")
 public class LoginCallbackServlet extends AbstractAuthorizationCodeCallbackServlet {
-    private static final String protocol = System.getenv("PROTOCOL");
-    private static final String domain = System.getenv("DOMAIN");
-    private static final String port = System.getenv("PORT");
-    private static final String fullURL = protocol + "://" + domain + ":" + port;
+    private static final String fullURL = System.getenv("REACT_APP_URL");
 
     @Override
     protected AuthorizationCodeFlow initializeFlow() throws ServletException, IOException {
@@ -33,7 +31,7 @@ public class LoginCallbackServlet extends AbstractAuthorizationCodeCallbackServl
     @Override
     protected String getRedirectUri(HttpServletRequest request) throws ServletException, IOException {
         GenericUrl url = new GenericUrl(request.getRequestURL().toString());
-        url.setRawPath(fullURL + "/login-callback");
+        url.setRawPath("/login-callback");
         return url.build();
     }
 
@@ -60,18 +58,15 @@ public class LoginCallbackServlet extends AbstractAuthorizationCodeCallbackServl
                     response.addCookie(cookie);
                     response.setStatus(200);
 
-                    response.sendRedirect(fullURL + "/?token=" + jwtToken);
+                    response.sendRedirect(fullURL + "/?token=" + jwtToken); 
                 } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
                     e.printStackTrace();
                 }
             } else {
-                response.sendRedirect(fullURL + "/unauthenticated");
-                response.getWriter().println("Not Authenticated");
                 response.sendError(401, "Not authenticated");
             }
         } else {
-            response.sendRedirect(fullURL + "/unauthenticated");
-            // response.sendError(401, "Not authenticated");
+            response.sendError(401, "Not authenticated");
             response.getWriter().println("Not Authenticated");
         }
     }

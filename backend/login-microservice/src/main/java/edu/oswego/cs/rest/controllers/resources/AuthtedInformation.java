@@ -15,9 +15,6 @@ import com.ibm.websphere.security.jwt.InvalidBuilderException;
 import com.ibm.websphere.security.jwt.InvalidClaimException;
 import com.ibm.websphere.security.jwt.JwtException;
 import com.google.api.services.oauth2.model.Tokeninfo;
-
-
-
 import edu.oswego.cs.rest.controllers.utils.OAuthUtils;
 
 @WebServlet("/authenticated")

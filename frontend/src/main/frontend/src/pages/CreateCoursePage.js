@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const CreateCoursePage = () => {
-    const submitCourseUrl = "http://moxie.cs.oswego.edu:13127/manage/professor/courses/course/create"
+    const submitCourseUrl = `${window.location.protocol}//${window.location.host}/manage/professor/courses/course/create`
     let navigate = useNavigate()
 
     const [formData, setFormData] = useState({
@@ -35,12 +35,12 @@ const CreateCoursePage = () => {
     }
 
     return (
-        <div className="parent">
+        <div className="cpp-parent">
             <SidebarComponent />
-            <div className="container">
-                <h1> New course </h1>
-                <form>
-                    <div className="course-name">
+            <div className="cpp-container">
+                <h2> Add new course </h2>
+                <form className="ccp-form">
+                    <div className="ccp-input-field">
                         <label> <b> Course name: </b> </label>
                         <input
                             type="text"
@@ -51,40 +51,56 @@ const CreateCoursePage = () => {
                         />
                     </div>
 
-                    <div className="course-name">
-                        <label> <b> Course section: </b> </label>
-                        <input
-                            type="number"
-                            name="CourseSection"
-                            value={CourseSection}
-                            required
-                            onChange={(e) => OnChange(e)}
-                        />
+                    <div className="cpp-row-two">
+                        <div className="row-two-first ccp-input-field">
+                            <label> <b> Course abbreviation: </b> </label>
+                            <input
+                                type="text"
+                                name="Abbreviation"
+                                value={Abbreviation}
+                                required
+                                onChange={(e) => OnChange(e)}
+                            />
+                        </div>
+
+                        <div className="ccp-input-field">
+                            <label> <b> Course section: </b> </label>
+                            <input
+                                type="number"
+                                name="CourseSection"
+                                value={CourseSection}
+                                required
+                                onChange={(e) => OnChange(e)}
+                            />
+                        </div>
+
                     </div>
 
-                    <div className="course-name">
-                        <label> <b> Semester: </b> </label>
-                        <input
-                            type="text"
-                            name="Semester"
-                            value={Semester}
-                            required
-                            onChange={(e) => OnChange(e)}
-                        />
+                    <div className="cpp-row-two">
+                        <div className="row-two-first ccp-input-field">
+                            <label> <b> Semester: </b> </label>
+                            <input
+                                type="text"
+                                name="Semester"
+                                value={Semester}
+                                required
+                                onChange={(e) => OnChange(e)}
+                            />
+                        </div>
+
+                        <div className="ccp-input-field">
+                            <label> <b> CRN: </b> </label>
+                            <input
+                                type="text"
+                                name="crn"
+                                // value={Semester}
+                                // required
+                                onChange={(e) => OnChange(e)}
+                            />
+                        </div>
                     </div>
 
-                    <div className="course-name">
-                        <label> <b> Course abbreviation: </b> </label>
-                        <input
-                            type="text"
-                            name="Abbreviation"
-                            value={Abbreviation}
-                            required
-                            onChange={(e) => OnChange(e)}
-                        />
-                    </div>
-
-                    <div className="button">
+                    <div className="ccp-button">
                         <button onClick={handleSubmit}> Create </button>
                     </div>
                 </form>

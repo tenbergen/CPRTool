@@ -1,16 +1,20 @@
-import {
-    LOGIN_SUCCESS,
-    LOGIN_ERROR
-} from './types';
-import axios from "axios";
+// import {
+//     LOGIN_SUCCESS,
+//     LOGIN_ERROR
+// } from './types';
+// import axios from "axios";
+//
+// export const authenticateUser = (token) => {
+//     // set token in local storage
+//     localStorage.setItem("token", token)
+//     return (dispatch) => {
+//         dispatch({
+//             type: "LOGIN_SUCCESS",
+//         });
+//     }
+// }
 
-export const authenticateUser = () => {
-    return (dispatch) => {
-        dispatch({
-            type: "LOGIN_SUCCESS",
-        });
-    }
-}
+// get userRole function
 
 // export const authenticateUser = () => (dispatch, getState) => {
 //     axios.get("http://localhost:13126/login", tokenConfig(getState))
