@@ -5,8 +5,9 @@ import TeacherDashboardPage from '../pages/TeacherDashboardPage';
 import StudentDashboardPage from '../pages/StudentDashboardPage'
 import EditCoursePage from '../pages/EditCoursePage';
 import TodoPage from "../pages/TodoPage";
-import React from 'react';
+import CreateAssignmentPage  from "../pages/CreateAssignmentPage";
 import UnauthedErrorPage from '../pages/UnauthedErrorPage';
+import React from 'react';
 
 
 const RouterHandler = () => {
@@ -19,6 +20,7 @@ const RouterHandler = () => {
         <Route path='studentDashboard' element={<StudentDashboardPage />} />
         <Route path='todoCourse' element={<TodoPage />} />
         <Route path='editCourse' element={<EditCoursePage />} />
+        <Route path='createAssignment' element={<CreateAssignmentPage />} />
         <Route path='unauthenticated' element={<UnauthedErrorPage />} />
         </Routes>
     </BrowserRouter>
