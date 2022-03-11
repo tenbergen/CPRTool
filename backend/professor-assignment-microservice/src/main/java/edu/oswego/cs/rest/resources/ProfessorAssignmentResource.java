@@ -24,7 +24,7 @@ public class ProfessorAssignmentResource {
      * The attachment is processed in FileDao.FileFactory, which reads and
      * reconstructs the file through inputStream and outputStream respectively
      *
-     * @param List<IAttachment> file(s) passed back as form-data
+     * @param attachments type List<IAttachment>: file(s) passed back as form-data
      * @return Response
      * */
     @POST
