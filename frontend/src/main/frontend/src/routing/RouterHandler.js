@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import App from '../App';
 import CreateCoursePage from '../pages/CreateCoursePage';
 import TeacherDashboardPage from '../pages/TeacherDashboardPage';
+import CreateAssignmentPage from '../pages/CreateAssignmentPage';
 import EditCoursePage from '../pages/EditCoursePage';
 import React from 'react';
 import UnauthedErrorPage from '../pages/UnauthedErrorPage';
@@ -14,6 +15,7 @@ const RouterHandler = () => {
         <Route path='/' element={<App />} />
         <Route path='createCourse' element={<CreateCoursePage />} />
         <Route path='teacherDashboard' element={<TeacherDashboardPage />} />
+        <Route path='createAssignment' element={<CreateAssignmentPage />} />
         <Route path='editCourse' element={<EditCoursePage />} />
         <Route path='unauthenticated' element={<UnauthedErrorPage />} />
         <Route path='rosterPage' element={<RosterPage />} />
