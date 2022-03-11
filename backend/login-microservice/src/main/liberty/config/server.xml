@@ -20,6 +20,11 @@
     <!-- Automatically expand WAR files and EAR files -->
     <applicationManager autoExpand="true"/>
 
+    <!-- for rsaPrivateKey -->
+    <keyStore id="defaultKeyStore" password=""/>
+
+    <jwtBuilder expiresInSeconds="600" id="myBuilder" issuer="https://localhost:13126" keyAlias="default"/>
+
     <!-- Configures the application on a specified context root -->
     <webApplication contextRoot="${app.context.root}" location="login-microservice.war">
         <application-bnd>

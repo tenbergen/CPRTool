@@ -9,12 +9,13 @@ import java.io.IOException;
 
 @WebServlet("/logout")
 public class LogoutServlet extends HttpServlet {
-    private static final String fullURL = System.getenv("REACT_APP_URL");;
+    private static final String fullURL = System.getenv("REACT_APP_URL");
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        request.getSession().invalidate(); // using this would invalidate the user's session
-
+        
+        // invalidate the user's session
+        request.getSession().invalidate();
         response.sendRedirect(fullURL);
 
         //this right here would completely log the users out with all google devices
