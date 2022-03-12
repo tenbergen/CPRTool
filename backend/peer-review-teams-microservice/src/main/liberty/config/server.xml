@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <server description="new server">
 
-    <!-- Enable features -->
     <featureManager>
          <feature>jakartaee-8.0</feature>
         <feature>microProfile-4.1</feature>
     </featureManager>
 
-    <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
-    <httpEndpoint id="defaultHttpEndpoint"
-                  httpPort="9080"
-                  httpsPort="9443" />
+    <variable name="default.http.port" defaultValue="13130"/>
+    <variable name="default.https.port" defaultValue="9448"/>
+    <variable name="app.context.root" defaultValue="/"/>
 
-    <!-- Automatically expand WAR files and EAR files -->
+    <httpEndpoint
+            host="*"
+            httpPort="${default.http.port}"
+            httpsPort="${default.https.port}"
+            id="defaultHttpEndpoint"
+    />
+
     <applicationManager autoExpand="true"/>
 
-    <!-- Configures the application on a specified context root -->
     <webApplication contextRoot="/peer-review-teams-microservice" location="peer-review-teams-microservice.war" />
 
-    <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
     <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
+
+    <cors domain="/"
+    allowedOrigins="*"
+    allowedMethods="POST"
+    allowCredentials="true"
+    allowedHeaders="Content-Type"
+    exposeHeaders="Content-Type"/>
 </server>
