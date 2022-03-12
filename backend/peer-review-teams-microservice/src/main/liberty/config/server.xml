@@ -2,12 +2,11 @@
 <server description="new server">
 
     <featureManager>
-         <feature>jakartaee-8.0</feature>
         <feature>microProfile-4.1</feature>
     </featureManager>
 
-    <variable name="default.http.port" defaultValue="13130"/>
-    <variable name="default.https.port" defaultValue="9448"/>
+    <variable name="default.http.port" defaultValue="13129"/>
+    <variable name="default.https.port" defaultValue="9447"/>
     <variable name="app.context.root" defaultValue="/"/>
 
     <httpEndpoint
@@ -19,7 +18,7 @@
 
     <applicationManager autoExpand="true"/>
 
-    <webApplication contextRoot="/peer-review-teams-microservice" location="peer-review-teams-microservice.war" />
+    <webApplication contextRoot="${app.context.root}" location="peer-review-teams-microservice.war" />
 
     <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
 
