@@ -46,6 +46,19 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
 
+  peer-review-teams:
+    build:
+      context: ./backend/peer-review-teams-microservice
+    container_name: cpr-peer-review-teams
+    restart: unless-stopped
+    environment:
+      MONGO_HOSTNAME: ${MONGO_HOSTNAME}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO2_PORT: ${MONGO2_PORT}
+      MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+
   mongo:
     image: mongo:5.0.6
     container_name: cpr-mongo
