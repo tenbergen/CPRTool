@@ -38,7 +38,7 @@ public class FileDAO {
                         if (!line.isEmpty()) csvLines.add(line);
                     if (csvLines.size() == 0) continue;
                     reader.close();
-                    return new FileDAO(modifiedFilename, csvLines);
+                    return new FileDAO(fileName, csvLines);
                 } catch (IOException ignored) {}
             }
         }
