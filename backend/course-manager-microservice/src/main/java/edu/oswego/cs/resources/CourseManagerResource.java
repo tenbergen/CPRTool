@@ -1,24 +1,16 @@
 package edu.oswego.cs.resources;
 
-import com.ibm.websphere.jaxrs20.multipart.IAttachment;
-import com.ibm.websphere.jaxrs20.multipart.IMultipartBody;
 import edu.oswego.cs.daos.FileDAO;
 import edu.oswego.cs.daos.StudentDAO;
 import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.database.CourseInterface;
 import edu.oswego.cs.util.CSVUtil;
-//import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
-import javax.activation.DataHandler;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.ibm.websphere.jaxrs20.multipart.IAttachment;
+import com.ibm.websphere.jaxrs20.multipart.IMultipartBody;
 
 
 @Path("professor")
@@ -91,16 +83,15 @@ public class CourseManagerResource {
         }
         FileDAO fileDAO;
         try {
-            System.out.println("Modified FileName: " + modifiedFileName );
             fileDAO = FileDAO.FileFactory(body.getAllAttachments(), modifiedFileName);
-            fileDAO.getCsvLines().forEach(System.out::println);
-
-
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity("File Corrupted. Try Again").build();
         }
-
-        new CourseInterface().addStudentsFromCSV(fileDAO);
+        try {
+            new CourseInterface().addStudentsFromCSV(fileDAO);
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Students Not Successfully Added.").build();
+        }
         return Response.status(Response.Status.OK).build();
     }
 
