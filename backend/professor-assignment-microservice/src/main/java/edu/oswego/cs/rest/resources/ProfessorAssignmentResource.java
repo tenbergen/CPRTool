@@ -32,7 +32,7 @@ public class ProfessorAssignmentResource {
     @Path("/test")
     @Produces({MediaType.TEXT_PLAIN})
     public String test() throws Exception {
-        new AssignmentInterface("CSC480","1");
+        new AssignmentInterface("CSC480");
         return System.getProperty("user.dir");
     }
     @POST

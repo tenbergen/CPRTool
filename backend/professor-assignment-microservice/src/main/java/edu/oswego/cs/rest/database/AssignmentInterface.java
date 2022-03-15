@@ -18,7 +18,7 @@ public class AssignmentInterface {
 
     boolean isSynced = true;
 
-    public AssignmentInterface(String CID,String AssID) throws Exception {
+    public AssignmentInterface(String CID) throws Exception {
         try{
             DatabaseManager manager = new DatabaseManager();
             assDatabase = manager.getAssDB();
@@ -49,16 +49,16 @@ public class AssignmentInterface {
         }
 
         String FileStructure = relativePathPrefix+"Courses"+reg+CID+reg;
-        new File(FileStructure).mkdirs();
-        int x = 1;
-        while(!(new File(FileStructure + x).mkdirs())){
-            x++;
+        File dir = new File(FileStructure);
+        dir.mkdirs();
+        int nextPos = 0;
+        if(dir.list().length != 0){
+            nextPos = Arrays.asList(dir.list()).stream().map(z->Integer.parseInt(z)).max(Integer::compare).get().intValue()+1;
         }
-        FileStructure += x;
+
+        FileStructure += nextPos;
         new File(FileStructure + reg + "TeamSubmissions").mkdirs();
         new File(FileStructure + reg + "PeerReviews").mkdirs();
-
-
 
     }
 
