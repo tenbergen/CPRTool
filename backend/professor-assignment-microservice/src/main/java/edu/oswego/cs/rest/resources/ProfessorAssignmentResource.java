@@ -2,6 +2,7 @@ package edu.oswego.cs.rest.resources;
 
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.rest.daos.FileDAO;
+import edu.oswego.cs.rest.database.AssignmentInterface;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import javax.ws.rs.*;
@@ -27,6 +28,13 @@ public class ProfessorAssignmentResource {
      * @param attachments type List<IAttachment>: file(s) passed back as form-data
      * @return Response
      * */
+    @GET
+    @Path("/test")
+    @Produces({MediaType.TEXT_PLAIN})
+    public String test() throws Exception {
+        new AssignmentInterface("CSC480","1");
+        return System.getProperty("user.dir");
+    }
     @POST
     @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf", MediaType.TEXT_PLAIN})
     @Path("/courses/course/assignments/upload")
