@@ -20,14 +20,14 @@ public class ProfessorAssignmentResource {
     public ProfessorAssignmentResource() {
     }
 
-    /**
+    /*
      * File is uploaded as form-data and passed back as a List<IAttachment>
      * The attachment is processed in FileDao.FileFactory, which reads and
      * reconstructs the file through inputStream and outputStream respectively
      *
      * @param attachments type List<IAttachment>: file(s) passed back as form-data
      * @return Response
-     * */
+      */
     @GET
     @Path("/test")
     @Produces({MediaType.TEXT_PLAIN})
@@ -67,6 +67,7 @@ public class ProfessorAssignmentResource {
                 System.out.println("Non-file attachment value: " + sb.toString());
             } else {
                 FileDAO.FileFactory(fileName,attachment);
+
 //                DB.getFileDao(FileDAO.FileFactory(fileName,attachment));
             }
             if (stream != null) {
