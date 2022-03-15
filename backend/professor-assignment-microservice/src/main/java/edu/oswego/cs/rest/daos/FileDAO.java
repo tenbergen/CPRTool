@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class FileDAO {
     private String filename;
     private String course;
-    private static final String UPLOAD_FOLDER = getAssignmentDir();
+    private static final String UPLOAD_FOLDER = getProjectRootDir();
 //    v this is how UPLOAD_FOLDER WILL END UP LOOKING LIKE v
 //  private static final String UPLOAD_FOLDER = DB.findHwFolder(course, filename);
 
@@ -38,13 +38,19 @@ public class FileDAO {
      *
      * @return String directory location the hw files should be saved to
      * */
-    private static String getAssignmentDir(){
-        String pattern = Pattern.quote(System.getProperty("file.separator"));
-        StringBuilder startingDir = new StringBuilder(System.getProperty("user.dir") + "\\");
-        String[] splitDir = startingDir.toString().split(pattern);
-        int rootIndex = Arrays.asList(splitDir).indexOf("professor-assignment-microservice");
-        int l = splitDir.length;
-        startingDir.append("../".repeat(Math.max(0, (l - rootIndex - 1))));
-        return startingDir.toString();
+    public static String getProjectRootDir(){
+        String path = (System.getProperty("user.dir").contains("\\")) ? System.getProperty("user.dir").replace("\\", "/") : System.getProperty("user.dir");
+        String[] slicedPath = path.split("/");
+        String targetDir = "professor-assignment-microservice";
+        int i;
+        StringBuilder relativePathPrefix = new StringBuilder();
+        System.out.println(Arrays.toString(slicedPath));
+        for (i = slicedPath.length - 1; ! slicedPath[i].equals(targetDir); i--) {
+            relativePathPrefix.append("../");
+        }
+        if (System.getProperty("user.dir").contains("\\")) {
+            relativePathPrefix = new StringBuilder(relativePathPrefix.toString().replace("/", "\\"));
+        }
+        return relativePathPrefix.toString();
     }
 }

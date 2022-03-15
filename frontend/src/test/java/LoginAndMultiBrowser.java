@@ -9,6 +9,8 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
+
 public class LoginAndMultiBrowser {
 
     // drivers for multiple browsers
@@ -45,10 +47,9 @@ public class LoginAndMultiBrowser {
 
         cDriver.get("http://129.3.168.61:13129/");
         cDriver.manage().window().maximize();
-        WebDriverWait wait = new WebDriverWait(cDriver,10);
-        WebElement loginButton = wait.until(
-                ExpectedConditions.presenceOfElementLocated(By.cssSelector(".googleButton > button:nth-child(1)")));
-        loginButton.click();
+        WebDriverWait wait = (WebDriverWait) new WebDriverWait(cDriver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.elementToBeClickable(By.cssSelector(".googleButton > button:nth-child(1)")));
+
 
         // wait for our desired element to appear
         // in this case, that's the first course element

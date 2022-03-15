@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 public class NavigationAndInput {
 
-    // web driver to control broswer
+    // web driver to control browser
     private static WebDriver driver;
 
     @BeforeAll
