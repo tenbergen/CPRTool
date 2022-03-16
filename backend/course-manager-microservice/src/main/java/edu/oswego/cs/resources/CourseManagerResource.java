@@ -75,21 +75,17 @@ public class CourseManagerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/student/massadd")
     public Response addStudentByCSVFile(IMultipartBody body) throws Exception {
-        String modifiedFileName = "";
-        // Checking for if the submitting file is the right file type, only accepting csv files.
-        for (IAttachment attachment : body.getAllAttachments()) {
-            String name = attachment.getDataHandler().getName();
-            if (name.contains("Cloud_name")) modifiedFileName = CSVUtil.getModifiedFileName(attachment);
-        }
         FileDAO fileDAO;
         try {
-            fileDAO = FileDAO.FileFactory(body.getAllAttachments(), modifiedFileName);
+            fileDAO = FileDAO.FileFactory(body.getAllAttachments());
         } catch (Exception e) {
+            System.out.println("File corruption.");
             return Response.status(Response.Status.BAD_REQUEST).entity("File Corrupted. Try Again").build();
         }
         try {
             new CourseInterface().addStudentsFromCSV(fileDAO);
         } catch (Exception e) {
+            System.out.println("Student Not added.");
             return Response.status(Response.Status.BAD_REQUEST).entity("Students Not Successfully Added.").build();
         }
         return Response.status(Response.Status.OK).build();

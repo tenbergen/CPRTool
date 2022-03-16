@@ -21,12 +21,11 @@ public class FileDAO {
      * @return FileDAO Instance
      * @throws Exception File Corruption Exception
      */
-    public static FileDAO FileFactory(List<IAttachment> attachments, String modifiedFilename) throws Exception {
+    public static FileDAO FileFactory(List<IAttachment> attachments) throws Exception {
         ArrayList<String> csvLines = new ArrayList<>();
 
         for (IAttachment attachment : attachments) {
             if (attachment == null) continue;
-
             String fileName = attachment.getDataHandler().getName();
 
             if (fileName != null) {
