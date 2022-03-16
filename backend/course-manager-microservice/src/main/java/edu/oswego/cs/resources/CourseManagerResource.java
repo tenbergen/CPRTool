@@ -1,13 +1,17 @@
 package edu.oswego.cs.resources;
 
+import edu.oswego.cs.daos.FileDAO;
 import edu.oswego.cs.daos.StudentDAO;
 import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.database.CourseInterface;
+import edu.oswego.cs.util.CSVUtil;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
+import com.ibm.websphere.jaxrs20.multipart.IAttachment;
+import com.ibm.websphere.jaxrs20.multipart.IMultipartBody;
+
 
 @Path("professor")
 public class CourseManagerResource {
@@ -18,45 +22,76 @@ public class CourseManagerResource {
     @Path("courses/course/create")
     public Response createCourse(CourseDAO course) {
         try {
-
             new CourseInterface().addCourse(course);
-        } catch (IOException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Course Already Added").build();
         }
-        return Response.status(Response.Status.OK).build();
+        return Response.status(Response.Status.OK).entity("Course Successfully Added").build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/delete")
-    public Response deleteCourse(CourseDAO course) throws IOException {
+    public Response deleteCourse(CourseDAO course) {
         try {
-
             new CourseInterface().removeCourse(course);
-        } catch (IOException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Course Does Not Exist").build();
         }
-        return Response.status(Response.Status.OK).build();
+        return Response.status(Response.Status.OK).entity("Course Successfully Deleted").build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/student/add")
-    public Response addStudent(StudentDAO studentDAO) throws Exception {
+    public Response addStudent(StudentDAO studentDAO) {
         CourseDAO course = new CourseDAO(studentDAO.courseName, studentDAO.courseSection, studentDAO.semester ,studentDAO.abbreviation);
-        new CourseInterface().addStudent(studentDAO.email, course);
-        return Response.status(Response.Status.OK).build();
+        try {
+            new CourseInterface().addStudent(studentDAO.email, course);
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Student/Course Does Not Exist").build();
+        }
+        return Response.status(Response.Status.OK).entity("Student Successfully Added").build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/student/delete")
-    public Response deleteStudent(StudentDAO studentDAO) throws Exception {
+    public Response deleteStudent(StudentDAO studentDAO) {
         CourseDAO course = new CourseDAO(studentDAO.courseName, studentDAO.courseSection, studentDAO.semester,studentDAO.abbreviation);
-        new CourseInterface().removeStudent(studentDAO.email, course);
+        try {
+            new CourseInterface().removeStudent(studentDAO.email, course);
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Student/Course Does Not Exist").build();
+        }
+        return Response.status(Response.Status.OK).entity("Student Successfully Removed").build();
+    }
+
+    @POST
+    @Consumes({MediaType.MULTIPART_FORM_DATA})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("courses/course/student/massadd")
+    public Response addStudentByCSVFile(IMultipartBody body) throws Exception {
+        String modifiedFileName = "";
+        // Checking for if the submitting file is the right file type, only accepting csv files.
+        for (IAttachment attachment : body.getAllAttachments()) {
+            String name = attachment.getDataHandler().getName();
+            if (name.contains("Cloud_name")) modifiedFileName = CSVUtil.getModifiedFileName(attachment);
+        }
+        FileDAO fileDAO;
+        try {
+            fileDAO = FileDAO.FileFactory(body.getAllAttachments(), modifiedFileName);
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("File Corrupted. Try Again").build();
+        }
+        try {
+            new CourseInterface().addStudentsFromCSV(fileDAO);
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Students Not Successfully Added.").build();
+        }
         return Response.status(Response.Status.OK).build();
     }
 
