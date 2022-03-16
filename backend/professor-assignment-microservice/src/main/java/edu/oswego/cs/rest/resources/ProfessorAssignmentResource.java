@@ -28,6 +28,13 @@ public class ProfessorAssignmentResource {
      * @param attachments type List<IAttachment>: file(s) passed back as form-data
      * @return Response
       */
+    @GET
+    @Path("/remove")
+    public void remove() throws Exception {
+        String assName = "CSC580-800-spring-2022.pdf";
+        String CID = "CSC580-800-spring-2022";
+        new AssignmentInterface().remove(assName,CID);
+    }
 
     @POST
     @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf", MediaType.TEXT_PLAIN})
@@ -61,7 +68,7 @@ public class ProfessorAssignmentResource {
                 System.out.println("Non-file attachment value: " + sb.toString());
             } else {
 
-                new AssignmentInterface(FileDAO.FileFactory(fileName,attachment));
+                new AssignmentInterface().add(FileDAO.FileFactory(fileName,attachment));
 //                DB.getFileDao(FileDAO.FileFactory(fileName,attachment));
             }
             if (stream != null) {

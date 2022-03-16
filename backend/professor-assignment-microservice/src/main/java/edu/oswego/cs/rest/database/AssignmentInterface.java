@@ -4,10 +4,12 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoIterable;
 import edu.oswego.cs.rest.daos.FileDAO;
+import org.apache.commons.io.FileUtils;
 import org.bson.Document;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -23,19 +25,74 @@ public class AssignmentInterface {
     String reg;
     String CID;
 
+    FileDAO fileDAO;
+
     int nextPos = 0;
 
     boolean isSynced = true;
 
-    public AssignmentInterface(FileDAO fileDAO) throws Exception {
-        this.CID = fileDAO.getCourse();
+    public AssignmentInterface() throws Exception {
         initiliseDatabases();
+    }
+    public void add(FileDAO fileDAO)throws Exception{
+        this.CID = fileDAO.getCourse();
+        this.fileDAO = fileDAO;
         String relativePathPrefix = getRelPath();
         String FileStructure = makeFileStructure(relativePathPrefix);
         fileDAO.writeFile(FileStructure+reg+fileDAO.getFilename());
         Document d = makeDBEntry(fileDAO.getFilename());
         if(isSynced)addToUsers(d);
     }
+    public void remove(String AssName,String courseID) throws IOException {
+        String relativePathPrefix = getRelPath();
+        Document ass = assDatabase.getCollection(assCol).findOneAndDelete(new Document("AssName",AssName).append("courseID",courseID));
+        if(ass==null) return;
+        String FileStructure = relativePathPrefix+"Courses"+reg+courseID+reg+ass.get("AssID");
+        FileUtils.deleteDirectory(new File(FileStructure));
+        if(isSynced)removeFromUsers(AssName,courseID);
+    }
+    public void removeFromUsers(String AssName, String courseID){
+        Document professor = userDatabase.getCollection(profCol).findOneAndDelete(new Document());
+        ArrayList asses = new ArrayList();
+        if(professor.get("Assignments")!=null){
+            asses = (ArrayList)professor.get("Assignments");
+        }
+        for(Object ass: asses){
+            if(((Document)ass).get("AssName").equals(AssName)){
+                asses.remove(ass);
+                break;
+            }
+        }
+        professor.put("Assignments",asses);
+        userDatabase.getCollection(profCol).insertOne(professor);
+
+        ArrayList courses = (ArrayList) professor.get("Courses");
+        ArrayList roster = new ArrayList();
+        for(Object o: courses){
+            if(((Document)o).get("courseID").equals(courseID)){
+                roster = (ArrayList)((Document)o).get("Students");
+                break;
+            }
+        }
+
+        for(Object o: roster){
+            Document student = userDatabase.getCollection(studentCol).findOneAndDelete(new Document("StudentID",o.toString()));
+            ArrayList studentasses = new ArrayList<>();
+            if(student.get("Assignments") != null){
+                studentasses = (ArrayList)student.get("Assignments");
+            }
+            for(Object ass:studentasses){
+                if(((Document)ass).get("AssName").equals(AssName)){
+                    asses.remove(ass);
+                    break;
+                }
+            }
+            student.put("Assignments",asses);
+            userDatabase.getCollection(studentCol).insertOne(student);
+        }
+
+    }
+
 
     public void initiliseDatabases() throws Exception {
         try{
@@ -101,7 +158,8 @@ public class AssignmentInterface {
         Document ass = new Document()
                 .append("courseID",CID)
                 .append("AssID",nextPos)
-                .append("AssName",fileName);
+                .append("AssName",fileName)
+                .append("Synced",isSynced);
         assCollection.insertOne(ass);
         return ass;
     }

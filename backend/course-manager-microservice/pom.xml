@@ -63,6 +63,12 @@
             <version>1.0.0-RC1</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.ibm.websphere.appserver.api</groupId>
+            <artifactId>com.ibm.websphere.appserver.api.jaxrs20</artifactId>
+            <version>1.0.10</version>
+        </dependency>
+
 
     </dependencies>
 
