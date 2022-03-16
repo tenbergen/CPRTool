@@ -28,17 +28,11 @@ public class ProfessorAssignmentResource {
      * @param attachments type List<IAttachment>: file(s) passed back as form-data
      * @return Response
       */
-    @GET
-    @Path("/test")
-    @Produces({MediaType.TEXT_PLAIN})
-    public String test() throws Exception {
-        new AssignmentInterface("CSC480");
-        return System.getProperty("user.dir");
-    }
+
     @POST
     @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf", MediaType.TEXT_PLAIN})
     @Path("/courses/course/assignments/upload")
-    public Response postFormData(List<IAttachment> attachments) throws IOException{
+    public Response postFormData(List<IAttachment> attachments) throws Exception {
 
         InputStream stream = null;
         for (IAttachment attachment : attachments) {
@@ -66,8 +60,8 @@ public class ProfessorAssignmentResource {
                 }
                 System.out.println("Non-file attachment value: " + sb.toString());
             } else {
-                FileDAO.FileFactory(fileName,attachment);
 
+                new AssignmentInterface(FileDAO.FileFactory(fileName,attachment));
 //                DB.getFileDao(FileDAO.FileFactory(fileName,attachment));
             }
             if (stream != null) {
