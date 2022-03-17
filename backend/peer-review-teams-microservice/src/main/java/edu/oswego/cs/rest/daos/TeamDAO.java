@@ -1,6 +1,5 @@
 package edu.oswego.cs.rest.daos;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.json.bind.annotation.JsonbCreator;
@@ -10,21 +9,21 @@ import javax.persistence.Id;
 
 import com.mongodb.lang.NonNull;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor
 @Data
+@AllArgsConstructor
 public class TeamDAO {
     
     @Id public @JsonbProperty("TeamID") @NonNull String teamID; // teamID will be the pointer of the TeamDAO since teamName is not generated until .isFull = true
     
-    public @JsonbProperty("TeamName") String teamName;
+    public @JsonbProperty("Team Name") String teamName;
     public @JsonbProperty("Team Members") @NonNull HashMap<String, Boolean> teamMembers; // teamMembers = {"studID", isStudentFinalized:boolean}
-    public @JsonbProperty("Member Requests") ArrayList<String> memRequests;
     public @JsonbProperty("Is Full") @NonNull boolean isFull;
     public @JsonbProperty("Is Finalized") @NonNull boolean isFinalized; // make sure if everyone in the team hit the "finalize" button
+    // public @JsonbProperty("Member Requests") ArrayList<String> memRequests; //deprecated
 
     @JsonbCreator public TeamDAO( 
         @JsonbProperty("TeamID") String teamID
@@ -35,9 +34,9 @@ public class TeamDAO {
 
         this.teamName = "";   // teamName is not generated until the .isFull is true
         this.teamMembers = new HashMap<String, Boolean>(); // create the teamMembers hashMap in resources
-        this.memRequests = new ArrayList<String>(); // contains only studentID
         this.isFull = false;
         this.isFinalized = false;
+        // this.memRequests = new ArrayList<String>(); // deprecated
 
     }
     

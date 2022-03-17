@@ -11,10 +11,17 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import edu.oswego.cs.rest.daos.StudentDAO;
 import edu.oswego.cs.rest.daos.TeamDAO;
 
 @Path("/teams")
 public class peerReviewTeamsResource {
+    @GET
+    public String get() {
+        TeamDAO team = new TeamDAO("teamID");
+
+        return team.toString();
+    }
     
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -86,7 +93,7 @@ public class peerReviewTeamsResource {
                 }
         */
 
-        return new ArrayList<TeamDAO>(List.of(new TeamDAO())); // change this
+        return new ArrayList<TeamDAO>(List.of(new TeamDAO("teamID"))); // change this
     }
 
     @POST
