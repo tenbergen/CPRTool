@@ -18,7 +18,7 @@ public class StudentDAO {
     /* team-MS */
     public @JsonbProperty("TeamID") String teamID;
     public @JsonbProperty("Team Lead") boolean isLead;
-    public @JsonbProperty("Team Lead") boolean confirmFinalized;
+    public @JsonbProperty("Finalized") boolean confirmFinalized;
     /* end team-MS */
 
     public @JsonbProperty("Abbreviation") @NonNull String abbreviation;

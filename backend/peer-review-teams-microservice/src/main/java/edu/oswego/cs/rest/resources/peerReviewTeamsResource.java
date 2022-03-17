@@ -3,6 +3,10 @@ package edu.oswego.cs.rest.resources;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
+import javax.json.bind.annotation.JsonbProperty;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -11,16 +15,44 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import edu.oswego.cs.rest.daos.StudentDAO;
+import org.bson.Document;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+
 import edu.oswego.cs.rest.daos.TeamDAO;
+import edu.oswego.cs.rest.database.TeamInterface;
+import edu.oswego.cs.rest.requests.TeamInitRequest;
 
 @Path("/teams")
 public class peerReviewTeamsResource {
-    @GET
-    public String get() {
-        TeamDAO team = new TeamDAO("teamID");
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("team/professor/initialize")
+    // public String initTeam(@RequestBody TeamInitRequest teamInit) {
+    public JsonArray initTeam(@RequestBody TeamInitRequest teamInit) {
+        /* DESCRIPTION:
+                - Happen right after professor initialize the course
+        */
 
-        return team.toString();
+        /* TODO
+            set courseID, teamSize, TeamDAO[] teams, max_teams = totalStudents / teamSize (not for prime numbers)
+         */
+        ArrayList<Integer> res;
+        try {
+            res = new TeamInterface().teamInitHandler(teamInit);
+            JsonArrayBuilder builder = Json.createArrayBuilder();
+		    for (Integer value : res) {
+			    builder.add(value);
+		    }
+            JsonArray doc = builder.build();
+            return doc;
+
+        } catch (Exception e) {
+            //TODO: handle exception
+            e.printStackTrace();
+            return null;
+        }
+
+        // return Response.status(Response.Status.OK).entity("Team Successfully Initialized").build();
     }
     
     @POST
