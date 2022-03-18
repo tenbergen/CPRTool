@@ -23,20 +23,17 @@ public class TeamDAO {
     public @JsonbProperty("Team Members") @NonNull HashMap<String, Boolean> teamMembers; // teamMembers = {"studID", isStudentFinalized:boolean}
     public @JsonbProperty("Is Full") @NonNull boolean isFull;
     public @JsonbProperty("Is Finalized") @NonNull boolean isFinalized; // make sure if everyone in the team hit the "finalize" button
-    // public @JsonbProperty("Member Requests") ArrayList<String> memRequests; //deprecated
 
     @JsonbCreator public TeamDAO( 
         @JsonbProperty("TeamID") String teamID
     ) {
 
-        this.teamID = teamID; // teamID can be the position of the team (index 0 index 1 ...)
-                              // this can be sent from FE or retrieved from DB
+        this.teamID = teamID; // teamID can be the position of the team (index 0 index 1 ...) sent from FE
 
         this.teamName = "";   // teamName is not generated until the .isFull is true
         this.teamMembers = new HashMap<String, Boolean>(); // create the teamMembers hashMap in resources
         this.isFull = false;
         this.isFinalized = false;
-        // this.memRequests = new ArrayList<String>(); // deprecated
 
     }
     

@@ -1,13 +1,11 @@
 package edu.oswego.cs.rest.resources;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
-import javax.json.bind.annotation.JsonbProperty;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -16,79 +14,58 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.bson.Document;
-import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
 import edu.oswego.cs.rest.daos.TeamDAO;
 import edu.oswego.cs.rest.database.TeamInterface;
-import edu.oswego.cs.rest.requests.InitTeamRequest;
+import edu.oswego.cs.rest.requests.InitTeamParam;
+import edu.oswego.cs.rest.requests.JoinTeamParam;
 
 @Path("/teams")
 public class peerReviewTeamsResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("team/professor/initialize")
-    public String initTeam(@RequestBody InitTeamRequest initTeam) {
+    public String initTeam(InitTeamParam request) {
         /*
             scope: professor
             desc: Initialize teams for each course
             FE: 
-                + This API returns an array of integer outlines the team size for each team for the whole course.
+                + This API returns the "team outline" array of integer presents the team size for each team for the whole course.
                 + FE will use this array to decide the total teams each course has and how many team members each team has
                     i.e. create placeholders for each team
         */
         
-        try {
-            ArrayList<Integer> res = new TeamInterface().initTeamHandler(initTeam);
-            JsonArrayBuilder builder = Json.createArrayBuilder();
-            for (Integer value : res) {
-                builder.add(value);
-            }
-            JsonArray teams = builder.build();
-            return teams.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "Team outline is not available";
+        // ArrayList<String> res = new TeamInterface().initTeamHandler(request);
+        ArrayList<Integer> res = new TeamInterface().initTeamHandler(request);
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+        for (Integer value : res) {
+            builder.add(value);
         }
-
+        JsonArray teams = builder.build();
+        return teams.toString();
     }
     
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("team/create")
-    public Response createTeam(String studentID, String newTeamID) { 
-        /* DESCRIPTION:
-                - requirements 4.2.3-1, 4.2.3-2   
-                - Happen right after a team lead hit generate team button
-                - Team name is not available at this point so teamID is the pointer
-                - The FE just need to send the newTeamID:string and studentID:string along with the HTTP request
+    @Path("team/join")
+    // public Response joinTeam(JoinTeamParam request) { 
+    public String joinTeam(JoinTeamParam request) { 
+        /*
+            scope: every students
+            desc: allows students to join the team
+            FE: This API returns 
+                + 200 OK => Sucessfully join
+                + 400 BR => failed
+                
         */
         try {
-
-            /* TODO
-                TeamInterface::createTeamHandler(String studentID, newTeamID) {
-                    Compare DB.max_teams with DB.team_counts
-                    - if team_counts < max_teams
-                        + make a new TeamDAO instance
-                            * TeamDAO newTeamDAO = new TeamDAO(newTeamID);
-                        + Find the student with the param studentID 
-                            * make this student team lead
-                        + make a HashMap<String, boolean> members = {teamLead=false} 
-                        + push the new hashmap members to the newTeamDAO
-                            * newTeamDAO.teamMembers = members;
-                        + add the team to DB
-                        + DB.team_counts += 1
-                        + HTTP 200 OK 
-
-                    - if team_counts >= max_teams 
-                        + HTTP 400 BAD REQUEST
-                }
-            */
-             
+             String student = new TeamInterface().joinTeamHandler(request);
+             return student;
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Too Many Teams").build();
+            // return Response.status(Response.Status.BAD_REQUEST).entity("Too Many Teams").build();
+            return "nothingjhjh";
         }
-        return Response.status(Response.Status.OK).entity("Team Successfully generated").build();
+        // return Response.status(Response.Status.OK).entity("Team Successfully generated").build();
 
     }
 

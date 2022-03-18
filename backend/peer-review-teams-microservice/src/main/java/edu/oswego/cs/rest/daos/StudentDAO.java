@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 
+import java.util.ArrayList;
+
 import javax.json.bind.annotation.JsonbProperty;
 
 
@@ -14,16 +16,22 @@ import javax.json.bind.annotation.JsonbProperty;
 @Data
 @AllArgsConstructor
 public class StudentDAO {
-    @Id public @JsonbProperty("Email") @NonNull String email;
-    /* team-MS */
+    @Id public @JsonbProperty("studentID") @NonNull String studentID; // email
+    /* for team*/
     public @JsonbProperty("TeamID") String teamID;
     public @JsonbProperty("Team Lead") boolean isLead;
     public @JsonbProperty("Finalized") boolean confirmFinalized;
-    /* end team-MS */
+    /* course */
+    public @JsonbProperty("Course ID") @NonNull ArrayList<String> courses;
 
-    public @JsonbProperty("Abbreviation") @NonNull String abbreviation;
-    public @JsonbProperty("CourseSection") @NonNull int courseSection;
-    public @JsonbProperty("Semester") @NonNull String semester;
-    public @JsonbProperty("CourseName") @NonNull String courseName;
+    public StudentDAO(
+        @JsonbProperty("Email") String studentID
+    ) {
+        this.studentID = studentID;
+        this.teamID = "";
+        this.isLead = false;
+        this.confirmFinalized = false;
+
+    }
 
 }
