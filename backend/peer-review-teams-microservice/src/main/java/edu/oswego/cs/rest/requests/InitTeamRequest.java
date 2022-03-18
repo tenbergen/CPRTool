@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class TeamInitRequest {
+public class InitTeamRequest {
     private String courseID;
     private int teamSize;
 }

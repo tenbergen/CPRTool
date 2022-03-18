@@ -1,5 +1,6 @@
 package edu.oswego.cs.rest.resources;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,39 +21,36 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
 import edu.oswego.cs.rest.daos.TeamDAO;
 import edu.oswego.cs.rest.database.TeamInterface;
-import edu.oswego.cs.rest.requests.TeamInitRequest;
+import edu.oswego.cs.rest.requests.InitTeamRequest;
 
 @Path("/teams")
 public class peerReviewTeamsResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("team/professor/initialize")
-    // public String initTeam(@RequestBody TeamInitRequest teamInit) {
-    public JsonArray initTeam(@RequestBody TeamInitRequest teamInit) {
-        /* DESCRIPTION:
-                - Happen right after professor initialize the course
+    public String initTeam(@RequestBody InitTeamRequest initTeam) {
+        /*
+            scope: professor
+            desc: Initialize teams for each course
+            FE: 
+                + This API returns an array of integer outlines the team size for each team for the whole course.
+                + FE will use this array to decide the total teams each course has and how many team members each team has
+                    i.e. create placeholders for each team
         */
-
-        /* TODO
-            set courseID, teamSize, TeamDAO[] teams, max_teams = totalStudents / teamSize (not for prime numbers)
-         */
-        ArrayList<Integer> res;
+        
         try {
-            res = new TeamInterface().teamInitHandler(teamInit);
+            ArrayList<Integer> res = new TeamInterface().initTeamHandler(initTeam);
             JsonArrayBuilder builder = Json.createArrayBuilder();
-		    for (Integer value : res) {
-			    builder.add(value);
-		    }
-            JsonArray doc = builder.build();
-            return doc;
-
-        } catch (Exception e) {
-            //TODO: handle exception
+            for (Integer value : res) {
+                builder.add(value);
+            }
+            JsonArray teams = builder.build();
+            return teams.toString();
+        } catch (IOException e) {
             e.printStackTrace();
-            return null;
+            return "Team outline is not available";
         }
 
-        // return Response.status(Response.Status.OK).entity("Team Successfully Initialized").build();
     }
     
     @POST
