@@ -93,7 +93,7 @@ services:
   
   mongo3:
     image: mongo:5.0.6
-    container_name: cpr-mongo2
+    container_name: cpr-mongo3
     restart: unless-stopped
     volumes:
       - ${DATABASE_FOLDER_3}:/data/db
@@ -109,7 +109,7 @@ services:
         
   mongo4:
     image: mongo:5.0.6
-    container_name: cpr-mongo2
+    container_name: cpr-mongo4
     restart: unless-stopped
     volumes:
       - ${DATABASE_FOLDER_4}:/data/db
