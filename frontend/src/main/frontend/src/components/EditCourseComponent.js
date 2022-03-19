@@ -2,6 +2,7 @@ import React from "react-dom";
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 import "./styles/EditCourse.css"
+import "./styles/DeleteModal.css"
 
 const EditCourseComponent = () => {
     const deleteUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/delete`
@@ -42,6 +43,7 @@ const EditCourseComponent = () => {
     //     })
     //     navigate("/teacherDashboard")
     // }
+
     //
     // const editCourse = async () => {
     //     // add
@@ -49,9 +51,25 @@ const EditCourseComponent = () => {
     //         console.log(response)
     //     })
     // }
+
+    const modal = () => {
+        return (
+            <div id="deleteModal">
+                <div id="modalContent">
+                    <span id="deleteSpan">Are you sure you want to delete this course?</span>
+                    <div id="deleteButtons">
+                        <button /*onClick={} */ >Yes</button>
+                        <button onClick={handleClose}>No</button>
+                    </div>
+                </div>
+            </div>
+
+        )
+    }
     
     const [showModal, setShow] = useState(false)
     const handleShow = () => setShow(true)
+    const handleClose = () => setShow(false)
 
     return (
         <form id="editCourseForm">
@@ -90,7 +108,7 @@ const EditCourseComponent = () => {
                 <button> Submit</button>
                 <a onClick={handleShow} target="_blank"> Delete course </a>
                 <div>
-                    {}
+                    {showModal ? modal() : null}
                 </div>
             </div>
         </form>

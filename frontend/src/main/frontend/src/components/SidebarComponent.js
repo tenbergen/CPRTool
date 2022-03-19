@@ -1,5 +1,6 @@
 //import useState hook to create menu collapse state
 import React  from 'react';
+import { Link } from "react-router-dom";
 
 //import react pro sidebar components
 import {
@@ -25,15 +26,19 @@ const handleLogout = () => {
 }
 
 const logoutURL = `${process.env.REACT_APP_URL}/logout`
+
 const SidebarComponent = () => {
   return (
     <>
       <div id='sidebar'>
         <ProSidebar>
           <SidebarContent>
+           {/* Need to use jwt to decide which dashboard to goto*/}
+           <Link to="/teacherDashboard">
             <Menu iconShape='circle'>
               <MenuItem icon={<FaList />}>Courses</MenuItem>
             </Menu>
+           </Link>
           </SidebarContent>
           <SidebarFooter>
             <a href={logoutURL} onClick={handleLogout}>
