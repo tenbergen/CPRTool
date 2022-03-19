@@ -11,24 +11,26 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.bson.Document;
 
-import edu.oswego.cs.rest.daos.TeamDAO;
 import edu.oswego.cs.rest.database.TeamInterface;
-import edu.oswego.cs.rest.requests.InitTeamParam;
-import edu.oswego.cs.rest.requests.JoinTeamParam;
+import edu.oswego.cs.rest.requests.TeamParam;
 
 @Path("/teams")
 public class peerReviewTeamsResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces("application/json")
     @Path("team/professor/initialize")
-    public String initTeam(InitTeamParam request) {
+    public Response initTeam(TeamParam request) {
         /*
          - scope: professor
          - desc: Initialize teams for each course
+         - params: {"courseID", "teamSize"}
          - FE: 
             + This API returns the "team outline" array of integer presents the team size for each team for the whole course.
             + FE will use this array to decide the total teams each course has and how many team members each team has
@@ -36,21 +38,18 @@ public class peerReviewTeamsResource {
             + Also, FE will need to include the element in the array in each http request call to "join team" api
         */
         ArrayList<Integer> res = new TeamInterface().initTeamHandler(request);
-        JsonArrayBuilder builder = Json.createArrayBuilder();
-        for (Integer value : res) {
-            builder.add(value);
-        }
-        JsonArray teams = builder.build();
-        return teams.toString();
+        return Response.status(Response.Status.OK).entity(res).build();
+
     }
     
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("team/join")
-    public Response joinTeam(JoinTeamParam request) { 
+    public Response joinTeam(TeamParam request) { 
         /*
          - scope: every students
          - desc: allows students to join the team
+         - params: {"courseID", "studentID", "newTeamID", "teamSize"}
          - FE: This API returns 
             + 200 OK => Sucessfully join 
             + 409 CoNFLICT => Invalid Join Request (team is already full)
@@ -79,167 +78,54 @@ public class peerReviewTeamsResource {
 
     @GET
     @Path("team/getallteams")
-    public ArrayList<TeamDAO> getAllTeams() { 
-        /* DESCRIPTION
-                - requirements 4.2.3-3 : display non-full teams for non-team student
-                - To non-team students, return only non-full-teams
-                - To alread-in-a-team students, return its team
-                - FE can apply the logic above ^
-        */
-
-        /* TODO
-
-                - TeamInterface::getNonFullTeams() {
-                    - find the targetedTeam in DB using targetedTeamID
-                
-                    if targetedTeam.teamMembers.size() + targetedTeam.memRequest.length < DB.max_team_member_count => TeamDAO.isFull = false
-                        ***(max_team_member_count is provided by the Profeessor once he/she created the course) ***
-
-                    return a list of non-full teams
-                 }
-
-                Then, 
-                if (studentDAO.teamID = " " || NULL) {
-                    call TeamInterface::getNonFull to get a list of non-full teams
-                }
-                if (studentDAO.teamID = "a team ID" ie. not NULL) {
-                    get a list which contains only the team that has the same teamID
-                }
-        */
-
-        return new ArrayList<TeamDAO>(List.of(new TeamDAO("teamID"))); // change this
-    }
-
-    @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("team/join/request")
-    public Response joinRequest(String studentID, String requestedTeamID) { 
-        /* DESCRIPTION
-                - requirements 4.2.3-4 : request to join a team
-                - scope: only for non-team students
-                - task: 
-                    + add the student with studentID into the requestedTeam.memRequest
-                    + update requestedTeam.isFull if needed
-                - FE: after a student hit the "request to join" button
-                    + if requestedTeam.isFull = true => 400 BAD_REQUEST
-                    + else => 200 OK successfully add the student waitlist
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllTeams(TeamParam request) { 
+        /*      
+         - DESC: 
+            + return a list of Teams (Json array)
+            + scope: every students, professors
+         - PARAMS: {"courseID", "studentID", "newTeamID", "teamSize"}
+         - FE
+            + To non-team students, show only non-full-teams 
+            + To alread-in-a-team students, show its team 
+            + show all teams to professors
         */
-
-        /* TODO
-            if (requestedTeam.isFull) {
-                + HTTP 400 BAD_REQUEST
-            } else {
-                - TeamInterface::joinRequestHandler(String studentID, String requestedTeamID) {
-                    - find the targetedTeam in DB using targetedTeamID
-                    - find the requestingStudent in DB using studentID
-                    - finally, add the requestingStudent to the targetedTeam.memRequests array (this means the request is pending)
-                    - notes, update requestedTeam.isFull if .memRequests.size() + .teamMembers.size() = DB.max_team_member_count
-                    - HTTP 200 success
-                }
-            }
-        */
-             
-        return Response.status(Response.Status.OK).entity("Successfully added student to requested team's waitlist").build(); // change the message
+        try {
+            List<Document> res = new TeamInterface().getAllTeamsHandler(request.getCourseID());
+            return Response.status(Response.Status.OK).entity(res).build();
+        } catch (Exception e) {
+            List<Document> errors = new ArrayList<Document>();
+            errors.add(new Document(e.toString(), Exception.class));
+            return Response.status(Response.Status.BAD_REQUEST).entity(errors).build();
+        }
+        
     }
-
 
     @GET
+    @Path("team/get")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("team/join/request/getjoinrequests") 
-    public ArrayList<String> getJoinRequests(String studenID, String requestedTeamID) { 
-        /* DESCRIPTION
-                - requirements 4.2.3-5 : notify team lead if there is/are new join request(s)
-                - scope: only for team lead 
-                - task: returns the list of joinRequests
-                - FE: should always call this rest API for team lead 
-                    + if this api return a list.size() != 0 => notify teamLead
-                    + if this api return an empty list i.e. list.size() == 0 => do nothing
-                    + limit this opetion to teamLead only 
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTeamByTeamID(TeamParam request) { 
+        /*      
+         - desc: 
+            + return a team (Json Object) that has the same teamID passed from FE
+            + scope: every students
+         - params: {"courseID", "TeamID" }
         */
-
-        /* TODO
-            - TeamInterface::getJoinRequests(String studentID, String requestedTeamID) {
-                - Make sure the student is team lead (just for safety purpose)
-                - find the requestedTeam in DB using requestedTeamID
-                - find the teamLead in the requestedTeam using studentID
-
-                if (teamLead != null) {
-                    requestedTeam.memRequests.size() != 0 ? return ArrayList<String> memRequests : empty ArrayList<String> memRequests
-                    i.e.: return ArrayList<String> memRequest. FE can decided what to do if the list is empty or not
-                }
-            }
-
-        */
-
-        return new ArrayList<String>(List.of("studentID")); // change this 
+        try {
+            Document res = new TeamInterface().getTeamByTeamIDHandler(request);
+            return Response.status(Response.Status.OK).entity(res).build();
+        } catch (Exception e) {
+            List<Document> errors = new ArrayList<Document>();
+            errors.add(new Document(e.toString(), Exception.class));
+            return Response.status(Response.Status.BAD_REQUEST).entity(errors).build();
+        }
     }
 
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("team/join/request/accept")
-    public Response accpetJoinRequest(String studentID, String requestedTeamID, String requestingStudentID) { 
-        /* DESCRIPTION
-                - requirements 4.2.3-4.2 : accept a join request
-                - scope: only for teamlead
-                - task: 
-                    + allow team lead to accept the join request
-                    + add the student to the requestedTeam.teamMember hashmap
-                    + update requestedTeam.isFull if needed
-                    + update requestingStudent.teamID = requestedTeamID
-                - FE: 
-                    + if this api returns 200 => sucessfully accept the student => inform the requestingStudent
-                    + if this api returns 400 => fail to accept the student => do nothing
-        */
+    
 
-        /* TODO
-            - TeamInterface::acceptJoinRequestHandler(String studentID, String requestedTeamID, String requestingStudentID) {
-                - find the requestedTeam in DB using requestedTeamID
-                - find the teamLead in the requestedTeam using studentID
-                - find the requestingStudentID by looping through the requestedTeam.memRequest
-                    + add the requestingStudentID to the requestedTeam.teamMembers hashmap
-                        * requestedTeam.teamMembers.put(requestingStudentID, "false")
-                    + drop the requestingStudentID from the requestedTeam.memRequests array 
-                    + update requestingStudent.teamID = requestedTeamID
-                - notes, update requestedTeam.isFull if .teamMembers.size() + .memRequests.size() = DB.max_team_member_count
-                    + just for safety purpose since .isFull should be updated in joinRequest API
-            }
-            - Exception here?
-        */
 
-        return Response.status(Response.Status.OK).entity("Sucessfully accepted the requesting student").build(); // change the message
-
-    }
-
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("team/join/request/reject")
-    public Response rejectJoinRequest(String studentID, String requestedTeamID, String requestingStudentID) { 
-        /* DESCRIPTION
-                - requirements 4.2.3-4.3 : reject a join request
-                - scope: only for teamlead
-                - task: 
-                    + allow team lead to reject the join request
-                    + drop the requestingStudentID from requestedTeam.memRequests array
-                    + update requestedTeam.isFull if needed (since .memRequests.size() is now -= 1 but .teamMembers.size() stays the same)
-                - FE: 
-                    + if this api returns 200 => sucessfully reject the student => inform the requestingStudent
-                    + if this api returns 400 => fail to reject the student => show Error then do nothing
-        */
-
-        /* TODO
-            - TeamInterface::rejectJoinRequestHandler(String studentID, String requestedTeamID, String requestingStudentID) {
-                - find the requestedTeam in DB using requestedTeamID
-                - find the teamLead in the requestedTeam using studentID
-                - find the requestingStudentID by looping through the requestedTeam.memRequest
-                    + drop the requestingStudentID from the requestedTeam.memRequests array 
-                - notes, update requestedTeam.isFull since .memRequests.size() is now -= 1 but .teamMembers.size() stays the same
-            }
-            - Exception here?
-        */
-
-        return Response.status(Response.Status.OK).entity("Sucessfully accepted the requesting student").build(); // change the message
-
-    }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
@@ -350,3 +236,8 @@ public class peerReviewTeamsResource {
     }
 
 }
+
+
+
+
+    

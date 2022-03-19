@@ -2,17 +2,14 @@ package edu.oswego.cs.rest.database;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
-import com.mongodb.client.result.UpdateResult;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import edu.oswego.cs.rest.daos.TeamDAO;
-import edu.oswego.cs.rest.requests.InitTeamParam;
-import edu.oswego.cs.rest.requests.JoinTeamParam;
+import edu.oswego.cs.rest.requests.TeamParam;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,7 +27,6 @@ public class TeamInterface {
     private MongoCollection<Document> studentCollection; 
     private final String CID = "courseID";
     private final String SID = "StudentID";
-    private boolean isSynced = true;
 
     public TeamInterface() {
         DatabaseManager databaseManager = new DatabaseManager();
@@ -41,12 +37,11 @@ public class TeamInterface {
             studentCollection = studentDB.getCollection("Student");
         }catch(Exception e){
             e.printStackTrace(System.out);
-            isSynced = false;
         }
     }
 
 
-    public ArrayList<Integer> initTeamHandler(InitTeamParam request) {
+    public ArrayList<Integer> initTeamHandler(TeamParam request) {
         /*
          - desc: Initialize teams
          - return: An array of integer represents the team size for each team. 
@@ -79,9 +74,15 @@ public class TeamInterface {
         
     }
 
-    public int joinTeamHandler(JoinTeamParam request) {
-        /* desc: allow students to join teams */
+    public int joinTeamHandler(TeamParam request) {
+        /* 
+         - desc: allow students to join teams 
+         - Notes: 
+            + fix isStudentIDvalid => wrong studentID still works (just for safety purpose. FE should make sure the studentID is correct before send it to BE)
+        */
+
         try {
+            // >>> Initialization <<<
             Document courseDoc = courseCollection.find(new Document(CID, request.getCourseID())).first();
             Document studentDoc = studentCollection.find(new Document(SID, request.getStudentID())).first();  
             List<Document> teams =  courseDoc.getList("Teams", Document.class);
@@ -93,7 +94,7 @@ public class TeamInterface {
 
 
             for (Document team : teams) {
-                if (team.get("TeamID").equals(request.getNewTeamID())) {
+                if (team.get("TeamID").equals(request.getTeamID())) {
                     targetTeamDoc = team;
                     isTeamAdded = true;
                     teamSize = (Integer) targetTeamDoc.get("TeamSize");
@@ -108,16 +109,29 @@ public class TeamInterface {
                      - just add the student to the teams.teamMember and set value of isStudentFinalized to false
                      - update isFull
                     */
+
                     if (teamSize == request.getTeamSize()) { // safety purpose
+                        // >>> Team Document <<<
                         teamMember = (Document) targetTeamDoc.get("TeamMembers");
                         teamMember.append(request.getStudentID(), false); // automatically update targetTeamDoc Document
                         if (teamMember.size() == teamSize) {
                             targetTeamDoc.replace("IsFull", false, true);
                         } 
+
+                        // >>> Student Document <<<
+                        Bson updates = Updates.combine(
+                            Updates.set("TeamID", request.getTeamID())
+                        );
+                        UpdateOptions options = new UpdateOptions().upsert(true);
                         
-                        // Update new member to the courseDoc
-                        courseCollection.updateOne(new Document(CID, request.getCourseID()), new Document("$set", new Document("Teams", teams)));
-                        return 0; 
+                        // >>> Update to mongo <<<
+                        try {
+                            studentCollection.updateOne(studentDoc, updates, options);
+                            courseCollection.updateOne(new Document(CID, request.getCourseID()), new Document("$set", new Document("Teams", teams)));
+                            return 0;
+                        } catch (Exception e) {
+                            return -1;
+                        }
                     } else {
                         return 1; 
                     }
@@ -134,7 +148,7 @@ public class TeamInterface {
                     */
                     
                     // >>> Team Document <<<
-                    TeamDAO newTeam = new TeamDAO(request.getNewTeamID());
+                    TeamDAO newTeam = new TeamDAO(request.getTeamID());
                     Jsonb jsonb = JsonbBuilder.create();
                     Entity<String> teamDAOEntity = Entity.entity(jsonb.toJson(newTeam), MediaType.APPLICATION_JSON_TYPE);
                     Document newTeamDoc = Document.parse(teamDAOEntity.getEntity());
@@ -146,13 +160,13 @@ public class TeamInterface {
                     // >>> Student Document <<<
                     Bson updates = Updates.combine(
                         Updates.set("TeamLead", true),
-                        Updates.set("TeamID", request.getNewTeamID())
+                        Updates.set("TeamID", request.getTeamID())
                     );
                     UpdateOptions options = new UpdateOptions().upsert(true);
                     
                     // >>> Update to mongo <<<
                     try {
-                        UpdateResult result = studentCollection.updateOne(studentDoc, updates, options);
+                        studentCollection.updateOne(studentDoc, updates, options);
                         courseCollection.updateOne(new Document(CID, request.getCourseID()), new Document("$set", new Document("Teams", teams)));
                         return 0;
                     } catch (Exception e) {
@@ -167,9 +181,36 @@ public class TeamInterface {
             e.printStackTrace();
             return -1;
         }
+    }
 
+    public List<Document> getAllTeamsHandler(String courseID) {
+        /* desc: get A list of all teams to join teams */
+        try {
+            Document courseDoc = courseCollection.find(new Document(CID, courseID)).first();
+            List<Document> teams =  courseDoc.getList("Teams", Document.class);
 
+            return teams;
+        } catch (Exception e) {
+            List<Document> errors = new ArrayList<Document>();
+            errors.add(new Document(e.toString(), Exception.class));
+            return errors;
+        }
+    }
 
+    public Document getTeamByTeamIDHandler(TeamParam request) {
+        /* desc: get A list of all teams to join teams */
+        try {
+            Document courseDoc = courseCollection.find(new Document(CID, request.getCourseID())).first();
+            List<Document> teams =  courseDoc.getList("Teams", Document.class);
+            Document targetTeam = new Document();
+
+            for (Document team : teams) {
+                if (team.getString("TeamID").equals(request.getTeamID())) targetTeam = team;
+            }
+            return targetTeam;
+        } catch (Exception e) {
+            return new Document(e.toString(), Exception.class);
+        }
     }
 
 }

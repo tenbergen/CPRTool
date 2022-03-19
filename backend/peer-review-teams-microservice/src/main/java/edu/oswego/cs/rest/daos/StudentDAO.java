@@ -3,7 +3,6 @@ package edu.oswego.cs.rest.daos;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 
