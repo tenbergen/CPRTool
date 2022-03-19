@@ -27,15 +27,14 @@ public class peerReviewTeamsResource {
     @Path("team/professor/initialize")
     public String initTeam(InitTeamParam request) {
         /*
-            scope: professor
-            desc: Initialize teams for each course
-            FE: 
-                + This API returns the "team outline" array of integer presents the team size for each team for the whole course.
-                + FE will use this array to decide the total teams each course has and how many team members each team has
-                    i.e. create placeholders for each team
+         - scope: professor
+         - desc: Initialize teams for each course
+         - FE: 
+            + This API returns the "team outline" array of integer presents the team size for each team for the whole course.
+            + FE will use this array to decide the total teams each course has and how many team members each team has
+                i.e. create placeholders for each team
+            + Also, FE will need to include the element in the array in each http request call to "join team" api
         */
-        
-        // ArrayList<String> res = new TeamInterface().initTeamHandler(request);
         ArrayList<Integer> res = new TeamInterface().initTeamHandler(request);
         JsonArrayBuilder builder = Json.createArrayBuilder();
         for (Integer value : res) {
@@ -48,25 +47,20 @@ public class peerReviewTeamsResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("team/join")
-    // public Response joinTeam(JoinTeamParam request) { 
-    public String joinTeam(JoinTeamParam request) { 
+    public Response joinTeam(JoinTeamParam request) { 
         /*
-            scope: every students
-            desc: allows students to join the team
-            FE: This API returns 
-                + 200 OK => Sucessfully join
-                + 400 BR => failed
-                
+         - scope: every students
+         - desc: allows students to join the team
+         - FE: This API returns 
+            + 200 OK => Sucessfully join or Invalid Join Request (team is already full, wrong parameters)
+            + 400 BR => BAD_REQUEST 
         */
         try {
-             String student = new TeamInterface().joinTeamHandler(request);
-             return student;
+            String resultString = new TeamInterface().joinTeamHandler(request);
+            return Response.status(Response.Status.OK).entity(resultString).build();
         } catch (Exception e) {
-            // return Response.status(Response.Status.BAD_REQUEST).entity("Too Many Teams").build();
-            return "nothingjhjh";
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.toString()).build();
         }
-        // return Response.status(Response.Status.OK).entity("Team Successfully generated").build();
-
     }
 
 

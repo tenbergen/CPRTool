@@ -14,15 +14,14 @@ import javax.json.bind.annotation.JsonbProperty;
 
 @Entity
 @Data
-@AllArgsConstructor
 public class StudentDAO {
     @Id public @JsonbProperty("studentID") @NonNull String studentID; // email
     /* for team*/
     public @JsonbProperty("TeamID") String teamID;
-    public @JsonbProperty("Team Lead") boolean isLead;
+    public @JsonbProperty("TeamLead") boolean isLead;
     public @JsonbProperty("Finalized") boolean confirmFinalized;
     /* course */
-    public @JsonbProperty("Course ID") @NonNull ArrayList<String> courses;
+    public @JsonbProperty("CourseID") @NonNull ArrayList<String> courses;
 
     public StudentDAO(
         @JsonbProperty("Email") String studentID

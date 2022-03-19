@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class JoinTeamParam {
+    private int teamSize;
     private String courseID;
     private String studentID;
     private String newTeamID;
