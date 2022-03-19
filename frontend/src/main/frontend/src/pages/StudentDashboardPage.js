@@ -7,7 +7,7 @@ import { getCoursesAsync } from "../redux/features/courseSlice";
 
 function StudentDashboardPage() {
     const dispatch = useDispatch()
-    const courses = useSelector((state) => state.courses)
+    const courses = useSelector((state) => state.courses.courses)
     const user = useSelector((state) => state.auth.user)
 
     useEffect( ()=> {
