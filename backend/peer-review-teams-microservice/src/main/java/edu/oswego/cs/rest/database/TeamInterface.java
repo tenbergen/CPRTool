@@ -79,7 +79,7 @@ public class TeamInterface {
         
     }
 
-    public String joinTeamHandler(JoinTeamParam request) {
+    public int joinTeamHandler(JoinTeamParam request) {
         /* desc: allow students to join teams */
         try {
             Document courseDoc = courseCollection.find(new Document(CID, request.getCourseID())).first();
@@ -117,9 +117,9 @@ public class TeamInterface {
                         
                         // Update new member to the courseDoc
                         courseCollection.updateOne(new Document(CID, request.getCourseID()), new Document("$set", new Document("Teams", teams)));
-                        return "Successfully Join!";
+                        return 0; 
                     } else {
-                        return "Team size does not match -- Invalid Join Request!";
+                        return 1; 
                     }
     
                 } else {
@@ -154,18 +154,18 @@ public class TeamInterface {
                     try {
                         UpdateResult result = studentCollection.updateOne(studentDoc, updates, options);
                         courseCollection.updateOne(new Document(CID, request.getCourseID()), new Document("$set", new Document("Teams", teams)));
-                        return "Successfully Join!";
+                        return 0;
                     } catch (Exception e) {
-                        return e.toString();
+                        return -1; //e.toString();
                     }
                 }
             } else {
-                return "Team is already full -- Invalid Join Request!";
+                return 2; 
             }
             
         } catch (Exception e) {
             e.printStackTrace();
-            return e.toString();
+            return -1;
         }
 
 

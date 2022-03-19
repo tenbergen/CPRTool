@@ -52,12 +52,25 @@ public class peerReviewTeamsResource {
          - scope: every students
          - desc: allows students to join the team
          - FE: This API returns 
-            + 200 OK => Sucessfully join or Invalid Join Request (team is already full, wrong parameters)
-            + 400 BR => BAD_REQUEST 
+            + 200 OK => Sucessfully join 
+            + 409 CoNFLICT => Invalid Join Request (team is already full)
+            + 400 BR => BAD_REQUEST (worng params, etc.) 
         */
         try {
-            String resultString = new TeamInterface().joinTeamHandler(request);
-            return Response.status(Response.Status.OK).entity(resultString).build();
+            int result = new TeamInterface().joinTeamHandler(request);
+            String resultString = "";
+            switch(result) {
+                case 1: 
+                    resultString = "Team size does not match -- Invalid Join Request!"; 
+                    return Response.status(Response.Status.CONFLICT).entity(resultString).build();
+                case 2: 
+                    resultString = "Team is already full -- Invalid Join Request!"; 
+                    return Response.status(Response.Status.BAD_REQUEST).entity(resultString).build();
+                default:
+                    resultString = "Successfully Join!"; 
+                    return Response.status(Response.Status.OK).entity(resultString).build();
+            }
+
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.toString()).build();
         }
