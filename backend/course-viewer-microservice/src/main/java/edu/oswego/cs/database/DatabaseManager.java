@@ -7,7 +7,6 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Disposes;
 
 @ApplicationScoped
 public class DatabaseManager {
@@ -42,7 +41,8 @@ public class DatabaseManager {
         );
         return client.getDatabase(professorDatabase);
     }
-    public MongoDatabase getStudentDB(){
+
+    public MongoDatabase getStudentDB() {
         MongoCredential credentials = MongoCredential.createCredential(studentUser, studentDatabase, studentPassword.toCharArray());
         MongoClient client = new MongoClient(
                 new ServerAddress(hostname, studentPort),
@@ -52,5 +52,6 @@ public class DatabaseManager {
         return client.getDatabase(studentDatabase);
     }
 
-    public DatabaseManager() {}
+    public DatabaseManager() {
+    }
 }

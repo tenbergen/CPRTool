@@ -1,23 +1,6 @@
 package edu.oswego.cs.rest.controllers.utils;
 
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.enterprise.context.ApplicationScoped;
-
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -26,12 +9,15 @@ import com.google.api.client.util.store.MemoryDataStoreFactory;
 import com.google.api.services.oauth2.Oauth2;
 import com.google.api.services.oauth2.model.Tokeninfo;
 import com.google.api.services.oauth2.model.Userinfo;
-import com.ibm.websphere.security.jwt.Claims;
-import com.ibm.websphere.security.jwt.InvalidBuilderException;
-import com.ibm.websphere.security.jwt.InvalidClaimException;
-import com.ibm.websphere.security.jwt.JwtBuilder;
-import com.ibm.websphere.security.jwt.JwtException;
-import com.ibm.websphere.security.jwt.KeyException;
+import com.ibm.websphere.security.jwt.*;
+
+import javax.enterprise.context.ApplicationScoped;
+import java.io.IOException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.util.*;
 
 @ApplicationScoped
 public class OAuthUtils {
@@ -104,9 +90,9 @@ public class OAuthUtils {
         Userinfo userinfo = getUserInfo(sessionId);
         Set<String> roles = new HashSet<String>();
         roles.add("students");
-        
+
         Map<String, Object> rsaKeys = null;
-        
+
         try {
             rsaKeys = getRSAKeys();
         } catch (Exception e) {
@@ -141,7 +127,7 @@ public class OAuthUtils {
     public static Map<String, Object> getRSAKeys() throws Exception {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(2048);
-        
+
         KeyPair keyPair = keyPairGenerator.generateKeyPair();// generate key pair
         PrivateKey privateKey = keyPair.getPrivate(); // generate private
         PublicKey publicKey = keyPair.getPublic(); // generate public

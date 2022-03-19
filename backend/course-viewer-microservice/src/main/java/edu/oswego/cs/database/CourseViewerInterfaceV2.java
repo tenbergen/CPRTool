@@ -22,37 +22,38 @@ public class CourseViewerInterfaceV2 {
     private String professorCollection = "Professor";
 
     MongoDatabase userDatabase;
-    private ArrayList<CourseDAO>courseList = new ArrayList<>();
+    private ArrayList<CourseDAO> courseList = new ArrayList<>();
     String ID;
 
     public CourseViewerInterfaceV2(String Email) throws IOException {
-        ID =Email.split("@")[0];
-        try{
+        ID = Email.split("@")[0];
+        try {
             DatabaseManager manager = new DatabaseManager();
             userDatabase = manager.getStudentDB();
             Document user;
-            if(ID.contains(".")){
-               user = userDatabase.getCollection(professorCollection).find().first();
-            }else  user = userDatabase.getCollection(studentCollection).find(new Document(SID,ID)).first();
-            for(Document d: (ArrayList<Document>)user.get(Courses)){
+            if (ID.contains(".")) {
+                user = userDatabase.getCollection(professorCollection).find().first();
+            } else user = userDatabase.getCollection(studentCollection).find(new Document(SID, ID)).first();
+            for (Document d : (ArrayList<Document>) user.get(Courses)) {
                 CourseDAO dao = new CourseDAO(
                         d.get("CourseName").toString(),
                         Integer.valueOf(d.get("CourseSection").toString()),
                         d.get("Semester").toString(),
                         d.get("Abbreviation").toString(),
-                        (ArrayList<String>)d.get("Students"),
-                        (ArrayList)d.get("Tas"),
-                        (ArrayList)d.get("Teams"),
+                        (ArrayList<String>) d.get("Students"),
+                        (ArrayList) d.get("Tas"),
+                        (ArrayList) d.get("Teams"),
                         d.get("courseID").toString());
                 courseList.add(dao);
             }
 
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace(System.out);
             throw new IOException();
         }
     }
-    public ArrayList<CourseDAO> getCourses(){
+
+    public ArrayList<CourseDAO> getCourses() {
         return courseList;
     }
 }
