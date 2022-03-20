@@ -13,7 +13,7 @@ public class LogoutServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        
+
         // invalidate the user's session
         request.getSession().invalidate();
         response.sendRedirect(fullURL);

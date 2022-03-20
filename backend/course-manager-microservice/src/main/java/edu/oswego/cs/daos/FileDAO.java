@@ -4,7 +4,10 @@ import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +20,7 @@ public class FileDAO {
 
     /**
      * Takes form-data from a POST request for a csv file and reconstructs the content within the file
+     *
      * @param attachments form-data
      * @return FileDAO Instance
      * @throws Exception File Corruption Exception
@@ -38,7 +42,8 @@ public class FileDAO {
                     if (csvLines.size() == 0) continue;
                     reader.close();
                     return new FileDAO(fileName, csvLines);
-                } catch (IOException ignored) {}
+                } catch (IOException ignored) {
+                }
             }
         }
         throw new Exception();

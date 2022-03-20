@@ -4,7 +4,7 @@ FROM maven:3.8.4 as maven
 WORKDIR .
 COPY . .
 
-RUN mvn package
+RUN mvn package -DskipTests
 
 # Stage 2: Copy the .jar file and server.xml into the required location.
 FROM icr.io/appcafe/open-liberty:full-java11-openj9-ubi

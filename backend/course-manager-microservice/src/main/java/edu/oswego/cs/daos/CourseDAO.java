@@ -27,10 +27,10 @@ public class CourseDAO {
 
     @JsonbCreator
     public CourseDAO(
-                     @JsonbProperty("CourseName") String courseName,
-                     @JsonbProperty("CourseSection") int courseSection,
-                     @JsonbProperty("Semester") String semester,
-                     @JsonbProperty("Abbreviation") String abbreviation) {
+            @JsonbProperty("CourseName") String courseName,
+            @JsonbProperty("CourseSection") int courseSection,
+            @JsonbProperty("Semester") String semester,
+            @JsonbProperty("Abbreviation") String abbreviation) {
         this.courseName = courseName;
         this.courseSection = courseSection;
         this.semester = semester;

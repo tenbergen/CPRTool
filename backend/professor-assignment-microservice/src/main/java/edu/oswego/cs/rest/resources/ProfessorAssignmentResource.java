@@ -2,6 +2,7 @@ package edu.oswego.cs.rest.resources;
 
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.rest.daos.FileDAO;
+import edu.oswego.cs.rest.database.AssignmentInterface;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import javax.ws.rs.*;
@@ -19,18 +20,26 @@ public class ProfessorAssignmentResource {
     public ProfessorAssignmentResource() {
     }
 
-    /**
+    /*
      * File is uploaded as form-data and passed back as a List<IAttachment>
      * The attachment is processed in FileDao.FileFactory, which reads and
      * reconstructs the file through inputStream and outputStream respectively
      *
      * @param attachments type List<IAttachment>: file(s) passed back as form-data
      * @return Response
-     * */
+      */
+    @GET
+    @Path("/remove")
+    public void remove() throws Exception {
+        String assName = "CSC580-800-spring-2022.pdf";
+        String CID = "CSC580-800-spring-2022";
+        new AssignmentInterface().remove(assName,CID);
+    }
+
     @POST
     @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf", MediaType.TEXT_PLAIN})
     @Path("/courses/course/assignments/upload")
-    public Response postFormData(List<IAttachment> attachments) throws IOException{
+    public Response postFormData(List<IAttachment> attachments) throws Exception {
 
         InputStream stream = null;
         for (IAttachment attachment : attachments) {
@@ -58,7 +67,8 @@ public class ProfessorAssignmentResource {
                 }
                 System.out.println("Non-file attachment value: " + sb.toString());
             } else {
-                FileDAO.FileFactory(fileName,attachment);
+
+                new AssignmentInterface().add(FileDAO.FileFactory(fileName,attachment));
 //                DB.getFileDao(FileDAO.FileFactory(fileName,attachment));
             }
             if (stream != null) {

@@ -46,6 +46,19 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
 
+  peer-review-teams:
+    build:
+      context: ./backend/peer-review-teams-microservice
+    container_name: cpr-peer-review-teams
+    restart: unless-stopped
+    environment:
+      MONGO_HOSTNAME: ${MONGO_HOSTNAME}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO2_PORT: ${MONGO2_PORT}
+      MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+
   mongo:
     image: mongo:5.0.6
     container_name: cpr-mongo
@@ -60,7 +73,7 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     ports:
-      - "27029:27017"
+      - "27037:27017"
 
   mongo2:
     image: mongo:5.0.6
@@ -76,7 +89,39 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     ports:
-      - "27030:27017"
+      - "27038:27017"
+  
+  mongo3:
+    image: mongo:5.0.6
+    container_name: cpr-mongo2
+    restart: unless-stopped
+    volumes:
+      - ${DATABASE_FOLDER_3}:/data/db
+      - ${INITIALIZE_SCRIPT}:/docker-entrypoint-initdb.d/mongo-init.sh
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - "27039:27017"
+        
+  mongo4:
+    image: mongo:5.0.6
+    container_name: cpr-mongo2
+    restart: unless-stopped
+    volumes:
+      - ${DATABASE_FOLDER_4}:/data/db
+      - ${INITIALIZE_SCRIPT}:/docker-entrypoint-initdb.d/mongo-init.sh
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - "27040:27017"
 
   nginx:
     image: nginx:1.21.6

@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from "axios";
 import React from "react";
 
-const viewCourseURL = `${window.location.protocol}//${window.location.host}/view/professor/courses`
+const viewCourseURL = `${process.env.REACT_APP_URL}/view/professor/courses`
 export const getCoursesAsync = createAsyncThunk(
     'courses/getCoursesAsync',
     async () => {
@@ -13,20 +13,26 @@ export const getCoursesAsync = createAsyncThunk(
     });
 
 const courseSlice = createSlice({
-    name: 'courses',
-    initialState: [],
+    name: 'courseSlice',
+    initialState: {
+        courses: [],
+        currentCourse: null
+    },
     reducers: {
         addCourse: (state, action) => {
-            state.push(action.payload)
+            state.courses.push(action.payload)
+        },
+        setCurrentCourse: (state, action) => {
+            state.currentCourse = action.payload
         }
     },
     extraReducers: {
         [getCoursesAsync.fulfilled]: (state, action) => {
-            return action.payload.courses
+            state.courses = action.payload.courses
         }
     }
 })
 
-export const { addCourse } = courseSlice.actions
+export const { addCourse, setCurrentCourse } = courseSlice.actions
 
 export default courseSlice.reducer
