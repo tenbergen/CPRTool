@@ -243,7 +243,7 @@ public class peerReviewTeamsResource {
 
             - Any exceptions here?
         */
-        
+
         return Response.status(Response.Status.OK).entity("Finalize Successfully ").build(); // change the message
     }
 

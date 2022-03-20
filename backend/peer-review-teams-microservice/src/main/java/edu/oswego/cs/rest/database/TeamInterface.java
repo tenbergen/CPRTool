@@ -89,7 +89,6 @@ public class TeamInterface {
             boolean isTeamAdded = false;
             Boolean isFull = false;
 
-
             for (Document team : teams) {
                 if (team.get("TeamID").equals(request.getTeamID())) {
                     targetTeamDoc = team;
@@ -189,9 +188,7 @@ public class TeamInterface {
         /* desc: get A list of all teams */
         try {
             Document courseDoc = courseCollection.find(new Document(CID, courseID)).first();
-            List<Document> teams = courseDoc.getList("Teams", Document.class);
-
-            return teams;
+            return courseDoc.getList("Teams", Document.class);
         } catch (Exception e) {
             List<Document> errors = new ArrayList<Document>();
             errors.add(new Document(e.toString(), Exception.class));
@@ -275,31 +272,9 @@ public class TeamInterface {
                     studentCollection.updateOne(nextLeadDoc, nextLeadUpdates, nextLeadOptions);
                 }
             }
-
             return 0;
         } catch (Exception e) {
             return -1;
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
