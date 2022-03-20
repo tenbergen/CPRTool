@@ -9,10 +9,12 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import edu.oswego.cs.rest.daos.TeamDAO;
+import edu.oswego.cs.rest.requests.SwitchTeamParam;
 import edu.oswego.cs.rest.requests.TeamParam;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.json.bind.Jsonb;
@@ -74,7 +76,7 @@ public class TeamInterface {
         
     }
 
-    public int joinTeamHandler(TeamParam request) {
+    public Integer joinTeamHandler(TeamParam request) {
         /* 
          - desc: allow students to join teams 
          - Notes: 
@@ -105,7 +107,7 @@ public class TeamInterface {
                 if (isTeamAdded) {
                     /* 
                      - the team with newTeamID is already added
-                     - the student does not have a chance to be a team lead
+                     - the student does not have a chance to be a team lead -- OR student can still be a team lead if the team is created
                      - just add the student to the teams.teamMember and set value of isStudentFinalized to false
                      - update isFull
                     */
@@ -113,15 +115,20 @@ public class TeamInterface {
                     if (teamSize == request.getTeamSize()) { // safety purpose
                         // >>> Team Document <<<
                         teamMember = (Document) targetTeamDoc.get("TeamMembers");
+                        /* if the team is created then left empty -> first one join is the team lead*/
+                        if (teamMember.size() == 0) {
+                            Bson leadUpdates = Updates.set("TeamLead", true);
+                            UpdateOptions leadOptions = new UpdateOptions().upsert(true);
+                            studentCollection.updateOne(studentDoc, leadUpdates, leadOptions);
+                        }
                         teamMember.append(request.getStudentID(), false); // automatically update targetTeamDoc Document
                         if (teamMember.size() == teamSize) {
                             targetTeamDoc.replace("IsFull", false, true);
                         } 
+                        
 
                         // >>> Student Document <<<
-                        Bson updates = Updates.combine(
-                            Updates.set("TeamID", request.getTeamID())
-                        );
+                        Bson updates = Updates.set("TeamID", request.getTeamID());
                         UpdateOptions options = new UpdateOptions().upsert(true);
                         
                         // >>> Update to mongo <<<
@@ -169,8 +176,9 @@ public class TeamInterface {
                         studentCollection.updateOne(studentDoc, updates, options);
                         courseCollection.updateOne(new Document(CID, request.getCourseID()), new Document("$set", new Document("Teams", teams)));
                         return 0;
+
                     } catch (Exception e) {
-                        return -1; //e.toString();
+                        return -1;
                     }
                 }
             } else {
@@ -178,13 +186,12 @@ public class TeamInterface {
             }
             
         } catch (Exception e) {
-            e.printStackTrace();
             return -1;
         }
     }
 
     public List<Document> getAllTeamsHandler(String courseID) {
-        /* desc: get A list of all teams to join teams */
+        /* desc: get A list of all teams */
         try {
             Document courseDoc = courseCollection.find(new Document(CID, courseID)).first();
             List<Document> teams =  courseDoc.getList("Teams", Document.class);
@@ -198,7 +205,7 @@ public class TeamInterface {
     }
 
     public Document getTeamByTeamIDHandler(TeamParam request) {
-        /* desc: get A list of all teams to join teams */
+        /* desc: get team with teamID */
         try {
             Document courseDoc = courseCollection.find(new Document(CID, request.getCourseID())).first();
             List<Document> teams =  courseDoc.getList("Teams", Document.class);
@@ -213,6 +220,72 @@ public class TeamInterface {
         }
     }
 
+
+    public int switchTeamHandler(SwitchTeamParam request) {
+        /* desc: get A list of all teams to join teams */
+
+        /* logic
+            Student can switch to other teams as long as the team is not finalized
+            
+            A student switch from teamA to teamB
+            
+            teamA:
+                + remove student
+                + if the removed student was a team lead => randomly grant the team lead to another member
+                + update removed student from team lead => false
+                + if team is full -> update not full
+            teamB:
+                + call joinTeam() handles team with members already and empty team
+        */
+
+        try {
+            /* Initialization */
+            Document courseDoc = courseCollection.find(new Document(CID, request.getCourseID())).first();
+            Document studentDoc = studentCollection.find(new Document(SID, request.getStudentID())).first();  
+            List<Document> teams =  courseDoc.getList("Teams", Document.class);
+            Document oldTeam = new Document();
+            Document teamMember = new Document();
+            boolean isFull = false;
+            Boolean isTeamLead = studentDoc.getBoolean("TeamLead");
+
+            /* get oldTeam */
+            for (Document team : teams) {
+                if (team.get("TeamID").equals(request.getOldTeamID())) {
+                    oldTeam = team;
+                    isFull = (Boolean) oldTeam.get("IsFull");
+                }
+            }
+
+            /* remove student from oldTeam */
+            teamMember = (Document) oldTeam.get("TeamMembers");
+            teamMember.remove(request.getStudentID(), false);
+
+            /* update isFull for oldTeam*/
+            if (isFull) oldTeam.replace("IsFull", true, false);
+            courseCollection.updateOne(new Document(CID, request.getCourseID()), new Document("$set", new Document("Teams", teams)));
+            
+            if (isTeamLead) {
+                Bson teamLeadUpdates = Updates.set("TeamLead", false);
+                UpdateOptions teamLeadOptions = new UpdateOptions().upsert(true);
+                studentCollection.updateOne(studentDoc, teamLeadUpdates, teamLeadOptions);
+                
+                /* Pass Team Lead to the next member if there is any*/
+                List<String> membersID = new ArrayList<>(teamMember.keySet());
+                if (membersID.size() > 0) {
+                    String nextLeadID = "";
+                    nextLeadID = membersID.get(0);
+                    Document nextLeadDoc = studentCollection.find(new Document(SID, nextLeadID)).first();
+                    Bson nextLeadUpdates = Updates.set("TeamLead", true);
+                    UpdateOptions nextLeadOptions = new UpdateOptions().upsert(true);
+                    studentCollection.updateOne(nextLeadDoc, nextLeadUpdates, nextLeadOptions);
+                }
+            }
+
+            return 0;
+        } catch (Exception e) {
+            return -1;
+        }
+    }
 }
 
 

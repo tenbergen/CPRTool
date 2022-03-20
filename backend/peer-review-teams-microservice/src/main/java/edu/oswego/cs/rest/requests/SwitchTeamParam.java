@@ -5,9 +5,10 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class TeamParam {
-    private int teamSize;
+public class SwitchTeamParam {
     private String courseID;
     private String studentID;
-    private String teamID;
+    private String oldTeamID;
+    private String newTeamID;
+    private int newTeamSize;
 }

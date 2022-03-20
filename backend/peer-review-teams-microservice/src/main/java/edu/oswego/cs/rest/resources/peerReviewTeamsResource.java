@@ -1,11 +1,9 @@
 package edu.oswego.cs.rest.resources;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonArrayBuilder;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -18,6 +16,7 @@ import javax.ws.rs.core.Response;
 import org.bson.Document;
 
 import edu.oswego.cs.rest.database.TeamInterface;
+import edu.oswego.cs.rest.requests.SwitchTeamParam;
 import edu.oswego.cs.rest.requests.TeamParam;
 
 @Path("/teams")
@@ -49,7 +48,7 @@ public class peerReviewTeamsResource {
         /*
          - scope: every students
          - desc: allows students to join the team
-         - params: {"courseID", "studentID", "newTeamID", "teamSize"}
+         - params: {"courseID", "studentID", "teamID", "teamSize"}
          - FE: This API returns 
             + 200 OK => Sucessfully join 
             + 409 CoNFLICT => Invalid Join Request (team is already full)
@@ -83,9 +82,9 @@ public class peerReviewTeamsResource {
     public Response getAllTeams(TeamParam request) { 
         /*      
          - DESC: 
-            + return a list of Teams (Json array)
+            + return a list of Teams (json array)
             + scope: every students, professors
-         - PARAMS: {"courseID", "studentID", "newTeamID", "teamSize"}
+         - PARAMS: {"courseID"}
          - FE
             + To non-team students, show only non-full-teams 
             + To alread-in-a-team students, show its team 
@@ -109,9 +108,9 @@ public class peerReviewTeamsResource {
     public Response getTeamByTeamID(TeamParam request) { 
         /*      
          - desc: 
-            + return a team (Json Object) that has the same teamID passed from FE
+            + return a team (json object) that has the same teamID passed from FE
             + scope: every students
-         - params: {"courseID", "TeamID" }
+         - params: {"courseID", "teamID" }
         */
         try {
             Document res = new TeamInterface().getTeamByTeamIDHandler(request);
@@ -123,7 +122,56 @@ public class peerReviewTeamsResource {
         }
     }
 
+    @POST
+    @Path("team/switch")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response switchTeam(SwitchTeamParam request) { 
+        /*      
+         - DESC: 
+            + This api allows student to switch from one team to another
+            + scope: for every students
+         - PARAMS: {"courseID", "studentID", "oldTeamID", "newTeamID", "newTeamSize"} // newTeamSize is the size of the new team from FE
+         - FE:
+            + 200
+            + 400
+        */
     
+        /* Todo make sure the oldTeamID has studentID*/
+        /* Todo fix the isLead update, student switches from team A to a team already created but empty, then its isLead is not updated*/
+
+        try {
+            TeamParam teamParam = new TeamParam();
+            teamParam.setCourseID(request.getCourseID());
+            teamParam.setStudentID(request.getStudentID());
+            teamParam.setTeamID(request.getNewTeamID());
+            teamParam.setTeamSize(request.getNewTeamSize());
+            int result = new TeamInterface().joinTeamHandler(teamParam);
+              
+            if (result == 0) {
+                result = new TeamInterface().switchTeamHandler(request);
+            }
+
+            String resultString = "";
+            switch(result) {
+                case 1: 
+                    resultString = "Team size does not match -- Invalid Join Request!"; 
+                    return Response.status(Response.Status.CONFLICT).entity(resultString).build();
+                case 2: 
+                    resultString = "New Team is already full -- Invalid Join Request!"; 
+                    return Response.status(Response.Status.BAD_REQUEST).entity(resultString).build();
+                default:
+                    resultString = "Successfully Switch"; 
+                    return Response.status(Response.Status.OK).entity(resultString).build();
+            }
+
+
+        } catch (Exception e) {
+            List<Document> errors = new ArrayList<Document>();
+            errors.add(new Document(e.toString(), Exception.class));
+            return Response.status(Response.Status.BAD_REQUEST).entity(errors).build();
+        }
+    }
 
 
 
