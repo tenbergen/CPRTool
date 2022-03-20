@@ -55,6 +55,9 @@
         <version>1.10.0</version>
         <configuration>
           <workingDirectory>src/main/frontend</workingDirectory>
+          <environmentVariables>
+            <REACT_APP_URL>${REACT_APP_URL}</REACT_APP_URL>
+          </environmentVariables>
         </configuration>
         <executions>
           <execution>
