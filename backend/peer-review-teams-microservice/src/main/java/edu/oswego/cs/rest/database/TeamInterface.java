@@ -189,7 +189,7 @@ public class TeamInterface {
     public List<Document> getAllTeamsHandler(String courseID) {
         /* desc: get A list of all teams */
         try {
-            Document courseDoc = courseCollection.find(new Document(courseID, courseID)).first();
+            Document courseDoc = courseCollection.find(new Document(this.courseID, courseID)).first();
             List<Document> teams = courseDoc.getList("Teams", Document.class);
 
             return teams;
