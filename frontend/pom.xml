@@ -56,7 +56,7 @@
         <configuration>
           <workingDirectory>src/main/frontend</workingDirectory>
           <environmentVariables>
-            <REACT_APP_URL>${REACT_APP_URL}</REACT_APP_URL>
+            <REACT_APP_URL>${env.REACT_APP_URL}</REACT_APP_URL>
           </environmentVariables>
         </configuration>
         <executions>
