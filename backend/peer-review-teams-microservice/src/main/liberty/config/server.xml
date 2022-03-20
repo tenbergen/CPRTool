@@ -3,6 +3,7 @@
 
     <featureManager>
         <feature>microProfile-4.1</feature>
+        <feature>jaxrs-2.1</feature>
     </featureManager>
 
     <variable name="default.http.port" defaultValue="13129"/>
