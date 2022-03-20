@@ -4,7 +4,8 @@ import { useDispatch } from 'react-redux';
 import { authenticateUser } from '../redux/features/authSlice';
 
 function LoginPage() {
-    const loginURL = `${process.env.REACT_APP_LOCAL}/login`
+    const loginURL = `${process.env.REACT_APP_URL}/login`
+    console.log(loginURL)
     const dispatch = useDispatch();
     const queryParams = new URLSearchParams(window.location.search);
 
