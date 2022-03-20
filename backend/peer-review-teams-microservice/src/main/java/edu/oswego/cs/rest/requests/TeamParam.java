@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class TeamParam {
-    private int teamSize;
-    private String courseID;
-    private String studentID;
-    private String teamID;
+    private int team_size;
+    private String course_id;
+    private String student_id;
+    private String team_id;
 }
