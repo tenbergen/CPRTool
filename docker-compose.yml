@@ -130,4 +130,4 @@ services:
     volumes:
       - ${NGINX}:/etc/nginx/nginx.conf:rw
     ports:
-      - "13126:80"
+      - "13125:80"
