@@ -17,7 +17,6 @@ public class DatabaseManager {
     String courseUser = "root";//System.getenv("MONGO_USERNAME");
     String coursePassword = "toor";//System.getenv("MONGO_PASSWORD");
 
-
     int studentPort = 27027;//Integer.parseInt(System.getenv("MONGO_PORT"));
     String studentDB = "cpr";//System.getenv("MONGO_DATABASE");
     String studentUser = "root";//System.getenv("MONGO_USERNAME");
@@ -42,7 +41,8 @@ public class DatabaseManager {
         );
         return client.getDatabase(courseDB);
     }
-    public MongoDatabase getStudentDB(){
+
+    public MongoDatabase getStudentDB() {
         MongoCredential credentials = MongoCredential.createCredential(studentUser, studentDB, studentPassword.toCharArray());
         MongoClient client = new MongoClient(
                 new ServerAddress(hostname, studentPort),
@@ -52,5 +52,6 @@ public class DatabaseManager {
         return client.getDatabase(studentDB);
     }
 
-    public DatabaseManager() {}
+    public DatabaseManager() {
+    }
 }

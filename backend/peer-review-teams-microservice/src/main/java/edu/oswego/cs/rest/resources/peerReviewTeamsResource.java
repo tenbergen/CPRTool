@@ -1,23 +1,15 @@
 package edu.oswego.cs.rest.resources;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import org.bson.Document;
-
 import edu.oswego.cs.rest.database.TeamInterface;
 import edu.oswego.cs.rest.requests.SwitchTeamParam;
 import edu.oswego.cs.rest.requests.TeamParam;
+import org.bson.Document;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 @Path("/teams")
 public class peerReviewTeamsResource {
@@ -38,9 +30,8 @@ public class peerReviewTeamsResource {
         */
         ArrayList<Integer> res = new TeamInterface().initTeamHandler(request);
         return Response.status(Response.Status.OK).entity(res).build();
-
     }
-    
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("team/join")
@@ -57,15 +48,15 @@ public class peerReviewTeamsResource {
         try {
             int result = new TeamInterface().joinTeamHandler(request);
             String resultString = "";
-            switch(result) {
-                case 1: 
-                    resultString = "Team size does not match -- Invalid Join Request!"; 
+            switch (result) {
+                case 1:
+                    resultString = "Team size does not match -- Invalid Join Request!";
                     return Response.status(Response.Status.CONFLICT).entity(resultString).build();
-                case 2: 
-                    resultString = "Team is already full -- Invalid Join Request!"; 
+                case 2:
+                    resultString = "Team is already full -- Invalid Join Request!";
                     return Response.status(Response.Status.BAD_REQUEST).entity(resultString).build();
                 default:
-                    resultString = "Successfully Join!"; 
+                    resultString = "Successfully Join!";
                     return Response.status(Response.Status.OK).entity(resultString).build();
             }
 
@@ -73,8 +64,7 @@ public class peerReviewTeamsResource {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.toString()).build();
         }
     }
-
-
+    
     @GET
     @Path("team/getallteams")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -98,7 +88,7 @@ public class peerReviewTeamsResource {
             errors.add(new Document(e.toString(), Exception.class));
             return Response.status(Response.Status.BAD_REQUEST).entity(errors).build();
         }
-        
+
     }
 
     @GET
@@ -136,7 +126,7 @@ public class peerReviewTeamsResource {
             + 200
             + 400
         */
-    
+
         /* Todo make sure the oldTeamID has studentID*/
         /* Todo fix the isLead update, student switches from team A to a team already created but empty, then its isLead is not updated*/
 
@@ -147,21 +137,21 @@ public class peerReviewTeamsResource {
             teamParam.setTeamID(request.getNewTeamID());
             teamParam.setTeamSize(request.getNewTeamSize());
             int result = new TeamInterface().joinTeamHandler(teamParam);
-              
+
             if (result == 0) {
                 result = new TeamInterface().switchTeamHandler(request);
             }
 
             String resultString = "";
-            switch(result) {
-                case 1: 
-                    resultString = "Team size does not match -- Invalid Join Request!"; 
+            switch (result) {
+                case 1:
+                    resultString = "Team size does not match -- Invalid Join Request!";
                     return Response.status(Response.Status.CONFLICT).entity(resultString).build();
-                case 2: 
-                    resultString = "New Team is already full -- Invalid Join Request!"; 
+                case 2:
+                    resultString = "New Team is already full -- Invalid Join Request!";
                     return Response.status(Response.Status.BAD_REQUEST).entity(resultString).build();
                 default:
-                    resultString = "Successfully Switch"; 
+                    resultString = "Successfully Switch";
                     return Response.status(Response.Status.OK).entity(resultString).build();
             }
 
@@ -174,10 +164,9 @@ public class peerReviewTeamsResource {
     }
 
 
-
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("team/generateteamname") 
+    @Path("team/generateteamname")
     public Response generateTeamName(String studenID, String targetedTeamID, String teamName) { 
         /* DESCRIPTION
             - requirements 4.2.3-7 : teamLead creates a name for the team
@@ -229,7 +218,7 @@ public class peerReviewTeamsResource {
     }
 
     @PUT
-    @Path("team/finalizeteam") 
+    @Path("team/finalizeteam")
     public Response finalizeTeam(String studenID, String targetedTeamID) { 
 
         /* DESCRIPTION
@@ -254,8 +243,7 @@ public class peerReviewTeamsResource {
 
             - Any exceptions here?
         */
-
-
+        
         return Response.status(Response.Status.OK).entity("Finalize Successfully ").build(); // change the message
     }
 
