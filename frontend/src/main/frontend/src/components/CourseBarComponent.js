@@ -6,7 +6,6 @@ import {setCurrentCourse} from "../redux/features/courseSlice";
 const CourseBarComponent = () => {
     const dispatch = useDispatch()
     const courses = useSelector((state) => state.courses.courses)
-    const currentCourse = useSelector((state) => state.courses.currentCourse)
 
     // to use when endpoint is not working
     const dummyCourses = ["Intro to Programming", "Programming Languages", "Systems Programming"]
@@ -18,7 +17,6 @@ const CourseBarComponent = () => {
     return (
         <div className="courseBar">
             Courses <br/>
-            Current course: {currentCourse}
             <tr className="TheTable">
                 <th>
                     <div className="colorForTable">

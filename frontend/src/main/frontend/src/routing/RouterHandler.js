@@ -1,12 +1,12 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import App from '../App';
-import CreateCoursePage from '../pages/CreateCoursePage';
-import TeacherDashboardPage from '../pages/TeacherDashboardPage';
-import StudentDashboardPage from '../pages/StudentDashboardPage'
-import EditCoursePage from '../pages/EditCoursePage';
-import TodoPage from "../pages/TodoPage";
-import CreateAssignmentPage  from "../pages/CreateAssignmentPage";
-import UnauthedErrorPage from '../pages/UnauthedErrorPage';
+import CreateCoursePage from '../pages/TeacherPages/CreateCoursePage';
+import TeacherDashboardPage from '../pages/TeacherPages/TeacherDashboardPage';
+import StudentDashboardPage from '../pages/StudentPages/StudentDashboardPage'
+import EditCoursePage from '../pages/TeacherPages/EditCoursePage';
+import TodoPage from "../pages/StudentPages/TodoPage";
+import CreateAssignmentPage  from "../pages/TeacherPages/CreateAssignmentPage";
+import UnauthedErrorPage from '../pages/AuthPages/UnauthedErrorPage';
 import React from 'react';
 
 

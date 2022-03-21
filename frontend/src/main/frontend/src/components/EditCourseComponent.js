@@ -3,13 +3,17 @@ import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 import "./styles/EditCourse.css"
 import "./styles/DeleteModal.css"
+import {useSelector} from "react-redux";
 
 const EditCourseComponent = () => {
     const deleteUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/delete`
     const editUrl = ""
     const csvUrl = ""
     // const {from} = useLocation().state
-    let currentCourse = Object()
+    // let currentCourse = Object()
+
+    const currentCourse = useSelector((state) => state.courses.currentCourse)
+
 
     // currentCourse.CourseName = from.CourseName
     // currentCourse.CourseSection = from.CourseSection
@@ -78,7 +82,7 @@ const EditCourseComponent = () => {
                 <input
                     type="text"
                     name="courseName"
-                    value={courseName}
+                    value={currentCourse}
                     required
                     //onChange={(e) => OnChange(e)}
                 />

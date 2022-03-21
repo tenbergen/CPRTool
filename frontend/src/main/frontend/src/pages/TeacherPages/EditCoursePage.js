@@ -1,11 +1,11 @@
 import React from "react-dom";
 import {useState} from "react";
 import "./styles/EditCourseStyle.css"
-import SidebarComponent from "../components/SidebarComponent"
-import RosterComponent from "../components/RosterComponent"
+import SidebarComponent from "../../components/SidebarComponent"
+import RosterComponent from "../../components/RosterComponent"
 import axios from "axios";
 import {Link, useLocation, useNavigate} from "react-router-dom";
-import EditCourseComponent from "../components/EditCourseComponent";
+import EditCourseComponent from "../../components/EditCourseComponent";
 
 function EditCoursePage() {
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./styles/CreateCourseStyle.css"
-import SidebarComponent from "../components/SidebarComponent";
+import SidebarComponent from "../../components/SidebarComponent";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -12,22 +12,26 @@ const CreateCoursePage = () => {
         CourseName: '',
         CourseSection: undefined,
         Semester: '',
-        Abbreviation: ''
+        Abbreviation: '',
+        Year: ''
     });
 
-    const { CourseName, CourseSection, Semester, Abbreviation } = formData;
+    const { CourseName, CourseSection, Semester, Abbreviation, Year } = formData;
 
-    const OnChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+    const OnChange = (e) => setFormData(
+        { ...formData, [e.target.name]: e.target.value }
+    );
 
     const handleSubmit = async (e) => {
-        if (Abbreviation === '' || CourseName === '' || CourseSection === undefined || Semester === '') alert("Fields can't be empty!")
+        if (Abbreviation === '' || CourseName === '' || CourseSection === undefined || Semester === '' || Year === '') alert("Fields can't be empty!")
         else {
             e.preventDefault()
             const data = {
                 CourseName: CourseName,
                 CourseSection: CourseSection,
                 Semester: Semester,
-                Abbreviation: Abbreviation
+                Abbreviation: Abbreviation,
+                Year: Year
             };
             await axios.post(submitCourseUrl, data);
             navigate("/teacherDashboard")
@@ -51,8 +55,8 @@ const CreateCoursePage = () => {
                         />
                     </div>
 
-                    <div className="cpp-row-two">
-                        <div className="row-two-first ccp-input-field">
+                    <div className="cpp-row-multiple">
+                        <div className="ccp-input-field">
                             <label> <b> Course abbreviation: </b> </label>
                             <input
                                 type="text"
@@ -74,10 +78,20 @@ const CreateCoursePage = () => {
                             />
                         </div>
 
+                        <div className="ccp-input-field">
+                            <label> <b> CRN: </b> </label>
+                            <input
+                                type="text"
+                                name="crn"
+                                // value={Semester}
+                                // required
+                                onChange={(e) => OnChange(e)}
+                            />
+                        </div>
                     </div>
 
-                    <div className="cpp-row-two">
-                        <div className="row-two-first ccp-input-field">
+                    <div className="cpp-row-multiple">
+                        <div className="ccp-input-field">
                             <label> <b> Semester: </b> </label>
                             <input
                                 type="text"
@@ -89,15 +103,16 @@ const CreateCoursePage = () => {
                         </div>
 
                         <div className="ccp-input-field">
-                            <label> <b> CRN: </b> </label>
+                            <label> <b> Year: </b> </label>
                             <input
+                                name="Year"
                                 type="text"
-                                name="crn"
-                                // value={Semester}
+                                value={Year}
                                 // required
                                 onChange={(e) => OnChange(e)}
                             />
                         </div>
+
                     </div>
 
                     <div className="ccp-button">

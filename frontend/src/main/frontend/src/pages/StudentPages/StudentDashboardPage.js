@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { Link } from "react-router-dom";
-import SidebarComponent from "../components/SidebarComponent";
+import SidebarComponent from "../../components/SidebarComponent";
 import "./styles/StudentDashboardStyle.css"
 import { useDispatch, useSelector } from "react-redux";
-import {getCoursesAsync, setCurrentCourse} from "../redux/features/courseSlice";
+import {getCoursesAsync, setCurrentCourse} from "../../redux/features/courseSlice";
 
 function StudentDashboardPage() {
     const dispatch = useDispatch()
@@ -21,7 +21,6 @@ function StudentDashboardPage() {
     const courseClickHandler = (course) => {
         dispatch(setCurrentCourse(course))
     }
-
 
     return (
         <div className={"StudentDashboard"}>

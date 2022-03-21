@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import './styles/LoginPage.css';
 import { useDispatch } from 'react-redux';
-import { authenticateUser } from '../redux/features/authSlice';
+import { authenticateUser } from '../../redux/features/authSlice';
 
 function LoginPage() {
     const loginURL = `${process.env.REACT_APP_URL}/login`
@@ -26,7 +26,7 @@ function LoginPage() {
                             <img
                                 alt="google login img"
                                 className={'google'}
-                                src={require('./img/google_logo.png')}
+                                src={require('../img/google_logo.png')}
                             />{' '}
                             Login With Google
                         </button>
