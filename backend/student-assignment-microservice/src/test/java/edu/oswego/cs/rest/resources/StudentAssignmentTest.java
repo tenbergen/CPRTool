@@ -1,6 +1,7 @@
 package edu.oswego.cs.rest.resources;
 
 import edu.oswego.cs.daos.CourseDAO;
+import edu.oswego.cs.rest.daos.FileDAO;
 import org.junit.jupiter.api.*;
 
 import javax.json.bind.Jsonb;
@@ -18,7 +19,7 @@ public class StudentAssignmentTest {
     private static String targetUrl;
 
     static CourseDAO course;
-    static DownloadResources download;
+    static FileDAO assignment;
     private boolean assignmentUploadedTest = false;
     private boolean assignmentDownloadedTest = false;
 
@@ -40,24 +41,23 @@ public class StudentAssignmentTest {
         String semester = "Spring";
         String wrongSemester = "Apple Juice";
         String abbreviation = "CSC480";
+
+        String fileName = "ImportantAss";
+        String attachment = ".pdf";
+
         course = new CourseDAO(courseName, courseSection, semester, abbreviation);
+        assignment = new FileDAO(fileName, attachment);
     }
 
     @BeforeEach
     public void setup() {
         client = ClientBuilder.newClient();
 
-        download = new DownloadResources();
-
         targetUrl = "courses/course/assignments/upload";
         WebTarget target = client.target(baseUrl + targetUrl);
         addAssignmentResponse = target.request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .post(Entity.entity(jsonb.toJson(course), MediaType.APPLICATION_JSON));
-
-        downloadAssignmentResponse = target.request(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .get();
+                .post(Entity.entity(jsonb.toJson(assignment), MediaType.APPLICATION_JSON));
     }
 
     @AfterEach
@@ -67,7 +67,7 @@ public class StudentAssignmentTest {
             WebTarget target = client.target(baseUrl + targetUrl);
             addAssignmentResponse = target.request(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
-                    .post(Entity.entity(jsonb.toJson(course), MediaType.APPLICATION_JSON));
+                    .post(Entity.entity(jsonb.toJson(assignment), MediaType.APPLICATION_JSON));
         }
         assignmentUploadedTest = false;
 
@@ -78,7 +78,6 @@ public class StudentAssignmentTest {
                     .accept(MediaType.APPLICATION_JSON)
                     .get();
         }
-
         assignmentDownloadedTest = false;
         client.close();
     }
