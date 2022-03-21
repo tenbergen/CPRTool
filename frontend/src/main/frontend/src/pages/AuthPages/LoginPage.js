@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import './styles/LoginPage.css';
 import { useDispatch } from 'react-redux';
 import { authenticateUser } from '../../redux/features/authSlice';
+import GoogleLogin from "react-google-login";
 
 function LoginPage() {
     const loginURL = `${process.env.REACT_APP_URL}/login`
@@ -9,30 +10,47 @@ function LoginPage() {
     const dispatch = useDispatch();
     const queryParams = new URLSearchParams(window.location.search);
 
-    useEffect(() => {
-        const token = queryParams.get('token');
-        if (token != null) {
-            localStorage.setItem("jwt_token", token)
-            dispatch(authenticateUser())
-        }
-    },[])
+    // useEffect(() => {
+    //     const token = queryParams.get('token');
+    //     if (token != null) {
+    //         localStorage.setItem("jwt_token", token)
+    //         dispatch(authenticateUser())
+    //     }
+    // },[])
+
+    const handleFailure = (result) => {
+        alert(result);
+    };
+
+    const handleLogin = async (googleData) => {
+        console.log(googleData)
+        const res = await fetch('PUT_ENDPOINT_HERE', {
+            method: 'POST',
+            body: JSON.stringify({
+                token: googleData.tokenId,
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        const data = await res.json();
+        console.log(data)
+    };
 
     return (
         <div id='bigBox'>
-                <div id='box'>
-                    <div className='welcome'>Welcome!</div>
-                    <a href={loginURL}>
-                        <button className='googleButton' type='login'>
-                            <img
-                                alt="google login img"
-                                className={'google'}
-                                src={require('../img/google_logo.png')}
-                            />{' '}
-                            Login With Google
-                        </button>
-                    </a>
-                    <a href="" className="started">Get started as an Instructor</a>
-                </div>
+            <div id='box'>
+                <div className='welcome'>Welcome!</div>
+                <GoogleLogin
+                    className='googleButton'
+                    clientId="644041850309-32m3qpk5jlq07pmqem0tasjph8ge77pp.apps.googleusercontent.com"
+                    buttonText="Log in with Google"
+                    onSuccess={handleLogin}
+                    onFailure={handleFailure}
+                    cookiePolicy={'single_host_origin'}
+                />
+                <a href="" className="started">Get started as an Instructor</a>
+            </div>
         </div>
     );
 }
