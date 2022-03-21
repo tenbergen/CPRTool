@@ -3,33 +3,43 @@ package edu.oswego.cs.rest.resources;
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import com.ibm.websphere.jaxrs20.multipart.IMultipartBody;
 import edu.oswego.cs.rest.daos.FileDAO;
-import javax.ws.rs.Path;
+//import edu.oswego.cs.database.CourseInterface;
 
-import javax.activation.DataHandler;
+import javax.ws.rs.Path;
+import javax.ws.rs.GET;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.net.URL;
 
 @Path("download")
 public class DownloadResources {
 
-    @POST
+    @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/assignment/download")
     public Response downloadAssignment(FileDAO assignment) {
         try {
-            new CourseInterface().downloadAssignment(assignment);
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Assignment Does Not Exist").build();
+            //new CourseInterface().downloadAssignment(assignment);
+
+            try (BufferedInputStream in = new BufferedInputStream(new URL("/courses/course/assignment").openStream());
+            FileOutputStream fileOutputStream = new FileOutputStream("/courses/course/assignment")) {
+                byte dataBuffer[] = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = in.read(dataBuffer,0,1024)) != -1) {
+                    fileOutputStream.write(dataBuffer, 0, bytesRead);
+                }
+            } catch(Exception e) {
+                return Response.status(Response.Status.NOT_FOUND).entity("Assignment Does Not Exist").build();
+            }
+            return Response.status(Response.Status.BAD_REQUEST).entity("Assignment Did Not Download").build();
+        } catch(Exception e) {
+            return Response.status(Response.Status.OK).entity("Assignment Successfully Downloaded").build();
         }
-        return Response.status(Response.Status.OK).entity("Assignment Successfully Downloaded").build();
     }
 
 }
