@@ -1,10 +1,12 @@
 package edu.oswego.cs.rest.resources;
 
-import edu.oswego.cs.rest.daos.CourseDAO;
+import edu.oswego.cs.daos.CourseDAO;
+import edu.oswego.cs.rest.daos.FileDAO;
 import org.junit.jupiter.api.*;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
+import javax.print.attribute.standard.Media;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -18,12 +20,17 @@ public class ProfessorAssignmentTest {
     private static String targetUrl;
 
     static CourseDAO course;
-    private boolean courseDeletedTest = false;
+    static FileDAO assignment;
+    private boolean assignmentUploadedTest = false;
+    private boolean assignmentDownloadedTest = false;
+    private boolean assignmentDeletedTest = false;
 
     private Client client;
     private static final Jsonb jsonb = JsonbBuilder.create();
 
     private Response addAssignmentResponse;
+    private Response downloadAssignmentResponse;
+    private Response deleteAssignmentResponse;
 
     @BeforeAll
     public static void oneTimeSetup() {
@@ -37,31 +44,53 @@ public class ProfessorAssignmentTest {
         String semester = "Spring";
         String wrongSemester = "Apple Juice";
         String abbreviation = "CSC480";
+
+        String fileName = "ImportantAss";
+        String attachment = ".pdf";
+
         course = new CourseDAO(courseName, courseSection, semester, abbreviation);
+        assignment = new FileDAO(fileName, attachment);
     }
 
     @BeforeEach
     public void setup() {
         client = ClientBuilder.newClient();
-        int assignment = 5731;
 
-        targetUrl = "courses/course/assignment/create";
+        targetUrl = "courses/course/assignments/upload";
         WebTarget target = client.target(baseUrl + targetUrl);
-        addCourseResponse = target.request(MediaType.APPLICATION_JSON)
+        addAssignmentResponse = target.request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .post(Entity.entity(jsonb.toJson(course), MediaType.APPLICATION_JSON));
+                .post(Entity.entity(jsonb.toJson(assignment), MediaType.APPLICATION_JSON));
     }
 
     @AfterEach
     public void tearDown() {
-        if (!assignmentDeletedTest) {
-            targetUrl = "courses/course/assignment/delete";
+        if (!assignmentUploadedTest) {
+            targetUrl = "courses/course/assignments/upload";
             WebTarget target = client.target(baseUrl + targetUrl);
-            addCourseResponse = target.request(MediaType.APPLICATION_JSON)
+            addAssignmentResponse = target.request(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
-                    .post(Entity.entity(jsonb.toJson(course), MediaType.APPLICATION_JSON));
+                    .post(Entity.entity(jsonb.toJson(assignment), MediaType.APPLICATION_JSON));
         }
-        courseDeletedTest = false;
+        assignmentUploadedTest = false;
+
+        if (!assignmentDownloadedTest) {
+            targetUrl = "courses/course/assignments/download";
+            WebTarget target = client.target(baseUrl + targetUrl);
+            downloadAssignmentResponse = target.request(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .get();
+        }
+        assignmentDownloadedTest = false;
+
+        if (!assignmentDeletedTest) {
+            targetUrl = "courses/course/assignments/delete";
+            WebTarget target = client.target(baseUrl + targetUrl);
+            deleteAssignmentResponse = target.request(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .post(Entity.entity(jsonb.toJson(assignment), MediaType.APPLICATION_JSON));
+        }
+        assignmentDeletedTest = false;
         client.close();
     }
 
@@ -72,20 +101,20 @@ public class ProfessorAssignmentTest {
 
     @Test
     public void testProfessorDownload() {
-        Assertions.assertEquals(Response.Status.OK, Response.Status.fromStatusCode(addAssignmentResponse.getStatus()), "Assignment was not downloaded properly.");
-    }//needs work
+        Assertions.assertEquals(Response.Status.OK, Response.Status.fromStatusCode(downloadAssignmentResponse.getStatus()), "Assignment was not downloaded properly.");
+    }
 
     @Test
-    public void testProfessorDelete() {
+    public void testProfessorDeleteAss() {
 
-        targetUrl = "courses/course/assignment/delete";
+        targetUrl = "courses/course/assignments/delete";
         WebTarget target = client.target(baseUrl + targetUrl);
-        Response response = target.request(MediaType.APPLICATION_JSON)
+        deleteAssignmentResponse = target.request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .post(Entity.entity(jsonb.toJson(course), MediaType.APPLICATION_JSON));
+                .post(Entity.entity(jsonb.toJson(assignment), MediaType.APPLICATION_JSON));
 
-        Assertions.assertEquals(Response.Status.OK, Response.Status.fromStatusCode(response.getStatus()), "Assignment was not deleted properly.");
-        courseDeletedTest = true;
+        Assertions.assertEquals(Response.Status.OK, Response.Status.fromStatusCode(deleteAssignmentResponse.getStatus()), "Assignment was not deleted properly.");
+        assignmentDeletedTest = true;
     }
 
 }

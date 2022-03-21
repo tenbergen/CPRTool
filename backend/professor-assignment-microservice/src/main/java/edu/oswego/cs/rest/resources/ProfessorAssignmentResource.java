@@ -71,10 +71,10 @@ public class ProfessorAssignmentResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("courses/course/assignment/delete")
+    @Path("courses/course/assignments/delete")
     public Response deleteAssignment(FileDAO assignment) {
         try {
-            new CourseInterface().deleteAssignment(assignment)
+            //new CourseInterface().deleteAssignment(assignment);
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Assignment Does Not Exist").build();
         }
