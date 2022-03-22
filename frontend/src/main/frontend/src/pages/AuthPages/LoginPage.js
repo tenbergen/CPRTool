@@ -19,7 +19,7 @@ function LoginPage() {
     // },[])
 
     const handleFailure = (result) => {
-        console.log(result.detail);
+        console.log("Login error: " + result.details)
     };
 
     const handleLogin = async (googleData) => {
