@@ -19,22 +19,22 @@ function LoginPage() {
     // },[])
 
     const handleFailure = (result) => {
-        alert(result);
+        console.log(result.detail);
     };
 
     const handleLogin = async (googleData) => {
         console.log(googleData)
-        const res = await fetch('PUT_ENDPOINT_HERE', {
-            method: 'POST',
-            body: JSON.stringify({
-                token: googleData.tokenId,
-            }),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        const data = await res.json();
-        console.log(data)
+        // const res = await fetch('PUT_ENDPOINT_HERE', {
+        //     method: 'POST',
+        //     body: JSON.stringify({
+        //         token: googleData.tokenId,
+        //     }),
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        // });
+        // const data = await res.json();
+        // console.log(data)
     };
 
     return (
@@ -43,7 +43,7 @@ function LoginPage() {
                 <div className='welcome'>Welcome!</div>
                 <GoogleLogin
                     className='googleButton'
-                    clientId="644041850309-32m3qpk5jlq07pmqem0tasjph8ge77pp.apps.googleusercontent.com"
+                    clientId="334840295190-jcieqjl5rdmcjur8qj9dg3uhtiicu1r6.apps.googleusercontent.com"
                     buttonText="Log in with Google"
                     onSuccess={handleLogin}
                     onFailure={handleFailure}
