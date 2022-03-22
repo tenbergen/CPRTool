@@ -1,5 +1,5 @@
-import TeacherDashboardPage from "./pages/TeacherDashboardPage";
-import LoginPage from "./pages/LoginPage";
+import TeacherDashboardPage from "./pages/TeacherPages/TeacherDashboardPage";
+import LoginPage from "./pages/AuthPages/LoginPage";
 import {useDispatch, useSelector} from "react-redux";
 import "./global_styles/global.css";
 import {useEffect} from "react";
