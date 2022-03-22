@@ -1,4 +1,4 @@
-package edu.oswego.cs.resources.corsfilter;
+package edu.oswego.cs.rest.resources.corsfilter;
 
 import java.io.IOException;
 
