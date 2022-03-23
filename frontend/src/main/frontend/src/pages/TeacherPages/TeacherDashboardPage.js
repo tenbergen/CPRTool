@@ -8,7 +8,7 @@ import {getCoursesAsync, setCurrentCourse} from "../../redux/features/courseSlic
 function TeacherDashboardPage() {
     const dispatch = useDispatch()
     const courses = useSelector((state) => state.courses.courses)
-    const user = useSelector((state) => state.auth.user)
+    const user = useSelector((state) => state.auth.user_given_name)
 
     useEffect(() => {
         dispatch(getCoursesAsync())

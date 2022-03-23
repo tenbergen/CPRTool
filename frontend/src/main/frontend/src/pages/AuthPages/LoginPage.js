@@ -1,40 +1,20 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import './styles/LoginPage.css';
 import { useDispatch } from 'react-redux';
 import { authenticateUser } from '../../redux/features/authSlice';
 import GoogleLogin from "react-google-login";
 
 function LoginPage() {
-    const loginURL = `${process.env.REACT_APP_URL}/login`
-    console.log(loginURL)
     const dispatch = useDispatch();
-    const queryParams = new URLSearchParams(window.location.search);
-
-    // useEffect(() => {
-    //     const token = queryParams.get('token');
-    //     if (token != null) {
-    //         localStorage.setItem("jwt_token", token)
-    //         dispatch(authenticateUser())
-    //     }
-    // },[])
+    const REACT_APP_CLIENT_ID = `${process.env.REACT_APP_CLIENT_ID}`
 
     const handleFailure = (result) => {
         console.log("Login error: " + result.details)
     };
 
     const handleLogin = async (googleData) => {
-        console.log(googleData)
-        // const res = await fetch('PUT_ENDPOINT_HERE', {
-        //     method: 'POST',
-        //     body: JSON.stringify({
-        //         token: googleData.tokenId,
-        //     }),
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        // });
-        // const data = await res.json();
-        // console.log(data)
+        localStorage.setItem("jwt_token", googleData.tokenId)
+        dispatch(authenticateUser())
     };
 
     return (
@@ -43,10 +23,11 @@ function LoginPage() {
                 <div className='welcome'>Welcome!</div>
                 <GoogleLogin
                     className='googleButton'
-                    clientId="334840295190-jcieqjl5rdmcjur8qj9dg3uhtiicu1r6.apps.googleusercontent.com"
+                    clientId={REACT_APP_CLIENT_ID}
                     buttonText="Log in with Google"
                     onSuccess={handleLogin}
                     onFailure={handleFailure}
+                    hostedDomain={"oswego.edu"}
                     cookiePolicy={'single_host_origin'}
                 />
                 <a href="" className="started">Get started as an Instructor</a>
