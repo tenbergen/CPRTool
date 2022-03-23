@@ -3,11 +3,12 @@ services:
   frontend:
     build:
       context: ./frontend
+      args:
+        URL: ${URL}
+        CLIENT_ID: ${CLIENT_ID}
     container_name: cpr-frontend
     restart: unless-stopped
-    environment:
-      REACT_APP_URL: ${REACT_APP_URL}
-
+      
   login:
     build:
       context: ./backend/login-microservice
@@ -18,7 +19,7 @@ services:
       CLIENT_ID: ${CLIENT_ID}
       CLIENT_SECRET: ${CLIENT_SECRET}
       EMAIL_DOMAIN: ${EMAIL_DOMAIN}
-      REACT_APP_URL: ${REACT_APP_URL}
+      URL: ${URL}
 
   course-manager:
     build:
