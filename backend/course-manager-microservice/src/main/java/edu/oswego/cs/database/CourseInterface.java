@@ -21,16 +21,16 @@ import static com.mongodb.client.model.Updates.set;
 import static edu.oswego.cs.util.CSVUtil.parseStudentCSV;
 
 public class CourseInterface {
-    private MongoDatabase studentDB;
-    private MongoDatabase courseDB;
+    private final MongoDatabase studentDB;
+    private final MongoDatabase courseDB;
 
-    public CourseInterface() {
+    public CourseInterface() throws Exception {
         DatabaseManager databaseManager = new DatabaseManager();
         try {
             studentDB = databaseManager.getStudentDB();
             courseDB = databaseManager.getCourseDB();
         } catch (Exception e) {
-            e.printStackTrace(System.out);
+            throw new Exception();
         }
     }
 
