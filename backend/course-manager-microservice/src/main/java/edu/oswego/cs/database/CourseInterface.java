@@ -12,264 +12,143 @@ import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.push;
+import static com.mongodb.client.model.Updates.set;
 import static edu.oswego.cs.util.CSVUtil.parseStudentCSV;
 
 public class CourseInterface {
-    private String professorCollection = "Professor";
-    private String courseCollection = "Courses";
-    private String studentCollection = "Student";
+    private MongoDatabase studentDB;
+    private MongoDatabase courseDB;
 
-    private String Courses = "Courses";
-    private String SID = "StudentID";
-    private String CID = "courseID";
-    private String assignments = "Assignments";
-    private String team = "Team";
-    private String teams = "Teams";
-    private String synced = "Synced";
-    private String students = "Students";
-    private String tas = "Tas";
-
-    private boolean isSynced = true;
-    private MongoDatabase courseDatabase;
-    private MongoDatabase userDatabase;
-
-    public CourseInterface() throws IOException {
+    public CourseInterface() {
         DatabaseManager databaseManager = new DatabaseManager();
         try {
-            courseDatabase = databaseManager.getProfessorDB();
+            studentDB = databaseManager.getStudentDB();
+            courseDB = databaseManager.getCourseDB();
         } catch (Exception e) {
             e.printStackTrace(System.out);
-            throw new IOException();
-        }
-        try {
-            userDatabase = databaseManager.getStudentDB();
-
-        } catch (Exception e) {
-            e.printStackTrace(System.out);
-            isSynced = false;
         }
     }
 
-    public void addCourse(CourseDAO dao) throws IOException {
-
-        dao.courseID = dao.courseID + "-" + DateTimeFormatter.ofPattern("yyyy").format(LocalDateTime.now());
-        String courseName = dao.courseID;
+    /**
+     * Update the course DAO's courseID, then add the course if it is not already existed in the database. At the same
+     * time, update the students' course list in the student database if a student list in the request is specified.
+     */
+    public void addCourse(CourseDAO dao) throws Exception {
+        MongoCollection<Document> studentCollection = studentDB.getCollection("students");
+        MongoCollection<Document> courseCollection = courseDB.getCollection("courses");
 
         Jsonb jsonb = JsonbBuilder.create();
         Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(dao), MediaType.APPLICATION_JSON_TYPE);
-        Document tempCourse = Document.parse(courseDAOEntity.getEntity());
-        tempCourse.append(synced, isSynced);
+        Document course = Document.parse(courseDAOEntity.getEntity());
 
-        MongoCollection<Document> courseCol = courseDatabase.getCollection(courseCollection);
-        if (courseCol.find(new Document(CID, courseName)).iterator().hasNext()) {
-            throw new ArrayIndexOutOfBoundsException();
+        if (courseCollection.find(eq("course_id", dao.courseID)).iterator().hasNext()) {
+            throw new Exception();
         } else {
-            courseCol.insertOne(tempCourse);
-        }
-        if (isSynced) {
-            Document tempProfessor = userDatabase.getCollection(professorCollection).findOneAndDelete(new Document());
-            if (tempProfessor == null) throw new IOException();
-            ArrayList<Document> tempList = (ArrayList<Document>) tempProfessor.get(Courses);
-            tempList.add(tempCourse);
-            tempProfessor.put(Courses, tempList);
-            userDatabase.getCollection(professorCollection).insertOne(tempProfessor);
+            courseCollection.insertOne(course);
         }
 
-    }
-
-    public void addStudent(String StudentName, CourseDAO temp) throws Exception {
-        CourseDAO dao = new CourseDAO(temp.courseName, temp.courseSection, temp.semester, temp.abbreviation);
-        dao.courseID = dao.courseID + "-" + DateTimeFormatter.ofPattern("yyyy").format(LocalDateTime.now());
-
-        String courseName = dao.courseID;
-        String StudentID = StudentName.split("@")[0];
-
-        //Add Student to the student List for the course
-        Document tempCourse = courseDatabase.getCollection(courseCollection).find(new Document(CID, courseName)).first();
-        ArrayList StudentList = (ArrayList) tempCourse.get(students);
-        if (!StudentList.contains(StudentID)) {
-            StudentList.add(StudentID);
-            tempCourse.put(students, StudentList);
-            courseDatabase.getCollection(courseCollection).findOneAndDelete(new Document(CID, courseName));
-            courseDatabase.getCollection(courseCollection).insertOne(tempCourse);
-        } else {
-            throw new Exception("Student Already Exists In Course");
-        }
-        //If the student Database is connected then add the course refrence to the student if not then return
-        if (!isSynced) {
-            setSyncFalse(courseName);
-            return;
-        }
-
-        //Generate the course document
-        Jsonb jsonb = JsonbBuilder.create();
-        Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(dao), MediaType.APPLICATION_JSON_TYPE);
-        Document studentCourse = Document.parse(courseDAOEntity.getEntity());
-
-        //Add student to the professor
-        Document tempProfessor = userDatabase.getCollection(professorCollection).findOneAndDelete(new Document());
-        ArrayList<Document> professorList = (ArrayList<Document>) tempProfessor.get(Courses);
-
-        for (Document d : professorList) {
-            if (d.get(CID).equals(courseName)) {
-                professorList.remove(d);
-                d.put(students, StudentList);
-                professorList.add(d);
+        @SuppressWarnings("unchecked") List<String> students = (List<String>) course.get("students");
+        for (String student : students) {
+            MongoCursor<Document> query = studentCollection.find(eq("student_id", student)).iterator();
+            if (query.hasNext()) {
+                studentCollection.updateOne(eq("student_id", student), push("courses", dao.courseID));
             }
         }
+    }
 
-        tempProfessor.put(Courses, professorList);
-        userDatabase.getCollection(professorCollection).insertOne(tempProfessor);
+    /**
+     * A course DAO is made from the student DAO. Attempt to create the course, then add the student into the student
+     * array in the course using their name from the email and into the student database at the same time with the
+     * student's course array updated to have the new course respectively.
+     */
+    public void addStudent(String email, CourseDAO dao) throws Exception {
+        MongoCollection<Document> studentCollection = studentDB.getCollection("students");
+        MongoCollection<Document> courseCollection = courseDB.getCollection("courses");
 
+        if (!courseCollection.find(eq("course_id", dao.courseID)).iterator().hasNext()) {
+            addCourse(dao);
+        }
 
-        //If the student Exists then update the existing student
-        MongoCursor<Document> query = userDatabase.getCollection(studentCollection).find(new Document(SID, StudentID)).iterator();
+        Document courseDocument = courseCollection.find(eq("course_id", dao.courseID)).first();
+        assert courseDocument != null;
+        @SuppressWarnings("unchecked") List<String> students = (List<String>) courseDocument.get("students");
+        String studentName = email.split("@")[0];
+        if (!students.contains(studentName)) {
+            courseCollection.updateOne(eq("course_id", dao.courseID), push("students", studentName));
+        }
+
+        MongoCursor<Document> query = studentCollection.find(eq("student_id", studentName)).iterator();
         if (query.hasNext()) {
-            Document tempStudent = query.next();
-            ArrayList courseList = (ArrayList) tempStudent.get(Courses);
-            //Check to see if the current course is in the student
-            for (Object d : courseList) {
-                if (((Document) d).get(CID).toString().equals(courseName)) {
-                    //Contains the course already so we can exit
-                    return;
-                }
+            Document studentDocument = query.next();
+            @SuppressWarnings("unchecked") List<String> courseList = (List<String>) studentDocument.get("courses");
+            for (String course : courseList) {
+                if (course.equals(dao.courseID)) throw new Exception();
             }
-            courseList.add(studentCourse);
-            tempStudent.put(Courses, courseList);
-            userDatabase.getCollection(studentCollection).deleteOne(new Document(SID, StudentID));
-            userDatabase.getCollection(studentCollection).insertOne(tempStudent);
+            studentCollection.updateOne(eq("student_id", studentName), push("courses", dao.courseID));
         } else {
-            ArrayList courseList = new ArrayList<>();
-            courseList.add(studentCourse);
-            Document tempStudent = new Document()
-                    .append(SID, StudentID)
-                    .append(Courses, courseList);
-            userDatabase.getCollection(studentCollection).insertOne(tempStudent);
+            List<String> courseList = new ArrayList<>();
+            courseList.add(dao.courseID);
+            Document newStudent = new Document()
+                    .append("student_id", studentName)
+                    .append("courses", courseList);
+            studentCollection.insertOne(newStudent);
         }
-        for (Object o : StudentList) {
-            Document TempStudent = userDatabase.getCollection(studentCollection).findOneAndDelete(new Document(SID, o.toString()));
-            ArrayList<Document> studentCourseStudentList = (ArrayList<Document>) TempStudent.get(Courses);
-            for (Document d : studentCourseStudentList) {
-                if (d.get(CID).equals(courseName)) {
-                    studentCourseStudentList.remove(d);
-                    d.put(students, StudentList);
-                    studentCourseStudentList.add(d);
+    }
+
+    /**
+     * Remove the course from the student's arraylist of courses, and then remove the course itself from the course database.
+     */
+    public void removeCourse(CourseDAO dao) throws Exception {
+        MongoCollection<Document> studentCollection = studentDB.getCollection("students");
+        MongoCollection<Document> courseCollection = courseDB.getCollection("courses");
+
+        MongoCursor<Document> courseQuery = courseCollection.find(eq("course_id", dao.courseID)).iterator();
+        if (courseQuery.hasNext()) {
+            Document courseDocument = courseQuery.next();
+            @SuppressWarnings("unchecked") List<String> students = (List<String>) courseDocument.get("students");
+            for (String student : students) {
+                MongoCursor<Document> studentQuery = studentCollection.find(eq("student_id", student)).iterator();
+                if (studentQuery.hasNext()) {
+                    Document studentDocument = studentQuery.next();
+                    @SuppressWarnings("unchecked") List<String> courses = (List<String>) studentDocument.get("courses");
+                    courses.remove(dao.courseID);
+                    studentCollection.updateOne(eq("student_id", student), set("courses", courses));
                 }
             }
-            userDatabase.getCollection(studentCollection).insertOne(TempStudent);
-        }
-
+        } else throw new Exception();
+        courseCollection.findOneAndDelete(eq("course_id", dao.courseID));
     }
 
-    public void removeCourse(CourseDAO dao) {
+    /**
+     * Remove the student from the course's arraylist of students, and then remove the course from the student's course
+     * arraylist in the student database.
+     */
+    public void removeStudent(String email, CourseDAO dao) throws Exception {
+        MongoCollection<Document> studentCollection = studentDB.getCollection("students");
+        MongoCollection<Document> courseCollection = courseDB.getCollection("courses");
+        String studentName = email.split("@")[0];
 
-        dao.courseID = dao.courseID + "-" + DateTimeFormatter.ofPattern("yyyy").format(LocalDateTime.now());
-        String courseName = dao.courseID;
-        //If student database is up then remove the refrence to this class from each student that has one
-        if (isSynced) {
-            ArrayList studentList = (ArrayList) courseDatabase.getCollection(courseCollection).find(new Document(CID, courseName)).first().get(students);
-            for (Object o : studentList) {
-                Document tempStudent = userDatabase.getCollection(studentCollection).findOneAndDelete(new Document(SID, o.toString()));
-                ArrayList<Document> currentCourses = (ArrayList<Document>) tempStudent.get(Courses);
-                currentCourses.removeIf(d -> d.get(CID).equals(courseName));
-                tempStudent.put(Courses, currentCourses);
-                userDatabase.getCollection(studentCollection).insertOne(tempStudent);
-            }
-            //remove the refrence from the professor
-            Document tempProfessor = userDatabase.getCollection(professorCollection).findOneAndDelete(new Document());
-            ArrayList<Document> currentCourses = (ArrayList<Document>) tempProfessor.get(Courses);
-            currentCourses.removeIf(d -> d.get(CID).equals(courseName));
-            tempProfessor.put(Courses, currentCourses);
-            userDatabase.getCollection(professorCollection).insertOne(tempProfessor);
-
-        } else setSyncFalse(courseName);
-
-        //delete the course from courses
-        courseDatabase.getCollection(courseCollection).findOneAndDelete(new Document(CID, courseName));
-    }
-
-    public void removeStudent(String StudentName, CourseDAO temp) throws Exception {
-        CourseDAO dao = new CourseDAO(temp.courseName, temp.courseSection, temp.semester, temp.abbreviation);
-        dao.courseID = dao.courseID + "-" + DateTimeFormatter.ofPattern("yyyy").format(LocalDateTime.now());
-        String courseName = dao.courseID;
-        String StudentID = StudentName.split("@")[0];
-
-        //Add Student to the student List for the course
-        Document tempCourse = courseDatabase.getCollection(courseCollection).find(new Document(CID, courseName)).first();
-        ArrayList StudentList = (ArrayList) tempCourse.get(students);
-        if (StudentList.contains(StudentID)) {
-            StudentList.remove(StudentID);
-            tempCourse.put(students, StudentList);
-            courseDatabase.getCollection(courseCollection).findOneAndDelete(new Document(CID, courseName));
-            courseDatabase.getCollection(courseCollection).insertOne(tempCourse);
-        } else {
-            throw new Exception("Student Does Not Exists In Course");
-        }
-        //If the student Database is connected then add the course refrence to the student if not then return
-        if (!isSynced) {
-            setSyncFalse(courseName);
-            return;
-        }
-
-        //Generate the course document
-        Jsonb jsonb = JsonbBuilder.create();
-        Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(dao), MediaType.APPLICATION_JSON_TYPE);
-        Document studentCourse = Document.parse(courseDAOEntity.getEntity());
-
-        //Add student to the professor
-        Document tempProfessor = userDatabase.getCollection(professorCollection).findOneAndDelete(new Document());
-        ArrayList<Document> professorList = (ArrayList<Document>) tempProfessor.get(Courses);
-
-        for (Document d : professorList) {
-            if (d.get(CID).equals(courseName)) {
-                professorList.remove(d);
-                d.put(students, StudentList);
-                professorList.add(d);
-            }
-        }
-
-        tempProfessor.put(Courses, professorList);
-        userDatabase.getCollection(professorCollection).insertOne(tempProfessor);
-
-        Document tempStudent = userDatabase.getCollection(studentCollection).findOneAndDelete(new Document(SID, StudentID));
-        ArrayList<Document> courseList = (ArrayList<Document>) tempStudent.get(Courses);
-        //Check to see if the current course is in the student
-        courseList.removeIf(d -> d.get(CID).toString().equals(courseName));
-        tempStudent.put(Courses, courseList);
-        userDatabase.getCollection(studentCollection).insertOne(tempStudent);
-
-        for (Object o : StudentList) {
-            Document TempStudent = userDatabase.getCollection(studentCollection).findOneAndDelete(new Document(SID, o.toString()));
-            ArrayList<Document> studentCourseStudentList = (ArrayList<Document>) TempStudent.get(Courses);
-            for (Document d : studentCourseStudentList) {
-                if (d.get(CID).equals(courseName)) {
-                    studentCourseStudentList.remove(d);
-                    d.put(students, StudentList);
-                    studentCourseStudentList.add(d);
+        MongoCursor<Document> studentQuery = studentCollection.find(eq("student_id", studentName)).iterator();
+        if (studentQuery.hasNext()) {
+            Document studentDocument = studentQuery.next();
+            @SuppressWarnings("unchecked") List<String> courses = (List<String>) studentDocument.get("courses");
+            for (String course : courses) {
+                MongoCursor<Document> courseQuery = courseCollection.find(eq("course_id", course)).iterator();
+                if (courseQuery.hasNext()) {
+                    Document courseDocument = courseQuery.next();
+                    @SuppressWarnings("unchecked") List<String> students = (List<String>) courseDocument.get("students");
+                    students.remove(studentName);
+                    courseCollection.updateOne(eq("course_id", dao.courseID), set("students", students));
                 }
             }
-            tempStudent.put(Courses, studentCourseStudentList);
-            userDatabase.getCollection(studentCollection).insertOne(TempStudent);
-        }
-
-    }
-
-    public void setSyncFalse(String courseName) {
-        Document tempCourse = courseDatabase.getCollection(courseCollection).findOneAndDelete(new Document(CID, courseName));
-        tempCourse.put(synced, false);
-        courseDatabase.getCollection(courseCollection).insertOne(tempCourse);
-
-    }
-
-    //Feature to sync the changes that occured in courses while the students db was offline
-    public void syncWithStudents() {
-
+            courses.remove(dao.courseID);
+            studentCollection.updateOne(eq("student_id", studentName), set("courses", courses));
+        } else throw new Exception();
     }
 
     public void addStudentsFromCSV(FileDAO f) throws Exception {
@@ -278,8 +157,16 @@ public class CourseInterface {
         String cid = f.getFilename();
         cid = cid.substring(0, cid.length() - 4);
         System.out.println(cid);
-        Document course = courseDatabase.getCollection(courseCollection).find(new Document(CID, cid)).first();
-        CourseDAO courseDAO = new CourseDAO(course.get("CourseName").toString(), Integer.parseInt(course.get("CourseSection").toString()), course.get("Semester").toString(), course.get("Abbreviation").toString());
+        Document course = courseDB.getCollection("courses").find(new Document("course_id", cid)).first();
+        assert course != null;
+        CourseDAO courseDAO = new CourseDAO(
+                course.get("abbreviation").toString(),
+                course.get("course_name").toString(),
+                course.get("course_section").toString(),
+                course.get("semester").toString(),
+                course.get("year").toString()
+        );
+
         ArrayList oldStudentList = (ArrayList) course.get("Students");
         ArrayList<String> newStudentList = new ArrayList<>();
         ArrayList<String> studentsToRemove = new ArrayList<>();
