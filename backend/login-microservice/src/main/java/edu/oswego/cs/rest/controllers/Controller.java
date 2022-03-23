@@ -1,12 +1,13 @@
 package edu.oswego.cs.rest.controllers;
 
-import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
-@Path("/handler")
+@Path("/auth")
 public class Controller {
-    @GET
-    public String handler() {
+    @POST
+    @Path("generate-token")
+    public String gene() {
         return "handler";
     }
 }
