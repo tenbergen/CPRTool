@@ -10,27 +10,27 @@ import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class DatabaseManager {
-    String hostname = "moxie.cs.oswego.edu";//System.getenv("MONGO_HOSTNAME");
+    String hostname = System.getenv("MONGO_HOSTNAME");
 
-    int studentPort = 27027;//Integer.parseInt(System.getenv("MONGO_PORT"));
-    String studentDatabase = "cpr";//System.getenv("MONGO_DATABASE");
-    String studentUser = "root";//System.getenv("MONGO_USERNAME");
-    String studentPassword = "toor";//System.getenv("MONGO_PASSWORD");
+    int studentPort = Integer.parseInt(System.getenv("MONGO_PORT"));
+    String studentDatabase = System.getenv("MONGO_DATABASE");
+    String studentUser = System.getenv("MONGO_USERNAME");
+    String studentPassword = System.getenv("MONGO_PASSWORD");
 
-    int professorPort = 27028;//Integer.parseInt(System.getenv("MONGO2_PORT"));
-    String professorDatabase = "cpr";//System.getenv("MONGO_DATABASE");
-    String professorUser = "root";//System.getenv("MONGO_USERNAME");
-    String professorPassword = "toor";//System.getenv("MONGO_PASSWORD");
+    int professorPort = Integer.parseInt(System.getenv("MONGO2_PORT"));
+    String professorDatabase = System.getenv("MONGO_DATABASE");
+    String professorUser = System.getenv("MONGO_USERNAME");
+    String professorPassword = System.getenv("MONGO_PASSWORD");
 
-    int coursePort = 27029;//Integer.parseInt(System.getenv("MONGO3_PORT"));
-    String courseDatabase = "cpr";//System.getenv("MONGO_DATABASE");
-    String courseUser = "root";//System.getenv("MONGO_USERNAME");
-    String coursePassword = "toor";//System.getenv("MONGO_PASSWORD");
+    int coursePort = Integer.parseInt(System.getenv("MONGO3_PORT"));
+    String courseDatabase = System.getenv("MONGO_DATABASE");
+    String courseUser = System.getenv("MONGO_USERNAME");
+    String coursePassword = System.getenv("MONGO_PASSWORD");
 
-    int teamPort = 27030;//Integer.parseInt(System.getenv("MONGO4_PORT"));
-    String teamDatabase = "cpr";//System.getenv("MONGO_DATABASE");
-    String teamUser = "root";//System.getenv("MONGO_USERNAME");
-    String teamPassword = "toor";//System.getenv("MONGO_PASSWORD");
+    int teamPort = Integer.parseInt(System.getenv("MONGO4_PORT"));
+    String teamDatabase = System.getenv("MONGO_DATABASE");
+    String teamUser = System.getenv("MONGO_USERNAME");
+    String teamPassword = System.getenv("MONGO_PASSWORD");
 
     public MongoDatabase getStudentDB() {
         MongoCredential credentials = MongoCredential.createCredential(studentUser, studentDatabase, studentPassword.toCharArray());
