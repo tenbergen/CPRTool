@@ -55,10 +55,6 @@
         <version>1.10.0</version>
         <configuration>
           <workingDirectory>src/main/frontend</workingDirectory>
-          <environmentVariables>
-            <REACT_APP_URL>${env.URL}</REACT_APP_URL>
-            <REACT_APP_CLIENT_ID>${env.CLIENT_ID}</REACT_APP_CLIENT_ID>
-          </environmentVariables>
         </configuration>
         <executions>
           <execution>
