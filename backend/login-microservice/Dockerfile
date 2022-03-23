@@ -1,14 +1,9 @@
-# Stage 1: Build the project and package it into a .jar file.
-FROM maven:3.8.4 as maven
+FROM icr.io/appcafe/open-liberty:kernel-slim-java11-openj9-ubi
 
-WORKDIR .
-COPY . .
+COPY --chown=1001:0 /src/main/liberty/config /config
 
-RUN mvn package -DskipTests
+RUN features.sh
 
-# Stage 2: Copy the .jar file and server.xml into the required location.
-FROM icr.io/appcafe/open-liberty:full-java11-openj9-ubi
+COPY --chown=1001:0 target/*.war /config/apps
 
-# Copy from the intermediate build container.
-COPY --from=maven src/main/liberty/config/server.xml /config/
-COPY --from=maven target/*.war /config/apps
+RUN configure.sh
