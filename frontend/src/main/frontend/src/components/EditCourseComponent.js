@@ -1,5 +1,4 @@
 import React from "react-dom";
-import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 import "./styles/EditCourse.css"
 import "./styles/DeleteModal.css"
@@ -9,37 +8,18 @@ const EditCourseComponent = () => {
     const deleteUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/delete`
     const editUrl = ""
     const csvUrl = ""
-    // const {from} = useLocation().state
-    // let currentCourse = Object()
-
     const currentCourse = useSelector((state) => state.courses.currentCourse)
 
-
-    // currentCourse.CourseName = from.CourseName
-    // currentCourse.CourseSection = from.CourseSection
-    // currentCourse.Semester = from.Semester
-    // currentCourse.Abbreviation = from.Abbreviation
-
-    let navigate = useNavigate()
-    console.log(currentCourse)
-
-    const [courseDescription, setCourseDescription] = useState()
-    const [courseName, setCourseName] = useState(currentCourse.CourseName)
-
-    let [selectedFile, setSelectedFile] = useState()
-    let [isFilePicked, setIsFilePicked] = useState(false)
-
-    // TODO move post request to submit button handler
-    // const changeHandler = async (event) => {
-    //     setSelectedFile(event.target.files[0])
-    //     setIsFilePicked(true)
-    //     const formData = new FormData()
-    //     formData.append("File", event.target.files[0])
-    //
-    //     await axios.post(csvUrl, formData).then( (response) => {
-    //         console.log(response)
-    //     })
-    // }
+    const changeHandler = (event) => {
+        let file = event.target.files[0];
+        const renamedFile = new File([file], "Filename", { type: file.type })
+        const formData = new FormData()
+        formData.append("File", renamedFile)
+        console.log(formData.get("File").name)
+        // await axios.post(csvUrl, formData).then( (response) => {
+        //     console.log(response)
+        // })
+    }
 
     // const deleteCourse = async () => {
     //     await axios.post(deleteUrl, currentCourse).then((response) => {
@@ -67,7 +47,6 @@ const EditCourseComponent = () => {
                     </div>
                 </div>
             </div>
-
         )
     }
     
@@ -82,7 +61,7 @@ const EditCourseComponent = () => {
                 <input
                     type="text"
                     name="courseName"
-                    value={currentCourse}
+                    value={currentCourse.course_name}
                     required
                     //onChange={(e) => OnChange(e)}
                 />

@@ -3,7 +3,7 @@ import App from '../App';
 import CreateCoursePage from '../pages/TeacherPages/CreateCoursePage';
 import TeacherDashboardPage from '../pages/TeacherPages/TeacherDashboardPage';
 import StudentDashboardPage from '../pages/StudentPages/StudentDashboardPage'
-import EditCoursePage from '../pages/TeacherPages/EditCoursePage';
+import CourseDetailsPage from '../pages/TeacherPages/CourseDetailsPage';
 import TodoPage from "../pages/StudentPages/TodoPage";
 import CreateAssignmentPage  from "../pages/TeacherPages/CreateAssignmentPage";
 import UnauthedErrorPage from '../pages/AuthPages/UnauthedErrorPage';
@@ -15,12 +15,12 @@ const RouterHandler = () => {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<App />} />
-        <Route path='createCourse' element={<CreateCoursePage />} />
-        <Route path='teacherDashboard' element={<TeacherDashboardPage />} />
-        <Route path='studentDashboard' element={<StudentDashboardPage />} />
+        <Route path='create/course' element={<CreateCoursePage />} />
+        <Route path='details/:courseId' element={<CourseDetailsPage />} />
+        <Route path='dashboard/teacher' element={<TeacherDashboardPage />} />
+        <Route path='dashboard/student' element={<StudentDashboardPage />} />
         <Route path='todoCourse' element={<TodoPage />} />
-        <Route path='editCourse' element={<EditCoursePage />} />
-        <Route path='createAssignment' element={<CreateAssignmentPage />} />
+        <Route path='create/assignment' element={<CreateAssignmentPage />} />
         <Route path='unauthenticated' element={<UnauthedErrorPage />} />
         </Routes>
     </BrowserRouter>
