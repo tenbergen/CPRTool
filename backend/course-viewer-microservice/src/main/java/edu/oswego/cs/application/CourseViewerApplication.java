@@ -5,5 +5,4 @@ import javax.ws.rs.core.Application;
 
 @ApplicationPath("view")
 public class CourseViewerApplication extends Application {
-
 }
