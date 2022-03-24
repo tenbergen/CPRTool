@@ -9,8 +9,10 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class professorAssignmentTest {
     private static String port;
@@ -23,19 +25,18 @@ public class professorAssignmentTest {
     @BeforeAll
     public static void oneTimeSetup(){
         port = "13130";
-//        baseUrl = "http://moxie.cs.oswego.edu:" + port + "assignments/professor";
-        baseUrl = "http://localhost:" + port + "assignments/professor";
+        baseUrl = "http://moxie.cs.oswego.edu:" + port + "assignments/professor";
 
-        String file1Name = "&&SoftwareDesignI&&.compressed(zipped)Folder.zip";
+        String file1Name = "compressed(zipped)Folder.zip";
         File file1 = new File(FileDAO.getProjectRootDir() + "src/test/java/edu/oswego/cs/resources/exampleFiles/" + file1Name);
 
-        String file2Name = "&&SoftwareDesignI&&.portableDocumentFormat.pdf";
+        String file2Name = "portableDocumentFormat.pdf";
         File file2 = new File(FileDAO.getProjectRootDir() + "src/test/java/edu/oswego/cs/resources/exampleFiles/" + file2Name);
 
-        String file3Name = "&&SoftwareDesignI&&.portableNetworkGraphics.png";
+        String file3Name = "portableNetworkGraphics.png";
         File file3 = new File(FileDAO.getProjectRootDir() + "src/test/java/edu/oswego/cs/resources/exampleFiles/" + file3Name);
 
-        String file4Name = "&&SoftwareDesignI&&.text.txt";
+        String file4Name = "text.txt";
         File file4 = new File(FileDAO.getProjectRootDir() + "src/test/java/edu/oswego/cs/resources/exampleFiles/" + file4Name);
 
         if (file1.exists() && file2.exists() && file3.exists() && file4.exists())
@@ -55,7 +56,13 @@ public class professorAssignmentTest {
     @BeforeEach
     public void setup() {
         client = ClientBuilder.newClient();
-
+        allFiles.forEach(file -> {
+            String uploadURL = baseUrl + "/courses/&&SoftwareDesignI&&/assignments/-1/upload";
+            WebTarget target = client.target(uploadURL);
+            target.request(MediaType.MULTIPART_FORM_DATA)
+                    .accept(MediaType.MULTIPART_FORM_DATA)
+                    .post(Entity.entity(file, MediaType.MULTIPART_FORM_DATA));
+        });
 //        expectedFiles.forEach(file -> {
 ////            String createURL = "http://moxie.cs.oswego.edu:13127/manage/professor/courses/course/create/";
 //            String uploadURL = baseUrl + "/courses/course/assignments/upload";
@@ -86,18 +93,8 @@ public class professorAssignmentTest {
 
     @Test
     public void ProfessorAssignment_UploadTest() throws FileNotFoundException {
-        Assertions.assertEquals(false, true,"test");
-        allFiles.forEach(file -> {
-//            String createURL = "http://moxie.cs.oswego.edu:13127/manage/professor/courses/course/create/";
 
-            String uploadURL = baseUrl + "/courses/course/assignments/upload";
-            WebTarget target = client.target(uploadURL);
-            target.request(MediaType.MULTIPART_FORM_DATA)
-                    .accept(MediaType.MULTIPART_FORM_DATA)
-                    .post(Entity.entity(file, MediaType.MULTIPART_FORM_DATA));
-        });
-
-        File file = new File(FileDAO.getProjectRootDir() + "/SoftwareDesignI");
+        File file = new File(FileDAO.getProjectRootDir() + "/&&SoftwareDesignI&&");
         File[] files = file.listFiles();
 //        Arrays.asList(files).forEach(uploadedFile -> {
 //            try {
@@ -112,10 +109,36 @@ public class professorAssignmentTest {
 //            }
 //    });
         Assertions.assertEquals(files.length, 2,
-                "The wrong files where allowed/blocked. \nIf > 2: \"allowed\" if < 2: \"blocked\"");
+                "The wrong files were allowed/blocked. \nIf > 2: \"allowed\" if < 2: \"blocked\"");
         Assertions.assertEquals(new FileInputStream(files[0]), new FileInputStream(expectedFiles.get(0)),
                 "The file uploaded: "+ files[0].getName() +", and the file expected: "+ expectedFiles.get(0) +" are different.");
         Assertions.assertEquals(new FileInputStream(files[1]), new FileInputStream(expectedFiles.get(1)),
                 "The file uploaded: "+ files[0].getName() +", and the file expected: "+ expectedFiles.get(0) +" are different.");
+    }
+
+    @Test
+    public void ProfessorAssignment_deleteTest() {
+//        targetUrl = "/courses/&&SoftwareDesignI&&/assignments/{assignmentID}/remove\n";
+//        WebTarget target = client.target(baseUrl + targetUrl);
+//        deleteAssignmentResponse = target.request(MediaType.APPLICATION_JSON)
+//                .accept(MediaType.APPLICATION_JSON)
+//                .post(Entity.entity(jsonb.toJson(assignment), MediaType.APPLICATION_JSON));
+//
+//        Assertions.assertEquals(Response.Status.OK, Response.Status.fromStatusCode(deleteAssignmentResponse.getStatus()), "Assignment was not deleted properly.");
+//        assignmentDeletedTest = true;
+        AtomicInteger index = new AtomicInteger(0);
+        allFiles.forEach(file -> {
+            String deleteURL = baseUrl + "/courses/&&SoftwareDesignI&&/assignments/" + index.getAndIncrement() + "/remove";
+            WebTarget target = client.target(deleteURL);
+            target.request(MediaType.MULTIPART_FORM_DATA)
+                    .accept(MediaType.MULTIPART_FORM_DATA)
+                    .delete();
+        });
+
+        File file = new File(FileDAO.getProjectRootDir() + "/&&SoftwareDesignI&&");
+        File[] files = file.listFiles();
+
+        Assertions.assertEquals(files.length, 0,
+                "The files were not deleted.");
     }
 }
