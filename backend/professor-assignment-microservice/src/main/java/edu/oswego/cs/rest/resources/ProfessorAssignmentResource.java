@@ -20,10 +20,15 @@ public class ProfessorAssignmentResource {
     @DELETE
 //    @Path("/courses/course/assignment/remove")
     @Path("/courses/{courseID}/assignments/{assignmentID}/remove")
-    public void removeAssignment(@PathParam("assignmentID") String assignment, @PathParam("courseID") String courseID) throws Exception {
+    public Response removeAssignment(@PathParam("assignmentID") String assignment, @PathParam("courseID") String courseID) throws Exception {
 //        String assName = "CSC580-800-spring-2022.pdf";
 //        String CID = "CSC580-800-spring-2022";
-        new AssignmentInterface().remove(assignment,courseID);
+        try {
+            new AssignmentInterface().remove(assignment,courseID);
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.status(Response.Status.OK).entity("Assignment Successfully Deleted").build();
     }
 
     /**
@@ -63,74 +68,4 @@ public class ProfessorAssignmentResource {
         }
         return Response.status(Response.Status.OK).build();
     }
-
-<<<<<<< HEAD
-//    /**
-//     * File is uploaded as form-data and passed back as a List<IAttachment>
-//     * The attachment is processed in FileDao.FileFactory, which reads and
-//     * reconstructs the file through inputStream and outputStream respectively
-//     *
-//     * @param attachments type List<IAttachment>: file(s) passed back as form-data
-//     * @return Response
-//     */
-//    @POST
-//    @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
-//    @Path("/courses/{courseID}/assignments/upload")
-//    public Response uploadAssignment(List<IAttachment> attachments, @PathParam("courseID") String courseID) throws Exception {
-//
-//        InputStream stream = null;
-//        for (IAttachment attachment : attachments) {
-//            if (attachment == null) {continue;}
-//            String fileName = attachment.getDataHandler().getName();
-//
-//            if (!fileName.endsWith("pdf") && !fileName.endsWith("zip"))
-//                return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
-//
-//            if (fileName == null) {
-//                StringBuilder sb = new StringBuilder();
-//                BufferedReader br = new BufferedReader(new InputStreamReader(stream));
-//                String line = null;
-//                try {
-//                    while ((line = br.readLine()) != null) {
-//                        sb.append(line);
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                } finally {
-//                    if (br != null) {
-//                        try {
-//                            br.close();
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
-//                System.out.println("Non-file attachment value: " + sb.toString());
-//            } else {
-//
-//                new AssignmentInterface().add(FileDAO.FileFactory(fileName, courseID, attachment));
-//            }
-//            if (stream != null) {
-//                stream.close();
-//            }
-//        }
-//        return Response.status(Response.Status.OK).build();
-//    }
-
-
-
-=======
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("courses/course/assignments/delete")
-    public Response deleteAssignment(FileDAO assignment) {
-        try {
-            //new AssignmentInterface().deleteAssignment(assignment);
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Assignment Does Not Exist").build();
-        }
-        return Response.status(Response.Status.OK).entity("Assignment Successfully Deleted").build();
-    }
->>>>>>> 5705b305afa414a5af2fc0c79d9f162e0a9fa8fd
 }
