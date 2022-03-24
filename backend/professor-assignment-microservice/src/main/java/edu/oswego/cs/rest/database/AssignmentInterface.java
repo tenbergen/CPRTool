@@ -7,11 +7,8 @@ import edu.oswego.cs.rest.daos.FileDAO;
 import org.apache.commons.io.FileUtils;
 import org.bson.Document;
 
-import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -32,10 +29,10 @@ public class AssignmentInterface {
     boolean isSynced = true;
 
     public AssignmentInterface() throws Exception {
-        initiliseDatabases();
+        initialiseDatabases();
     }
     public void add(FileDAO fileDAO)throws Exception{
-        this.CID = fileDAO.getCourse();
+        this.CID = fileDAO.getCourseID();
         this.fileDAO = fileDAO;
         String relativePathPrefix = getRelPath();
         String FileStructure = makeFileStructure(relativePathPrefix);
@@ -94,7 +91,7 @@ public class AssignmentInterface {
     }
 
 
-    public void initiliseDatabases() throws Exception {
+    public void initialiseDatabases() throws Exception {
         try{
             DatabaseManager manager = new DatabaseManager();
             assDatabase = manager.getAssDB();

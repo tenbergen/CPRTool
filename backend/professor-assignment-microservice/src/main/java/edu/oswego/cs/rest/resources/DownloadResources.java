@@ -21,8 +21,8 @@ public class DownloadResources {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("courses/course/assignment/download")
-    public Response downloadAssignment(FileDAO assignment) {
+    @Path("/courses/{courseID}/assignments/{assignmentID}/download")
+    public Response downloadAssignment(FileDAO assignment, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
         try {
             //new AssignmentInterface().downloadAssignment(assignment);
 
