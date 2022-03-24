@@ -10,7 +10,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class DatabaseManager {
-    String hostname = System.getenv("MONGO_HOSTNAME");
+    String hostname = "moxie.cs.oswego.edu";
 
     int coursePort = 27028;//Integer.parseInt(System.getenv("MONGO_PORT"));
     String courseDB = "cpr";//System.getenv("MONGO_DATABASE");

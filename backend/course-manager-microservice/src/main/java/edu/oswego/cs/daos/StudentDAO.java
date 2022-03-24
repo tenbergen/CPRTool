@@ -12,12 +12,12 @@ import javax.persistence.Id;
 @NoArgsConstructor
 public class StudentDAO {
     @Id
-    public @JsonbProperty("Email") @NonNull String email;
-    public @JsonbProperty("Abbreviation") @NonNull String abbreviation;
-    public @JsonbProperty("CourseSection") @NonNull int courseSection;
-    public @JsonbProperty("Semester") @NonNull String semester;
-    public @JsonbProperty("CourseName") @NonNull String courseName;
-
+    @JsonbProperty("email") public String email;
+    @JsonbProperty("abbreviation") public String abbreviation;
+    @JsonbProperty("course_name") public String courseName;
+    @JsonbProperty("course_section") public String courseSection;
+    @JsonbProperty("semester") public String semester;
+    @JsonbProperty("year") public String year;
     public String fullName;
 
     public StudentDAO(String fullName, String email) {
@@ -26,19 +26,20 @@ public class StudentDAO {
     }
 
     @JsonbCreator
-    public StudentDAO(@JsonbProperty("Email") String email,
-                      @JsonbProperty("CourseName") String courseName,
-                      @JsonbProperty("Abbreviation") String abbreviation,
-                      @JsonbProperty("CourseSection") int courseSection,
-                      @JsonbProperty("Semester") String semester) {
+    public StudentDAO(
+            @NonNull @JsonbProperty("email") String email,
+            @NonNull @JsonbProperty("abbreviation") String abbreviation,
+            @NonNull @JsonbProperty("course_name") String courseName,
+            @NonNull @JsonbProperty("course_section") String courseSection,
+            @NonNull @JsonbProperty("semester") String semester,
+            @NonNull @JsonbProperty("year") String year) {
         this.email = email;
-        this.courseSection = courseSection;
-        this.semester = semester;
         this.abbreviation = abbreviation;
         this.courseName = courseName;
+        this.courseSection = courseSection;
+        this.semester = semester;
+        this.year = year;
     }
-
-    public String getFullName() { return this.fullName; }
 
     public String toString() {
         return this.email + "/" + this.fullName;

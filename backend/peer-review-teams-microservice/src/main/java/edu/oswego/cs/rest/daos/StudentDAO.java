@@ -12,15 +12,15 @@ import java.util.ArrayList;
 @Data
 public class StudentDAO {
     @Id
-    public @JsonbProperty("studentID") @NonNull String studentID; // email
+    public @JsonbProperty("course_id") @NonNull String studentID; // email
     /* for team*/
-    public @JsonbProperty("TeamID") String teamID;
-    public @JsonbProperty("TeamLead") boolean isLead;
-    public @JsonbProperty("Finalized") boolean confirmFinalized;
+    public @JsonbProperty("team_id") String teamID;
+    public @JsonbProperty("team_lead") boolean isLead;
+    public @JsonbProperty("finalized") boolean confirmFinalized;
     /* course */
-    public @JsonbProperty("CourseID") @NonNull ArrayList<String> courses;
+    public @JsonbProperty("course_id") @NonNull ArrayList<String> courses;
 
-    public StudentDAO(@JsonbProperty("Email") String studentID) {
+    public StudentDAO(@JsonbProperty("email") String studentID) {
         this.studentID = studentID;
         this.teamID = "";
         this.isLead = false;

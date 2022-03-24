@@ -64,6 +64,7 @@ public class ProfessorAssignmentResource {
         return Response.status(Response.Status.OK).build();
     }
 
+<<<<<<< HEAD
 //    /**
 //     * File is uploaded as form-data and passed back as a List<IAttachment>
 //     * The attachment is processed in FileDao.FileFactory, which reads and
@@ -118,4 +119,18 @@ public class ProfessorAssignmentResource {
 
 
 
+=======
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("courses/course/assignments/delete")
+    public Response deleteAssignment(FileDAO assignment) {
+        try {
+            //new AssignmentInterface().deleteAssignment(assignment);
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Assignment Does Not Exist").build();
+        }
+        return Response.status(Response.Status.OK).entity("Assignment Successfully Deleted").build();
+    }
+>>>>>>> 5705b305afa414a5af2fc0c79d9f162e0a9fa8fd
 }

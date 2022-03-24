@@ -25,9 +25,9 @@ public class CourseManagerResource {
         try {
             new CourseInterface().addCourse(course);
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Course Already Added").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Failed to add course.").build();
         }
-        return Response.status(Response.Status.OK).entity("Course Successfully Added").build();
+        return Response.status(Response.Status.OK).entity("Course successfully added.").build();
     }
 
     @POST
@@ -38,9 +38,9 @@ public class CourseManagerResource {
         try {
             new CourseInterface().removeCourse(course);
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Course Does Not Exist").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Failed to delete course.").build();
         }
-        return Response.status(Response.Status.OK).entity("Course Successfully Deleted").build();
+        return Response.status(Response.Status.OK).entity("Course successfully deleted.").build();
     }
 
     @POST
@@ -48,13 +48,20 @@ public class CourseManagerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/student/add")
     public Response addStudent(StudentDAO studentDAO) {
-        CourseDAO course = new CourseDAO(studentDAO.courseName, studentDAO.courseSection, studentDAO.semester, studentDAO.abbreviation);
+        CourseDAO courseDAO = new CourseDAO(
+                studentDAO.abbreviation,
+                studentDAO.courseName,
+                studentDAO.courseSection,
+                studentDAO.semester,
+                studentDAO.year
+        );
+
         try {
-            new CourseInterface().addStudent(studentDAO.email, course);
+            new CourseInterface().addStudent(studentDAO.email, courseDAO);
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Student/Course Does Not Exist").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Failed to add student.").build();
         }
-        return Response.status(Response.Status.OK).entity("Student Successfully Added").build();
+        return Response.status(Response.Status.OK).entity("Student successfully added.").build();
     }
 
     @POST
@@ -62,34 +69,38 @@ public class CourseManagerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/student/delete")
     public Response deleteStudent(StudentDAO studentDAO) {
-        CourseDAO course = new CourseDAO(studentDAO.courseName, studentDAO.courseSection, studentDAO.semester, studentDAO.abbreviation);
+        CourseDAO courseDAO = new CourseDAO(
+                studentDAO.abbreviation,
+                studentDAO.courseName,
+                studentDAO.courseSection,
+                studentDAO.semester,
+                studentDAO.year
+        );
+
         try {
-            new CourseInterface().removeStudent(studentDAO.email, course);
+            new CourseInterface().removeStudent(studentDAO.email, courseDAO);
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Student/Course Does Not Exist").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Student or course does not exist.").build();
         }
-        return Response.status(Response.Status.OK).entity("Student Successfully Removed").build();
+        return Response.status(Response.Status.OK).entity("Student successfully removed.").build();
     }
 
     @POST
     @Consumes({MediaType.MULTIPART_FORM_DATA})
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("courses/course/student/massadd")
-    public Response addStudentByCSVFile(IMultipartBody body) throws Exception {
+    @Path("courses/course/student/mass-add")
+    public Response addStudentByCSVFile(IMultipartBody body) {
         FileDAO fileDAO;
         try {
             fileDAO = FileDAO.FileFactory(body.getAllAttachments());
         } catch (Exception e) {
-            System.out.println("File corruption.");
-            return Response.status(Response.Status.BAD_REQUEST).entity("File Corrupted. Try Again").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("File corrupted. Try again.").build();
         }
         try {
             new CourseInterface().addStudentsFromCSV(fileDAO);
         } catch (Exception e) {
-            System.out.println("Student Not added.");
-            return Response.status(Response.Status.BAD_REQUEST).entity("Students Not Successfully Added.").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Failed to add student.").build();
         }
         return Response.status(Response.Status.OK).build();
     }
-
 }
