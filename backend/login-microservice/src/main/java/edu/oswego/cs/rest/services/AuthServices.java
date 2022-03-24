@@ -1,19 +1,12 @@
 package edu.oswego.cs.rest.services;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
 import com.ibm.websphere.security.jwt.InvalidBuilderException;
 import com.ibm.websphere.security.jwt.InvalidClaimException;
 import com.ibm.websphere.security.jwt.JwtBuilder;
@@ -26,7 +19,7 @@ import edu.oswego.cs.rest.database.DatabaseManager;
 public class AuthServices {
     private MongoDatabase profDB;
     private final String profID = "professor_id";
-    private final String CLIENT_ID = System.getenv("CLIENT_ID"); // "644041850309-32m3qpk5jlq07pmqem0tasjph8ge77pp.apps.googleusercontent.com"; 
+    GoogleService googleService = new GoogleService();
   
     public AuthServices() {
         DatabaseManager databaseManager = new DatabaseManager();
@@ -38,7 +31,7 @@ public class AuthServices {
     }
 
     public String generateNewToken(String token) {
-        Payload payload = validateToken(token);
+        Payload payload = googleService.validateToken(token);
         Set<String> roles = new HashSet<>();
         if (payload == null) {
             throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("401 Invalid Token").build());
@@ -73,7 +66,7 @@ public class AuthServices {
     }
 
     protected boolean isProfessor(String token) {
-        Payload payload = validateToken(token);
+        Payload payload = googleService.validateToken(token);
         if (payload == null) {
             throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("401 Invalid Token").build());
         }
@@ -84,29 +77,4 @@ public class AuthServices {
         return false;
     }
 
-    protected Payload validateToken(String token) {
-        GoogleIdToken idToken = verifyToken(token);
-        if (idToken == null) {
-            throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("401 Invalid Token").build());
-        }
-        Payload payload = idToken.getPayload();
-        return payload;
-    }
-
-    protected GoogleIdToken verifyToken(String token) {
-        try {
-            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(),
-                    new GsonFactory())
-                            .setAudience(Collections.singletonList(CLIENT_ID))
-                            .build();
-
-            return verifier.verify(token);
-        } catch (GeneralSecurityException | IOException e) {
-            e.printStackTrace();
-            throw new WebApplicationException(Response.Status.UNAUTHORIZED);
-        }
-    }
-
-
-    
 }

@@ -16,7 +16,7 @@ import edu.oswego.cs.rest.services.AuthServices;
 public class Controller {
     
     @POST
-    @Path("generate-token")
+    @Path("token/generate")
     @Produces(MediaType.APPLICATION_JSON)
     public Response generateToken(@Context HttpHeaders request) throws JsonException{
         if (request.getRequestHeader(HttpHeaders.AUTHORIZATION) == null) {
