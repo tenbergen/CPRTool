@@ -40,7 +40,7 @@ public class ProfessorAssignmentTest {
         String course = ".pdf";
         InputStream file = System.in;
 
-        assignment = new FileDAO(fileName, course, file);
+//        assignment = new FileDAO(fileName, course, file);
     }
 
     @BeforeEach

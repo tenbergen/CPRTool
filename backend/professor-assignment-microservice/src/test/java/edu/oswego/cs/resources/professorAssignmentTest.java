@@ -50,7 +50,6 @@ public class professorAssignmentTest {
         expectedFiles = new ArrayList<>();
         expectedFiles.add(file1);
         expectedFiles.add(file2);
-        expectedFiles.add(file3);
     }
 
     @BeforeEach
