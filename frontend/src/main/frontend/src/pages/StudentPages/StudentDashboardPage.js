@@ -8,7 +8,7 @@ import {getCoursesAsync, setCurrentCourse} from "../../redux/features/courseSlic
 function StudentDashboardPage() {
     const dispatch = useDispatch()
     const courses = useSelector((state) => state.courses.courses)
-    const user = useSelector((state) => state.auth.user)
+    const user = useSelector((state) => state.auth.user_given_name)
 
     useEffect( ()=> {
        dispatch(getCoursesAsync())
@@ -26,11 +26,11 @@ function StudentDashboardPage() {
         <div className={"StudentDashboard"}>
             <SidebarComponent />
             <div id="student">
-                <h1> Hello {user}</h1>
+                <h2> Hello {user}</h2>
                 <div id="courseList">
                     {courses.map(course =>
-                        <Link to="/toDoCourse" onClick={() => courseClickHandler(course)} state={{from: course}}>
-                            <li className="courseListItem">{course.CourseName}</li>
+                        <Link to={"/todoCourse/" + course.course_id} onClick={() => courseClickHandler(course)} state={{from: course}}>
+                            <li className="courseListItem">{course.course_id + "\n\n"  + course.course_name}</li>
                         </Link>)}
                 </div>
             </div>
