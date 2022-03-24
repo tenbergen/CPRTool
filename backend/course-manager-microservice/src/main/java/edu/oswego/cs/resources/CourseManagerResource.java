@@ -16,7 +16,6 @@ import javax.ws.rs.core.Response;
 
 @Path("professor")
 public class CourseManagerResource {
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -24,10 +23,10 @@ public class CourseManagerResource {
     public Response createCourse(CourseDAO course) {
         try {
             new CourseInterface().addCourse(course);
+            return Response.status(Response.Status.OK).entity("Course successfully added.").build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Failed to add course.").build();
         }
-        return Response.status(Response.Status.OK).entity("Course successfully added.").build();
     }
 
     @POST
@@ -37,10 +36,10 @@ public class CourseManagerResource {
     public Response deleteCourse(CourseDAO course) {
         try {
             new CourseInterface().removeCourse(course);
+            return Response.status(Response.Status.OK).entity("Course successfully deleted.").build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Failed to delete course.").build();
         }
-        return Response.status(Response.Status.OK).entity("Course successfully deleted.").build();
     }
 
     @POST
@@ -58,10 +57,10 @@ public class CourseManagerResource {
 
         try {
             new CourseInterface().addStudent(studentDAO.email, courseDAO);
+            return Response.status(Response.Status.OK).entity("Student successfully added.").build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Failed to add student.").build();
         }
-        return Response.status(Response.Status.OK).entity("Student successfully added.").build();
     }
 
     @POST
@@ -79,10 +78,10 @@ public class CourseManagerResource {
 
         try {
             new CourseInterface().removeStudent(studentDAO.email, courseDAO);
+            return Response.status(Response.Status.OK).entity("Student successfully removed.").build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Student or course does not exist.").build();
         }
-        return Response.status(Response.Status.OK).entity("Student successfully removed.").build();
     }
 
     @POST
