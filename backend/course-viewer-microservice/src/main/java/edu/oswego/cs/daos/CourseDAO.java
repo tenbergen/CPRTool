@@ -4,54 +4,41 @@ import lombok.*;
 
 import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.ArrayList;
+import java.util.List;
 
 @ToString
 @Entity
 @NoArgsConstructor
 @Getter
 public class CourseDAO {
-
     @Id
-    public String courseID;
-    public @JsonbProperty("CourseName") @NonNull String courseName;
-    public @JsonbProperty("CourseSection") @NonNull int courseSection;
-    public @JsonbProperty("Semester") @NonNull String semester;
-    public @JsonbProperty("Abbreviation") @NonNull String abbreviation;
-    public @JsonbProperty ("Students") ArrayList students;
-    public @JsonbProperty("Teams") ArrayList teams;
-    public @JsonbProperty("Tas") ArrayList tas;
-
+    @JsonbProperty("abbreviation") public String abbreviation;
+    @JsonbProperty("course_name") public String courseName;
+    @JsonbProperty("course_section") public String courseSection;
+    @JsonbProperty("semester") public String semester;
+    @JsonbProperty("students") @ElementCollection public List<String> students;
+    @JsonbProperty("teams") @ElementCollection public List<String> teams;
+    @JsonbProperty("year") public String year;
+    @JsonbProperty("course_id") public String courseID;
 
     @JsonbCreator
     public CourseDAO(
-            @JsonbProperty("CourseName") String courseName,
-            @JsonbProperty("CourseSection") int courseSection,
-            @JsonbProperty("Semester") String semester,
-            @JsonbProperty("Abbreviation") String abbreviation) {
+            @NonNull @JsonbProperty("abbreviation") String abbreviation,
+            @NonNull @JsonbProperty("course_name")  String courseName,
+            @NonNull @JsonbProperty("course_section") String courseSection,
+            @NonNull @JsonbProperty("semester") String semester,
+            @NonNull @JsonbProperty("year") String year) {
+        this.abbreviation = abbreviation;
         this.courseName = courseName;
         this.courseSection = courseSection;
         this.semester = semester;
-        this.abbreviation = abbreviation;
-        this.courseID = this.abbreviation + "-" + this.courseSection + "-" + this.semester;
-        this.students = new ArrayList();
-        this.teams = new ArrayList();
-        this.tas = new ArrayList();
+        this.students = new ArrayList<>();
+        this.teams = new ArrayList<>();
+        this.year = year;
+        this.courseID = this.abbreviation + "-" + this.courseSection + "-" + this.semester + "-" + this.year;
     }
-
-    public CourseDAO(String courseName,int courseSection,String semester,String abbreviation,
-                     ArrayList students,ArrayList teams,ArrayList tas,String courseID){
-        this.teams = teams;
-        this.tas = tas;
-        this.students = students;
-        this.courseName = courseName;
-        this.courseSection = courseSection;
-        this.semester = semester;
-        this.abbreviation = abbreviation;
-        this.courseID = courseID;
-    }
-
-
 }

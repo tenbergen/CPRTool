@@ -2,7 +2,7 @@ package edu.oswego.cs.rest.resources;
 
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.rest.daos.FileDAO;
-import edu.oswego.cs.rest.database.AssignmentInterface;
+//import edu.oswego.cs.rest.database.AssignmentInterface;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import javax.ws.rs.*;
@@ -14,28 +14,19 @@ import java.util.List;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
-@Path("professor")
-public class ProfessorAssignmentResource {
+@Path("student")
+public class StudentAssignmentResource {
 
-    public ProfessorAssignmentResource() {
+    public StudentAssignmentResource() {
     }
-
     /*
      * File is uploaded as form-data and passed back as a List<IAttachment>
      * The attachment is processed in FileDao.FileFactory, which reads and
      * reconstructs the file through inputStream and outputStream respectively
      *
-     * @param attachments type List<IAttachment>: file(s) passed back as form-data
+             * @param attachments type List<IAttachment>: file(s) passed back as form-data
      * @return Response
-      */
-    @GET
-    @Path("/remove")
-    public void remove() throws Exception {
-        String assName = "CSC580-800-spring-2022.pdf";
-        String CID = "CSC580-800-spring-2022";
-        new AssignmentInterface().remove(assName,CID);
-    }
-
+     */
     @POST
     @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf", MediaType.TEXT_PLAIN})
     @Path("/courses/course/assignments/upload")
@@ -68,7 +59,7 @@ public class ProfessorAssignmentResource {
                 System.out.println("Non-file attachment value: " + sb.toString());
             } else {
 
-                new AssignmentInterface().add(FileDAO.FileFactory(fileName,attachment));
+                //new AssignmentInterface().add(FileDAO.FileFactory(fileName,attachment));
 //                DB.getFileDao(FileDAO.FileFactory(fileName,attachment));
             }
             if (stream != null) {
@@ -78,16 +69,4 @@ public class ProfessorAssignmentResource {
         return Response.status(Response.Status.OK).build();
     }
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("courses/course/assignments/delete")
-    public Response deleteAssignment(FileDAO assignment) {
-        try {
-            //new AssignmentInterface().deleteAssignment(assignment);
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Assignment Does Not Exist").build();
-        }
-        return Response.status(Response.Status.OK).entity("Assignment Successfully Deleted").build();
-    }
 }
