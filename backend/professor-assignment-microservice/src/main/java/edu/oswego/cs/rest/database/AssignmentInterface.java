@@ -35,7 +35,7 @@ public class AssignmentInterface {
         initiliseDatabases();
     }
     public void add(FileDAO fileDAO)throws Exception{
-        this.CID = fileDAO.getCourse();
+        this.CID = fileDAO.getCourseID();
         this.fileDAO = fileDAO;
         String relativePathPrefix = getRelPath();
         String FileStructure = makeFileStructure(relativePathPrefix);

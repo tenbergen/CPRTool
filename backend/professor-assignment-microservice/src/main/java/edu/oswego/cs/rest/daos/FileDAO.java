@@ -4,30 +4,34 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import java.io.*;
 import java.util.Arrays;
-import java.util.regex.Pattern;
 
 @Getter
 @AllArgsConstructor
 public class FileDAO {
     private String filename;
-    private String course;
+    private String courseID;
     private InputStream file;
+    private int assignmentID;
 //    v this is how UPLOAD_FOLDER WILL END UP LOOKING LIKE v
 //  private static final String UPLOAD_FOLDER = DB.findHwFolder(course, filename);
 
     /**
-     * Takes form-data from a POST request for a csv file and reconstructs the content within the file
+     * Takes form-data from a POST request, converts it to an inputStream, and return the FileDOA containing
+     * the files' information including the inputStream
+     *
      * @param fileName form-data String representation of file name
+     * @param courseID String
      * @param attachment form-data
      * @return FileDAO Instance
      * @throws IOException File Corruption Exception
      */
-    public static FileDAO FileFactory(String fileName, IAttachment attachment) throws IOException {
-        String courseName = fileName.split("\\.")[0];
+    public static FileDAO fileFactory(String fileName, String courseID, IAttachment attachment, int assignmentID) throws IOException {
+//        String courseName = fileName.split("\\.")[0];
         InputStream inputStream = attachment.getDataHandler().getInputStream();
-        System.out.println("fileName: " + fileName + "courseName: " + courseName);
-        return new FileDAO(fileName, courseName, inputStream);
+        System.out.println("fileName: " + fileName + "courseID: " + courseID);
+        return new FileDAO(fileName, courseID, inputStream, assignmentID);
     }
+
     /**
     * Writes the inputStream to a file.
     * */
@@ -56,5 +60,26 @@ public class FileDAO {
             relativePathPrefix = new StringBuilder(relativePathPrefix.toString().replace("/", "\\"));
         }
         return relativePathPrefix.toString();
+    }
+    public static void nullFiles(InputStream stream){
+        StringBuilder sb = new StringBuilder();
+        BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+        String line = null;
+        try {
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        System.out.println("Non-file attachment value: " + sb.toString());
     }
 }
