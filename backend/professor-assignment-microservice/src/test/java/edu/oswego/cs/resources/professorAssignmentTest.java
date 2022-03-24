@@ -69,7 +69,7 @@ public class professorAssignmentTest {
 
     @AfterEach
     public void teardown() throws IOException {
-
+//
 //        allFiles.forEach(file -> {
 ////            String deleteURL = "http://moxie.cs.oswego.edu:13127/manage/professor/courses/course/delete/";
 //            String removeURL = baseUrl + "/courses/course/assignments/remove";
