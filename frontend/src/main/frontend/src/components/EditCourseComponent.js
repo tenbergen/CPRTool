@@ -3,56 +3,65 @@ import {useState} from "react";
 import "./styles/EditCourse.css"
 import "./styles/DeleteModal.css"
 import {useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import axios from "axios";
+
+const deleteUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/delete`
+const editUrl = ""
+const csvUrl = ""
 
 const EditCourseComponent = () => {
-    const deleteUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/delete`
-    const editUrl = ""
-    const csvUrl = ""
+    let navigate = useNavigate()
     const currentCourse = useSelector((state) => state.courses.currentCourse)
 
-    const changeHandler = (event) => {
+    const [formData, setFormData] = useState({
+        course_name: currentCourse.course_name,
+        course_csv: null,
+        team_size: null,
+    });
+    const [showModal, setShow] = useState(false)
+
+    const { course_name, team_size } = formData;
+
+    const OnChange = (e) => setFormData(
+        { ...formData, [e.target.name]: e.target.value }
+    );
+
+    const fileChangeHandler = (event) => {
         let file = event.target.files[0];
-        const renamedFile = new File([file], "Filename", { type: file.type })
-        const formData = new FormData()
-        formData.append("File", renamedFile)
-        console.log(formData.get("File").name)
-        // await axios.post(csvUrl, formData).then( (response) => {
-        //     console.log(response)
-        // })
+        const renamedFile = new File([file], currentCourse.course_id, { type: file.type })
+        const fileFormData = new FormData()
+        fileFormData.append("File", renamedFile)
+        setFormData({course_csv: fileFormData})
     }
 
-    // const deleteCourse = async () => {
-    //     await axios.post(deleteUrl, currentCourse).then((response) => {
-    //         console.log(response)
-    //     })
-    //     navigate("/teacherDashboard")
-    // }
+    const editCourse = () => {
+        // await axios.post(editUrl, currentCourse).then((response) =>{
+        //     console.log(response)
+        // })
+        console.log({...formData})
+    }
 
-    //
-    // const editCourse = async () => {
-    //     // add
-    //     await axios.post(editUrl, currentCourse).then((response) =>{
-    //         console.log(response)
-    //     })
-    // }
+    const deleteCourse = async () => {
+        await axios.post(deleteUrl, currentCourse).then((response) => {
+            console.log(response)
+        })
+        navigate("/")
+    }
 
-    const modal = () => {
+    const Modal = () => {
         return (
             <div id="deleteModal">
                 <div id="modalContent">
                     <span id="deleteSpan">Are you sure you want to delete this course?</span>
                     <div id="deleteButtons">
-                        <button /*onClick={} */ >Yes</button>
-                        <button onClick={handleClose}>No</button>
+                        <button onClick={deleteCourse}>Yes</button>
+                        <button onClick={() => setShow(false)}>No</button>
                     </div>
                 </div>
             </div>
         )
     }
-    
-    const [showModal, setShow] = useState(false)
-    const handleShow = () => setShow(true)
-    const handleClose = () => setShow(false)
 
     return (
         <form id="editCourseForm">
@@ -60,19 +69,19 @@ const EditCourseComponent = () => {
                 <label> <b> Name of course: </b> </label>
                 <input
                     type="text"
-                    name="courseName"
-                    value={currentCourse.course_name}
+                    name="course_name"
+                    value={course_name}
                     required
-                    //onChange={(e) => OnChange(e)}
+                    onChange={(e) => OnChange(e)}
                 />
             </div>
 
             <div className="course-csv">
                 <label> <b> Add course CSV: </b> </label>
                 <input
-                    //onChange={changeHandler}
+                    onChange={fileChangeHandler}
                     type="file"
-                    name="courseCSV"
+                    name="course_csv"
                     required
                 />
             </div>
@@ -82,16 +91,18 @@ const EditCourseComponent = () => {
                 <input
                     type="number"
                     min="1"
-                    name="teamSize"
+                    name="team_size"
                     required
+                    value={team_size}
+                    onChange={(e) => OnChange(e)}
                 />
             </div>
 
             <div className="editCourseButton">
-                <button> Submit</button>
-                <a onClick={handleShow} target="_blank"> Delete course </a>
+                <button onClick={editCourse}> Submit</button>
+                <a onClick={() => setShow(true)} target="_blank"> Delete course </a>
                 <div>
-                    {showModal ? modal() : null}
+                    {showModal ? Modal() : null}
                 </div>
             </div>
         </form>
