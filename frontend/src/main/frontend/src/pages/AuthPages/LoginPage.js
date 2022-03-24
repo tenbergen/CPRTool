@@ -1,38 +1,37 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import './styles/LoginPage.css';
 import { useDispatch } from 'react-redux';
 import { authenticateUser } from '../../redux/features/authSlice';
+import GoogleLogin from "react-google-login";
 
 function LoginPage() {
-    const loginURL = `${process.env.REACT_APP_URL}/login`
-    console.log(loginURL)
     const dispatch = useDispatch();
-    const queryParams = new URLSearchParams(window.location.search);
+    const REACT_APP_CLIENT_ID = `${process.env.REACT_APP_CLIENT_ID}`
 
-    useEffect(() => {
-        const token = queryParams.get('token');
-        if (token != null) {
-            localStorage.setItem("jwt_token", token)
-            dispatch(authenticateUser())
-        }
-    },[])
+    const handleFailure = (result) => {
+        console.log("Login error: " + result.details)
+    };
+
+    const handleLogin = async (googleData) => {
+        localStorage.setItem("jwt_token", googleData.tokenId)
+        dispatch(authenticateUser())
+    };
 
     return (
         <div id='bigBox'>
-                <div id='box'>
-                    <div className='welcome'>Welcome!</div>
-                    <a href={loginURL}>
-                        <button className='googleButton' type='login'>
-                            <img
-                                alt="google login img"
-                                className={'google'}
-                                src={require('../img/google_logo.png')}
-                            />{' '}
-                            Login With Google
-                        </button>
-                    </a>
-                    <a href="" className="started">Get started as an Instructor</a>
-                </div>
+            <div id='box'>
+                <div className='welcome'>Welcome!</div>
+                <GoogleLogin
+                    className='googleButton'
+                    clientId={REACT_APP_CLIENT_ID}
+                    buttonText="Log in with Google"
+                    onSuccess={handleLogin}
+                    onFailure={handleFailure}
+                    hostedDomain={"oswego.edu"}
+                    cookiePolicy={'single_host_origin'}
+                />
+                <a href="" className="started">Get started as an Instructor</a>
+            </div>
         </div>
     );
 }
