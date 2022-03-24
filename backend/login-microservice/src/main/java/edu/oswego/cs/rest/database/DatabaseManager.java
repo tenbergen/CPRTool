@@ -29,7 +29,7 @@ public class DatabaseManager {
         return client.getDatabase(mongoDB);
     }
 
-    public MongoDatabase getCourseDB() {
+    public MongoDatabase getProfDB() {
         MongoCredential credentials = MongoCredential.createCredential(mongoUser, mongoDB, mongoPassword.toCharArray());
         MongoClient client = new MongoClient(
                 new ServerAddress(hostname, profPort),

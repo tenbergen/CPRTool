@@ -19,13 +19,12 @@
     />
     <applicationManager autoExpand="true"/>
 
-    <!-- <keyStore id="cpr22sKS" password="cpr22s" location="cprJwtKey.p12"/> -->
-    <!-- <jwtBuilder expiresInSeconds="600" id="cpr22s" issuer="https://localhost:13126" keyStoreRef="cpr22sKS"  /> -->
-    <!-- <jwtBuilder expiresInSeconds="600" id="cpr22s" issuer="https://localhost:13126" jwkEnabled="true" /> -->
+    <jwtBuilder expiresInSeconds="1800" id="cpr22s" jwkEnabled="true"/>
 
     <webApplication contextRoot="${app.context.root}" location="login-microservice.war" />
         
-    <ssl id="defaultSSLConfig" trustDefaultCerts="true"/>
+    <ssl id="defaultSSLConfig" expiresInSeconds="600" trustDefaultCerts="true"/>
+    
     <cors domain="/"
           allowedOrigins="*"
           allowedMethods="GET, POST, DELETE, PUT"
