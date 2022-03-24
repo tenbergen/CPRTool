@@ -8,6 +8,7 @@ const authSlice = createSlice({
         token: localStorage.getItem("token"),
         isAuthenticated: null,
         user_given_name: null,
+        role: "teacher"
     },
     reducers: {
         authenticateUser: () => {
@@ -15,7 +16,8 @@ const authSlice = createSlice({
                 let decoded = jwtDecode(localStorage.getItem("jwt_token"))
                 return {
                     isAuthenticated: true,
-                    user_given_name: decoded.given_name
+                    user_given_name: decoded.given_name,
+                    role: "teacher"
                 }
             } catch (e) {
                 console.log(e)

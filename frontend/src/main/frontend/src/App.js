@@ -4,11 +4,13 @@ import {useDispatch, useSelector} from "react-redux";
 import "./global_styles/global.css";
 import {useEffect} from "react";
 import {authenticateUser} from "./redux/features/authSlice";
+import StudentDashboardPage from "./pages/StudentPages/StudentDashboardPage";
 
 function App() {
   const dispatch = useDispatch()
   const authentication = useSelector((state) => state);
   const isAuthenticated = authentication.auth.isAuthenticated;
+  const role = authentication.auth.role;
 
   useEffect(() => {
     const token = localStorage.getItem("jwt_token")
@@ -19,7 +21,12 @@ function App() {
 
   return (
     <div>
-        {isAuthenticated? <TeacherDashboardPage/> : <LoginPage />}
+        {isAuthenticated ?
+          <div>
+            {role === "teacher" && <TeacherDashboardPage/>}
+            {role === "student" && <StudentDashboardPage/>}
+          </div>
+        : <LoginPage />}
     </div>
   );
 }
