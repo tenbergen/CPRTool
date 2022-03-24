@@ -27,7 +27,7 @@ function TeacherDashboardPage() {
                 <div id="courseList">
                     {courses.map(course =>
                     <Link to={"/details/" + course.course_id}>
-                        <li className="courseListItem">{course.course_name}</li>
+                        <li className="courseListItem">{course.course_id + "\n\n"  + course.course_name}</li>
                     </Link>)}
                 </div>
                 <div id="addClass">
