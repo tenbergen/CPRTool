@@ -9,29 +9,31 @@ const CreateCoursePage = () => {
     let navigate = useNavigate()
 
     const [formData, setFormData] = useState({
-        CourseName: '',
-        CourseSection: undefined,
-        Semester: '',
-        Abbreviation: '',
-        Year: ''
+        course_name: '',
+        course_section: '',
+        semester: '',
+        abbreviation: '',
+        year: ''
     });
 
-    const { CourseName, CourseSection, Semester, Abbreviation, Year } = formData;
+    const { course_name, course_section, semester, abbreviation, year } = formData;
 
     const OnChange = (e) => setFormData(
         { ...formData, [e.target.name]: e.target.value }
     );
 
     const handleSubmit = async (e) => {
-        if (Abbreviation === '' || CourseName === '' || CourseSection === undefined || Semester === '' || Year === '') alert("Fields can't be empty!")
+        if (abbreviation === '' || course_name === '' || course_section === '' || semester === '' || year === '') {
+            alert("Fields can't be empty!")
+        }
         else {
             e.preventDefault()
             const data = {
-                CourseName: CourseName,
-                CourseSection: CourseSection,
-                Semester: Semester,
-                Abbreviation: Abbreviation,
-                Year: Year
+                course_name: course_name,
+                course_section: course_section,
+                semester: semester,
+                abbreviation: abbreviation,
+                year: year
             };
             await axios.post(submitCourseUrl, data);
             navigate("/teacherDashboard")
@@ -48,8 +50,8 @@ const CreateCoursePage = () => {
                         <label> <b> Course name: </b> </label>
                         <input
                             type="text"
-                            name="CourseName"
-                            value={CourseName}
+                            name="course_name"
+                            value={course_name}
                             required
                             onChange={(e) => OnChange(e)}
                         />
@@ -60,8 +62,8 @@ const CreateCoursePage = () => {
                             <label> <b> Course abbreviation: </b> </label>
                             <input
                                 type="text"
-                                name="Abbreviation"
-                                value={Abbreviation}
+                                name="abbreviation"
+                                value={abbreviation}
                                 required
                                 onChange={(e) => OnChange(e)}
                             />
@@ -70,9 +72,9 @@ const CreateCoursePage = () => {
                         <div className="ccp-input-field">
                             <label> <b> Course section: </b> </label>
                             <input
-                                type="number"
-                                name="CourseSection"
-                                value={CourseSection}
+                                type="text"
+                                name="course_section"
+                                value={course_section}
                                 required
                                 onChange={(e) => OnChange(e)}
                             />
@@ -95,8 +97,8 @@ const CreateCoursePage = () => {
                             <label> <b> Semester: </b> </label>
                             <input
                                 type="text"
-                                name="Semester"
-                                value={Semester}
+                                name="semester"
+                                value={semester}
                                 required
                                 onChange={(e) => OnChange(e)}
                             />
@@ -105,9 +107,9 @@ const CreateCoursePage = () => {
                         <div className="ccp-input-field">
                             <label> <b> Year: </b> </label>
                             <input
-                                name="Year"
+                                name="year"
                                 type="text"
-                                value={Year}
+                                value={year}
                                 // required
                                 onChange={(e) => OnChange(e)}
                             />
