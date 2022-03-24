@@ -3,7 +3,7 @@ import {useEffect, useState} from "react";
 import "./styles/EditCourseStyle.css"
 import SidebarComponent from "../../components/SidebarComponent"
 import RosterComponent from "../../components/RosterComponent"
-import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import EditCourseComponent from "../../components/EditCourseComponent";
 import {useDispatch, useSelector} from "react-redux";
 import {getCourseDetailsAsync} from "../../redux/features/courseSlice";
@@ -14,7 +14,6 @@ function CourseDetailsPage() {
     const isDataLoaded = useSelector((state) => state.courses.currentCourseLoaded)
 
     useEffect( () => {
-        console.log("Hello")
         dispatch(getCourseDetailsAsync(courseId))
     }, [])
 
