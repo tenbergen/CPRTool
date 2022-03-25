@@ -1,6 +1,7 @@
 package edu.oswego.cs.rest.resources;
 
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
+import edu.oswego.cs.rest.daos.AssignmentDAO;
 import edu.oswego.cs.rest.daos.FileDAO;
 import edu.oswego.cs.rest.database.AssignmentInterface;
 import javax.ws.rs.*;
@@ -17,18 +18,23 @@ public class ProfessorAssignmentResource {
     public ProfessorAssignmentResource() {
     }
 
-    @DELETE
-//    @Path("/courses/course/assignment/remove")
-    @Path("/courses/{courseID}/assignments/{assignmentID}/remove")
-    public Response removeAssignment(@PathParam("assignmentID") int assignment, @PathParam("courseID") String courseID) throws Exception {
-//        String assName = "CSC580-800-spring-2022.pdf";
-//        String CID = "CSC580-800-spring-2022";
-        try {
-            new AssignmentInterface().remove(assignment,courseID);
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        return Response.status(Response.Status.OK).entity("Assignment Successfully Deleted").build();
+    @GET
+    @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
+    @Consumes({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
+    @Path("/courses/{courseID}/assignments/")
+    public Response viewAssignments(@PathParam("courseID") String courseID) throws Exception {
+        InputStream[] allAssignments = new AssignmentInterface().getAllAssignments(courseID);
+        return Response.status(Response.Status.OK).entity(allAssignments).build();
+    }
+
+    @GET
+    @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
+    @Consumes({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
+    @Path("/courses/{courseID}/assignments/{assignmentID}")
+    public Response viewAssignment(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) throws Exception {
+        File assignment = new File(new AssignmentInterface().findAssignment(courseID, assignmentID));
+        InputStream assignmentStream = new FileInputStream(assignment);
+        return Response.status(Response.Status.OK).entity(assignmentStream).build();
     }
 
     /**
@@ -44,7 +50,7 @@ public class ProfessorAssignmentResource {
     @POST
     @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
     @Path("/courses/{courseID}/assignments/{assignmentID}/upload")
-    public Response uploadAssignment(List<IAttachment> attachments, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) throws Exception {
+    public Response addFileToAssignment(List<IAttachment> attachments, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) throws Exception {
 
         InputStream stream = null;
         for (IAttachment attachment : attachments) {
@@ -56,11 +62,7 @@ public class ProfessorAssignmentResource {
             if (fileName == null) {
                 FileDAO.nullFiles(stream);
             } else {
-                if (assignmentID == -1)
-                    new AssignmentInterface().add(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
-                else
-                    FileDAO.fileFactory(fileName,courseID,attachment,assignmentID);
-//                    addToExistingAssignment
+                    new AssignmentInterface().addToAssignment(FileDAO.fileFactory(fileName,courseID,attachment,assignmentID));
             }
             if (stream != null) {
                 stream.close();
@@ -68,4 +70,25 @@ public class ProfessorAssignmentResource {
         }
         return Response.status(Response.Status.OK).build();
     }
+
+    @POST
+    @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
+    @Path("/courses/{courseID}/assignments/createAssignment")
+    public Response createAssignment(AssignmentDAO assignmentDAO, @PathParam("courseID") String courseID) throws Exception {
+
+        new AssignmentInterface().createAssignment(assignmentDAO);
+        return Response.status(Response.Status.OK).build();
+    }
+
+    @DELETE
+    @Path("/courses/{courseID}/assignments/{assignmentID}/remove")
+    public Response removeAssignment(@PathParam("assignmentID") int assignment, @PathParam("courseID") String courseID) throws Exception {
+        try {
+            new AssignmentInterface().remove(assignment,courseID);
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.status(Response.Status.OK).entity("Assignment Successfully Deleted").build();
+    }
+
 }
