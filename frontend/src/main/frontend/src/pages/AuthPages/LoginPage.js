@@ -1,7 +1,7 @@
 import React from 'react';
 import './styles/LoginPage.css';
 import { useDispatch } from 'react-redux';
-import { authenticateUser } from '../../redux/features/authSlice';
+import { getTokenAsync } from '../../redux/features/authSlice';
 import GoogleLogin from "react-google-login";
 
 function LoginPage() {
@@ -13,8 +13,8 @@ function LoginPage() {
     };
 
     const handleLogin = async (googleData) => {
-        localStorage.setItem("jwt_token", googleData.tokenId)
-        dispatch(authenticateUser())
+        localStorage.setItem("google_token", googleData.tokenId)
+        dispatch(getTokenAsync())
     };
 
     return (

@@ -1,9 +1,9 @@
 import TeacherDashboardPage from "./pages/TeacherPages/TeacherDashboardPage";
 import LoginPage from "./pages/AuthPages/LoginPage";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "./global_styles/global.css";
-import {useEffect} from "react";
-import {authenticateUser} from "./redux/features/authSlice";
+import React, { useEffect } from "react";
+import { setUserInformation } from "./redux/features/authSlice";
 import StudentDashboardPage from "./pages/StudentPages/StudentDashboardPage";
 
 function App() {
@@ -13,20 +13,17 @@ function App() {
   const role = authentication.auth.role;
 
   useEffect(() => {
-    const token = localStorage.getItem("jwt_token")
-    if (token != null) {
-      dispatch(authenticateUser())
-    }
+    dispatch(setUserInformation())
   }, [])
 
   return (
     <div>
         {isAuthenticated ?
           <div>
-            {role === "teacher" && <TeacherDashboardPage/>}
+            {role === "professor" && <TeacherDashboardPage/>}
             {role === "student" && <StudentDashboardPage/>}
           </div>
-        : <LoginPage />}
+        : <LoginPage/>}
     </div>
   );
 }
