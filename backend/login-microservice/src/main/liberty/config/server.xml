@@ -19,7 +19,7 @@
     />
     <applicationManager autoExpand="true"/>
 
-    <jwtBuilder expiresInSeconds="1800" id="cpr22s" jwkEnabled="true"/>
+    <jwtBuilder expiresInSeconds="3600" id="cpr22s" jwkEnabled="true"/>
 
     <webApplication contextRoot="${app.context.root}" location="login-microservice.war" />
         
