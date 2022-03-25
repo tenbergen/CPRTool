@@ -9,7 +9,7 @@ import java.io.IOException;
 
 @WebServlet("/logout")
 public class LogoutServlet extends HttpServlet {
-    private static final String fullURL = System.getenv("REACT_APP_URL");
+    private static final String fullURL = System.getenv("URL");
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

@@ -1,6 +1,5 @@
 package edu.oswego.cs.rest.daos;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.json.bind.annotation.JsonbCreator;
@@ -11,34 +10,23 @@ import javax.persistence.Id;
 import com.mongodb.lang.NonNull;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor
 @Data
 public class TeamDAO {
-    
-    @Id public @JsonbProperty("TeamID") @NonNull String teamID; // teamID will be the pointer of the TeamDAO since teamName is not generated until .isFull = true
-    
-    public @JsonbProperty("TeamName") String teamName;
-    public @JsonbProperty("Team Members") @NonNull HashMap<String, Boolean> teamMembers; // teamMembers = {"studID", isStudentFinalized:boolean}
-    public @JsonbProperty("Member Requests") ArrayList<String> memRequests;
-    public @JsonbProperty("Is Full") @NonNull boolean isFull;
-    public @JsonbProperty("Is Finalized") @NonNull boolean isFinalized; // make sure if everyone in the team hit the "finalize" button
+    @Id public @JsonbProperty("team_id") @NonNull String teamID; // teamID will be the pointer of the TeamDAO since teamName is not generated until .full = true
+    public @JsonbProperty("team_name") String teamName;
+    public @JsonbProperty("team_members") @NonNull HashMap<String, Boolean> teamMembers; // teamMembers = {"studID", isStudentFinalized:boolean}
+    public @JsonbProperty("is_full") @NonNull boolean isFull;
+    public @JsonbProperty("is_finalized") @NonNull boolean isFinalized; // make sure if everyone in the team hit the "finalize" button
+    public @JsonbProperty("team_size") int teamSize;
 
-    @JsonbCreator public TeamDAO( 
-        @JsonbProperty("TeamID") String teamID
-    ) {
-
-        this.teamID = teamID; // teamID can be the position of the team (index 0 index 1 ...)
-                              // this can be sent from FE or retrieved from DB
-
-        this.teamName = "";   // teamName is not generated until the .isFull is true
+    @JsonbCreator public TeamDAO(@JsonbProperty("team_id") String teamID) {
+        this.teamID = teamID; // teamID can be the position of the team (index 0 index 1 ...) sent from FE
+        this.teamName = "";   // teamName is not generated until the .full is true
         this.teamMembers = new HashMap<String, Boolean>(); // create the teamMembers hashMap in resources
-        this.memRequests = new ArrayList<String>(); // contains only studentID
         this.isFull = false;
         this.isFinalized = false;
-
+        this.teamSize = 0;
     }
-    
 }

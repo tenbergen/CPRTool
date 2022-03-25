@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/login-callback")
 public class LoginCallbackServlet extends AbstractAuthorizationCodeCallbackServlet {
-    private static final String fullURL = System.getenv("REACT_APP_URL");
+    private static final String fullURL = System.getenv("URL");
 
     @Override
     protected AuthorizationCodeFlow initializeFlow() throws ServletException, IOException {

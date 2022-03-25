@@ -29,7 +29,6 @@
             <type>pom</type>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -46,7 +45,6 @@
             <artifactId>lombok</artifactId>
             <version>1.18.22</version>
         </dependency>
-        
     </dependencies>
 
     <build>
