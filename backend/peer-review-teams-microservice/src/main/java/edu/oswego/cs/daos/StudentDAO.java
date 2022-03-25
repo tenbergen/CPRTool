@@ -1,4 +1,4 @@
-package edu.oswego.cs.rest.daos;
+package edu.oswego.cs.daos;
 
 import lombok.Data;
 import lombok.NonNull;
