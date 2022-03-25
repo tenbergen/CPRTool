@@ -18,7 +18,6 @@ import edu.oswego.cs.rest.database.DatabaseManager;
 
 public class AuthServices {
     private MongoDatabase profDB;
-    private final String profID = "professor_id";
     GoogleService googleService = new GoogleService();
   
     public AuthServices() {
@@ -71,7 +70,7 @@ public class AuthServices {
             throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("401 Invalid Token").build());
         }
         String userID = payload.getEmail().split("@")[0];
-        if (profDB.getCollection("professors").find(new Document(profID, userID)).first() != null) {
+        if (profDB.getCollection("professors").find(new Document("professor_id", userID)).first() != null) {
             return true;
         }
         return false;

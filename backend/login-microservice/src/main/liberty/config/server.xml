@@ -19,16 +19,9 @@
     />
     <applicationManager autoExpand="true"/>
 
-    <jwtBuilder expiresInSeconds="1800" id="cpr22s" jwkEnabled="true"/>
+    <jwtBuilder expiresInSeconds="3600" id="cpr22s" jwkEnabled="true"/>
 
     <webApplication contextRoot="${app.context.root}" location="login-microservice.war" />
         
     <ssl id="defaultSSLConfig" expiresInSeconds="600" trustDefaultCerts="true"/>
-    
-    <cors domain="/"
-          allowedOrigins="*"
-          allowedMethods="GET, POST, DELETE, PUT"
-          allowCredentials="true"
-          exposeHeaders="MyHeader"
-    />
 </server>
