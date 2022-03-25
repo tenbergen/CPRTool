@@ -36,7 +36,7 @@ const SidebarComponent = () => {
         <ProSidebar>
           <SidebarContent>
            {/* Need to use jwt to decide which dashboard to goto*/}
-           <Link to="/teacherDashboard">
+           <Link to="/">
             <Menu iconShape='circle'>
               <MenuItem icon={<FaList />}>Courses</MenuItem>
             </Menu>
