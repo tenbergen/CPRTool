@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <server description="new server">
 
-    <!-- Enable features -->
     <featureManager>
+        <feature>jakartaee-8.0</feature>
+        <feature>microProfile-4.1</feature>
         <feature>jwt-1.0</feature>
     </featureManager>
 
-    <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
     <variable name="default.http.port" defaultValue="13126"/>
     <variable name="default.https.port" defaultValue="9444"/>
     <variable name="app.context.root" defaultValue="/"/>
@@ -17,25 +17,14 @@
             httpsPort="${default.https.port}"
             id="defaultHttpEndpoint"
     />
-    <!-- Automatically expand WAR files and EAR files -->
     <applicationManager autoExpand="true"/>
 
-    <!-- for rsaPrivateKey -->
-    <keyStore id="defaultKeyStore" password=""/>
+    <jwtBuilder expiresInSeconds="1800" id="cpr22s" jwkEnabled="true"/>
 
-    <jwtBuilder expiresInSeconds="600" id="myBuilder" issuer="https://localhost:13126" keyAlias="default"/>
-
-    <!-- Configures the application on a specified context root -->
-    <webApplication contextRoot="${app.context.root}" location="login-microservice.war">
-        <application-bnd>
-            <security-role name="users">
-                <special-subject type="ALL_AUTHENTICATED_USERS"/>
-            </security-role>
-        </application-bnd>
-    </webApplication>
-
-    <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
-    <ssl id="defaultSSLConfig" trustDefaultCerts="true"/>
+    <webApplication contextRoot="${app.context.root}" location="login-microservice.war" />
+        
+    <ssl id="defaultSSLConfig" expiresInSeconds="600" trustDefaultCerts="true"/>
+    
     <cors domain="/"
           allowedOrigins="*"
           allowedMethods="GET, POST, DELETE, PUT"
