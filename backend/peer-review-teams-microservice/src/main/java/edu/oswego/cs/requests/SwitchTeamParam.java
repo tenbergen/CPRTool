@@ -1,4 +1,4 @@
-package edu.oswego.cs.rest.requests;
+package edu.oswego.cs.requests;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

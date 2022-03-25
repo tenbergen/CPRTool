@@ -25,4 +25,6 @@ public class Controller {
         String newToken = new AuthServices().generateNewToken(authToken);
         return Response.status(Response.Status.OK).entity(newToken).build();
     }
+    
+    
 }
