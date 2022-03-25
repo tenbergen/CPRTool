@@ -7,7 +7,6 @@ import com.ibm.websphere.security.jwt.JwtBuilder;
 import com.ibm.websphere.security.jwt.JwtException;
 import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.rest.database.DatabaseManager;
-import org.bson.Document;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;

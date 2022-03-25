@@ -15,8 +15,7 @@ import java.util.Collections;
 
 @NoArgsConstructor
 public class GoogleService {
-    // private final String CLIENT_ID = System.getenv("CLIENT_ID");
-    private final String CLIENT_ID = "644041850309-32m3qpk5jlq07pmqem0tasjph8ge77pp.apps.googleusercontent.com"; // System.getenv("CLIENT_ID");
+    private final String CLIENT_ID = System.getenv("CLIENT_ID");
 
     protected Payload validateToken(String token) {
         GoogleIdToken idToken = verifyToken(token);
