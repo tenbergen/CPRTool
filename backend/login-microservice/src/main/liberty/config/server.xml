@@ -24,11 +24,4 @@
     <webApplication contextRoot="${app.context.root}" location="login-microservice.war" />
         
     <ssl id="defaultSSLConfig" expiresInSeconds="600" trustDefaultCerts="true"/>
-    
-    <cors domain="/"
-          allowedOrigins="*"
-          allowedMethods="GET, POST, DELETE, PUT"
-          allowCredentials="true"
-          exposeHeaders="MyHeader"
-    />
 </server>
