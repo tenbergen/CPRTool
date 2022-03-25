@@ -57,7 +57,7 @@ public class ProfessorAssignmentResource {
                 FileDAO.nullFiles(stream);
             } else {
                 if (assignmentID == -1)
-                    new AssignmentInterface().add(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID),courseID);
+                    new AssignmentInterface().add(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
                 else
                     FileDAO.fileFactory(fileName,courseID,attachment,assignmentID);
 //                    addToExistingAssignment

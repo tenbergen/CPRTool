@@ -29,8 +29,8 @@ public class AssignmentInterface {
             throw new Exception("No connection to the ass DB");
         }
     }
-    public int add(FileDAO fileDAO,String CID)throws Exception{
-        this.CID = CID;
+    public int add(FileDAO fileDAO)throws Exception{
+        this.CID = fileDAO.getCourseID();
         this.fileDAO = fileDAO;
         String relativePathPrefix = getRelPath();
         String FileStructure = makeFileStructure(relativePathPrefix);
