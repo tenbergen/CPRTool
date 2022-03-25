@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./styles/CreateAssignmentStyle.css"
-import SidebarComponent from "../components/SidebarComponent";
+import SidebarComponent from "../../components/SidebarComponent";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
