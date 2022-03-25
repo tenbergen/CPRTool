@@ -20,7 +20,7 @@ public class ProfessorAssignmentResource {
     @DELETE
 //    @Path("/courses/course/assignment/remove")
     @Path("/courses/{courseID}/assignments/{assignmentID}/remove")
-    public Response removeAssignment(@PathParam("assignmentID") String assignment, @PathParam("courseID") String courseID) throws Exception {
+    public Response removeAssignment(@PathParam("assignmentID") int assignment, @PathParam("courseID") String courseID) throws Exception {
 //        String assName = "CSC580-800-spring-2022.pdf";
 //        String CID = "CSC580-800-spring-2022";
         try {
@@ -57,7 +57,7 @@ public class ProfessorAssignmentResource {
                 FileDAO.nullFiles(stream);
             } else {
                 if (assignmentID == -1)
-                    new AssignmentInterface().add(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
+                    new AssignmentInterface().add(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID),courseID);
                 else
                     FileDAO.fileFactory(fileName,courseID,attachment,assignmentID);
 //                    addToExistingAssignment
