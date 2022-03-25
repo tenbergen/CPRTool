@@ -14,17 +14,15 @@ import edu.oswego.cs.rest.services.AuthServices;
 
 @Path("/auth")
 public class Controller {
-    
     @POST
     @Path("token/generate")
     @Produces(MediaType.APPLICATION_JSON)
     public Response generateToken(@Context HttpHeaders request) throws JsonException{
         if (request.getRequestHeader(HttpHeaders.AUTHORIZATION) == null) {
-            return Response.status(Response.Status.FORBIDDEN).entity("403 No Token found").build();
+            return Response.status(Response.Status.FORBIDDEN).entity("No token found.").build();
         }
         String authToken = request.getRequestHeader(HttpHeaders.AUTHORIZATION).get(0).split(" ")[1];
         String newToken = new AuthServices().generateNewToken(authToken);
-
         return Response.status(Response.Status.OK).entity(newToken).build();
     }
 }

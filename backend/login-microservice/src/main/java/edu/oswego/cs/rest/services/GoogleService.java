@@ -20,7 +20,7 @@ public class GoogleService {
     protected Payload validateToken(String token) {
         GoogleIdToken idToken = verifyToken(token);
         if (idToken == null) {
-            throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("401 Invalid Token").build());
+            throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token.").build());
         }
         return idToken.getPayload();
     }
@@ -31,7 +31,6 @@ public class GoogleService {
                     new GsonFactory())
                     .setAudience(Collections.singletonList(CLIENT_ID))
                     .build();
-
             return verifier.verify(token);
         } catch (GeneralSecurityException | IOException e) {
             e.printStackTrace();
