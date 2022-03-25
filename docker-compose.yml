@@ -32,6 +32,7 @@ services:
       MONGO2_PORT: ${MONGO2_PORT}
       MONGO3_PORT: ${MONGO3_PORT}
       MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
       MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
@@ -47,6 +48,7 @@ services:
       MONGO2_PORT: ${MONGO2_PORT}
       MONGO3_PORT: ${MONGO3_PORT}
       MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
       MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
@@ -62,6 +64,7 @@ services:
       MONGO2_PORT: ${MONGO2_PORT}
       MONGO3_PORT: ${MONGO3_PORT}
       MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
       MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
@@ -129,6 +132,22 @@ services:
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     ports:
       - "27040:27017"
+
+  mongo5:
+    image: mongo:5.0.6
+    container_name: cpr-mongo5
+    restart: unless-stopped
+    volumes:
+      - ${DATABASE_FOLDER_5}:/data/db
+      - ${INITIALIZE_SCRIPT}:/docker-entrypoint-initdb.d/mongo-init.sh
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - "27041:27017"
 
   nginx:
     image: nginx:1.21.6
