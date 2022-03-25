@@ -1,12 +1,12 @@
-package edu.oswego.cs.rest.database;
+package edu.oswego.cs.database;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
-import edu.oswego.cs.rest.daos.TeamDAO;
-import edu.oswego.cs.rest.requests.SwitchTeamParam;
-import edu.oswego.cs.rest.requests.TeamParam;
+import edu.oswego.cs.daos.TeamDAO;
+import edu.oswego.cs.requests.SwitchTeamParam;
+import edu.oswego.cs.requests.TeamParam;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
