@@ -15,7 +15,7 @@ import java.util.Arrays;
 public class AssignmentInterface {
     MongoDatabase assDatabase;
 
-    String assCol = "Assignments";
+    String assCol = "assignments";
     String reg;
     String CID;
     FileDAO fileDAO;
@@ -41,14 +41,14 @@ public class AssignmentInterface {
 
     public void remove(int AssID,String courseID) throws IOException {
         MongoCursor<Document> results = assDatabase.getCollection(assCol).find(new Document()
-                .append("course_ID",courseID)
-                .append("Assgnment_ID",AssID)).iterator();
+                .append("course_id",courseID)
+                .append("assgnment_id",AssID)).iterator();
         if(!results.hasNext()) throw new IOException("No Assignment by this name found");
         String relativePathPrefix = getRelPath();
 
         while(results.hasNext()){
             Document ass = results.next();
-            String Destination = relativePathPrefix+ "Courses"+reg+courseID+reg+ass.get("Assignment_ID");
+            String Destination = relativePathPrefix+ "Courses"+reg+courseID+reg+ass.get("assignment_id");
             FileUtils.deleteDirectory(new File(Destination));
             assDatabase.getCollection(assCol).findOneAndDelete(ass);
         }
@@ -113,9 +113,9 @@ public class AssignmentInterface {
         }
         assCollection = assDatabase.getCollection(assCol);
         Document ass = new Document()
-                .append("course_ID",CID)
-                .append("Assignment_ID",nextPos)
-                .append("Assignment_Name",fileName);
+                .append("course_id",CID)
+                .append("assignment_id",nextPos)
+                .append("assignment_name",fileName);
         assCollection.insertOne(ass);
         return ass;
     }
