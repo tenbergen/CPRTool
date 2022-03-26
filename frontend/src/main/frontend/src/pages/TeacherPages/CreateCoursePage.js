@@ -103,17 +103,17 @@ const CreateCoursePage = () => {
                                 onChange={(e) => OnChange(e)}
                             />
                         </div>
+                    </div>
 
-                        <div className="ccp-input-field">
-                            <label> <b> CRN: </b> </label>
-                            <input
-                                type="text"
-                                name="crn"
-                                // value={Semester}
-                                // required
-                                onChange={(e) => OnChange(e)}
-                            />
-                        </div>
+                    <div className="ccp-input-field">
+                        <label> <b> CRN: </b> </label>
+                        <input
+                            type="text"
+                            name="crn"
+                            // value={Semester}
+                            // required
+                            onChange={(e) => OnChange(e)}
+                        />
                     </div>
 
                     <div className="ccp-button">

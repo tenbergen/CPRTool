@@ -1,6 +1,6 @@
 import React from "react-dom";
 import {useEffect, useState} from "react";
-import "./styles/EditCourseStyle.css"
+import "./styles/CourseDetailsStyle.css"
 import SidebarComponent from "../../components/SidebarComponent"
 import RosterComponent from "../../components/RosterComponent"
 import { useParams } from "react-router-dom";
@@ -32,14 +32,15 @@ function CourseDetailsPage() {
     return (
         <div>
         { isDataLoaded ?
-            <div className={"parent"}>
+            <div className="cdp-parent">
                 <SidebarComponent/>
-                <div className="container">
-                    <h1> Editing </h1>
-                    <a onClick={handleShowEdit} className="editCourseA" target="_blank">Manage</a>
-                    <a onClick={handleRoster} className="editCourseA" target="_blank">Roster</a>
-                    <a className="editCourseA" target="_blank">Assignments</a>
-                    <a className="editCourseA" target="_blank">Gradebook</a>
+                <div className="cdp-container">
+                    <div className="cdp-component-links">
+                        <p className="editCourseA">Assignments</p>
+                        <p className="editCourseA">Gradebook</p>
+                        <p onClick={handleRoster} className="editCourseA">Roster</p>
+                        <p onClick={handleShowEdit} className="editCourseA">Manage</p>
+                    </div>
                     <div>
                         {showEdit ? <EditCourseComponent/>: null}
                     </div>

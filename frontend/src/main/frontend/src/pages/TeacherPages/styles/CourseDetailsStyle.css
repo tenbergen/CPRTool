@@ -1,4 +1,4 @@
-.parent {
+.cdp-parent {
     display: flex;
     flex-direction: row;
     overflow: auto;
@@ -9,21 +9,22 @@
      #57E1B2 385.81deg);
 }
 
-.container {
+.cdp-container {
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 50px;
-    margin-top: 3%;
-    margin-bottom: 3%;
-    padding-right: 3%;
-    padding-left: 3%;
-    margin-right: 5%;
-    margin-left: 5%;
+    padding: 3% 3% 0 3%;
+    margin: 3% 5%;
     flex-grow: 1;
 }
 
 .container a {
     text-decoration: underline;
 
+}
+
+.cdp-component-links {
+    display: flex;
+    flex-direction: row;
 }
 
 .container a:hover {

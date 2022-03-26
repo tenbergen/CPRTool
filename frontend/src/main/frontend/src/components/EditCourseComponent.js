@@ -5,9 +5,9 @@ import "./styles/DeleteModal.css"
 import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
+import SidebarComponent from "./SidebarComponent";
 
 const deleteUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/delete`
-const editUrl = ""
 const csvUrl = ""
 
 const EditCourseComponent = () => {
@@ -16,12 +16,16 @@ const EditCourseComponent = () => {
 
     const [formData, setFormData] = useState({
         course_name: currentCourse.course_name,
+        course_section: currentCourse.course_section,
+        semester: currentCourse.semester,
+        abbreviation: currentCourse.abbreviation,
+        year: currentCourse.year,
         course_csv: null,
         team_size: null,
     });
     const [showModal, setShow] = useState(false)
 
-    const { course_name, team_size } = formData;
+    const { course_name, course_section, semester, abbreviation, year, team_size } = formData;
 
     const OnChange = (e) => setFormData(
         { ...formData, [e.target.name]: e.target.value }
@@ -64,8 +68,8 @@ const EditCourseComponent = () => {
     }
 
     return (
-        <form id="editCourseForm">
-            <div className="course-name">
+        <form className="ecc-form">
+            <div className="ecc-input-field">
                 <label> <b> Name of course: </b> </label>
                 <input
                     type="text"
@@ -76,8 +80,81 @@ const EditCourseComponent = () => {
                 />
             </div>
 
-            <div className="course-csv">
-                <label> <b> Add course CSV: </b> </label>
+            <div className="ecc-row-multiple">
+                <div className="ecc-input-field">
+                    <label> <b> Course abbreviation: </b> </label>
+                    <input
+                        type="text"
+                        name="abbreviation"
+                        value={abbreviation}
+                        required
+                        onChange={(e) => OnChange(e)}
+                    />
+                </div>
+
+                <div className="ecc-input-field">
+                    <label> <b> Course section: </b> </label>
+                    <input
+                        type="text"
+                        name="course_section"
+                        value={course_section}
+                        required
+                        onChange={(e) => OnChange(e)}
+                    />
+                </div>
+            </div>
+
+            <div className="ecc-row-multiple">
+                <div className="ecc-input-field">
+                    <label> <b> Semester: </b> </label>
+                    <input
+                        type="text"
+                        name="semester"
+                        value={semester}
+                        required
+                        onChange={(e) => OnChange(e)}
+                    />
+                </div>
+
+                <div className="ecc-input-field">
+                    <label> <b> Year: </b> </label>
+                    <input
+                        name="year"
+                        type="text"
+                        value={year}
+                        // required
+                        onChange={(e) => OnChange(e)}
+                    />
+                </div>
+            </div>
+
+            <div className="ecc-row-multiple">
+                <div className="ecc-input-field">
+                    <label> <b> CRN: </b> </label>
+                    <input
+                        type="text"
+                        name="crn"
+                        // value={Semester}
+                        // required
+                        onChange={(e) => OnChange(e)}
+                    />
+                </div>
+
+                <div className="ecc-input-field">
+                    <label> <b> Team size: </b> </label>
+                    <input
+                        type="number"
+                        min="1"
+                        name="team_size"
+                        required
+                        value={team_size}
+                        onChange={(e) => OnChange(e)}
+                    />
+                </div>
+            </div>
+
+            <div className="ecc-file-upload">
+                <label> <b> Course CSV: </b> </label>
                 <input
                     onChange={fileChangeHandler}
                     type="file"
@@ -86,26 +163,43 @@ const EditCourseComponent = () => {
                 />
             </div>
 
-            <div className="team-size">
-                <label> <b> Select peer review team size: </b> </label>
-                <input
-                    type="number"
-                    min="1"
-                    name="team_size"
-                    required
-                    value={team_size}
-                    onChange={(e) => OnChange(e)}
-                />
-            </div>
-
-            <div className="editCourseButton">
-                <button onClick={editCourse}> Submit</button>
+            <div className="ecc-button">
+                <button onClick={editCourse}> Save</button>
                 <a onClick={() => setShow(true)} target="_blank"> Delete course </a>
                 <div>
                     {showModal ? Modal() : null}
                 </div>
             </div>
         </form>
+
+        // <form id="editCourseForm">
+        //     <div className="course-name">
+        //         <label> <b> Name of course: </b> </label>
+        //         <input
+        //             type="text"
+        //             name="course_name"
+        //             value={course_name}
+        //             required
+        //             onChange={(e) => OnChange(e)}
+        //         />
+        //     </div>
+        //
+
+        //
+        //     <div className="team-size">
+        //         <label> <b> Select peer review team size: </b> </label>
+        //         <input
+        //             type="number"
+        //             min="1"
+        //             name="team_size"
+        //             required
+        //             value={team_size}
+        //             onChange={(e) => OnChange(e)}
+        //         />
+        //     </div>
+        //
+
+        // </form>
     )
 }
 
