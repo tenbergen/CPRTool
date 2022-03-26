@@ -12,21 +12,22 @@ import java.util.List;
 import static com.mongodb.client.model.Filters.eq;
 
 public class CourseInterface {
-    private final MongoDatabase studentDB;
-    private final MongoDatabase courseDB;
+    private final MongoCollection<Document> studentCollection;
+    private final MongoCollection<Document> courseCollection;
 
     public CourseInterface() throws Exception {
         DatabaseManager databaseManager = new DatabaseManager();
         try {
-            studentDB = databaseManager.getStudentDB();
-            courseDB = databaseManager.getCourseDB();
+            MongoDatabase studentDB = databaseManager.getStudentDB();
+            MongoDatabase courseDB = databaseManager.getCourseDB();
+            studentCollection = studentDB.getCollection("students");
+            courseCollection = courseDB.getCollection("courses");
         } catch (Exception e) {
             throw new Exception();
         }
     }
 
     public List<CourseDAO> getAllCourses() {
-        MongoCollection<Document> courseCollection = courseDB.getCollection("courses");
         List<CourseDAO> courses = new ArrayList<>();
         for (Document document : courseCollection.find()) {
             CourseDAO courseDAO = new CourseDAO(
@@ -42,7 +43,6 @@ public class CourseInterface {
     }
 
     public CourseDAO getCourse(String courseID) {
-        MongoCollection<Document> courseCollection = courseDB.getCollection("courses");
         Document document = courseCollection.find(eq("course_id", courseID)).first();
         assert document != null;
         CourseDAO courseDAO = new CourseDAO(
@@ -60,7 +60,6 @@ public class CourseInterface {
     }
 
     public List<StudentDAO> getAllStudents() {
-        MongoCollection<Document> studentCollection = studentDB.getCollection("students");
         List<StudentDAO> students = new ArrayList<>();
         for (Document document : studentCollection.find()) {
             StudentDAO studentDAO = new StudentDAO((String) document.get("student_id"));
@@ -72,7 +71,6 @@ public class CourseInterface {
     }
 
     public StudentDAO getStudent(String studentID) {
-        MongoCollection<Document> studentCollection = studentDB.getCollection("students");
         Document document = studentCollection.find(eq("student_id", studentID)).first();
         assert document != null;
         StudentDAO studentDAO = new StudentDAO((String) document.get("student_id"));

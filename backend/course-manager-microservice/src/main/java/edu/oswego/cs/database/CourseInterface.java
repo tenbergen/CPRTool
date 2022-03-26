@@ -21,14 +21,16 @@ import static com.mongodb.client.model.Updates.set;
 import static edu.oswego.cs.util.CSVUtil.parseStudentCSV;
 
 public class CourseInterface {
-    private final MongoDatabase studentDB;
-    private final MongoDatabase courseDB;
+    private final MongoCollection<Document> studentCollection;
+    private final MongoCollection<Document> courseCollection;
 
     public CourseInterface() throws Exception {
         DatabaseManager databaseManager = new DatabaseManager();
         try {
-            studentDB = databaseManager.getStudentDB();
-            courseDB = databaseManager.getCourseDB();
+            MongoDatabase studentDB = databaseManager.getStudentDB();
+            MongoDatabase courseDB = databaseManager.getCourseDB();
+            studentCollection = studentDB.getCollection("students");
+            courseCollection = courseDB.getCollection("courses");
         } catch (Exception e) {
             throw new Exception();
         }
@@ -39,9 +41,6 @@ public class CourseInterface {
      * time, update the students' course list in the student database if a student list in the request is specified.
      */
     public void addCourse(CourseDAO dao) throws Exception {
-        MongoCollection<Document> studentCollection = studentDB.getCollection("students");
-        MongoCollection<Document> courseCollection = courseDB.getCollection("courses");
-
         Jsonb jsonb = JsonbBuilder.create();
         Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(dao), MediaType.APPLICATION_JSON_TYPE);
         Document course = Document.parse(courseDAOEntity.getEntity());
@@ -67,9 +66,6 @@ public class CourseInterface {
      * student's course array updated to have the new course respectively.
      */
     public void addStudent(String email, CourseDAO dao) throws Exception {
-        MongoCollection<Document> studentCollection = studentDB.getCollection("students");
-        MongoCollection<Document> courseCollection = courseDB.getCollection("courses");
-
         if (!courseCollection.find(eq("course_id", dao.courseID)).iterator().hasNext()) {
             addCourse(dao);
         }
@@ -104,9 +100,6 @@ public class CourseInterface {
      * Remove the course from the student's arraylist of courses, and then remove the course itself from the course database.
      */
     public void removeCourse(CourseDAO dao) throws Exception {
-        MongoCollection<Document> studentCollection = studentDB.getCollection("students");
-        MongoCollection<Document> courseCollection = courseDB.getCollection("courses");
-
         MongoCursor<Document> courseQuery = courseCollection.find(eq("course_id", dao.courseID)).iterator();
         if (courseQuery.hasNext()) {
             Document courseDocument = courseQuery.next();
@@ -129,10 +122,7 @@ public class CourseInterface {
      * arraylist in the student database.
      */
     public void removeStudent(String email, CourseDAO dao) throws Exception {
-        MongoCollection<Document> studentCollection = studentDB.getCollection("students");
-        MongoCollection<Document> courseCollection = courseDB.getCollection("courses");
         String studentName = email.split("@")[0];
-
         MongoCursor<Document> studentQuery = studentCollection.find(eq("student_id", studentName)).iterator();
         if (studentQuery.hasNext()) {
             Document studentDocument = studentQuery.next();
@@ -157,7 +147,7 @@ public class CourseInterface {
         String cid = f.getFilename();
         cid = cid.substring(0, cid.length() - 4);
         System.out.println(cid);
-        Document course = courseDB.getCollection("courses").find(new Document("course_id", cid)).first();
+        Document course = courseCollection.find(new Document("course_id", cid)).first();
         assert course != null;
         CourseDAO courseDAO = new CourseDAO(
                 course.get("abbreviation").toString(),

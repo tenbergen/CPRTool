@@ -15,7 +15,7 @@ import java.util.Collections;
 
 @NoArgsConstructor
 public class GoogleService {
-    private final String CLIENT_ID = System.getenv("CLIENT_ID");
+    private final String clientID = System.getenv("CLIENT_ID");
 
     protected Payload validateToken(String token) {
         GoogleIdToken idToken = verifyToken(token);
@@ -29,7 +29,7 @@ public class GoogleService {
         try {
             GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(),
                     new GsonFactory())
-                    .setAudience(Collections.singletonList(CLIENT_ID))
+                    .setAudience(Collections.singletonList(clientID))
                     .build();
             return verifier.verify(token);
         } catch (GeneralSecurityException | IOException e) {
