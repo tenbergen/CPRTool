@@ -4,8 +4,8 @@ import SidebarComponent from "../../components/SidebarComponent";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const CreateCoursePage = () => {
-    const submitCourseUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/create`
+const CreateAssignmentPage = () => {
+    //const submitCourseUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/create`
     let navigate = useNavigate()
 
     const [formData, setFormData] = useState({
@@ -15,20 +15,27 @@ const CreateCoursePage = () => {
         Abbreviation: ''
     });
 
-    const { AssignmentName, AssignmentInstructions } = formData;
+    const { AssignmentName, AssignmentInstructions, files, AssignmentDueDate, AssignmentPoints, ReviewInstructions, ReviewRubric, ReviewDueDate, ReviewPoints} = formData;
 
     const OnChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
     const handleSubmit = async (e) => {
-        if (AssignmentName === '' || AssignmentInstructions === '' ) alert("Fields can't be empty!")
+        if (AssignmentName === '' || AssignmentInstructions === '' || files === '' || AssignmentDueDate === '' || AssignmentPoints === '' 
+        || ReviewInstructions === '' || ReviewRubric === '' || ReviewDueDate === '' || ReviewPoints === '') alert("Fields can't be empty!")
         else {
             e.preventDefault()
             const data = {
                 AssignmentName: AssignmentName,
                 AssignmentInstructions: AssignmentInstructions,
-            
+                files: files,
+                AssignmentDueDate: AssignmentDueDate,
+                AssignmentPoints: AssignmentPoints,
+                ReviewInstructions: ReviewInstructions,
+                ReviewRubric: ReviewRubric,
+                ReviewDueDate: ReviewDueDate,
+                ReviewPoints: ReviewPoints            
             };
-            await axios.post(submitCourseUrl, data);
+            //await axios.post(submitCourseUrl, data);
             navigate("/teacherDashboard")
         }
     }
@@ -58,16 +65,18 @@ const CreateCoursePage = () => {
                             name="AssignmentInstructions"
                             value={AssignmentInstructions}
                             required
+                            onChange={(e) => OnChange(e)}
                         />
                     </div>
 
                     <div className="cap-assignment-files">
                         <label> <b> Files: </b> </label>
                         <input
-                            //onChange={changeHandler}
                             type="file"
                             name="AssignmentFiles"
+                            value={files}
                             required
+                            onChange={(e) => OnChange(e)}
                         />
                     </div>
 
@@ -76,29 +85,74 @@ const CreateCoursePage = () => {
                         <input
                             type="date"
                             name="AssignmentDueDate"
+                            value={AssignmentDueDate}
                             required
+                            onChange={(e) => OnChange(e)}
+                        />
+                        <label> <b> Points: </b> </label>
+                        <input
+                            type="number"
+                            min="0"
+                            name="AssignmentPoints"
+                            value={AssignmentPoints}
+                            required
+                            onChange={(e) => OnChange(e)}
+                        />
+                    </div>
+
+                    <div className="cap-instructions">
+                        <label> <b> Peer Review Instructions:</b> </label>
+                        <input
+                            type="text"
+                            name="ReviewInstructions"
+                            value={ReviewInstructions}
+                            required
+                            onChange={(e) => OnChange(e)}
+                        />
+                    </div>
+
+                    <div className="cap-assignment-files">
+                        <label> <b> Rubric: </b> </label>
+                        <input
+                            type="file"
+                            name="ReviewRubric"
+                            value={ReviewRubric}
+                            required
+                            onChange={(e) => OnChange(e)}
+                        />
+                    </div>
+
+                    <div className="cap-assignment-info">
+                        <label> <b> Due Date: </b> </label>
+                        <input
+                            type="date"
+                            name="ReviewDueDate"
+                            value={ReviewDueDate}
+                            required
+                            onChange={(e) => OnChange(e)}
                         />
                         <label> <b>Points: </b> </label>
                         <input
                             type="number"
                             min="0"
-                            name="AssignmentPoints"
+                            name="ReviewPoints"
+                            value={ReviewPoints}
                             required
+                            onChange={(e) => OnChange(e)}
                         />
-
                     </div>
 
                     <div className="cap-button">
                         <button /*onClick={handleSubmit}*/> Create Peer Review </button>
                     </div>
 
-                    <div class="cap-altbutton">
+                    {/* <div class="cap-altbutton">
                         <a href="">Create Assignment Only </a>
-                    </div>
+                    </div> */}
                 </form>
             </div>
         </div>
     );
 }
 
-export default CreateCoursePage;
+export default CreateAssignmentPage;
