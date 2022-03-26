@@ -18,7 +18,7 @@ export const getCourseDetailsAsync = createAsyncThunk(
     async (courseId )=> {
         const url = `${viewCourseURL}/${courseId}`
         console.log(url)
-        const currentCourse = await axios.get( `${viewCourseURL}/${courseId}`).then(res => {
+        const currentCourse = await axios.get(url).then(res => {
             return res.data
         })
         console.log(currentCourse)
