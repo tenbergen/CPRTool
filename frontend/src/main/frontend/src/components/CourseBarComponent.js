@@ -14,18 +14,21 @@ const CourseBarComponent = () => {
         dispatch(setCurrentCourse(course))
     }
 
+    const trList = []
+
+    dummyCourses.forEach(course => {
+        trList.push(<tr className="TheTable">
+            <td>
+                <div className="colorForTable"/>
+                <div className="courseText" onClick={() => onCourseClick(course)}> {course} </div>
+            </td>
+        </tr>)
+    })
+
     return (
         <div className="courseBar">
             Courses <br/>
-            <tr className="TheTable">
-                <th>
-                    <div className="colorForTable">
-                        {dummyCourses.map(course => {
-                            return <div className="courseText" onClick={() => onCourseClick(course)}> {course} </div>
-                        })}
-                    </div>
-                </th>
-            </tr>
+            {trList}
         </div>
     );
 };

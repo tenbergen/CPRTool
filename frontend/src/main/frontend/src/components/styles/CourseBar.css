@@ -1,5 +1,5 @@
 .courseBar {
-    padding: 3% 4% 0 4%;
+    padding-top: 2%;
     flex-grow: 1;
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 50px;
@@ -11,31 +11,29 @@
 }
 
 .TheTable{
-    background-color: rgba(255, 255, 255, 0.5);;
-    margin-right: 95%;
+    background-color: rgba(255, 255, 255, 0.5);
 }
 
-tr:hover {background-color: white}
+td:hover {background-color: white;}
+
+td {
+    table-layout: auto;
+    width: 1%;
+    height: fit-content;
+}
 
 .courseText{
-    margin-left: 50%;
-    margin-top: 50%;
-    margin-right: 100%;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%) rotate(90deg);
+    text-align: left;
+    padding-left: 3%;
 }
 
 .colorForTable{
-    text-align: left;
-    width: auto;
-    height: 16px;
-    left: 100px;
-    top: 10px;
-    margin-top: 10%;
-    background: #7398FF;
-    border-radius: 0px;
-    -ms-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%) rotate(-90deg);
+    float: left;
+    height: 100px;
+    width: 2%;
+    background-color: #7398FF;
 }
+
+
 
 
