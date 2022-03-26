@@ -10,10 +10,8 @@ import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
 
-@ToString
 @Entity
 @NoArgsConstructor
-@Getter
 public class CourseDAO {
     @Id
     @JsonbProperty("abbreviation") public String abbreviation;
