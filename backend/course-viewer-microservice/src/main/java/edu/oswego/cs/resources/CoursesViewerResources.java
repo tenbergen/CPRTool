@@ -18,47 +18,31 @@ public class CoursesViewerResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses")
     public Response viewAllCourses() {
-        try {
-            List<CourseDAO> courses = new CourseInterface().getAllCourses();
-            return Response.status(Response.Status.OK).entity(courses).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Failed to fetch courses.").build();
-        }
+        List<CourseDAO> courses = new CourseInterface().getAllCourses();
+        return Response.status(Response.Status.OK).entity(courses).build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/{courseID}")
     public Response viewCourse(@PathParam("courseID") String courseID) {
-        try {
-            CourseDAO courseDAO = new CourseInterface().getCourse(courseID);
-            return Response.status(Response.Status.OK).entity(courseDAO).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Failed to fetch course.").build();
-        }
+        CourseDAO courseDAO = new CourseInterface().getCourse(courseID);
+        return Response.status(Response.Status.OK).entity(courseDAO).build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("students")
     public Response viewAllStudents() {
-        try {
-            List<StudentDAO> students = new CourseInterface().getAllStudents();
-            return Response.status(Response.Status.OK).entity(students).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Failed to fetch students.").build();
-        }
+        List<StudentDAO> students = new CourseInterface().getAllStudents();
+        return Response.status(Response.Status.OK).entity(students).build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("students/{studentID}")
     public Response viewStudent(@PathParam("studentID") String studentID) {
-        try {
-            StudentDAO studentDAO = new CourseInterface().getStudent(studentID);
-            return Response.status(Response.Status.OK).entity(studentDAO).build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Failed to fetch student.").build();
-        }
+        StudentDAO studentDAO = new CourseInterface().getStudent(studentID);
+        return Response.status(Response.Status.OK).entity(studentDAO).build();
     }
 }
