@@ -1,34 +1,35 @@
-import React from "react";
+import React, {useEffect} from "react";
 import "./styles/CourseBar.css"
 import {useDispatch, useSelector} from "react-redux";
-import {setCurrentCourse} from "../redux/features/courseSlice";
+import { getCoursesAsync, setCurrentCourse } from "../redux/features/courseSlice";
+import {Link} from "react-router-dom";
 
 const CourseBarComponent = () => {
     const dispatch = useDispatch()
     const courses = useSelector((state) => state.courses.courses)
 
-    // to use when endpoint is not working
-    const dummyCourses = ["Intro to Programming", "Programming Languages", "Systems Programming"]
+    useEffect(() => {
+        dispatch(getCoursesAsync())
+    }, [])
 
     const onCourseClick = (course) => {
+        console.log(course)
         dispatch(setCurrentCourse(course))
     }
 
-    const trList = []
-
-    dummyCourses.forEach(course => {
-        trList.push(<tr className="TheTable">
-            <td>
-                <div className="colorForTable"/>
-                <div className="courseText" onClick={() => onCourseClick(course)}> {course} </div>
-            </td>
-        </tr>)
-    })
-
     return (
         <div className="courseBar">
-            Courses <br/>
-            {trList}
+            <h5> Courses </h5>
+            {courses.map(course =>
+                <Link to={"/details/" + course.course_id} onClick={() => onCourseClick(course)}>
+                    <tr className="TheTable">
+                        <td>
+                            <div className="colorForTable"/>
+                            <p className="courseText"> {course.course_name} </p>
+                        </td>
+                    </tr>
+                </Link>
+            )}
         </div>
     );
 };

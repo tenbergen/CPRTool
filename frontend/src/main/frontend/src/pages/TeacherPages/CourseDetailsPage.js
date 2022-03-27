@@ -34,6 +34,7 @@ function CourseDetailsPage() {
         { isDataLoaded ?
             <div className="cdp-parent">
                 <SidebarComponent/>
+                {/*<CourseBarComponent/>*/}
                 <div className="cdp-container">
                     <div className="cdp-component-links">
                         <p className="editCourseA">Assignments</p>

@@ -37,6 +37,9 @@ const courseSlice = createSlice({
         addCourse: (state, action) => {
             state.courses.push(action.payload)
         },
+        setCurrentCourse: (state, action) => {
+            state.currentCourse = action.payload
+        }
     },
     extraReducers: {
         [getCoursesAsync.fulfilled]: (state, action) => {
