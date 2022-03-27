@@ -156,7 +156,7 @@ public class CourseInterface {
                 Integer.parseInt(course.get("crn").toString())
         );
 
-        ArrayList oldStudentList = (ArrayList) course.get("Students");
+        List<String> oldStudentList = course.getList("Students", String.class);
         ArrayList<String> newStudentList = new ArrayList<>();
         ArrayList<String> studentsToRemove = new ArrayList<>();
         ArrayList<String> studentsToAdd = new ArrayList<>();

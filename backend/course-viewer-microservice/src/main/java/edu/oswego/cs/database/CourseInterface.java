@@ -55,7 +55,7 @@ public class CourseInterface {
                 (String) document.get("semester"),
                 (String) document.get("year")
         );
-        @SuppressWarnings("unchecked") List<String> students = (List<String>) document.get("students");
+        List<String> students = document.getList("students", String.class);
         courseDAO.students = students;
         return courseDAO;
     }
@@ -64,7 +64,7 @@ public class CourseInterface {
         List<StudentDAO> students = new ArrayList<>();
         for (Document document : studentCollection.find()) {
             StudentDAO studentDAO = new StudentDAO((String) document.get("student_id"));
-            @SuppressWarnings("unchecked") List<String> courses = (List<String>) document.get("courses");
+            List<String> courses = document.getList("courses", String.class);
             studentDAO.courses = courses;
             students.add(studentDAO);
         }
@@ -76,7 +76,7 @@ public class CourseInterface {
         if (document == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist.").build());
 
         StudentDAO studentDAO = new StudentDAO((String) document.get("student_id"));
-        @SuppressWarnings("unchecked") List<String> courses = (List<String>) document.get("courses");
+        List<String> courses = document.getList("courses", String.class);
         studentDAO.courses = courses;
         return studentDAO;
     }
