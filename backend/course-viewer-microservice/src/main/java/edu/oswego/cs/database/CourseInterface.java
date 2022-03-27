@@ -3,28 +3,34 @@ package edu.oswego.cs.database;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.daos.CourseDAO;
+import edu.oswego.cs.daos.StudentDAO;
 import org.bson.Document;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
 
 public class CourseInterface {
-    private final MongoDatabase courseDB;
-    private final List<CourseDAO> courses = new ArrayList<>();
+    private final MongoCollection<Document> studentCollection;
+    private final MongoCollection<Document> courseCollection;
 
-    public CourseInterface() throws Exception {
+    public CourseInterface() {
         DatabaseManager databaseManager = new DatabaseManager();
         try {
-            courseDB = databaseManager.getCourseDB();
-        } catch (Exception e) {
-            throw new Exception();
+            MongoDatabase studentDB = databaseManager.getStudentDB();
+            MongoDatabase courseDB = databaseManager.getCourseDB();
+            studentCollection = studentDB.getCollection("students");
+            courseCollection = courseDB.getCollection("courses");
+        } catch (WebApplicationException e) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
         }
     }
 
     public List<CourseDAO> getAllCourses() {
-        MongoCollection<Document> courseCollection = courseDB.getCollection("courses");
+        List<CourseDAO> courses = new ArrayList<>();
         for (Document document : courseCollection.find()) {
             CourseDAO courseDAO = new CourseDAO(
                     (String) document.get("abbreviation"),
@@ -39,9 +45,9 @@ public class CourseInterface {
     }
 
     public CourseDAO getCourse(String courseID) {
-        MongoCollection<Document> courseCollection = courseDB.getCollection("courses");
         Document document = courseCollection.find(eq("course_id", courseID)).first();
-        assert document != null;
+        if (document == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
+
         CourseDAO courseDAO = new CourseDAO(
                 (String) document.get("abbreviation"),
                 (String) document.get("course_name"),
@@ -54,5 +60,26 @@ public class CourseInterface {
         courseDAO.students = students;
         courseDAO.teams = teams;
         return courseDAO;
+    }
+
+    public List<StudentDAO> getAllStudents() {
+        List<StudentDAO> students = new ArrayList<>();
+        for (Document document : studentCollection.find()) {
+            StudentDAO studentDAO = new StudentDAO((String) document.get("student_id"));
+            @SuppressWarnings("unchecked") List<String> courses = (List<String>) document.get("courses");
+            studentDAO.courses = courses;
+            students.add(studentDAO);
+        }
+        return students;
+    }
+
+    public StudentDAO getStudent(String studentID) {
+        Document document = studentCollection.find(eq("student_id", studentID)).first();
+        if (document == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist.").build());
+
+        StudentDAO studentDAO = new StudentDAO((String) document.get("student_id"));
+        @SuppressWarnings("unchecked") List<String> courses = (List<String>) document.get("courses");
+        studentDAO.courses = courses;
+        return studentDAO;
     }
 }
