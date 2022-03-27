@@ -91,5 +91,4 @@ public class CourseManagerResource {
         }
         return Response.status(Response.Status.OK).build();
     }
-
 }
