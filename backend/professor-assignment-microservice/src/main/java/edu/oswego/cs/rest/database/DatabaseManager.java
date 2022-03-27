@@ -10,36 +10,67 @@ import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class DatabaseManager {
-    String hostname = System.getenv("MONGO_HOSTNAME");
-
     int studentPort = Integer.parseInt(System.getenv("MONGO_PORT"));
-    String studentDatabase = System.getenv("MONGO_DATABASE");
-    String studentUser = System.getenv("MONGO_USERNAME");
-    String studentPassword = System.getenv("MONGO_PASSWORD");
+    int professorPort = Integer.parseInt(System.getenv("MONGO2_PORT"));
+    int coursePort = Integer.parseInt(System.getenv("MONGO3_PORT"));
+    int assignmentPort = Integer.parseInt(System.getenv("MONGO4_PORT"));
+    int teamPort = Integer.parseInt(System.getenv("MONGO5_PORT"));
+    String hostname = System.getenv("MONGO_HOSTNAME");
+    String mongoDatabase = System.getenv("MONGO_DATABASE");
+    String mongoUser = System.getenv("MONGO_USERNAME");
+    String mongoPassword = System.getenv("MONGO_PASSWORD");
 
-    int assPort = Integer.parseInt(System.getenv("MONGO2_PORT"));
-    String assDatabase = System.getenv("MONGO_DATABASE");
-    String assUser = System.getenv("MONGO_USERNAME");
-    String assPassword = System.getenv("MONGO_PASSWORD");
 
-    public MongoDatabase getAssDB() {
-        MongoCredential credentials = MongoCredential.createCredential(assUser, assDatabase, assPassword.toCharArray());
-        MongoClient client = new MongoClient(
-                new ServerAddress(hostname, assPort),
-                credentials,
-                new MongoClientOptions.Builder().build()
-        );
-        return client.getDatabase(assDatabase);
-    }
-    public MongoDatabase getUserDB(){
-        MongoCredential credentials = MongoCredential.createCredential(studentUser, studentDatabase, studentPassword.toCharArray());
+    public MongoDatabase getStudentDB() {
+        MongoCredential credentials = MongoCredential.createCredential(mongoUser, mongoDatabase, mongoPassword.toCharArray());
         MongoClient client = new MongoClient(
                 new ServerAddress(hostname, studentPort),
                 credentials,
                 new MongoClientOptions.Builder().build()
         );
-        return client.getDatabase(studentDatabase);
+        return client.getDatabase(mongoDatabase);
     }
 
-    public DatabaseManager() {}
+    public MongoDatabase getProfessorDB() {
+        MongoCredential credentials = MongoCredential.createCredential(mongoUser, mongoDatabase, mongoPassword.toCharArray());
+        MongoClient client = new MongoClient(
+                new ServerAddress(hostname, professorPort),
+                credentials,
+                new MongoClientOptions.Builder().build()
+        );
+        return client.getDatabase(mongoDatabase);
+    }
+
+    public MongoDatabase getCourseDB() {
+        MongoCredential credentials = MongoCredential.createCredential(mongoUser, mongoDatabase, mongoPassword.toCharArray());
+        MongoClient client = new MongoClient(
+                new ServerAddress(hostname, coursePort),
+                credentials,
+                new MongoClientOptions.Builder().build()
+        );
+        return client.getDatabase(mongoDatabase);
+    }
+
+    public MongoDatabase getAssignmentDB() {
+        MongoCredential credentials = MongoCredential.createCredential(mongoUser, mongoDatabase, mongoPassword.toCharArray());
+        MongoClient client = new MongoClient(
+                new ServerAddress(hostname, assignmentPort),
+                credentials,
+                new MongoClientOptions.Builder().build()
+        );
+        return client.getDatabase(mongoDatabase);
+    }
+
+    public MongoDatabase getTeamDB() {
+        MongoCredential credentials = MongoCredential.createCredential(mongoUser, mongoDatabase, mongoPassword.toCharArray());
+        MongoClient client = new MongoClient(
+                new ServerAddress(hostname, teamPort),
+                credentials,
+                new MongoClientOptions.Builder().build()
+        );
+        return client.getDatabase(mongoDatabase);
+    }
+
+    public DatabaseManager() {
+    }
 }
