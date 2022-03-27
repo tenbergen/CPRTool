@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Link } from "react-router-dom";
 import SidebarComponent from "../../components/SidebarComponent";
 import "./styles/StudentDashboardStyle.css"
 import { useDispatch, useSelector } from "react-redux";
-import {getCoursesAsync, setCurrentCourse} from "../../redux/features/courseSlice";
+import {getCourseDetailsAsync, getCoursesAsync} from "../../redux/features/courseSlice";
+import CourseBarComponent from "../../components/CourseBarComponent";
 
 function StudentDashboardPage() {
     const dispatch = useDispatch()
@@ -18,8 +19,8 @@ function StudentDashboardPage() {
         return <div><h1>LOADING</h1></div>
     }
 
-    const courseClickHandler = (course) => {
-        dispatch(setCurrentCourse(course))
+    const courseClickHandler = () => {
+        dispatch(getCourseDetailsAsync)
     }
 
     return (

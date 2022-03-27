@@ -15,7 +15,7 @@ const RouterHandler = () => {
         <Route path='create/course' element={<CreateCoursePage />} />
         <Route path='details/:courseId' element={<CourseDetailsPage />} />
         <Route path='todoCourse/:courseId' element={<StudentCoursePage />} />
-        <Route path='create/assignment' element={<CreateAssignmentPage />} />
+        <Route path='details/:courseId/create/assignment' element={<CreateAssignmentPage />} />
         <Route path='unauthenticated' element={<UnauthedErrorPage />} />
         </Routes>
     </BrowserRouter>

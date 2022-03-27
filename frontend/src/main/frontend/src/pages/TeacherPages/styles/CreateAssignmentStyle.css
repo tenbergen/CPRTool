@@ -71,6 +71,10 @@
     margin-bottom: 1%;
 }
 
+.cap-assignment-files input {
+    flex-grow: 1;
+}
+
 .cap-assignment-files input[type=file]::file-selector-button {
     background: #91D8DF;
     color: #393939;

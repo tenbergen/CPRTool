@@ -5,29 +5,30 @@ import SidebarComponent from "../../components/SidebarComponent"
 import RosterComponent from "../../components/RosterComponent"
 import { useParams } from "react-router-dom";
 import EditCourseComponent from "../../components/EditCourseComponent";
+import TeacherAssComponent from "../../components/TeacherAssComponent";
 import {useDispatch, useSelector} from "react-redux";
 import {getCourseDetailsAsync} from "../../redux/features/courseSlice";
+import CourseBarComponent from "../../components/CourseBarComponent";
+
+const DetailComponent = ({ active, component, onClick }) => {
+    return (
+        <p onClick={onClick} className={active ? "cdp-component-link-clicked" : "cdp-component-link"}>
+            {component}
+        </p>
+    );
+};
 
 function CourseDetailsPage() {
     let dispatch = useDispatch()
     let { courseId } = useParams();
     const isDataLoaded = useSelector((state) => state.courses.currentCourseLoaded)
 
+    const components = ["Assignments", "Gradebook", "Roster", "Manage"];
+    const [chosen, setChosen] = useState("Assignments");
+
     useEffect( () => {
         dispatch(getCourseDetailsAsync(courseId))
     }, [])
-
-    const [showEdit, setShowEdit] = useState(true)
-    const handleShowEdit = () => {
-        setShowEdit(true)
-        setShowRoster(false)
-    }
-
-    const [showRoster, setShowRoster] = useState(false)
-    const handleRoster = () => {
-        setShowRoster(true)
-        setShowEdit(false)
-    }
 
     return (
         <div>
@@ -35,17 +36,24 @@ function CourseDetailsPage() {
             <div className="cdp-parent">
                 <SidebarComponent/>
                 <div className="cdp-container">
-                    <div className="cdp-component-links">
-                        <p className="editCourseA">Assignments</p>
-                        <p className="editCourseA">Gradebook</p>
-                        <p onClick={handleRoster} className="editCourseA">Roster</p>
-                        <p onClick={handleShowEdit} className="editCourseA">Manage</p>
-                    </div>
-                    <div>
-                        {showEdit ? <EditCourseComponent/>: null}
-                    </div>
-                    <div>
-                        {showRoster ? <RosterComponent/> : null}
+                    <CourseBarComponent/>
+                    <div className="cdp-components">
+                        <div className="cdp-component-links">
+                            {components.map(t => (
+                                <DetailComponent
+                                    key={t}
+                                    component={t}
+                                    active={t === chosen}
+                                    onClick={() => setChosen(t)}
+                                />
+                            ))}
+                        </div>
+                        <div>
+                            {chosen === "Assignments" && <TeacherAssComponent/>}
+                            {chosen === "Gradebook" && null}
+                            {chosen === "Roster" && <RosterComponent/>}
+                            {chosen === "Manage" && <EditCourseComponent/>}
+                        </div>
                     </div>
                 </div>
             </div> : null }
