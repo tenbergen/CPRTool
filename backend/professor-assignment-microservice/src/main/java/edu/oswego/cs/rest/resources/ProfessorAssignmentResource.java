@@ -8,6 +8,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -18,27 +19,31 @@ public class ProfessorAssignmentResource {
     public ProfessorAssignmentResource() {
     }
 
-//    @GET
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @Path("/courses/{courseID}/assignments/")
-//    public Response viewAssignments(@PathParam("courseID") String courseID) {
-//        try {
-//            List<AssignmentDAO> allAssignments = new AssignmentInterface().getAllAssignments();
-//            return Response.status(Response.Status.OK).entity(allAssignments).build();
-//        } catch (Exception e){
-//            return Response.status(Response.Status.BAD_REQUEST).entity("Failed to fetch courses.").build();
-//        }
-//    }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/assignments")
+    public Response viewAllAssignments() {
+        try {
+            List<AssignmentDAO> allAssignments = new AssignmentInterface().getAllAssignments();
+            return Response.status(Response.Status.OK).entity(allAssignments).build();
+        } catch (Exception e){
+            return Response.status(Response.Status.BAD_REQUEST).entity("Failed to fetch assignments.").build();
+        }
+    }
 
-//    @GET
-//    @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
-//    @Consumes({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
-//    @Path("/courses/{courseID}/assignments/{assignmentID}")
-//    public Response viewAssignment(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) throws Exception {
-//        File assignment = new File(new AssignmentInterface().findAssignment(courseID, assignmentID));
-//        InputStream assignmentStream = new FileInputStream(assignment);
-//        return Response.status(Response.Status.OK).entity(assignmentStream).build();
-//    }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/courses/{courseID}/assignments/")
+    public Response viewAssignment(@PathParam("courseID") String courseID) throws Exception {
+        try {
+            List<AssignmentDAO> specifiedAssignments = new AssignmentInterface().getAssignmentsByCourse(courseID);
+            if (specifiedAssignments.isEmpty())
+                return Response.status(Response.Status.NOT_FOUND).entity("This assignment does not exist").build();
+            return Response.status(Response.Status.OK).entity(specifiedAssignments).build();
+        } catch (Exception e){
+            return Response.status(Response.Status.BAD_REQUEST).entity("Failed to fetch assignments.").build();
+        }
+    }
 
     /**
      * File is uploaded as form-data and passed back as a List<IAttachment>

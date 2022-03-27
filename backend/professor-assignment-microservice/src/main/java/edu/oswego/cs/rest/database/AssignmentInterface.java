@@ -43,8 +43,6 @@ public class AssignmentInterface {
     }
 
     private void makeNewDataBaseEntry(){
-        MongoIterable<String> list = assignmentDatabase.listCollectionNames();
-
         if (!collectionExists())
             assignmentDatabase.createCollection(assCol);
 
@@ -54,7 +52,8 @@ public class AssignmentInterface {
                 .append("assignment_id",nextPos)
                 .append("assignment_name",assignmentDAO.getAssignmentName())
                 .append("instructions", assignmentDAO.getInstructions())
-                .append("due_date", assignmentDAO.getDueDate());
+                .append("due_date", assignmentDAO.getDueDate())
+                .append("points", assignmentDAO.getPoints());
         assignmentCollection.insertOne(assignment);
     }
 
@@ -69,6 +68,7 @@ public class AssignmentInterface {
     public String findAssignment(String courseID, int assID){
         String relativePath = getRelPath();
         return relativePath + reg + courseID + reg + assID;
+
     }
 
     public Document addToDataBaseEntry(){
@@ -125,17 +125,37 @@ public class AssignmentInterface {
         return relativePathPrefix;
     }
 
+    public List<AssignmentDAO> getAssignmentsByCourse(String courseID){
+        MongoCollection<Document> assignmentCollection = assignmentDatabase.getCollection("assignments");
+        for (Document document : assignmentCollection.find()) {
+            if (document.get("course_id").equals(courseID)) {
+                AssignmentDAO assignmentDAO = new AssignmentDAO(
+                        (String) document.get("assignment_name"),
+                        (String) document.get("instructions"),
+                        (String) document.get("due_date"),
+                        (String) document.get("course_id"),
+                        (int) document.get("points")
+
+                );
+                assignments.add(assignmentDAO);
+            }
+        }
+        return assignments;
+    }
+
     public List<AssignmentDAO> getAllAssignments() {
-        MongoCollection<Document> courseCollection = assignmentDatabase.getCollection("assignments");
-        for (Document document : courseCollection.find()) {
-            AssignmentDAO courseDAO = new AssignmentDAO(
-                    (String) document.get("assignmentName"),
+
+        MongoCollection<Document> assignmentCollection = assignmentDatabase.getCollection("assignments");
+
+        for (Document document : assignmentCollection.find()) {
+            AssignmentDAO assignmentDAO = new AssignmentDAO(
+                    (String) document.get("assignment_name"),
                     (String) document.get("instructions"),
-                    (String) document.get("dueDate"),
-                    (String) document.get("courseID"),
-                    (int) document.get("year")
+                    (String) document.get("due_date"),
+                    (String) document.get("course_id"),
+                    (int) document.get("points")
             );
-            assignments.add(courseDAO);
+            assignments.add(assignmentDAO);
         }
         return assignments;
     }
