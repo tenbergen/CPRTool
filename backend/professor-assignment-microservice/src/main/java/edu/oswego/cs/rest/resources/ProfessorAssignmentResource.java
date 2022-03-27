@@ -96,5 +96,16 @@ public class ProfessorAssignmentResource {
         return Response.status(Response.Status.OK).entity("Assignment Successfully Deleted").build();
     }
 
-
+    @PUT
+    @Path("/courses/{courseID}/assignments/{assignmentID}/edit")
+    public Response updateAssignment(AssignmentDAO assignmentDAO, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID){
+        try {
+            AssignmentInterface.updateAssignment(assignmentDAO, courseID, assignmentID);
+            String assignmentSuccessfullyUpdated = assignmentDAO.getCourseID() + ":" + assignmentDAO.getAssignmentName() + " Successfully updated";
+            return Response.status(Response.Status.BAD_REQUEST).entity(assignmentSuccessfullyUpdated).build();
+        } catch (Exception e){
+            String assignmentFailedUpdate = assignmentDAO.getCourseID() + ":" + assignmentDAO.getAssignmentName() + " failed to update";
+            return Response.status(Response.Status.BAD_REQUEST).entity(assignmentFailedUpdate).build();
+        }
+    }
 }
