@@ -1,20 +1,12 @@
 package edu.oswego.cs.resources;
 
 import com.ibm.websphere.jaxrs20.multipart.IMultipartBody;
-
-import org.bson.Document;
-
 import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.daos.FileDAO;
 import edu.oswego.cs.daos.StudentDAO;
 import edu.oswego.cs.database.CourseInterface;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -46,7 +38,7 @@ public class CourseManagerResource {
     @Path("courses/course/update")
     public Response updateCourse(CourseDAO course) {
         new CourseInterface().updateCourse(course);
-        return Response.status(Response.Status.OK).entity("Course successfully updated").build();
+        return Response.status(Response.Status.OK).entity("Course successfully updated.").build();
     }
 
     @POST

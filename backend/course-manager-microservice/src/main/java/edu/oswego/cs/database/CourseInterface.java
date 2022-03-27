@@ -3,14 +3,10 @@ package edu.oswego.cs.database;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.UpdateOptions;
-import com.mongodb.client.model.Updates;
-
 import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.daos.FileDAO;
 import edu.oswego.cs.daos.StudentDAO;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
@@ -63,16 +59,16 @@ public class CourseInterface {
     }
 
     /**
-     * Find the course document from Mongo using the current course ID, then update the course document using the new infromation 
-     * passed from Frontend. 
+     * Find the course document from Mongo using the current course ID, then update the course document using the new infromation
+     * passed from Frontend.
      */
     public void updateCourse(CourseDAO dao) {
         Document courseDocument = courseCollection.find(eq("course_id", dao.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
-        
+
         String courseID = dao.courseID;
-        dao.courseID = dao.abbreviation + "-" + dao.courseSection + "-" + dao.semester + "-" + dao.year;
-        
+        dao.courseID = dao.abbreviation + "-" + dao.courseSection + "-" + dao.crn + "-" + dao.semester + "-" + dao.year;
+
         Jsonb jsonb = JsonbBuilder.create();
         Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(dao), MediaType.APPLICATION_JSON_TYPE);
         Document course = Document.parse(courseDAOEntity.getEntity());
