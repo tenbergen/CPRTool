@@ -152,7 +152,7 @@ public class CourseInterface {
                 course.get("course_name").toString(),
                 course.get("course_section").toString(),
                 course.get("semester").toString(),
-                course.get("year").toString(), 
+                course.get("year").toString(),
                 Integer.parseInt(course.get("crn").toString())
         );
 

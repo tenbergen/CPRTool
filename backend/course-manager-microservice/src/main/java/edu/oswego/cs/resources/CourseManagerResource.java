@@ -37,6 +37,14 @@ public class CourseManagerResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("courses/course/update")
+    public Response updateCourse(CourseDAO course) {
+        return Response.status(Response.Status.OK).build();
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/student/add")
     public Response addStudent(StudentDAO studentDAO) {
         CourseDAO courseDAO = new CourseDAO(
