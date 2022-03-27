@@ -59,6 +59,23 @@ public class CourseInterface {
     }
 
     /**
+     * Find the course document from Mongo using the current course ID, then update the course document using the new infromation
+     * passed from Frontend.
+     */
+    public void updateCourse(CourseDAO dao) {
+        Document courseDocument = courseCollection.find(eq("course_id", dao.getCourseID())).first();
+        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
+
+        String courseID = dao.courseID;
+        dao.courseID = dao.abbreviation + "-" + dao.courseSection + "-" + dao.crn + "-" + dao.semester + "-" + dao.year;
+
+        Jsonb jsonb = JsonbBuilder.create();
+        Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(dao), MediaType.APPLICATION_JSON_TYPE);
+        Document course = Document.parse(courseDAOEntity.getEntity());
+        courseCollection.replaceOne(eq("course_id", courseID), course);
+    }
+
+    /**
      * A course DAO is made from the student DAO. Attempt to create the course, then add the student into the student
      * array in the course using their name from the email and into the student database at the same time with the
      * student's course array updated to have the new course respectively.
@@ -156,7 +173,7 @@ public class CourseInterface {
                 course.get("year").toString()
         );
 
-        ArrayList oldStudentList = (ArrayList) course.get("Students");
+        List<String> oldStudentList = course.getList("Students", String.class);
         ArrayList<String> newStudentList = new ArrayList<>();
         ArrayList<String> studentsToRemove = new ArrayList<>();
         ArrayList<String> studentsToAdd = new ArrayList<>();
