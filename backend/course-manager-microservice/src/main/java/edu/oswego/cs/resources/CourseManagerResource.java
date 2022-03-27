@@ -44,7 +44,8 @@ public class CourseManagerResource {
                 studentDAO.courseName,
                 studentDAO.courseSection,
                 studentDAO.semester,
-                studentDAO.year
+                studentDAO.year,
+                studentDAO.crn
         );
         new CourseInterface().addStudent(studentDAO.email, courseDAO);
         return Response.status(Response.Status.OK).entity("Student successfully added.").build();
@@ -60,7 +61,8 @@ public class CourseManagerResource {
                 studentDAO.courseName,
                 studentDAO.courseSection,
                 studentDAO.semester,
-                studentDAO.year
+                studentDAO.year,
+                studentDAO.crn
         );
         new CourseInterface().removeStudent(studentDAO.email, courseDAO);
         return Response.status(Response.Status.OK).entity("Student successfully removed.").build();
