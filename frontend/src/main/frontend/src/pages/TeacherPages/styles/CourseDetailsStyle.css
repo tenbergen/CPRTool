@@ -25,6 +25,7 @@
 .cdp-component-links {
     display: flex;
     flex-direction: row;
+    font-weight: bold;
 }
 
 .container a:hover {
