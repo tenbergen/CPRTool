@@ -21,12 +21,7 @@ public class CourseManagerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/create")
     public Response createCourse(CourseDAO course) {
-        try {
-            new CourseInterface().addCourse(course);
-        }
-        catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Course was not successfully added.").build();
-        }
+        new CourseInterface().addCourse(course);
         return Response.status(Response.Status.OK).entity("Course successfully added.").build();
     }
 
@@ -35,12 +30,7 @@ public class CourseManagerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/delete")
     public Response deleteCourse(CourseDAO course) {
-        try {
-            new CourseInterface().removeCourse(course);
-        }
-        catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Course was not successfully removed.").build();
-        }
+        new CourseInterface().removeCourse(course);
         return Response.status(Response.Status.OK).entity("Course successfully deleted.").build();
     }
 
@@ -65,11 +55,7 @@ public class CourseManagerResource {
                 studentDAO.year,
                 studentDAO.crn
         );
-        try {
-            new CourseInterface().addStudent(studentDAO.email, courseDAO);
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Student was not successfully added.").build();
-        }
+        new CourseInterface().addStudent(studentDAO.email, courseDAO);
         return Response.status(Response.Status.OK).entity("Student successfully added.").build();
     }
 
@@ -86,11 +72,7 @@ public class CourseManagerResource {
                 studentDAO.year,
                 studentDAO.crn
         );
-        try {
-            new CourseInterface().removeStudent(studentDAO.email, courseDAO);
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Student was not successfully removed.").build();
-        }
+        new CourseInterface().removeStudent(studentDAO.email, courseDAO);
         return Response.status(Response.Status.OK).entity("Student successfully removed.").build();
     }
 
