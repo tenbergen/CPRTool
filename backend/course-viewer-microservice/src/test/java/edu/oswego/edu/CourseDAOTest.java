@@ -1,13 +1,13 @@
-package edu.oswego.edu;
+// package edu.oswego.edu;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+// import org.junit.jupiter.api.Assertions;
+// import org.junit.jupiter.api.Test;
 
-public class CourseDAOTest {
+// public class CourseDAOTest {
 
-    @Test
-    public void t() {
-        Assertions.assertEquals(0, 0, "");
-    }
+//     @Test
+//     public void t() {
+//         Assertions.assertEquals(0, 0, "");
+//     }
 
-}
+// }
