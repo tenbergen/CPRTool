@@ -1,19 +1,40 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import "./styles/CourseBar.css"
 import {useDispatch, useSelector} from "react-redux";
 import { getCoursesAsync, setCurrentCourse } from "../redux/features/courseSlice";
 import {Link} from "react-router-dom";
 
+const CourseBarLink = ({ active, course, onClick }) => {
+    console.log(active)
+    const normalStyle = { backgroundColor: "rgba(255, 255, 255, 0.25)" }
+    const clickedStyle = { backgroundColor: "white" }
+
+    return (
+        <Link to={"/details/" + course.course_id} onClick={onClick}>
+            <tr>
+                <td style={active ? clickedStyle : normalStyle} >
+                    <div className="colorForTable"/>
+                    <p className="courseText"> {course.course_name} </p>
+                </td>
+            </tr>
+        </Link>
+    );
+}
+
 const CourseBarComponent = () => {
     const dispatch = useDispatch()
-    const courses = useSelector((state) => state.courses.courses)
+    const courseState = useSelector((state) => state.courses)
+    const courses = courseState.courses
+    const currentCourse = courseState.currentCourse
+
+    const [chosen, setChosen] = useState(currentCourse.course_id);
 
     useEffect(() => {
         dispatch(getCoursesAsync())
     }, [])
 
     const onCourseClick = (course) => {
-        console.log(course)
+        setChosen(course.course_id)
         dispatch(setCurrentCourse(course))
     }
 
@@ -22,14 +43,11 @@ const CourseBarComponent = () => {
             <h2> Courses </h2>
             <div className="cbc-courses">
                 {courses.map(course =>
-                    <Link to={"/details/" + course.course_id} onClick={() => onCourseClick(course)}>
-                        <tr className="TheTable">
-                            <td>
-                                <div className="colorForTable"/>
-                                <p className="courseText"> {course.course_name} </p>
-                            </td>
-                        </tr>
-                    </Link>
+                    <CourseBarLink
+                        onClick={() => onCourseClick(course)}
+                        active={course.course_id === chosen}
+                        course={course}
+                    />
                 )}
             </div>
         </div>

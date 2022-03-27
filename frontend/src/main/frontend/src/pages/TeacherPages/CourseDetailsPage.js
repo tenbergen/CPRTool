@@ -50,7 +50,7 @@ function CourseDetailsPage() {
                         </div>
                         <div>
                             {chosen === "Assignments" && <TeacherAssComponent/>}
-                            {chosen === "Assignments" && null}
+                            {chosen === "Gradebook" && null}
                             {chosen === "Roster" && <RosterComponent/>}
                             {chosen === "Manage" && <EditCourseComponent/>}
                         </div>
