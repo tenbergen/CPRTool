@@ -19,7 +19,6 @@ public class CourseDAO {
     @JsonbProperty("course_section") public String courseSection;
     @JsonbProperty("semester") public String semester;
     @JsonbProperty("students") @ElementCollection public List<String> students;
-    @JsonbProperty("teams") @ElementCollection public List<String> teams;
     @JsonbProperty("year") public String year;
     @JsonbProperty("course_id") public String courseID;
 
@@ -35,7 +34,6 @@ public class CourseDAO {
         this.courseSection = courseSection;
         this.semester = semester;
         this.students = new ArrayList<>();
-        this.teams = new ArrayList<>();
         this.year = year;
         this.courseID = this.abbreviation + "-" + this.courseSection + "-" + this.semester + "-" + this.year;
     }
