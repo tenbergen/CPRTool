@@ -3,7 +3,7 @@ package edu.oswego.cs.rest.resources;
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import com.ibm.websphere.jaxrs20.multipart.IMultipartBody;
 import edu.oswego.cs.rest.daos.FileDAO;
-//import edu.oswego.cs.rest.database.AssignmentInterface;
+//import edu.oswego.cs.database.AssignmentInterface;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.GET;
@@ -21,8 +21,8 @@ public class DownloadResources {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/courses/{courseID}/assignments/{assignmentID}/download")
-    public Response downloadAssignment(FileDAO assignment, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
+    @Path("courses/course/assignment/download")
+    public Response downloadAssignment(FileDAO assignment) {
         try {
             //new AssignmentInterface().downloadAssignment(assignment);
 

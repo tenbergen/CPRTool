@@ -1,4 +1,4 @@
-package edu.oswego.cs.database;
+package edu.oswego.cs.rest.database;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;

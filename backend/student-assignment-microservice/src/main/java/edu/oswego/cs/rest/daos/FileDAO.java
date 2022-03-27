@@ -4,37 +4,33 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import java.io.*;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 @Getter
 @AllArgsConstructor
 public class FileDAO {
     private String filename;
-    private String courseID;
+    private String course;
     private InputStream file;
-    private int assignmentID;
 //    v this is how UPLOAD_FOLDER WILL END UP LOOKING LIKE v
 //  private static final String UPLOAD_FOLDER = DB.findHwFolder(course, filename);
 
     /**
-     * Takes form-data from a POST request, converts it to an inputStream, and return the FileDOA containing
-     * the files' information including the inputStream
-     *
+     * Takes form-data from a POST request for a csv file and reconstructs the content within the file
      * @param fileName form-data String representation of file name
-     * @param courseID String
      * @param attachment form-data
      * @return FileDAO Instance
      * @throws IOException File Corruption Exception
      */
-    public static FileDAO fileFactory(String fileName, String courseID, IAttachment attachment, int assignmentID) throws IOException {
-//        String courseName = fileName.split("\\.")[0];
+    public static FileDAO FileFactory(String fileName, IAttachment attachment) throws IOException {
+        String courseName = fileName.split("\\.")[0];
         InputStream inputStream = attachment.getDataHandler().getInputStream();
-        System.out.println("fileName: " + fileName + "courseID: " + courseID);
-        return new FileDAO(fileName, courseID, inputStream, assignmentID);
+        System.out.println("fileName: " + fileName + "courseName: " + courseName);
+        return new FileDAO(fileName, courseName, inputStream);
     }
-
     /**
-    * Writes the inputStream to a file.
-    * */
+     * Writes the inputStream to a file.
+     * */
     public void writeFile (String filePath) throws IOException {
         OutputStream outputStream = new FileOutputStream(filePath);
         outputStream.write(file.readAllBytes());
@@ -49,7 +45,7 @@ public class FileDAO {
     public static String getProjectRootDir(){
         String path = (System.getProperty("user.dir").contains("\\")) ? System.getProperty("user.dir").replace("\\", "/") : System.getProperty("user.dir");
         String[] slicedPath = path.split("/");
-        String targetDir = "professor-assignment-microservice";
+        String targetDir = "student-assignment-microservice";
         int i;
         StringBuilder relativePathPrefix = new StringBuilder();
         System.out.println(Arrays.toString(slicedPath));
@@ -60,26 +56,5 @@ public class FileDAO {
             relativePathPrefix = new StringBuilder(relativePathPrefix.toString().replace("/", "\\"));
         }
         return relativePathPrefix.toString();
-    }
-    public static void nullFiles(InputStream stream){
-        StringBuilder sb = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(stream));
-        String line = null;
-        try {
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        System.out.println("Non-file attachment value: " + sb.toString());
     }
 }
