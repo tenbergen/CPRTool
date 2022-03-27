@@ -10,11 +10,13 @@ import org.apache.commons.io.FileUtils;
 import org.bson.Document;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.List;
 
 public class AssignmentInterface {
-    MongoDatabase assDatabase;
+    MongoDatabase assignmentDatabase;
+    private final List<AssignmentDAO> assignments = new ArrayList<>();
 
     String assCol = "assignments";
     String reg;
@@ -26,7 +28,7 @@ public class AssignmentInterface {
     public AssignmentInterface() throws Exception {
         try{
             DatabaseManager manager = new DatabaseManager();
-            assDatabase = manager.getAssDB();
+            assignmentDatabase = manager.getAssDB();
         }catch(Exception e){
             e.printStackTrace(System.out);
             throw new Exception("No connection to the ass DB");
@@ -36,16 +38,17 @@ public class AssignmentInterface {
     public void createAssignment(AssignmentDAO assignmentDAO){
         this.assignmentDAO = assignmentDAO;
         this.CID = assignmentDAO.getCourseID();
+        makeFileStructure();
         makeNewDataBaseEntry();
     }
 
-    private Document makeNewDataBaseEntry(){
-        MongoIterable<String> list = assDatabase.listCollectionNames();
+    private void makeNewDataBaseEntry(){
+        MongoIterable<String> list = assignmentDatabase.listCollectionNames();
 
         if (!collectionExists())
-            assDatabase.createCollection(assCol);
+            assignmentDatabase.createCollection(assCol);
 
-        MongoCollection assignmentCollection = assDatabase.getCollection(assCol);
+        MongoCollection assignmentCollection = assignmentDatabase.getCollection(assCol);
         Document assignment = new Document()
                 .append("course_id",CID)
                 .append("assignment_id",nextPos)
@@ -53,10 +56,9 @@ public class AssignmentInterface {
                 .append("instructions", assignmentDAO.getInstructions())
                 .append("due_date", assignmentDAO.getDueDate());
         assignmentCollection.insertOne(assignment);
-        return assignment;
     }
 
-    public void addToAssignment(FileDAO fileDAO) throws IOException {
+    public void writeToAssignment(FileDAO fileDAO) throws IOException {
         this.CID = fileDAO.getCourseID();
         this.fileDAO = fileDAO;
         String relativePathPrefix = getRelPath();
@@ -70,9 +72,9 @@ public class AssignmentInterface {
     }
 
     public Document addToDataBaseEntry(){
-        MongoIterable<String> list = assDatabase.listCollectionNames();
+        MongoIterable<String> list = assignmentDatabase.listCollectionNames();
 
-        MongoCollection assignmentCollection = assDatabase.getCollection(assCol);
+        MongoCollection assignmentCollection = assignmentDatabase.getCollection(assCol);
         Document assignment = new Document()
                 .append("course_id",CID)
                 .append("assignment_id",nextPos)
@@ -82,8 +84,7 @@ public class AssignmentInterface {
     }
 
     public boolean collectionExists(){
-        MongoIterable<String> list = assDatabase.listCollectionNames();
-        boolean hasCollection = false;
+        MongoIterable<String> list = assignmentDatabase.listCollectionNames();
         for(String s : list){
             if(s.equals(assCol)){
                 return true;
@@ -92,8 +93,8 @@ public class AssignmentInterface {
         return false;
     }
 
-    public String makeFileStructure(String relativePathPrefix){
-        String FileStructure = relativePathPrefix+"Courses"+reg+CID+reg;
+    public String makeFileStructure(){
+        String FileStructure = getRelPath()+"Courses"+reg+CID+reg;
         File dir = new File(FileStructure);
         dir.mkdirs();
 
@@ -124,32 +125,25 @@ public class AssignmentInterface {
         return relativePathPrefix;
     }
 
-    public InputStream[] getAllAssignments(String CID){
-        File assignmentFolder = new File(getRelPath() + "Courses" + reg + CID);
-        if (!assignmentFolder.exists())
-            return null;
-
-        File[] assignmentFiles = assignmentFolder.listFiles();
-        if (assignmentFiles == null)
-            return null;
-
-        InputStream[] assignments = new InputStream[assignmentFiles.length];
-        AtomicInteger index = new AtomicInteger(0);
-        Arrays.asList(assignmentFiles).forEach(file -> {
-            try {
-                assignments[index.getAndIncrement()] = new FileInputStream(file);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        });
-
+    public List<AssignmentDAO> getAllAssignments() {
+        MongoCollection<Document> courseCollection = assignmentDatabase.getCollection("assignments");
+        for (Document document : courseCollection.find()) {
+            AssignmentDAO courseDAO = new AssignmentDAO(
+                    (String) document.get("assignmentName"),
+                    (String) document.get("instructions"),
+                    (String) document.get("dueDate"),
+                    (String) document.get("courseID"),
+                    (int) document.get("year")
+            );
+            assignments.add(courseDAO);
+        }
         return assignments;
     }
 
-    public void remove(int AssID,String courseID) throws IOException {
-        MongoCursor<Document> results = assDatabase.getCollection(assCol).find(new Document()
+    public void remove(int AssignmentID,String courseID) throws IOException {
+        MongoCursor<Document> results = assignmentDatabase.getCollection(assCol).find(new Document()
                 .append("course_id",courseID)
-                .append("assgnment_id",AssID)).iterator();
+                .append("assignment_id",AssignmentID)).iterator();
         if(!results.hasNext()) throw new IOException("No Assignment by this name found");
         String relativePathPrefix = getRelPath();
 
@@ -157,38 +151,9 @@ public class AssignmentInterface {
             Document ass = results.next();
             String Destination = relativePathPrefix+ "Courses"+reg+courseID+reg+ass.get("assignment_id");
             FileUtils.deleteDirectory(new File(Destination));
-            assDatabase.getCollection(assCol).findOneAndDelete(ass);
+            assignmentDatabase.getCollection(assCol).findOneAndDelete(ass);
         }
 
     }
-//    public Document makeDBEntry(String fileName, String discription){
-//        MongoIterable<String> list = assDatabase.listCollectionNames();
-//        boolean hasCollection = false;
-//        for(String s : list){
-//            if(s.equals(assCol)){
-//                hasCollection = true;
-//                break;
-//            }
-//        }
-//        MongoCollection assCollection = null;
-//        if(!hasCollection){
-//            assDatabase.createCollection(assCol);
-//        }
-//        assCollection = assDatabase.getCollection(assCol);
-//        Document ass = new Document()
-//                .append("course_id",CID)
-//                .append("assignment_id",nextPos)
-//                .append("assignment_name",fileName);
-//        assCollection.insertOne(ass);
-//        return ass;
-//    }
-    //    public int add(FileDAO fileDAO)throws Exception{
-//        this.CID = fileDAO.getCourseID();
-//        this.fileDAO = fileDAO;
-//        String relativePathPrefix = getRelPath();
-//        String FileStructure = makeFileStructure(relativePathPrefix);
-//        fileDAO.writeFile(FileStructure+reg+fileDAO.getFilename());
-//        makeDBEntry(fileDAO.getFilename(),assignmentDAO.getInstructions());
-//        return nextPos;
-//    }
+
 }
