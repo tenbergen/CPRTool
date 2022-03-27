@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>edu.oswego.cs</groupId>
@@ -20,6 +20,11 @@
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
             <version>3.12.10</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>javax.persistence-api</artifactId>
+            <version>2.2</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -45,25 +50,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.sun.activation</groupId>
-            <artifactId>javax.activation</artifactId>
-            <version>1.2.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>5.8.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>3.12.10</version>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.22</version>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>javax.activation</artifactId>
+            <version>1.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
@@ -89,20 +84,10 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>com.ibm.websphere.appserver.api</groupId>
-            <artifactId>com.ibm.websphere.appserver.api.jaxrs20</artifactId>
-            <version>1.1.54</version>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>8.0.0</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.activation</groupId>
-            <artifactId>javax.activation</artifactId>
-            <version>1.2.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.microprofile.openapi</groupId>
-            <artifactId>microprofile-openapi-api</artifactId>
-            <version>2.0</version>
         </dependency>
     </dependencies>
 
@@ -114,6 +99,9 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
                     <version>3.3.2</version>
+                    <configuration>
+                        <failOnMissingWebXml>false</failOnMissingWebXml>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>io.openliberty.tools</groupId>

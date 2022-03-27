@@ -1,7 +1,2 @@
 target/
 !target/*.war
-
-.mvn/
-mvnw
-mvnw.cmd
-src/test

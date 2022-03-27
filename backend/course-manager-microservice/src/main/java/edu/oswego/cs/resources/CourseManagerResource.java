@@ -1,6 +1,9 @@
 package edu.oswego.cs.resources;
 
 import com.ibm.websphere.jaxrs20.multipart.IMultipartBody;
+
+import org.bson.Document;
+
 import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.daos.FileDAO;
 import edu.oswego.cs.daos.StudentDAO;
@@ -8,7 +11,9 @@ import edu.oswego.cs.database.CourseInterface;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -16,31 +21,32 @@ import javax.ws.rs.core.Response;
 
 @Path("professor")
 public class CourseManagerResource {
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/create")
     public Response createCourse(CourseDAO course) {
-        try {
-            new CourseInterface().addCourse(course);
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Failed to add course.").build();
-        }
+        new CourseInterface().addCourse(course);
         return Response.status(Response.Status.OK).entity("Course successfully added.").build();
     }
+
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/delete")
     public Response deleteCourse(CourseDAO course) {
-        try {
-            new CourseInterface().removeCourse(course);
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Failed to delete course.").build();
-        }
+        new CourseInterface().removeCourse(course);
         return Response.status(Response.Status.OK).entity("Course successfully deleted.").build();
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("courses/course/update")
+    public Response updateCourse(CourseDAO course) {
+        new CourseInterface().updateCourse(course);
+        return Response.status(Response.Status.OK).entity("Course successfully updated").build();
     }
 
     @POST
@@ -52,15 +58,11 @@ public class CourseManagerResource {
                 studentDAO.abbreviation,
                 studentDAO.courseName,
                 studentDAO.courseSection,
+                studentDAO.crn,
                 studentDAO.semester,
                 studentDAO.year
         );
-
-        try {
-            new CourseInterface().addStudent(studentDAO.email, courseDAO);
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Failed to add student.").build();
-        }
+        new CourseInterface().addStudent(studentDAO.email, courseDAO);
         return Response.status(Response.Status.OK).entity("Student successfully added.").build();
     }
 
@@ -73,15 +75,11 @@ public class CourseManagerResource {
                 studentDAO.abbreviation,
                 studentDAO.courseName,
                 studentDAO.courseSection,
+                studentDAO.crn,
                 studentDAO.semester,
                 studentDAO.year
         );
-
-        try {
-            new CourseInterface().removeStudent(studentDAO.email, courseDAO);
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Student or course does not exist.").build();
-        }
+        new CourseInterface().removeStudent(studentDAO.email, courseDAO);
         return Response.status(Response.Status.OK).entity("Student successfully removed.").build();
     }
 
