@@ -37,6 +37,14 @@ public class CourseManagerResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("courses/course/update")
+    public Response updateCourse(CourseDAO course) {
+        return Response.status(Response.Status.OK).build();
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/student/add")
     public Response addStudent(StudentDAO studentDAO) {
         CourseDAO courseDAO = new CourseDAO(
@@ -44,7 +52,8 @@ public class CourseManagerResource {
                 studentDAO.courseName,
                 studentDAO.courseSection,
                 studentDAO.semester,
-                studentDAO.year
+                studentDAO.year,
+                studentDAO.crn
         );
         new CourseInterface().addStudent(studentDAO.email, courseDAO);
         return Response.status(Response.Status.OK).entity("Student successfully added.").build();
@@ -60,7 +69,8 @@ public class CourseManagerResource {
                 studentDAO.courseName,
                 studentDAO.courseSection,
                 studentDAO.semester,
-                studentDAO.year
+                studentDAO.year,
+                studentDAO.crn
         );
         new CourseInterface().removeStudent(studentDAO.email, courseDAO);
         return Response.status(Response.Status.OK).entity("Student successfully removed.").build();

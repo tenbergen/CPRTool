@@ -10,6 +10,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class DatabaseManager {
+<<<<<<< HEAD
     int studentPort = Integer.parseInt(System.getenv("MONGO_PORT"));
     int professorPort = Integer.parseInt(System.getenv("MONGO2_PORT"));
     int coursePort = Integer.parseInt(System.getenv("MONGO3_PORT"));
@@ -20,6 +21,19 @@ public class DatabaseManager {
     String mongoUser = System.getenv("MONGO_USERNAME");
     String mongoPassword = System.getenv("MONGO_PASSWORD");
 
+=======
+    String hostname = "moxie.cs.oswego.edu";//System.getenv("MONGO_HOSTNAME");
+
+    int studentPort = 27030; //Integer.parseInt(System.getenv("MONGO_PORT"));
+    String studentDatabase = "cpr";//System.getenv("MONGO_DATABASE");
+    String studentUser = "root";//System.getenv("MONGO_USERNAME");
+    String studentPassword = "toor"; //System.getenv("MONGO_PASSWORD");
+
+    int assPort = 27030;//Integer.parseInt(System.getenv("MONGO2_PORT"));
+    String assDatabase = "cpr";//System.getenv("MONGO_DATABASE");
+    String assUser = "root"; //System.getenv("MONGO_USERNAME");
+    String assPassword = "toor"; //System.getenv("MONGO_PASSWORD");
+>>>>>>> aeb0baef353cade318324f01b959bccb10811cbf
 
     public MongoDatabase getStudentDB() {
         MongoCredential credentials = MongoCredential.createCredential(mongoUser, mongoDatabase, mongoPassword.toCharArray());
