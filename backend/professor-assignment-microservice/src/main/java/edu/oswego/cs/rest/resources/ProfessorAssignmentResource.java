@@ -1,16 +1,12 @@
 package edu.oswego.cs.rest.resources;
 
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
-import edu.oswego.cs.rest.daos.CourseDAO;
+import edu.oswego.cs.rest.daos.AssignmentDAO;
 import edu.oswego.cs.rest.daos.FileDAO;
 import edu.oswego.cs.rest.database.AssignmentInterface;
-
-import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -28,7 +24,7 @@ public class ProfessorAssignmentResource {
         try {
             List<AssignmentDAO> allAssignments = new AssignmentInterface().getAllAssignments();
             return Response.status(Response.Status.OK).entity(allAssignments).build();
-        } catch (Exception e){
+        } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Failed to fetch assignments.").build();
         }
     }
@@ -36,30 +32,15 @@ public class ProfessorAssignmentResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/")
-    public Response viewAssignment(@PathParam("courseID") String courseID) throws Exception {
+    public Response viewAssignmentsByCourse(@PathParam("courseID") String courseID) {
         try {
             List<AssignmentDAO> specifiedAssignments = new AssignmentInterface().getAssignmentsByCourse(courseID);
             if (specifiedAssignments.isEmpty())
                 return Response.status(Response.Status.NOT_FOUND).entity("This assignment does not exist").build();
             return Response.status(Response.Status.OK).entity(specifiedAssignments).build();
-        } catch (Exception e){
+        } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Failed to fetch assignments.").build();
         }
-    }
-
-    @GET
-    @Produces
-    @Path("courses/course/assignments/description/delete")
-    public String sayHello() {
-        return "Hello";
-    }
-
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("courses/course/assignments/description/add")
-    public Response addCourseDescription(CourseDAO course) throws Exception {
-        return Response.status(Response.Status.OK).build();
     }
 
     /**
@@ -67,8 +48,8 @@ public class ProfessorAssignmentResource {
      * The attachment is processed in FileDao.FileFactory, which reads and
      * reconstructs the file through inputStream and outputStream respectively
      *
-     * @param attachments type List<IAttachment>: file(s) passed back as form-data
-     * @param courseID type String
+     * @param attachments  type List<IAttachment>: file(s) passed back as form-data
+     * @param courseID     type String
      * @param assignmentID type int
      * @return Response
      */
@@ -77,21 +58,16 @@ public class ProfessorAssignmentResource {
     @Path("/courses/{courseID}/assignments/{assignmentID}/upload")
     public Response addFileToAssignment(List<IAttachment> attachments, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) throws Exception {
 
-        InputStream stream = null;
         for (IAttachment attachment : attachments) {
-            if (attachment == null) {continue;}
+            if (attachment == null) {
+                continue;
+            }
             String fileName = attachment.getDataHandler().getName();
+
             if (!fileName.endsWith("pdf") && !fileName.endsWith("zip"))
                 return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
 
-            if (fileName == null) {
-                FileDAO.nullFiles(stream);
-            } else {
-                    new AssignmentInterface().writeToAssignment(FileDAO.fileFactory(fileName,courseID,attachment,assignmentID));
-            }
-            if (stream != null) {
-                stream.close();
-            }
+            new AssignmentInterface().writeToAssignment(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
         }
         return Response.status(Response.Status.OK).build();
     }
@@ -101,23 +77,24 @@ public class ProfessorAssignmentResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/createAssignment")
     public Response createAssignment(AssignmentDAO assignmentDAO, @PathParam("courseID") String courseID) throws Exception {
+
         assignmentDAO.setCourseID(courseID);
-        System.out.println("-----------------------------------------------------\n"+
-                assignmentDAO.getAssignmentName() + "\n" + assignmentDAO.getCourseID()+"\n"+
-                assignmentDAO.getDueDate() + "\n" + assignmentDAO.getInstructions()+"\n"+assignmentDAO.getPoints());
         new AssignmentInterface().createAssignment(assignmentDAO);
-        return Response.status(Response.Status.OK).entity("Assignment Successfully Created").build();
+        String assignmentSuccessfullyCreated = assignmentDAO.getCourseID() + ":" + assignmentDAO.getAssignmentName() + " successfully Created";
+
+        return Response.status(Response.Status.OK).entity(assignmentSuccessfullyCreated).build();
     }
 
     @DELETE
     @Path("/courses/{courseID}/assignments/{assignmentID}/remove")
-    public Response removeAssignment(@PathParam("assignmentID") int assignmentID, @PathParam("courseID") String courseID) throws Exception {
+    public Response removeAssignment(@PathParam("assignmentID") int assignmentID, @PathParam("courseID") String courseID) {
         try {
-            new AssignmentInterface().remove(assignmentID,courseID);
+            new AssignmentInterface().remove(assignmentID, courseID);
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         return Response.status(Response.Status.OK).entity("Assignment Successfully Deleted").build();
     }
+
 
 }
