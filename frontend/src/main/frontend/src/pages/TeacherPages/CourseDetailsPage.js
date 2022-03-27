@@ -8,6 +8,7 @@ import EditCourseComponent from "../../components/EditCourseComponent";
 import TeacherAssComponent from "../../components/TeacherAssComponent";
 import {useDispatch, useSelector} from "react-redux";
 import {getCourseDetailsAsync} from "../../redux/features/courseSlice";
+import CourseBarComponent from "../../components/CourseBarComponent";
 
 function CourseDetailsPage() {
     let dispatch = useDispatch()
@@ -44,22 +45,24 @@ function CourseDetailsPage() {
         { isDataLoaded ?
             <div className="cdp-parent">
                 <SidebarComponent/>
-                {/*<CourseBarComponent/>*/}
                 <div className="cdp-container">
-                    <div className="cdp-component-links">
-                        <p onClick={handleShowAss} className="editCourseA">Assignments</p>
-                        <p className="editCourseA">Gradebook</p>
-                        <p onClick={handleShowRoster} className="editCourseA">Roster</p>
-                        <p onClick={handleShowEdit} className="editCourseA">Manage</p>
-                    </div>
-                    <div>
-                        {showAss ? <TeacherAssComponent/>: null}
-                    </div>
-                    <div>
-                        {showEdit ? <EditCourseComponent/>: null}
-                    </div>
-                    <div>
-                        {showRoster ? <RosterComponent/> : null}
+                    <CourseBarComponent/>
+                    <div className="cdp-components">
+                        <div className="cdp-component-links">
+                            <p onClick={handleShowAss} className="editCourseA">Assignments</p>
+                            <p className="editCourseA">Gradebook</p>
+                            <p onClick={handleShowRoster} className="editCourseA">Roster</p>
+                            <p onClick={handleShowEdit} className="editCourseA">Manage</p>
+                        </div>
+                        <div>
+                            {showAss ? <TeacherAssComponent/>: null}
+                        </div>
+                        <div>
+                            {showEdit ? <EditCourseComponent/>: null}
+                        </div>
+                        <div>
+                            {showRoster ? <RosterComponent/> : null}
+                        </div>
                     </div>
                 </div>
             </div> : null }

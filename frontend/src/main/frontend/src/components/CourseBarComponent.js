@@ -18,18 +18,20 @@ const CourseBarComponent = () => {
     }
 
     return (
-        <div className="courseBar">
-            <h5> Courses </h5>
-            {courses.map(course =>
-                <Link to={"/details/" + course.course_id} onClick={() => onCourseClick(course)}>
-                    <tr className="TheTable">
-                        <td>
-                            <div className="colorForTable"/>
-                            <p className="courseText"> {course.course_name} </p>
-                        </td>
-                    </tr>
-                </Link>
-            )}
+        <div className="cbc-parent">
+            <h2> Courses </h2>
+            <div className="cbc-courses">
+                {courses.map(course =>
+                    <Link to={"/details/" + course.course_id} onClick={() => onCourseClick(course)}>
+                        <tr className="TheTable">
+                            <td>
+                                <div className="colorForTable"/>
+                                <p className="courseText"> {course.course_name} </p>
+                            </td>
+                        </tr>
+                    </Link>
+                )}
+            </div>
         </div>
     );
 };

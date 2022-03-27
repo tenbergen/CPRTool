@@ -12,20 +12,24 @@
 .cdp-container {
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 50px;
-    padding: 3% 3% 0 3%;
-    margin: 3% 5%;
+    margin: 3% 5% 3% 2%;
     flex-grow: 1;
+    display: flex;
+    flex-direction: row;
 }
 
-.container a {
-    text-decoration: underline;
-
+.cdp-components {
+    border-radius: 50px;
+    flex-grow: 1;
+    padding: 2%;
+    background-color: rgba(255, 255, 255, 0.5);
 }
 
 .cdp-component-links {
     display: flex;
     flex-direction: row;
     font-weight: bold;
+    text-align: center;
 }
 
 .container a:hover {
