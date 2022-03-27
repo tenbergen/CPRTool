@@ -21,12 +21,8 @@ public class CourseManagerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/create")
     public Response createCourse(CourseDAO course) {
-        try {
-            new CourseInterface().addCourse(course);
-            return Response.status(Response.Status.OK).entity("Course successfully added.").build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Failed to add course.").build();
-        }
+        new CourseInterface().addCourse(course);
+        return Response.status(Response.Status.OK).entity("Course successfully added.").build();
     }
 
     @POST
@@ -34,12 +30,8 @@ public class CourseManagerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/delete")
     public Response deleteCourse(CourseDAO course) {
-        try {
-            new CourseInterface().removeCourse(course);
-            return Response.status(Response.Status.OK).entity("Course successfully deleted.").build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Failed to delete course.").build();
-        }
+        new CourseInterface().removeCourse(course);
+        return Response.status(Response.Status.OK).entity("Course successfully deleted.").build();
     }
 
     @POST
@@ -54,13 +46,8 @@ public class CourseManagerResource {
                 studentDAO.semester,
                 studentDAO.year
         );
-
-        try {
-            new CourseInterface().addStudent(studentDAO.email, courseDAO);
-            return Response.status(Response.Status.OK).entity("Student successfully added.").build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Failed to add student.").build();
-        }
+        new CourseInterface().addStudent(studentDAO.email, courseDAO);
+        return Response.status(Response.Status.OK).entity("Student successfully added.").build();
     }
 
     @POST
@@ -75,13 +62,8 @@ public class CourseManagerResource {
                 studentDAO.semester,
                 studentDAO.year
         );
-
-        try {
-            new CourseInterface().removeStudent(studentDAO.email, courseDAO);
-            return Response.status(Response.Status.OK).entity("Student successfully removed.").build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Student or course does not exist.").build();
-        }
+        new CourseInterface().removeStudent(studentDAO.email, courseDAO);
+        return Response.status(Response.Status.OK).entity("Student successfully removed.").build();
     }
 
     @POST

@@ -5,8 +5,10 @@ import com.ibm.websphere.security.jwt.InvalidBuilderException;
 import com.ibm.websphere.security.jwt.InvalidClaimException;
 import com.ibm.websphere.security.jwt.JwtBuilder;
 import com.ibm.websphere.security.jwt.JwtException;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.rest.database.DatabaseManager;
+import org.bson.Document;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -16,13 +18,14 @@ import java.util.Set;
 import static com.mongodb.client.model.Filters.eq;
 
 public class AuthServices {
-    private MongoDatabase professorDB;
+    private MongoCollection<Document> professorCollection;
     GoogleService googleService = new GoogleService();
 
     public AuthServices() {
         DatabaseManager databaseManager = new DatabaseManager();
         try {
-            professorDB = databaseManager.getProfessorDB();
+            MongoDatabase professorDB = databaseManager.getProfessorDB();
+            professorCollection = professorDB.getCollection("professors");
         } catch (Exception e) {
             e.printStackTrace(System.out);
         }
@@ -62,7 +65,6 @@ public class AuthServices {
             throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token.").build());
         }
         String userID = payload.getEmail().split("@")[0];
-        return professorDB.getCollection("professors").find(eq("professor_id", userID)).first() != null;
+        return professorCollection.find(eq("professor_id", userID)).first() != null;
     }
-
 }
