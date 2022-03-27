@@ -76,11 +76,11 @@ public class NavigationAndInput {
             String newwin = it.next();
             driver.switchTo().window(newwin);
 //perform actions on new window
-            driver.findElement(By.xpath("//*[@id=\"identifierId\"]")).sendKeys("tpark");
+            driver.findElement(By.xpath("//*[@id=\"identifierId\"]")).sendKeys("id");
             driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
             driver.findElement(By.cssSelector("#identifierNext > div > button > span")).click();
 
-            driver.findElement(By.xpath("//*[@id=\"password\"]/div[1]/div/div[1]/input")).sendKeys("zZ!9805892");
+            driver.findElement(By.xpath("//*[@id=\"password\"]/div[1]/div/div[1]/input")).sendKeys("password");
             driver.findElement(By.cssSelector("#passwordNext > div > button > span")).click();
             // driver.close();
             driver.switchTo().window(parent);
