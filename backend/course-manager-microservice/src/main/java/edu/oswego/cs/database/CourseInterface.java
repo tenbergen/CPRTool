@@ -151,6 +151,7 @@ public class CourseInterface {
                 course.get("abbreviation").toString(),
                 course.get("course_name").toString(),
                 course.get("course_section").toString(),
+                course.get("crn").toString(),
                 course.get("semester").toString(),
                 course.get("year").toString()
         );
