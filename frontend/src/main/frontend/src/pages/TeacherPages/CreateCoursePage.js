@@ -13,17 +13,18 @@ const CreateCoursePage = () => {
         course_section: '',
         semester: '',
         abbreviation: '',
-        year: ''
+        year: '',
+        crn: ''
     });
 
-    const { course_name, course_section, semester, abbreviation, year } = formData;
+    const { course_name, course_section, semester, abbreviation, year, crn } = formData;
 
     const OnChange = (e) => setFormData(
         { ...formData, [e.target.name]: e.target.value }
     );
 
     const handleSubmit = async (e) => {
-        if (abbreviation === '' || course_name === '' || course_section === '' || semester === '' || year === '') {
+        if (abbreviation === '' || course_name === '' || course_section === '' || semester === '' || year === '' || crn === '') {
             alert("Fields can't be empty!")
         }
         else {
@@ -33,10 +34,11 @@ const CreateCoursePage = () => {
                 course_section: course_section,
                 semester: semester,
                 abbreviation: abbreviation,
-                year: year
+                year: year,
+                crn: crn
             };
             await axios.post(submitCourseUrl, data);
-            navigate("/teacherDashboard")
+            navigate("/")
         }
     }
 
@@ -99,7 +101,7 @@ const CreateCoursePage = () => {
                                 name="year"
                                 type="text"
                                 value={year}
-                                // required
+                                required
                                 onChange={(e) => OnChange(e)}
                             />
                         </div>
@@ -110,8 +112,8 @@ const CreateCoursePage = () => {
                         <input
                             type="text"
                             name="crn"
-                            // value={Semester}
-                            // required
+                            value={crn}
+                            required
                             onChange={(e) => OnChange(e)}
                         />
                     </div>
