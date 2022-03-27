@@ -30,16 +30,24 @@
     flex-direction: row;
     font-weight: bold;
     text-align: center;
+    justify-content: space-between;
+    padding: 0 5% 0 5%;
 }
 
 .container a:hover {
     cursor: pointer;
 }
 
-.editCourseA {
-    margin-left: 10%;
+.cdp-component-link {
     font-size: 24px;
     padding-left: 24px;
+}
+
+.cdp-component-link-clicked {
+    font-size: 24px;
+    padding-left: 24px;
+    text-decoration: underline;
+    color: #5267A3
 }
 
 .container h1 {

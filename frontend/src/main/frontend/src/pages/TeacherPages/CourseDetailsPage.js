@@ -10,35 +10,25 @@ import {useDispatch, useSelector} from "react-redux";
 import {getCourseDetailsAsync} from "../../redux/features/courseSlice";
 import CourseBarComponent from "../../components/CourseBarComponent";
 
+const DetailComponent = ({ active, component, onClick }) => {
+    return (
+        <p onClick={onClick} className={active ? "cdp-component-link-clicked" : "cdp-component-link"}>
+            {component}
+        </p>
+    );
+};
+
 function CourseDetailsPage() {
     let dispatch = useDispatch()
     let { courseId } = useParams();
     const isDataLoaded = useSelector((state) => state.courses.currentCourseLoaded)
 
+    const components = ["Assignments", "Gradebook", "Roster", "Manage"];
+    const [chosen, setChosen] = useState("Assignments");
+
     useEffect( () => {
         dispatch(getCourseDetailsAsync(courseId))
     }, [])
-
-    const [showAss, setShowAss] = useState(true)
-    const handleShowAss = () => {
-        setShowAss(true)
-        setShowEdit(false)
-        setShowRoster(false)
-    }
-
-    const [showEdit, setShowEdit] = useState(false)
-    const handleShowEdit = () => {
-        setShowAss(false)
-        setShowEdit(true)
-        setShowRoster(false)
-    }
-
-    const [showRoster, setShowRoster] = useState(false)
-    const handleShowRoster = () => {
-        setShowAss(false)
-        setShowRoster(true)
-        setShowEdit(false)
-    }
 
     return (
         <div>
@@ -49,19 +39,20 @@ function CourseDetailsPage() {
                     <CourseBarComponent/>
                     <div className="cdp-components">
                         <div className="cdp-component-links">
-                            <p onClick={handleShowAss} className="editCourseA">Assignments</p>
-                            <p className="editCourseA">Gradebook</p>
-                            <p onClick={handleShowRoster} className="editCourseA">Roster</p>
-                            <p onClick={handleShowEdit} className="editCourseA">Manage</p>
+                            {components.map(t => (
+                                <DetailComponent
+                                    key={t}
+                                    component={t}
+                                    active={t === chosen}
+                                    onClick={() => setChosen(t)}
+                                />
+                            ))}
                         </div>
                         <div>
-                            {showAss ? <TeacherAssComponent/>: null}
-                        </div>
-                        <div>
-                            {showEdit ? <EditCourseComponent/>: null}
-                        </div>
-                        <div>
-                            {showRoster ? <RosterComponent/> : null}
+                            {chosen === "Assignments" && <TeacherAssComponent/>}
+                            {chosen === "Assignments" && null}
+                            {chosen === "Roster" && <RosterComponent/>}
+                            {chosen === "Manage" && <EditCourseComponent/>}
                         </div>
                     </div>
                 </div>
