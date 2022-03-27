@@ -46,7 +46,7 @@ public class CourseManagerResource {
     @Path("courses/course/update")
     public Response updateCourse(CourseDAO course) {
         new CourseInterface().updateCourse(course);
-        return Response.status(Response.Status.OK).entity("Course successfully updated").build();
+        return Response.status(Response.Status.OK).entity("Course successfully updated.").build();
     }
 
     @POST
