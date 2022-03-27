@@ -12,6 +12,7 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
+@ToString
 public class CourseDAO {
     @JsonbProperty("abbreviation") public String abbreviation;
     @Id @JsonbProperty("course_name") public String courseName;
