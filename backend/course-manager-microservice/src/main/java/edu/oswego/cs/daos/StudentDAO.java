@@ -18,6 +18,7 @@ public class StudentDAO {
     @JsonbProperty("course_section") public String courseSection;
     @JsonbProperty("semester") public String semester;
     @JsonbProperty("year") public String year;
+    @JsonbProperty("crn") public int crn;
     public String fullName;
 
     public StudentDAO(String fullName, String email) {
@@ -32,13 +33,15 @@ public class StudentDAO {
             @NonNull @JsonbProperty("course_name") String courseName,
             @NonNull @JsonbProperty("course_section") String courseSection,
             @NonNull @JsonbProperty("semester") String semester,
-            @NonNull @JsonbProperty("year") String year) {
+            @NonNull @JsonbProperty("year") String year,
+            @NonNull @JsonbProperty("crn") int crn) {
         this.email = email;
         this.abbreviation = abbreviation;
         this.courseName = courseName;
         this.courseSection = courseSection;
         this.semester = semester;
         this.year = year;
+        this.crn = crn;
     }
 
     public String toString() {

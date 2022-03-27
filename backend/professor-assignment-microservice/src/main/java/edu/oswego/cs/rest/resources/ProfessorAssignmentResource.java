@@ -1,8 +1,11 @@
 package edu.oswego.cs.rest.resources;
 
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
+import edu.oswego.cs.rest.daos.CourseDAO;
 import edu.oswego.cs.rest.daos.FileDAO;
 import edu.oswego.cs.rest.database.AssignmentInterface;
+
+import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -29,6 +32,21 @@ public class ProfessorAssignmentResource {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
         return Response.status(Response.Status.OK).entity("Assignment Successfully Deleted").build();
+    }
+
+    @GET
+    @Produces
+    @Path("courses/course/assignments/description/delete")
+    public String sayHello() {
+        return "Hello";
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("courses/course/assignments/description/add")
+    public Response addCourseDescription(CourseDAO course) throws Exception {
+        return Response.status(Response.Status.OK).build();
     }
 
     /**
