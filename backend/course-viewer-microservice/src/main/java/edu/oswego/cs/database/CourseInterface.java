@@ -55,8 +55,7 @@ public class CourseInterface {
                 (String) document.get("semester"),
                 (String) document.get("year")
         );
-        List<String> students = document.getList("students", String.class);
-        courseDAO.students = students;
+        courseDAO.students = document.getList("students", String.class);
         return courseDAO;
     }
 
@@ -64,8 +63,7 @@ public class CourseInterface {
         List<StudentDAO> students = new ArrayList<>();
         for (Document document : studentCollection.find()) {
             StudentDAO studentDAO = new StudentDAO((String) document.get("student_id"));
-            List<String> courses = document.getList("courses", String.class);
-            studentDAO.courses = courses;
+            studentDAO.courses = document.getList("courses", String.class);
             students.add(studentDAO);
         }
         return students;
@@ -76,8 +74,7 @@ public class CourseInterface {
         if (document == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist.").build());
 
         StudentDAO studentDAO = new StudentDAO((String) document.get("student_id"));
-        List<String> courses = document.getList("courses", String.class);
-        studentDAO.courses = courses;
+        studentDAO.courses = document.getList("courses", String.class);
         return studentDAO;
     }
 }
