@@ -56,9 +56,7 @@ public class CourseInterface {
                 (String) document.get("year")
         );
         @SuppressWarnings("unchecked") List<String> students = (List<String>) document.get("students");
-        @SuppressWarnings("unchecked") List<String> teams = (List<String>) document.get("teams");
         courseDAO.students = students;
-        courseDAO.teams = teams;
         return courseDAO;
     }
 
