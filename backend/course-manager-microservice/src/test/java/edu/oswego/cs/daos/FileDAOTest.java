@@ -5,8 +5,10 @@ package edu.oswego.cs.daos;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
 
-import com.ibm.websphere.jaxrs20.multipart.AttachmentBuilder;
-import com.ibm.websphere.jaxrs20.multipart.IAttachment;
+// QA wonders if these are needed. THey caused errors on our end
+//import com.ibm.websphere.jaxrs20.multipart.AttachmentBuilder;
+//import com.ibm.websphere.jaxrs20.multipart.IAttachment;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

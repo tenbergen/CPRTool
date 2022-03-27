@@ -28,8 +28,8 @@ public class CourseManagerTest {
 
     @BeforeAll
     public static void oneTimeSetup() {
-        port = "13127";
-        baseUrl = "http://moxie.cs.oswego.edu:" + port + "/manage/professor/";
+        port = "13125";
+        baseUrl = "http://moxie.cs.oswego.edu:" + port + "/manage/professor/courses/course/";
 
         String courseName = "Software Engineering";
         int courseSection = 9000;
@@ -45,7 +45,7 @@ public class CourseManagerTest {
     public void setup() {
         client = ClientBuilder.newClient();
 
-        targetUrl = "courses/course/create/";
+        targetUrl = "create/";
         WebTarget target = client.target(baseUrl + targetUrl);
         addCourseResponse = target.request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -55,7 +55,7 @@ public class CourseManagerTest {
     @AfterEach
     public void teardown() {
         if (! courseDeletedTest) {
-            targetUrl = "courses/course/delete/";
+            targetUrl = "delete/";
             WebTarget target = client.target(baseUrl + targetUrl);
             addCourseResponse = target.request(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
@@ -74,7 +74,7 @@ public class CourseManagerTest {
     public void testDeleteCourse() {
 
         //Test delete course to see if endpoint works
-        targetUrl = "courses/course/delete/";
+        targetUrl = "delete/";
         WebTarget target = client.target(baseUrl + targetUrl);
         Response response = target.request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -89,7 +89,7 @@ public class CourseManagerTest {
         String email = "timmyTest@Oswego.edu";
         StudentDAO studentDAO = new StudentDAO(email, course.courseName, course.abbreviation, course.courseSection, course.semester);
 
-        targetUrl = "courses/course/student/add/";
+        targetUrl = "student/add/";
         WebTarget target = client.target(baseUrl + targetUrl);
         Response response = target.request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -103,13 +103,13 @@ public class CourseManagerTest {
         String email = "thisStringIsNotAnEmail";
         StudentDAO studentDAO = new StudentDAO(email, course.courseName, course.abbreviation, course.courseSection, course.semester);
 
-        targetUrl = "courses/course/student/add/";
+        targetUrl = "student/add/";
         WebTarget target = client.target(baseUrl + targetUrl);
         Response response = target.request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(jsonb.toJson(studentDAO), MediaType.APPLICATION_JSON));
 
-        Assertions.assertEquals(Response.Status.OK, Response.Status.fromStatusCode(response.getStatus()), "Student was not added properly.");
+        Assertions.assertEquals(Response.Status.BAD_REQUEST, Response.Status.fromStatusCode(response.getStatus()), "Student was not added properly.");
     }
 
     @Test
@@ -117,13 +117,13 @@ public class CourseManagerTest {
         String email = "timmyTest@oswego.edu";
         StudentDAO studentDAO = new StudentDAO(email, course.courseName, course.abbreviation, course.courseSection, course.semester);
 
-        targetUrl = "courses/course/student/add/";
+        targetUrl = "student/add/";
         WebTarget target = client.target(baseUrl + targetUrl);
         target.request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(jsonb.toJson(studentDAO), MediaType.APPLICATION_JSON));
 
-        targetUrl = "courses/course/student/delete/";
+        targetUrl = "student/delete/";
         target = client.target(baseUrl + targetUrl);
         Response response = target.request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)

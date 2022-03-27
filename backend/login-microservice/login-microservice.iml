@@ -27,24 +27,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.9.0" level="project" />
-    <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.18.22" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: jakarta.platform:jakarta.jakartaee-api:8.0.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: jakarta.enterprise:jakarta.enterprise.cdi-api:2.0.2" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: jakarta.interceptor:jakarta.interceptor-api:1.2.5" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: jakarta.inject:jakarta.inject-api:1.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: jakarta.ws.rs:jakarta.ws.rs-api:2.1.6" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: jakarta.json.bind:jakarta.json.bind-api:1.0.2" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: jakarta.json:jakarta.json-api:1.1.6" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: jakarta.annotation:jakarta.annotation-api:1.3.5" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.microprofile.config:microprofile-config-api:2.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.microprofile.fault-tolerance:microprofile-fault-tolerance-api:3.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.microprofile.health:microprofile-health-api:3.1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.microprofile.metrics:microprofile-metrics-api:3.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.microprofile.jwt:microprofile-jwt-auth-api:1.2" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.microprofile.openapi:microprofile-openapi-api:2.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.microprofile.rest.client:microprofile-rest-client-api:2.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.microprofile.opentracing:microprofile-opentracing-api:2.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.apis:google-api-services-oauth2:v2-rev157-1.25.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.api-client:google-api-client:1.25.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.http-client:google-http-client-jackson2:1.25.0" level="project" />
