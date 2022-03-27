@@ -35,9 +35,9 @@ function StudentCoursePage() {
     return (
         <div>
             { isDataLoaded ?
-            <div className={"parent"}>
+            <div className={"scs-parent"}>
                 <SidebarComponent/>
-                <div className="container">
+                <div className="scs-container">
                     <h1>Assignments</h1>
                     <a onClick={handleShowTodo} className="assSubTodo" target="_blank">To Do</a>
                     <a onClick={handleShowSubmitted} className="assSubTodo" target="_blank">Submitted</a>

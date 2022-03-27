@@ -1,4 +1,4 @@
-parent {
+.scs-parent {
     display: flex;
     flex-direction: row;
     overflow: auto;
@@ -9,7 +9,7 @@ parent {
     #57E1B2 385.81deg);
 }
 
-.container {
+.scs-container {
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 50px;
     margin-top: 3%;
@@ -21,12 +21,12 @@ parent {
     flex-grow: 1;
 }
 
-.container a {
+.scs-container a {
     text-decoration: underline;
 
 }
 
-.container a:hover {
+.scs-container a:hover {
     cursor: pointer;
 }
 
@@ -36,7 +36,7 @@ parent {
     padding-left: 24px;
 }
 
-.container h1 {
+.scs-container h1 {
     margin-left: 1%;
     margin-bottom: 1%;
 }
