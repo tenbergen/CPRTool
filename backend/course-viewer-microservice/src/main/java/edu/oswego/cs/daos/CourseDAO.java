@@ -15,9 +15,8 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 public class CourseDAO {
-    @Id
     @JsonbProperty("abbreviation") public String abbreviation;
-    @JsonbProperty("course_name") public String courseName;
+    @Id @JsonbProperty("course_name") public String courseName;
     @JsonbProperty("course_section") public String courseSection;
     @JsonbProperty("semester") public String semester;
     @JsonbProperty("students") @ElementCollection public List<String> students;
