@@ -11,8 +11,7 @@ import javax.persistence.Id;
 @Entity
 @NoArgsConstructor
 public class StudentDAO {
-    @Id
-    @JsonbProperty("email") public String email;
+    @Id @JsonbProperty("email") public String email;
     @JsonbProperty("abbreviation") public String abbreviation;
     @JsonbProperty("course_name") public String courseName;
     @JsonbProperty("course_section") public String courseSection;
