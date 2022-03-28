@@ -62,7 +62,7 @@ public class CourseInterface {
      * Find the course document from Mongo using the current course ID, then update the course document using the new infromation
      * passed from Frontend.
      */
-    public void updateCourse(CourseDAO dao) {
+    public String updateCourse(CourseDAO dao) {
         Document courseDocument = courseCollection.find(eq("course_id", dao.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
 
@@ -73,6 +73,7 @@ public class CourseInterface {
         Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(dao), MediaType.APPLICATION_JSON_TYPE);
         Document course = Document.parse(courseDAOEntity.getEntity());
         courseCollection.replaceOne(eq("course_id", courseID), course);
+        return dao.courseID;
     }
 
     /**

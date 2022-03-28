@@ -37,8 +37,8 @@ public class CourseManagerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/update")
     public Response updateCourse(CourseDAO course) {
-        new CourseInterface().updateCourse(course);
-        return Response.status(Response.Status.OK).entity("Course successfully updated.").build();
+        String courseID = new CourseInterface().updateCourse(course);
+        return Response.status(Response.Status.OK).entity(courseID).build();
     }
 
     @POST
