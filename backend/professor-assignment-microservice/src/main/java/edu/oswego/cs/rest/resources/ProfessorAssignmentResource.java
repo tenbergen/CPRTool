@@ -42,7 +42,7 @@ public class ProfessorAssignmentResource {
      */
     @POST
     @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
-    @Path("/courses/{courseID}/{assignmentID}/upload")
+    @Path("/courses/{courseID}/assignments/{assignmentID}/upload")
     public Response addFileToAssignment(List<IAttachment> attachments, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) throws Exception {
         for (IAttachment attachment : attachments) {
             if (attachment == null) continue;
