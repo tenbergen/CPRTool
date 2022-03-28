@@ -36,31 +36,36 @@ const EditCourseComponent = () => {
         }
 
         console.log(finalData)
-        await axios.put(updateUrl, finalData).then((res) =>{
-            console.log(res)
-            courseId = res.data
-            if (csvFormData.get("csv_file") == null) {
+        await axios.put(updateUrl, finalData)
+            .then((res) =>{
+                console.log(res)
+                courseId = res.data
                 window.alert("Course successfully updated!")
-                dispatch(getCourseDetailsAsync(res.data))
-                navigate("/details/professor/" + res.data)
-            }
-        })
-
-        // for csv
-        if (csvFormData.get("csv_file") != null) await uploadCsv()
+                if (csvFormData.get("csv_file") != null) {
+                    uploadCsv()
+                } else {
+                    dispatch(getCourseDetailsAsync(res.data))
+                    navigate("/details/professor/" + res.data)
+                }
+            })
+            .catch((e) => {
+                console.log(e)
+                window.alert("Error updating course. Please try again.")
+            })
     }
 
     const uploadCsv = async () => {
         await axios.post(uploadCsvUrl, csvFormData, { headers: { "Content-Type": "multipart/form-data" }})
             .then((res) =>{
                 console.log(res)
-                window.alert("Course successfully updated!")
-                dispatch(getCourseDetailsAsync(courseId))
-                navigate("/details/professor/" + courseId)
+                window.alert("CSV successfully uploaded!")
             })
             .catch((e) => {
                 console.log(e)
+                window.alert("Error uploading CSV. Please try again.")
             })
+        dispatch(getCourseDetailsAsync(courseId))
+        navigate("/details/professor/" + courseId)
     }
 
     const deleteCourse = async () => {
