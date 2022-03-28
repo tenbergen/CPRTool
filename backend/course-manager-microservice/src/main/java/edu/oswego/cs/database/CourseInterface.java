@@ -158,6 +158,7 @@ public class CourseInterface {
         cid = cid.substring(0, cid.length() - 4);
         System.out.println(cid);
         Document course = courseDB.getCollection("courses").find(new Document("course_id", cid)).first();
+        System.out.println(course);
         assert course != null;
         CourseDAO courseDAO = new CourseDAO(
                 course.get("abbreviation").toString(),
@@ -167,7 +168,7 @@ public class CourseInterface {
                 course.get("year").toString()
         );
 
-        ArrayList oldStudentList = (ArrayList) course.get("Students");
+        ArrayList oldStudentList = (ArrayList) course.get("students");
         ArrayList<String> newStudentList = new ArrayList<>();
         ArrayList<String> studentsToRemove = new ArrayList<>();
         ArrayList<String> studentsToAdd = new ArrayList<>();
