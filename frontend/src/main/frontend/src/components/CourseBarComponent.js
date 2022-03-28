@@ -3,6 +3,7 @@ import "./styles/CourseBar.css"
 import {useDispatch, useSelector} from "react-redux";
 import { getCoursesAsync, setCurrentCourse } from "../redux/features/courseSlice";
 import {Link} from "react-router-dom";
+import {setUserInformation} from "../redux/features/authSlice";
 
 const CourseBarLink = ({ active, course, onClick }) => {
     const role = useSelector((state) => state.auth.role)
@@ -31,6 +32,7 @@ const CourseBarComponent = () => {
 
     useEffect(() => {
         dispatch(getCoursesAsync())
+        dispatch(setUserInformation())
     }, [])
 
     const onCourseClick = (course) => {
