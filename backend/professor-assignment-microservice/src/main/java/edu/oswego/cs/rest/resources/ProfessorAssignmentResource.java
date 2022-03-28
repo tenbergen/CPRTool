@@ -4,13 +4,12 @@ import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.rest.daos.AssignmentDAO;
 import edu.oswego.cs.rest.daos.FileDAO;
 import edu.oswego.cs.rest.database.AssignmentInterface;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.List;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 
 @Path("professor")
 public class ProfessorAssignmentResource {
@@ -24,7 +23,7 @@ public class ProfessorAssignmentResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/courses/{courseID}/assignments/")
+    @Path("/courses/{courseID}/assignments")
     public Response viewAssignmentsByCourse(@PathParam("courseID") String courseID) {
         List<AssignmentDAO> specifiedAssignments = new AssignmentInterface().getAssignmentsByCourse(courseID);
         if (specifiedAssignments.isEmpty()) return Response.status(Response.Status.NOT_FOUND).entity("This assignment does not exist").build();
@@ -61,7 +60,7 @@ public class ProfessorAssignmentResource {
     @Path("/courses/create-assignment")
     public Response createAssignment(AssignmentDAO assignmentDAO) {
         new AssignmentInterface().createAssignment(assignmentDAO);
-        String assignmentSuccessfullyCreated = assignmentDAO.getCourseID() + ":" + assignmentDAO.getAssignmentName() + " successfully created.";
+        String assignmentSuccessfullyCreated = assignmentDAO.getCourseID() + ": " + assignmentDAO.getAssignmentName() + " successfully created.";
         return Response.status(Response.Status.OK).entity(assignmentSuccessfullyCreated).build();
     }
 
