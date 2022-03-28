@@ -5,7 +5,6 @@ import { getCoursesAsync, setCurrentCourse } from "../redux/features/courseSlice
 import {Link} from "react-router-dom";
 
 const CourseBarLink = ({ active, course, onClick }) => {
-    console.log(active)
     const normalStyle = { backgroundColor: "rgba(255, 255, 255, 0.25)" }
     const clickedStyle = { backgroundColor: "white" }
 

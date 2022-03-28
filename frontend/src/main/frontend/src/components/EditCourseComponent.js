@@ -2,42 +2,61 @@ import React from "react-dom";
 import { useState} from "react";
 import "./styles/EditCourse.css"
 import "./styles/DeleteModal.css"
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import { Form, Field } from 'react-final-form'
+import {getCourseDetailsAsync} from "../redux/features/courseSlice";
 
 const deleteUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/delete`
-const csvUrl = ""
+const updateUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/update`
+const uploadCsv = `${process.env.REACT_APP_URL}/manage/professor/courses/course/student/mass-add`
 
 const EditCourseComponent = () => {
     let navigate = useNavigate()
+    let dispatch = useDispatch()
     const currentCourse = useSelector((state) => state.courses.currentCourse)
     console.log(currentCourse)
 
     const [showModal, setShow] = useState(false)
-    const [file, setFile] = useState(null)
+    const csvFormData = new FormData()
 
     const fileChangeHandler = (event) => {
         let file = event.target.files[0];
         const renamedFile = new File([file], currentCourse.course_id, { type: file.type })
-        const fileFormData = new FormData()
-        fileFormData.append("File", renamedFile)
-        setFile(fileFormData)
+        csvFormData.set("csv_file", renamedFile)
+        console.log(csvFormData.get("csv_file"))
     }
 
-    const editCourse = (data) => {
-        console.log(data)
-        // await axios.post(editUrl, currentCourse).then((response) =>{
-        //     console.log(response)
-        // })
+    const updateCourse = async (data) => {
+        const finalData = {
+            ...data,
+            course_id: currentCourse.course_id
+        }
+        console.log(finalData)
+        await axios.put(updateUrl, finalData).then((res) =>{
+            console.log(res)
+            window.alert("Successfully saved!")
+            navigate("/details/" + res.data)
+            dispatch(getCourseDetailsAsync(res.data))
+        })
+
+        // for csv
+        // if (csvFormData.get("csv_file")!= null)  {
+        //     await axios.post(uploadCsv, csvFormData, {headers: { "Content-Type": "multipart/form-data" }})
+        //         .then((response) =>{
+        //             console.log(response.data)
+        //         })
+        //         .catch((e) => {
+        //             console.log(e)
+        //         })
+        // }
     }
 
     const deleteCourse = async () => {
         await axios.post(deleteUrl, currentCourse).then((response) => {
             console.log(response)
         })
-        navigate("/")
     }
 
     const Modal = () => {
@@ -58,7 +77,7 @@ const EditCourseComponent = () => {
         <div>
             <Form
                 onSubmit={formObj => {
-                    editCourse(formObj)
+                    updateCourse(formObj)
                 }}
                 initialValues={{
                     course_name: currentCourse.course_name,
@@ -66,6 +85,7 @@ const EditCourseComponent = () => {
                     semester: currentCourse.semester,
                     abbreviation: currentCourse.abbreviation,
                     year: currentCourse.year,
+                    crn: currentCourse.crn
                 }}>
                 {({ handleSubmit }) => (
                     <form onSubmit={handleSubmit} className="ecc-form">
@@ -77,6 +97,7 @@ const EditCourseComponent = () => {
                                         type="text"
                                         name="course_name"
                                         {...input}
+                                        required
                                     />
                                 )}
                             </Field>
@@ -91,6 +112,7 @@ const EditCourseComponent = () => {
                                             type="text"
                                             name="abbreviation"
                                             {...input}
+                                            required
                                         />
                                     )}
                                 </Field>
@@ -104,6 +126,7 @@ const EditCourseComponent = () => {
                                             type="text"
                                             name="course_section"
                                             {...input}
+                                            required
                                         />
                                     )}
                                 </Field>
@@ -119,6 +142,7 @@ const EditCourseComponent = () => {
                                             type="text"
                                             name="semester"
                                             {...input}
+                                            required
                                         />
                                     )}
                                 </Field>
@@ -131,6 +155,7 @@ const EditCourseComponent = () => {
                                             type="text"
                                             name="year"
                                             {...input}
+                                            required
                                         />
                                     )}
                                 </Field>
@@ -174,6 +199,7 @@ const EditCourseComponent = () => {
                                 onChange={fileChangeHandler}
                                 type="file"
                                 name="course_csv"
+                                accept=".csv"
                                 // required
                             />
                         </div>

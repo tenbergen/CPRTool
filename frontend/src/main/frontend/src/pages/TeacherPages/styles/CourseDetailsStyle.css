@@ -34,7 +34,7 @@
     padding: 0 5% 0 5%;
 }
 
-.container a:hover {
+.cdp-component-links p:hover {
     cursor: pointer;
 }
 
