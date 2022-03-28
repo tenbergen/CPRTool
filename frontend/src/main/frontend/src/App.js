@@ -1,4 +1,4 @@
-import TeacherDashboardPage from "./pages/TeacherPages/TeacherDashboardPage";
+import ProfessorDashboardPage from "./pages/TeacherPages/ProfessorDashboardPage";
 import LoginPage from "./pages/AuthPages/LoginPage";
 import { useDispatch, useSelector } from "react-redux";
 import "./global_styles/global.css";
@@ -20,7 +20,7 @@ function App() {
     <div>
         {isAuthenticated ?
           <div>
-            {role === "professor" && <TeacherDashboardPage/>}
+            {role === "professor" && <ProfessorDashboardPage/>}
             {role === "student" && <StudentDashboardPage/>}
           </div>
         : <LoginPage/>}

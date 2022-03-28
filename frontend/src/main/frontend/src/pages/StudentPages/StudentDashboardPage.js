@@ -1,10 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect } from 'react';
 import { Link } from "react-router-dom";
 import SidebarComponent from "../../components/SidebarComponent";
 import "./styles/StudentDashboardStyle.css"
 import { useDispatch, useSelector } from "react-redux";
 import {getCourseDetailsAsync, getCoursesAsync} from "../../redux/features/courseSlice";
-import CourseBarComponent from "../../components/CourseBarComponent";
 
 function StudentDashboardPage() {
     const dispatch = useDispatch()
@@ -30,7 +29,7 @@ function StudentDashboardPage() {
                 <h2> Hello {user}</h2>
                 <div id="courseList">
                     {courses.map(course =>
-                        <Link to={"/todoCourse/" + course.course_id} onClick={() => courseClickHandler(course)} state={{from: course}}>
+                        <Link to={"/details/student/" + course.course_id} onClick={() => courseClickHandler(course)} state={{from: course}}>
                             <li className="courseListItem">{course.course_id + "\n\n"  + course.course_name}</li>
                         </Link>)}
                 </div>

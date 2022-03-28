@@ -10,12 +10,13 @@ import {getCourseDetailsAsync} from "../redux/features/courseSlice";
 
 const deleteUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/delete`
 const updateUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/update`
-const uploadCsv = `${process.env.REACT_APP_URL}/manage/professor/courses/course/student/mass-add`
+const uploadCsvUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/student/mass-add`
 
 const EditCourseComponent = () => {
     let navigate = useNavigate()
     let dispatch = useDispatch()
     const currentCourse = useSelector((state) => state.courses.currentCourse)
+    let courseId = currentCourse.course_id
     console.log(currentCourse)
 
     const [showModal, setShow] = useState(false)
@@ -33,30 +34,40 @@ const EditCourseComponent = () => {
             ...data,
             course_id: currentCourse.course_id
         }
+
         console.log(finalData)
         await axios.put(updateUrl, finalData).then((res) =>{
             console.log(res)
-            window.alert("Successfully saved!")
-            navigate("/details/" + res.data)
-            dispatch(getCourseDetailsAsync(res.data))
+            courseId = res.data
+            if (csvFormData.get("csv_file") == null) {
+                window.alert("Course successfully updated!")
+                dispatch(getCourseDetailsAsync(res.data))
+                navigate("/details/" + res.data)
+            }
         })
 
         // for csv
-        // if (csvFormData.get("csv_file")!= null)  {
-        //     await axios.post(uploadCsv, csvFormData, {headers: { "Content-Type": "multipart/form-data" }})
-        //         .then((response) =>{
-        //             console.log(response.data)
-        //         })
-        //         .catch((e) => {
-        //             console.log(e)
-        //         })
-        // }
+        if (csvFormData.get("csv_file") != null) await uploadCsv()
+    }
+
+    const uploadCsv = async () => {
+        await axios.post(uploadCsvUrl, csvFormData, { headers: { "Content-Type": "multipart/form-data" }})
+            .then((res) =>{
+                console.log(res)
+                window.alert("Course successfully updated!")
+                dispatch(getCourseDetailsAsync(courseId))
+                navigate("/details/" + res.data)
+            })
+            .catch((e) => {
+                console.log(e)
+            })
     }
 
     const deleteCourse = async () => {
         await axios.post(deleteUrl, currentCourse).then((response) => {
             console.log(response)
         })
+        navigate("/")
     }
 
     const Modal = () => {

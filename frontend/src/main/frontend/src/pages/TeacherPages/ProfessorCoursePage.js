@@ -1,6 +1,6 @@
 import React from "react-dom";
 import {useEffect, useState} from "react";
-import "./styles/CourseDetailsStyle.css"
+import "./styles/ProfessorCourseStyle.css"
 import SidebarComponent from "../../components/SidebarComponent"
 import RosterComponent from "../../components/RosterComponent"
 import { useParams } from "react-router-dom";
@@ -10,15 +10,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {getCourseDetailsAsync} from "../../redux/features/courseSlice";
 import CourseBarComponent from "../../components/CourseBarComponent";
 
-const DetailComponent = ({ active, component, onClick }) => {
+const CourseComponent = ({ active, component, onClick }) => {
     return (
-        <p onClick={onClick} className={active ? "cdp-component-link-clicked" : "cdp-component-link"}>
+        <p onClick={onClick} className={active ? "pcp-component-link-clicked" : "pcp-component-link"}>
             {component}
         </p>
     );
 };
 
-function CourseDetailsPage() {
+function ProfessorCoursePage() {
     let dispatch = useDispatch()
     let { courseId } = useParams();
     const isDataLoaded = useSelector((state) => state.courses.currentCourseLoaded)
@@ -33,14 +33,14 @@ function CourseDetailsPage() {
     return (
         <div>
         { isDataLoaded ?
-            <div className="cdp-parent">
+            <div className="pcp-parent">
                 <SidebarComponent/>
-                <div className="cdp-container">
+                <div className="pcp-container">
                     <CourseBarComponent/>
-                    <div className="cdp-components">
-                        <div className="cdp-component-links">
+                    <div className="pcp-components">
+                        <div className="pcp-component-links">
                             {components.map(t => (
-                                <DetailComponent
+                                <CourseComponent
                                     key={t}
                                     component={t}
                                     active={t === chosen}
@@ -61,4 +61,4 @@ function CourseDetailsPage() {
     )
 }
 
-export default CourseDetailsPage
+export default ProfessorCoursePage

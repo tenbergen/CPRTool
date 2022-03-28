@@ -5,11 +5,12 @@ import { getCoursesAsync, setCurrentCourse } from "../redux/features/courseSlice
 import {Link} from "react-router-dom";
 
 const CourseBarLink = ({ active, course, onClick }) => {
+    const role = useSelector((state) => state.auth.role)
     const normalStyle = { backgroundColor: "rgba(255, 255, 255, 0.25)" }
     const clickedStyle = { backgroundColor: "white" }
 
     return (
-        <Link to={"/details/" + course.course_id} onClick={onClick}>
+        <Link to={`/details/${role}/${course.course_id}`} onClick={onClick}>
             <tr>
                 <td style={active ? clickedStyle : normalStyle} >
                     <div className="colorForTable"/>

@@ -1,4 +1,4 @@
-.cdp-parent {
+.pcp-parent {
     display: flex;
     flex-direction: row;
     overflow: auto;
@@ -9,7 +9,7 @@
      #57E1B2 385.81deg);
 }
 
-.cdp-container {
+.pcp-container {
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 50px;
     margin: 3% 5% 3% 2%;
@@ -18,14 +18,14 @@
     flex-direction: row;
 }
 
-.cdp-components {
+.pcp-components {
     border-radius: 50px;
     flex-grow: 1;
     padding: 2%;
     background-color: rgba(255, 255, 255, 0.5);
 }
 
-.cdp-component-links {
+.pcp-component-links {
     display: flex;
     flex-direction: row;
     font-weight: bold;
@@ -34,23 +34,18 @@
     padding: 0 5% 0 5%;
 }
 
-.cdp-component-links p:hover {
+.pcp-component-links p:hover {
     cursor: pointer;
 }
 
-.cdp-component-link {
+.pcp-component-link {
     font-size: 24px;
     padding-left: 24px;
 }
 
-.cdp-component-link-clicked {
+.pcp-component-link-clicked {
     font-size: 24px;
     padding-left: 24px;
     text-decoration: underline;
     color: #5267A3
-}
-
-.container h1 {
-    margin-left: 1%;
-    margin-bottom: 1%;
 }

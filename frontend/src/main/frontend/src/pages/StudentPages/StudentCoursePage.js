@@ -1,49 +1,56 @@
 import React from "react-dom";
-import {useEffect,useState} from "react";
+import { useEffect,useState } from "react";
 import "./styles/StudentCourseStyle.css";
 import SidebarComponent from "../../components/SidebarComponent";
 import ToDoComponent from "../../components/ToDoComponent";
 import CourseBarComponent from "../../components/CourseBarComponent";
 import SubmittedComponent from "../../components/SubmittedComponent";
-import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {getCourseDetailsAsync} from "../../redux/features/courseSlice";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getCourseDetailsAsync } from "../../redux/features/courseSlice";
 
+const CourseComponent = ({ active, component, onClick }) => {
+    return (
+        <p onClick={onClick} className={active ? "scp-component-link-clicked" : "scp-component-link"}>
+            {component}
+        </p>
+    );
+};
 
 function StudentCoursePage() {
     let dispatch = useDispatch()
     let { courseId } = useParams();
     const isDataLoaded = useSelector((state) => state.courses.currentCourseLoaded)
 
+    const components = ["To Do", "Submitted"];
+    const [chosen, setChosen] = useState("To Do");
+
     useEffect( () => {
-        console.log("Hello")
         dispatch(getCourseDetailsAsync(courseId))
     }, [])
-
-    const [showTodo, setShowTodo] = useState(true);
-    const handleShowTodo = () => {
-        setShowTodo(true);
-        setShowSubmitted(false);
-    }
-
-    const [showSubmitted, setShowSubmitted] = useState(false);
-    const handleShowSubmitted = () => {
-        setShowTodo(false);
-        setShowSubmitted(true);
-    }
 
     return (
         <div>
             { isDataLoaded ?
-            <div className={"scs-parent"}>
+            <div className="scp-parent">
                 <SidebarComponent/>
-                <div className="scs-container">
-                    <h1>Assignments</h1>
-                    <a onClick={handleShowTodo} className="assSubTodo" target="_blank">To Do</a>
-                    <a onClick={handleShowSubmitted} className="assSubTodo" target="_blank">Submitted</a>
-                    <div>
-                        {showTodo ? <ToDoComponent/>:null}
-                        {showSubmitted ? <SubmittedComponent/>:null}
+                <div className="scp-container">
+                    <CourseBarComponent/>
+                    <div className="scp-component">
+                        <div className="scp-component-links">
+                            {components.map(t => (
+                                <CourseComponent
+                                    key={t}
+                                    component={t}
+                                    active={t === chosen}
+                                    onClick={() => setChosen(t)}
+                                />
+                            ))}
+                        </div>
+                        <div>
+                            {chosen === "To Do" && <ToDoComponent/>}
+                            {chosen === "Submitted" && <SubmittedComponent/>}
+                        </div>
                     </div>
                 </div>
             </div> : null }
