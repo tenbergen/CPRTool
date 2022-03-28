@@ -1,6 +1,8 @@
 package edu.oswego.cs.rest.database;
 
-import com.mongodb.client.*;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.rest.daos.AssignmentDAO;
 import edu.oswego.cs.rest.daos.FileDAO;
 import org.apache.commons.io.FileUtils;
@@ -12,14 +14,11 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -29,51 +28,20 @@ public class AssignmentInterface {
     static MongoCollection<Document> assignmentsCollection;
     private final List<AssignmentDAO> assignments = new ArrayList<>();
 
-    FileDAO fileDAO;
-    AssignmentDAO assignmentDAO;
-    static String asgmtCollection = "assignments";
     static String reg;
     static int nextPos = 0;
 
-    public AssignmentInterface() throws Exception {
+    public AssignmentInterface() {
         try {
             DatabaseManager manager = new DatabaseManager();
             assignmentDatabase = manager.getAssignmentDB();
             assignmentsCollection = assignmentDatabase.getCollection("assignments");
-        } catch (Exception e) {
-            e.printStackTrace(System.out);
-            throw new Exception("No connection to the ass DB");
+        } catch (WebApplicationException e) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
         }
     }
 
     public void createAssignment(AssignmentDAO assignmentDAO) {
-        this.assignmentDAO = assignmentDAO;
-        if (makeNewDataBaseEntry())
-            makeFileStructure();
-    }
-
-    private boolean makeNewDataBaseEntry() {
-        if (!collectionExists())
-            assignmentDatabase.createCollection(asgmtCollection);
-        try {
-            MongoCollection<Document> assignmentCollection = assignmentDatabase.getCollection(asgmtCollection);
-            Document assignment = new Document()
-                    .append("course_id", assignmentDAO.getCourseID())
-                    .append("assignment_id", nextPos)
-                    .append("assignment_name", assignmentDAO.getAssignmentName())
-                    .append("instructions", assignmentDAO.getInstructions())
-                    .append("due_date", assignmentDAO.getDueDate())
-                    .append("points", assignmentDAO.getPoints());
-            assignmentCollection.insertOne(assignment);
-            return true;
-        } catch (Exception e){
-            return false;
-        }
-    }
-
-    public static void updateAssignment(AssignmentDAO assignmentDAO, String courseID, int assignmentID) {
-
-        MongoCollection<Document> assignmentCollection = assignmentDatabase.getCollection(asgmtCollection);
         Document assignment = new Document()
                 .append("course_id", assignmentDAO.getCourseID())
                 .append("assignment_id", nextPos)
@@ -81,67 +49,52 @@ public class AssignmentInterface {
                 .append("instructions", assignmentDAO.getInstructions())
                 .append("due_date", assignmentDAO.getDueDate())
                 .append("points", assignmentDAO.getPoints());
+        assignmentsCollection.insertOne(assignment);
 
-        for (Document document : assignmentCollection.find()) {
-            boolean courseMatch = document.get("course_id").equals(courseID);
-            boolean assignmentMatch = document.get("assignment_id").equals(assignmentID);
-            System.out.println("----------------------------" + (courseMatch && assignmentMatch));
-            if (courseMatch && assignmentMatch) {
-                System.out.println(document.get("course_id").toString() + document.get("assignment_id").toString());
-                assignmentCollection.updateOne(document, assignment);
-            }
+        String FileStructure = getRelPath() + "courses" + reg + assignmentDAO.getCourseID() + reg;
+        File dir = new File(FileStructure);
+        if (!dir.mkdirs()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create directory at " + dir.getAbsolutePath()).build());
+
+        String[] dirList = dir.list();
+        if (dirList == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Directory must exist to make file structure.").build());
+
+        if (dirList.length != 0) {
+            nextPos = Arrays.stream(dirList)
+                    .map(Integer::parseInt)
+                    .max(Integer::compare)
+                    .orElse(-9999) + 1;
         }
+
+        FileStructure += nextPos;
+        if (!new File(FileStructure + reg + "TeamSubmissions").mkdirs())
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create team submission directory.").build());
+        if (!new File(FileStructure + reg + "PeerReviews").mkdirs())
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create peer review directory.").build());
+        if (!new File(FileStructure + reg + "assignments").mkdirs())
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create assignments directory.").build());
+
+    }
+
+    public static void updateAssignment(AssignmentDAO assignmentDAO, String courseID, int assignmentID) {
+        Document assignmentDocument = assignmentsCollection.find(eq("assignment_id", assignmentID)).first();
+        if (assignmentDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
+        Jsonb jsonb = JsonbBuilder.create();
+        Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(assignmentDAO), MediaType.APPLICATION_JSON_TYPE);
+        Document course = Document.parse(courseDAOEntity.getEntity());
+        assignmentDatabase.getCollection("assignments").replaceOne(eq("course_id", courseID), course);
     }
 
     public void writeToAssignment(FileDAO fileDAO) throws IOException {
-        this.fileDAO = fileDAO;
         String FileStructure = getRelPath()
                 + "courses" + reg
                 + fileDAO.getCourseID() + reg
                 + fileDAO.getAssignmentID() + reg
-                + "assignments" + reg;
-        fileDAO.writeFile(FileStructure + fileDAO.getFilename());
+                + "assignments";
+        fileDAO.writeFile(FileStructure + reg + fileDAO.getFilename());
     }
 
     public static String findAssignment(String courseID, int assID) {
-        return getRelPath() + "courses" + reg + courseID + reg + assID;
-    }
-
-    private static boolean collectionExists() {
-        MongoIterable<String> list = assignmentDatabase.listCollectionNames();
-        for (String s : list) {
-            if (s.equals(asgmtCollection)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void makeFileStructure() {
-        String FileStructure = getRelPath() + "courses" + reg + assignmentDAO.getCourseID() + reg;
-        String notNullMsg = "directory must exist to make file structure";
-        File dir = new File(FileStructure);
-
-        if (dir.mkdirs())
-            System.out.println("DIRECTORY SUCCESSFULLY CREATED AT: \n" + dir.getAbsolutePath());
-
-        if (Objects.requireNonNull(dir.list(), notNullMsg).length != 0) {
-            nextPos = Arrays.stream(Objects.requireNonNull(dir.list(), notNullMsg))
-                    .map(Integer::parseInt)
-                    .max(Integer::compare)
-                    .orElse(-9999) + 1;
-
-        }
-        FileStructure += nextPos;
-        if (new File(FileStructure + reg + "TeamSubmissions").mkdirs())
-            System.out.println(" TEAM_SUBMISSIONS DIRECTORY SUCCESSFULLY CREATED");
-
-        if (new File(FileStructure + reg + "PeerReviews").mkdirs())
-            System.out.println(" PEER_REVIEWS DIRECTORY SUCCESSFULLY CREATED");
-
-        if (new File(FileStructure + reg + "assignments").mkdirs())
-            System.out.println(" ASSIGNMENTS DIRECTORY SUCCESSFULLY CREATED");
-
+        return getRelPath() + "courses" + reg + courseID + reg + assID + reg + "assignments";
     }
 
     /**
@@ -168,16 +121,14 @@ public class AssignmentInterface {
     }
 
     public List<AssignmentDAO> getAssignmentsByCourse(String courseID) {
-        MongoCollection<Document> assignmentCollection = assignmentDatabase.getCollection(asgmtCollection);
-        for (Document document : assignmentCollection.find()) {
+        for (Document document : assignmentsCollection.find()) {
             if (document.get("course_id").equals(courseID)) {
                 AssignmentDAO assignmentDAO = new AssignmentDAO(
-                        (String) document.get("assignment_name"),
-                        (String) document.get("instructions"),
-                        (String) document.get("due_date"),
-                        (String) document.get("course_id"),
-                        (int) document.get("points")
-
+                        document.getString("assignment_name"),
+                        document.getString("instructions"),
+                        document.getString("due_date"),
+                        document.getString("course_id"),
+                        document.getInteger("points")
                 );
                 assignments.add(assignmentDAO);
             }
@@ -186,15 +137,13 @@ public class AssignmentInterface {
     }
 
     public List<AssignmentDAO> getAllAssignments() {
-
-        MongoCollection<Document> assignmentCollection = assignmentDatabase.getCollection(asgmtCollection);
-        for (Document document : assignmentCollection.find()) {
+        for (Document document : assignmentsCollection.find()) {
             AssignmentDAO assignmentDAO = new AssignmentDAO(
-                    (String) document.get("assignment_name"),
-                    (String) document.get("instructions"),
-                    (String) document.get("due_date"),
-                    (String) document.get("course_id"),
-                    (int) document.get("points")
+                    document.getString("assignment_name"),
+                    document.getString("course_id"),
+                    document.getString("due_date"),
+                    document.getString("instructions"),
+                    document.getInteger("points")
             );
             assignments.add(assignmentDAO);
         }
@@ -202,22 +151,22 @@ public class AssignmentInterface {
     }
 
     public void remove(int AssignmentID, String courseID) throws IOException {
-        MongoCursor<Document> results = assignmentDatabase.getCollection(asgmtCollection).find(new Document()
+        MongoCursor<Document> results = assignmentDatabase.getCollection("assignments").find(new Document()
                 .append("course_id", courseID)
                 .append("assignment_id", AssignmentID)).iterator();
-        if (!results.hasNext()) throw new IOException("No Assignment by this name found");
+        if (!results.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
         String relativePathPrefix = getRelPath();
 
         while (results.hasNext()) {
             Document ass = results.next();
             String Destination = relativePathPrefix + "courses" + reg + courseID + reg + ass.get("assignment_id");
             FileUtils.deleteDirectory(new File(Destination));
-            assignmentDatabase.getCollection(asgmtCollection).findOneAndDelete(ass);
+            assignmentDatabase.getCollection("assignments").findOneAndDelete(ass);
         }
     }
 
     public static String findFile(String courseID, int assignmentID, String fileName){
-        return getRelPath() + "courses" + reg + courseID + reg + assignmentID + "assignments" + reg + fileName;
+        return getRelPath() + "courses" + reg + courseID + reg + assignmentID + reg + "assignments" + reg + fileName;
     }
 
 }
