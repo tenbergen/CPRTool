@@ -14,17 +14,11 @@ import javax.persistence.Id;
 @Entity
 public class AssignmentDAO {
 
-    @Id
-    @JsonbProperty("assignment_name")
-    String assignmentName;
-    @JsonbProperty("instructions")
-    String instructions;
-    @JsonbProperty("due_date")
-    String dueDate;
-    @JsonbProperty("course_id")
-    String courseID;
-    @JsonbProperty("points")
-    int points;
+    @Id @JsonbProperty("assignment_name") String assignmentName;
+    @JsonbProperty("instructions") String instructions;
+    @JsonbProperty("due_date") String dueDate;
+    @JsonbProperty("course_id") String courseID;
+    @JsonbProperty("points") int points;
 
     /**
      * basic AllArgsConstructor: all fields need to filled in order to work, INCLUDING COURSE_ID.
@@ -43,5 +37,4 @@ public class AssignmentDAO {
         this.courseID = courseID;
         this.points = points;
     }
-
 }
