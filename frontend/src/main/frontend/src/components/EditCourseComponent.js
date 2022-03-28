@@ -42,7 +42,7 @@ const EditCourseComponent = () => {
             if (csvFormData.get("csv_file") == null) {
                 window.alert("Course successfully updated!")
                 dispatch(getCourseDetailsAsync(res.data))
-                navigate("/details/" + res.data)
+                navigate("/details/professor/" + res.data)
             }
         })
 
@@ -56,7 +56,7 @@ const EditCourseComponent = () => {
                 console.log(res)
                 window.alert("Course successfully updated!")
                 dispatch(getCourseDetailsAsync(courseId))
-                navigate("/details/" + res.data)
+                navigate("/details/professor/" + courseId)
             })
             .catch((e) => {
                 console.log(e)
