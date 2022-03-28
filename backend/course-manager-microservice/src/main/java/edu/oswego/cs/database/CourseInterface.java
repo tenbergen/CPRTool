@@ -174,7 +174,7 @@ public class CourseInterface {
                 course.get("year").toString()
         );
 
-        List<String> oldStudentList = course.getList("Students", String.class);
+        List<String> oldStudentList = course.getList("students", String.class);
         ArrayList<String> newStudentList = new ArrayList<>();
         ArrayList<String> studentsToRemove = new ArrayList<>();
         ArrayList<String> studentsToAdd = new ArrayList<>();
