@@ -26,10 +26,6 @@ public class AssignmentDAO {
     @JsonbProperty("points")
     int points;
 
-    /**
-     * basic AllArgsConstructor: all fields need to filled in order to work, INCLUDING COURSE_ID.
-     * Fill course_id with dummy information, it will be updated via the PathParam {courseID}
-     **/
     @JsonbCreator
     public AssignmentDAO(
             @NonNull @JsonbProperty("assignment_name") String assignmentName,

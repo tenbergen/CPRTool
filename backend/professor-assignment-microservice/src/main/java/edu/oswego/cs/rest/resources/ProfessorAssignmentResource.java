@@ -34,10 +34,10 @@ public class ProfessorAssignmentResource {
     @Path("/courses/{courseID}/assignments/")
     public Response viewAssignmentsByCourse(@PathParam("courseID") String courseID) {
         try {
-            List<AssignmentDAO> specifiedAssignments = new AssignmentInterface().getAssignmentsByCourse(courseID);
-            if (specifiedAssignments.isEmpty())
-                return Response.status(Response.Status.NOT_FOUND).entity("This assignment does not exist").build();
-            return Response.status(Response.Status.OK).entity(specifiedAssignments).build();
+            List<AssignmentDAO> specifiedCourse = new AssignmentInterface().getAssignmentsByCourse(courseID);
+            if (specifiedCourse.isEmpty())
+                return Response.status(Response.Status.NOT_FOUND).entity("This course does not exist").build();
+            return Response.status(Response.Status.OK).entity(specifiedCourse).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Failed to fetch assignments.").build();
         }
@@ -96,4 +96,16 @@ public class ProfessorAssignmentResource {
         return Response.status(Response.Status.OK).entity("Assignment Successfully Deleted").build();
     }
 
+    @PUT
+    @Path("/courses/{courseID}/assignments/{assignmentID}/edit")
+    public Response updateAssignment(AssignmentDAO assignmentDAO, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID){
+        try {
+            AssignmentInterface.updateAssignment(assignmentDAO, courseID, assignmentID);
+            String assignmentSuccessfullyUpdated = assignmentDAO.getCourseID() + ":" + assignmentDAO.getAssignmentName() + " Successfully updated";
+            return Response.status(Response.Status.OK).entity(assignmentSuccessfullyUpdated).build();
+        } catch (Exception e){
+            String assignmentFailedUpdate = assignmentDAO.getCourseID() + ":" + assignmentDAO.getAssignmentName() + " failed to update";
+            return Response.status(Response.Status.BAD_REQUEST).entity(assignmentFailedUpdate).build();
+        }
+    }
 }
