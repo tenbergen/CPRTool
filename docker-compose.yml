@@ -8,7 +8,7 @@ services:
         CLIENT_ID: ${CLIENT_ID}
     container_name: cpr-frontend
     restart: unless-stopped
-      
+
   login:
     build:
       context: ./backend/login-microservice
@@ -65,7 +65,7 @@ services:
     container_name: cpr-professor-assignment
     restart: unless-stopped
     volumes:
-      - ./professor-assignment-microservice:/professor-assignment-microservice
+      - ./assignments/courses:/opt/ol/wlp/output/defaultServer/courses
     environment:
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
