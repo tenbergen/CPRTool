@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "./styles/CourseBar.css"
 import {useDispatch, useSelector} from "react-redux";
-import { getCoursesAsync, setCurrentCourse } from "../redux/features/courseSlice";
+import {getCourseDetailsAsync, getCoursesAsync } from "../redux/features/courseSlice";
 import {Link} from "react-router-dom";
 import {setUserInformation} from "../redux/features/authSlice";
 
@@ -37,7 +37,7 @@ const CourseBarComponent = () => {
 
     const onCourseClick = (course) => {
         setChosen(course.course_id)
-        dispatch(setCurrentCourse(course))
+        dispatch(getCourseDetailsAsync(course.course_id))
     }
 
     return (

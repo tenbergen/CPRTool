@@ -36,9 +36,6 @@ const courseSlice = createSlice({
     reducers: {
         addCourse: (state, action) => {
             state.courses.push(action.payload)
-        },
-        setCurrentCourse: (state, action) => {
-            state.currentCourse = action.payload
         }
     },
     extraReducers: {
@@ -55,6 +52,6 @@ const courseSlice = createSlice({
     }
 })
 
-export const { addCourse, setCurrentCourse } = courseSlice.actions
+export const { addCourse } = courseSlice.actions
 
 export default courseSlice.reducer
