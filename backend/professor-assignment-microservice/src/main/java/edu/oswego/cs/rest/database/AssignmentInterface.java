@@ -23,11 +23,9 @@ import java.util.List;
 import static com.mongodb.client.model.Filters.eq;
 
 public class AssignmentInterface {
-
     static MongoDatabase assignmentDatabase;
     static MongoCollection<Document> assignmentsCollection;
     private final List<AssignmentDAO> assignments = new ArrayList<>();
-
     static String reg;
     static int nextPos = 0;
     static boolean isWindows = false;
@@ -43,21 +41,11 @@ public class AssignmentInterface {
     }
 
     public void createAssignment(AssignmentDAO assignmentDAO) {
-        Document assignment = new Document()
-                .append("course_id", assignmentDAO.getCourseID())
-                .append("assignment_id", nextPos)
-                .append("assignment_name", assignmentDAO.getAssignmentName())
-                .append("instructions", assignmentDAO.getInstructions())
-                .append("due_date", assignmentDAO.getDueDate())
-                .append("points", assignmentDAO.getPoints());
-        if (assignmentsCollection.find(assignment).iterator().hasNext()) {
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This assignment already exists.").build());
-        }
-        assignmentsCollection.insertOne(assignment);
-        String FileStructure = getRelPath() + "courses" + reg + assignmentDAO.getCourseID() + reg;
+        String FileStructure = getRelPath() + "assignments" + reg + assignmentDAO.getCourseID() + reg;
 
         File dir = new File(FileStructure);
-        if (!dir.mkdirs() && !dir.exists()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create directory at " + dir.getAbsolutePath()).build());
+        if (!dir.mkdirs() && !dir.exists())
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create directory at " + dir.getAbsolutePath()).build());
 
         String[] dirList = dir.list();
         if (dirList == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Directory must exist to make file structure.").build());
@@ -76,6 +64,8 @@ public class AssignmentInterface {
                 .append("instructions", assignmentDAO.getInstructions())
                 .append("due_date", assignmentDAO.getDueDate())
                 .append("points", assignmentDAO.getPoints());
+        MongoCursor<Document> query = assignmentsCollection.find(assignment).iterator();
+        if (query.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This assignment already exists.").build());
         assignmentsCollection.insertOne(assignment);
 
         FileStructure += nextPos;
@@ -85,7 +75,6 @@ public class AssignmentInterface {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create peer review directory.").build());
         if (!new File(FileStructure + reg + "assignments").mkdirs())
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create assignments directory.").build());
-
     }
 
     public static void updateAssignment(AssignmentDAO assignmentDAO, String courseID, int assignmentID) {
