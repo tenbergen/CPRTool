@@ -50,7 +50,7 @@ public class AssignmentInterface {
                 .append("instructions", assignmentDAO.getInstructions())
                 .append("due_date", assignmentDAO.getDueDate())
                 .append("points", assignmentDAO.getPoints());
-        assignmentsCollection.insertOne(assignment);
+        if(!assignmentsCollection.find(assignment).iterator().hasNext())assignmentsCollection.insertOne(assignment);
         String FileStructure =  getRelPath() +"courses" + reg + assignmentDAO.getCourseID() + reg;
 
         File dir = new File(FileStructure);
