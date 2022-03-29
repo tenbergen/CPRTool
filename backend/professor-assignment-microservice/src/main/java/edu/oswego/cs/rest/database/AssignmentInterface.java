@@ -52,6 +52,7 @@ public class AssignmentInterface {
         assignmentsCollection.insertOne(assignment);
 
         String FileStructure = getRelPath() + "courses" + reg + assignmentDAO.getCourseID() + reg;
+
         File dir = new File(FileStructure);
         if (!dir.mkdirs()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create directory at " + dir.getAbsolutePath()).build());
 
@@ -98,19 +99,25 @@ public class AssignmentInterface {
     public static String getRelPath() {
         String path = (System.getProperty("user.dir").contains("\\")) ? System.getProperty("user.dir").replace("\\", "/") : System.getProperty("user.dir");
         String[] slicedPath = path.split("/");
-        String targetDir = "professor-assignment-microservice";
-        int i;
+        throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(slicedPath).build());
+        /*
+        String targetDir = "";
         StringBuilder relativePathPrefix = new StringBuilder();
         System.out.println(Arrays.toString(slicedPath));
-        for (i = slicedPath.length - 1; !slicedPath[i].equals(targetDir); i--) {
+        System.out.println(slicedPath[0]);
+        for (int i = slicedPath.length-1; !slicedPath[i].equals(targetDir);i--) {
             relativePathPrefix.append("../");
         }
+        System.out.println(relativePathPrefix.toString());
         reg = "/";
         if (System.getProperty("user.dir").contains("\\")) {
             reg = "\\";
             relativePathPrefix = new StringBuilder(relativePathPrefix.toString().replace("/", "\\"));
         }
+
         return relativePathPrefix.toString();
+
+         */
     }
 
     public List<AssignmentDAO> getAssignmentsByCourse(String courseID) {
