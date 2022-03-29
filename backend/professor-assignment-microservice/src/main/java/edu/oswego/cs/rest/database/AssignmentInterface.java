@@ -51,7 +51,7 @@ public class AssignmentInterface {
                 .append("points", assignmentDAO.getPoints());
         assignmentsCollection.insertOne(assignment);
 
-        String FileStructure =  System.getProperty("user.dir") + reg +"courses" + reg + assignmentDAO.getCourseID() + reg;
+        String FileStructure =  getRelPath() + reg +"courses" + reg + assignmentDAO.getCourseID() + reg;
 
         File dir = new File(FileStructure);
         if (!dir.mkdirs()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create directory at " + dir.getAbsolutePath()).build());
@@ -99,7 +99,7 @@ public class AssignmentInterface {
     public static String getRelPath() {
         String path = (System.getProperty("user.dir").contains("\\")) ? System.getProperty("user.dir").replace("\\", "/") : System.getProperty("user.dir");
         String[] slicedPath = path.split("/");
-        String targetDir = "opt";
+        String targetDir = "defaultServer";
         StringBuilder relativePathPrefix = new StringBuilder();
         System.out.println(Arrays.toString(slicedPath));
         System.out.println(slicedPath[0]);
