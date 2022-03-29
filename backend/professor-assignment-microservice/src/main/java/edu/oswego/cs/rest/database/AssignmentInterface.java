@@ -98,7 +98,7 @@ public class AssignmentInterface {
     }
 
     public void writeToAssignment(FileDAO fileDAO) throws IOException {
-        String FileStructure = getRelPath() + reg + "courses" + reg + fileDAO.getCourseID() + reg + fileDAO.getAssignmentID();
+        String FileStructure = getRelPath() + reg + "assignments" + reg + fileDAO.getCourseID() + reg + fileDAO.getAssignmentID();
         System.out.println(FileStructure);
         fileDAO.writeFile(FileStructure + reg + fileDAO.getFilename());
     }
