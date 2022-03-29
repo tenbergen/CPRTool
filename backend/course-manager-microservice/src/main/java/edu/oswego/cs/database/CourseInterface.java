@@ -274,7 +274,9 @@ public class CourseInterface {
         cid = cid.substring(0,cid.length()-4);
         System.out.println(cid);
         Document course = courseDatabase.getCollection(courseCollection).find(new Document(CID,cid)).first();
-        CourseDAO courseDAO = new CourseDAO(course.get("CourseName").toString(),Integer.parseInt(course.get("CourseSection").toString()),course.get("Semester").toString(),course.get("Abbreviation").toString());
+        CourseDAO courseDAO = new CourseDAO(course.get("CourseName").toString(),Integer.parseInt(
+                course.get("CourseSection").toString()),course.get("Semester").toString(),
+                course.get("Abbreviation").toString());
         ArrayList oldStudentList = (ArrayList) course.get("Students");
         ArrayList<String> newStudentList = new ArrayList<>();
         ArrayList<String> studentsToRemove = new ArrayList<>();

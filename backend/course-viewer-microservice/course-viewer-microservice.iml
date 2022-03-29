@@ -6,6 +6,9 @@
         <webroots>
           <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
         </webroots>
+        <sourceRoots>
+          <root url="file://$MODULE_DIR$/src/main/java" />
+        </sourceRoots>
       </configuration>
     </facet>
     <facet type="jpa" name="JPA">
@@ -71,5 +74,8 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: javax.el:javax.el-api:3.0.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: javax.interceptor:javax.interceptor-api:1.2" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: javax.inject:javax.inject:1" level="project" />
+    <orderEntry type="module" module-name="course-manager-microservice" scope="TEST" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.ibm.websphere.appserver.api:com.ibm.websphere.appserver.api.jaxrs20:1.1.62" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.sun.activation:javax.activation:1.2.0" level="project" />
   </component>
 </module>

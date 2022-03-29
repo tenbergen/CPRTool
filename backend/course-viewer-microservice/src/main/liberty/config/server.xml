@@ -7,7 +7,7 @@
         <feature>mpConfig-2.0</feature>
     </featureManager>
 
-    <variable name="default.http.port" defaultValue="13128"/>
+    <variable name="default.http.port" defaultValue="131285"/>
     <variable name="default.https.port" defaultValue="9446"/>
     <variable name="app.context.root" defaultValue="/"/>
 

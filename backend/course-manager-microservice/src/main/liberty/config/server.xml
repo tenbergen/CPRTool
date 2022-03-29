@@ -9,7 +9,7 @@
         <feature>jaxrs-2.1</feature>
     </featureManager>
 
-    <variable name="default.http.port" defaultValue="13127"/>
+    <variable name="default.http.port" defaultValue="13125"/>
     <variable name="default.https.port" defaultValue="9445"/>
     <variable name="app.context.root" defaultValue="/"/>
 

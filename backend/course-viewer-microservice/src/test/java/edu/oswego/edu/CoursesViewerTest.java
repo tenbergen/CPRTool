@@ -28,12 +28,12 @@ public class CoursesViewerTest {
 
     @BeforeAll
     public static void oneTimeSetup() {
-        port = "13128";
+        port = "13125";
         baseUrl = "http://moxie.cs.oswego.edu:" + port + "/view/professor/";
-        String course1Name = "Software Design I";
-        int course1Section = 9000;
-        String semester1 = "Spring";
-        String abbreviation1 = "CSC480T";
+        String course1Name = "Intro to Programming";
+        int course1Section = 12345;
+        String semester1 = "Fall";
+        String abbreviation1 = "CSC212";
 
         String course2Name = "Software Design II";
         int course2Section = 9000;
@@ -56,7 +56,7 @@ public class CoursesViewerTest {
         client = ClientBuilder.newClient();
 
         expectedCourses.forEach( course -> {
-            String createURL = "http://moxie.cs.oswego.edu:13127/manage/professor/courses/course/create/";
+            String createURL = baseUrl+"courses/course/create/";
             WebTarget target = client.target(createURL);
             target.request(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
@@ -70,7 +70,7 @@ public class CoursesViewerTest {
     public void teardown() {
 
         expectedCourses.forEach( course -> {
-            String deleteURL = "http://moxie.cs.oswego.edu:13127/manage/professor/courses/course/delete/";
+            String deleteURL = baseUrl+"courses/course/delete/";
             WebTarget target = client.target(deleteURL);
             target.request(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
@@ -92,10 +92,10 @@ public class CoursesViewerTest {
         for (Object o : courseObjects) {
             HashMap mapO = (HashMap) o;
             courses.add(new CourseDAO(
-                    (String) mapO.get("CourseName"),
-                    ((java.math.BigDecimal) mapO.get("CourseSection")).intValue(),
-                    (String) mapO.get("Semester"),
-                    (String) mapO.get("Abbreviation")
+                    (String) mapO.get("course_name"),
+                    (Integer.parseInt((String) mapO.get("course_section"))),
+                    (String) mapO.get("semester"),
+                    (String) mapO.get("abbreviation")
             ));
         }
 
@@ -109,5 +109,22 @@ public class CoursesViewerTest {
         });
 
         Assertions.assertEquals(expectedCourses.size(), actualCourses.size(), "Not all courses were retrieved.");
+    }
+
+    @Test
+    public void viewSpecificCourseTest() {
+
+        String courseIDToObserve = "CSC345-800-Spring-2022";
+        targetUrl = "courses/"+courseIDToObserve;
+
+        WebTarget target = client.target(baseUrl + targetUrl);
+        Response response = target.request().get();
+        System.out.println("response: " + response.readEntity(String.class));
+        CourseDAO courseObject = jsonb.fromJson(response.readEntity(String.class), CourseDAO.class);
+
+        CourseDAO comparison = new CourseDAO();
+        comparison.courseID = courseIDToObserve;
+
+        Assertions.assertEquals(courseObject.courseID, comparison.courseName, "Course not found.");
     }
 }

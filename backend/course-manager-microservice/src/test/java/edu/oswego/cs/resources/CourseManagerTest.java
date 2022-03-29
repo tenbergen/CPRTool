@@ -1,6 +1,9 @@
 package edu.oswego.cs.resources;
 
+import com.ibm.websphere.jaxrs20.multipart.IAttachment;
+import com.ibm.websphere.jaxrs20.multipart.IMultipartBody;
 import edu.oswego.cs.daos.CourseDAO;
+import edu.oswego.cs.daos.FileDAO;
 import edu.oswego.cs.daos.StudentDAO;
 import org.junit.jupiter.api.*;
 
@@ -12,6 +15,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 public class CourseManagerTest {
     private static String port;
@@ -130,5 +134,21 @@ public class CourseManagerTest {
                 .post(Entity.entity(jsonb.toJson(studentDAO), MediaType.APPLICATION_JSON));
 
         Assertions.assertEquals(Response.Status.OK, Response.Status.fromStatusCode(response.getStatus()), "Student was not deleted properly.");
+    }
+
+    @Test
+    public void testAddStudentByCSV() {
+
+//        // multipart form passed in
+//        IMultipartBody input;
+//
+//        //Test delete course to see if endpoint works
+//        targetUrl = "student/massadd/";
+//        WebTarget target = client.target(baseUrl + targetUrl);
+//        Response response = target.request(MediaType.MULTIPART_FORM_DATA)
+//                .accept(MediaType.MULTIPART_FORM_DATA)
+//                .post(Entity.entity(input, MediaType.MULTIPART_FORM_DATA));
+//
+//        Assertions.assertEquals(Response.Status.OK, Response.Status.fromStatusCode(response.getStatus()), "Students were not added properly.");
     }
 }
