@@ -50,8 +50,8 @@ public class AssignmentInterface {
                 .append("due_date", assignmentDAO.getDueDate())
                 .append("points", assignmentDAO.getPoints());
         assignmentsCollection.insertOne(assignment);
-
-        String FileStructure =  getRelPath() + reg +"courses" + reg + assignmentDAO.getCourseID() + reg;
+        getRelPath();
+        String FileStructure =  "courses" + reg + assignmentDAO.getCourseID() + reg;
 
         File dir = new File(FileStructure);
         if (!dir.mkdirs()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create directory at " + dir.getAbsolutePath()).build());
