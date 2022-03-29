@@ -51,7 +51,7 @@ public class AssignmentInterface {
                 .append("points", assignmentDAO.getPoints());
         assignmentsCollection.insertOne(assignment);
 
-        String FileStructure = getRelPath() +  "professor-assignment-microservice" + reg +"courses" + reg + assignmentDAO.getCourseID() + reg;
+        String FileStructure =  System.getProperty("user.dir") + reg +"courses" + reg + assignmentDAO.getCourseID() + reg;
 
         File dir = new File(FileStructure);
         if (!dir.mkdirs()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create directory at " + dir.getAbsolutePath()).build());
@@ -106,7 +106,6 @@ public class AssignmentInterface {
         for (int i = slicedPath.length-1; !slicedPath[i].equals(targetDir);i--) {
             relativePathPrefix.append("../");
         }
-        //relativePathPrefix.append("../");
         System.out.println(relativePathPrefix.toString());
         reg = "/";
         if (System.getProperty("user.dir").contains("\\")) {
