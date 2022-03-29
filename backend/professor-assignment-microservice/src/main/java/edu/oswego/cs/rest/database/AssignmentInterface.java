@@ -30,6 +30,7 @@ public class AssignmentInterface {
 
     static String reg;
     static int nextPos = 0;
+    static boolean isWindows = false;
 
     public AssignmentInterface() {
         try {
@@ -49,9 +50,12 @@ public class AssignmentInterface {
                 .append("instructions", assignmentDAO.getInstructions())
                 .append("due_date", assignmentDAO.getDueDate())
                 .append("points", assignmentDAO.getPoints());
+        if (assignmentsCollection.find(assignment).iterator().hasNext()) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This assignment already exists.").build());
+        }
         assignmentsCollection.insertOne(assignment);
-
         String FileStructure = getRelPath() + "courses" + reg + assignmentDAO.getCourseID() + reg;
+
         File dir = new File(FileStructure);
         if (!dir.mkdirs()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create directory at " + dir.getAbsolutePath()).build());
 
@@ -85,11 +89,8 @@ public class AssignmentInterface {
     }
 
     public void writeToAssignment(FileDAO fileDAO) throws IOException {
-        String FileStructure = getRelPath()
-                + "courses" + reg
-                + fileDAO.getCourseID() + reg
-                + fileDAO.getAssignmentID() + reg
-                + "assignments";
+        String FileStructure = getRelPath() + reg + "courses" + reg + fileDAO.getCourseID() + reg + fileDAO.getAssignmentID();
+        System.out.println(FileStructure);
         fileDAO.writeFile(FileStructure + reg + fileDAO.getFilename());
     }
 
@@ -105,18 +106,22 @@ public class AssignmentInterface {
     public static String getRelPath() {
         String path = (System.getProperty("user.dir").contains("\\")) ? System.getProperty("user.dir").replace("\\", "/") : System.getProperty("user.dir");
         String[] slicedPath = path.split("/");
-        String targetDir = "professor-assignment-microservice";
-        int i;
+        String targetDir = "defaultServer";
         StringBuilder relativePathPrefix = new StringBuilder();
         System.out.println(Arrays.toString(slicedPath));
-        for (i = slicedPath.length - 1; !slicedPath[i].equals(targetDir); i--) {
+        System.out.println(slicedPath[0]);
+        for (int i = slicedPath.length - 1; !slicedPath[i].equals(targetDir); i--) {
             relativePathPrefix.append("../");
         }
+        System.out.println(relativePathPrefix.toString());
         reg = "/";
-        if (System.getProperty("user.dir").contains("\\")) {
+        System.out.println(System.getProperty("user.dir"));
+        if (!isWindows) {
+            System.out.println("Linux");
             reg = "\\";
             relativePathPrefix = new StringBuilder(relativePathPrefix.toString().replace("/", "\\"));
         }
+        System.out.println(reg);
         return relativePathPrefix.toString();
     }
 
@@ -165,7 +170,7 @@ public class AssignmentInterface {
         }
     }
 
-    public static String findFile(String courseID, int assignmentID, String fileName){
+    public static String findFile(String courseID, int assignmentID, String fileName) {
         return getRelPath() + "courses" + reg + courseID + reg + assignmentID + reg + "assignments" + reg + fileName;
     }
 

@@ -35,7 +35,7 @@ public class FileDAO {
      * Writes the inputStream to a file.
      */
     public void writeFile(String filePath) throws IOException {
-        OutputStream outputStream = new FileOutputStream(filePath);
+        OutputStream outputStream = new FileOutputStream(new File(filePath));
         outputStream.write(file.readAllBytes());
         outputStream.close();
     }
