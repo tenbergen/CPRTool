@@ -14,8 +14,8 @@ import java.util.zip.ZipInputStream;
 public class DownloadResources {
 
     /**
-     * Retrieves the assignment from its location on the server and passes it to the front end via the request entity.
-     * The request entity passes an InputStream[] with the assignment files in each array.
+     * Retrieves the assignment from its location on the server and passes it to the front end via the request header
+     * as a stream. The request entity passes an InputStream[] with the assignment files in each array.
      *
      * @param courseID String
      * @param assignmentID int

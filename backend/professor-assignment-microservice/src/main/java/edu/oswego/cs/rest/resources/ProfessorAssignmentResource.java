@@ -69,13 +69,14 @@ public class ProfessorAssignmentResource {
     }
 
     @DELETE
-    @Path("/courses/{courseID}/{assignmentID}/remove")
+    @Path("/courses/{courseID}/assignments/{assignmentID}/remove")
     public Response removeAssignment(@PathParam("assignmentID") int assignmentID, @PathParam("courseID") String courseID) throws IOException {
         new AssignmentInterface().remove(assignmentID, courseID);
         return Response.status(Response.Status.OK).entity("Assignment successfully deleted.").build();
     }
 
     @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}/edit")
     public Response updateAssignment(AssignmentDAO assignmentDAO, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID){
         try {
@@ -92,17 +93,15 @@ public class ProfessorAssignmentResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}/view-files")
-    public Response viewFiles(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID){
+    public Response viewAssignmentFiles(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID){
         File file = new File(AssignmentInterface.findAssignment(courseID,assignmentID));
-
         if (!file.exists())
-            return Response.status(Response.Status.NOT_FOUND).entity("bang bang").build();
-        File[] files = file.listFiles();
-        if (files == null)
-            return Response.status(Response.Status.NOT_FOUND).entity("bing bong").build();
+            return Response.status(Response.Status.NOT_FOUND).entity("Assignment does not exist").build();
 
+        File[] files = file.listFiles();
         ArrayList<String> fileNames = new ArrayList<>();
         Arrays.asList(files).forEach(names -> fileNames.add(names.getName()));
+
         return Response.status(Response.Status.OK).entity(fileNames).build();
     }
 }
