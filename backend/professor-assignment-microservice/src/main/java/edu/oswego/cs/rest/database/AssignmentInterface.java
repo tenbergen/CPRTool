@@ -50,7 +50,10 @@ public class AssignmentInterface {
                 .append("instructions", assignmentDAO.getInstructions())
                 .append("due_date", assignmentDAO.getDueDate())
                 .append("points", assignmentDAO.getPoints());
-        if(!assignmentsCollection.find(assignment).iterator().hasNext())assignmentsCollection.insertOne(assignment);
+        if(assignmentsCollection.find(assignment).iterator().hasNext()){
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This assignment already exists.").build());
+        }
+            assignmentsCollection.insertOne(assignment);
         String FileStructure =  getRelPath() +"courses" + reg + assignmentDAO.getCourseID() + reg;
 
         File dir = new File(FileStructure);
