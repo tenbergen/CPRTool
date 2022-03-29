@@ -42,18 +42,9 @@ public class AssignmentInterface {
     }
 
     public void createAssignment(AssignmentDAO assignmentDAO) {
-        Document assignment = new Document()
-                .append("course_id", assignmentDAO.getCourseID())
-                .append("assignment_id", nextPos)
-                .append("assignment_name", assignmentDAO.getAssignmentName())
-                .append("instructions", assignmentDAO.getInstructions())
-                .append("due_date", assignmentDAO.getDueDate())
-                .append("points", assignmentDAO.getPoints());
-        assignmentsCollection.insertOne(assignment);
-
         String FileStructure = getRelPath() + "courses" + reg + assignmentDAO.getCourseID() + reg;
         File dir = new File(FileStructure);
-        if (!dir.mkdirs()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create directory at " + dir.getAbsolutePath()).build());
+        if (!dir.mkdirs() && !dir.exists()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create directory at " + dir.getAbsolutePath()).build());
 
         String[] dirList = dir.list();
         if (dirList == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Directory must exist to make file structure.").build());
@@ -64,6 +55,15 @@ public class AssignmentInterface {
                     .max(Integer::compare)
                     .orElse(-9999) + 1;
         }
+
+        Document assignment = new Document()
+                .append("course_id", assignmentDAO.getCourseID())
+                .append("assignment_id", nextPos)
+                .append("assignment_name", assignmentDAO.getAssignmentName())
+                .append("instructions", assignmentDAO.getInstructions())
+                .append("due_date", assignmentDAO.getDueDate())
+                .append("points", assignmentDAO.getPoints());
+        assignmentsCollection.insertOne(assignment);
 
         FileStructure += nextPos;
         if (!new File(FileStructure + reg + "TeamSubmissions").mkdirs())
@@ -91,10 +91,6 @@ public class AssignmentInterface {
                 + fileDAO.getAssignmentID() + reg
                 + "assignments";
         fileDAO.writeFile(FileStructure + reg + fileDAO.getFilename());
-    }
-
-    public static String findAssignment(String courseID, int assID) {
-        return getRelPath() + "courses" + reg + courseID + reg + assID + reg + "assignments";
     }
 
     /**
@@ -155,11 +151,10 @@ public class AssignmentInterface {
                 .append("course_id", courseID)
                 .append("assignment_id", AssignmentID)).iterator();
         if (!results.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
-        String relativePathPrefix = getRelPath();
 
         while (results.hasNext()) {
             Document ass = results.next();
-            String Destination = relativePathPrefix + "courses" + reg + courseID + reg + ass.get("assignment_id");
+            String Destination = getRelPath() + "courses" + reg + courseID + reg + ass.get("assignment_id");
             FileUtils.deleteDirectory(new File(Destination));
             assignmentDatabase.getCollection("assignments").findOneAndDelete(ass);
         }
@@ -169,4 +164,7 @@ public class AssignmentInterface {
         return getRelPath() + "courses" + reg + courseID + reg + assignmentID + reg + "assignments" + reg + fileName;
     }
 
+    public static String findAssignment(String courseID, int assID) {
+        return getRelPath() + "courses" + reg + courseID + reg + assID + reg + "assignments";
+    }
 }
