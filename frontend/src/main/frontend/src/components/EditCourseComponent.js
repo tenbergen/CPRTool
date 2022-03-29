@@ -24,7 +24,7 @@ const EditCourseComponent = () => {
 
     const fileChangeHandler = (event) => {
         let file = event.target.files[0];
-        const renamedFile = new File([file], currentCourse.course_id, { type: file.type })
+        const renamedFile = new File([file], currentCourse.course_id + ".csv", { type: file.type })
         csvFormData.set("csv_file", renamedFile)
         console.log(csvFormData.get("csv_file"))
     }
