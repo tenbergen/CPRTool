@@ -8,7 +8,11 @@ import edu.oswego.cs.rest.database.AssignmentInterface;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Path("professor")
@@ -69,5 +73,36 @@ public class ProfessorAssignmentResource {
     public Response removeAssignment(@PathParam("assignmentID") int assignmentID, @PathParam("courseID") String courseID) throws IOException {
         new AssignmentInterface().remove(assignmentID, courseID);
         return Response.status(Response.Status.OK).entity("Assignment successfully deleted.").build();
+    }
+
+    @PUT
+    @Path("/courses/{courseID}/assignments/{assignmentID}/edit")
+    public Response updateAssignment(AssignmentDAO assignmentDAO, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID){
+        try {
+            AssignmentInterface.updateAssignment(assignmentDAO, courseID, assignmentID);
+            String assignmentSuccessfullyUpdated = assignmentDAO.getCourseID() + ":" + assignmentDAO.getAssignmentName() + " Successfully updated";
+            return Response.status(Response.Status.OK).entity(assignmentSuccessfullyUpdated).build();
+        } catch (Exception e){
+            String assignmentFailedUpdate = assignmentDAO.getCourseID() + ":" + assignmentDAO.getAssignmentName() + " failed to update";
+            return Response.status(Response.Status.BAD_REQUEST).entity(assignmentFailedUpdate).build();
+        }
+    }
+
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/courses/{courseID}/assignments/{assignmentID}/view-files")
+    public Response viewFiles(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID){
+        File file = new File(AssignmentInterface.findAssignment(courseID,assignmentID));
+
+        if (!file.exists())
+            return Response.status(Response.Status.NOT_FOUND).entity("bang bang").build();
+        File[] files = file.listFiles();
+        if (files == null)
+            return Response.status(Response.Status.NOT_FOUND).entity("bing bong").build();
+
+        ArrayList<String> fileNames = new ArrayList<>();
+        Arrays.asList(files).forEach(names -> fileNames.add(names.getName()));
+        return Response.status(Response.Status.OK).entity(fileNames).build();
     }
 }

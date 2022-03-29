@@ -70,6 +70,9 @@ public class AssignmentInterface {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create team submission directory.").build());
         if (!new File(FileStructure + reg + "PeerReviews").mkdirs())
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create peer review directory.").build());
+        if (!new File(FileStructure + reg + "assignments").mkdirs())
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create assignments directory.").build());
+
     }
 
     public static void updateAssignment(AssignmentDAO assignmentDAO, String courseID, int assignmentID) {
@@ -82,12 +85,16 @@ public class AssignmentInterface {
     }
 
     public void writeToAssignment(FileDAO fileDAO) throws IOException {
-        String FileStructure = getRelPath() + "courses" + reg + fileDAO.getCourseID() + reg + fileDAO.getAssignmentID();
+        String FileStructure = getRelPath()
+                + "courses" + reg
+                + fileDAO.getCourseID() + reg
+                + fileDAO.getAssignmentID() + reg
+                + "assignments";
         fileDAO.writeFile(FileStructure + reg + fileDAO.getFilename());
     }
 
     public static String findAssignment(String courseID, int assID) {
-        return getRelPath() + "courses" + reg + courseID + reg + assID;
+        return getRelPath() + "courses" + reg + courseID + reg + assID + reg + "assignments";
     }
 
     /**
@@ -157,4 +164,9 @@ public class AssignmentInterface {
             assignmentDatabase.getCollection("assignments").findOneAndDelete(ass);
         }
     }
+
+    public static String findFile(String courseID, int assignmentID, String fileName){
+        return getRelPath() + "courses" + reg + courseID + reg + assignmentID + reg + "assignments" + reg + fileName;
+    }
+
 }
