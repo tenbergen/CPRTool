@@ -99,15 +99,14 @@ public class AssignmentInterface {
     public static String getRelPath() {
         String path = (System.getProperty("user.dir").contains("\\")) ? System.getProperty("user.dir").replace("\\", "/") : System.getProperty("user.dir");
         String[] slicedPath = path.split("/");
-        throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(slicedPath).build());
-        /*
-        String targetDir = "";
+        String targetDir = "opt";
         StringBuilder relativePathPrefix = new StringBuilder();
         System.out.println(Arrays.toString(slicedPath));
         System.out.println(slicedPath[0]);
         for (int i = slicedPath.length-1; !slicedPath[i].equals(targetDir);i--) {
             relativePathPrefix.append("../");
         }
+        relativePathPrefix.append("../");
         System.out.println(relativePathPrefix.toString());
         reg = "/";
         if (System.getProperty("user.dir").contains("\\")) {
@@ -116,8 +115,6 @@ public class AssignmentInterface {
         }
 
         return relativePathPrefix.toString();
-
-         */
     }
 
     public List<AssignmentDAO> getAssignmentsByCourse(String courseID) {
