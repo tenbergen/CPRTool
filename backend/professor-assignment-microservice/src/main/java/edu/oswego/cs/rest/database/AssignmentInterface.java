@@ -30,6 +30,7 @@ public class AssignmentInterface {
 
     static String reg;
     static int nextPos = 0;
+    static boolean isWindows = false;
 
     public AssignmentInterface() {
         try {
@@ -50,8 +51,7 @@ public class AssignmentInterface {
                 .append("due_date", assignmentDAO.getDueDate())
                 .append("points", assignmentDAO.getPoints());
         assignmentsCollection.insertOne(assignment);
-        getRelPath();
-        String FileStructure =  "courses" + reg + assignmentDAO.getCourseID() + reg;
+        String FileStructure =  getRelPath() +"courses" + reg + assignmentDAO.getCourseID() + reg;
 
         File dir = new File(FileStructure);
         if (!dir.mkdirs()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create directory at " + dir.getAbsolutePath()).build());
@@ -83,7 +83,9 @@ public class AssignmentInterface {
     }
 
     public void writeToAssignment(FileDAO fileDAO) throws IOException {
-        String FileStructure = getRelPath() +reg +"courses" + reg + fileDAO.getCourseID() + reg + fileDAO.getAssignmentID();
+
+        String FileStructure = getRelPath() + reg +"courses" + reg + fileDAO.getCourseID() + reg + fileDAO.getAssignmentID();
+        System.out.println(FileStructure);
         fileDAO.writeFile(FileStructure + reg + fileDAO.getFilename());
     }
 
@@ -108,11 +110,13 @@ public class AssignmentInterface {
         }
         System.out.println(relativePathPrefix.toString());
         reg = "/";
-        if (System.getProperty("user.dir").contains("\\")) {
+        System.out.println(System.getProperty("user.dir"));
+        if (!isWindows) {
+            System.out.println("Linux");
             reg = "\\";
             relativePathPrefix = new StringBuilder(relativePathPrefix.toString().replace("/", "\\"));
         }
-
+        System.out.println(reg);
         return relativePathPrefix.toString();
     }
 
