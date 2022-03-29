@@ -2,44 +2,39 @@ package edu.oswego.cs.rest.resources;
 
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import com.ibm.websphere.jaxrs20.multipart.IMultipartBody;
-import edu.oswego.cs.rest.daos.FileDAO;
-//import edu.oswego.cs.database.AssignmentInterface;
-
+import edu.oswego.cs.rest.database.AssignmentInterface;
 import javax.ws.rs.Path;
 import javax.ws.rs.GET;
-
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.io.*;
 import java.net.URL;
 
-@Path("download")
+@Path("student")
 public class DownloadResources {
 
+    /**
+     * Retrieves the assignment from its location on the server and passes it to the front end via the request header
+     * as a stream. The request entity passes an InputStream[] with the assignment files in each array.
+     *
+     * @param courseID String
+     * @param assignmentID int
+     * @return response
+     * **/
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("courses/course/assignment/download")
-    public Response downloadAssignment(FileDAO assignment) {
-        try {
-            //new AssignmentInterface().downloadAssignment(assignment);
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.MULTIPART_FORM_DATA)
+    @Path("/courses/{courseID}/assignments/{assignmentID}/download/{fileName}")
+    public Response downloadAssignment(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("fileName") String fileName) {
+        File file = new File(AssignmentInterface.findFile(courseID, assignmentID, fileName));
+        if (!file.exists())
+            return Response.status(Response.Status.NOT_FOUND).entity("Assignment Does Not Exist").build();
 
-            try (BufferedInputStream in = new BufferedInputStream(new URL("/courses/course/assignment").openStream());
-                 FileOutputStream fileOutputStream = new FileOutputStream("/courses/course/assignment")) {
-                byte dataBuffer[] = new byte[1024];
-                int bytesRead;
-                while ((bytesRead = in.read(dataBuffer,0,1024)) != -1) {
-                    fileOutputStream.write(dataBuffer, 0, bytesRead);
-                }
-            } catch(Exception e) {
-                return Response.status(Response.Status.NOT_FOUND).entity("Assignment Does Not Exist").build();
-            }
-            return Response.status(Response.Status.BAD_REQUEST).entity("Assignment Did Not Download").build();
-        } catch(Exception e) {
-            return Response.status(Response.Status.OK).entity("Assignment Successfully Downloaded").build();
-        }
+        Response.ResponseBuilder response = Response.ok((Object) file);
+        response.header("Content-Disposition","attachment; filename=" + file.getName());
+        return response.build();
+
     }
 
 }
