@@ -3,13 +3,16 @@ import './styles/LoginPage.css';
 import { useDispatch } from 'react-redux';
 import { getTokenAsync } from '../../redux/features/authSlice';
 import GoogleLogin from "react-google-login";
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const REACT_APP_CLIENT_ID = `${process.env.REACT_APP_CLIENT_ID}`
 
     const handleFailure = (result) => {
-        console.log("Login error: " + result.details)
+        console.log(result)
+        navigate("/unauthenticated")
     };
 
     const handleLogin = async (googleData) => {

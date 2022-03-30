@@ -1,5 +1,4 @@
 import ProfessorDashboardPage from "./pages/TeacherPages/ProfessorDashboardPage";
-import LoginPage from "./pages/AuthPages/LoginPage";
 import { useDispatch, useSelector } from "react-redux";
 import "./global_styles/global.css";
 import React, { useEffect } from "react";
@@ -8,24 +7,18 @@ import StudentDashboardPage from "./pages/StudentPages/StudentDashboardPage";
 
 function App() {
   const dispatch = useDispatch()
-  const authentication = useSelector((state) => state);
-  const isAuthenticated = authentication.auth.isAuthenticated;
-  const role = authentication.auth.role;
+  const { role } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(setUserInformation())
   }, [])
 
   return (
-    <div>
-        {isAuthenticated ?
-          <div>
-            {role === "professor" && <ProfessorDashboardPage/>}
-            {role === "student" && <StudentDashboardPage/>}
-          </div>
-        : <LoginPage/>}
-    </div>
-  );
+      <div>
+        {role === "professor" && <ProfessorDashboardPage/>}
+        {role === "student" && <StudentDashboardPage/>}
+      </div>
+  )
 }
 
 export default App;
