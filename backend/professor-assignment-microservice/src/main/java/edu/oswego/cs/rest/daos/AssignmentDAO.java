@@ -19,6 +19,7 @@ public class AssignmentDAO {
     @JsonbProperty("due_date") String dueDate;
     @JsonbProperty("course_id") String courseID;
     @JsonbProperty("points") int points;
+    @JsonbProperty("assignment_id") int assignment_id;
 
     @JsonbCreator
     public AssignmentDAO(
@@ -32,5 +33,21 @@ public class AssignmentDAO {
         this.dueDate = dueDate;
         this.courseID = courseID;
         this.points = points;
+    }
+
+    public AssignmentDAO(
+            @NonNull @JsonbProperty("assignment_name") String assignmentName,
+            @NonNull @JsonbProperty("instructions") String instructions,
+            @NonNull @JsonbProperty("due_date") String dueDate,
+            @NonNull @JsonbProperty("course_id") String courseID,
+            @NonNull @JsonbProperty("points") int points,
+            @NonNull @JsonbProperty("assignment_id") int assignment_id)
+             {
+        this.assignmentName = assignmentName;
+        this.instructions = instructions;
+        this.dueDate = dueDate;
+        this.courseID = courseID;
+        this.points = points;
+        this.assignment_id = assignment_id;
     }
 }
