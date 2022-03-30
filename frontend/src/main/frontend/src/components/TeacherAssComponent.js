@@ -26,7 +26,7 @@ const TeacherAssComponent = () => {
             setAssignments(Array())
         }
         setLoad(false)
-    })
+    }, [])
 
     if (isLoading) {
         return <div><h1>LOADING</h1></div>
