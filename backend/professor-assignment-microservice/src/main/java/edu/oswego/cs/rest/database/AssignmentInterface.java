@@ -41,7 +41,7 @@ public class AssignmentInterface {
     }
 
     public void createAssignment(AssignmentDAO assignmentDAO) {
-        String FileStructure = getRelPath() + "assignments" + reg + assignmentDAO.getCourseID() + reg;
+        String FileStructure = getRelPath() + "assignments" + reg + assignmentDAO.getCourseID();
 
         File dir = new File(FileStructure);
         if (!dir.mkdirs() && !dir.exists())
@@ -68,7 +68,7 @@ public class AssignmentInterface {
         if (query.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This assignment already exists.").build());
         assignmentsCollection.insertOne(assignment);
 
-        FileStructure += nextPos;
+        FileStructure += reg+nextPos;
         if (!new File(FileStructure + reg + "TeamSubmissions").mkdirs())
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create team submission directory.").build());
         if (!new File(FileStructure + reg + "PeerReviews").mkdirs())
@@ -108,14 +108,14 @@ public class AssignmentInterface {
             relativePathPrefix.append("../");
         }
         System.out.println(relativePathPrefix.toString());
-        reg = "/";
+        reg = "\\";
         System.out.println(System.getProperty("user.dir"));
         if (!isWindows) {
             System.out.println("Linux");
-            reg = "\\";
-            relativePathPrefix = new StringBuilder(relativePathPrefix.toString().replace("/", "\\"));
+            reg = "/";
+            relativePathPrefix = new StringBuilder(relativePathPrefix.toString().replace("\\", "/"));
         }
-        System.out.println(reg);
+        System.out.println(relativePathPrefix);
         return relativePathPrefix.toString();
     }
 
