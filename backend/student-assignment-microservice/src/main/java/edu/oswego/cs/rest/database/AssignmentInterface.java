@@ -41,55 +41,12 @@ public class AssignmentInterface {
         }
     }
 
-    public void createAssignment(AssignmentDAO assignmentDAO) {
-        String FileStructure = getRelPath() + "courses" + reg + assignmentDAO.getCourseID() + reg;
-        File dir = new File(FileStructure);
-        if (!dir.mkdirs() && !dir.exists()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create directory at " + dir.getAbsolutePath()).build());
-
-        String[] dirList = dir.list();
-        if (dirList == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Directory must exist to make file structure.").build());
-
-        if (dirList.length != 0) {
-            nextPos = Arrays.stream(dirList)
-                    .map(Integer::parseInt)
-                    .max(Integer::compare)
-                    .orElse(-9999) + 1;
-        }
-
-        Document assignment = new Document()
-                .append("course_id", assignmentDAO.getCourseID())
-                .append("assignment_id", nextPos)
-                .append("assignment_name", assignmentDAO.getAssignmentName())
-                .append("instructions", assignmentDAO.getInstructions())
-                .append("due_date", assignmentDAO.getDueDate())
-                .append("points", assignmentDAO.getPoints());
-        assignmentsCollection.insertOne(assignment);
-
-        FileStructure += nextPos;
-        if (!new File(FileStructure + reg + "TeamSubmissions").mkdirs())
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create team submission directory.").build());
-        if (!new File(FileStructure + reg + "PeerReviews").mkdirs())
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create peer review directory.").build());
-        if (!new File(FileStructure + reg + "assignments").mkdirs())
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create assignments directory.").build());
-
-    }
-
-    public static void updateAssignment(AssignmentDAO assignmentDAO, String courseID, int assignmentID) {
-        Document assignmentDocument = assignmentsCollection.find(eq("assignment_id", assignmentID)).first();
-        if (assignmentDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
-        Jsonb jsonb = JsonbBuilder.create();
-        Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(assignmentDAO), MediaType.APPLICATION_JSON_TYPE);
-        Document course = Document.parse(courseDAOEntity.getEntity());
-        assignmentDatabase.getCollection("assignments").replaceOne(eq("course_id", courseID), course);
-    }
-
     public void writeToAssignment(FileDAO fileDAO) throws IOException {
         String FileStructure = getRelPath()
                 + "courses" + reg
                 + fileDAO.getCourseID() + reg
                 + fileDAO.getAssignmentID() + reg
-                + "assignments";
+                + "TeamSubmissions";
         fileDAO.writeFile(FileStructure + reg + fileDAO.getFilename());
     }
 
@@ -101,7 +58,7 @@ public class AssignmentInterface {
     public static String getRelPath() {
         String path = (System.getProperty("user.dir").contains("\\")) ? System.getProperty("user.dir").replace("\\", "/") : System.getProperty("user.dir");
         String[] slicedPath = path.split("/");
-        String targetDir = "professor-assignment-microservice";
+        String targetDir = "student-assignment-microservice";
         int i;
         StringBuilder relativePathPrefix = new StringBuilder();
         System.out.println(Arrays.toString(slicedPath));
@@ -144,20 +101,6 @@ public class AssignmentInterface {
             assignments.add(assignmentDAO);
         }
         return assignments;
-    }
-
-    public void remove(int AssignmentID, String courseID) throws IOException {
-        MongoCursor<Document> results = assignmentDatabase.getCollection("assignments").find(new Document()
-                .append("course_id", courseID)
-                .append("assignment_id", AssignmentID)).iterator();
-        if (!results.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
-
-        while (results.hasNext()) {
-            Document ass = results.next();
-            String Destination = getRelPath() + "courses" + reg + courseID + reg + ass.get("assignment_id");
-            FileUtils.deleteDirectory(new File(Destination));
-            assignmentDatabase.getCollection("assignments").findOneAndDelete(ass);
-        }
     }
 
     public static String findFile(String courseID, int assignmentID, String fileName){
