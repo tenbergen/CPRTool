@@ -65,7 +65,7 @@ services:
     container_name: cpr-professor-assignment
     restart: unless-stopped
     volumes:
-      - ./assignments:/opt/ol/wlp/output/defaultServer/assignments
+      - ./assignments:/opt/ol/wlp/output/defaultServer/assignments:r
     environment:
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
