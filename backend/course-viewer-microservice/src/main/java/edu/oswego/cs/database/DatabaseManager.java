@@ -7,53 +7,69 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Disposes;
 
 @ApplicationScoped
 public class DatabaseManager {
-    String hostname = "moxie.cs.oswego.edu";//System.getenv("MONGO_HOSTNAME");
+    int studentPort = Integer.parseInt(System.getenv("MONGO_PORT"));
+    int professorPort = Integer.parseInt(System.getenv("MONGO2_PORT"));
+    int coursePort = Integer.parseInt(System.getenv("MONGO3_PORT"));
+    int assignmentPort = Integer.parseInt(System.getenv("MONGO4_PORT"));
+    int teamPort = Integer.parseInt(System.getenv("MONGO5_PORT"));
+    String hostname = System.getenv("MONGO_HOSTNAME");
+    String mongoDatabase = System.getenv("MONGO_DATABASE");
+    String mongoUser = System.getenv("MONGO_USERNAME");
+    String mongoPassword = System.getenv("MONGO_PASSWORD");
 
-    int ProfessorPort = 27028;//Integer.parseInt(System.getenv("MONGO_PORT"));
-    String ProfessorDatabase = "cpr";//System.getenv("MONGO_DATABASE");
-    String ProfessorUser = "root";//System.getenv("MONGO_USERNAME");
-    String ProfessorPassword = "toor";//System.getenv("MONGO_PASSWORD");
-
-
-    int Studentport = 27027;//Integer.parseInt(System.getenv("MONGO_PORT"));
-    String Studentdatabase = "cpr";//System.getenv("MONGO_DATABASE");
-    String Studentuser = "root";//System.getenv("MONGO_USERNAME");
-    String Studentpassword = "toor";//System.getenv("MONGO_PASSWORD");
-    public MongoDatabase getDB() {
-        MongoCredential credentials = MongoCredential.createCredential(ProfessorUser, ProfessorDatabase, ProfessorPassword.toCharArray());
+    public MongoDatabase getStudentDB() {
+        MongoCredential credentials = MongoCredential.createCredential(mongoUser, mongoDatabase, mongoPassword.toCharArray());
         MongoClient client = new MongoClient(
-                new ServerAddress(hostname, ProfessorPort),
+                new ServerAddress(hostname, studentPort),
                 credentials,
                 new MongoClientOptions.Builder().build()
         );
-        return client.getDatabase(ProfessorDatabase);
+        return client.getDatabase(mongoDatabase);
     }
 
     public MongoDatabase getProfessorDB() {
-        MongoCredential credentials = MongoCredential.createCredential(ProfessorUser, ProfessorDatabase, ProfessorPassword.toCharArray());
+        MongoCredential credentials = MongoCredential.createCredential(mongoUser, mongoDatabase, mongoPassword.toCharArray());
         MongoClient client = new MongoClient(
-                new ServerAddress(hostname, ProfessorPort),
+                new ServerAddress(hostname, professorPort),
                 credentials,
                 new MongoClientOptions.Builder().build()
         );
-        return client.getDatabase(ProfessorDatabase);
+        return client.getDatabase(mongoDatabase);
     }
-    public MongoDatabase getStudentDB(){
-        MongoCredential credentials = MongoCredential.createCredential(Studentuser, Studentdatabase, Studentpassword.toCharArray());
-        MongoClient client = new MongoClient(
-                new ServerAddress(hostname, Studentport),
-                credentials,
-                new MongoClientOptions.Builder().build()
-        );
-        return client.getDatabase(Studentdatabase);
-    }
-   // public void close(@Disposes MongoClient toClose) {
-   //     toClose.close();
-   // }
 
-    public DatabaseManager() {}
+    public MongoDatabase getCourseDB() {
+        MongoCredential credentials = MongoCredential.createCredential(mongoUser, mongoDatabase, mongoPassword.toCharArray());
+        MongoClient client = new MongoClient(
+                new ServerAddress(hostname, coursePort),
+                credentials,
+                new MongoClientOptions.Builder().build()
+        );
+        return client.getDatabase(mongoDatabase);
+    }
+
+    public MongoDatabase getAssignmentDB() {
+        MongoCredential credentials = MongoCredential.createCredential(mongoUser, mongoDatabase, mongoPassword.toCharArray());
+        MongoClient client = new MongoClient(
+                new ServerAddress(hostname, assignmentPort),
+                credentials,
+                new MongoClientOptions.Builder().build()
+        );
+        return client.getDatabase(mongoDatabase);
+    }
+
+    public MongoDatabase getTeamDB() {
+        MongoCredential credentials = MongoCredential.createCredential(mongoUser, mongoDatabase, mongoPassword.toCharArray());
+        MongoClient client = new MongoClient(
+                new ServerAddress(hostname, teamPort),
+                credentials,
+                new MongoClientOptions.Builder().build()
+        );
+        return client.getDatabase(mongoDatabase);
+    }
+
+    public DatabaseManager() {
+    }
 }

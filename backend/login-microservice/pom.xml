@@ -16,6 +16,17 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.22</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>3.12.10</version>
+        </dependency>
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
@@ -27,6 +38,11 @@
             <groupId>com.google.apis</groupId>
             <artifactId>google-api-services-oauth2</artifactId>
             <version>v2-rev157-1.25.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+            <version>1.33.0</version>
         </dependency>
 
         <!-- Google OAuth 2.0 servlets -->

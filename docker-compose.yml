@@ -3,10 +3,11 @@ services:
   frontend:
     build:
       context: ./frontend
+      args:
+        URL: ${URL}
+        CLIENT_ID: ${CLIENT_ID}
     container_name: cpr-frontend
     restart: unless-stopped
-    environment:
-      REACT_APP_URL: ${REACT_APP_URL}
 
   login:
     build:
@@ -14,11 +15,17 @@ services:
     container_name: cpr-login
     restart: unless-stopped
     environment:
-      APP_NAME: ${APP_NAME}
+      MONGO_HOSTNAME: ${MONGO_HOSTNAME}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO2_PORT: ${MONGO2_PORT}
+      MONGO3_PORT: ${MONGO3_PORT}
+      MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
+      MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
       CLIENT_ID: ${CLIENT_ID}
       CLIENT_SECRET: ${CLIENT_SECRET}
-      EMAIL_DOMAIN: ${EMAIL_DOMAIN}
-      REACT_APP_URL: ${REACT_APP_URL}
 
   course-manager:
     build:
@@ -29,6 +36,9 @@ services:
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
       MONGO2_PORT: ${MONGO2_PORT}
+      MONGO3_PORT: ${MONGO3_PORT}
+      MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
       MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
@@ -42,6 +52,27 @@ services:
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
       MONGO2_PORT: ${MONGO2_PORT}
+      MONGO3_PORT: ${MONGO3_PORT}
+      MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
+      MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+
+  professor-assignment:
+    build:
+      context: ./backend/professor-assignment-microservice
+    container_name: cpr-professor-assignment
+    restart: unless-stopped
+    volumes:
+      - ./assignments:/opt/ol/wlp/output/defaultServer/assignments:r
+    environment:
+      MONGO_HOSTNAME: ${MONGO_HOSTNAME}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO2_PORT: ${MONGO2_PORT}
+      MONGO3_PORT: ${MONGO3_PORT}
+      MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
       MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
@@ -51,8 +82,8 @@ services:
     container_name: cpr-mongo
     restart: unless-stopped
     volumes:
-      - ${DATABASE_FOLDER}:/data/db
-      - ${INITIALIZE_SCRIPT}:/docker-entrypoint-initdb.d/mongo-init.sh
+      - ./db:/data/db
+      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
@@ -60,15 +91,15 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     ports:
-      - "27029:27017"
+      - "27037:27017"
 
   mongo2:
     image: mongo:5.0.6
     container_name: cpr-mongo2
     restart: unless-stopped
     volumes:
-      - ${DATABASE_FOLDER_2}:/data/db
-      - ${INITIALIZE_SCRIPT}:/docker-entrypoint-initdb.d/mongo-init.sh
+      - ./db2:/data/db
+      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
@@ -76,13 +107,61 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     ports:
-      - "27030:27017"
+      - "27038:27017"
+  
+  mongo3:
+    image: mongo:5.0.6
+    container_name: cpr-mongo3
+    restart: unless-stopped
+    volumes:
+      - ./db3:/data/db
+      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - "27039:27017"
+        
+  mongo4:
+    image: mongo:5.0.6
+    container_name: cpr-mongo4
+    restart: unless-stopped
+    volumes:
+      - ./db4:/data/db
+      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - "27040:27017"
+
+  mongo5:
+    image: mongo:5.0.6
+    container_name: cpr-mongo5
+    restart: unless-stopped
+    volumes:
+      - ./db5:/data/db
+      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - "27041:27017"
 
   nginx:
     image: nginx:1.21.6
     restart: unless-stopped
     container_name: cpr-nginx
     volumes:
-      - ${NGINX}:/etc/nginx/nginx.conf:rw
+      - ./nginx.conf:/etc/nginx/nginx.conf:rw
     ports:
-      - "13126:80"
+      - "13125:80"

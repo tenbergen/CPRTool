@@ -3,7 +3,7 @@ import LoginPage from "./pages/LoginPage";
 import {useDispatch, useSelector} from "react-redux";
 import "./global_styles/global.css";
 import {useEffect} from "react";
-import {authenticateUser} from "./redux/slices/authSlice";
+import {authenticateUser} from "./redux/features/authSlice";
 
 function App() {
   const dispatch = useDispatch()

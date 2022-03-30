@@ -49,6 +49,17 @@
             <artifactId>javax.json.bind-api</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.ibm.websphere.appserver.api</groupId>
+            <artifactId>com.ibm.websphere.appserver.api.jaxrs20</artifactId>
+            <version>1.1.61</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>javax.activation</artifactId>
+            <version>1.2.0</version>
+        </dependency>
 
 <!--        Both of these are necessary for testing purposes        -->
         <dependency>
@@ -63,17 +74,12 @@
             <version>1.0.0-RC1</version>
             <scope>runtime</scope>
         </dependency>
-
         <dependency>
             <groupId>com.ibm.websphere.appserver.api</groupId>
             <artifactId>com.ibm.websphere.appserver.api.jaxrs20</artifactId>
-            <version>1.1.62</version>
+            <version>1.0.10</version>
         </dependency>
-        <dependency>
-            <groupId>com.sun.activation</groupId>
-            <artifactId>javax.activation</artifactId>
-            <version>1.2.0</version>
-        </dependency>
+
 
     </dependencies>
 
@@ -81,12 +87,12 @@
         <finalName>course-manager-microservice</finalName>
         <pluginManagement>
             <plugins>
-<!-- Used for maven war commands. Bring back in if needed. -->
-<!--                <plugin>-->
-<!--                    <groupId>org.apache.maven.plugins</groupId>-->
-<!--                    <artifactId>maven-war-plugin</artifactId>-->
-<!--                    <version>3.3.2</version>-->
-<!--                </plugin>-->
+            <!-- Used for maven war commands. Fails to build on the production server without this. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
+            </plugin>
 <!-- Used for unit testing surefire commands. Bring back in if needed. -->
 <!--                <plugin>-->
 <!--                    <groupId>org.apache.maven.plugins</groupId>-->

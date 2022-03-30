@@ -7,7 +7,7 @@
         <feature>mpConfig-2.0</feature>
     </featureManager>
 
-    <variable name="default.http.port" defaultValue="131285"/>
+    <variable name="default.http.port" defaultValue="13128"/>
     <variable name="default.https.port" defaultValue="9446"/>
     <variable name="app.context.root" defaultValue="/"/>
 
@@ -17,8 +17,8 @@
             httpsPort="${default.https.port}"
             id="defaultHttpEndpoint"
     />
-    
-     <cors domain="/"
+
+    <cors domain="/"
           allowedOrigins="*"
           allowedMethods="GET, DELETE, POST, PUT"
           allowCredentials="true"
@@ -29,8 +29,8 @@
     <applicationManager autoExpand="true"/>
 
     <!-- Configures the application on a specified context root -->
-    <webApplication contextRoot="${app.context.root}" location="course-viewer-microservice.war" />
+    <webApplication contextRoot="${app.context.root}" location="course-viewer-microservice.war"/>
 
     <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
-    <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
+    <ssl id="defaultSSLConfig" trustDefaultCerts="true"/>
 </server>

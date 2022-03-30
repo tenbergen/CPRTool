@@ -3,13 +3,13 @@
 
     <!-- Enable features -->
     <featureManager>
-<!--        App runs normally without these features? If needed, bring them back -->
+        <!-- App runs normally without these features? If needed, bring them back -->
         <feature>microProfile-4.1</feature>
         <feature>mpConfig-2.0</feature>
         <feature>jaxrs-2.1</feature>
     </featureManager>
 
-    <variable name="default.http.port" defaultValue="13125"/>
+    <variable name="default.http.port" defaultValue="13127"/>
     <variable name="default.https.port" defaultValue="9445"/>
     <variable name="app.context.root" defaultValue="/"/>
 
@@ -24,14 +24,14 @@
     <applicationManager autoExpand="true"/>
 
     <!-- Configures the application on a specified context root -->
-    <webApplication contextRoot="${app.context.root}" location="course-manager-microservice.war" />
+    <webApplication contextRoot="${app.context.root}" location="course-manager-microservice.war"/>
 
     <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
-    <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
+    <ssl id="defaultSSLConfig" trustDefaultCerts="true"/>
 
     <cors domain="/"
           allowedOrigins="*"
-          allowedMethods="POST"
+          allowedMethods="POST, PUT, GET, DELETE"
           allowCredentials="true"
           allowedHeaders="Content-Type"
           exposeHeaders="Content-Type"/>
