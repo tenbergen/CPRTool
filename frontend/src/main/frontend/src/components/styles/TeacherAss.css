@@ -16,7 +16,7 @@
     width: 100%;
 }
 
-#assListItem {
+.assListItem {
     height: 10vh;
     border-radius: 25px;
     border-style: solid;

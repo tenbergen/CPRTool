@@ -3,9 +3,17 @@ import "./styles/CreateAssignmentStyle.css"
 import SidebarComponent from "../../components/SidebarComponent";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {useSelector} from "react-redux";
 
 const CreateAssignmentPage = () => {
+    const currentCourse = useSelector((state) => state.courses.currentCourse)
+    const courseId = currentCourse.course_id
     //const submitCourseUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/create`
+    const submitCourseUrl = 'http://moxie.cs.oswego.edu:13125/assignments/professor/courses/create-assignment'
+    // const uploadFileUrl = 'http://moxie.cs.oswego.edu:13125/professor/courses/' + courseId +
+    const getAssUrl = 'http://moxie.cs.oswego.edu:13125/assignments/professor/courses/' + courseId + '/assignments/'
+
+    console.log(courseId)
     let navigate = useNavigate()
 
     const [formData, setFormData] = useState({
@@ -25,18 +33,28 @@ const CreateAssignmentPage = () => {
         else {
             e.preventDefault()
             const data = {
-                AssignmentName: AssignmentName,
-                AssignmentInstructions: AssignmentInstructions,
-                files: files,
-                AssignmentDueDate: AssignmentDueDate,
-                AssignmentPoints: AssignmentPoints,
-                ReviewInstructions: ReviewInstructions,
-                ReviewRubric: ReviewRubric,
-                ReviewDueDate: ReviewDueDate,
-                ReviewPoints: ReviewPoints            
+                assignment_name: AssignmentName,
+                instructions: AssignmentInstructions,
+                due_date: AssignmentDueDate,
+                points: AssignmentPoints,
+                course_id: courseId
             };
-            //await axios.post(submitCourseUrl, data);
-            navigate("/teacherDashboard")
+            await axios.post(submitCourseUrl, data).then(r => console.log(r));
+            let assignmentId
+            await axios.get(getAssUrl).then(r => {
+                console.log(r)
+                assignmentId = r.data[r.data.length - 1].assignment_id
+            });
+            const fileUrl = 'http://moxie.cs.oswego.edu:13125/assignments/professor/courses/' + courseId + '/assignments/'
+            + assignmentId + '/upload'
+            let form = new FormData()
+            form.set(AssignmentName + ".pdf", files)
+            await axios.post(fileUrl, form)
+            // const u = 'http://moxie.cs.oswego.edu:13125/assignments/professor/courses/' + courseId + '/assignments/'
+            //     + assignmentId + '/view-files'
+            // axios.get(u).then(r => console.log(r))
+
+            navigate("/details/professor/" + courseId)
         }
     }
 
@@ -143,7 +161,7 @@ const CreateAssignmentPage = () => {
                     </div>
 
                     <div className="cap-button">
-                        <button /*onClick={handleSubmit}*/> Create Peer Review </button>
+                        <button onClick={handleSubmit}> Create Peer Review </button>
                     </div>
 
                     {/* <div class="cap-altbutton">
