@@ -127,7 +127,8 @@ public class AssignmentInterface {
                         document.getString("instructions"),
                         document.getString("due_date"),
                         document.getString("course_id"),
-                        document.getInteger("points")
+                        document.getInteger("points"),
+                        document.getInteger("assignment_id")
                 );
                 assignments.add(assignmentDAO);
             }
