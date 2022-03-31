@@ -1,24 +1,47 @@
-
 package edu.oswego.cs.resources;
 
+import edu.oswego.cs.database.CourseInterface;
+import org.bson.Document;
 
-import edu.oswego.cs.daos.CourseDAO;
-import edu.oswego.cs.database.CourseViewerInterfaceV2;
-
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("professor")
 public class CoursesViewerResources {
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses")
-    public ArrayList<CourseDAO> ViewCourses() throws IOException {
-        CourseViewerInterfaceV2 courses = new CourseViewerInterfaceV2("bastian.tenbergen");
-        return courses.getCourses();
+    public Response viewAllCourses() {
+        List<Document> courses = new CourseInterface().getAllCourses();
+        return Response.status(Response.Status.OK).entity(courses).build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("courses/{courseID}")
+    public Response viewCourse(@PathParam("courseID") String courseID) {
+        Document document = new CourseInterface().getCourse(courseID);
+        return Response.status(Response.Status.OK).entity(document).build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("students")
+    public Response viewAllStudents() {
+        List<Document> students = new CourseInterface().getAllStudents();
+        return Response.status(Response.Status.OK).entity(students).build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("students/{studentID}")
+    public Response viewStudent(@PathParam("studentID") String studentID) {
+        Document document = new CourseInterface().getStudent(studentID);
+        return Response.status(Response.Status.OK).entity(document).build();
     }
 }
