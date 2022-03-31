@@ -4,6 +4,7 @@ import CreateCoursePage from '../pages/TeacherPages/CreateCoursePage';
 import ProfessorCoursePage from '../pages/TeacherPages/ProfessorCoursePage';
 import StudentCoursePage from "../pages/StudentPages/StudentCoursePage";
 import CreateAssignmentPage  from "../pages/TeacherPages/CreateAssignmentPage";
+import AssignmentPage from "../pages/StudentPages/AssignmentPage";
 import UnauthedErrorPage from '../pages/AuthPages/UnauthedErrorPage';
 import React from 'react';
 import RoleRouteHandler from "./RoleRouteHandler";
@@ -30,6 +31,7 @@ const RouterHandler = () => {
                   {/*student routes*/}
                   <Route element={<RoleRouteHandler allowedRoles={["student", "professor"]}/>} >
                       <Route path='details/student/:courseId' element={<StudentCoursePage />} />
+                      <Route path='details/student/:courseId/:assignmentName' element={<AssignmentPage />}/>
                   </Route>
               </Route>
           </Route>
