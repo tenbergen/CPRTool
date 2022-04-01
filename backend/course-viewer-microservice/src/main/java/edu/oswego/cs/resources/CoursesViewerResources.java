@@ -1,8 +1,7 @@
 package edu.oswego.cs.resources;
 
-import edu.oswego.cs.daos.CourseDAO;
-import edu.oswego.cs.daos.StudentDAO;
 import edu.oswego.cs.database.CourseInterface;
+import org.bson.Document;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -18,7 +17,7 @@ public class CoursesViewerResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses")
     public Response viewAllCourses() {
-        List<CourseDAO> courses = new CourseInterface().getAllCourses();
+        List<Document> courses = new CourseInterface().getAllCourses();
         return Response.status(Response.Status.OK).entity(courses).build();
     }
 
@@ -26,15 +25,15 @@ public class CoursesViewerResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/{courseID}")
     public Response viewCourse(@PathParam("courseID") String courseID) {
-        CourseDAO courseDAO = new CourseInterface().getCourse(courseID);
-        return Response.status(Response.Status.OK).entity(courseDAO).build();
+        Document document = new CourseInterface().getCourse(courseID);
+        return Response.status(Response.Status.OK).entity(document).build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("students")
     public Response viewAllStudents() {
-        List<StudentDAO> students = new CourseInterface().getAllStudents();
+        List<Document> students = new CourseInterface().getAllStudents();
         return Response.status(Response.Status.OK).entity(students).build();
     }
 
@@ -42,7 +41,7 @@ public class CoursesViewerResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("students/{studentID}")
     public Response viewStudent(@PathParam("studentID") String studentID) {
-        StudentDAO studentDAO = new CourseInterface().getStudent(studentID);
-        return Response.status(Response.Status.OK).entity(studentDAO).build();
+        Document document = new CourseInterface().getStudent(studentID);
+        return Response.status(Response.Status.OK).entity(document).build();
     }
 }

@@ -1,6 +1,6 @@
 //import useState hook to create menu collapse state
 import React  from 'react';
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 //import react pro sidebar components
 import {
@@ -21,36 +21,36 @@ import {
 import 'react-pro-sidebar/dist/css/styles.css';
 import './styles/Sidebar.css';
 
-const handleLogout = () => {
-  localStorage.clear();
-}
-
-const logoutURL = `${process.env.REACT_APP_URL}/logout`
-
 const SidebarComponent = () => {
-  return (
+    let navigate = useNavigate()
+
+    const handleLogout = () => {
+        localStorage.clear();
+        navigate('/')
+        window.location.reload(false);
+    }
+
+    return (
     <>
       <div id='sidebar'>
         <ProSidebar>
           <SidebarContent>
            {/* Need to use jwt to decide which dashboard to goto*/}
-           <Link to="/teacherDashboard">
+           <Link to="/">
             <Menu iconShape='circle'>
               <MenuItem icon={<FaList />}>Courses</MenuItem>
             </Menu>
            </Link>
           </SidebarContent>
           <SidebarFooter>
-            <a href={logoutURL} onClick={handleLogout}>
-              <Menu iconShape='circle'>
-                <MenuItem icon={<FiLogOut />}>Logout</MenuItem>
-              </Menu>
-            </a>
+          <Menu iconShape='circle'>
+            <MenuItem icon={<FiLogOut />} onClick={handleLogout}>Logout</MenuItem>
+          </Menu>
           </SidebarFooter>
         </ProSidebar>
       </div>
     </>
-  );
+    );
 };
 
 export default SidebarComponent;

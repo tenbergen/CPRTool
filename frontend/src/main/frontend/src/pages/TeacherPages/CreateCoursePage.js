@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./styles/CreateCourseStyle.css"
-import SidebarComponent from "../components/SidebarComponent";
+import SidebarComponent from "../../components/SidebarComponent";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -9,28 +9,36 @@ const CreateCoursePage = () => {
     let navigate = useNavigate()
 
     const [formData, setFormData] = useState({
-        CourseName: '',
-        CourseSection: undefined,
-        Semester: '',
-        Abbreviation: ''
+        course_name: '',
+        course_section: '',
+        semester: '',
+        abbreviation: '',
+        year: '',
+        crn: ''
     });
 
-    const { CourseName, CourseSection, Semester, Abbreviation } = formData;
+    const { course_name, course_section, semester, abbreviation, year, crn } = formData;
 
-    const OnChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+    const OnChange = (e) => setFormData(
+        { ...formData, [e.target.name]: e.target.value }
+    );
 
     const handleSubmit = async (e) => {
-        if (Abbreviation === '' || CourseName === '' || CourseSection === undefined || Semester === '') alert("Fields can't be empty!")
+        if (abbreviation === '' || course_name === '' || course_section === '' || semester === '' || year === '' || crn === '') {
+            alert("Fields can't be empty!")
+        }
         else {
             e.preventDefault()
             const data = {
-                CourseName: CourseName,
-                CourseSection: CourseSection,
-                Semester: Semester,
-                Abbreviation: Abbreviation
+                course_name: course_name,
+                course_section: course_section,
+                semester: semester,
+                abbreviation: abbreviation,
+                year: year,
+                crn: crn
             };
             await axios.post(submitCourseUrl, data);
-            navigate("/teacherDashboard")
+            navigate("/")
         }
     }
 
@@ -44,20 +52,20 @@ const CreateCoursePage = () => {
                         <label> <b> Course name: </b> </label>
                         <input
                             type="text"
-                            name="CourseName"
-                            value={CourseName}
+                            name="course_name"
+                            value={course_name}
                             required
                             onChange={(e) => OnChange(e)}
                         />
                     </div>
 
-                    <div className="cpp-row-two">
-                        <div className="row-two-first ccp-input-field">
+                    <div className="cpp-row-multiple">
+                        <div className="ccp-input-field">
                             <label> <b> Course abbreviation: </b> </label>
                             <input
                                 type="text"
-                                name="Abbreviation"
-                                value={Abbreviation}
+                                name="abbreviation"
+                                value={abbreviation}
                                 required
                                 onChange={(e) => OnChange(e)}
                             />
@@ -66,38 +74,48 @@ const CreateCoursePage = () => {
                         <div className="ccp-input-field">
                             <label> <b> Course section: </b> </label>
                             <input
-                                type="number"
-                                name="CourseSection"
-                                value={CourseSection}
+                                type="text"
+                                name="course_section"
+                                value={course_section}
                                 required
                                 onChange={(e) => OnChange(e)}
                             />
                         </div>
-
                     </div>
 
-                    <div className="cpp-row-two">
-                        <div className="row-two-first ccp-input-field">
+                    <div className="cpp-row-multiple">
+                        <div className="ccp-input-field">
                             <label> <b> Semester: </b> </label>
                             <input
                                 type="text"
-                                name="Semester"
-                                value={Semester}
+                                name="semester"
+                                value={semester}
                                 required
                                 onChange={(e) => OnChange(e)}
                             />
                         </div>
 
                         <div className="ccp-input-field">
-                            <label> <b> CRN: </b> </label>
+                            <label> <b> Year: </b> </label>
                             <input
+                                name="year"
                                 type="text"
-                                name="crn"
-                                // value={Semester}
-                                // required
+                                value={year}
+                                required
                                 onChange={(e) => OnChange(e)}
                             />
                         </div>
+                    </div>
+
+                    <div className="ccp-input-field">
+                        <label> <b> CRN: </b> </label>
+                        <input
+                            type="text"
+                            name="crn"
+                            value={crn}
+                            required
+                            onChange={(e) => OnChange(e)}
+                        />
                     </div>
 
                     <div className="ccp-button">

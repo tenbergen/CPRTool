@@ -4,13 +4,13 @@ import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.rest.daos.AssignmentDAO;
 import edu.oswego.cs.rest.daos.FileDAO;
 import edu.oswego.cs.rest.database.AssignmentInterface;
+import org.bson.Document;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +21,7 @@ public class ProfessorAssignmentResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/assignments")
     public Response viewAllAssignments() {
-        List<AssignmentDAO> allAssignments = new AssignmentInterface().getAllAssignments();
+        List<Document> allAssignments = new AssignmentInterface().getAllAssignments();
         return Response.status(Response.Status.OK).entity(allAssignments).build();
     }
 
@@ -29,7 +29,7 @@ public class ProfessorAssignmentResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments")
     public Response viewAssignmentsByCourse(@PathParam("courseID") String courseID) {
-        List<AssignmentDAO> specifiedAssignments = new AssignmentInterface().getAssignmentsByCourse(courseID);
+        List<Document> specifiedAssignments = new AssignmentInterface().getAssignmentsByCourse(courseID);
         if (specifiedAssignments.isEmpty()) return Response.status(Response.Status.NOT_FOUND).entity("This assignment does not exist").build();
         return Response.status(Response.Status.OK).entity(specifiedAssignments).build();
     }

@@ -25,7 +25,6 @@ import static com.mongodb.client.model.Filters.eq;
 public class AssignmentInterface {
     static MongoDatabase assignmentDatabase;
     static MongoCollection<Document> assignmentsCollection;
-    private final List<AssignmentDAO> assignments = new ArrayList<>();
     static String reg;
     int nextPos = 0;
     static boolean isWindows = false;
@@ -88,7 +87,7 @@ public class AssignmentInterface {
     }
 
     public void writeToAssignment(FileDAO fileDAO) throws IOException {
-        String FileStructure = getRelPath() + "assignments" + reg + fileDAO.getCourseID() + reg + fileDAO.getAssignmentID() + reg +"assignments";
+        String FileStructure = getRelPath() + "assignments" + reg + fileDAO.getCourseID() + reg + fileDAO.getAssignmentID() + reg + "assignments";
         System.out.println(FileStructure);
         fileDAO.writeFile(FileStructure + reg + fileDAO.getFilename());
     }
@@ -108,7 +107,7 @@ public class AssignmentInterface {
         for (int i = slicedPath.length - 1; !slicedPath[i].equals(targetDir); i--) {
             relativePathPrefix.append("../");
         }
-        System.out.println(relativePathPrefix.toString());
+        System.out.println(relativePathPrefix);
         reg = "\\";
         System.out.println(System.getProperty("user.dir"));
         if (!isWindows) {
@@ -120,34 +119,22 @@ public class AssignmentInterface {
         return relativePathPrefix.toString();
     }
 
-    public List<AssignmentDAO> getAssignmentsByCourse(String courseID) {
-        for (Document document : assignmentsCollection.find()) {
-            if (document.get("course_id").equals(courseID)) {
-                AssignmentDAO assignmentDAO = new AssignmentDAO(
-                        document.getString("assignment_name"),
-                        document.getString("instructions"),
-                        document.getString("due_date"),
-                        document.getString("course_id"),
-                        document.getInteger("points"),
-                        document.getInteger("assignment_id")
-                );
-                assignments.add(assignmentDAO);
-            }
+    public List<Document> getAssignmentsByCourse(String courseID) {
+        MongoCursor<Document> query = assignmentsCollection.find(eq("course_id", courseID)).iterator();
+        List<Document> assignments = new ArrayList<>();
+        while (query.hasNext()) {
+            Document document = query.next();
+            assignments.add(document);
         }
         return assignments;
     }
 
-    public List<AssignmentDAO> getAllAssignments() {
-        for (Document document : assignmentsCollection.find()) {
-            AssignmentDAO assignmentDAO = new AssignmentDAO(
-                    document.getString("assignment_name"),
-                    document.getString("course_id"),
-                    document.getString("due_date"),
-                    document.getString("instructions"),
-                    document.getInteger("points"),
-                    document.getInteger("assignment_id")
-            );
-            assignments.add(assignmentDAO);
+    public List<Document> getAllAssignments() {
+        MongoCursor<Document> query = assignmentsCollection.find().iterator();
+        List<Document> assignments = new ArrayList<>();
+        while (query.hasNext()) {
+            Document document = query.next();
+            assignments.add(document);
         }
         return assignments;
     }

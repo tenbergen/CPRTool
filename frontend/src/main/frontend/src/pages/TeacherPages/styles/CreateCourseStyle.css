@@ -10,7 +10,7 @@
 }
 
 .cpp-container {
-    padding: 3% 4% 0 4%;
+    padding: 2% 4% 0 4%;
     flex-grow: 1;
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 50px;
@@ -42,13 +42,10 @@
     border-radius: 50px;
 }
 
-.cpp-row-two {
+.cpp-row-multiple {
     display: flex;
     flex-direction: row;
-}
-
-div .row-two-first.ccp-input-field {
-    margin-right:20px
+    gap: 20px;
 }
 
 .ccp-button {
