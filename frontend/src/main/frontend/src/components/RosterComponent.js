@@ -49,6 +49,7 @@ const RosterComponent = () => {
             course_id: currentCourse.course_id,
             course_name: currentCourse.course_name,
             course_section: currentCourse.course_section,
+            crn: currentCourse.crn,
             semester: currentCourse.semester,
             year: currentCourse.year
         };
