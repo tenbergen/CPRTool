@@ -14,7 +14,9 @@
     <facet type="jpa" name="JPA">
       <configuration>
         <setting name="validation-enabled" value="true" />
-        <datasource-mapping />
+        <datasource-mapping>
+          <factory-entry name="course-manager-microservice" />
+        </datasource-mapping>
         <naming-strategy-map />
       </configuration>
     </facet>
@@ -77,8 +79,8 @@
     <orderEntry type="library" scope="TEST" name="Maven: com.sun.xml.messaging.saaj:saaj-impl:1.5.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.jvnet.staxex:stax-ex:1.8.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.geronimo.specs:geronimo-jta_1.1_spec:1.1.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.glassfish:javax.json:1.1.4" level="project" />
     <orderEntry type="library" name="Maven: javax.json.bind:javax.json.bind-api:1.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.glassfish:javax.json:1.1.4" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.eclipse:yasson:1.0.0-RC1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: javax.json:javax.json-api:1.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: javax.enterprise:cdi-api:1.2" level="project" />

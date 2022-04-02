@@ -3,11 +3,10 @@
 
     <!-- Enable features -->
     <featureManager>
+        <!-- App runs normally without these features? If needed, bring them back -->
         <feature>microProfile-4.1</feature>
-        <feature>jaxrs-2.1</feature>
-        <feature>cdi-2.0</feature>
         <feature>mpConfig-2.0</feature>
-
+        <feature>jaxrs-2.1</feature>
     </featureManager>
 
     <variable name="default.http.port" defaultValue="13127"/>
@@ -20,26 +19,19 @@
             httpsPort="${default.https.port}"
             id="defaultHttpEndpoint"
     />
-    
-     <cors domain="/"
-          allowedOrigins="*"
-          allowedMethods="GET, DELETE, POST, PUT"
-          allowCredentials="true"
-          allowedHeaders="Content-Type"
-          exposeHeaders="Content-Type"/>
 
     <!-- Automatically expand WAR files and EAR files -->
     <applicationManager autoExpand="true"/>
 
     <!-- Configures the application on a specified context root -->
-    <webApplication contextRoot="${app.context.root}" location="course-manager-microservice.war" />
+    <webApplication contextRoot="${app.context.root}" location="course-manager-microservice.war"/>
 
     <!-- Default SSL configuration enables trust for default certificates from the Java runtime -->
-    <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
+    <ssl id="defaultSSLConfig" trustDefaultCerts="true"/>
 
     <cors domain="/"
           allowedOrigins="*"
-          allowedMethods="POST"
+          allowedMethods="POST, PUT, GET, DELETE"
           allowCredentials="true"
           allowedHeaders="Content-Type"
           exposeHeaders="Content-Type"/>
