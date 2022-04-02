@@ -27,18 +27,12 @@ public class CourseManagerTests {
 
         port = "13125";
         baseUrl = "http://moxie.cs.oswego.edu:" + port + "/manage/professor/";
-        String courseName = "JUnit Test Methodologies";
+        String courseName = "JUnit Theory";
         String courseSection = "800";
         String crn = "54266";
         String semester = "Spring";
         String abbreviation = "CSC378";
         String year = "2023";
-//        String courseName = "JUnit Theory";
-//        String courseSection = "700";
-//        String crn = "54269";
-//        String semester = "Summer";
-//        String abbreviation = "CSC343";
-//        String year = "2022";
         course = new CourseDAO(abbreviation, courseName, courseSection, crn, semester, year);
     }
 
