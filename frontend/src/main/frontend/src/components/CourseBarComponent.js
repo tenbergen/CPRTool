@@ -15,7 +15,10 @@ const CourseBarLink = ({ active, course, onClick }) => {
             <tr>
                 <td style={active ? clickedStyle : normalStyle} >
                     <div className="colorForTable"/>
-                    <p className="courseText"> {course.course_name} </p>
+                    <div className="course_info">
+                        <p className="course_id"> {course.abbreviation}-{course.course_section} </p>
+                        <p className="course_text"> <b> {course.course_name} </b> </p>
+                    </div>
                 </td>
             </tr>
         </Link>
@@ -43,7 +46,7 @@ const CourseBarComponent = () => {
     return (
         <div className="cbc-parent">
             <h2> Courses </h2>
-            <div className="cbc-courses">
+            <div>
                 {courses.map(course =>
                     <CourseBarLink
                         onClick={() => onCourseClick(course)}
