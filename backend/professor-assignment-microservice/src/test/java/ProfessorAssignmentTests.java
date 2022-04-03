@@ -72,26 +72,26 @@ public class ProfessorAssignmentTests {
         client = ClientBuilder.newClient();
 
         // add some temp assignments to the DB
-        expectedAssignments.forEach(assignment -> {
-            String createURL = baseUrl + "/courses/create-assignment/";
-            WebTarget target = client.target(createURL);
-            target.request(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .post(Entity.entity(jsonb.toJson(assignment), MediaType.APPLICATION_JSON));
-        });
+//        expectedAssignments.forEach(assignment -> {
+//            String createURL = baseUrl + "/courses/create-assignment/";
+//            WebTarget target = client.target(createURL);
+//            target.request(MediaType.APPLICATION_JSON)
+//                    .accept(MediaType.APPLICATION_JSON)
+//                    .post(Entity.entity(jsonb.toJson(assignment), MediaType.APPLICATION_JSON));
+//        });
     }
 
     @AfterEach
     public void teardown() {
 
         // remove added assignments from the DB
-        expectedAssignments.forEach(assignment -> {
-            String deleteURL = baseUrl + "/courses/" + assignment.getCourseID() + "/assignments/" + assignment.getAssignment_id() + "/remove/";
-            WebTarget target = client.target(deleteURL);
-            target.request(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .delete();
-        });
+//        expectedAssignments.forEach(assignment -> {
+//            String deleteURL = baseUrl + "/courses/" + assignment.getCourseID() + "/assignments/" + assignment.getAssignment_id() + "/remove/";
+//            WebTarget target = client.target(deleteURL);
+//            target.request(MediaType.APPLICATION_JSON)
+//                    .accept(MediaType.APPLICATION_JSON)
+//                    .delete();
+//        });
         client.close();
     }
 

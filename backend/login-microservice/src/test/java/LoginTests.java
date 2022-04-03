@@ -19,23 +19,7 @@ public class LoginTests {
 
         // base jwt token found by intercepting the request in Burp ;D
         // we can manipulate this to see what else we can do with this request. XD
-        jwt = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjU4YjQyOTY2MmRiMDc4NmYyZWZlZmUxM2MxZWI" +
-                "xMmEyOGRjNDQyZDAiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUu" +
-                "Y29tIiwiYXpwIjoiNTMxNzc3MjQ3OTMzLXRjcDEzamxpM3BnOHIzYjY3ZG92MmQ3a2I0" +
-                "amlydG1zLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiNTMxNzc3MjQ3O" +
-                "TMzLXRjcDEzamxpM3BnOHIzYjY3ZG92MmQ3a2I0amlydG1zLmFwcHMuZ29vZ2xldXNlcmN" +
-                "vbnRlbnQuY29tIiwic3ViIjoiMTA4NTQwNjQ4NDY5NDM0NDg5MDk2IiwiaGQiOiJvc3dlZ2" +
-                "8uZWR1IiwiZW1haWwiOiJsbWNtYWhhbkBvc3dlZ28uZWR1IiwiZW1haWxfdmVyaWZpZWQiO" +
-                "nRydWUsImF0X2hhc2giOiJ6X3BZZmhpU2FYcW5WVzBCbU1QZ3RnIiwibmFtZSI6IkxpYW0g" +
-                "TWNNYWhhbiIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20v" +
-                "YS0vQU9oMTRHakF3N1FCY2RKVDZYaklJd0Fial9FeVFNRjllTWV4TnZPbVE5eDdsUT1zOTYt" +
-                "YyIsImdpdmVuX25hbWUiOiJMaWFtIiwiZmFtaWx5X25hbWUiOiJNY01haGFuIiwibG9jYWxlIj" +
-                "oiZW4iLCJpYXQiOjE2NDg3ODU2MzgsImV4cCI6MTY0ODc4OTIzOCwianRpIjoiNzdmYWM1MzA5ZT" +
-                "RjNzkxYjIwYTQxZmM0NjRiOGQ5NjEzMzZhMTQxYyJ9.jcN2YBXkHZFDNA3-OG6If-zHu2RyhpqBI9" +
-                "x6vDnz9Hi6TPrTIwptvpVlRrDRkxHcdzrj_yPfSfz9FIom0YFYx6YU_EvcA2PHJXRGjjPigQYHgDFq" +
-                "cIBj4SPED_vYjSOcCTGX6OkyKQioUeW02KeprO0obCpXqXmPYVzs-OVzNTVU6NbPPHTP9nkrYhTM5M3" +
-                "xm1n6W_W_veI3SRwODof6C98tzMa5JPe3NM5QkvJn2PBCAISDbqkrs6hPLbobRTglhYYNRyyT4Wo11qV" +
-                "5_paKLZp-e4LFz0oYrtB62GGd-pdf8NhdCREDhfgt0iJR0h_Wj_Le5sOoCdg397-tg36BXw";
+        jwt = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNlYzEzZGViZjRiOTY0Nzk2ODM3MzYyMDUwODI0NjZjMTQ3OTdiZDAiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiNTMxNzc3MjQ3OTMzLXRjcDEzamxpM3BnOHIzYjY3ZG92MmQ3a2I0amlydG1zLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiNTMxNzc3MjQ3OTMzLXRjcDEzamxpM3BnOHIzYjY3ZG92MmQ3a2I0amlydG1zLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA4NTQwNjQ4NDY5NDM0NDg5MDk2IiwiaGQiOiJvc3dlZ28uZWR1IiwiZW1haWwiOiJsbWNtYWhhbkBvc3dlZ28uZWR1IiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiJRSFNDRUx3WkV5SS1ZU2FyWk5VdmZRIiwibmFtZSI6IkxpYW0gTWNNYWhhbiIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS0vQU9oMTRHakF3N1FCY2RKVDZYaklJd0Fial9FeVFNRjllTWV4TnZPbVE5eDdsUT1zOTYtYyIsImdpdmVuX25hbWUiOiJMaWFtIiwiZmFtaWx5X25hbWUiOiJNY01haGFuIiwibG9jYWxlIjoiZW4iLCJpYXQiOjE2NDg5NTgyNjMsImV4cCI6MTY0ODk2MTg2MywianRpIjoiNWU0NTM0OTZiMGUxZGVjNGVkM2I1ZWQ3Y2Y4OTY4MGI5ZDZiMjM4NSJ9.oQ47HH_lB5CHkBaqjyvxqChE34oYq2kfdZgeWn8XrZpmVQh6C84P-BKiynbrKjdNupq8XCSjMJylHI4D8PlTBgLWKTEuOQWQG_SQQgiS46xUR_3BgVzdYH-WwiQirZBjmxqEM9S8YjvH4uulu3jlpoVWhYGtb1JMyOLIShYHHg5jmJOhFxwz8mRYHSe_if-r2QsPo6HZeZOICvrS8gdLuQ1YCjQ3KzxQg2_QaBi8zBGRcd1ncYkt8lfkUB4SP-QMTESBxl2du2jvIdFMlmeX7vkWK1ncie8d21ggIaQhuhGNnupJaxKG7ydjHbmXgmhk4T3HS0eHXU-vwQqjFCCU5w";
     }
 
     @BeforeEach

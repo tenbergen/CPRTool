@@ -89,7 +89,7 @@ public class CourseManagerResource {
         try {
             new CourseInterface().addStudentsFromCSV(fileDAO);
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Failed to add student.").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Failed to add students.").build();
         }
         return Response.status(Response.Status.OK).build();
     }

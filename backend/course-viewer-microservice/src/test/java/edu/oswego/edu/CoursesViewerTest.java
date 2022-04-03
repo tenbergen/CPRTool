@@ -35,12 +35,12 @@ public class CoursesViewerTest {
 
 
         // variables for inserted courses
-        String abbreviation1 = "CSC480";
-        String courseName1 = "Software Design";
+        String abbreviation1 = "CSC378";
+        String courseName1 = "JUnit Theory";
         String courseSection1 = "800";
-        String crn1 = "12345";
+        String crn1 = "54226";
         String semester1 = "Spring";
-        String year1 = "2022";
+        String year1 = "2023";
 
         String abbreviation2 = "CRW406";
         String courseName2 = "Advanced Fiction Writing";
@@ -98,9 +98,6 @@ public class CoursesViewerTest {
                     .accept(MediaType.APPLICATION_JSON)
                     .post(Entity.entity(jsonb.toJson(course), MediaType.APPLICATION_JSON));
         });
-
-        client.close();
-        client = ClientBuilder.newClient();
     }
 
     @AfterEach
@@ -163,7 +160,7 @@ public class CoursesViewerTest {
     public void viewSpecificCourseTest() {
 
         // view course1
-        targetUrl = "courses/"+course1.courseID+"/";
+        targetUrl = "courses/CSC999-723-92674-Summer-2025/";
 
         WebTarget target = client.target(baseUrl + targetUrl);
         Response response = target.request().get();
@@ -222,7 +219,7 @@ public class CoursesViewerTest {
 
      @Test
      public void viewSpecificStudentTest() {
-         targetUrl = "students/"+ student1.studentID+"/";
+         targetUrl = "students/"+ student1.studentID +"/";
 
          WebTarget target = client.target(baseUrl + targetUrl);
          Response response = target.request().get();

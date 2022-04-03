@@ -1,3 +1,5 @@
+import com.ibm.websphere.jaxrs20.multipart.AttachmentBuilder;
+import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.daos.StudentDAO;
 import org.junit.jupiter.api.*;
@@ -10,11 +12,16 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CourseManagerTests {
 
     private static final Jsonb jsonb = JsonbBuilder.create();
-    static CourseDAO course;
+    static CourseDAO course, courseDNE; // create a course that does not exist in the db
     private static String port;
     private static String baseUrl;
     private static String targetUrl;
@@ -34,6 +41,7 @@ public class CourseManagerTests {
         String abbreviation = "CSC378";
         String year = "2023";
         course = new CourseDAO(abbreviation, courseName, courseSection, crn, semester, year);
+        courseDNE = new CourseDAO("CSC999", courseName, courseSection, crn, semester, year);
     }
 
     @BeforeEach
@@ -89,6 +97,25 @@ public class CourseManagerTests {
     }
 
     @Test
+    public void testCreateAndDeleteCourse() {
+
+        // test will observe to see if it returned a positive response
+        // think of how you can enter faulty courses here, like in M1 and log the results
+
+        Assertions.assertEquals(Response.Status.OK, Response.Status.fromStatusCode(addCourseResponse.getStatus()), "Course was not added properly.");
+
+        //Test delete course to see if endpoint works
+        targetUrl = "courses/course/delete/";
+        WebTarget target = client.target(baseUrl + targetUrl);
+        Response deleteCourseResponse = target.request(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .post(Entity.entity(jsonb.toJson(course), MediaType.APPLICATION_JSON));
+
+        Assertions.assertEquals(Response.Status.OK, Response.Status.fromStatusCode(deleteCourseResponse.getStatus()), "Course was not deleted properly.");
+        courseDeletedTest = true;
+    }
+
+    @Test
     public void testUpdateAndDeleteCourse() {
 
         // update and delete will happen at the same time since it's harder to delete a course
@@ -130,7 +157,7 @@ public class CourseManagerTests {
     @Test
     public void testAddStudent() {
 
-        String email = "timmyTest@oswego.edu";
+        String email = "ThisIsNotAnEmail";
         StudentDAO studentDAO = new StudentDAO(email, course.abbreviation, course.courseName, course.courseSection,
                 course.crn, course.semester, course.year);
 
@@ -142,6 +169,7 @@ public class CourseManagerTests {
 
         Assertions.assertEquals(Response.Status.OK, Response.Status.fromStatusCode(response.getStatus()), "Student was not added properly.");
     }
+
 
     @Test
     public void testDeleteStudent() {
@@ -161,50 +189,46 @@ public class CourseManagerTests {
 
     @Test
     public void testAddAndDeleteStudent() {
-        String email = "tommyTrial@oswego.edu";
+        String email = "timmyTest@oswego.edu";
         StudentDAO studentDAO = new StudentDAO(email, course.abbreviation, course.courseName, course.courseSection,
+                course.crn, course.semester, course.year);
+        StudentDAO studentDNEDAO = new StudentDAO("tommyTrial@oswego.edu", course.abbreviation, course.courseName, course.courseSection,
                 course.crn, course.semester, course.year);
 
         targetUrl = "courses/course/student/add/";
         WebTarget target = client.target(baseUrl + targetUrl);
-        target.request(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .post(Entity.entity(jsonb.toJson(studentDAO), MediaType.APPLICATION_JSON));
-
-        targetUrl = "courses/course/student/delete/";
-        target = client.target(baseUrl + targetUrl);
         Response response = target.request(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(jsonb.toJson(studentDAO), MediaType.APPLICATION_JSON));
 
+        Assertions.assertEquals(Response.Status.OK, Response.Status.fromStatusCode(response.getStatus()), "Student was not added properly.");
+
+        targetUrl = "courses/course/student/delete/";
+        target = client.target(baseUrl + targetUrl);
+        response = target.request(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .post(Entity.entity(jsonb.toJson(studentDNEDAO), MediaType.APPLICATION_JSON));
+
         Assertions.assertEquals(Response.Status.OK, Response.Status.fromStatusCode(response.getStatus()), "Student was not deleted properly.");
     }
 
-//    @Test
-//    public void testMassAddStudents() throws FileNotFoundException {
-//
-//        // how to make an IMultiPartBody here in the backend???
-//
-//        targetUrl = "courses/course/student/massadd/";
-//
-//        List<IAttachment> attachments = new ArrayList<>();
-//
-//        // insert other files into attachment list?
-//
-//        File file = new File("src/test/testRosters/Roster1.csv");
-//        attachments.add(AttachmentBuilder.newBuilder("thefile")
-//                .inputStream("person.xml",new FileInputStream(file))
-//                .contentType(MediaType.APPLICATION_XML_TYPE)
-//                .build());
-//
-//        WebTarget target = client.target(baseUrl + targetUrl);
-//        Response r = target.request(MediaType.TEXT_PLAIN)
-//                .header("Content-Type", "multipart/form-data")
-//                .post(Entity.entity(attachments, MediaType.MULTIPART_FORM_DATA_TYPE));
-//
-////        Response response = target.request(MediaType.MULTIPART_FORM_DATA)
-////                .accept(MediaType.MULTIPART_FORM_DATA)
-//
-//        Assertions.assertEquals(Response.Status.OK, Response.Status.fromStatusCode(r.getStatus()), "Student was not added properly.");
-//    }
+    @Test
+    public void testMassAddStudents() throws FileNotFoundException {
+
+        targetUrl = "/courses/course/student/mass-add/";
+
+        // for whatever reason, AttachmentBuilder.newBuilder is recognized at compiler time but not at run time...?
+        // gives a NoClassDefFoundError if you try to run this test...
+        List<IAttachment> attachments = new ArrayList<>();
+        File testFile = new File("src/test/testRosters/test.csv");
+        attachments.add(AttachmentBuilder.newBuilder("studentRoster")
+                .inputStream(new FileInputStream(testFile))
+                .build());
+
+        Response r = client.target(baseUrl + targetUrl)
+                .request()
+                .post(Entity.entity(attachments, MediaType.MULTIPART_FORM_DATA));
+
+        Assertions.assertEquals(Response.Status.OK, Response.Status.fromStatusCode(r.getStatus()), "Student was not added properly.");
+    }
 }
