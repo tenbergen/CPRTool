@@ -1,5 +1,6 @@
 package edu.oswego.cs.resources;
 
+import edu.oswego.cs.daos.StudentDAO;
 import edu.oswego.cs.database.CourseInterface;
 import org.bson.Document;
 
@@ -10,6 +11,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Path("professor")
 public class CoursesViewerResources {
@@ -27,6 +30,22 @@ public class CoursesViewerResources {
     public Response viewCourse(@PathParam("courseID") String courseID) {
         Document document = new CourseInterface().getCourse(courseID);
         return Response.status(Response.Status.OK).entity(document).build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("courses/student/{studentID}")
+    public Response viewStudentCourses(@PathParam("studentID") String studentID) {
+        List<Document> students = new CourseInterface().getAllStudents();
+
+        Optional<Document> student = students.stream()
+                .filter( document -> document.containsValue(studentID) )
+                .findFirst();
+
+        if (! student.isPresent())
+            return Response.status(Response.Status.BAD_REQUEST).entity(studentID + " not found.").build();
+
+        return Response.status(Response.Status.OK).entity(student.get().get("courses")).build();
     }
 
     @GET
