@@ -13,20 +13,26 @@ export const getCoursesAsync = createAsyncThunk(
     });
 
 const courseSlice = createSlice({
-    name: 'courses',
-    initialState: [],
+    name: 'courseSlice',
+    initialState: {
+        courses: [],
+        currentCourse: null
+    },
     reducers: {
         addCourse: (state, action) => {
-            state.push(action.payload)
+            state.courses.push(action.payload)
+        },
+        setCurrentCourse: (state, action) => {
+            state.currentCourse = action.payload
         }
     },
     extraReducers: {
         [getCoursesAsync.fulfilled]: (state, action) => {
-            return action.payload.courses
+            state.courses = action.payload.courses
         }
     }
 })
 
-export const { addCourse } = courseSlice.actions
+export const { addCourse, setCurrentCourse } = courseSlice.actions
 
 export default courseSlice.reducer
