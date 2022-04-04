@@ -11,6 +11,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Path("professor")
 public class CoursesViewerResources {
@@ -36,6 +38,23 @@ public class CoursesViewerResources {
     public Response viewAllStudents() {
         List<StudentDAO> students = new CourseInterface().getAllStudents();
         return Response.status(Response.Status.OK).entity(students).build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("courses/{id}")
+    public Response viewStudentCourses(@PathParam("id") String id) {
+        List<StudentDAO> students = new CourseInterface().getAllStudents();
+
+        Optional<StudentDAO> student = students.stream()
+                .filter( dao -> dao.studentID.equals(id) )
+                .findFirst();
+
+        if (! student.isPresent())
+            return Response.status(Response.Status.BAD_REQUEST).entity(id + " not found.").build();
+
+        return Response.status(Response.Status.OK).entity(student.get().courses).build();
+
     }
 
     @GET
