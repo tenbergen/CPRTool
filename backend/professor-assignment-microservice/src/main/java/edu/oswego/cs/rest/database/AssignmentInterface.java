@@ -51,9 +51,9 @@ public class AssignmentInterface {
                 .append("course_id",CID)
                 .append("assignment_id",nextPos)
                 .append("assignment_name",assignmentDAO.getAssignmentName())
-                .append("instructions", assignmentDAO.getInstructions())
-                .append("due_date", assignmentDAO.getDueDate())
-                .append("points", assignmentDAO.getPoints());
+                .append("instructions", assignmentDAO.getAssignmentInstructions())
+                .append("due_date", assignmentDAO.getAssignmentDueDate())
+                .append("points", assignmentDAO.getAssignmentDueDate());
         assignmentCollection.insertOne(assignment);
     }
 
@@ -130,12 +130,15 @@ public class AssignmentInterface {
         for (Document document : assignmentCollection.find()) {
             if (document.get("course_id").equals(courseID)) {
                 AssignmentDAO assignmentDAO = new AssignmentDAO(
-                        (String) document.get("assignment_name"),
-                        (String) document.get("instructions"),
-                        (String) document.get("due_date"),
                         (String) document.get("course_id"),
-                        (int) document.get("points")
-
+                        (String) document.get("assignment_name"),
+                        (String) document.get("assignment_id"),
+                        (String) document.get("assignment_instructions"),
+                        (String) document.get("peer_review_instructions"),
+                        (String) document.get("assignment_due_date"),
+                        (String) document.get("peer_review_due_date"),
+                        (int) document.get("assignment_points"),
+                        (int) document.get("peer_review_points")
                 );
                 assignments.add(assignmentDAO);
             }
@@ -149,11 +152,15 @@ public class AssignmentInterface {
 
         for (Document document : assignmentCollection.find()) {
             AssignmentDAO assignmentDAO = new AssignmentDAO(
-                    (String) document.get("assignment_name"),
-                    (String) document.get("instructions"),
-                    (String) document.get("due_date"),
                     (String) document.get("course_id"),
-                    (int) document.get("points")
+                    (String) document.get("assignment_name"),
+                    (String) document.get("assignment_id"),
+                    (String) document.get("assignment_instructions"),
+                    (String) document.get("peer_review_instructions"),
+                    (String) document.get("assignment_due_date"),
+                    (String) document.get("peer_review_due_date"),
+                    (int) document.get("assignment_points"),
+                    (int) document.get("peer_review_points")
             );
             assignments.add(assignmentDAO);
         }

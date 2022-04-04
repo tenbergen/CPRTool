@@ -144,7 +144,6 @@ public class CourseInterface {
 
         String cid = f.getFilename();
         cid = cid.substring(0, cid.length() - 4);
-        System.out.println(cid);
         Document course = courseCollection.find(new Document("course_id", cid)).first();
         assert course != null;
         CourseDAO courseDAO = new CourseDAO(

@@ -97,7 +97,7 @@ public class ProfessorAssignmentResource {
         assignmentDAO.setCourseID(courseID);
         System.out.println("-----------------------------------------------------\n"+
                 assignmentDAO.getAssignmentName() + "\n" + assignmentDAO.getCourseID()+"\n"+
-                assignmentDAO.getDueDate() + "\n" + assignmentDAO.getInstructions()+"\n"+assignmentDAO.getPoints());
+                assignmentDAO.getAssignmentDueDate() + "\n" + assignmentDAO.getAssignmentInstructions()+"\n"+assignmentDAO.getAssignmentPoints());
         new AssignmentInterface().createAssignment(assignmentDAO);
         return Response.status(Response.Status.OK).entity("Assignment Successfully Created").build();
     }
