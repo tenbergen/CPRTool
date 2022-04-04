@@ -1,7 +1,6 @@
 package edu.oswego.cs.rest.daos;
 
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;

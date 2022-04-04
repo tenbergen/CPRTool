@@ -1,7 +1,10 @@
 package edu.oswego.cs.rest.daos;
 
-import lombok.*;
-
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.persistence.Entity;
