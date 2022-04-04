@@ -16,15 +16,18 @@ public class AssignmentDAO {
 
     @Id @JsonbProperty("assignment_name") String assignmentName;
     @JsonbProperty("instructions") String instructions;
+    @JsonbProperty("peer_review_instructions") String peerReviewInstructions;
     @JsonbProperty("due_date") String dueDate;
     @JsonbProperty("course_id") String courseID;
     @JsonbProperty("points") int points;
     @JsonbProperty("assignment_id") int assignment_id;
 
+
     @JsonbCreator
     public AssignmentDAO(
             @NonNull @JsonbProperty("assignment_name") String assignmentName,
             @NonNull @JsonbProperty("instructions") String instructions,
+            @NonNull @JsonbProperty("peer_review_instructions") String peerReviewInstructions,
             @NonNull @JsonbProperty("due_date") String dueDate,
             @NonNull @JsonbProperty("course_id") String courseID,
             @NonNull @JsonbProperty("points") int points) {
@@ -33,11 +36,13 @@ public class AssignmentDAO {
         this.dueDate = dueDate;
         this.courseID = courseID;
         this.points = points;
+        this.peerReviewInstructions = peerReviewInstructions;
     }
 
     public AssignmentDAO(
             @NonNull @JsonbProperty("assignment_name") String assignmentName,
             @NonNull @JsonbProperty("instructions") String instructions,
+            @NonNull @JsonbProperty("peer_review_instructions") String peerReviewInstructions,
             @NonNull @JsonbProperty("due_date") String dueDate,
             @NonNull @JsonbProperty("course_id") String courseID,
             @NonNull @JsonbProperty("points") int points,
