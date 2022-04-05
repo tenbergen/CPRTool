@@ -25,7 +25,7 @@ const AssBarLink = ({active, assignment, onClick}) => {
 const AssBarComponent = () => {
     const currentCourse = useSelector((state) => state.courses.currentCourse)
     const assUrl = `${window.location.protocol}//${window.location.host}/assignments/professor/courses/${currentCourse.course_id}/assignments/`
-    //const assUrl = `http://moxie.cs.oswego.edu:13125/assignments/professor/courses/${currentCourse.course_id}/assignments/`
+    // const assUrl = `http://moxie.cs.oswego.edu:13125/assignments/professor/courses/${currentCourse.course_id}/assignments/`
     const [assignments, setAssignments] = useState()
     const [isLoading, setLoad] = useState(true)
     const [chosen, setChosen] = useState(currentCourse.course_id);
@@ -49,7 +49,7 @@ const AssBarComponent = () => {
 
 
     if(isLoading) {
-        return <div><h1>LOADING</h1></div>
+        return <div></div>
     }
 
     return (

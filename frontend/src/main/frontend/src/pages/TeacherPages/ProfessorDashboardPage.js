@@ -24,7 +24,7 @@ function ProfessorDashboardPage() {
             <SidebarComponent />
             <div id="teacher">
                 <h1>Hello {user}</h1>
-                <div id="courseList">
+                <div id="proCourseList">
                     {courses.map(course =>
                     <Link to={"/details/professor/" + course.course_id}>
                         <li className="courseListItem">{course.course_id + "\n\n"  + course.course_name}</li>

@@ -26,7 +26,7 @@ const ToDoComponent = () => {
     },[])
 
     if(isLoading) {
-        return <div><h1>LOADING</h1></div>
+        return <div></div>
     }
 
     return (

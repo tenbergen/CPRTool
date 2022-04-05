@@ -8,7 +8,7 @@ import {setUserInformation} from "../redux/features/authSlice";
 const CourseBarLink = ({ active, course, onClick }) => {
     const role = useSelector((state) => state.auth.role)
     const normalStyle = { backgroundColor: "rgba(255, 255, 255, 0.25)" }
-    const clickedStyle = { backgroundColor: "white" }
+    const clickedStyle = { backgroundColor: "white"}
 
     return (
         <Link to={`/details/${role}/${course.course_id}`} onClick={onClick}>
@@ -46,6 +46,7 @@ const CourseBarComponent = () => {
     return (
         <div className="cbc-parent">
             <h2> Courses </h2>
+            <div className="cbc-courses">
             <div>
                 {courses.map(course =>
                     <CourseBarLink
@@ -54,6 +55,7 @@ const CourseBarComponent = () => {
                         course={course}
                     />
                 )}
+            </div>
             </div>
         </div>
     );
