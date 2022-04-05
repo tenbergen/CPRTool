@@ -36,9 +36,10 @@ const RosterComponent = () => {
                 semester: currentCourse.semester,
                 year: currentCourse.year
             };
-            updateArray((arr) => [...arr, Email])
-            await axios.post(addStudentUrl, data)
+            updateArray((arr) => [...arr, Name])
+            setFormData({Name: '', Email: ''})
             setFalse()
+            await axios.post(addStudentUrl, data)
         }
     }
 
@@ -86,15 +87,14 @@ const RosterComponent = () => {
                         <th className="rosterHeader">Name</th>
                         <th className="rosterHeader">Email</th>
                         <th className="rosterHeader">Team</th>
-                        <th className="rosterHeader">Status</th>
+                        <th className="rosterHeader">Remove</th>
                     </tr>
                     {studentArray.map(d =>
                         <tr>
-                            <th>{d}</th>
-                            <th>{d.Email}</th>
-                            <th>{d.Team}</th>
-                            <th>{d.Status}</th>
-                            <span onClick={() => deleteStudent(d)} className="crossMark">&#10060;</span>
+                            <th className="rosterComp">{d}</th>
+                            <th className="rosterComp">{d.Email}</th>
+                            <th className="rosterComp">{d.Team}</th>
+                            <th className="rosterComp"> <span onClick={() => deleteStudent(d)} className="crossMark">&#10006;</span></th>
                         </tr>
                     )}
                 </table>

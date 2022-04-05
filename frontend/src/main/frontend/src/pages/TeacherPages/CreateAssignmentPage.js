@@ -35,6 +35,7 @@ const CreateAssignmentPage = () => {
             const data = {
                 assignment_name: AssignmentName,
                 instructions: AssignmentInstructions,
+                peer_review_instructions: ReviewInstructions,
                 due_date: AssignmentDueDate,
                 points: AssignmentPoints,
                 course_id: courseId

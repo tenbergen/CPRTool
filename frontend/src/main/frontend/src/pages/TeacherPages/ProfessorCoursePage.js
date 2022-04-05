@@ -9,6 +9,7 @@ import TeacherAssComponent from "../../components/TeacherAssComponent";
 import {useDispatch, useSelector} from "react-redux";
 import {getCourseDetailsAsync} from "../../redux/features/courseSlice";
 import CourseBarComponent from "../../components/CourseBarComponent";
+import ProfessorGradebookComponent from "../../components/ProfessorGradebookComponent";
 
 const CourseComponent = ({ active, component, onClick }) => {
     return (
@@ -50,7 +51,7 @@ function ProfessorCoursePage() {
                         </div>
                         <div>
                             {chosen === "Assignments" && <TeacherAssComponent/>}
-                            {chosen === "Gradebook" && null}
+                            {chosen === "Gradebook" && <ProfessorGradebookComponent/> }
                             {chosen === "Roster" && <RosterComponent/>}
                             {chosen === "Manage" && <EditCourseComponent/>}
                         </div>
