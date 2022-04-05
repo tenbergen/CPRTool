@@ -149,7 +149,7 @@ public class AssignmentInterface {
         if (!file.delete()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist or could not be deleted.").build());
     }
 
-    public void remove(int AssignmentID, String courseID) throws IOException {
+    public void removeAssignment(int AssignmentID, String courseID) throws IOException {
         MongoCursor<Document> results = assignmentDatabase.getCollection("assignments").find(new Document()
                 .append("course_id", courseID)
                 .append("assignment_id", AssignmentID)).iterator();
@@ -161,6 +161,20 @@ public class AssignmentInterface {
             FileUtils.deleteDirectory(new File(Destination));
             assignmentDatabase.getCollection("assignments").findOneAndDelete(ass);
         }
+    }
+
+    public void removeCourse(String courseID) throws IOException {
+        MongoCursor<Document> results = assignmentDatabase.getCollection("assignments").find(new Document()
+                .append("course_id", courseID)).iterator();
+        if (!results.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
+
+        while (results.hasNext()) {
+            Document ass = results.next();
+            assignmentDatabase.getCollection("assignments").findOneAndDelete(ass);
+        }
+
+        String Destination = getRelPath() + "assignments" + reg + courseID;
+        FileUtils.deleteDirectory(new File(Destination));
     }
 
     public static String findFile(String courseID, int assignmentID, String fileName) {
