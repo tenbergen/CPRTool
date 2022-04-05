@@ -80,7 +80,7 @@ public class ProfessorAssignmentResource {
     @DELETE
     @Path("/courses/{courseID}/assignments/{assignmentID}/remove")
     public Response removeAssignment(@PathParam("assignmentID") int assignmentID, @PathParam("courseID") String courseID) throws IOException {
-        new AssignmentInterface().remove(assignmentID, courseID);
+        new AssignmentInterface().removeAssignment(assignmentID, courseID);
         return Response.status(Response.Status.OK).entity("Assignment successfully deleted.").build();
     }
 
@@ -135,4 +135,10 @@ public class ProfessorAssignmentResource {
 
     }
 
+    @DELETE
+    @Path("/courses/{courseID}/remove")
+    public Response removeCourse(@PathParam("courseID") String courseID) throws IOException {
+        new AssignmentInterface().removeCourse(courseID);
+        return Response.status(Response.Status.OK).entity("Course successfully deleted from Assignments Database and assignments folder").build();
+    }
 }
