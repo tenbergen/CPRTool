@@ -35,6 +35,8 @@ const getUserInformation = () => {
         return {
             isAuthenticated: true,
             user_given_name: decoded.name,
+            email: decoded.email,
+            lakerId: decoded.email.substring(0, decoded.email.indexOf("@")),
             role: alt_role != null ? alt_role : decoded.roles[0]
         }
     } catch (e) {
@@ -49,6 +51,8 @@ const authSlice = createSlice({
     initialState: {
         isAuthenticated: null,
         user_given_name: null,
+        email: null,
+        lakerId: null,
         role: null
     },
     reducers: {

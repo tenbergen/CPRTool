@@ -2,12 +2,22 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from "axios";
 import React from "react";
 
-const viewCourseURL = `${process.env.REACT_APP_URL}/view/professor/courses`
+const viewCourseUrl = `${process.env.REACT_APP_URL}/view/professor`
+
+export const getStudentCoursesAsync = createAsyncThunk(
+    'courses/getStudentCoursesAsync',
+    async (studentId) => {
+        const courses = await axios.get(`${viewCourseUrl}/${studentId}/courses`).then(res => {
+            return res.data
+        });
+        return { courses }
+    });
 
 export const getCoursesAsync = createAsyncThunk(
     'courses/getCoursesAsync',
     async () => {
-        const courses = await axios.get(viewCourseURL).then(res => {
+        const courses = await axios.get(`${viewCourseUrl}/courses`).then(res => {
+            console.log(res.data)
             return res.data
         })
         return { courses }
@@ -16,7 +26,7 @@ export const getCoursesAsync = createAsyncThunk(
 export const getCourseDetailsAsync = createAsyncThunk(
     'courses/getCourseDetailAsync',
     async (courseId )=> {
-        const url = `${viewCourseURL}/${courseId}`
+        const url = `${viewCourseUrl}/courses/${courseId}`
         console.log(url)
         const currentCourse = await axios.get(url).then(res => {
             return res.data
@@ -40,6 +50,9 @@ const courseSlice = createSlice({
     },
     extraReducers: {
         [getCoursesAsync.fulfilled]: (state, action) => {
+            state.courses = action.payload.courses
+        },
+        [getStudentCoursesAsync.fulfilled]: (state, action) => {
             state.courses = action.payload.courses
         },
         [getCourseDetailsAsync.fulfilled]: (state, action) => {
