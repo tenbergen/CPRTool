@@ -1,3 +1,6 @@
+body {
+    overflow-y: hidden;
+}
 .StudentDashboard {
     display: flex;
 }
@@ -11,7 +14,33 @@
     padding-left: 3%;
     margin-right: 5%;
     margin-left: 5%;
-    flex-grow: 1;
+    /*flex-grow: 1;*/
+    height: 90vh;
+    width: 100vw;
+}
+
+#courseList {
+    overflow-y: scroll;
+    height: 75vh;
+}
+
+#courseList::-webkit-scrollbar {
+    width: 20px;
+}
+
+#courseList::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+#courseList::-webkit-scrollbar-thumb {
+    background-color: #d6dee1;
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
+}
+
+#courseList::-webkit-scrollbar-thumb:hover {
+    background-color: #a8bbbf;
 }
 
 .courseListItem {
