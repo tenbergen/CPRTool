@@ -61,6 +61,7 @@ public class AssignmentInterface {
                 .append("assignment_id", nextPos)
                 .append("assignment_name", assignmentDAO.getAssignmentName())
                 .append("instructions", assignmentDAO.getInstructions())
+                .append("peer_review_instructions", assignmentDAO.getPeerReviewInstructions())
                 .append("due_date", assignmentDAO.getDueDate())
                 .append("points", assignmentDAO.getPoints());
         MongoCursor<Document> query = assignmentsCollection.find(assignment).iterator();
@@ -126,6 +127,8 @@ public class AssignmentInterface {
             Document document = query.next();
             assignments.add(document);
         }
+        if (assignments.isEmpty()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This assignment does not exist").build());
+
         return assignments;
     }
 
@@ -137,6 +140,13 @@ public class AssignmentInterface {
             assignments.add(document);
         }
         return assignments;
+    }
+
+    public static void removeFile(FileDAO fileDAO){
+        String fileLocation = findFile(fileDAO.getCourseID(), fileDAO.getAssignmentID(), fileDAO.getFilename());
+        File file = new File(fileLocation);
+        System.out.println(file.getAbsolutePath());
+        if (!file.delete()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist or could not be deleted.").build());
     }
 
     public void remove(int AssignmentID, String courseID) throws IOException {
