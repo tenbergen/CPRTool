@@ -14,6 +14,16 @@ function ProfessorDashboardPage() {
         dispatch(getCoursesAsync())
     }, []);
 
+    const studentView = () => {
+        localStorage.setItem("alt_role", "student")
+        window.location.reload(false);
+    }
+
+    const originalView = () => {
+        localStorage.removeItem("alt_role")
+        window.location.reload(false);
+    }
+
     // this allows the courses to be received and rendered, hence this and useEffect
     if (!courses) {
         return <div><h1>LOADING</h1></div>
@@ -24,6 +34,8 @@ function ProfessorDashboardPage() {
             <SidebarComponent />
             <div id="teacher">
                 <h1>Hello {user}</h1>
+                <button onClick={studentView} style={{marginRight: "10px"}}> Student View </button>
+                <button onClick={originalView}> Original View </button>
                 <div id="proCourseList">
                     {courses.map(course =>
                     <Link to={"/details/professor/" + course.course_id}>

@@ -29,12 +29,13 @@ export const getTokenAsync = createAsyncThunk(
 )
 
 const getUserInformation = () => {
+    const alt_role = localStorage.getItem("alt_role")
     try {
         let decoded = jwtDecode(localStorage.getItem("jwt_token"))
         return {
             isAuthenticated: true,
             user_given_name: decoded.name,
-            role: decoded.roles[0]
+            role: alt_role != null ? alt_role : decoded.roles[0]
         }
     } catch (e) {
         return {

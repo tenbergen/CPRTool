@@ -18,6 +18,16 @@ function StudentDashboardPage() {
         return <div><h1>LOADING</h1></div>
     }
 
+    const professorView = () => {
+        localStorage.setItem("alt_role", "professor")
+        window.location.reload(false);
+    }
+
+    const originalView = () => {
+        localStorage.removeItem("alt_role")
+        window.location.reload(false);
+    }
+
     const courseClickHandler = () => {
         dispatch(getCourseDetailsAsync)
     }
@@ -27,6 +37,8 @@ function StudentDashboardPage() {
             <SidebarComponent />
             <div id="student">
                 <h2> Hello {user}</h2>
+                <button onClick={professorView} style={{marginRight: "10px"}}> Professor View </button>
+                <button onClick={originalView}> Original View </button>
                 <div id="courseList">
                     {courses.map(course =>
                         <Link to={"/details/student/" + course.course_id} onClick={() => courseClickHandler(course)} state={{from: course}}>
