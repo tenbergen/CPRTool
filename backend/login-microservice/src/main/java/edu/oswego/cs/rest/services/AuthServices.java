@@ -34,22 +34,24 @@ public class AuthServices {
     public String generateNewToken(String token) {
         Payload payload = googleService.validateToken(token);
         Set<String> roles = new HashSet<>();
-        if (payload == null) {
+        if (payload == null) 
             throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token.").build());
-        }
-
-        if (isProfessor(token)) {
+        
+        String lakerID = payload.getEmail().split("@")[0];
+        
+        if (professorCollection.find(eq("professor_id", lakerID)).first() != null) {
             roles.add("professor");
         } else {
             roles.add("student");
         }
-
+        
         try {
             return JwtBuilder.create("cpr22s")
                     .claim("sub", payload.getSubject())
                     .claim("email", payload.getEmail())
                     .claim("hd", payload.getHostedDomain())
                     .claim("name", payload.get("name"))
+                    .claim("lakerID", lakerID)
                     .claim("roles", roles)
                     .claim("aud", "CPR22S480")
                     .buildJwt().compact();
@@ -59,12 +61,4 @@ public class AuthServices {
         }
     }
 
-    protected boolean isProfessor(String token) {
-        Payload payload = googleService.validateToken(token);
-        if (payload == null) {
-            throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token.").build());
-        }
-        String userID = payload.getEmail().split("@")[0];
-        return professorCollection.find(eq("professor_id", userID)).first() != null;
-    }
 }

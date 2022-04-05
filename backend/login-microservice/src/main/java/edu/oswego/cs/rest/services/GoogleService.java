@@ -15,20 +15,19 @@ import java.util.Collections;
 
 @NoArgsConstructor
 public class GoogleService {
-    private final String clientID = System.getenv("CLIENT_ID");
 
     protected Payload validateToken(String token) {
         GoogleIdToken idToken = verifyToken(token);
-        if (idToken == null) {
+        if (idToken == null) 
             throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token.").build());
-        }
+        
         return idToken.getPayload();
     }
 
     protected GoogleIdToken verifyToken(String token) {
         try {
-            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(),
-                    new GsonFactory())
+            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier
+                    .Builder(new NetHttpTransport(), new GsonFactory())
                     .setAudience(Collections.singletonList(clientID))
                     .build();
             return verifier.verify(token);
