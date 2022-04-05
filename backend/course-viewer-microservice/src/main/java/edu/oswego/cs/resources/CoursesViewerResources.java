@@ -35,7 +35,7 @@ public class CoursesViewerResources {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("courses/student/{studentID}")
+    @Path("{studentID}/courses")
     public Response viewStudentCourses(@PathParam("studentID") String studentID) {
         CourseInterface courseInterface = new CourseInterface();
         List<Document> students = courseInterface.getAllStudents();
