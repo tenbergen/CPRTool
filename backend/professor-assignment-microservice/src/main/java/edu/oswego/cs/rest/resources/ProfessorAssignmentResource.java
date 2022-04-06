@@ -34,6 +34,14 @@ public class ProfessorAssignmentResource {
         return Response.status(Response.Status.OK).entity(specifiedAssignments).build();
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/courses/{courseID}/assignments/{assignmentID}")
+    public Response viewSpecifiedAssignment(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID){
+        Document specifiedAssignment = AssignmentInterface.getSpecifiedAssignment(courseID, assignmentID);
+        return Response.status(Response.Status.OK).entity(specifiedAssignment).build();
+    }
+
     /**
      * File is uploaded as form-data and passed back as a List<IAttachment>
      * The attachment is processed in FileDao.FileFactory, which reads and
@@ -63,7 +71,6 @@ public class ProfessorAssignmentResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/assignments/remove-file")
     public Response removeFileFromAssignment(FileDAO fileDAO){
-        System.out.println(fileDAO.getFilename() + fileDAO.getCourseID());
         AssignmentInterface.removeFile(fileDAO);
         return Response.status(Response.Status.OK).entity("File successfully deleted.").build();
     }
