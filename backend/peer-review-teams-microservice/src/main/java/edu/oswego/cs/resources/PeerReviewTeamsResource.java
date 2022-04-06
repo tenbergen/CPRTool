@@ -1,8 +1,8 @@
 package edu.oswego.cs.resources;
 
+import edu.oswego.cs.daos.TeamDAO;
 import edu.oswego.cs.database.TeamInterface;
 import edu.oswego.cs.requests.SwitchTeamParam;
-import edu.oswego.cs.requests.TeamParam;
 import org.bson.Document;
 
 import javax.ws.rs.*;
@@ -17,34 +17,16 @@ public class PeerReviewTeamsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
     @Path("team/professor/initialize")
-    public Response initTeam(TeamParam request) {
-        /*
-         - scope: professor
-         - desc: Initialize teams for each course
-         - params: {"courseID", "teamSize"}
-         - FE:
-            + This API returns the "team outline" array of integer presents the team size for each team for the whole course.
-            + FE will use this array to decide the total teams each course has and how many team members each team has
-                i.e. create placeholders for each team
-            + Also, FE will need to include the element in the array in each http request call to "join team" api
-        */
-        ArrayList<Integer> res = new TeamInterface().initTeamHandler(request);
-        return Response.status(Response.Status.OK).entity(res).build();
+    public Response initializeTeams(TeamDAO dao) {
+        new TeamInterface().initializeTeams(dao);
+        return Response.status(Response.Status.OK).entity("Successfully initialized teams.").build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("team/join")
-    public Response joinTeam(TeamParam request) {
-        /*
-         - scope: every students
-         - desc: allows students to join the team
-         - params: {"courseID", "studentID", "teamID", "teamSize"}
-         - FE: This API returns
-            + 200 OK => Sucessfully join
-            + 409 CoNFLICT => Invalid Join Request (team is already full)
-            + 400 BR => BAD_REQUEST (worng params, etc.)
-        */
+    public Response joinTeam(TeamDAO dao) {
         try {
             int result = new TeamInterface().joinTeamHandler(request);
             String resultString = "";
