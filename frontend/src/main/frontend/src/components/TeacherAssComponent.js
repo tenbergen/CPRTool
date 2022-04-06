@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import "./styles/TeacherAss.css"
 import {useDispatch, useSelector} from "react-redux";
 import {Link, useParams} from "react-router-dom";
-import {getCourseAssignmentsAsync} from "../redux/features/assignmentSlice";
+import { getCourseAssignmentsAsync } from "../redux/features/assignmentSlice";
 import axios from "axios";
 
 const assignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`
@@ -31,7 +31,7 @@ const TeacherAssComponent = () => {
                 <div id="assList">
                     {courseAssignments.map(assignment =>
                         <div className="assListItem">
-                            <Link to={`/details/professor/${courseId}/${assignment.assignment_name}/grade`}>
+                            <Link to={`/details/professor/${courseId}/${assignment.assignment_id}/grade`}>
                                 <li>
                                     {assignment.assignment_name} <br/> <br/>
                                 </li>

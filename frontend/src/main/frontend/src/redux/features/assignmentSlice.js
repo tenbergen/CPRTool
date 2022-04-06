@@ -18,6 +18,19 @@ export const getCourseAssignmentsAsync = createAsyncThunk(
     }
 )
 
+export const getAssignmentFilesAsync = createAsyncThunk(
+    'assignments/getAssignmentFilesAsync',
+    async (values) => {
+        const { courseId, assignmentId } = values;
+        const url = `${getAssignmentUrl}/${courseId}/assignments/${assignmentId}/view-files`
+        const currentAssignmentFiles = await axios.get(url).then(res => {
+            console.log(res.data)
+            return res.data
+        })
+        return { currentAssignmentFiles }
+    }
+)
+
 export const getAssignmentDetailsAsync = createAsyncThunk(
     'assignments/getAssignmentDetailsAsync',
     async (values)=> {
@@ -38,6 +51,7 @@ const assignmentSlice = createSlice({
     initialState: {
         courseAssignments: [],
         currentAssignment: null,
+        currentAssignmentFiles: [],
         currentAssignmentLoaded: false
     },
     reducers: {
@@ -59,6 +73,9 @@ const assignmentSlice = createSlice({
         },
         [getAssignmentDetailsAsync.pending]: (state) => {
             state.currentAssignmentLoaded = false
+        },
+        [getAssignmentFilesAsync.fulfilled]: (state, action) => {
+            state.currentAssignmentFiles = action.currentAssignmentFiles
         }
     }
 })
