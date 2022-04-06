@@ -5,13 +5,13 @@ import {Link, useParams} from "react-router-dom";
 import { getCourseAssignmentsAsync, setCurrentAssignment } from "../redux/features/assignmentSlice";
 
 const AssBarLink = ( {active, assignment, onClick})  => {
-    const role = useSelector((state) => state.auth.role)
+    const { role } = useSelector((state) => state.auth)
     const normalStyle = { backgroundColor: "rgba(255, 255, 255, 0.25)" }
     const clickedStyle = { backgroundColor: "white" }
-    const { courseId, assignmentId } = useParams()
+    const { courseId } = useParams()
 
     return (
-        <Link to={`/details/${role}/${courseId}/${assignmentId}`} onClick={onClick}>
+        <Link to={`/details/${role}/${courseId}/${assignment.assignment_id}`} onClick={onClick}>
             <tr>
                 <td style={active ? clickedStyle : normalStyle} >
                     <div className="colorForTable"/>
