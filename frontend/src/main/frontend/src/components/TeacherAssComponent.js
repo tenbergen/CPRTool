@@ -18,9 +18,9 @@ const TeacherAssComponent = () => {
             <div id="ass">
                 <div id="assList">
                     {courseAssignments.map(assignment =>
-                            // <Link to={}> add this for functionality
+                            <Link to={`/details/professor/${courseId}/${assignment.assignment_name}/grade`}>
                             <li className="assListItem">{assignment.assignment_name}</li>
-                        // </Link>
+                           </Link>
                     )}
                 </div>
                 <div id="assAddClass">
