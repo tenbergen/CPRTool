@@ -5,6 +5,9 @@ import edu.oswego.cs.requests.SwitchTeamParam;
 import edu.oswego.cs.requests.TeamParam;
 import org.bson.Document;
 
+import javax.annotation.security.DenyAll;
+import javax.annotation.security.RolesAllowed;
+import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -12,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Path("/teams")
+@DenyAll
+@RequestScoped
 public class PeerReviewTeamsResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -69,6 +74,7 @@ public class PeerReviewTeamsResource {
     @Path("team/get-all-teams")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("professor")
     public Response getAllTeams(TeamParam request) {
         /*
          - DESC:
@@ -81,8 +87,8 @@ public class PeerReviewTeamsResource {
             + show all teams to professors
         */
         try {
-            List<Document> res = new TeamInterface().getAllTeamsHandler(request.getCourse_id());
-            return Response.status(Response.Status.OK).entity(res).build();
+            // List<Document> res = new TeamInterface().getAllTeamsHandler(request.getCourse_id());
+            return Response.status(Response.Status.OK).entity("Success").build();
         } catch (Exception e) {
             List<Document> errors = new ArrayList<>();
             errors.add(new Document(e.toString(), Exception.class));
