@@ -9,7 +9,6 @@ function ProfessorDashboardPage() {
     const dispatch = useDispatch()
     const courses = useSelector((state) => state.courses.courses)
     const user = useSelector((state) => state.auth.user_given_name)
-    const hideButtons =  localStorage.getItem("hideButtons")
 
     useEffect(() => {
         dispatch(getCoursesAsync())
@@ -35,15 +34,10 @@ function ProfessorDashboardPage() {
             <SidebarComponent />
             <div id="teacher">
                 <h1>Hello {user}</h1>
-                {
-                    hideButtons
-                        ? null
-                        :
-                        <div>
-                            <button onClick={studentView} style={{marginRight: "10px"}}> Student View</button>
-                            <button onClick={originalView}> Original View</button>
-                        </div>
-                }
+                    {/*<div>*/}
+                    {/*    <button onClick={studentView} style={{marginRight: "10px"}}> Student View</button>*/}
+                    {/*    <button onClick={originalView}> Original View</button>*/}
+                    {/*</div>*/}
                 <div id="proCourseList">
                     {courses.map(course =>
                     <Link to={"/details/professor/" + course.course_id}>

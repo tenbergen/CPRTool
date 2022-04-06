@@ -5,10 +5,8 @@ import {useSelector} from "react-redux";
 
 
 const RosterComponent = () => {
-    const addStudentUrl = `${window.location.protocol}//${window.location.host}/manage/professor/courses/course/student/add`
-    // const addStudentUrl = `http://moxie.cs.oswego.edu:13125/manage/professor/courses/course/student/add`
-    const deleteStudentUrl = `${window.location.protocol}//${window.location.host}/manage/professor/courses/course/student/delete`
-    // const deleteStudentUrl = `http://moxie.cs.oswego.edu:13125/manage/professor/courses/course/student/delete`
+    const addStudentUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/student/add`
+    const deleteStudentUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/student/delete`
     const currentCourse = useSelector((state) => state.courses.currentCourse)
     const [studentArray, updateArray] = useState(Array.from(currentCourse.students))
 

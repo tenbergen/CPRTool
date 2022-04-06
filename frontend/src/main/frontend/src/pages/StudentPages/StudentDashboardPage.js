@@ -9,7 +9,6 @@ function StudentDashboardPage() {
     const dispatch = useDispatch()
     const courses = useSelector((state) => state.courses.courses)
     const { user_given_name, lakerId } = useSelector((state) => state.auth)
-    const hideButtons =  localStorage.getItem("hideButtons")
 
     useEffect( ()=> {
        dispatch(getStudentCoursesAsync(lakerId))
@@ -38,15 +37,10 @@ function StudentDashboardPage() {
             <SidebarComponent />
             <div id="student">
                 <h2> Hello {user_given_name}</h2>
-                {
-                    hideButtons
-                        ? null
-                        :
-                        <div>
-                            <button onClick={professorView} style={{marginRight: "10px"}}> Professor View </button>
-                            <button onClick={originalView}> Original View </button>
-                        </div>
-                }
+                    {/*<div>*/}
+                    {/*    <button onClick={professorView} style={{marginRight: "10px"}}> Professor View </button>*/}
+                    {/*    <button onClick={originalView}> Original View </button>*/}
+                    {/*</div>*/}
                 <div id="courseList">
                     {courses.map(course =>
                         <Link to={"/details/student/" + course.course_id} onClick={() => courseClickHandler(course)} state={{from: course}}>
