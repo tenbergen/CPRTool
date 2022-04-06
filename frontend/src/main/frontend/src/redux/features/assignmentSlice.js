@@ -46,8 +46,12 @@ const assignmentSlice = createSlice({
         }
     },
     extraReducers: {
+        [getCourseAssignmentsAsync.pending]: (state) => {
+            state.currentAssignmentLoaded = false
+        },
         [getCourseAssignmentsAsync.fulfilled]: (state, action) => {
             state.courseAssignments = action.payload.courseAssignments
+            state.currentAssignmentLoaded = true
         },
         [getAssignmentDetailsAsync.fulfilled]: (state, action) => {
             state.currentAssignmentLoaded = true

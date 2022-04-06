@@ -74,6 +74,7 @@ const EditCourseComponent = () => {
             console.log(response)
         })
         if (courseAssignments.length > 0) await deleteAssignments()
+        alert("Successfully deleted course.")
         navigate("/")
     }
 
