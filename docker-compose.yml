@@ -8,7 +8,7 @@ services:
         CLIENT_ID: ${CLIENT_ID}
     container_name: cpr-frontend
     restart: unless-stopped
-      
+
   login:
     build:
       context: ./backend/login-microservice
@@ -59,11 +59,13 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
 
-  peer-review-teams:
+  professor-assignment:
     build:
-      context: ./backend/peer-review-teams-microservice
-    container_name: cpr-peer-review-teams
+      context: ./backend/professor-assignment-microservice
+    container_name: cpr-professor-assignment
     restart: unless-stopped
+    volumes:
+      - ./assignments:/opt/ol/wlp/output/defaultServer/assignments:r
     environment:
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
@@ -80,8 +82,8 @@ services:
     container_name: cpr-mongo
     restart: unless-stopped
     volumes:
-      - ${DATABASE_FOLDER}:/data/db
-      - ${INITIALIZE_SCRIPT}:/docker-entrypoint-initdb.d/mongo-init.sh
+      - ./db:/data/db
+      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
@@ -96,8 +98,8 @@ services:
     container_name: cpr-mongo2
     restart: unless-stopped
     volumes:
-      - ${DATABASE_FOLDER_2}:/data/db
-      - ${INITIALIZE_SCRIPT}:/docker-entrypoint-initdb.d/mongo-init.sh
+      - ./db2:/data/db
+      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
@@ -112,8 +114,8 @@ services:
     container_name: cpr-mongo3
     restart: unless-stopped
     volumes:
-      - ${DATABASE_FOLDER_3}:/data/db
-      - ${INITIALIZE_SCRIPT}:/docker-entrypoint-initdb.d/mongo-init.sh
+      - ./db3:/data/db
+      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
@@ -128,8 +130,8 @@ services:
     container_name: cpr-mongo4
     restart: unless-stopped
     volumes:
-      - ${DATABASE_FOLDER_4}:/data/db
-      - ${INITIALIZE_SCRIPT}:/docker-entrypoint-initdb.d/mongo-init.sh
+      - ./db4:/data/db
+      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
@@ -144,8 +146,8 @@ services:
     container_name: cpr-mongo5
     restart: unless-stopped
     volumes:
-      - ${DATABASE_FOLDER_5}:/data/db
-      - ${INITIALIZE_SCRIPT}:/docker-entrypoint-initdb.d/mongo-init.sh
+      - ./db5:/data/db
+      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
@@ -160,6 +162,6 @@ services:
     restart: unless-stopped
     container_name: cpr-nginx
     volumes:
-      - ${NGINX}:/etc/nginx/nginx.conf:rw
+      - ./nginx.conf:/etc/nginx/nginx.conf:rw
     ports:
       - "13125:80"

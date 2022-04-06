@@ -1,58 +1,62 @@
 package edu.oswego.cs.database;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import edu.oswego.cs.daos.CourseDAO;
 import org.bson.Document;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
 
 public class CourseInterface {
-    private final MongoDatabase courseDB;
-    private final List<CourseDAO> courses = new ArrayList<>();
+    private final MongoCollection<Document> studentCollection;
+    private final MongoCollection<Document> courseCollection;
 
-    public CourseInterface() throws Exception {
+    public CourseInterface() {
         DatabaseManager databaseManager = new DatabaseManager();
         try {
-            courseDB = databaseManager.getCourseDB();
-        } catch (Exception e) {
-            throw new Exception();
+            MongoDatabase studentDB = databaseManager.getStudentDB();
+            MongoDatabase courseDB = databaseManager.getCourseDB();
+            studentCollection = studentDB.getCollection("students");
+            courseCollection = courseDB.getCollection("courses");
+        } catch (WebApplicationException e) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
         }
     }
 
-    public List<CourseDAO> getAllCourses() {
-        MongoCollection<Document> courseCollection = courseDB.getCollection("courses");
-        for (Document document : courseCollection.find()) {
-            CourseDAO courseDAO = new CourseDAO(
-                    (String) document.get("abbreviation"),
-                    (String) document.get("course_name"),
-                    (String) document.get("course_section"),
-                    (String) document.get("semester"),
-                    (String) document.get("year")
-            );
-            courses.add(courseDAO);
+    public List<Document> getAllCourses() {
+        MongoCursor<Document> query = courseCollection.find().iterator();
+        List<Document> courses = new ArrayList<>();
+        while (query.hasNext()) {
+            Document document = query.next();
+            courses.add(document);
         }
         return courses;
     }
 
-    public CourseDAO getCourse(String courseID) {
-        MongoCollection<Document> courseCollection = courseDB.getCollection("courses");
+    public Document getCourse(String courseID) {
         Document document = courseCollection.find(eq("course_id", courseID)).first();
-        assert document != null;
-        CourseDAO courseDAO = new CourseDAO(
-                (String) document.get("abbreviation"),
-                (String) document.get("course_name"),
-                (String) document.get("course_section"),
-                (String) document.get("semester"),
-                (String) document.get("year")
-        );
-        @SuppressWarnings("unchecked") List<String> students = (List<String>) document.get("students");
-        @SuppressWarnings("unchecked") List<String> teams = (List<String>) document.get("teams");
-        courseDAO.students = students;
-        courseDAO.teams = teams;
-        return courseDAO;
+        if (document == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
+        return document;
+    }
+
+    public List<Document> getAllStudents() {
+        MongoCursor<Document> query = studentCollection.find().iterator();
+        List<Document> students = new ArrayList<>();
+        while (query.hasNext()) {
+            Document document = query.next();
+            students.add(document);
+        }
+        return students;
+    }
+
+    public Document getStudent(String studentID) {
+        Document document = studentCollection.find(eq("student_id", studentID)).first();
+        if (document == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist.").build());
+        return document;
     }
 }

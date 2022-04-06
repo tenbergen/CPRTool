@@ -5,6 +5,7 @@ import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
+
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
