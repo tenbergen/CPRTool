@@ -33,7 +33,7 @@ const TeacherAssComponent = () => {
                         <div className="assListItem">
                             <Link to={`/details/professor/${courseId}/${assignment.assignment_id}/grade`}>
                                 <li>
-                                    {assignment.assignment_name} <br/> <br/>
+                                    {assignment.assignment_name} <br></br><br></br>
                                 </li>
                             </Link>
                             <div>

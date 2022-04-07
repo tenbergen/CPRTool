@@ -19,6 +19,7 @@
 #proCourseList {
     overflow-y: scroll;
     height: 65vh;
+    margin-top:5px;
 }
 
 #proCourseList::-webkit-scrollbar {
@@ -44,7 +45,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top:15px;
     margin-bottom: 15px;
 }
 

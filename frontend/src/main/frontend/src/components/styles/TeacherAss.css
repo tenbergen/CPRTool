@@ -1,5 +1,7 @@
 .TeacherAss {
     display: flex;
+    overflow-y: scroll;
+    height: 70vh;
 }
 
 #ass {
@@ -16,6 +18,25 @@
     width: 100%;
 }
 
+.TeacherAss::-webkit-scrollbar {
+    width: 20px;
+}
+
+.TeacherAss::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.TeacherAss::-webkit-scrollbar-thumb {
+    background-color: #d6dee1;
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
+}
+
+.TeacherAss::-webkit-scrollbar-thumb:hover {
+    background-color: #a8bbbf;
+}
+
 .assListItem {
     height: 10vh;
     border-radius: 25px;
@@ -30,7 +51,14 @@
     padding-top: 30px;
     white-space: pre-line;
     font-weight: bold;
-    padding-left: 50px;
+    padding-left: 20px;
+}
+
+.assListItem p {
+    text-align: right;
+    padding-right: 15px;
+    font-weight: normal;
+    font-size: small;
 }
 
 #assAddClass {

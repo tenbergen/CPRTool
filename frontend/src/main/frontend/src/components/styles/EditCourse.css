@@ -2,8 +2,8 @@
     background-color: white;
     border-radius: 50px;
     margin-top: 0;
-    margin-bottom: 3%;
     padding: 5%;
+    height: 57vh;
 }
 
 .ecc-input-field {
@@ -66,7 +66,6 @@
     display: flex;
     justify-content: right;
     margin-right: 5%;
-    margin-top: 5%;
 }
 
 .ecc-delete button {
