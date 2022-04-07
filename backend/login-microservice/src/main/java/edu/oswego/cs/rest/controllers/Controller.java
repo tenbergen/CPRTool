@@ -1,6 +1,7 @@
 package edu.oswego.cs.rest.controllers;
 
 import javax.json.JsonException;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -9,7 +10,10 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import edu.oswego.cs.rest.database.ProfessorCheck;
 import edu.oswego.cs.rest.services.AuthServices;
+
+import java.io.IOException;
 
 
 @Path("/auth")
@@ -25,6 +29,11 @@ public class Controller {
         String newToken = new AuthServices().generateNewToken(authToken);
         return Response.status(Response.Status.OK).entity(newToken).build();
     }
-    
+    @GET
+    @Path("check")
+    public String checkProfessor() throws IOException {
+        new ProfessorCheck();
+        return "Done";
+    }
     
 }
