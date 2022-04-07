@@ -18,11 +18,10 @@
     />
 
     <applicationManager autoExpand="true"/>
-    
-    <logging traceSpecification="com.ibm.ws.security*=all:io.openliberty.security*=all" />
 
     <webApplication contextRoot="${app.context.root}" location="peer-review-teams-microservice.war" />
 
+    <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
 
     <cors domain="/"
     allowedOrigins="*"
