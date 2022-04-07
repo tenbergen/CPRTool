@@ -6,7 +6,6 @@ import edu.oswego.cs.daos.FileDAO;
 import edu.oswego.cs.daos.StudentDAO;
 import edu.oswego.cs.database.CourseInterface;
 
-import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -23,11 +22,6 @@ public class CourseManagerResource {
         return Response.status(Response.Status.OK).entity("Course successfully added.").build();
     }
 
-    @GET
-    @RolesAllowed("professor")
-    public String basicGet(){
-        return "Success";
-    }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
