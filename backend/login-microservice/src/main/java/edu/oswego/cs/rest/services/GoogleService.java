@@ -28,7 +28,7 @@ public class GoogleService {
         try {
             GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier
                     .Builder(new NetHttpTransport(), new GsonFactory())
-                    .setAudience(Collections.singletonList(clientID))
+                    .setAudience(Collections.singletonList(System.getenv("CLIENT_ID")))
                     .build();
             return verifier.verify(token);
         } catch (GeneralSecurityException | IOException e) {
