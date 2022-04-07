@@ -15,7 +15,7 @@ function AssignmentPage() {
         dispatch(getAssignmentDetailsAsync({ courseId, assignmentId}));
     }, [])
 
-    return currentAssignmentLoaded ? (
+    return (
         <div>
             <div className="ap-parent">
                 <SidebarComponent/>
@@ -33,7 +33,7 @@ function AssignmentPage() {
                 </div>
             </div>
         </div>
-    ): null
+    )
 }
 
 export default AssignmentPage;
