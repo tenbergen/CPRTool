@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import SidebarComponent from "../../components/SidebarComponent";
 import "./styles/ProfessorDashboardStyle.css"
 import { useDispatch, useSelector } from "react-redux";
-import {getCoursesAsync} from "../../redux/features/courseSlice";
+import { getCourseDetailsAsync, getCoursesAsync } from "../../redux/features/courseSlice";
 
 function ProfessorDashboardPage() {
     const dispatch = useDispatch()
@@ -24,6 +24,10 @@ function ProfessorDashboardPage() {
         window.location.reload(false);
     }
 
+    const onCourseClick = (course) => {
+        dispatch(getCourseDetailsAsync(course.course_id))
+    }
+
     // this allows the courses to be received and rendered, hence this and useEffect
     if (!courses) {
         return <div><h1>LOADING</h1></div>
@@ -40,7 +44,7 @@ function ProfessorDashboardPage() {
                     </div>
                 <div id="proCourseList">
                     {courses.map(course =>
-                    <Link to={"/details/professor/" + course.course_id}>
+                    <Link to={"/details/professor/" + course.course_id} onClick={() => onCourseClick(course)}>
                         <li className="courseListItem">{course.course_id + "\n\n"  + course.course_name}</li>
                     </Link>)}
                 </div>

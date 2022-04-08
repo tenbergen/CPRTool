@@ -6,8 +6,8 @@ import RosterComponent from "../../components/RosterComponent"
 import { useParams } from "react-router-dom";
 import EditCourseComponent from "../../components/EditCourseComponent";
 import TeacherAssComponent from "../../components/TeacherAssComponent";
-import {useDispatch, useSelector} from "react-redux";
-import {getCourseDetailsAsync} from "../../redux/features/courseSlice";
+import { useDispatch } from "react-redux";
+import { getCourseDetailsAsync } from "../../redux/features/courseSlice";
 import CourseBarComponent from "../../components/CourseBarComponent";
 import ProfessorGradebookComponent from "../../components/ProfessorGradebookComponent";
 
@@ -22,7 +22,6 @@ const CourseComponent = ({ active, component, onClick }) => {
 function ProfessorCoursePage() {
     let dispatch = useDispatch()
     let { courseId } = useParams();
-    const isDataLoaded = useSelector((state) => state.courses.currentCourseLoaded)
 
     const components = ["Assignments", "Gradebook", "Roster", "Manage"];
     const [chosen, setChosen] = useState("Assignments");
@@ -33,7 +32,6 @@ function ProfessorCoursePage() {
 
     return (
         <div>
-        { isDataLoaded ?
             <div className="pcp-parent">
                 <SidebarComponent/>
                 <div className="pcp-container">
@@ -57,7 +55,7 @@ function ProfessorCoursePage() {
                         </div>
                     </div>
                 </div>
-            </div> : null }
+            </div>
         </div>
     )
 }

@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from "react";
 import "./styles/CourseBar.css"
 import {useDispatch, useSelector} from "react-redux";
-import {getCourseDetailsAsync, getCoursesAsync, getStudentCoursesAsync} from "../redux/features/courseSlice";
-import {Link} from "react-router-dom";
+import { getCourseDetailsAsync, getCoursesAsync, getStudentCoursesAsync } from "../redux/features/courseSlice";
+import {Link, useParams} from "react-router-dom";
 import {setUserInformation} from "../redux/features/authSlice";
+import { getCourseAssignmentsAsync } from "../redux/features/assignmentSlice";
 
 const CourseBarLink = ({ active, course, onClick }) => {
     const role = useSelector((state) => state.auth.role)
@@ -28,9 +29,9 @@ const CourseBarLink = ({ active, course, onClick }) => {
 const CourseBarComponent = () => {
     const dispatch = useDispatch()
     const { role, lakerId, dataLoaded } = useSelector((state) => state.auth)
-    const { courses, currentCourse} = useSelector((state) => state.courses)
-
-    const [chosen, setChosen] = useState(currentCourse.course_id);
+    const { courses } = useSelector((state) => state.courses)
+    const { courseId } = useParams()
+    const [chosen, setChosen] = useState(courseId);
 
     useEffect(() => {
         dispatch(setUserInformation())
@@ -40,6 +41,7 @@ const CourseBarComponent = () => {
     const onCourseClick = (course) => {
         setChosen(course.course_id)
         dispatch(getCourseDetailsAsync(course.course_id))
+        dispatch(getCourseAssignmentsAsync(course.course_id))
     }
 
     return (

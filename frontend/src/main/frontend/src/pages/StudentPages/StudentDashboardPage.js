@@ -28,8 +28,8 @@ function StudentDashboardPage() {
         window.location.reload(false);
     }
 
-    const courseClickHandler = () => {
-        dispatch(getCourseDetailsAsync)
+    const courseClickHandler = (course) => {
+        dispatch(getCourseDetailsAsync(course.course_id))
     }
 
     return (

@@ -6,7 +6,7 @@ import ToDoComponent from "../../components/ToDoComponent";
 import CourseBarComponent from "../../components/CourseBarComponent";
 import SubmittedComponent from "../../components/SubmittedComponent";
 import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getCourseDetailsAsync } from "../../redux/features/courseSlice";
 
 const CourseComponent = ({ active, component, onClick }) => {
@@ -20,7 +20,6 @@ const CourseComponent = ({ active, component, onClick }) => {
 function StudentCoursePage() {
     let dispatch = useDispatch()
     let { courseId } = useParams();
-    const isDataLoaded = useSelector((state) => state.courses.currentCourseLoaded)
 
     const components = ["To Do", "Submitted"];
     const [chosen, setChosen] = useState("To Do");
@@ -31,7 +30,6 @@ function StudentCoursePage() {
 
     return (
         <div>
-            { isDataLoaded ?
             <div className="scp-parent">
                 <SidebarComponent/>
                 <div className="scp-container">
@@ -53,7 +51,7 @@ function StudentCoursePage() {
                         </div>
                     </div>
                 </div>
-            </div> : null }
+            </div>
         </div>
     );
 }
