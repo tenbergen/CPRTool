@@ -66,6 +66,23 @@ public class CoursesViewerResources {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("courses/{id}")
+    public Response viewStudentCourses(@PathParam("id") String id) {
+        List<StudentDAO> students = new CourseInterface().getAllStudents();
+
+        Optional<StudentDAO> student = students.stream()
+                .filter( dao -> dao.studentID.equals(id) )
+                .findFirst();
+
+        if (! student.isPresent())
+            return Response.status(Response.Status.BAD_REQUEST).entity(id + " not found.").build();
+
+        return Response.status(Response.Status.OK).entity(student.get().courses).build();
+
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("students/{studentID}")
     public Response viewStudent(@PathParam("studentID") String studentID) {
         Document document = new CourseInterface().getStudent(studentID);

@@ -5,6 +5,7 @@ import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.daos.FileDAO;
 import edu.oswego.cs.daos.StudentDAO;
 import edu.oswego.cs.database.CourseInterface;
+import edu.oswego.cs.util.CSVUtil;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -87,10 +88,11 @@ public class CourseManagerResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("File corrupted. Try again.").build();
         }
         try {
+            System.out.println(fileDAO.getFilename().substring(0, fileDAO.getFilename().length() - 4));
             new CourseInterface().addStudentsFromCSV(fileDAO);
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Failed to add student.").build();
         }
-        return Response.status(Response.Status.OK).build();
+        return Response.status(Response.Status.OK).entity("Student(s) successfully added.").build();
     }
 }

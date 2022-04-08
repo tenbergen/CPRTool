@@ -50,7 +50,7 @@ public class AssignmentDAO {
             @NonNull @JsonbProperty("course_id") String courseID,
             @NonNull @JsonbProperty("points") int points,
             @NonNull @JsonbProperty("assignment_id") int assignment_id)
-             {
+    {
         this.assignmentName = assignmentName;
         this.instructions = instructions;
         this.dueDate = dueDate;
