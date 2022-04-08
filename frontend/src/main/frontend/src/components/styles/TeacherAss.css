@@ -55,10 +55,26 @@
 }
 
 .assListItem p {
-    text-align: right;
+    text-align: left;
     padding-right: 15px;
     font-weight: normal;
     font-size: small;
+}
+
+.assListItem span1 {
+    float: right;
+    padding-right: 11px;
+    font-weight: bold;
+    font-size: small;
+    cursor: pointer;
+}
+
+.assListItem span2 {
+    float: right;
+    padding-right: 0px;
+    font-weight: normal;
+    font-size: small;
+    cursor: pointer;
 }
 
 #assAddClass {
