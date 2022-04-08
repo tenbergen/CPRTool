@@ -48,14 +48,12 @@ public class AuthServices {
         try {
             return JwtBuilder.create("cpr22s")
                     .claim("sub", payload.getSubject())
-                    .claim("email", payload.getEmail())
                     .claim("upn", payload.getEmail())
-                    .claim("hd", payload.getHostedDomain())
                     .claim("name", payload.get("name"))
                     .claim("lakerID", lakerID)
-                    .claim("roles", roles)
                     .claim("groups", roles)
-                    .claim("aud", "CPR22S480")
+                    .claim("aud", "CPR.22S.480")
+                    .claim("iss", "edu.oswego.cs-CPR.22S.480")
                     .buildJwt().compact();
         } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
             e.printStackTrace();
