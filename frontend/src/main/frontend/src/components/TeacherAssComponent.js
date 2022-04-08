@@ -16,6 +16,8 @@ const TeacherAssComponent = () => {
         dispatch(getCourseAssignmentsAsync(courseId))
     }, [])
 
+    console.log(courseAssignments);
+
     const deleteAssignment = async (assignment) => {
         const url = `${assignmentUrl}/${courseId}/assignments/${assignment.assignment_id}/remove`
         await axios.delete(url).then(res => {
@@ -33,11 +35,17 @@ const TeacherAssComponent = () => {
                         <div className="assListItem">
                             <Link to={`/details/professor/${courseId}/${assignment.assignment_id}/grade`}>
                                 <li>
-                                    {assignment.assignment_name} <br></br><br></br>
+                                    {assignment.assignment_name}
+                                    <span1>Due Date: {assignment.due_date}</span1>
+                                    <br></br>
                                 </li>
                             </Link>
                             <div>
-                                <p onClick={() => deleteAssignment(assignment)}>Delete Assignment</p>
+                                <p>
+                                    {/*{assignment}*/}
+                                    <br></br>
+                                    <span2 onClick={() => deleteAssignment(assignment)}>Delete Assignment</span2>
+                                </p>
                             </div>
                         </div>
                     )}
