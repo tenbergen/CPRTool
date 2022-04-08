@@ -79,7 +79,7 @@ public class AssignmentInterface {
         if (!file.delete()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist or could not be deleted.").build());
     }
 
-    public void createAssignment(AssignmentDAO assignmentDAO) {
+    public int createAssignment(AssignmentDAO assignmentDAO) {
         String FileStructure = getRelPath() + "assignments" + reg + assignmentDAO.courseID;
 
         File dir = new File(FileStructure);
@@ -113,6 +113,7 @@ public class AssignmentInterface {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create peer review directory.").build());
         if (!new File(FileStructure + reg + "assignments").mkdirs())
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create assignments directory.").build());
+        return nextPos;
     }
 
     public List<Document> getAllAssignments() {

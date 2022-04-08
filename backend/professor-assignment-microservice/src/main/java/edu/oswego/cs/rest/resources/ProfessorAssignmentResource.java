@@ -79,9 +79,9 @@ public class ProfessorAssignmentResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/create-assignment")
     public Response createAssignment(AssignmentDAO assignmentDAO) {
-        new AssignmentInterface().createAssignment(assignmentDAO);
+        int assignmentID = new AssignmentInterface().createAssignment(assignmentDAO);
         String response = assignmentDAO.courseID + ": " + assignmentDAO.assignmentName + " successfully created.";
-        return Response.status(Response.Status.OK).entity(response).build();
+        return Response.status(Response.Status.OK).entity(response).header("assignment_id", assignmentID).build();
     }
 
     @DELETE
