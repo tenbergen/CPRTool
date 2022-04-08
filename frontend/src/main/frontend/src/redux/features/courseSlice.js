@@ -8,7 +8,8 @@ export const getStudentCoursesAsync = createAsyncThunk(
     'courses/getStudentCoursesAsync',
     async (studentId) => {
         const courses = await axios.get(`${viewCourseUrl}/${studentId}/courses`).then(res => {
-            return res.data
+            console.log(res.data)
+            return res.data.filter(course => course !== null);
         });
         return { courses }
     });
@@ -46,6 +47,9 @@ const courseSlice = createSlice({
     reducers: {
         addCourse: (state, action) => {
             state.courses.push(action.payload)
+        },
+        setCurrentCourse: (state, action) => {
+            state.currentCourse = action.payload
         }
     },
     extraReducers: {
@@ -65,6 +69,6 @@ const courseSlice = createSlice({
     }
 })
 
-export const { addCourse } = courseSlice.actions
+export const { addCourse, setCurrentCourse } = courseSlice.actions
 
 export default courseSlice.reducer
