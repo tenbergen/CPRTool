@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="new server">
+
+    <featureManager>
+        <feature>microProfile-4.1</feature>
+        <feature>jaxrs-2.1</feature>
+    </featureManager>
+
+    <variable name="default.http.port" defaultValue="13129"/>
+    <variable name="default.https.port" defaultValue="9447"/>
+    <variable name="app.context.root" defaultValue="/"/>
+
+    <httpEndpoint
+            host="*"
+            httpPort="${default.http.port}"
+            httpsPort="${default.https.port}"
+            id="defaultHttpEndpoint"
+    />
+
+    <applicationManager autoExpand="true"/>
+
+    <webApplication contextRoot="${app.context.root}" location="peer-review-teams-microservice.war" />
+
+    <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
+
+    <cors domain="/"
+    allowedOrigins="*"
+    allowedMethods="POST"
+    allowCredentials="true"
+    allowedHeaders="Content-Type"
+    exposeHeaders="Content-Type"/>
+</server>

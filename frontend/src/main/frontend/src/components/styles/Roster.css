@@ -1,0 +1,52 @@
+.RosterPage {
+    display: flex;
+    background-color: #FFFFFF;
+    margin-top: 3%;
+    border-radius: 50px;
+}
+
+#roster {
+    flex-grow: 1;
+    height: 400px;
+    overflow-y: scroll;
+    border-radius: 50px;
+}
+.rosterHeader {
+    font-size: 24px;
+}
+
+.rosterTable {
+    width: 99%;
+    border-spacing: 15px;
+    border-radius: 50px;
+}
+
+.rosterInput {
+    border-radius: 50px;
+    padding: 5px;
+    margin: 10px;
+}
+
+.crossMark{
+    cursor: pointer;
+}
+
+#addStudentButton {
+    border-radius: 50px;
+}
+
+#addStudentDiv {
+    position: absolute;
+    top: 85%;
+    left: 32.5%;
+}
+
+.button_plus {
+    position: absolute;
+    width: 50px;
+    background: transparent;
+    cursor: pointer;
+    top: 82%;
+    left: 50%;
+
+}
