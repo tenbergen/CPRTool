@@ -59,7 +59,7 @@ public class CourseInterface {
     }
 
     /**
-     * Find the course document from Mongo using the current course ID, then update the course document using the new infromation
+     * Find the course document from Mongo using the current course ID, then update the course document using the new information
      * passed from Frontend.
      */
     public String updateCourse(CourseDAO dao) {

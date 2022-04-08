@@ -91,7 +91,7 @@ public class CourseManagerResource {
             System.out.println(fileDAO.getFilename().substring(0, fileDAO.getFilename().length() - 4));
             new CourseInterface().addStudentsFromCSV(fileDAO);
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Failed to add student.").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Failed to add students.").build();
         }
         return Response.status(Response.Status.OK).entity("Student(s) successfully added.").build();
     }

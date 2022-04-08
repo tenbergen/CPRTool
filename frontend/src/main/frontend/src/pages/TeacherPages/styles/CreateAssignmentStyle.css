@@ -10,11 +10,11 @@
 }
 
 .cap-container {
-    padding: 3% 4% 0 4%;
+    padding: 0 2% 2% 2%;
     flex-grow: 1;
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 50px;
-    margin: 3% 5%;
+    margin: 1% 1%;
 }
 
 .cap-form {
@@ -63,11 +63,16 @@
 
 .cap-assignment-files {
     display: flex;
+    flex-grow: 1;
     margin-bottom: 3%;
 }
 
 .cap-assignment-files label {
     margin-bottom: 1%;
+}
+
+.cap-assignment-files input {
+    flex-grow: 1;
 }
 
 .cap-assignment-files input[type=file]::file-selector-button {
