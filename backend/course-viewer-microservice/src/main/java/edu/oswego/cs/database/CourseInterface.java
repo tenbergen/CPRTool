@@ -59,4 +59,10 @@ public class CourseInterface {
         if (document == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist.").build());
         return document;
     }
+
+    public List<String> getStudentCourses(String studentID) {
+        Document document = studentCollection.find(eq("student_id", studentID)).first();
+        if (document == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist.").build());
+        return document.getList("courses", String.class);
+    }
 }
