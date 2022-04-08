@@ -27,7 +27,7 @@ public class AssignmentInterface {
     static String reg;
     int nextPos = 0;
 
-    // set this to true if testing on windows. QA, ask Team DB a bit more about this one...
+    // Set to true if running on Windows.
     static boolean isWindows = false;
 
     public AssignmentInterface() {
@@ -90,7 +90,6 @@ public class AssignmentInterface {
 
     public void writeToAssignment(FileDAO fileDAO) throws IOException {
         String FileStructure = getRelPath() + "assignments" + reg + fileDAO.getCourseID() + reg + fileDAO.getAssignmentID() + reg + "assignments";
-        System.out.println(FileStructure);
         fileDAO.writeFile(FileStructure + reg + fileDAO.getFilename());
     }
 
@@ -104,20 +103,14 @@ public class AssignmentInterface {
         String[] slicedPath = path.split("/");
         String targetDir = "defaultServer";
         StringBuilder relativePathPrefix = new StringBuilder();
-        System.out.println(Arrays.toString(slicedPath));
-        System.out.println(slicedPath[0]);
         for (int i = slicedPath.length - 1; !slicedPath[i].equals(targetDir); i--) {
             relativePathPrefix.append("../");
         }
-        System.out.println(relativePathPrefix);
         reg = "\\";
-        System.out.println(System.getProperty("user.dir"));
         if (!isWindows) {
-            System.out.println("Linux");
             reg = "/";
             relativePathPrefix = new StringBuilder(relativePathPrefix.toString().replace("\\", "/"));
         }
-        System.out.println(relativePathPrefix);
         return relativePathPrefix.toString();
     }
 
@@ -133,13 +126,12 @@ public class AssignmentInterface {
         return assignments;
     }
 
-    public static Document getSpecifiedAssignment(String courseID, int AssignmentID){
+    public static Document getSpecifiedAssignment(String courseID, int AssignmentID) {
         MongoCursor<Document> results = assignmentsCollection.find(new Document()
                 .append("course_id", courseID)
                 .append("assignment_id", AssignmentID)).iterator();
         if (!results.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
-        Document assignment = results.next();
-        return assignment;
+        return results.next();
     }
 
     public List<Document> getAllAssignments() {
@@ -152,10 +144,9 @@ public class AssignmentInterface {
         return assignments;
     }
 
-    public static void removeFile(FileDAO fileDAO){
+    public static void removeFile(FileDAO fileDAO) {
         String fileLocation = findFile(fileDAO.getCourseID(), fileDAO.getAssignmentID(), fileDAO.getFilename());
         File file = new File(fileLocation);
-        System.out.println(file.getAbsolutePath());
         if (!file.delete()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist or could not be deleted.").build());
     }
 
