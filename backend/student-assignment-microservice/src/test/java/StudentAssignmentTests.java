@@ -1,19 +1,15 @@
-import edu.oswego.cs.rest.daos.AssignmentDAO;
 import org.junit.jupiter.api.*;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.util.ArrayList;
+
+// DISCLAIMER: Don't run all the tests at the same time. You'll likely screw up the database and fail the tests in some way.
+// Read through the tests to see what they create, update and delete before you run them please.
 
 public class StudentAssignmentTests {
     private static final Jsonb jsonb = JsonbBuilder.create();
-    private static final ArrayList<AssignmentDAO> expectedAssignments = new ArrayList<>();
     private static String port;
     private static String baseUrl;
     private static String targetUrl;
@@ -39,24 +35,28 @@ public class StudentAssignmentTests {
         client.close();
     }
 
-    // BELOW REQUIRES PROCESSING OF IATTATCHMENT LISTS!!! DO THE COURSE CSV BEFORE YOU DO THESE!
+    // For whatever reason, AttachmentBuilder.newBuilder is recognized at compiler time but not at run time...?
+    // gives a NoClassDefFoundError if you try to run this test. I explored different dependency versions to fix this,
+    // ... but no dice. Figured this was becoming more trouble than it was worth, so I switched tactics a bit.
+    // For this reason, any tests that involve a file upload/download are only ever done in Postman.
+
 
     @Test
     public void studentUploadFileTest() {
 
         targetUrl = "/upload/";
 
-        // ...
+        // Not included here
 
     }
 
     @Test
     public void studentDownloadFileTest() {
 
-        String fileName = "daFile"; // what the heck should this be?
+        String fileName = "";
         targetUrl = "/download/"+fileName+"/";
 
-        // ...
+        // Not included here
 
     }
 }

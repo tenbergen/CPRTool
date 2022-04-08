@@ -13,9 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-// DISCLAIMER: Don't run all the tests at the same time. You'll screw up the database and fail the tests in some way
-// most likely. Read through the tests to see what they create, update and delete. Now that you're in the loop, don't
-// be a dingus.
+// DISCLAIMER: Don't run all the tests at the same time. You'll likely screw up the database and fail the tests in some way.
+// Read through the tests to see what they create, update and delete before you run them please.
 
 public class ProfessorAssignmentTests {
 
@@ -58,13 +57,13 @@ public class ProfessorAssignmentTests {
         // what happens if we make an assignment without the allocated course being there...
         assignment1 = new AssignmentDAO(aName1, instructions1, dueDate1, courseID1, points1);
         assignment1Edited = new AssignmentDAO(aName1, instructions1E, dueDate1, courseID1, points1);
-//        assignment2 = new AssignmentDAO(aName2, instructions2, dueDate2, courseID2, points2);
-//        assignment3 = new AssignmentDAO(aName3, instructions3, dueDate3, courseID3, points3);
+        assignment2 = new AssignmentDAO(aName2, instructions2, dueDate2, courseID2, points2);
+        assignment3 = new AssignmentDAO(aName3, instructions3, dueDate3, courseID3, points3);
 
         // we will add these assignments to the database
         expectedAssignments.add(assignment1);
-//        expectedAssignments.add(assignment2);
-//        expectedAssignments.add(assignment3);
+        expectedAssignments.add(assignment2);
+        expectedAssignments.add(assignment3);
     }
 
     @BeforeEach
@@ -72,26 +71,26 @@ public class ProfessorAssignmentTests {
         client = ClientBuilder.newClient();
 
         // add some temp assignments to the DB
-//        expectedAssignments.forEach(assignment -> {
-//            String createURL = baseUrl + "/courses/create-assignment/";
-//            WebTarget target = client.target(createURL);
-//            target.request(MediaType.APPLICATION_JSON)
-//                    .accept(MediaType.APPLICATION_JSON)
-//                    .post(Entity.entity(jsonb.toJson(assignment), MediaType.APPLICATION_JSON));
-//        });
+        expectedAssignments.forEach(assignment -> {
+            String createURL = baseUrl + "/courses/create-assignment/";
+            WebTarget target = client.target(createURL);
+            target.request(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .post(Entity.entity(jsonb.toJson(assignment), MediaType.APPLICATION_JSON));
+        });
     }
 
     @AfterEach
     public void teardown() {
 
         // remove added assignments from the DB
-//        expectedAssignments.forEach(assignment -> {
-//            String deleteURL = baseUrl + "/courses/" + assignment.getCourseID() + "/assignments/" + assignment.getAssignment_id() + "/remove/";
-//            WebTarget target = client.target(deleteURL);
-//            target.request(MediaType.APPLICATION_JSON)
-//                    .accept(MediaType.APPLICATION_JSON)
-//                    .delete();
-//        });
+        expectedAssignments.forEach(assignment -> {
+            String deleteURL = baseUrl + "/courses/" + assignment.getCourseID() + "/assignments/" + assignment.getAssignment_id() + "/remove/";
+            WebTarget target = client.target(deleteURL);
+            target.request(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .delete();
+        });
         client.close();
     }
 
@@ -218,12 +217,6 @@ public class ProfessorAssignmentTests {
     @Test
     public void viewAssignmentsTest() {
 
-//            @NonNull @JsonbProperty("assignment_name") String assignmentName,
-//            @NonNull @JsonbProperty("instructions") String instructions,
-//            @NonNull @JsonbProperty("due_date") String dueDate,
-//            @NonNull @JsonbProperty("course_id") String courseID,
-//            @NonNull @JsonbProperty("points") int points)
-
         targetUrl = "/assignments/";
 
         WebTarget target = client.target(baseUrl + targetUrl);
@@ -268,12 +261,6 @@ public class ProfessorAssignmentTests {
     @Test
     public void viewAssignmentsWithinCourseTest() {
 
-//            @NonNull @JsonbProperty("assignment_name") String assignmentName,
-//            @NonNull @JsonbProperty("instructions") String instructions,
-//            @NonNull @JsonbProperty("due_date") String dueDate,
-//            @NonNull @JsonbProperty("course_id") String courseID,
-//            @NonNull @JsonbProperty("points") int points)
-
         targetUrl = "/courses/"+assignment1.getCourseID()+"/assignments/";
 
         WebTarget target = client.target(baseUrl + targetUrl);
@@ -314,48 +301,28 @@ public class ProfessorAssignmentTests {
         Assertions.assertEquals(expectedAssignments.size(), actualAssignments.size(), "Not all assignments were retrieved.");
     }
 
-    // BELOW REQUIRES PROCESSING OF IATTATCHMENT LISTS!!! DO THE COURSE CSV BEFORE YOU DO THESE!
+    // For whatever reason, AttachmentBuilder.newBuilder is recognized at compiler time but not at run time...?
+    // gives a NoClassDefFoundError if you try to run this test. I explored different dependency versions to fix this,
+    // ... but no dice. Figured this was becoming more trouble than it was worth, so I switched tactics a bit.
+    // For this reason, any tests that involve a file upload/download are only ever done in Postman.
 
-//    @Test
-//    public void uploadFileTest() {
-//        targetUrl = "/courses/"+assignment1.getCourseID()+"/assignments/"+assignmentIdCount+"/upload";
-//    }
-//
-//    @Test
-//    public void createAssignmentAndUploadFileTest() {
-//
-//        targetUrl = "/courses/create-assignment/";
-//        WebTarget target = client.target(baseUrl + targetUrl);
-//        Response addAssignmentResponse = target.request(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON)
-//                .post(Entity.entity(jsonb.toJson(assignment1), MediaType.APPLICATION_JSON));
-//
-//        // derive the assignmentID number, since this is tied to the course object, but out of the assignment objects territory
-//        targetUrl = "/courses/"+assignment1.getCourseID()+"/assignments/";
-//        target = client.target(baseUrl + targetUrl);
-//        Response response = target.request().get();
-//        List assignmentObjects = jsonb.fromJson(response.readEntity(String.class), ArrayList.class);
-//        for (Object o : assignmentObjects) {
-//            HashMap mapO = (HashMap) o;
-//            if(assignment1.getAssignmentName().equals(mapO.get("assignment_name"))){
-//                assignmentIdCount = Integer.parseInt(String.valueOf(mapO.get("assignment_id")));
-//                System.out.println("AssignmentID = "+ assignmentIdCount);
-//            }
-//        }
-//
-//        Assertions.assertEquals(Response.Status.OK, Response.Status.fromStatusCode(addAssignmentResponse.getStatus()), "Assignment was not added properly.");
-//
-//        targetUrl = "/courses/"+assignment1.getCourseID()+"/assignments/"+assignmentIdCount+"/upload";
-//    }
-//
-//    @Test
-//    public void downloadFileTest() {
-//      targetUrl = "/courses/"+assignment1.getCourseID()+"/assignments/"+assignmentIdCount+"/download/"+fileName;
-//    }
-//
-//    @Test
-//    public void viewFilesTest() {
-//      targetUrl = "/courses/"+assignment1.getCourseID()+"/assignments/"+assignmentIdCount+"/view-files";
-//    }
+    @Test
+    public void uploadFileTest() {
+        targetUrl = "/courses/"+assignment1.getCourseID()+"/assignments/"+assignmentIdCount+"/upload";
+        // (NOT INCLUDED HERE)
+    }
+
+    @Test
+    public void downloadFileTest() {
+        String fileName = "";
+        targetUrl = "/courses/"+assignment1.getCourseID()+"/assignments/"+assignmentIdCount+"/download/"+fileName;
+        // (NOT INCLUDED HERE)
+    }
+
+    @Test
+    public void viewFilesTest() {
+      targetUrl = "/courses/"+assignment1.getCourseID()+"/assignments/"+assignmentIdCount+"/view-files";
+        // (NOT INCLUDED HERE)
+    }
 }
 

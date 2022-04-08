@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+// DISCLAIMER: Don't run all the tests at the same time. You'll likely screw up the database and fail the tests in some way.
+// Read through the tests to see what they create, update and delete before you run them please.
+
 public class CoursesViewerTest {
 
     private static final Jsonb jsonb = JsonbBuilder.create();
@@ -83,10 +86,6 @@ public class CoursesViewerTest {
         expectedStudents.add(student4);
     }
 
-    // add and delete all the courses over the course of these tests.
-    // we confirmed that add and delete work already, so we can call for each on all the elements here to clear them out
-    // I wonder if this messes with any other elements already in the db...
-    // NOPE! Only does it for each of the courses we made in "expected"
     @BeforeEach
     public void setup() {
         client = ClientBuilder.newClient();
@@ -127,7 +126,6 @@ public class CoursesViewerTest {
 
         for (Object o : courseObjects) {
             HashMap mapO = (HashMap) o;
-            // new CourseDAO(abbreviation1, courseName1, courseSection1, crn1, semester1, year1)
             courses.add(new CourseDAO(
                     (String) mapO.get("abbreviation"),
                     (String) mapO.get("course_name"),
@@ -140,8 +138,7 @@ public class CoursesViewerTest {
 
         ArrayList<CourseDAO> actualCourses = new ArrayList<>();
 
-        // compare the courses we made before to the courses in the database.
-        // This should NOT work if we entered anything funky that could mess things up db side...
+        // compare the courses we actually entered to what we expect to see
         courses.forEach(course -> {
             for (CourseDAO c : expectedCourses) {
                 if (c.courseID.equals(course.courseID))
@@ -153,9 +150,6 @@ public class CoursesViewerTest {
         Assertions.assertEquals(expectedCourses.size(), actualCourses.size(), "Not all courses were retrieved.");
     }
 
-    // compare the courses we made before to the courses in the database.
-    // This should NOT work if we entered anything funky that could mess things up db side...
-
     @Test
     public void viewSpecificCourseTest() {
 
@@ -166,7 +160,6 @@ public class CoursesViewerTest {
         Response response = target.request().get();
         System.out.println("response: " + response.readEntity(String.class));
 
-        // read each of the objects from the db as jsons!
         Object o = jsonb.fromJson(response.readEntity(String.class), Object.class);
         HashMap mapO = (HashMap) o;
 
@@ -179,7 +172,6 @@ public class CoursesViewerTest {
                 (String) mapO.get("year")
         );
 
-        // test passes if we found the course we're looking for
         Assertions.assertEquals(courseFromDB, course1, "Course not found.");
     }
 
@@ -191,7 +183,6 @@ public class CoursesViewerTest {
          Response response = target.request().get();
          System.out.println("response: " + response.readEntity(String.class));
 
-         // read each of the objects from the db as jsons!
          List studentObjects = jsonb.fromJson(response.readEntity(String.class), ArrayList.class);
          ArrayList<StudentDAO> students = new ArrayList<>();
 
@@ -220,20 +211,14 @@ public class CoursesViewerTest {
      @Test
      public void viewSpecificStudentTest() {
          targetUrl = "students/"+ student1.studentID +"/";
-
          WebTarget target = client.target(baseUrl + targetUrl);
          Response response = target.request().get();
          System.out.println("response: " + response.readEntity(String.class));
-
-         // read each of the objects from the db as jsons!
          Object o = jsonb.fromJson(response.readEntity(String.class), Object.class);
          HashMap mapO = (HashMap) o;
-
          StudentDAO studentFromDB = new StudentDAO(
                  (String) mapO.get("student_id")
          );
-
-         // test passes if we found the course we're looking for
          Assertions.assertEquals(studentFromDB.studentID, student1.studentID, "Student not found.");
      }
 }
