@@ -24,12 +24,12 @@ public class CourseManagerResource {
     }
 
 
-    @POST
+    @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("courses/course/delete")
-    public Response deleteCourse(CourseDAO course) {
-        new CourseInterface().removeCourse(course);
+    @Path("courses/{courseID}/delete")
+    public Response deleteCourse(@PathParam("courseID") String courseID) {
+        new CourseInterface().removeCourse(courseID);
         return Response.status(Response.Status.OK).entity("Course successfully deleted.").build();
     }
 

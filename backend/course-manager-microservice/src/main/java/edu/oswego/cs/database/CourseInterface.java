@@ -115,8 +115,8 @@ public class CourseInterface {
     /**
      * Remove the course from the student's list of courses, and then remove the course itself from the course database.
      */
-    public void removeCourse(CourseDAO dao) {
-        MongoCursor<Document> courseQuery = courseCollection.find(eq("course_id", dao.courseID)).iterator();
+    public void removeCourse(String courseID) {
+        MongoCursor<Document> courseQuery = courseCollection.find(eq("course_id", courseID)).iterator();
         if (!courseQuery.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
 
         Document courseDocument = courseQuery.next();
@@ -126,11 +126,11 @@ public class CourseInterface {
             if (studentQuery.hasNext()) {
                 Document studentDocument = studentQuery.next();
                 List<String> courses = studentDocument.getList("courses", String.class);
-                courses.remove(dao.courseID);
+                courses.remove(courseID);
                 studentCollection.updateOne(eq("student_id", student), set("courses", courses));
             }
         }
-        courseCollection.findOneAndDelete(eq("course_id", dao.courseID));
+        courseCollection.findOneAndDelete(eq("course_id", courseID));
     }
 
     /**
