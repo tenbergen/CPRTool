@@ -59,20 +59,15 @@ public class CourseManagerResource {
         return Response.status(Response.Status.OK).entity("Student successfully added.").build();
     }
 
-    @POST
+    @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("courses/course/student/delete")
-    public Response deleteStudent(StudentDAO studentDAO) {
-        CourseDAO courseDAO = new CourseDAO(
-                studentDAO.abbreviation,
-                studentDAO.courseName,
-                studentDAO.courseSection,
-                studentDAO.crn,
-                studentDAO.semester,
-                studentDAO.year
-        );
-        new CourseInterface().removeStudent(studentDAO.email, courseDAO);
+    @Path("courses/{courseID}/students/{studentID}/delete")
+    public Response deleteStudent(
+            @PathParam("courseID")  String courseID,
+            @PathParam("studentID") String studentID) {
+
+        new CourseInterface().removeStudent(studentID, courseID);
         return Response.status(Response.Status.OK).entity("Student successfully removed.").build();
     }
 

@@ -137,8 +137,7 @@ public class CourseInterface {
      * Remove the student from the course's arraylist of students, and then remove the course from the student's course
      * arraylist in the student database.
      */
-    public void removeStudent(String email, CourseDAO dao) {
-        String studentName = email.split("@")[0];
+    public void removeStudent(String studentName, String courseID) {
         MongoCursor<Document> studentQuery = studentCollection.find(eq("student_id", studentName)).iterator();
         if (!studentQuery.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist.").build());
 
@@ -150,10 +149,10 @@ public class CourseInterface {
                 Document courseDocument = courseQuery.next();
                 List<String> students = courseDocument.getList("students", String.class);
                 students.remove(studentName);
-                courseCollection.updateOne(eq("course_id", dao.courseID), set("students", students));
+                courseCollection.updateOne(eq("course_id", courseID), set("students", students));
             }
         }
-        courses.remove(dao.courseID);
+        courses.remove(courseID);
         studentCollection.updateOne(eq("student_id", studentName), set("courses", courses));
     }
 
@@ -192,7 +191,7 @@ public class CourseInterface {
             }
         }
         for (String s : studentsToRemove) {
-            removeStudent(s, courseDAO);
+            removeStudent(s, courseDAO.courseID);
         }
         for (String s : studentsToAdd) {
             addStudent(s, courseDAO);
