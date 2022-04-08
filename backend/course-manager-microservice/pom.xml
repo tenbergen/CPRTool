@@ -50,12 +50,6 @@
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>com.ibm.websphere.appserver.api</groupId>
-            <artifactId>com.ibm.websphere.appserver.api.jaxrs20</artifactId>
-            <version>1.1.61</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.sun.activation</groupId>
             <artifactId>javax.activation</artifactId>
             <version>1.2.0</version>
@@ -74,12 +68,13 @@
             <version>1.0.0-RC1</version>
             <scope>runtime</scope>
         </dependency>
+
+        <!--        Team QA updated this to 1.1.54 from 1.0.10 so we can use AttatchmentBuilder-->
         <dependency>
             <groupId>com.ibm.websphere.appserver.api</groupId>
             <artifactId>com.ibm.websphere.appserver.api.jaxrs20</artifactId>
-            <version>1.0.10</version>
+            <version>1.1.54</version>
         </dependency>
-
 
     </dependencies>
 

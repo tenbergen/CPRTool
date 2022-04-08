@@ -26,6 +26,8 @@ public class AssignmentInterface {
     static MongoCollection<Document> assignmentsCollection;
     static String reg;
     int nextPos = 0;
+
+    // set this to true if testing on windows. QA, ask Team DB a bit more about this one...
     static boolean isWindows = false;
 
     public AssignmentInterface() {
