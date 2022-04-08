@@ -10,26 +10,15 @@ import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class DatabaseManager {
-    int studentPort = 27027; //Integer.parseInt(System.getenv("MONGO_PORT"));
-    int professorPort = 27028;//Integer.parseInt(System.getenv("MONGO2_PORT"));
-    int coursePort = 27029;//Integer.parseInt(System.getenv("MONGO3_PORT"));
-    int assignmentPort = 27030;//Integer.parseInt(System.getenv("MONGO4_PORT"));
-    int teamPort = 27031;//Integer.parseInt(System.getenv("MONGO5_PORT"));
-    String hostname = "moxie.cs.oswego.edu";//System.getenv("MONGO_HOSTNAME");
-    String mongoDatabase = "cpr";//System.getenv("MONGO_DATABASE");
-    String mongoUser = "root"; //System.getenv("MONGO_USERNAME");
-    String mongoPassword = "toor";//System.getenv("MONGO_PASSWORD");
-
-    // Switch these for the above lines to use the test DB'S!
-//    int studentPort = 27027;
-//    int professorPort = 27028;
-//    int coursePort = 27029;
-//    int assignmentPort = 27030;
-//    int teamPort = 27031;
-//    String hostname = "moxie.cs.oswego.edu";
-//    String mongoDatabase = "cpr";
-//    String mongoUser = "root";
-//    String mongoPassword = "toor";
+    int studentPort = Integer.parseInt(System.getenv("MONGO_PORT"));
+    int professorPort = Integer.parseInt(System.getenv("MONGO2_PORT"));
+    int coursePort = Integer.parseInt(System.getenv("MONGO3_PORT"));
+    int assignmentPort = Integer.parseInt(System.getenv("MONGO4_PORT"));
+    int teamPort = Integer.parseInt(System.getenv("MONGO5_PORT"));
+    String hostname = System.getenv("MONGO_HOSTNAME");
+    String mongoDatabase = System.getenv("MONGO_DATABASE");
+    String mongoUser = System.getenv("MONGO_USERNAME");
+    String mongoPassword = System.getenv("MONGO_PASSWORD");
 
     public MongoDatabase getStudentDB() {
         MongoCredential credentials = MongoCredential.createCredential(mongoUser, mongoDatabase, mongoPassword.toCharArray());
