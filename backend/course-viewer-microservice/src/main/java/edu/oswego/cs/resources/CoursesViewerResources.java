@@ -46,7 +46,14 @@ public class CoursesViewerResources {
 
         if (! student.isPresent())
             return Response.status(Response.Status.BAD_REQUEST).entity(studentID + " not found.").build();
-        return Response.status(Response.Status.OK).entity(student.get()).build();
+
+        List<String> courseIDs = (List<String>) student.get().get("courses");
+
+        List<Document> courses = courseIDs.stream()
+                .map(courseInterface::getCourse)
+                .collect(Collectors.toList());
+
+        return Response.status(Response.Status.OK).entity(courses).build();
     }
 
     @GET
