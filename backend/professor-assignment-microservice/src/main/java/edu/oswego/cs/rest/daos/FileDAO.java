@@ -1,18 +1,45 @@
 package edu.oswego.cs.rest.daos;
 
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
+import javax.json.bind.annotation.JsonbCreator;
+import javax.json.bind.annotation.JsonbProperty;
+import javax.persistence.Id;
 import java.io.*;
 
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor
+//@AllArgsConstructor
 public class FileDAO {
-    private String filename;
-    private String courseID;
-    private InputStream file;
-    private int assignmentID;
+    @Id
+    @JsonbProperty private String filename;
+    @JsonbProperty private String courseID;
+    @JsonbProperty private InputStream file;
+    @JsonbProperty private int assignmentID;
+
+    public FileDAO(
+            @NonNull @JsonbProperty("file_name") String filename,
+            @NonNull @JsonbProperty("course_id") String courseID,
+            @NonNull @JsonbProperty("inputStream") InputStream file,
+            @NonNull @JsonbProperty("assignment_id") int assignmentID) {
+        this.filename = filename;
+        this.courseID = courseID;
+        this.file = file;
+        this.assignmentID = assignmentID;
+    }
+
+    @JsonbCreator
+    public FileDAO(
+            @NonNull @JsonbProperty("file_name") String filename,
+            @NonNull @JsonbProperty("course_id") String courseID,
+            @NonNull @JsonbProperty("assignment_id") int assignmentID) {
+        this.filename = filename;
+        this.courseID = courseID;
+        this.assignmentID = assignmentID;
+    }
 
     /**
      * Takes form-data from a POST request, converts it to an inputStream, and return the FileDOA containing
