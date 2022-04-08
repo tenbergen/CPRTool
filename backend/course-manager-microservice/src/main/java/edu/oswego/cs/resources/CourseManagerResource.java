@@ -7,10 +7,7 @@ import edu.oswego.cs.daos.StudentDAO;
 import edu.oswego.cs.database.CourseInterface;
 import edu.oswego.cs.util.CSVUtil;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -26,6 +23,7 @@ public class CourseManagerResource {
         return Response.status(Response.Status.OK).entity("Course successfully added.").build();
     }
 
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -35,12 +33,13 @@ public class CourseManagerResource {
         return Response.status(Response.Status.OK).entity("Course successfully deleted.").build();
     }
 
-    @POST
+    @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/update")
     public Response updateCourse(CourseDAO course) {
-        return Response.status(Response.Status.OK).build();
+        String courseID = new CourseInterface().updateCourse(course);
+        return Response.status(Response.Status.OK).entity(courseID).build();
     }
 
     @POST
@@ -52,9 +51,9 @@ public class CourseManagerResource {
                 studentDAO.abbreviation,
                 studentDAO.courseName,
                 studentDAO.courseSection,
+                studentDAO.crn,
                 studentDAO.semester,
-                studentDAO.year,
-                studentDAO.crn
+                studentDAO.year
         );
         new CourseInterface().addStudent(studentDAO.email, courseDAO);
         return Response.status(Response.Status.OK).entity("Student successfully added.").build();
@@ -69,9 +68,9 @@ public class CourseManagerResource {
                 studentDAO.abbreviation,
                 studentDAO.courseName,
                 studentDAO.courseSection,
+                studentDAO.crn,
                 studentDAO.semester,
-                studentDAO.year,
-                studentDAO.crn
+                studentDAO.year
         );
         new CourseInterface().removeStudent(studentDAO.email, courseDAO);
         return Response.status(Response.Status.OK).entity("Student successfully removed.").build();

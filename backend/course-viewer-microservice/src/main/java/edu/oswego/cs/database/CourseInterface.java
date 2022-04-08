@@ -1,9 +1,8 @@
 package edu.oswego.cs.database;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import edu.oswego.cs.daos.CourseDAO;
-import edu.oswego.cs.daos.StudentDAO;
 import org.bson.Document;
 
 import javax.ws.rs.WebApplicationException;
@@ -29,55 +28,35 @@ public class CourseInterface {
         }
     }
 
-    public List<CourseDAO> getAllCourses() {
-        List<CourseDAO> courses = new ArrayList<>();
-        for (Document document : courseCollection.find()) {
-            CourseDAO courseDAO = new CourseDAO(
-                    (String) document.get("abbreviation"),
-                    (String) document.get("course_name"),
-                    (String) document.get("course_section"),
-                    (String) document.get("semester"),
-                    (String) document.get("year")
-            );
-            courses.add(courseDAO);
+    public List<Document> getAllCourses() {
+        MongoCursor<Document> query = courseCollection.find().iterator();
+        List<Document> courses = new ArrayList<>();
+        while (query.hasNext()) {
+            Document document = query.next();
+            courses.add(document);
         }
         return courses;
     }
 
-    public CourseDAO getCourse(String courseID) {
+    public Document getCourse(String courseID) {
         Document document = courseCollection.find(eq("course_id", courseID)).first();
         if (document == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
-
-        CourseDAO courseDAO = new CourseDAO(
-                (String) document.get("abbreviation"),
-                (String) document.get("course_name"),
-                (String) document.get("course_section"),
-                (String) document.get("semester"),
-                (String) document.get("year")
-        );
-        @SuppressWarnings("unchecked") List<String> students = (List<String>) document.get("students");
-        courseDAO.students = students;
-        return courseDAO;
+        return document;
     }
 
-    public List<StudentDAO> getAllStudents() {
-        List<StudentDAO> students = new ArrayList<>();
-        for (Document document : studentCollection.find()) {
-            StudentDAO studentDAO = new StudentDAO((String) document.get("student_id"));
-            @SuppressWarnings("unchecked") List<String> courses = (List<String>) document.get("courses");
-            studentDAO.courses = courses;
-            students.add(studentDAO);
+    public List<Document> getAllStudents() {
+        MongoCursor<Document> query = studentCollection.find().iterator();
+        List<Document> students = new ArrayList<>();
+        while (query.hasNext()) {
+            Document document = query.next();
+            students.add(document);
         }
         return students;
     }
 
-    public StudentDAO getStudent(String studentID) {
+    public Document getStudent(String studentID) {
         Document document = studentCollection.find(eq("student_id", studentID)).first();
         if (document == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist.").build());
-
-        StudentDAO studentDAO = new StudentDAO((String) document.get("student_id"));
-        @SuppressWarnings("unchecked") List<String> courses = (List<String>) document.get("courses");
-        studentDAO.courses = courses;
-        return studentDAO;
+        return document;
     }
 }

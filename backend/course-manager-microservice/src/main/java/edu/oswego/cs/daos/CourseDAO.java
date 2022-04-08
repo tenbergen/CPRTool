@@ -13,15 +13,16 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @ToString
+@Data
 public class CourseDAO {
+    @Id @JsonbProperty("course_id") public String courseID;
     @JsonbProperty("abbreviation") public String abbreviation;
-    @Id @JsonbProperty("course_name") public String courseName;
+    @JsonbProperty("course_name") public String courseName;
     @JsonbProperty("course_section") public String courseSection;
     @JsonbProperty("crn") public String crn;
     @JsonbProperty("semester") public String semester;
     @JsonbProperty("students") @ElementCollection public List<String> students;
     @JsonbProperty("year") public String year;
-    @JsonbProperty("course_id") public String courseID;
 
     @JsonbCreator
     public CourseDAO(
@@ -38,6 +39,6 @@ public class CourseDAO {
         this.semester = semester;
         this.students = new ArrayList<>();
         this.year = year;
-        this.courseID = this.abbreviation + "-" + this.courseSection + "-" + this.semester + "-" + this.year;
+        this.courseID = this.abbreviation + "-" + this.courseSection + "-" + this.crn + "-" + this.semester + "-" + this.year;
     }
 }

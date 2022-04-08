@@ -31,7 +31,7 @@
 
     <cors domain="/"
           allowedOrigins="*"
-          allowedMethods="POST"
+          allowedMethods="POST, PUT, GET, DELETE"
           allowCredentials="true"
           allowedHeaders="Content-Type"
           exposeHeaders="Content-Type"/>
