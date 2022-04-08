@@ -33,7 +33,7 @@ public class CoursesViewerResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{studentID}/courses")
     public Response viewStudentCourses(@PathParam("studentID") String studentID) {
-        List<String> courses = new CourseInterface().getStudentCourses(studentID);
+        List<Document> courses = new CourseInterface().getStudentCourses(studentID);
         return Response.status(Response.Status.OK).entity(courses).build();
     }
 

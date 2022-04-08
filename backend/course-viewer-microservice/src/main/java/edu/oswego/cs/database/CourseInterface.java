@@ -60,9 +60,16 @@ public class CourseInterface {
         return document;
     }
 
-    public List<String> getStudentCourses(String studentID) {
-        Document document = studentCollection.find(eq("student_id", studentID)).first();
-        if (document == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist.").build());
-        return document.getList("courses", String.class);
+    public List<Document> getStudentCourses(String studentID) {
+        Document studentDocument = studentCollection.find(eq("student_id", studentID)).first();
+        if (studentDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist.").build());
+        
+        List<String> courses = studentDocument.getList("courses", String.class);
+        List<Document> courseDocuments = new ArrayList<>();
+        for (String course : courses) {
+            Document courseDocument = courseCollection.find(eq("course_id", course)).first();
+            courseDocuments.add(courseDocument);
+        }
+        return courseDocuments;
     }
 }
