@@ -65,6 +65,33 @@
             <version>1.1.36</version>
             <scope>provided</scope>
         </dependency>
+
+<!--        dependencies for testing -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.8.2</version>
+            <scope>test</scope>
+        </dependency>
+
+<!--        A note from Liam, bear with me here...
+            Only the apache dependency is required to get our login test to run,
+            but without it there, it says it can't find glassfish...
+            the presence of glassfish makes no difference to this error however.
+            So in other words... apache is more glassfish than glassfish...
+            Try it yourself to see what I mean... XD-->
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
+            <version>1.1.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-rs-client</artifactId>
+            <version>3.4.5</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

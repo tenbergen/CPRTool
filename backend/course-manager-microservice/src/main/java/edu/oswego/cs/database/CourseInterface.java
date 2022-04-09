@@ -59,7 +59,7 @@ public class CourseInterface {
     }
 
     /**
-     * Find the course document from Mongo using the current course ID, then update the course document using the new infromation
+     * Find the course document from Mongo using the current course ID, then update the course document using the new information
      * passed from Frontend.
      */
     public String updateCourse(CourseDAO dao) {
@@ -162,7 +162,6 @@ public class CourseInterface {
 
         String cid = f.getFilename();
         cid = cid.substring(0, cid.length() - 4);
-        System.out.println(cid);
         Document course = courseCollection.find(new Document("course_id", cid)).first();
         assert course != null;
         CourseDAO courseDAO = new CourseDAO(

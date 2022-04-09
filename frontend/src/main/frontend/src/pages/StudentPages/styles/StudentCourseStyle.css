@@ -1,0 +1,63 @@
+.scp-parent {
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
+    background: conic-gradient(from 180deg at 50% 50%,
+    #7398FF -128.84deg,
+    #57E1B2 25.81deg,
+    #7398FF 231.16deg,
+    #57E1B2 385.81deg);
+}
+
+.scp-container {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50px;
+    margin: 3% 5% 3% 2%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+}
+
+.scp-component {
+    border-radius: 50px;
+    flex-grow: 1;
+    padding: 2%;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.scp-component-links {
+    display: flex;
+    flex-direction: row;
+    font-weight: bold;
+    text-align: center;
+    justify-content: left;
+    padding: 0 5% 0 2%;
+    gap: 15%;
+}
+
+.scp-component-links p:hover {
+    cursor: pointer;
+}
+
+.scp-component-link {
+    font-size: 24px;
+    padding-left: 24px;
+}
+
+.scp-component-link-clicked {
+    font-size: 24px;
+    padding-left: 24px;
+    text-decoration: underline;
+    color: #5267A3
+}
+
+/*.assSubTodo {*/
+/*    margin-left: 10%;*/
+/*    font-size: 24px;*/
+/*    padding-left: 24px;*/
+/*}*/
+
+/*.scs-container h1 {*/
+/*    margin-left: 1%;*/
+/*    margin-bottom: 1%;*/
+/*}*/

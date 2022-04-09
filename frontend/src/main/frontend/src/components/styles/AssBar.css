@@ -1,0 +1,40 @@
+.abc-parent {
+    /*background-color: rgba(255, 255, 255, 0.5);*/
+    /*border-radius: 50px;*/
+    width: 22%;
+}
+
+.abc-parent h2 {
+    margin: 15% 10% 12% 10%;
+}
+
+.abc-assignments {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    padding-bottom: 7%;
+}
+
+.TheTable{
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+tr:hover {background-color: white;}
+
+td {
+    table-layout: auto;
+    width: 1%;
+    height: fit-content;
+}
+
+.courseText{
+    padding-left: 6%;
+    text-align: center;
+}
+
+.colorForTable{
+    float: left;
+    height: 100px;
+    width: 4%;
+    background-color: #7398FF;
+}

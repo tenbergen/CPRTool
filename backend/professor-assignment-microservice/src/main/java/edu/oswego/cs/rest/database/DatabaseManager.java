@@ -5,10 +5,12 @@ import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
+
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class DatabaseManager {
+
     int studentPort = Integer.parseInt(System.getenv("MONGO_PORT"));
     int professorPort = Integer.parseInt(System.getenv("MONGO2_PORT"));
     int coursePort = Integer.parseInt(System.getenv("MONGO3_PORT"));
