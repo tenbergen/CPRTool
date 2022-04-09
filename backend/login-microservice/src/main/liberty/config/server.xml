@@ -21,6 +21,9 @@
     <applicationManager autoExpand="true"/>
 
     <jwtBuilder expiresInSeconds="3600" id="cpr22s" jwkEnabled="true" signatureAlgorithm="RS512"/>
+    <jwtBuilder id="cpr22s_access" expiresInSeconds="900" jwkEnabled="true" signatureAlgorithm="RS512"/>
+    <jwtBuilder id="cpr22s_refresh" expiry="72h" jwkEnabled="true" signatureAlgorithm="RS512"/>
+
 
     <webApplication contextRoot="${app.context.root}" location="login-microservice.war" />
         
