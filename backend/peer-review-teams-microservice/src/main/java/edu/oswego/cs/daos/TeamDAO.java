@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class TeamDAO {
-    @Id @JsonbProperty("team_id") private Integer teamID;
+    @Id @JsonbProperty("team_id") private String teamID;
     @JsonbProperty("course_id") private String courseID;
     @JsonbProperty("team_lead") private String teamLead;
     @JsonbProperty("team_members") @ElementCollection private List<String> teamMembers;
@@ -27,14 +27,14 @@ public class TeamDAO {
 
     @JsonbCreator
     public TeamDAO( 
-        @NonNull @JsonbProperty("team_id") Integer teamID,
+        @NonNull @JsonbProperty("team_id") String teamID,
         @NonNull @JsonbProperty("course_id") String courseID,
+        @NonNull @JsonbProperty("team_lead") String teamLead,
         @NonNull @JsonbProperty("team_size") Integer teamSize
-        
         ) {
         this.teamID = teamID;
         this.courseID = courseID;
-        this.teamLead = null;
+        this.teamLead = teamLead;
         this.teamMembers = new ArrayList<>();
         this.teamName = null;
         this.teamSize = teamSize;
