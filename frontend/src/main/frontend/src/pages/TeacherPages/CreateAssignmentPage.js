@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import "./styles/CreateAssignmentStyle.css"
 import SidebarComponent from "../../components/SidebarComponent";
-import { useNavigate } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import {useSelector} from "react-redux";
 
 const CreateAssignmentPage = () => {
     const currentCourse = useSelector((state) => state.courses.currentCourse)
-    const courseId = currentCourse.course_id
+    const { courseId } = useParams()
     //const submitCourseUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/create`
     const submitCourseUrl = 'http://moxie.cs.oswego.edu:13125/assignments/professor/courses/create-assignment'
-    // const uploadFileUrl = 'http://moxie.cs.oswego.edu:13125/professor/courses/' + courseId +
     const getAssUrl = 'http://moxie.cs.oswego.edu:13125/assignments/professor/courses/' + courseId + '/assignments/'
 
     console.log(courseId)
@@ -27,6 +26,25 @@ const CreateAssignmentPage = () => {
 
     const OnChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
+    const fileFormData = new FormData()
+
+    const fileChangeHandler = (event) => {
+        let file = event.target.files[0];
+        const renamedFile = new File([file], "something.pdf", { type: file.type })
+        fileFormData.append("file", renamedFile)
+    }
+
+    const uploadFiles = async (assignmentId) => {
+        const fileUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/upload`
+        await axios.post(fileUrl, fileFormData)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(e => {
+                console.log(e)
+            })
+    }
+
     const handleSubmit = async (e) => {
         if (AssignmentName === '' || AssignmentInstructions === '' || files === '' || AssignmentDueDate === '' || AssignmentPoints === '' 
         || ReviewInstructions === '' || ReviewRubric === '' || ReviewDueDate === '' || ReviewPoints === '') alert("Fields can't be empty!")
@@ -35,24 +53,24 @@ const CreateAssignmentPage = () => {
             const data = {
                 assignment_name: AssignmentName,
                 instructions: AssignmentInstructions,
+                peer_review_instructions: ReviewInstructions,
                 due_date: AssignmentDueDate,
                 points: AssignmentPoints,
                 course_id: courseId
             };
-            await axios.post(submitCourseUrl, data).then(r => console.log(r));
-            let assignmentId
-            await axios.get(getAssUrl).then(r => {
-                console.log(r)
-                assignmentId = r.data[r.data.length - 1].assignment_id
+
+            await axios.post(submitCourseUrl, data).then(res => {
+                console.log(res)
             });
-            const fileUrl = 'http://moxie.cs.oswego.edu:13125/assignments/professor/courses/' + courseId + '/assignments/'
-            + assignmentId + '/upload'
-            let form = new FormData()
-            form.set(AssignmentName + ".pdf", files)
-            await axios.post(fileUrl, form)
-            // const u = 'http://moxie.cs.oswego.edu:13125/assignments/professor/courses/' + courseId + '/assignments/'
-            //     + assignmentId + '/view-files'
-            // axios.get(u).then(r => console.log(r))
+
+            const assignmentId = await axios.get(getAssUrl).then(res => {
+                console.log(res)
+                return res.data[res.data.length - 1].assignment_id
+            });
+
+            setTimeout(() => {
+                uploadFiles(assignmentId)
+            }, 5000);
 
             navigate("/details/professor/" + courseId)
         }
@@ -60,6 +78,7 @@ const CreateAssignmentPage = () => {
 
     return (
         <div className="cap-parent">
+            {/*<FileUploadComponent />*/}
             <SidebarComponent />
             <div className="cap-container">
                 <h2> Add new assignment </h2>
@@ -90,11 +109,10 @@ const CreateAssignmentPage = () => {
                     <div className="cap-assignment-files">
                         <label> <b> Files: </b> </label>
                         <input
+                            onChange={fileChangeHandler}
                             type="file"
-                            name="AssignmentFiles"
-                            value={files}
-                            required
-                            onChange={(e) => OnChange(e)}
+                            name="assignment_file"
+                            accept=".pdf"
                         />
                     </div>
 

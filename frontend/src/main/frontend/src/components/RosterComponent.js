@@ -1,16 +1,17 @@
-import {useState} from "react";
+import { useState } from "react";
 import axios from "axios";
 import "./styles/Roster.css"
-import {useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getCourseDetailsAsync } from "../redux/features/courseSlice";
+import { useParams } from "react-router-dom";
 
 
 const RosterComponent = () => {
-    const addStudentUrl = `${window.location.protocol}//${window.location.host}/manage/professor/courses/course/student/add`
-    // const addStudentUrl = `http://moxie.cs.oswego.edu:13125/manage/professor/courses/course/student/add`
-    const deleteStudentUrl = `${window.location.protocol}//${window.location.host}/manage/professor/courses/course/student/delete`
-    // const deleteStudentUrl = `http://moxie.cs.oswego.edu:13125/manage/professor/courses/course/student/delete`
-    const currentCourse = useSelector((state) => state.courses.currentCourse)
-    const [studentArray, updateArray] = useState(Array.from(currentCourse.students))
+    const dispatch = useDispatch()
+    const { courseId } = useParams()
+    const addStudentUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/student/add`
+    const deleteStudentUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/student/delete`
+    const { currentCourse } = useSelector((state) => state.courses)
 
     const [formData, setFormData] = useState({
         Name: '',
@@ -26,37 +27,34 @@ const RosterComponent = () => {
         }
         else {
             e.preventDefault()
-            const data = {
-                email: Email,
-                abbreviation: currentCourse.abbreviation,
-                course_id: currentCourse.course_id,
-                course_name: currentCourse.course_name,
-                course_section: currentCourse.course_section,
-                crn: currentCourse.crn,
-                semester: currentCourse.semester,
-                year: currentCourse.year
-            };
-            updateArray((arr) => [...arr, Email])
+            const data = { email: Email, ...currentCourse };
             await axios.post(addStudentUrl, data)
-            setFalse()
+                .then(res => {
+                    console.log(res.data)
+                    alert("Successfully added student.")
+                    dispatch(getCourseDetailsAsync(courseId))
+                })
+                .catch(e => {
+                    console.log(e)
+                    alert("Error adding student.")
+                    setFalse()
+                })
         }
     }
 
     const deleteStudent = async (Email) => {
-        const data = {
-            email: Email,
-            abbreviation: currentCourse.abbreviation,
-            course_id: currentCourse.course_id,
-            course_name: currentCourse.course_name,
-            course_section: currentCourse.course_section,
-            semester: currentCourse.semester,
-            year: currentCourse.year
-        };
-
-        let index = studentArray.indexOf(Email)
-        studentArray.splice(index, 1)
-        updateArray((arr) => [...arr])
+        console.log(Email)
+        const data = { email: Email, ...currentCourse};
         await axios.post(deleteStudentUrl, data)
+            .then(res => {
+                console.log(res)
+                alert("Successfully deleted student.")
+                dispatch(getCourseDetailsAsync(courseId))
+            })
+            .catch(e => {
+                console.log(e)
+                alert("Error deleting student.")
+            })
     }
 
     const addsStudent = () => {
@@ -85,15 +83,14 @@ const RosterComponent = () => {
                         <th className="rosterHeader">Name</th>
                         <th className="rosterHeader">Email</th>
                         <th className="rosterHeader">Team</th>
-                        <th className="rosterHeader">Status</th>
+                        <th className="rosterHeader">Remove</th>
                     </tr>
-                    {studentArray.map(d =>
+                    {currentCourse.students.map(d =>
                         <tr>
-                            <th>{d}</th>
-                            <th>{d.Email}</th>
-                            <th>{d.Team}</th>
-                            <th>{d.Status}</th>
-                            <span onClick={() => deleteStudent(d)} className="crossMark">&#10060;</span>
+                            <th className="rosterComp">{d}</th>
+                            <th className="rosterComp">{d.Email}</th>
+                            <th className="rosterComp">{d.Team}</th>
+                            <th className="rosterComp"> <span onClick={() => deleteStudent(d)} className="crossMark">&#10006;</span></th>
                         </tr>
                     )}
                 </table>

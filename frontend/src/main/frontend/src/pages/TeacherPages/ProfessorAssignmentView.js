@@ -1,15 +1,14 @@
 import React from "react-dom";
 import { useEffect,useState } from "react";
-import "./styles/StudentCourseStyle.css";
+import "./styles/ProfessorCourseStyle.css";
 import SidebarComponent from "../../components/SidebarComponent";
-import ToDoComponent from "../../components/ToDoComponent";
-import CourseBarComponent from "../../components/CourseBarComponent";
-import SubmittedComponent from "../../components/SubmittedComponent";
 import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getCourseDetailsAsync } from "../../redux/features/courseSlice";
+import GradeAssBarComponent from "../../components/GradeAssBarComponent";
+import TeamSubmissionComponent from "../../components/TeamSubmissionComponent";
 
-const CourseComponent = ({ active, component, onClick }) => {
+const AssComponent = ({ active, component, onClick }) => {
     return (
         <p onClick={onClick} className={active ? "scp-component-link-clicked" : "scp-component-link"}>
             {component}
@@ -20,9 +19,10 @@ const CourseComponent = ({ active, component, onClick }) => {
 function StudentCoursePage() {
     let dispatch = useDispatch()
     let { courseId } = useParams();
+    const isDataLoaded = useSelector((state) => state.courses.currentCourseLoaded)
 
-    const components = ["To Do", "Submitted"];
-    const [chosen, setChosen] = useState("To Do");
+    const components = ["All Submissions", "Needs Grading", "Edit"];
+    const [chosen, setChosen] = useState("All Submissions");
 
     useEffect( () => {
         dispatch(getCourseDetailsAsync(courseId))
@@ -30,14 +30,15 @@ function StudentCoursePage() {
 
     return (
         <div>
+            { isDataLoaded ?
             <div className="scp-parent">
                 <SidebarComponent/>
                 <div className="scp-container">
-                    <CourseBarComponent/>
+                    <GradeAssBarComponent/>
                     <div className="scp-component">
                         <div className="scp-component-links">
                             {components.map(t => (
-                                <CourseComponent
+                                <AssComponent
                                     key={t}
                                     component={t}
                                     active={t === chosen}
@@ -46,12 +47,13 @@ function StudentCoursePage() {
                             ))}
                         </div>
                         <div>
-                            {chosen === "To Do" && <ToDoComponent/>}
-                            {chosen === "Submitted" && <SubmittedComponent/>}
+                            {chosen === "All Submissions" && <TeamSubmissionComponent/>}
+                            {chosen === "Needs Grading" && <TeamSubmissionComponent/>}
+                            {chosen === "Edit"}
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> : null }
         </div>
     );
 }

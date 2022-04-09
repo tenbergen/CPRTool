@@ -1,23 +1,24 @@
 import React from "react-dom";
-import { useState} from "react";
+import { useState } from "react";
 import "./styles/EditCourse.css"
 import "./styles/DeleteModal.css"
-import {useDispatch, useSelector} from "react-redux";
-import {useNavigate} from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { Form, Field } from 'react-final-form'
-import {getCourseDetailsAsync} from "../redux/features/courseSlice";
+import { getCourseDetailsAsync } from "../redux/features/courseSlice";
 
-const deleteUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/delete`
+const deleteCourseUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/delete`
 const updateUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/update`
 const uploadCsvUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/student/mass-add`
+const assignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`
 
 const EditCourseComponent = () => {
     let navigate = useNavigate()
     let dispatch = useDispatch()
-    const currentCourse = useSelector((state) => state.courses.currentCourse)
-    let courseId = currentCourse.course_id
-    console.log(currentCourse)
+    const { currentCourse } = useSelector((state) => state.courses)
+    const { courseAssignments } = useSelector((state) => state.assignments)
+    let { courseId } = useParams()
 
     const [showModal, setShow] = useState(false)
     const csvFormData = new FormData()
@@ -69,10 +70,19 @@ const EditCourseComponent = () => {
     }
 
     const deleteCourse = async () => {
-        await axios.post(deleteUrl, currentCourse).then((response) => {
+        await axios.post(deleteCourseUrl, currentCourse).then((response) => {
             console.log(response)
         })
+        if (courseAssignments.length > 0) await deleteAssignments()
+        alert("Successfully deleted course.")
         navigate("/")
+    }
+
+    const deleteAssignments = async () => {
+        const url = `${assignmentUrl}/${courseId}/remove`
+        await axios.delete(url).then((response) => {
+            console.log(response)
+        })
     }
 
     const Modal = () => {
@@ -90,10 +100,10 @@ const EditCourseComponent = () => {
     }
 
     return (
-        <div>
+        <div className="ecc-form">
             <Form
                 onSubmit={formObj => {
-                    updateCourse(formObj)
+                    updateCourse(formObj).then(r => console.log(r))
                 }}
                 initialValues={{
                     course_name: currentCourse.course_name,
@@ -104,7 +114,7 @@ const EditCourseComponent = () => {
                     crn: currentCourse.crn
                 }}>
                 {({ handleSubmit }) => (
-                    <form onSubmit={handleSubmit} className="ecc-form">
+                    <form onSubmit={handleSubmit}>
                         <div className="ecc-input-field">
                             <label> <b> Name of course: </b> </label>
                             <Field name="course_name" >
@@ -219,17 +229,18 @@ const EditCourseComponent = () => {
                                 // required
                             />
                         </div>
-
                         <div className="ecc-button">
-                            <button type="submit"> Save</button>
-                            <a onClick={() => setShow(true)} target="_blank"> Delete course </a>
-                            <div>
-                                {showModal ? Modal() : null}
-                            </div>
+                            <button  type="submit"> Save</button>
                         </div>
                     </form>
                 )}
             </Form>
+            <div className="ecc-delete">
+                <a onClick={() => setShow(true)} target="_blank"><b> Delete course </b></a>
+                <div>
+                    {showModal ? Modal() : null}
+                </div>
+            </div>
         </div>
     )
 }

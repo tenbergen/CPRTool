@@ -1,17 +1,17 @@
 import React, {useEffect, useState} from "react";
-import "./styles/AssBar.css"
+import "./styles/TeacherAss.css"
 import {useDispatch, useSelector} from "react-redux";
 import {Link, useParams} from "react-router-dom";
 import { getCourseAssignmentsAsync, setCurrentAssignment } from "../redux/features/assignmentSlice";
 
-const AssBarLink = ( {active, assignment, onClick})  => {
+const GradeAssBarLink = ( {active, assignment, onClick})  => {
     const { role } = useSelector((state) => state.auth)
     const normalStyle = { backgroundColor: "rgba(255, 255, 255, 0.25)" }
     const clickedStyle = { backgroundColor: "white" }
     const { courseId } = useParams()
 
     return (
-        <Link to={`/details/${role}/${courseId}/${assignment.assignment_id}`} onClick={onClick}>
+        <Link to={`/details/${role}/${courseId}/${assignment.assignment_name}/grade`} onClick={onClick}>
             <tr>
                 <td style={active ? clickedStyle : normalStyle} >
                     <div className="colorForTable"/>
@@ -22,7 +22,7 @@ const AssBarLink = ( {active, assignment, onClick})  => {
     );
 }
 
-const AssBarComponent = () => {
+const GradeAssBarComponent = () => {
     const dispatch = useDispatch()
     const { courseAssignments }  = useSelector((state) => state.assignments)
     const { courseId, assignmentId } = useParams()
@@ -34,7 +34,7 @@ const AssBarComponent = () => {
     },[])
 
     const onAssClick = (assignment) =>{
-        setChosen(assignment.assignment_id)
+        setChosen(assignment.assignment_name)
         dispatch(setCurrentAssignment(assignment))
     }
 
@@ -43,9 +43,9 @@ const AssBarComponent = () => {
             <h2> Assignments </h2>
             <div className="abc-assignments">
                 {courseAssignments.map(assignment =>
-                    <AssBarLink
+                    <GradeAssBarLink
                         onClick={()=> onAssClick(assignment)}
-                        active={assignment.assignment_id === chosen}
+                        active={assignment.assignment_name === chosen}
                         assignment={assignment}/>
                 )}
             </div>
@@ -53,4 +53,4 @@ const AssBarComponent = () => {
     );
 }
 
-export default AssBarComponent;
+export default GradeAssBarComponent;

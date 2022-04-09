@@ -29,16 +29,21 @@ export const getTokenAsync = createAsyncThunk(
 )
 
 const getUserInformation = () => {
+    const alt_role = localStorage.getItem("alt_role")
     try {
         let decoded = jwtDecode(localStorage.getItem("jwt_token"))
         return {
             isAuthenticated: true,
             user_given_name: decoded.name,
-            role: decoded.roles[0]
+            email: decoded.email,
+            lakerId: decoded.lakerID,
+            role: alt_role != null ? alt_role : decoded.groups[0],
+            dataLoaded: true
         }
     } catch (e) {
         return {
             isAuthenticated: false,
+            dataLoaded: true
         }
     }
 }
@@ -48,7 +53,10 @@ const authSlice = createSlice({
     initialState: {
         isAuthenticated: null,
         user_given_name: null,
-        role: null
+        email: null,
+        lakerId: null,
+        role: null,
+        dataLoaded: false
     },
     reducers: {
         setUserInformation: getUserInformation

@@ -1,7 +1,6 @@
 .pcp-parent {
     display: flex;
     flex-direction: row;
-    overflow: auto;
     background: conic-gradient(from 180deg at 50% 50%,
      #7398FF -128.84deg, 
      #57E1B2 25.81deg, 
@@ -16,6 +15,8 @@
     flex-grow: 1;
     display: flex;
     flex-direction: row;
+    height: 90vh;
+    width: 100vw;
 }
 
 .pcp-components {
@@ -23,6 +24,25 @@
     flex-grow: 1;
     padding: 2%;
     background-color: rgba(255, 255, 255, 0.5);
+}
+
+.pcp-components::-webkit-scrollbar {
+    width: 20px;
+}
+
+.pcp-components::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.pcp-components::-webkit-scrollbar-thumb {
+    background-color: #d6dee1;
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
+}
+
+.pcp-components::-webkit-scrollbar-thumb:hover {
+    background-color: #a8bbbf;
 }
 
 .pcp-component-links {

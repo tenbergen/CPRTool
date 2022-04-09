@@ -12,13 +12,39 @@
     margin-right: 5%;
     margin-left: 5%;
     flex-grow: 1;
+    height: 90vh;
+    width: 100vw;
+}
+
+#proCourseList {
+    overflow-y: scroll;
+    height: 65vh;
+    margin-top:5px;
+}
+
+#proCourseList::-webkit-scrollbar {
+    width: 20px;
+}
+
+#proCourseList::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+#proCourseList::-webkit-scrollbar-thumb {
+    background-color: #d6dee1;
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
+}
+
+#proCourseList::-webkit-scrollbar-thumb:hover {
+    background-color: #a8bbbf;
 }
 
 #addClass {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top:15px;
     margin-bottom: 15px;
 }
 
