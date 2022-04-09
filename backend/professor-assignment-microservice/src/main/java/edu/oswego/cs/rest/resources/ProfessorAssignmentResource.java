@@ -29,7 +29,7 @@ public class ProfessorAssignmentResource {
     }
 
     @GET
-    @RolesAllowed("professor")
+    @RolesAllowed({"professor", "student"})
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments")
     public Response viewAssignmentsByCourse(@PathParam("courseID") String courseID) {
@@ -37,7 +37,7 @@ public class ProfessorAssignmentResource {
     }
 
     @GET
-    @RolesAllowed("professor")
+    @RolesAllowed({"professor", "student"})
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}")
     public Response viewSpecifiedAssignment(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID){
@@ -55,7 +55,7 @@ public class ProfessorAssignmentResource {
      * @return Response
      */
     @POST
-    @RolesAllowed("professor")
+    @RolesAllowed({"professor", "student"})
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
     @Path("/courses/{courseID}/assignments/{assignmentID}/upload")
@@ -80,7 +80,7 @@ public class ProfessorAssignmentResource {
     }
 
     @POST
-    @RolesAllowed("professor")
+    @RolesAllowed({"professor", "student"})
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/create-assignment")
     public Response createAssignment(AssignmentDAO assignmentDAO) {
@@ -90,7 +90,7 @@ public class ProfessorAssignmentResource {
     }
 
     @DELETE
-    @RolesAllowed("professor")
+    @RolesAllowed({"professor", "student"})
     @Path("/courses/{courseID}/assignments/{assignmentID}/remove")
     public Response removeAssignment(@PathParam("assignmentID") int assignmentID, @PathParam("courseID") String courseID) throws IOException {
         new AssignmentInterface().removeAssignment(assignmentID, courseID);
@@ -98,7 +98,7 @@ public class ProfessorAssignmentResource {
     }
 
     @PUT
-    @RolesAllowed("professor")
+    @RolesAllowed({"professor", "student"})
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}/edit")
     public Response updateAssignment(AssignmentDAO assignmentDAO, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID){
@@ -113,7 +113,7 @@ public class ProfessorAssignmentResource {
     }
 
     @GET
-    @RolesAllowed("professor")
+    @RolesAllowed({"professor", "student"})
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}/view-files")
     public Response viewAssignmentFiles(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID){
@@ -137,7 +137,7 @@ public class ProfessorAssignmentResource {
      * @return response
      * **/
     @GET
-    @RolesAllowed("professor")
+    @RolesAllowed({"professor", "student"})
     @Produces(MediaType.MULTIPART_FORM_DATA)
     @Path("/courses/{courseID}/assignments/{assignmentID}/download/{fileName}")
     public Response downloadAssignment(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("fileName") String fileName) throws Exception {
