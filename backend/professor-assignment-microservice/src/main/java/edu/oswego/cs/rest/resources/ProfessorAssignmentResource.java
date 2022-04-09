@@ -65,7 +65,7 @@ public class ProfessorAssignmentResource {
             String fileName = attachment.getDataHandler().getName();
 
             if (!fileName.endsWith("pdf") && !fileName.endsWith("zip")) return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
-            new AssignmentInterface().writeToAssignment(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
+            AssignmentInterface.writeToAssignment(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
         }
         return Response.status(Response.Status.OK).entity("Successfully added file to assignment.").build();
     }
@@ -74,7 +74,7 @@ public class ProfessorAssignmentResource {
     @RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/assignments/remove-file")
-    public Response removeFileFromAssignment(FileDAO fileDAO){
+    public Response removeFileFromAssignment(FileDAO fileDAO) {
         AssignmentInterface.removeFile(fileDAO);
         return Response.status(Response.Status.OK).entity("File successfully deleted.").build();
     }
@@ -84,9 +84,9 @@ public class ProfessorAssignmentResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/create-assignment")
     public Response createAssignment(AssignmentDAO assignmentDAO) {
-        new AssignmentInterface().createAssignment(assignmentDAO);
-        String assignmentSuccessfullyCreated = assignmentDAO.getCourseID() + ": " + assignmentDAO.getAssignmentName() + " successfully created.";
-        return Response.status(Response.Status.OK).entity(assignmentSuccessfullyCreated).build();
+        int assignmentID = new AssignmentInterface().createAssignment(assignmentDAO);
+        String response = assignmentDAO.courseID + ": " + assignmentDAO.assignmentName + " successfully created.";
+        return Response.status(Response.Status.OK).entity(response).header("assignment_id", assignmentID).build();
     }
 
     @DELETE
@@ -101,25 +101,20 @@ public class ProfessorAssignmentResource {
     @RolesAllowed({"professor", "student"})
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}/edit")
-    public Response updateAssignment(AssignmentDAO assignmentDAO, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID){
-        try {
-            AssignmentInterface.updateAssignment(assignmentDAO, courseID, assignmentID);
-            String assignmentSuccessfullyUpdated = assignmentDAO.getCourseID() + ":" + assignmentDAO.getAssignmentName() + " Successfully updated";
-            return Response.status(Response.Status.OK).entity(assignmentSuccessfullyUpdated).build();
-        } catch (Exception e){
-            String assignmentFailedUpdate = assignmentDAO.getCourseID() + ":" + assignmentDAO.getAssignmentName() + " failed to update";
-            return Response.status(Response.Status.BAD_REQUEST).entity(assignmentFailedUpdate).build();
-        }
+    public Response updateAssignment(AssignmentDAO assignmentDAO, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
+        new AssignmentInterface().updateAssignment(assignmentDAO, courseID, assignmentID);
+        String response = assignmentDAO.courseID + ": " + assignmentDAO.assignmentName + " successfully updated.";
+        return Response.status(Response.Status.OK).entity(response).build();
     }
 
     @GET
     @RolesAllowed({"professor", "student"})
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}/view-files")
-    public Response viewAssignmentFiles(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID){
-        File file = new File(AssignmentInterface.findAssignment(courseID,assignmentID));
-        if (!file.exists())
-            return Response.status(Response.Status.NOT_FOUND).entity("Assignment does not exist").build();
+    public Response viewAssignmentFiles(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
+        new AssignmentInterface();
+        File file = new File(AssignmentInterface.findAssignment(courseID, assignmentID));
+        if (!file.exists()) return Response.status(Response.Status.NOT_FOUND).entity("Assignment does not exist.").build();
 
         File[] files = file.listFiles();
         ArrayList<String> fileNames = new ArrayList<>();
@@ -132,23 +127,23 @@ public class ProfessorAssignmentResource {
      * Retrieves the assignment from its location on the server and passes it to the front end via the request header
      * as a stream. The request entity passes an InputStream[] with the assignment files in each array.
      *
-     * @param courseID String
+     * @param courseID     String
      * @param assignmentID int
      * @return response
-     * **/
+     **/
     @GET
     @RolesAllowed({"professor", "student"})
     @Produces(MediaType.MULTIPART_FORM_DATA)
     @Path("/courses/{courseID}/assignments/{assignmentID}/download/{fileName}")
-    public Response downloadAssignment(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("fileName") String fileName) throws Exception {
+    public Response downloadAssignment(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("fileName") String fileName) {
+        new AssignmentInterface();
         File file = new File(AssignmentInterface.findFile(courseID, assignmentID, fileName));
         if (!file.exists())
-            return Response.status(Response.Status.BAD_REQUEST).entity("Assignment Does Not Exist").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist.").build();
 
-        Response.ResponseBuilder response = Response.ok((Object) file);
-        response.header("Content-Disposition","attachment; filename=" + file.getName());
+        Response.ResponseBuilder response = Response.ok(file);
+        response.header("Content-Disposition", "attachment; filename=" + file.getName());
         return response.build();
-
     }
 
     @DELETE
@@ -156,6 +151,6 @@ public class ProfessorAssignmentResource {
     @Path("/courses/{courseID}/remove")
     public Response removeCourse(@PathParam("courseID") String courseID) throws IOException {
         new AssignmentInterface().removeCourse(courseID);
-        return Response.status(Response.Status.OK).entity("Course successfully deleted from Assignments Database and assignments folder").build();
+        return Response.status(Response.Status.OK).entity("Course successfully deleted from assignments database and assignments folder.").build();
     }
 }
