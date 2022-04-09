@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import {useDispatch, useSelector} from "react-redux";
 import "./styles/StudentAss.css"
 import {Link, useParams} from "react-router-dom";
-import { getCourseAssignmentsAsync, setCurrentAssignment } from "../redux/features/assignmentSlice";
+import { getAssignmentDetailsAsync, getAssignmentFilesAsync, getCourseAssignmentsAsync } from "../redux/features/assignmentSlice";
 
 const ToDoComponent = () => {
     const dispatch = useDispatch()
@@ -16,7 +16,9 @@ const ToDoComponent = () => {
     },[])
 
     const assignmentClickHandler = (assignment) => {
-        dispatch(setCurrentAssignment(assignment))
+        const assignmentId = assignment.assignment_id
+        dispatch(getAssignmentDetailsAsync({ courseId, assignmentId }));
+        dispatch(getAssignmentFilesAsync({ courseId, assignmentId }));
     }
 
     return (

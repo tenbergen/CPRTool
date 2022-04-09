@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import "./styles/AssBar.css"
 import {useDispatch, useSelector} from "react-redux";
 import {Link, useParams} from "react-router-dom";
-import { getCourseAssignmentsAsync, setCurrentAssignment } from "../redux/features/assignmentSlice";
+import { getAssignmentFilesAsync, getCourseAssignmentsAsync, setCurrentAssignment } from "../redux/features/assignmentSlice";
 
 const AssBarLink = ( {active, assignment, onClick})  => {
     const { role } = useSelector((state) => state.auth)
@@ -34,8 +34,11 @@ const AssBarComponent = () => {
     },[])
 
     const onAssClick = (assignment) =>{
-        setChosen(assignment.assignment_id)
+        const assignment_id = assignment.assignment_id
+        console.log(assignment_id)
+        setChosen(assignment_id)
         dispatch(setCurrentAssignment(assignment))
+        dispatch(getAssignmentFilesAsync({courseId, assignment_id}))
     }
 
     return (
