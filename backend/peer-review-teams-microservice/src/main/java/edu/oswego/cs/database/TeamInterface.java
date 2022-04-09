@@ -7,6 +7,7 @@ import com.mongodb.client.model.Updates;
 import edu.oswego.cs.daos.TeamDAO;
 import edu.oswego.cs.requests.SwitchTeamParam;
 import edu.oswego.cs.requests.TeamParam;
+import edu.oswego.cs.services.SecurityService;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -18,7 +19,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -28,6 +28,9 @@ public class TeamInterface {
     private final MongoCollection<Document> studentCollection;
     private final MongoCollection<Document> teamCollection;
 
+    /**
+     * Default constructor initializes database connections and retrieves needed collections 
+     */
     public TeamInterface() {
         DatabaseManager databaseManager = new DatabaseManager();
         try {
@@ -43,40 +46,30 @@ public class TeamInterface {
     }
 
     /**
-     * Calculates the maximum number of teams in a course by dividing the total number of students by the determined
-     * team size. If there are left out students, create a new team and take one student from each of other full teams
-     * and add to the new team. Finally, initialize the teams in the database with such team sizes accordingly.
+     * Allows user to create and write a team to TeamDatabase
+     * @param request TeamDAO:{"team_id", "course_id", "team_lead", "team_size"}
      */
-    public String initializeTeams(TeamParam request) {
+    public void createTeam(TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
-        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
-        List<String> students = courseDocument.getList("students", String.class);
-
-        int totalStudent = students.size();
-        int teamSize = request.getTeamSize();
-        int maxTeams = totalStudent / teamSize;
-        int remainingStudents = totalStudent % teamSize;
-
-        if (remainingStudents > 0) maxTeams += 1;
-        List<Integer> team = new ArrayList<>(Collections.nCopies(maxTeams, teamSize));
-        for (int i = 0; i < ((maxTeams * teamSize) - totalStudent); i++) {
-            team.set(i, team.get(i) - 1);
-        }
-
-        team.sort(Collections.reverseOrder());
-
-        int teamID = 0;
-        for (int size : team) {
-            TeamDAO newTeam = new TeamDAO(teamID, request.getCourseID(), size);
-            teamID += 1;
-
-            Jsonb jsonb = JsonbBuilder.create();
-            Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(newTeam), MediaType.APPLICATION_JSON_TYPE);
-            Document teamDocument = Document.parse(courseDAOEntity.getEntity());
-            teamCollection.insertOne(teamDocument);
-        }
-        return String.valueOf(team);
+        if (courseDocument == null) 
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve course.").build());
+        
+        new SecurityService().isStudentValid(courseDocument, request);
+        new SecurityService().isStudentAlreadyInATeam(teamCollection, request); 
+        new SecurityService().isTeamCreated(teamCollection, request);
+            
+        TeamDAO newTeam = new TeamDAO(request.getTeamID(), request.getCourseID(), request.getStudentID(), request.getTeamSize());
+        newTeam.getTeamMembers().add(request.getStudentID());
+        newTeam.setTeamMembers(newTeam.getTeamMembers());
+        
+        Jsonb jsonb = JsonbBuilder.create();
+        Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(newTeam), MediaType.APPLICATION_JSON_TYPE);
+        Document teamDocument = Document.parse(courseDAOEntity.getEntity());
+        teamCollection.insertOne(teamDocument);
     }
+
+
+
 
     public void joinTeam(TeamParam request) {
         Document teamDocument = teamCollection.find(eq("team_id", request.getTeamID())).first();
