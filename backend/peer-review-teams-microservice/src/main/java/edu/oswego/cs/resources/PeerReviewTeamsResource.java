@@ -17,11 +17,10 @@ public class PeerReviewTeamsResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
-    @Path("team/professor/initialize")
-    public Response initializeTeams(TeamParam request) {
-        // new TeamInterface().initializeTeams(dao);
-        return Response.status(Response.Status.OK).entity(new TeamInterface().initializeTeams(request)).build();
-        // return Response.status(Response.Status.OK).entity("Successfully initialized teams.").build();
+    @Path("team/create")
+    public Response createTeam(TeamParam request) {
+        new TeamInterface().createTeam(request);
+        return Response.status(Response.Status.OK).entity("Team successfully created.").build();
     }
 
     @POST
