@@ -2,7 +2,8 @@ package edu.oswego.cs.resources;
 
 import edu.oswego.cs.daos.TeamDAO;
 import edu.oswego.cs.database.TeamInterface;
-import edu.oswego.cs.requests.SwitchTeamParam;
+import edu.oswego.cs.requests.TeamParam;
+
 import org.bson.Document;
 
 import javax.ws.rs.*;
@@ -17,31 +18,33 @@ public class PeerReviewTeamsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
     @Path("team/professor/initialize")
-    public Response initializeTeams(TeamDAO dao) {
-        new TeamInterface().initializeTeams(dao);
-        return Response.status(Response.Status.OK).entity("Successfully initialized teams.").build();
+    public Response initializeTeams(TeamParam request) {
+        // new TeamInterface().initializeTeams(dao);
+        return Response.status(Response.Status.OK).entity(new TeamInterface().initializeTeams(request)).build();
+        // return Response.status(Response.Status.OK).entity("Successfully initialized teams.").build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("team/join")
-    public Response joinTeam(TeamDAO dao) {
+    public Response joinTeam(TeamParam request) {
         try {
-            int result = new TeamInterface().joinTeamHandler(request);
-            String resultString = "";
-            switch (result) {
-                case 1:
-                    resultString = "Team size does not match -- Invalid Join Request!";
-                    return Response.status(Response.Status.CONFLICT).entity(resultString).build();
-                case 2:
-                    resultString = "Team is already full -- Invalid Join Request!";
-                    return Response.status(Response.Status.BAD_REQUEST).entity(resultString).build();
-                default:
-                    resultString = "Successfully Join!";
-                    return Response.status(Response.Status.OK).entity(resultString).build();
-            }
+            new TeamInterface().joinTeam(request);
+            // String resultString = "";
+            // switch (result) {
+            //     case 1:
+            //         resultString = "Team size does not match -- Invalid Join Request!";
+            //         return Response.status(Response.Status.CONFLICT).entity(resultString).build();
+            //     case 2:
+            //         resultString = "Team is already full -- Invalid Join Request!";
+            //         return Response.status(Response.Status.BAD_REQUEST).entity(resultString).build();
+            //     default:
+            //         resultString = "Successfully Join!";
+            //         return Response.status(Response.Status.OK).entity(resultString).build();
+            // }
 
+            return Response.status(Response.Status.OK).entity("resultString").build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.toString()).build();
         }
@@ -63,7 +66,7 @@ public class PeerReviewTeamsResource {
             + show all teams to professors
         */
         try {
-            List<Document> res = new TeamInterface().getAllTeamsHandler(request.getCourse_id());
+            List<Document> res = new TeamInterface().getAllTeamsHandler(request.getCourseID());
             return Response.status(Response.Status.OK).entity(res).build();
         } catch (Exception e) {
             List<Document> errors = new ArrayList<>();
@@ -97,7 +100,7 @@ public class PeerReviewTeamsResource {
     @Path("team/switch")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response switchTeam(SwitchTeamParam request) {
+    public Response switchTeam(TeamParam request) {
         /*
          - DESC:
             + This api allows student to switch from one team to another
@@ -112,29 +115,27 @@ public class PeerReviewTeamsResource {
         /* Todo fix the isLead update, student switches from team A to a team already created but empty, then its isLead is not updated*/
 
         try {
-            TeamParam teamParam = new TeamParam();
-            teamParam.setCourse_id(request.getCourse_id());
-            teamParam.setStudent_id(request.getStudent_id());
-            teamParam.setTeam_id(request.getNew_team_id());
-            teamParam.setTeam_size(request.getNew_team_size());
-            int result = new TeamInterface().joinTeamHandler(teamParam);
+            
+            new TeamInterface().joinTeam(request);
 
-            if (result == 0) {
-                result = new TeamInterface().switchTeamHandler(request);
-            }
+            // if (result == 0) {
+            //     result = new TeamInterface().switchTeamHandler(request);
+            // }
 
-            String resultString = "";
-            switch (result) {
-                case 1:
-                    resultString = "Team size does not match -- Invalid Join Request!";
-                    return Response.status(Response.Status.CONFLICT).entity(resultString).build();
-                case 2:
-                    resultString = "New Team is already full -- Invalid Join Request!";
-                    return Response.status(Response.Status.BAD_REQUEST).entity(resultString).build();
-                default:
-                    resultString = "Successfully Switch";
-                    return Response.status(Response.Status.OK).entity(resultString).build();
-            }
+            // String resultString = "";
+            // switch (result) {
+            //     case 1:
+            //         resultString = "Team size does not match -- Invalid Join Request!";
+            //         return Response.status(Response.Status.CONFLICT).entity(resultString).build();
+            //     case 2:
+            //         resultString = "New Team is already full -- Invalid Join Request!";
+            //         return Response.status(Response.Status.BAD_REQUEST).entity(resultString).build();
+            //     default:
+            //         resultString = "Successfully Switch";
+            //         return Response.status(Response.Status.OK).entity(resultString).build();
+            // } 
+            return Response.status(Response.Status.OK).entity("resultString").build();
+
 
 
         } catch (Exception e) {

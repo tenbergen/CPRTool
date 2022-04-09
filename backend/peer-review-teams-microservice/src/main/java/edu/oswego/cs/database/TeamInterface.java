@@ -6,6 +6,8 @@ import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
 import edu.oswego.cs.daos.TeamDAO;
 import edu.oswego.cs.requests.SwitchTeamParam;
+import edu.oswego.cs.requests.TeamParam;
+
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -36,7 +38,7 @@ public class TeamInterface {
             courseCollection = courseDB.getCollection("courses");
             teamCollection = teamDB.getCollection("teams");
         } catch (WebApplicationException e) {
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
+            throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to retrieve collections.").build());
         }
     }
 
@@ -45,55 +47,52 @@ public class TeamInterface {
      * team size. If there are left out students, create a new team and take one student from each of other full teams
      * and add to the new team. Finally, initialize the teams in the database with such team sizes accordingly.
      */
-    public void initializeTeams(TeamDAO dao) {
-        Document courseDocument = courseCollection.find(eq("course_id", dao.courseID)).first();
+    public String initializeTeams(TeamParam request) {
+        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
-        @SuppressWarnings("unchecked") ArrayList<String> students = (ArrayList<String>) courseDocument.get("students");
+        List<String> students = courseDocument.getList("students", String.class);
 
         int totalStudent = students.size();
-        int teamSize = dao.teamSize;
+        int teamSize = request.getTeamSize();
         int maxTeams = totalStudent / teamSize;
         int remainingStudents = totalStudent % teamSize;
 
         if (remainingStudents > 0) maxTeams += 1;
-        ArrayList<Integer> team = new ArrayList<>(Collections.nCopies(maxTeams, teamSize));
+        List<Integer> team = new ArrayList<>(Collections.nCopies(maxTeams, teamSize));
         for (int i = 0; i < ((maxTeams * teamSize) - totalStudent); i++) {
             team.set(i, team.get(i) - 1);
         }
 
         team.sort(Collections.reverseOrder());
 
-        int index = 0;
+        int teamID = 0;
         for (int size : team) {
-            TeamDAO newTeam = new TeamDAO();
-            newTeam.courseID = dao.courseID;
-            newTeam.teamID = index;
-            newTeam.teamSize = size;
-            index += 1;
+            TeamDAO newTeam = new TeamDAO(teamID, request.getCourseID(), size);
+            teamID += 1;
 
             Jsonb jsonb = JsonbBuilder.create();
             Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(newTeam), MediaType.APPLICATION_JSON_TYPE);
             Document teamDocument = Document.parse(courseDAOEntity.getEntity());
             teamCollection.insertOne(teamDocument);
         }
+        return String.valueOf(team);
     }
 
-    public void joinTeam(TeamDAO dao) {
-        Document teamDocument = teamCollection.find(eq("team_id", dao.teamID)).first();
+    public void joinTeam(TeamParam request) {
+        Document teamDocument = teamCollection.find(eq("team_id", request.getTeamID())).first();
         if (teamDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This team does not exist.").build());
 
         List<String> teamMembers = teamDocument.getList("team_members", String.class);
         for (String member : teamMembers) {
-            if (teamMembers.size() >= dao.teamSize) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This team is already full.").build());
-            if (dao.studentID.equals(member)) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This student is already in the team.").build());
+            if (teamMembers.size() >= request.getTeamSize()) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This team is already full.").build());
+            if (request.getStudentID().equals(member)) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This student is already in the team.").build());
         }
-        teamMembers.add(dao.studentID);
+        teamMembers.add(request.getStudentID());
     }
 
-    public List<Document> getAllTeams(String courseID) {
-        Document courseDoc = courseCollection.find(eq(this.courseID, courseID)).iterator();
+    public List<Document> getAllTeamsHandler(String courseID) {
+        Document courseDoc = (Document) courseCollection.find(eq("course_id", courseID)).iterator();
         try {
-
             List<Document> teams = courseDoc.getList("teams", Document.class);
             return teams;
         } catch (Exception e) {
@@ -103,15 +102,15 @@ public class TeamInterface {
         }
     }
 
-    public Document getTeam(TeamParam request) {
+    public Document getTeamByTeamIDHandler(TeamParam request) {
         /* desc: get team with teamID */
         try {
-            Document courseDoc = courseCollection.find(new Document(courseID, request.getCourse_id())).first();
+            Document courseDoc = courseCollection.find(new Document("course_id", request.getCourseID())).first();
             List<Document> teams = courseDoc.getList("teams", Document.class);
             Document targetTeam = new Document();
 
             for (Document team : teams) {
-                if (team.getString("team_id").equals(request.getTeam_id())) targetTeam = team;
+                if (team.getString("team_id").equals(request.getTeamID())) targetTeam = team;
             }
             return targetTeam;
         } catch (Exception e) {
@@ -138,8 +137,8 @@ public class TeamInterface {
 
         try {
             // Initialize.
-            Document courseDoc = courseCollection.find(new Document(courseID, request.getCourse_id())).first();
-            Document studentDoc = studentCollection.find(new Document(studentID, request.getStudent_id())).first();
+            Document courseDoc = courseCollection.find(new Document("course_id", request.getCourse_id())).first();
+            Document studentDoc = studentCollection.find(new Document("student_id", request.getStudent_id())).first();
             List<Document> teams = courseDoc.getList("teams", Document.class);
             Document oldTeam = new Document();
             Document teamMember = new Document();
@@ -161,7 +160,7 @@ public class TeamInterface {
             // Update isFull for oldTeam.
             if (isFull) oldTeam.replace("is_full", true, false);
             courseCollection.updateOne(
-                    new Document(courseID, request.getCourse_id()),
+                    new Document("course_id", request.getCourse_id()),
                     new Document("$set", new Document("teams", teams))
             );
 
@@ -175,7 +174,7 @@ public class TeamInterface {
                 if (membersID.size() > 0) {
                     String nextLeadID;
                     nextLeadID = membersID.get(0);
-                    Document nextLeadDoc = studentCollection.find(new Document(studentID, nextLeadID)).first();
+                    Document nextLeadDoc = studentCollection.find(new Document("student_id", nextLeadID)).first();
                     Bson nextLeadUpdates = Updates.set("team_lead", true);
                     UpdateOptions nextLeadOptions = new UpdateOptions().upsert(true);
                     studentCollection.updateOne(nextLeadDoc, nextLeadUpdates, nextLeadOptions);
