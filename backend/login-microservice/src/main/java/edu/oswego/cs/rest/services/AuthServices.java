@@ -77,21 +77,38 @@ public class AuthServices {
             e.printStackTrace();
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Unable to find token.").build());
         }
+    }
+
+    public Map<String, String> refreshToken(SecurityContext securityContext) {
+        Principal user = securityContext.getUserPrincipal();
+        JsonWebToken payload = (JsonWebToken) user;
+        if (payload == null) 
+            throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("JWT is not available.").build());
+        
+        Map<String, String> tokens = new HashMap<>();
+
+        String lakerID = payload.getName().split("@")[0];
+        Set<String> roles = getRoles(lakerID);
         
         try {
-            return JwtBuilder.create("cpr22s")
+            String access_token = JwtBuilder.create("cpr22s_access")
                     .claim("sub", payload.getSubject())
-                    .claim("upn", payload.getEmail())
-                    .claim("name", payload.get("name"))
+                    .claim("upn", payload.getName())
+                    .claim("full_name", payload.getClaim("full_name"))
                     .claim("lakerID", lakerID)
                     .claim("groups", roles)
                     .claim("aud", "CPR.22S.480")
-                    .claim("iss", "edu.oswego.cs-CPR.22S.480")
+                    .claim("iss", "edu.oswego.cs_CPR.22S.480")
                     .buildJwt().compact();
+            tokens.put("access_token", access_token);
         } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
             e.printStackTrace();
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Unable to find token.").build());
         }
+
+        return tokens;
+    }
+
     public Set<String> getRoles(String lakerID) {
         Set<String> roles = new HashSet<>();
         
