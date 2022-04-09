@@ -21,12 +21,13 @@ export const getCourseAssignmentsAsync = createAsyncThunk(
 export const getAssignmentFilesAsync = createAsyncThunk(
     'assignments/getAssignmentFilesAsync',
     async (values) => {
-        const { courseId, assignmentId } = values;
-        const url = `${getAssignmentUrl}/${courseId}/assignments/${assignmentId}/view-files`
-        const currentAssignmentFiles = await axios.get(url).then(res => {
-            console.log(res.data)
-            return res.data
-        })
+        const { courseId, assignment_id } = values;
+        const url = `${getAssignmentUrl}/${courseId}/assignments/${assignment_id}/view-files`
+        const currentAssignmentFiles = await axios.get(url)
+            .then(res => {
+                console.log(res.data)
+                return res.data
+            })
         return { currentAssignmentFiles }
     }
 )
@@ -35,13 +36,17 @@ export const getAssignmentDetailsAsync = createAsyncThunk(
     'assignments/getAssignmentDetailsAsync',
     async (values)=> {
         console.log(values)
-        const { courseId, assignmentId } = values;
+        let { courseId, assignmentId } = values;
         const url = `${getAssignmentUrl}/${courseId}/assignments/${assignmentId}`
         console.log(url)
-        const currentAssignment = await axios.get(url).then(res => {
-            console.log(res.data)
-            return res.data
-        })
+        const currentAssignment = await axios.get(url)
+            .then(res => {
+                console.log(res.data)
+                return res.data
+            })
+            .catch(e => {
+                console.log(e)
+            })
         return { currentAssignment }
     }
 )
@@ -60,22 +65,18 @@ const assignmentSlice = createSlice({
         }
     },
     extraReducers: {
-        [getCourseAssignmentsAsync.pending]: (state) => {
-            state.currentAssignmentLoaded = false
-        },
         [getCourseAssignmentsAsync.fulfilled]: (state, action) => {
             state.courseAssignments = action.payload.courseAssignments
-            state.currentAssignmentLoaded = true
         },
         [getAssignmentDetailsAsync.fulfilled]: (state, action) => {
-            state.currentAssignmentLoaded = true
             state.currentAssignment = action.payload.currentAssignment
+            state.currentAssignmentLoaded = true
         },
         [getAssignmentDetailsAsync.pending]: (state) => {
             state.currentAssignmentLoaded = false
         },
         [getAssignmentFilesAsync.fulfilled]: (state, action) => {
-            state.currentAssignmentFiles = action.currentAssignmentFiles
+            state.currentAssignmentFiles = action.payload.currentAssignmentFiles
         }
     }
 })
