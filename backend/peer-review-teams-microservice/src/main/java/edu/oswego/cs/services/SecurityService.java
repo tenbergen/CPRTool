@@ -86,4 +86,31 @@ public class SecurityService {
         return false;
     }
 
+    /**
+     * allows security checks on passed in information
+     * @param courseDocument
+     * @param request 
+     * @param mode
+     */
+    public void securityChecks(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request, String mode) {
+        if (!isStudentValid(courseDocument, request)) 
+        throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
+
+        MongoCursor<Document> cursor = teamCollection.find().iterator();
+        if (cursor == null) 
+            throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to retrieve team collection.").build());
+
+        if (cursor.hasNext()) {
+            if (isStudentAlreadyInATeam(teamCollection, request)) 
+                throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student is already in a team.").build());
+            if (mode.equals("CREATE")) {
+                if (isTeamCreated(teamCollection, request)) 
+                    throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Team is already created.").build());
+            } else if (mode.equals("JOIN")) {
+                if (!isTeamCreated(teamCollection, request)) 
+                    throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
+            }
+        }
+    }
+
 }
