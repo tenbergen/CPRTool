@@ -5,6 +5,7 @@ import "./styles/AssignmentPageStyle.css"
 import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
 import {getAssignmentDetailsAsync, getAssignmentFilesAsync} from "../../redux/features/assignmentSlice";
+import axios from "axios";
 
 function AssignmentPage() {
     const dispatch = useDispatch()
@@ -23,11 +24,8 @@ function AssignmentPage() {
         const fileName = currentAssignmentFiles[0]
         const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/download/${fileName}`
 
-        fetch(url)
-            .then(response => response.blob())
-            .then(function(myBlob) {
-                downloadFile(myBlob, fileName)
-            });
+        await axios.get(url, {responseType: 'blob'})
+            .then(res => downloadFile(res.data, fileName))
     }
 
     const downloadFile = (blob, fileName) => {
