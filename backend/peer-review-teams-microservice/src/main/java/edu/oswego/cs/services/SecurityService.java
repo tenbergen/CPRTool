@@ -36,6 +36,9 @@ public class SecurityService {
      */
     public void isStudentAlreadyInATeam(MongoCollection<Document> teamCollection, TeamParam request) {
         MongoCursor<Document> cursor = teamCollection.find().iterator();
+        if (cursor == null) 
+            throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to retrieve team collection.").build());
+        
         try { 
             while(cursor.hasNext()) { 
                 List<String> members = cursor.next().getList("team_members", String.class);
@@ -47,7 +50,7 @@ public class SecurityService {
                 }
             } 
         } finally { 
-            cursor.close(); 
+            cursor.close();
         } 
     }
 
