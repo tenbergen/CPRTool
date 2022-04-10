@@ -23,6 +23,15 @@ public class FileDAO {
     public FileDAO(
             @NonNull @JsonbProperty("file_name") String filename,
             @NonNull @JsonbProperty("assignment_id") int assignmentID,
+            @NonNull @JsonbProperty("course_id") String courseID) {
+        this.filename = filename;
+        this.assignmentID = assignmentID;
+        this.courseID = courseID;
+    }
+
+    public FileDAO(
+            @NonNull @JsonbProperty("file_name") String filename,
+            @NonNull @JsonbProperty("assignment_id") int assignmentID,
             @NonNull @JsonbProperty("course_id") String courseID,
             @NonNull @JsonbProperty("inputStream") InputStream file) {
         this.filename = filename;
@@ -30,6 +39,7 @@ public class FileDAO {
         this.courseID = courseID;
         this.file = file;
     }
+
 
     /**
      * Takes form-data from a POST request, converts it to an inputStream, and return the FileDOA containing
