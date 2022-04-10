@@ -1,15 +1,12 @@
 package edu.oswego.cs.resources;
 
 import edu.oswego.cs.database.TeamInterface;
+import edu.oswego.cs.requests.SwitchTeamParam;
 import edu.oswego.cs.requests.TeamParam;
-
-import org.bson.Document;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.List;
 
 @Path("/teams")
 public class PeerReviewTeamsResource {
@@ -55,56 +52,13 @@ public class PeerReviewTeamsResource {
         return Response.status(Response.Status.OK).entity("Student successfully added to team.").build();
     }
     
-
-    
-
-    @POST
+    @PUT
     @Path("team/switch")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response switchTeam(TeamParam request) {
-        /*
-         - DESC:
-            + This api allows student to switch from one team to another
-            + scope: for every students
-         - PARAMS: {"courseID", "studentID", "oldTeamID", "newTeamID", "newTeamSize"} // newTeamSize is the size of the new team from FE
-         - FE:
-            + 200
-            + 400
-        */
-
-        /* Todo make sure the oldTeamID has studentID*/
-        /* Todo fix the isLead update, student switches from team A to a team already created but empty, then its isLead is not updated*/
-
-        try {
-            
-            new TeamInterface().joinTeam(request);
-
-            // if (result == 0) {
-            //     result = new TeamInterface().switchTeamHandler(request);
-            // }
-
-            // String resultString = "";
-            // switch (result) {
-            //     case 1:
-            //         resultString = "Team size does not match -- Invalid Join Request!";
-            //         return Response.status(Response.Status.CONFLICT).entity(resultString).build();
-            //     case 2:
-            //         resultString = "New Team is already full -- Invalid Join Request!";
-            //         return Response.status(Response.Status.BAD_REQUEST).entity(resultString).build();
-            //     default:
-            //         resultString = "Successfully Switch";
-            //         return Response.status(Response.Status.OK).entity(resultString).build();
-            // } 
-            return Response.status(Response.Status.OK).entity("resultString").build();
-
-
-
-        } catch (Exception e) {
-            List<Document> errors = new ArrayList<Document>();
-            errors.add(new Document(e.toString(), Exception.class));
-            return Response.status(Response.Status.BAD_REQUEST).entity(errors).build();
-        }
+    public Response switchTeam(SwitchTeamParam request) {
+        new TeamInterface().switchTeam(request);
+        return Response.status(Response.Status.OK).entity("Student successfully switch to a new team.").build();
     }
 
 
