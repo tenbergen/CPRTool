@@ -59,7 +59,9 @@ public class TeamInterface {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
 
         MongoCursor<Document> cursor = teamCollection.find().iterator();
-        
+        if (cursor == null) 
+            throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to retrieve team collection.").build());
+
         if (cursor.hasNext()) {
             if (new SecurityService().isStudentAlreadyInATeam(teamCollection, request)) 
                 throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student is already in a team.").build());
@@ -106,12 +108,51 @@ public class TeamInterface {
         } finally { 
             cursor.close(); 
         } 
-        
         return teams;
     }
 
-    public String getTeamByStudentID(TeamParam request) {
-        return "hello";
+    /**
+     * If requested student is not already in a team, shows non-full-teams
+     * If requested student is already in a team, shows their team
+     * @param request
+     * @return
+     */
+    public List<Document> getTeamByStudentID(TeamParam request) {
+        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
+        if (courseDocument == null) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+        
+        if (!new SecurityService().isStudentValid(courseDocument, request)) 
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
+
+        List<Document> nonFullTeams = new ArrayList<>();
+        MongoCursor<Document> cursor = teamCollection.find().iterator();
+        if (cursor == null) 
+            throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to retrieve team collection.").build());
+
+        try { 
+            while(cursor.hasNext()) { 
+                Document teamDocument = cursor.next();
+                List<String> members = teamDocument.getList("team_members", String.class);
+                String courseID = teamDocument.get("course_id").toString();
+                
+                for (String member : members) {
+                    List<Document> teams = new ArrayList<>();
+                    if (request.getStudentID().equals(member) && request.getCourseID().equals(courseID)){
+                        teams.add(teamDocument);
+                        return teams; 
+                    }
+                }
+
+                if (!teamDocument.getBoolean("is_full") && request.getCourseID().equals(courseID)) 
+                    nonFullTeams.add(teamDocument);
+                
+            }
+        } finally { 
+            cursor.close();
+        } 
+
+        return nonFullTeams;
     }
 
 
