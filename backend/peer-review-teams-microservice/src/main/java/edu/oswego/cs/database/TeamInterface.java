@@ -3,6 +3,7 @@ package edu.oswego.cs.database;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
 import edu.oswego.cs.daos.TeamDAO;
@@ -55,21 +56,7 @@ public class TeamInterface {
         if (courseDocument == null) 
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
         
-        if (!new SecurityService().isStudentValid(courseDocument, request)) 
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
-
-        MongoCursor<Document> cursor = teamCollection.find().iterator();
-        if (cursor == null) 
-            throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to retrieve team collection.").build());
-
-        if (cursor.hasNext()) {
-            if (new SecurityService().isStudentAlreadyInATeam(teamCollection, request)) 
-                throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student is already in a team.").build());
-                
-            if (new SecurityService().isTeamCreated(teamCollection, request)) {
-                throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Team is already created.").build());
-            }
-        }
+        new SecurityService().securityChecks(teamCollection, courseDocument, request, "CREATE");
             
             
         TeamDAO newTeam = new TeamDAO(request.getTeamID(), request.getCourseID(), request.getMaxSize(), request.getStudentID() );
@@ -114,7 +101,7 @@ public class TeamInterface {
     /**
      * If requested student is not already in a team, shows non-full-teams
      * If requested student is already in a team, shows their team
-     * @param request
+     * @param request TeamParam:{"course_id", "student_id"}
      * @return List<Document> of teams
      */
     public List<Document> getTeamByStudentID(TeamParam request) {
@@ -157,7 +144,7 @@ public class TeamInterface {
 
     /**
      * Gets team by teamID
-     * @param request
+     * @param request TeamParam:{"course_id", "team_id"}
      * @return Document
      */
     public Document getTeamByTeamID(TeamParam request) {
@@ -176,7 +163,7 @@ public class TeamInterface {
                 String teamID = teamDocument.get("team_id").toString();
                 
                 if (request.getTeamID().equals(teamID) && request.getCourseID().equals(courseID))
-                    return cursor.next();
+                    return teamDocument;
             } 
         } finally { 
             cursor.close();
@@ -186,22 +173,30 @@ public class TeamInterface {
 
     }
 
-
+    /**
+     * Allows student user to join a team
+     * @param request TeamDAO:{"team_id", "course_id", "team_lead"}
+     */
     public void joinTeam(TeamParam request) {
+        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
+        if (courseDocument == null) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+
+        new SecurityService().securityChecks(teamCollection, courseDocument, request, "JOIN");
+
         Document teamDocument = teamCollection.find(eq("team_id", request.getTeamID())).first();
-        if (teamDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This team does not exist.").build());
+        if (teamDocument.getBoolean("is_full")) 
+            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Team is already full.").build());
 
         List<String> teamMembers = teamDocument.getList("team_members", String.class);
-        for (String member : teamMembers) {
-            if (teamMembers.size() >= request.getMaxSize()) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This team is already full.").build());
-            if (request.getStudentID().equals(member)) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This student is already in the team.").build());
-        }
         teamMembers.add(request.getStudentID());
+        teamCollection.updateOne(Filters.eq("team_id", request.getTeamID()), Updates.set("team_members", teamMembers));
+
+        if (teamMembers.size() == teamDocument.getInteger("max_size")) 
+            teamCollection.updateOne(Filters.eq("team_id", request.getTeamID()), Updates.set("is_full", true));
+        
     }
 
-    
-
-    
 
     public int switchTeamHandler(SwitchTeamParam request) {
         /* desc: get A list of all teams to join teams */

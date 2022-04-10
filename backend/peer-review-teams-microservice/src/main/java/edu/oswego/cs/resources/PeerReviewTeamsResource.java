@@ -19,7 +19,7 @@ public class PeerReviewTeamsResource {
     @Path("team/create")
     public Response createTeam(TeamParam request) {
         new TeamInterface().createTeam(request);
-        return Response.status(Response.Status.OK).entity("Team successfully created.").build();
+        return Response.status(Response.Status.CREATED).entity("Team successfully created.").build();
     }
 
     @GET
@@ -46,21 +46,14 @@ public class PeerReviewTeamsResource {
         return Response.status(Response.Status.OK).entity(new TeamInterface().getTeamByTeamID(request)).build();
     }
     
-
-
-    @POST
+    @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("team/join")
     public Response joinTeam(TeamParam request) {
-        try {
-            new TeamInterface().joinTeam(request);
-            return Response.status(Response.Status.OK).entity("resultString").build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.toString()).build();
-        }
+        new TeamInterface().joinTeam(request);
+        return Response.status(Response.Status.OK).entity("Student successfully added to team.").build();
     }
-
     
 
     
