@@ -64,6 +64,10 @@ public class AssignmentInterface {
         return getRelPath() + "assignments" + reg + courseID + reg + assignmentID + reg + "assignments";
     }
 
+    public static String findPeerReview(String courseID, int assignmentID) {
+        return getRelPath() + "assignments" + reg + courseID + reg + assignmentID + reg + "peer-reviews";
+    }
+
     public static String findFile(String courseID, int assignmentID, String fileName) {
         return getRelPath() + "assignments" + reg + courseID + reg + assignmentID + reg + "assignments" + reg + fileName;
     }
@@ -77,6 +81,7 @@ public class AssignmentInterface {
         String FileStructure = getRelPath() + "assignments" + reg + fileDAO.courseID + reg + fileDAO.assignmentID + reg + "assignments";
         fileDAO.writeFile(FileStructure + reg + fileDAO.filename);
     }
+
     public static void writeToPeerReviews(FileDAO fileDAO) throws IOException {
         String FileStructure = getRelPath() + "assignments" + reg + fileDAO.courseID + reg + fileDAO.assignmentID + reg + "peer-reviews";
         fileDAO.writeFile(FileStructure + reg + fileDAO.filename);

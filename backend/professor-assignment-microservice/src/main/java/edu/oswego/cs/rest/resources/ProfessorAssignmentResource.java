@@ -145,8 +145,21 @@ public class ProfessorAssignmentResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}/view-files")
     public Response viewAssignmentFiles(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
-        new AssignmentInterface();
         File file = new File(AssignmentInterface.findAssignment(courseID, assignmentID));
+        if (!file.exists()) return Response.status(Response.Status.NOT_FOUND).entity("Assignment does not exist.").build();
+
+        File[] files = file.listFiles();
+        ArrayList<String> fileNames = new ArrayList<>();
+        Arrays.asList(files).forEach(names -> fileNames.add(names.getName()));
+
+        return Response.status(Response.Status.OK).entity(fileNames).build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/courses/{courseID}/assignments/{assignmentID}/peer-review/view-files")
+    public Response viewPeerReviewFiles(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
+        File file = new File(AssignmentInterface.findPeerReview(courseID, assignmentID));
         if (!file.exists()) return Response.status(Response.Status.NOT_FOUND).entity("Assignment does not exist.").build();
 
         File[] files = file.listFiles();
