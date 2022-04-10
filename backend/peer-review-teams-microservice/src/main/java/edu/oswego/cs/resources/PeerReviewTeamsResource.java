@@ -37,7 +37,16 @@ public class PeerReviewTeamsResource {
     public Response getTeamByStudentID(TeamParam request) {
         return Response.status(Response.Status.OK).entity(new TeamInterface().getTeamByStudentID(request)).build();
     }
+
+    @GET
+    @Path("team/get/team_id")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTeamByTeamID(TeamParam request) {
+        return Response.status(Response.Status.OK).entity(new TeamInterface().getTeamByTeamID(request)).build();
+    }
     
+
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -54,26 +63,7 @@ public class PeerReviewTeamsResource {
 
     
 
-    @GET
-    @Path("team/get")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getTeamByTeamID(TeamParam request) {
-        /*
-         - desc:
-            + return a team (json object) that has the same teamID passed from FE
-            + scope: every students
-         - params: {"courseID", "teamID" }
-        */
-        try {
-            Document res = new TeamInterface().getTeamByTeamIDHandler(request);
-            return Response.status(Response.Status.OK).entity(res).build();
-        } catch (Exception e) {
-            List<Document> errors = new ArrayList<Document>();
-            errors.add(new Document(e.toString(), Exception.class));
-            return Response.status(Response.Status.BAD_REQUEST).entity(errors).build();
-        }
-    }
+    
 
     @POST
     @Path("team/switch")

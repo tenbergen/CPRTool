@@ -85,7 +85,7 @@ public class TeamInterface {
     /**
      * Gets all teams in a course
      * @param request TeamParam:{"course_id"}
-     * @return
+     * @return List<Document> of all team
      */
     public List<Document> getAllTeams(TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
@@ -115,7 +115,7 @@ public class TeamInterface {
      * If requested student is not already in a team, shows non-full-teams
      * If requested student is already in a team, shows their team
      * @param request
-     * @return
+     * @return List<Document> of teams
      */
     public List<Document> getTeamByStudentID(TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
@@ -155,6 +155,37 @@ public class TeamInterface {
         return nonFullTeams;
     }
 
+    /**
+     * Gets team by teamID
+     * @param request
+     * @return Document
+     */
+    public Document getTeamByTeamID(TeamParam request) {
+        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
+        if (courseDocument == null) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+        
+        MongoCursor<Document> cursor = teamCollection.find().iterator();
+        if (cursor == null) 
+            throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to retrieve team collection.").build());
+        
+        try { 
+            while(cursor.hasNext()) { 
+                Document teamDocument = cursor.next();
+                String courseID = teamDocument.get("course_id").toString();
+                String teamID = teamDocument.get("team_id").toString();
+                
+                if (request.getTeamID().equals(teamID) && request.getCourseID().equals(courseID))
+                    return cursor.next();
+            } 
+        } finally { 
+            cursor.close();
+        } 
+
+        throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
+
+    }
+
 
     public void joinTeam(TeamParam request) {
         Document teamDocument = teamCollection.find(eq("team_id", request.getTeamID())).first();
@@ -170,21 +201,7 @@ public class TeamInterface {
 
     
 
-    public Document getTeamByTeamIDHandler(TeamParam request) {
-        /* desc: get team with teamID */
-        try {
-            Document courseDoc = courseCollection.find(new Document("course_id", request.getCourseID())).first();
-            List<Document> teams = courseDoc.getList("teams", Document.class);
-            Document targetTeam = new Document();
-
-            for (Document team : teams) {
-                if (team.getString("team_id").equals(request.getTeamID())) targetTeam = team;
-            }
-            return targetTeam;
-        } catch (Exception e) {
-            return new Document(e.toString(), Exception.class);
-        }
-    }
+    
 
     public int switchTeamHandler(SwitchTeamParam request) {
         /* desc: get A list of all teams to join teams */

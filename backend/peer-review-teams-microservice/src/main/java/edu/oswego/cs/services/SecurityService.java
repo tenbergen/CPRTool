@@ -15,9 +15,10 @@ import edu.oswego.cs.requests.TeamParam;
 public class SecurityService {
 
     /**
-     * Checks if the student is in the right course
+     * Checks if the passed in studentID is in the right course
      * @param courseDocument Document
      * @param request TeamParam
+     * @return boolean
      */
     public boolean isStudentValid(Document courseDocument,TeamParam request) {
         List<String> students = courseDocument.getList("students", String.class);
@@ -29,9 +30,10 @@ public class SecurityService {
     }
 
     /**
-     * Checks if a student is already in a team
+     * Checks if the passed in studentID is already in a team
      * @param teamCollection MongoCollection<Document>
      * @param request TeamParam:{"team_id", "course_id", "student_id", "team_size"}
+     * @return boolean
      */
     public boolean isStudentAlreadyInATeam(MongoCollection<Document> teamCollection, TeamParam request) {
         MongoCursor<Document> cursor = teamCollection.find().iterator();
@@ -60,6 +62,7 @@ public class SecurityService {
      * Checks if the team with the request.teamID() is already created
      * @param teamCollection MongoCollection<Document>
      * @param request TeamParam:{"team_id", "course_id", "student_id", "team_size"}
+     * @return boolean
      */
     public boolean isTeamCreated(MongoCollection<Document> teamCollection, TeamParam request) {
         MongoCursor<Document> cursor = teamCollection.find().iterator();
@@ -83,5 +86,4 @@ public class SecurityService {
         return false;
     }
 
-   
 }
