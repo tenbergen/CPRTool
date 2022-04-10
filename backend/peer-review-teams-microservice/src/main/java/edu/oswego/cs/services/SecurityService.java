@@ -10,7 +10,6 @@ import com.mongodb.client.MongoCursor;
 
 import org.bson.Document;
 import edu.oswego.cs.requests.TeamParam;
-import static com.mongodb.client.model.Filters.eq;
 
 
 public class SecurityService {

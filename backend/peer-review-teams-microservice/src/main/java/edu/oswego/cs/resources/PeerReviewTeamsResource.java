@@ -1,6 +1,5 @@
 package edu.oswego.cs.resources;
 
-import edu.oswego.cs.daos.TeamDAO;
 import edu.oswego.cs.database.TeamInterface;
 import edu.oswego.cs.requests.TeamParam;
 
@@ -26,9 +25,17 @@ public class PeerReviewTeamsResource {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("team/get-all-teams")
+    @Path("team/get/all")
     public Response getAllTeams(TeamParam request) {
         return Response.status(Response.Status.OK).entity(new TeamInterface().getAllTeams(request)).build();
+    }
+
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("team/get/student_id")
+    public Response getTeamByStudentID(TeamParam request) {
+        return Response.status(Response.Status.OK).entity(new TeamInterface().getTeamByStudentID(request)).build();
     }
     
 
@@ -39,19 +46,6 @@ public class PeerReviewTeamsResource {
     public Response joinTeam(TeamParam request) {
         try {
             new TeamInterface().joinTeam(request);
-            // String resultString = "";
-            // switch (result) {
-            //     case 1:
-            //         resultString = "Team size does not match -- Invalid Join Request!";
-            //         return Response.status(Response.Status.CONFLICT).entity(resultString).build();
-            //     case 2:
-            //         resultString = "Team is already full -- Invalid Join Request!";
-            //         return Response.status(Response.Status.BAD_REQUEST).entity(resultString).build();
-            //     default:
-            //         resultString = "Successfully Join!";
-            //         return Response.status(Response.Status.OK).entity(resultString).build();
-            // }
-
             return Response.status(Response.Status.OK).entity("resultString").build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.toString()).build();

@@ -24,6 +24,7 @@ public class TeamDAO {
     @JsonbProperty("team_members") @ElementCollection private List<String> teamMembers;
     @JsonbProperty("team_name") private String teamName;
     @JsonbProperty("is_finalized") @ElementCollection private List<String> isFinalized;
+    @JsonbProperty("is_full") private Boolean isFull;
 
     @JsonbCreator
     public TeamDAO( 
@@ -39,5 +40,6 @@ public class TeamDAO {
         this.teamMembers = new ArrayList<>();
         this.teamName = null;
         this.isFinalized = new ArrayList<>();
+        this.isFull = false;
     }
 }
