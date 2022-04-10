@@ -54,12 +54,15 @@ public class TeamInterface {
      * @param request TeamDAO:{"team_id", "course_id", "team_lead", "team_size"}
      */
     public void createTeam(TeamParam request) {
+        /* Course Security Checks */
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) 
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
         
+        /* Param Security Checks */
         new SecurityService().securityChecks(teamCollection, courseDocument, request, "CREATE");
             
+        /* Create Team */
         TeamDAO newTeam = new TeamDAO(request.getTeamID(), request.getCourseID(), request.getMaxSize(), request.getStudentID() );
         newTeam.getTeamMembers().add(request.getStudentID());
         newTeam.setTeamMembers(newTeam.getTeamMembers());
@@ -76,10 +79,12 @@ public class TeamInterface {
      * @return List<Document> of all team
      */
     public List<Document> getAllTeams(TeamParam request) {
+        /* Course Security Checks */
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) 
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
         
+        /* Get Team */
         MongoCursor<Document> cursor = teamCollection.find().iterator();
         if (cursor == null)
             throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to retrieve team collection.").build());
@@ -106,13 +111,16 @@ public class TeamInterface {
      * @return List<Document> of teams
      */
     public List<Document> getTeamByStudentID(TeamParam request) {
+        /* Course Security check */
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) 
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
         
+        /* Param Security Checks */
         if (!new SecurityService().isStudentValid(courseDocument, request.getStudentID())) 
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
 
+        /* Get Team */
         List<Document> nonFullTeams = new ArrayList<>();
         MongoCursor<Document> cursor = teamCollection.find().iterator();
         if (cursor == null) 
@@ -146,10 +154,12 @@ public class TeamInterface {
      * @return Document
      */
     public Document getTeamByTeamID(TeamParam request) {
+        /* Course Security check */
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) 
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
         
+        /* Get Team */
         MongoCursor<Document> cursor = teamCollection.find().iterator();
         if (cursor == null) 
             throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to retrieve team collection.").build());
@@ -175,12 +185,15 @@ public class TeamInterface {
      * @param request TeamDAO:{"team_id", "course_id", "team_lead"}
      */
     public void joinTeam(TeamParam request) {
+        /* Course Security check */
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) 
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-
+        
+        /* Param Security Checks */
         new SecurityService().securityChecks(teamCollection, courseDocument, request, "JOIN");
 
+        /* Update Team */
         Document teamDocument = teamCollection.find(eq("team_id", request.getTeamID())).first();
         if (teamDocument.getBoolean("is_full")) 
             throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Team is already full.").build());
@@ -198,30 +211,13 @@ public class TeamInterface {
      * @param request SwitchTeamParam:{"course_id", "student_id", "current_team_id", "target_team_id"}
      */
     public void switchTeam(SwitchTeamParam request) {
+        /* Course Security check */
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) 
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-        
-        if (!new SecurityService().isStudentValid(courseDocument, request.getStudentID())) 
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
 
-        MongoCursor<Document> cursor = teamCollection.find().iterator();
-        if (cursor == null) 
-            throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to retrieve team collection.").build());
-        if (cursor.hasNext()) {
-            if (!new SecurityService().isStudentAlreadyInATeam(teamCollection, request.getStudentID(), request.getCourseID())) 
-                throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student not in any team.").build());
-            if (!new SecurityService().isTeamCreated(teamCollection, request.getTargetTeamID(), request.getCourseID())) 
-                throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Target team not found.").build());
-            if (!new SecurityService().isTeamCreated(teamCollection, request.getCurrentTeamID(), request.getCourseID()))
-                throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Current team not found.").build());
-        }
-        if (!new SecurityService().isStudentInThisTeam(teamCollection, request.getCurrentTeamID(), request.getStudentID(), request.getCourseID() ))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in current team.").build());
-        if (new SecurityService().isStudentInThisTeam(teamCollection, request.getTargetTeamID(), request.getStudentID(), request.getCourseID() ))
-            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student already in target team.").build());
-        if (new SecurityService().isTeamFull(teamCollection, request.getTargetTeamID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Target team already full.").build());
+        /* Param Security Checks */
+        new SecurityService().switchTeamSecurity(teamCollection, courseDocument, request);
 
         /* Update currentTeamDocument */
         Document currentTeamDocument = teamCollection.find(eq("team_id", request.getCurrentTeamID())).first();
