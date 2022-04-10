@@ -142,6 +142,12 @@ public class SecurityService {
         }
     }
 
+    /**
+     * Checks the passed in params in switchTeam interface
+     * @param teamCollection
+     * @param courseDocument
+     * @param request
+     */
     public void switchTeamSecurity(MongoCollection<Document> teamCollection, Document courseDocument, SwitchTeamParam request) {
         MongoCursor<Document> cursor = teamCollection.find().iterator();
         if (cursor == null) 
@@ -150,7 +156,6 @@ public class SecurityService {
         if (!isStudentValid(courseDocument, request.getStudentID())) 
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
 
-        
         if (cursor.hasNext()) {
             if (!isStudentAlreadyInATeam(teamCollection, request.getStudentID(), request.getCourseID())) 
                 throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student not in any team.").build());

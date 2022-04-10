@@ -169,6 +169,11 @@ public class PeerReviewTeamsResource {
         return false; // change the message
     }
 
+    /* TODO: 
+        + Move/remove a user from a team (professor)
+        + Delete Team (members.size() == 1) (TL + professor)
+    */
+
 }
 
 
