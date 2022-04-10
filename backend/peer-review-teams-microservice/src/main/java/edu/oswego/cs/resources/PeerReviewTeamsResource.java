@@ -16,12 +16,21 @@ import java.util.List;
 public class PeerReviewTeamsResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("team/create")
     public Response createTeam(TeamParam request) {
         new TeamInterface().createTeam(request);
         return Response.status(Response.Status.OK).entity("Team successfully created.").build();
     }
+
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("team/get-all-teams")
+    public Response getAllTeams(TeamParam request) {
+        return Response.status(Response.Status.OK).entity(new TeamInterface().getAllTeams(request)).build();
+    }
+    
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -49,30 +58,7 @@ public class PeerReviewTeamsResource {
         }
     }
 
-    @GET
-    @Path("team/get-all-teams")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllTeams(TeamParam request) {
-        /*
-         - DESC:
-            + return a list of Teams (json array)
-            + scope: every students, professors
-         - PARAMS: {"courseID"}
-         - FE
-            + To non-team students, show only non-full-teams
-            + To alread-in-a-team students, show its team
-            + show all teams to professors
-        */
-        try {
-            List<Document> res = new TeamInterface().getAllTeamsHandler(request.getCourseID());
-            return Response.status(Response.Status.OK).entity(res).build();
-        } catch (Exception e) {
-            List<Document> errors = new ArrayList<>();
-            errors.add(new Document(e.toString(), Exception.class));
-            return Response.status(Response.Status.BAD_REQUEST).entity(errors).build();
-        }
-    }
+    
 
     @GET
     @Path("team/get")

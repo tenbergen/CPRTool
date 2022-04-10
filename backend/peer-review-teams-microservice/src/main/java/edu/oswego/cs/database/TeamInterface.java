@@ -1,6 +1,7 @@
 package edu.oswego.cs.database;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
@@ -52,13 +53,13 @@ public class TeamInterface {
     public void createTeam(TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) 
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve course.").build());
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
         
         new SecurityService().isStudentValid(courseDocument, request);
         new SecurityService().isStudentAlreadyInATeam(teamCollection, request); 
         new SecurityService().isTeamCreated(teamCollection, request);
             
-        TeamDAO newTeam = new TeamDAO(request.getTeamID(), request.getCourseID(), request.getStudentID(), request.getTeamSize());
+        TeamDAO newTeam = new TeamDAO(request.getTeamID(), request.getCourseID(), request.getMaxSize(), request.getStudentID() );
         newTeam.getTeamMembers().add(request.getStudentID());
         newTeam.setTeamMembers(newTeam.getTeamMembers());
         
@@ -68,7 +69,35 @@ public class TeamInterface {
         teamCollection.insertOne(teamDocument);
     }
 
+    /**
+     * Gets all teams in a course
+     * @param request TeamParam:{"course_id"}
+     * @return
+     */
+    public List<Document> getAllTeams(TeamParam request) {
+        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
+        if (courseDocument == null) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+        
+        MongoCursor<Document> cursor = teamCollection.find().iterator();
+        if (cursor == null)
+            throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to retrieve team collection.").build());
+        
+        List<Document> teams = new ArrayList<>();
 
+        try { 
+            while(cursor.hasNext()) { 
+                Document teamDocument = cursor.next();
+                if (teamDocument.get("course_id").toString().equals(request.getCourseID())) {
+                    teams.add(teamDocument);
+                }
+            } 
+        } finally { 
+            cursor.close(); 
+        } 
+        
+        return teams;
+    }
 
 
     public void joinTeam(TeamParam request) {
@@ -77,23 +106,13 @@ public class TeamInterface {
 
         List<String> teamMembers = teamDocument.getList("team_members", String.class);
         for (String member : teamMembers) {
-            if (teamMembers.size() >= request.getTeamSize()) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This team is already full.").build());
+            if (teamMembers.size() >= request.getMaxSize()) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This team is already full.").build());
             if (request.getStudentID().equals(member)) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This student is already in the team.").build());
         }
         teamMembers.add(request.getStudentID());
     }
 
-    public List<Document> getAllTeamsHandler(String courseID) {
-        Document courseDoc = (Document) courseCollection.find(eq("course_id", courseID)).iterator();
-        try {
-            List<Document> teams = courseDoc.getList("teams", Document.class);
-            return teams;
-        } catch (Exception e) {
-            List<Document> errors = new ArrayList<>();
-            errors.add(new Document(e.toString(), Exception.class));
-            return errors;
-        }
-    }
+    
 
     public Document getTeamByTeamIDHandler(TeamParam request) {
         /* desc: get team with teamID */
