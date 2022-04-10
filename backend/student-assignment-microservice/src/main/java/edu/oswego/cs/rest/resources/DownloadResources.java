@@ -1,17 +1,17 @@
 package edu.oswego.cs.rest.resources;
 
-import com.ibm.websphere.jaxrs20.multipart.IAttachment;
-import com.ibm.websphere.jaxrs20.multipart.IMultipartBody;
 import edu.oswego.cs.rest.database.AssignmentInterface;
 import javax.ws.rs.Path;
 import javax.ws.rs.GET;
+import javax.annotation.security.DenyAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
-import java.net.URL;
 
 @Path("student")
+@DenyAll
 public class DownloadResources {
 
     /**
@@ -23,6 +23,7 @@ public class DownloadResources {
      * @return response
      * **/
     @GET
+    @RolesAllowed({"professor", "student"})
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.MULTIPART_FORM_DATA)
     @Path("/courses/{courseID}/assignments/{assignmentID}/download/{fileName}")
@@ -34,7 +35,6 @@ public class DownloadResources {
         Response.ResponseBuilder response = Response.ok((Object) file);
         response.header("Content-Disposition","attachment; filename=" + file.getName());
         return response.build();
-
     }
 
 }

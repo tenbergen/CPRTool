@@ -4,8 +4,9 @@ import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.rest.daos.AssignmentDAO;
 import edu.oswego.cs.rest.daos.FileDAO;
 import edu.oswego.cs.rest.database.AssignmentInterface;
-import org.bson.Document;
 
+import javax.annotation.security.DenyAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -16,30 +17,31 @@ import java.util.Arrays;
 import java.util.List;
 
 @Path("professor")
+@DenyAll
 public class ProfessorAssignmentResource {
 
     @GET
+    @RolesAllowed("professor")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/assignments")
     public Response viewAllAssignments() {
-        List<Document> allAssignments = new AssignmentInterface().getAllAssignments();
-        return Response.status(Response.Status.OK).entity(allAssignments).build();
+        return Response.status(Response.Status.OK).entity(new AssignmentInterface().getAllAssignments()).build();
     }
 
     @GET
+    @RolesAllowed({"professor", "student"})
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments")
     public Response viewAssignmentsByCourse(@PathParam("courseID") String courseID) {
-        List<Document> specifiedAssignments = new AssignmentInterface().getAssignmentsByCourse(courseID);
-        return Response.status(Response.Status.OK).entity(specifiedAssignments).build();
+        return Response.status(Response.Status.OK).entity(new AssignmentInterface().getAssignmentsByCourse(courseID)).build();
     }
 
     @GET
+    @RolesAllowed({"professor", "student"})
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}")
-    public Response viewSpecifiedAssignment(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
-        Document specifiedAssignment = new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID);
-        return Response.status(Response.Status.OK).entity(specifiedAssignment).build();
+    public Response viewSpecifiedAssignment(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID){
+        return Response.status(Response.Status.OK).entity(AssignmentInterface.getSpecifiedAssignment(courseID, assignmentID)).build();
     }
 
     /**
@@ -53,6 +55,7 @@ public class ProfessorAssignmentResource {
      * @return Response
      */
     @POST
+    @RolesAllowed({"professor", "student"})
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
     @Path("/courses/{courseID}/assignments/{assignmentID}/upload")
@@ -93,6 +96,7 @@ public class ProfessorAssignmentResource {
     }
 
     @DELETE
+    @RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/assignments/remove-file")
     public Response removeFileFromAssignment(FileDAO fileDAO) {
@@ -109,6 +113,7 @@ public class ProfessorAssignmentResource {
     }
 
     @POST
+    @RolesAllowed({"professor", "student"})
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/create-assignment")
     public Response createAssignment(AssignmentDAO assignmentDAO) {
@@ -118,6 +123,7 @@ public class ProfessorAssignmentResource {
     }
 
     @DELETE
+    @RolesAllowed({"professor", "student"})
     @Path("/courses/{courseID}/assignments/{assignmentID}/remove")
     public Response removeAssignment(@PathParam("assignmentID") int assignmentID, @PathParam("courseID") String courseID) throws IOException {
         new AssignmentInterface().removeAssignment(assignmentID, courseID);
@@ -125,6 +131,7 @@ public class ProfessorAssignmentResource {
     }
 
     @PUT
+    @RolesAllowed({"professor", "student"})
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}/edit")
     public Response updateAssignment(AssignmentDAO assignmentDAO, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
@@ -134,6 +141,7 @@ public class ProfessorAssignmentResource {
     }
 
     @GET
+    @RolesAllowed({"professor", "student"})
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}/view-files")
     public Response viewAssignmentFiles(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
@@ -157,6 +165,7 @@ public class ProfessorAssignmentResource {
      * @return response
      **/
     @GET
+    @RolesAllowed({"professor", "student"})
     @Produces(MediaType.MULTIPART_FORM_DATA)
     @Path("/courses/{courseID}/assignments/{assignmentID}/download/{fileName}")
     public Response downloadAssignment(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("fileName") String fileName) {
@@ -188,6 +197,7 @@ public class ProfessorAssignmentResource {
     }
 
     @DELETE
+    @RolesAllowed("professor")
     @Path("/courses/{courseID}/remove")
     public Response removeCourse(@PathParam("courseID") String courseID) throws IOException {
         new AssignmentInterface().removeCourse(courseID);

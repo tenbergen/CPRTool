@@ -1,5 +1,6 @@
 package edu.oswego.cs.rest.controllers;
 
+import javax.annotation.security.RolesAllowed;
 import javax.json.JsonException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -8,6 +9,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 import edu.oswego.cs.rest.services.AuthServices;
 
@@ -25,5 +27,12 @@ public class Controller {
         return Response.status(Response.Status.OK).entity(new AuthServices().generateNewToken(authToken)).build();
     }
     
+    @POST
+    @RolesAllowed("lakers")
+    @Path("token/refresh")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response refreshToken(@Context SecurityContext securityContext) {
+        return Response.status(Response.Status.OK).entity(new AuthServices().refreshToken(securityContext)).build();
+    }
     
 }
