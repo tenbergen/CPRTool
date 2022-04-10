@@ -37,8 +37,9 @@ const ProfessorRosterComponent = () => {
                 .catch(e => {
                     console.log(e)
                     alert("Error adding student.")
-                    setFalse()
                 })
+            setFalse()
+            setFormData({...formData, Name: '', Email: ''})
         }
     }
 
@@ -90,7 +91,7 @@ const ProfessorRosterComponent = () => {
                             <th className="rosterComp">{d}</th>
                             <th className="rosterComp">{d.Email}</th>
                             <th className="rosterComp">{d.Team}</th>
-                            <th className="rosterComp"> <span onClick={() => deleteStudent(d)} className="crossMark">&#10006;</span></th>
+                            <th className="rosterComp"> <span onClick={() => deleteStudent(d)} className="crossMark">&#10060;</span></th>
                         </tr>
                     )}
                 </table>
