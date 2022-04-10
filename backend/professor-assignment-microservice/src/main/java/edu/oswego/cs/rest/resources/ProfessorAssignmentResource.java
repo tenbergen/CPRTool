@@ -41,7 +41,7 @@ public class ProfessorAssignmentResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}")
     public Response viewSpecifiedAssignment(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID){
-        return Response.status(Response.Status.OK).entity(AssignmentInterface.getSpecifiedAssignment(courseID, assignmentID)).build();
+        return Response.status(Response.Status.OK).entity(new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID)).build();
     }
 
     /**
