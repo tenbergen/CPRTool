@@ -10,10 +10,14 @@ import React from 'react';
 import RoleRouteHandler from "./RoleRouteHandler";
 import AuthRouteHandler from "./AuthRouteHandler";
 import ProfessorAssignmentView from "../pages/TeacherPages/ProfessorAssignmentView";
+import axiosInterceptor from "./interceptors/axiosInterceptor";
 
 const RouterHandler = () => {
-  return (
-      <Routes>
+
+    axiosInterceptor()
+
+    return (
+        <Routes>
           <Route>
               {/*public routes*/}
               <Route path="unauthenticated" element={<UnauthedErrorPage />} />
@@ -38,7 +42,7 @@ const RouterHandler = () => {
               </Route>
           </Route>
         </Routes>
-  );
+    );
 };
 
 export default RouterHandler;

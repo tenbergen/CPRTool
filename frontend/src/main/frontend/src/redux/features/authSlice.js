@@ -17,7 +17,8 @@ export const getTokenAsync = createAsyncThunk(
         });
         const jwt_token = await axiosAuthInstance.post(url)
             .then(res => {
-                localStorage.setItem("jwt_token", res.data)
+                localStorage.setItem("jwt_token", res.data.access_token)
+                localStorage.setItem("refresh_token", res.data.refresh_token)
                 return true
             })
             .catch(e => {
@@ -34,8 +35,8 @@ const getUserInformation = () => {
         let decoded = jwtDecode(localStorage.getItem("jwt_token"))
         return {
             isAuthenticated: true,
-            user_given_name: decoded.name,
-            email: decoded.email,
+            user_given_name: decoded.full_name,
+            email: decoded.upn,
             lakerId: decoded.lakerID,
             role: alt_role != null ? alt_role : decoded.groups[0],
             dataLoaded: true
