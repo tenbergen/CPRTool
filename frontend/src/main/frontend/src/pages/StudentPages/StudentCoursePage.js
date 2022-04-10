@@ -2,9 +2,9 @@ import React from "react-dom";
 import { useEffect,useState } from "react";
 import "./styles/StudentCourseStyle.css";
 import SidebarComponent from "../../components/SidebarComponent";
-import ToDoComponent from "../../components/ToDoComponent";
+import StudentToDoComponent from "../../components/StudentComponents/CoursePage/StudentToDoComponent";
 import CourseBarComponent from "../../components/CourseBarComponent";
-import SubmittedComponent from "../../components/SubmittedComponent";
+import StudentSubmittedComponent from "../../components/StudentComponents/CoursePage/StudentSubmittedComponent";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getCourseDetailsAsync } from "../../redux/features/courseSlice";
@@ -46,8 +46,8 @@ function StudentCoursePage() {
                             ))}
                         </div>
                         <div>
-                            {chosen === "To Do" && <ToDoComponent/>}
-                            {chosen === "Submitted" && <SubmittedComponent/>}
+                            {chosen === "To Do" && <StudentToDoComponent/>}
+                            {chosen === "Submitted" && <StudentSubmittedComponent/>}
                         </div>
                     </div>
                 </div>

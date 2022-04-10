@@ -1,4 +1,4 @@
-import './styles/Gradebook.css'
+import '../../styles/Gradebook.css'
 
 const ProfessorGradebookComponent = () => {
 

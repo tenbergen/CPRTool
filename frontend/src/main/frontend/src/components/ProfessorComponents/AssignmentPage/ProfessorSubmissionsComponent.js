@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import {useDispatch, useSelector} from "react-redux";
-import "./styles/TeamSubmission.css"
+import "../../styles/TeamSubmission.css"
 import {Link, useParams} from "react-router-dom";
-import { getCourseAssignmentsAsync, setCurrentAssignment } from "../redux/features/assignmentSlice";
+import { getCourseAssignmentsAsync, setCurrentAssignment } from "../../../redux/features/assignmentSlice";
 
 const ToDoComponent = () => {
     const dispatch = useDispatch()

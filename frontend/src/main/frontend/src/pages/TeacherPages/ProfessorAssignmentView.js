@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getCourseDetailsAsync } from "../../redux/features/courseSlice";
 import GradeAssBarComponent from "../../components/GradeAssBarComponent";
-import TeamSubmissionComponent from "../../components/TeamSubmissionComponent";
+import ProfessorSubmissionsComponent from "../../components/ProfessorComponents/AssignmentPage/ProfessorSubmissionsComponent";
 
 const AssComponent = ({ active, component, onClick }) => {
     return (
@@ -47,8 +47,8 @@ function StudentCoursePage() {
                             ))}
                         </div>
                         <div>
-                            {chosen === "All Submissions" && <TeamSubmissionComponent/>}
-                            {chosen === "Needs Grading" && <TeamSubmissionComponent/>}
+                            {chosen === "All Submissions" && <ProfessorSubmissionsComponent/>}
+                            {chosen === "Needs Grading" && <ProfessorSubmissionsComponent/>}
                             {chosen === "Edit"}
                         </div>
                     </div>

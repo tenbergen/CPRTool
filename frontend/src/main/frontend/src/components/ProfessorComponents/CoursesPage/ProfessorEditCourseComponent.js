@@ -1,19 +1,19 @@
 import React from "react-dom";
 import { useState } from "react";
-import "./styles/EditCourse.css"
-import "./styles/DeleteModal.css"
+import "../../styles/EditCourse.css"
+import "../../styles/DeleteModal.css"
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { Form, Field } from 'react-final-form'
-import { getCourseDetailsAsync } from "../redux/features/courseSlice";
+import { getCourseDetailsAsync } from "../../../redux/features/courseSlice";
 
 const deleteCourseUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/delete`
 const updateUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/update`
 const uploadCsvUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/student/mass-add`
 const assignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`
 
-const EditCourseComponent = () => {
+const ProfessorEditCourseComponent = () => {
     let navigate = useNavigate()
     let dispatch = useDispatch()
     const { currentCourse } = useSelector((state) => state.courses)
@@ -74,7 +74,6 @@ const EditCourseComponent = () => {
             console.log(response)
         })
         if (courseAssignments.length > 0) await deleteAssignments()
-        alert("Successfully deleted course.")
         navigate("/")
     }
 
@@ -245,4 +244,4 @@ const EditCourseComponent = () => {
     )
 }
 
-export default EditCourseComponent
+export default ProfessorEditCourseComponent

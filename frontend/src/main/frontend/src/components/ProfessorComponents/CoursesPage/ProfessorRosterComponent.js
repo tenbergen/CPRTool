@@ -1,12 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
-import "./styles/Roster.css"
+import "../../styles/Roster.css"
 import { useDispatch, useSelector } from "react-redux";
-import { getCourseDetailsAsync } from "../redux/features/courseSlice";
+import { getCourseDetailsAsync } from "../../../redux/features/courseSlice";
 import { useParams } from "react-router-dom";
 
 
-const RosterComponent = () => {
+const ProfessorRosterComponent = () => {
     const dispatch = useDispatch()
     const { courseId } = useParams()
     const addStudentUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/student/add`
@@ -96,9 +96,9 @@ const RosterComponent = () => {
                 </table>
             </div>
             {show ? addsStudent(): <button className="button_plus" onClick={setTrue}>
-                <img className="button_plus" src={require("./styles/plus-purple.png")}/></button>}
+                <img className="button_plus" src={require("../../styles/plus-purple.png")}/></button>}
         </div>
     )
 }
 
-export default RosterComponent
+export default ProfessorRosterComponent

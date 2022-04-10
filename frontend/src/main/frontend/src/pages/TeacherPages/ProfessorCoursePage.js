@@ -2,14 +2,14 @@ import React from "react-dom";
 import {useEffect, useState} from "react";
 import "./styles/ProfessorCourseStyle.css"
 import SidebarComponent from "../../components/SidebarComponent"
-import RosterComponent from "../../components/RosterComponent"
+import ProfessorRosterComponent from "../../components/ProfessorComponents/CoursesPage/ProfessorRosterComponent"
 import { useParams } from "react-router-dom";
-import EditCourseComponent from "../../components/EditCourseComponent";
-import TeacherAssComponent from "../../components/TeacherAssComponent";
+import ProfessorEditCourseComponent from "../../components/ProfessorComponents/CoursesPage/ProfessorEditCourseComponent";
+import ProfessorAssignmentComponent from "../../components/ProfessorComponents/CoursesPage/ProfessorAssignmentComponent";
 import { useDispatch } from "react-redux";
 import { getCourseDetailsAsync } from "../../redux/features/courseSlice";
 import CourseBarComponent from "../../components/CourseBarComponent";
-import ProfessorGradebookComponent from "../../components/ProfessorGradebookComponent";
+import ProfessorGradebookComponent from "../../components/ProfessorComponents/CoursesPage/ProfessorGradebookComponent";
 
 const CourseComponent = ({ active, component, onClick }) => {
     return (
@@ -48,10 +48,10 @@ function ProfessorCoursePage() {
                             ))}
                         </div>
                         <div>
-                            {chosen === "Assignments" && <TeacherAssComponent/>}
+                            {chosen === "Assignments" && <ProfessorAssignmentComponent/>}
                             {chosen === "Gradebook" && <ProfessorGradebookComponent/> }
-                            {chosen === "Roster" && <RosterComponent/>}
-                            {chosen === "Manage" && <EditCourseComponent/>}
+                            {chosen === "Roster" && <ProfessorRosterComponent/>}
+                            {chosen === "Manage" && <ProfessorEditCourseComponent/>}
                         </div>
                     </div>
                 </div>
