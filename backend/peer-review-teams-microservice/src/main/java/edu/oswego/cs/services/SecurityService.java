@@ -6,6 +6,8 @@ import javax.ws.rs.core.Response;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import org.bson.Document;
+
+import edu.oswego.cs.requests.SwitchTeamParam;
 import edu.oswego.cs.requests.TeamParam;
 import static com.mongodb.client.model.Filters.eq;
 
@@ -139,5 +141,35 @@ public class SecurityService {
             }
         }
     }
+
+    /**
+     * Checks the passed in params in switchTeam interface
+     * @param teamCollection
+     * @param courseDocument
+     * @param request
+     */
+    public void switchTeamSecurity(MongoCollection<Document> teamCollection, Document courseDocument, SwitchTeamParam request) {
+        MongoCursor<Document> cursor = teamCollection.find().iterator();
+        if (cursor == null) 
+            throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to retrieve team collection.").build());
+
+        if (!isStudentValid(courseDocument, request.getStudentID())) 
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
+
+        if (cursor.hasNext()) {
+            if (!isStudentAlreadyInATeam(teamCollection, request.getStudentID(), request.getCourseID())) 
+                throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student not in any team.").build());
+            if (!isTeamCreated(teamCollection, request.getTargetTeamID(), request.getCourseID())) 
+                throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Target team not found.").build());
+            if (!isTeamCreated(teamCollection, request.getCurrentTeamID(), request.getCourseID()))
+                throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Current team not found.").build());
+        }
+        if (!isStudentInThisTeam(teamCollection, request.getCurrentTeamID(), request.getStudentID(), request.getCourseID() ))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in current team.").build());
+        if (isStudentInThisTeam(teamCollection, request.getTargetTeamID(), request.getStudentID(), request.getCourseID() ))
+            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student already in target team.").build());
+        if (isTeamFull(teamCollection, request.getTargetTeamID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Target team already full.").build());
+        }
 
 }
