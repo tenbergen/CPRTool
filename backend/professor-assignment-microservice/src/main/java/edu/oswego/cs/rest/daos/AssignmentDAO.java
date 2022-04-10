@@ -7,10 +7,7 @@ import javax.json.bind.annotation.JsonbProperty;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.ws.rs.sse.Sse;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
