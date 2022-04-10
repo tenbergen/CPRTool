@@ -55,9 +55,20 @@ public class TeamInterface {
         if (courseDocument == null) 
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
         
-        new SecurityService().isStudentValid(courseDocument, request);
-        new SecurityService().isStudentAlreadyInATeam(teamCollection, request); 
-        new SecurityService().isTeamCreated(teamCollection, request);
+        if (!new SecurityService().isStudentValid(courseDocument, request)) 
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
+
+        MongoCursor<Document> cursor = teamCollection.find().iterator();
+        
+        if (cursor.hasNext()) {
+            if (new SecurityService().isStudentAlreadyInATeam(teamCollection, request)) 
+                throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student is already in a team.").build());
+                
+            if (new SecurityService().isTeamCreated(teamCollection, request)) {
+                throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Team is already created.").build());
+            }
+        }
+            
             
         TeamDAO newTeam = new TeamDAO(request.getTeamID(), request.getCourseID(), request.getMaxSize(), request.getStudentID() );
         newTeam.getTeamMembers().add(request.getStudentID());
@@ -97,6 +108,10 @@ public class TeamInterface {
         } 
         
         return teams;
+    }
+
+    public String getTeamByStudentID(TeamParam request) {
+        return "hello";
     }
 
 
