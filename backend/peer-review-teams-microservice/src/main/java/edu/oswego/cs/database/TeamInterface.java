@@ -1,11 +1,13 @@
 package edu.oswego.cs.database;
 
+import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
+
 import edu.oswego.cs.daos.TeamDAO;
 import edu.oswego.cs.requests.SwitchTeamParam;
 import edu.oswego.cs.requests.TeamParam;
@@ -58,7 +60,6 @@ public class TeamInterface {
         
         new SecurityService().securityChecks(teamCollection, courseDocument, request, "CREATE");
             
-            
         TeamDAO newTeam = new TeamDAO(request.getTeamID(), request.getCourseID(), request.getMaxSize(), request.getStudentID() );
         newTeam.getTeamMembers().add(request.getStudentID());
         newTeam.setTeamMembers(newTeam.getTeamMembers());
@@ -109,7 +110,7 @@ public class TeamInterface {
         if (courseDocument == null) 
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
         
-        if (!new SecurityService().isStudentValid(courseDocument, request)) 
+        if (!new SecurityService().isStudentValid(courseDocument, request.getStudentID())) 
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
 
         List<Document> nonFullTeams = new ArrayList<>();
@@ -130,15 +131,12 @@ public class TeamInterface {
                         return teams; 
                     }
                 }
-
                 if (!teamDocument.getBoolean("is_full") && request.getCourseID().equals(courseID)) 
                     nonFullTeams.add(teamDocument);
-                
             }
         } finally { 
             cursor.close();
         } 
-
         return nonFullTeams;
     }
 
@@ -164,13 +162,12 @@ public class TeamInterface {
                 
                 if (request.getTeamID().equals(teamID) && request.getCourseID().equals(courseID))
                     return teamDocument;
-            } 
+            }
         } finally { 
             cursor.close();
         } 
 
         throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
-
     }
 
     /**
@@ -194,75 +191,79 @@ public class TeamInterface {
 
         if (teamMembers.size() == teamDocument.getInteger("max_size")) 
             teamCollection.updateOne(Filters.eq("team_id", request.getTeamID()), Updates.set("is_full", true));
-        
     }
 
+    /**
+     * Allows student users to switch teams
+     * @param request SwitchTeamParam:{"course_id", "student_id", "current_team_id", "target_team_id"}
+     */
+    public void switchTeam(SwitchTeamParam request) {
+        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
+        if (courseDocument == null) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+        
+        if (!new SecurityService().isStudentValid(courseDocument, request.getStudentID())) 
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
 
-    public int switchTeamHandler(SwitchTeamParam request) {
-        /* desc: get A list of all teams to join teams */
+        MongoCursor<Document> cursor = teamCollection.find().iterator();
+        if (cursor == null) 
+            throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to retrieve team collection.").build());
+        if (cursor.hasNext()) {
+            if (!new SecurityService().isStudentAlreadyInATeam(teamCollection, request.getStudentID(), request.getCourseID())) 
+                throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student not in any team.").build());
+            if (!new SecurityService().isTeamCreated(teamCollection, request.getTargetTeamID(), request.getCourseID())) 
+                throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Target team not found.").build());
+            if (!new SecurityService().isTeamCreated(teamCollection, request.getCurrentTeamID(), request.getCourseID()))
+                throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Current team not found.").build());
+        }
+        if (!new SecurityService().isStudentInThisTeam(teamCollection, request.getCurrentTeamID(), request.getStudentID(), request.getCourseID() ))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in current team.").build());
+        if (new SecurityService().isStudentInThisTeam(teamCollection, request.getTargetTeamID(), request.getStudentID(), request.getCourseID() ))
+            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student already in target team.").build());
+        if (new SecurityService().isTeamFull(teamCollection, request.getTargetTeamID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Target team already full.").build());
 
-        /* logic
-            Student can switch to other teams as long as the team is not finalized
+        /* Update currentTeamDocument */
+        Document currentTeamDocument = teamCollection.find(eq("team_id", request.getCurrentTeamID())).first();
+        List<String> currentTeamMembers = currentTeamDocument.getList("team_members", String.class);
+        currentTeamMembers.remove(request.getStudentID());
 
-            A student switch from teamA to teamB
+        if (currentTeamMembers.size() == 0) {
+            teamCollection.deleteOne(eq("team_id", request.getCurrentTeamID()));
+        } else {
+            Bson currentTeamUpdates = Updates.combine(
+                Updates.set("team_members", currentTeamMembers), 
+                Updates.set("team_lead", currentTeamMembers.get(0)), 
+                Updates.set("is_full", false));
+            UpdateOptions currentTeamOptions = new UpdateOptions().upsert(true);
+    
+            try {
+                teamCollection.updateOne(new Document("team_id", request.getCurrentTeamID()), currentTeamUpdates, currentTeamOptions);
+            } catch (MongoException error){
+                error.printStackTrace();
+            }
+        }
+        
+        /* Update targetTeamDocument  */
+        Document targetTeamDocument = teamCollection.find(eq("team_id", request.getTargetTeamID())).first();
+        List<String> targetTeamMembers = targetTeamDocument.getList("team_members", String.class);
+        targetTeamMembers.add(request.getStudentID());
 
-            teamA:
-                + remove student
-                + if the removed student was a team lead => randomly grant the team lead to another member
-                + update removed student from team lead => false
-                + if team is full -> update not full
-            teamB:
-                + call joinTeam() handles team with members already and empty team
-        */
+        Bson targetTeamUpdates = Updates.combine(
+            Updates.set("team_members", targetTeamMembers),
+            Updates.set("is_full", false));
+
+        if (targetTeamMembers.size() == targetTeamDocument.getInteger("max_size")) 
+            targetTeamUpdates = Updates.combine(targetTeamUpdates, Updates.set("is_full", true));
+        
+        UpdateOptions targetTeamOptions = new UpdateOptions().upsert(true);
 
         try {
-            // Initialize.
-            Document courseDoc = courseCollection.find(new Document("course_id", request.getCourse_id())).first();
-            Document studentDoc = studentCollection.find(new Document("student_id", request.getStudent_id())).first();
-            List<Document> teams = courseDoc.getList("teams", Document.class);
-            Document oldTeam = new Document();
-            Document teamMember = new Document();
-            boolean isFull = false;
-            Boolean isTeamLead = studentDoc.getBoolean("team_lead");
-
-            // Get oldTeam.
-            for (Document team : teams) {
-                if (team.get("team_id").equals(request.getOld_team_id())) {
-                    oldTeam = team;
-                    isFull = oldTeam.getBoolean("is_full");
-                }
-            }
-
-            // Remove student from oldTeam.
-            teamMember = (Document) oldTeam.get("team_members");
-            teamMember.remove(request.getStudent_id(), false);
-
-            // Update isFull for oldTeam.
-            if (isFull) oldTeam.replace("is_full", true, false);
-            courseCollection.updateOne(
-                    new Document("course_id", request.getCourse_id()),
-                    new Document("$set", new Document("teams", teams))
-            );
-
-            if (isTeamLead) {
-                Bson teamLeadUpdates = Updates.set("team_lead", false);
-                UpdateOptions teamLeadOptions = new UpdateOptions().upsert(true);
-                studentCollection.updateOne(studentDoc, teamLeadUpdates, teamLeadOptions);
-
-                // Attempt to pass team lead to the next member.
-                List<String> membersID = new ArrayList<>(teamMember.keySet());
-                if (membersID.size() > 0) {
-                    String nextLeadID;
-                    nextLeadID = membersID.get(0);
-                    Document nextLeadDoc = studentCollection.find(new Document("student_id", nextLeadID)).first();
-                    Bson nextLeadUpdates = Updates.set("team_lead", true);
-                    UpdateOptions nextLeadOptions = new UpdateOptions().upsert(true);
-                    studentCollection.updateOne(nextLeadDoc, nextLeadUpdates, nextLeadOptions);
-                }
-            }
-            return 0;
-        } catch (Exception e) {
-            return -1;
+            teamCollection.updateOne(new Document("team_id", request.getTargetTeamID()), targetTeamUpdates, targetTeamOptions);
+        } catch (MongoException error){
+            error.printStackTrace();
         }
     }
+
+    
 }
