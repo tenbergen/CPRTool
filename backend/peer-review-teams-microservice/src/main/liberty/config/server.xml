@@ -21,6 +21,6 @@
     <webApplication contextRoot="${app.context.root}" location="peer-review-teams-microservice.war" />
 
     <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
-    
-    <mpJwt id="cpr22s_access" signatureAlgorithm="RS512" tokenHeader="Authorization" issuer="edu.oswego.cs_CPR.22S.480" audiences="CPR.22S.480" jwksUri="${jwksUrl}"/> 
+
+    <mpJwt id="cpr22s_access" signatureAlgorithm="RS512" tokenHeader="Authorization" issuer="edu.oswego.cs_CPR.22S.480" audiences="CPR.22S.480" jwksUri="${JWKS_URL}"/>
 </server>
