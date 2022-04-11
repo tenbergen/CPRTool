@@ -44,7 +44,6 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
       JWKS_URL: ${JWKS_URL}
-      JWKS_REFRESH_URL: ${JWKS_REFRESH_URL}
 
   course-viewer:
     build:
@@ -62,7 +61,6 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
       JWKS_URL: ${JWKS_URL}
-      JWKS_REFRESH_URL: ${JWKS_REFRESH_URL}
 
   professor-assignment:
     build:
@@ -82,7 +80,6 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
       JWKS_URL: ${JWKS_URL}
-      JWKS_REFRESH_URL: ${JWKS_REFRESH_URL}
 
   peer-review-teams:
     build:
@@ -99,7 +96,6 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
       JWKS_URL: ${JWKS_URL}
-      JWKS_REFRESH_URL: ${JWKS_REFRESH_URL}
 
   mongo:
     image: mongo:5.0.6
