@@ -9,8 +9,7 @@ import { useParams } from "react-router-dom";
 const ProfessorRosterComponent = () => {
     const dispatch = useDispatch()
     const { courseId } = useParams()
-    const addStudentUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/student/add`
-    const deleteStudentUrl = `${process.env.REACT_APP_URL}/manage/professor/courses`
+    const url = `${process.env.REACT_APP_URL}/manage/professor/courses`
     const { currentCourse } = useSelector((state) => state.courses)
 
     const [formData, setFormData] = useState({
@@ -27,8 +26,8 @@ const ProfessorRosterComponent = () => {
         }
         else {
             e.preventDefault()
-            const data = { email: Email, ...currentCourse };
-            await axios.post(addStudentUrl, data)
+            const addStudentUrl = `${url}/${courseId}/students/${Email}/add`
+            await axios.post(addStudentUrl)
                 .then(res => {
                     console.log(res.data)
                     alert("Successfully added student.")
@@ -45,8 +44,8 @@ const ProfessorRosterComponent = () => {
 
     const deleteStudent = async (Email) => {
         console.log(Email)
-        const url = `${deleteStudentUrl}/${courseId}/students/${Email}/delete`
-        await axios.delete(url)
+        const deleteStudentUrl = `${url}/${courseId}/students/${Email}/delete`
+        await axios.delete(deleteStudentUrl)
             .then(res => {
                 console.log(res)
                 alert("Successfully deleted student.")
@@ -97,7 +96,7 @@ const ProfessorRosterComponent = () => {
                 </table>
             </div>
             {show ? addsStudent(): <button className="button_plus" onClick={setTrue}>
-                <img className="button_plus" src={require("../../styles/plus-purple.png")}/></button>}
+                <img className="button_plus" src={require("../../styles/plus-purple.png")} alt="plus_button"/></button>}
         </div>
     )
 }
