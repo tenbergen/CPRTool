@@ -3,163 +3,62 @@ package edu.oswego.cs.resources;
 import edu.oswego.cs.database.TeamInterface;
 import edu.oswego.cs.requests.SwitchTeamParam;
 import edu.oswego.cs.requests.TeamParam;
-import org.bson.Document;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
-import java.util.List;
 
 @Path("/teams")
 public class PeerReviewTeamsResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces("application/json")
-    @Path("team/professor/initialize")
-    public Response initTeam(TeamParam request) {
-        /*
-         - scope: professor
-         - desc: Initialize teams for each course
-         - params: {"courseID", "teamSize"}
-         - FE:
-            + This API returns the "team outline" array of integer presents the team size for each team for the whole course.
-            + FE will use this array to decide the total teams each course has and how many team members each team has
-                i.e. create placeholders for each team
-            + Also, FE will need to include the element in the array in each http request call to "join team" api
-        */
-        ArrayList<Integer> res = new TeamInterface().initTeamHandler(request);
-        return Response.status(Response.Status.OK).entity(res).build();
-    }
-
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("team/join")
-    public Response joinTeam(TeamParam request) {
-        /*
-         - scope: every students
-         - desc: allows students to join the team
-         - params: {"courseID", "studentID", "teamID", "teamSize"}
-         - FE: This API returns
-            + 200 OK => Sucessfully join
-            + 409 CoNFLICT => Invalid Join Request (team is already full)
-            + 400 BR => BAD_REQUEST (worng params, etc.)
-        */
-        try {
-            int result = new TeamInterface().joinTeamHandler(request);
-            String resultString = "";
-            switch (result) {
-                case 1:
-                    resultString = "Team size does not match -- Invalid Join Request!";
-                    return Response.status(Response.Status.CONFLICT).entity(resultString).build();
-                case 2:
-                    resultString = "Team is already full -- Invalid Join Request!";
-                    return Response.status(Response.Status.BAD_REQUEST).entity(resultString).build();
-                default:
-                    resultString = "Successfully Join!";
-                    return Response.status(Response.Status.OK).entity(resultString).build();
-            }
-
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.toString()).build();
-        }
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("team/create")
+    public Response createTeam(TeamParam request) {
+        new TeamInterface().createTeam(request);
+        return Response.status(Response.Status.CREATED).entity("Team successfully created.").build();
     }
 
     @GET
-    @Path("team/get-all-teams")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("team/get/all")
     public Response getAllTeams(TeamParam request) {
-        /*
-         - DESC:
-            + return a list of Teams (json array)
-            + scope: every students, professors
-         - PARAMS: {"courseID"}
-         - FE
-            + To non-team students, show only non-full-teams
-            + To alread-in-a-team students, show its team
-            + show all teams to professors
-        */
-        try {
-            List<Document> res = new TeamInterface().getAllTeamsHandler(request.getCourse_id());
-            return Response.status(Response.Status.OK).entity(res).build();
-        } catch (Exception e) {
-            List<Document> errors = new ArrayList<>();
-            errors.add(new Document(e.toString(), Exception.class));
-            return Response.status(Response.Status.BAD_REQUEST).entity(errors).build();
-        }
+        return Response.status(Response.Status.OK).entity(new TeamInterface().getAllTeams(request)).build();
     }
 
     @GET
-    @Path("team/get")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("team/get/student_id")
+    public Response getTeamByStudentID(TeamParam request) {
+        return Response.status(Response.Status.OK).entity(new TeamInterface().getTeamByStudentID(request)).build();
+    }
+
+    @GET
+    @Path("team/get/team_id")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTeamByTeamID(TeamParam request) {
-        /*
-         - desc:
-            + return a team (json object) that has the same teamID passed from FE
-            + scope: every students
-         - params: {"courseID", "teamID" }
-        */
-        try {
-            Document res = new TeamInterface().getTeamByTeamIDHandler(request);
-            return Response.status(Response.Status.OK).entity(res).build();
-        } catch (Exception e) {
-            List<Document> errors = new ArrayList<Document>();
-            errors.add(new Document(e.toString(), Exception.class));
-            return Response.status(Response.Status.BAD_REQUEST).entity(errors).build();
-        }
+        return Response.status(Response.Status.OK).entity(new TeamInterface().getTeamByTeamID(request)).build();
     }
-
-    @POST
+    
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("team/join")
+    public Response joinTeam(TeamParam request) {
+        new TeamInterface().joinTeam(request);
+        return Response.status(Response.Status.OK).entity("Student successfully added to team.").build();
+    }
+    
+    @PUT
     @Path("team/switch")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response switchTeam(SwitchTeamParam request) {
-        /*
-         - DESC:
-            + This api allows student to switch from one team to another
-            + scope: for every students
-         - PARAMS: {"courseID", "studentID", "oldTeamID", "newTeamID", "newTeamSize"} // newTeamSize is the size of the new team from FE
-         - FE:
-            + 200
-            + 400
-        */
-
-        /* Todo make sure the oldTeamID has studentID*/
-        /* Todo fix the isLead update, student switches from team A to a team already created but empty, then its isLead is not updated*/
-
-        try {
-            TeamParam teamParam = new TeamParam();
-            teamParam.setCourse_id(request.getCourse_id());
-            teamParam.setStudent_id(request.getStudent_id());
-            teamParam.setTeam_id(request.getNew_team_id());
-            teamParam.setTeam_size(request.getNew_team_size());
-            int result = new TeamInterface().joinTeamHandler(teamParam);
-
-            if (result == 0) {
-                result = new TeamInterface().switchTeamHandler(request);
-            }
-
-            String resultString = "";
-            switch (result) {
-                case 1:
-                    resultString = "Team size does not match -- Invalid Join Request!";
-                    return Response.status(Response.Status.CONFLICT).entity(resultString).build();
-                case 2:
-                    resultString = "New Team is already full -- Invalid Join Request!";
-                    return Response.status(Response.Status.BAD_REQUEST).entity(resultString).build();
-                default:
-                    resultString = "Successfully Switch";
-                    return Response.status(Response.Status.OK).entity(resultString).build();
-            }
-
-
-        } catch (Exception e) {
-            List<Document> errors = new ArrayList<Document>();
-            errors.add(new Document(e.toString(), Exception.class));
-            return Response.status(Response.Status.BAD_REQUEST).entity(errors).build();
-        }
+        new TeamInterface().switchTeam(request);
+        return Response.status(Response.Status.OK).entity("Student successfully switch to a new team.").build();
     }
 
 
@@ -269,6 +168,11 @@ public class PeerReviewTeamsResource {
 
         return false; // change the message
     }
+
+    /* TODO: 
+        + Move/remove a user from a team (professor)
+        + Delete Team (members.size() == 1) (TL + professor)
+    */
 
 }
 

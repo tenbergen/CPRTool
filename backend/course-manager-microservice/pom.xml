@@ -50,12 +50,6 @@
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>com.ibm.websphere.appserver.api</groupId>
-            <artifactId>com.ibm.websphere.appserver.api.jaxrs20</artifactId>
-            <version>1.1.61</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.sun.activation</groupId>
             <artifactId>javax.activation</artifactId>
             <version>1.2.0</version>
@@ -74,44 +68,28 @@
             <version>1.0.0-RC1</version>
             <scope>runtime</scope>
         </dependency>
+
+        <!--        Team QA updated this to 1.1.54 from 1.0.10 so we can use AttatchmentBuilder-->
         <dependency>
             <groupId>com.ibm.websphere.appserver.api</groupId>
             <artifactId>com.ibm.websphere.appserver.api.jaxrs20</artifactId>
-            <version>1.0.10</version>
+            <version>1.1.54</version>
         </dependency>
-
 
     </dependencies>
 
     <build>
         <finalName>course-manager-microservice</finalName>
-        <pluginManagement>
-            <plugins>
-            <!-- Used for maven war commands. Fails to build on the production server without this. -->
+        <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.2</version>
             </plugin>
-<!-- Used for unit testing surefire commands. Bring back in if needed. -->
-<!--                <plugin>-->
-<!--                    <groupId>org.apache.maven.plugins</groupId>-->
-<!--                    <artifactId>maven-surefire-plugin</artifactId>-->
-<!--                    <version>2.22.2</version>-->
-<!--                </plugin>-->
-<!-- Don't get rid of this one. This is like... THE plugin for this project... -->
-                <plugin>
-                    <groupId>io.openliberty.tools</groupId>
-                    <artifactId>liberty-maven-plugin</artifactId>
-                    <version>3.5.1</version>
-                </plugin>
-
-            </plugins>
-        </pluginManagement>
-        <plugins>
             <plugin>
                 <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
+                <version>3.5.1</version>
             </plugin>
         </plugins>
     </build>

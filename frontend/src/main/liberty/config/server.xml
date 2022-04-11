@@ -5,8 +5,8 @@
         <feature>jsonp-1.1</feature>
     </featureManager>
 
-    <variable name="default.http.port" defaultValue="13129"/>
-    <variable name="default.https.port" defaultValue="9447"/>
+    <variable name="default.http.port" defaultValue="13125"/>
+    <variable name="default.https.port" defaultValue="9443"/>
 
     <httpEndpoint host="*" httpPort="${default.http.port}" httpsPort="${default.https.port}" id="defaultHttpEndpoint" />
 
