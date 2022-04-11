@@ -31,12 +31,8 @@ const ProfessorEditCourseComponent = () => {
     }
 
     const updateCourse = async (data) => {
-        const finalData = {
-            ...data,
-            course_id: currentCourse.course_id
-        }
+        const finalData = {...data, course_id: currentCourse.course_id}
 
-        console.log(finalData)
         await axios.put(updateUrl, finalData)
             .then((res) =>{
                 console.log(res)
@@ -99,20 +95,34 @@ const ProfessorEditCourseComponent = () => {
         )
     }
 
+    const initialData = {
+        course_name: currentCourse.course_name,
+        course_section: currentCourse.course_section,
+        semester: currentCourse.semester,
+        abbreviation: currentCourse.abbreviation,
+        year: currentCourse.year,
+        crn: currentCourse.crn
+    }
+
+    const handleSubmit = async (formObj) => {
+        if (JSON.stringify(initialData) === JSON.stringify(formObj)) {
+            if (csvFormData.get("csv_file") != null) {
+                await uploadCsv()
+            } else {
+                alert("Nothing to save!")
+            }
+        } else {
+            await updateCourse(formObj)
+        }
+    }
+
     return (
         <div className="ecc-form">
             <Form
-                onSubmit={formObj => {
-                    updateCourse(formObj).then(r => console.log(r))
+                onSubmit={async formObj => {
+                    await handleSubmit(formObj)
                 }}
-                initialValues={{
-                    course_name: currentCourse.course_name,
-                    course_section: currentCourse.course_section,
-                    semester: currentCourse.semester,
-                    abbreviation: currentCourse.abbreviation,
-                    year: currentCourse.year,
-                    crn: currentCourse.crn
-                }}>
+                initialValues={initialData}>
                 {({ handleSubmit }) => (
                     <form onSubmit={handleSubmit}>
                         <div className="ecc-input-field">
