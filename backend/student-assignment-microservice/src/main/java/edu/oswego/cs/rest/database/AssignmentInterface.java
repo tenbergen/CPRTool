@@ -1,26 +1,17 @@
 package edu.oswego.cs.rest.database;
 
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.rest.daos.AssignmentDAO;
 import edu.oswego.cs.rest.daos.FileDAO;
-import org.apache.commons.io.FileUtils;
 import org.bson.Document;
 
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.mongodb.client.model.Filters.eq;
 
 public class AssignmentInterface {
 

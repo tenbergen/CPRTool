@@ -81,30 +81,29 @@ public class CourseInterface {
      * array in the course using their name from the email and into the student database at the same time with the
      * student's course array updated to have the new course respectively.
      */
-    public void addStudent(String email, CourseDAO dao) {
-        if (!courseCollection.find(eq("course_id", dao.courseID)).iterator().hasNext()) {
-            addCourse(dao);
-        }
+    public void addStudent(String studentName, String courseID) {
+//        if (!courseCollection.find(eq("course_id", courseID)).iterator().hasNext()) {
+//            addCourse(dao);
+//        }
 
-        Document courseDocument = courseCollection.find(eq("course_id", dao.courseID)).first();
+        Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
 
         List<String> students = courseDocument.getList("students", String.class);
-        String studentName = email.split("@")[0];
         if (students.contains(studentName)) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This student is already in the course.").build());
-        courseCollection.updateOne(eq("course_id", dao.courseID), push("students", studentName));
+        courseCollection.updateOne(eq("course_id", courseID), push("students", studentName));
 
         MongoCursor<Document> query = studentCollection.find(eq("student_id", studentName)).iterator();
         if (query.hasNext()) {
             Document studentDocument = query.next();
             List<String> courseList = studentDocument.getList("courses", String.class);
             for (String course : courseList) {
-                if (course.equals(dao.courseID)) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This student is already in the course.").build());
+                if (course.equals(courseID)) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This student is already in the course.").build());
             }
-            studentCollection.updateOne(eq("student_id", studentName), push("courses", dao.courseID));
+            studentCollection.updateOne(eq("student_id", studentName), push("courses", courseID));
         } else {
             List<String> courseList = new ArrayList<>();
-            courseList.add(dao.courseID);
+            courseList.add(courseID);
             Document newStudent = new Document()
                     .append("student_id", studentName)
                     .append("courses", courseList);
@@ -115,8 +114,8 @@ public class CourseInterface {
     /**
      * Remove the course from the student's list of courses, and then remove the course itself from the course database.
      */
-    public void removeCourse(CourseDAO dao) {
-        MongoCursor<Document> courseQuery = courseCollection.find(eq("course_id", dao.courseID)).iterator();
+    public void removeCourse(String courseID) {
+        MongoCursor<Document> courseQuery = courseCollection.find(eq("course_id", courseID)).iterator();
         if (!courseQuery.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
 
         Document courseDocument = courseQuery.next();
@@ -126,19 +125,18 @@ public class CourseInterface {
             if (studentQuery.hasNext()) {
                 Document studentDocument = studentQuery.next();
                 List<String> courses = studentDocument.getList("courses", String.class);
-                courses.remove(dao.courseID);
+                courses.remove(courseID);
                 studentCollection.updateOne(eq("student_id", student), set("courses", courses));
             }
         }
-        courseCollection.findOneAndDelete(eq("course_id", dao.courseID));
+        courseCollection.findOneAndDelete(eq("course_id", courseID));
     }
 
     /**
      * Remove the student from the course's arraylist of students, and then remove the course from the student's course
      * arraylist in the student database.
      */
-    public void removeStudent(String email, CourseDAO dao) {
-        String studentName = email.split("@")[0];
+    public void removeStudent(String studentName, String courseID) {
         MongoCursor<Document> studentQuery = studentCollection.find(eq("student_id", studentName)).iterator();
         if (!studentQuery.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist.").build());
 
@@ -150,10 +148,10 @@ public class CourseInterface {
                 Document courseDocument = courseQuery.next();
                 List<String> students = courseDocument.getList("students", String.class);
                 students.remove(studentName);
-                courseCollection.updateOne(eq("course_id", dao.courseID), set("students", students));
+                courseCollection.updateOne(eq("course_id", courseID), set("students", students));
             }
         }
-        courses.remove(dao.courseID);
+        courses.remove(courseID);
         studentCollection.updateOne(eq("student_id", studentName), set("courses", courses));
     }
 
@@ -162,7 +160,6 @@ public class CourseInterface {
 
         String cid = f.getFilename();
         cid = cid.substring(0, cid.length() - 4);
-        System.out.println(cid);
         Document course = courseCollection.find(new Document("course_id", cid)).first();
         assert course != null;
         CourseDAO courseDAO = new CourseDAO(
@@ -193,10 +190,10 @@ public class CourseInterface {
             }
         }
         for (String s : studentsToRemove) {
-            removeStudent(s, courseDAO);
+            removeStudent(s, courseDAO.courseID);
         }
         for (String s : studentsToAdd) {
-            addStudent(s, courseDAO);
+            addStudent(s, courseDAO.courseID);
         }
     }
 }

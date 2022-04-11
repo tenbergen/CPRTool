@@ -1,7 +1,27 @@
-.DS_Store
-.idea/
-.vscode/
-.env
+# Automatically generated files by Maven and IDEs.
+**/.DS_Store
+**/.idea/
+**/.vscode/
+**/.env
+**/target/
+**/pom.xml.tag
+**/pom.xml.releaseBackup
+**/pom.xml.versionsBackup
+**/pom.xml.next
+**/release.properties
+**/dependency-reduced-pom.xml
+**/buildNumber.properties
+**/.mvn/
+**/mvnw
+**/mvnw.cmd
+**/*.iml
+
+# Frontend React stuff.
+**/node_modules/
+**/build/
+**/node/
+**/static/
+**/webapp/
 
 # Compiled class file
 *.class

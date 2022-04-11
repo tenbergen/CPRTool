@@ -1,18 +1,45 @@
 package edu.oswego.cs.rest.daos;
 
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
-import java.io.*;
+import javax.json.bind.annotation.JsonbCreator;
+import javax.json.bind.annotation.JsonbProperty;
+import javax.persistence.Id;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-@Getter
-@AllArgsConstructor
+@NoArgsConstructor
 public class FileDAO {
-    private String filename;
-    private String courseID;
-    private InputStream file;
-    private int assignmentID;
+    @Id @JsonbProperty public String filename;
+    @JsonbProperty public int assignmentID;
+    @JsonbProperty public String courseID;
+    @JsonbProperty public InputStream file;
+
+    @JsonbCreator
+    public FileDAO(
+            @NonNull @JsonbProperty("file_name") String filename,
+            @NonNull @JsonbProperty("assignment_id") int assignmentID,
+            @NonNull @JsonbProperty("course_id") String courseID) {
+        this.filename = filename;
+        this.assignmentID = assignmentID;
+        this.courseID = courseID;
+    }
+
+    public FileDAO(
+            @NonNull @JsonbProperty("file_name") String filename,
+            @NonNull @JsonbProperty("assignment_id") int assignmentID,
+            @NonNull @JsonbProperty("course_id") String courseID,
+            @NonNull @JsonbProperty("inputStream") InputStream file) {
+        this.filename = filename;
+        this.assignmentID = assignmentID;
+        this.courseID = courseID;
+        this.file = file;
+    }
+
 
     /**
      * Takes form-data from a POST request, converts it to an inputStream, and return the FileDOA containing
@@ -25,17 +52,15 @@ public class FileDAO {
      * @throws IOException File Corruption Exception
      */
     public static FileDAO fileFactory(String fileName, String courseID, IAttachment attachment, int assignmentID) throws IOException {
-//        String courseName = fileName.split("\\.")[0];
         InputStream inputStream = attachment.getDataHandler().getInputStream();
-        System.out.println("fileName: " + fileName + "courseID: " + courseID);
-        return new FileDAO(fileName, courseID, inputStream, assignmentID);
+        return new FileDAO(fileName, assignmentID, courseID, inputStream);
     }
 
     /**
      * Writes the inputStream to a file.
      */
     public void writeFile(String filePath) throws IOException {
-        OutputStream outputStream = new FileOutputStream(new File(filePath));
+        OutputStream outputStream = new FileOutputStream(filePath);
         outputStream.write(file.readAllBytes());
         outputStream.close();
     }
