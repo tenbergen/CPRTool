@@ -3,7 +3,7 @@ import React from "react";
 import jwtDecode from "jwt-decode";
 import axios from "axios";
 
-const authURL = `http://localhost:13126/auth`
+const authURL = `${process.env.REACT_APP_URL}/auth`
 
 export const getTokenAsync = createAsyncThunk(
     'auth/getTokenAsync',
