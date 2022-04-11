@@ -47,8 +47,8 @@ function AssignmentPage() {
                             <h2>{currentAssignment.assignment_name}</h2>
                             <div className="ap-assignmentArea">
                                 <div className="ap-component-links">
-                                    <h3> Instructions: <br/> <br/> <br/>{currentAssignment.instructions}
-                                        <br/> <br/>
+                                    <h3> Instructions: <br/><br/>{currentAssignment.instructions}
+                                        <br/> <br/> <br/>
                                          Files: <div onClick={onAssignmentClick}> {currentAssignmentFiles[0]} </div>
                                     </h3>
                                     <h3> Due Date: {currentAssignment.due_date}</h3>
