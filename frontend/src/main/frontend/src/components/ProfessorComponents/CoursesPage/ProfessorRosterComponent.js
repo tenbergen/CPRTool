@@ -10,7 +10,7 @@ const ProfessorRosterComponent = () => {
     const dispatch = useDispatch()
     const { courseId } = useParams()
     const addStudentUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/student/add`
-    const deleteStudentUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/student/delete`
+    const deleteStudentUrl = `${process.env.REACT_APP_URL}/manage/professor/courses`
     const { currentCourse } = useSelector((state) => state.courses)
 
     const [formData, setFormData] = useState({
@@ -45,8 +45,8 @@ const ProfessorRosterComponent = () => {
 
     const deleteStudent = async (Email) => {
         console.log(Email)
-        const data = { email: Email, ...currentCourse};
-        await axios.post(deleteStudentUrl, data)
+        const url = `${deleteStudentUrl}/${courseId}/students/${Email}/delete`
+        await axios.delete(url)
             .then(res => {
                 console.log(res)
                 alert("Successfully deleted student.")
