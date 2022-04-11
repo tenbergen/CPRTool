@@ -60,4 +60,12 @@ public class CoursesViewerResources {
         Document document = new CourseInterface().getStudent(studentID);
         return Response.status(Response.Status.OK).entity(document).build();
     }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("courses/{courseID}/students")
+    public Response viewStudentsInCourse(@PathParam("courseID") String courseID) {
+        Document courseDocument = new CourseInterface().getCourse(courseID);
+        return Response.status(Response.Status.OK).entity(courseDocument.get("students")).build();
+    }
 }

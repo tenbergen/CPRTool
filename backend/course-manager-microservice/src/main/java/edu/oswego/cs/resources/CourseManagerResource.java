@@ -28,13 +28,14 @@ public class CourseManagerResource {
     }
 
 
-    @POST
+    @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/delete")
     @RolesAllowed("professor")
-    public Response deleteCourse(CourseDAO course) {
-        new CourseInterface().removeCourse(course);
+    @Path("courses/{courseID}/delete")
+    public Response deleteCourse(@PathParam("courseID") String courseID) {
+        new CourseInterface().removeCourse(courseID);
         return Response.status(Response.Status.OK).entity("Course successfully deleted.").build();
     }
 
@@ -51,36 +52,26 @@ public class CourseManagerResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("courses/course/student/add")
     @RolesAllowed("professor")
-    public Response addStudent(StudentDAO studentDAO) {
-        CourseDAO courseDAO = new CourseDAO(
-                studentDAO.abbreviation,
-                studentDAO.courseName,
-                studentDAO.courseSection,
-                studentDAO.crn,
-                studentDAO.semester,
-                studentDAO.year
-        );
-        new CourseInterface().addStudent(studentDAO.email, courseDAO);
+    @Path("courses/{courseID}/students/{studentID}/add")
+    public Response addStudent(
+            @PathParam("courseID")  String courseID,
+            @PathParam("studentID") String studentID){
+
+        new CourseInterface().addStudent(studentID, courseID);
         return Response.status(Response.Status.OK).entity("Student successfully added.").build();
     }
 
-    @POST
+    @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("courses/course/student/delete")
     @RolesAllowed("professor")
-    public Response deleteStudent(StudentDAO studentDAO) {
-        CourseDAO courseDAO = new CourseDAO(
-                studentDAO.abbreviation,
-                studentDAO.courseName,
-                studentDAO.courseSection,
-                studentDAO.crn,
-                studentDAO.semester,
-                studentDAO.year
-        );
-        new CourseInterface().removeStudent(studentDAO.email, courseDAO);
+    @Path("courses/{courseID}/students/{studentID}/delete")
+    public Response deleteStudent(
+            @PathParam("courseID")  String courseID,
+            @PathParam("studentID") String studentID) {
+
+        new CourseInterface().removeStudent(studentID, courseID);
         return Response.status(Response.Status.OK).entity("Student successfully removed.").build();
     }
 
