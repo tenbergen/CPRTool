@@ -25,8 +25,6 @@ export const getTokenAsync = createAsyncThunk(
                 console.log(e)
                 return false
             })
-        const token = localStorage.getItem('jwt_token');
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         return { jwt_token }
     }
 )
