@@ -3,10 +3,12 @@ package edu.oswego.cs.distribution;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AssignmentDistribution {
 
-    public static HashMap<String, List<String>> distribute(List<String> teams, int assignmentsPerTeam) throws Exception {
+    public static Map<String, List<String>> distribute(List<String> teams, int assignmentsPerTeam) throws Exception {
+
         if (assignmentsPerTeam >= teams.size())
             throw new IndexOutOfBoundsException();
 
