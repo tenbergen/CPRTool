@@ -1,27 +1,24 @@
-import TeacherDashboardPage from "./pages/TeacherDashboardPage";
-import LoginPage from "./pages/LoginPage";
-import {useDispatch, useSelector} from "react-redux";
+import ProfessorDashboardPage from "./pages/TeacherPages/ProfessorDashboardPage";
+import { useDispatch, useSelector } from "react-redux";
 import "./global_styles/global.css";
-import {useEffect} from "react";
-import {authenticateUser} from "./redux/features/authSlice";
+import React, { useEffect } from "react";
+import { setUserInformation } from "./redux/features/authSlice";
+import StudentDashboardPage from "./pages/StudentPages/StudentDashboardPage";
 
 function App() {
   const dispatch = useDispatch()
-  const authentication = useSelector((state) => state);
-  const isAuthenticated = authentication.auth.isAuthenticated;
+  const { role } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    const token = localStorage.getItem("jwt_token")
-    if (token != null) {
-      dispatch(authenticateUser())
-    }
+    dispatch(setUserInformation())
   }, [])
 
   return (
-    <div>
-        {isAuthenticated? <TeacherDashboardPage/> : <LoginPage />}
-    </div>
-  );
+      <div>
+        {role === "professor" && <ProfessorDashboardPage/>}
+        {role === "student" && <StudentDashboardPage/>}
+      </div>
+  )
 }
 
 export default App;
