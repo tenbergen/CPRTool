@@ -16,6 +16,13 @@
 **/mvnw.cmd
 **/*.iml
 
+# Frontend React stuff.
+**/node_modules/
+**/build/
+**/node/
+**/static/
+**/webapp/
+
 # Compiled class file
 *.class
 
