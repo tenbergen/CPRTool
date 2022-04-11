@@ -2,6 +2,7 @@ target/
 !target/*.war
 .idea/
 .mvn/
+src/test
 .vscode/
 mvnw
 mvnw.cmd
