@@ -26,7 +26,7 @@ services:
       MONGO_PASSWORD: ${MONGO_PASSWORD}
       CLIENT_ID: ${CLIENT_ID}
       CLIENT_SECRET: ${CLIENT_SECRET}
-      JWKS_REFRESH_URL: ${JWKS_REFRESH_URL}
+      JWKS_REFRESH_URL: ${JWKS_REFRESH_URI}
 
   course-manager:
     build:
@@ -43,7 +43,7 @@ services:
       MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
-      JWKS_URL: ${JWKS_URL}
+      JWKS_URL: ${JWKS_URI}
 
   course-viewer:
     build:
@@ -60,7 +60,7 @@ services:
       MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
-      JWKS_URL: ${JWKS_URL}
+      JWKS_URL: ${JWKS_URI}
 
   professor-assignment:
     build:
@@ -79,7 +79,7 @@ services:
       MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
-      JWKS_URL: ${JWKS_URL}
+      JWKS_URL: ${JWKS_URI}
 
   peer-review-teams:
     build:
@@ -95,7 +95,7 @@ services:
       MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
-      JWKS_URL: ${JWKS_URL}
+      JWKS_URL: ${JWKS_URI}
 
   mongo:
     image: mongo:5.0.6
