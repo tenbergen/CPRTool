@@ -10,11 +10,8 @@ import React from 'react';
 import RoleRouteHandler from "./RoleRouteHandler";
 import AuthRouteHandler from "./AuthRouteHandler";
 import ProfessorAssignmentView from "../pages/TeacherPages/ProfessorAssignmentView";
-import axiosInterceptor from "./interceptors/axiosInterceptor";
 
 const RouterHandler = () => {
-
-    axiosInterceptor()
 
     return (
         <Routes>

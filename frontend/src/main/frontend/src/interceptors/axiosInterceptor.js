@@ -16,10 +16,15 @@ axios.interceptors.response.use(
 async (error) => {
     if (error.response.status === 401 && !refresh) {
         refresh = true;
-        const response = await axios.post(url);
+        const axiosAuthInstance = axios.create({
+            headers: {
+                "Authorization" : `Bearer ${refresh_token}`
+            }
+        });
+        const response = await axiosAuthInstance.post(url);
 
         if (response.status === 200) {
-            axios.defaults.headers.common["Authorization"] = `Bearer ${refresh_token}`;
+            axios.defaults.headers.common["Authorization"] = `Bearer ${response.data}`;
         }
 
         return axios(error.config); // When the token is expired, this will get the new refreshed token and resend the failed request
