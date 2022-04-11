@@ -1,2 +1,8 @@
 target/
 !target/*.war
+.idea/
+.mvn/
+.vscode/
+mvnw
+mvnw.cmd
+.DS_Store

@@ -1,7 +1,8 @@
 target/
 !target/*.war
-
+.idea/
 .mvn/
+.vscode/
 mvnw
 mvnw.cmd
-src/test
+.DS_Store
