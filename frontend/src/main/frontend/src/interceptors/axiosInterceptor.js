@@ -1,12 +1,7 @@
 import axios from 'axios';
 
-const authURL = `${process.env.REACT_APP_URL}/auth`;
+const authURL = `http://localhost:13126/auth`;
 const url = `${authURL}/token/refresh`;
-
-const token = localStorage.getItem("jwt_token")
-if (token) {
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-}
 
 const refresh_token = localStorage.getItem("refresh_token")
 let refresh = false;
@@ -21,6 +16,7 @@ async (error) => {
                 "Authorization" : `Bearer ${refresh_token}`
             }
         });
+        //axios.defaults.headers.common["Authorization"] = `Bearer ${refresh_token}`;
         const response = await axiosAuthInstance.post(url);
 
         if (response.status === 200) {

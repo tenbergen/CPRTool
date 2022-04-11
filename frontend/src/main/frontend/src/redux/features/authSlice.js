@@ -3,7 +3,7 @@ import React from "react";
 import jwtDecode from "jwt-decode";
 import axios from "axios";
 
-const authURL = `${process.env.REACT_APP_URL}/auth`
+const authURL = `http://localhost:13126/auth`
 
 export const getTokenAsync = createAsyncThunk(
     'auth/getTokenAsync',
@@ -19,6 +19,7 @@ export const getTokenAsync = createAsyncThunk(
             .then(res => {
                 localStorage.setItem("jwt_token", res.data.access_token)
                 localStorage.setItem("refresh_token", res.data.refresh_token)
+                axios.defaults.headers.common["Authorization"] = `Bearer ${res.data.access_token}`;
                 return true
             })
             .catch(e => {
