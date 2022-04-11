@@ -81,6 +81,7 @@ public class ProfessorAssignmentResource {
      * @return Response
      */
     @POST
+    @RolesAllowed("professor")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
     @Path("/courses/{courseID}/assignments/{assignmentID}/peer-review/upload")
