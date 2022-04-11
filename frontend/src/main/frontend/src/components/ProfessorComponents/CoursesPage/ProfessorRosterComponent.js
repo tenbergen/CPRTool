@@ -49,12 +49,12 @@ const ProfessorRosterComponent = () => {
             .then(res => {
                 console.log(res)
                 alert("Successfully deleted student.")
-                dispatch(getCourseDetailsAsync(courseId))
             })
             .catch(e => {
                 console.log(e)
                 alert("Error deleting student.")
             })
+        dispatch(getCourseDetailsAsync(courseId))
     }
 
     const addsStudent = () => {
