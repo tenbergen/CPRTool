@@ -80,33 +80,16 @@
 
     <build>
         <finalName>course-manager-microservice</finalName>
-        <pluginManagement>
-            <plugins>
-            <!-- Used for maven war commands. Fails to build on the production server without this. -->
+        <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.3.2</version>
             </plugin>
-<!-- Used for unit testing surefire commands. Bring back in if needed. -->
-<!--                <plugin>-->
-<!--                    <groupId>org.apache.maven.plugins</groupId>-->
-<!--                    <artifactId>maven-surefire-plugin</artifactId>-->
-<!--                    <version>2.22.2</version>-->
-<!--                </plugin>-->
-<!-- Don't get rid of this one. This is like... THE plugin for this project... -->
-                <plugin>
-                    <groupId>io.openliberty.tools</groupId>
-                    <artifactId>liberty-maven-plugin</artifactId>
-                    <version>3.5.1</version>
-                </plugin>
-
-            </plugins>
-        </pluginManagement>
-        <plugins>
             <plugin>
                 <groupId>io.openliberty.tools</groupId>
                 <artifactId>liberty-maven-plugin</artifactId>
+                <version>3.5.1</version>
             </plugin>
         </plugins>
     </build>

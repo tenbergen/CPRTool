@@ -1,10 +1,10 @@
 package edu.oswego.cs.resources;
 
-import edu.oswego.cs.daos.CourseDAO;
-import edu.oswego.cs.daos.StudentDAO;
 import edu.oswego.cs.database.CourseInterface;
 import org.bson.Document;
 
+import javax.annotation.security.DenyAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -12,12 +12,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Path("professor")
+@DenyAll
 public class CoursesViewerResources {
     @GET
+    @RolesAllowed("professor")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses")
     public Response viewAllCourses() {
@@ -26,6 +26,7 @@ public class CoursesViewerResources {
     }
 
     @GET
+    @RolesAllowed("professor")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/{courseID}")
     public Response viewCourse(@PathParam("courseID") String courseID) {
@@ -34,29 +35,16 @@ public class CoursesViewerResources {
     }
 
     @GET
+    @RolesAllowed({"professor","student"})
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{studentID}/courses")
     public Response viewStudentCourses(@PathParam("studentID") String studentID) {
-        CourseInterface courseInterface = new CourseInterface();
-        List<Document> students = courseInterface.getAllStudents();
-
-        Optional<Document> student = students.stream()
-                .filter( document -> document.containsValue(studentID) )
-                .findFirst();
-
-        if (! student.isPresent())
-            return Response.status(Response.Status.BAD_REQUEST).entity(studentID + " not found.").build();
-
-        List<String> courseIDs = (List<String>) student.get().get("courses");
-
-        List<Document> courses = courseIDs.stream()
-                .map(courseInterface::getCourse)
-                .collect(Collectors.toList());
-
+        List<Document> courses = new CourseInterface().getStudentCourses(studentID);
         return Response.status(Response.Status.OK).entity(courses).build();
     }
 
     @GET
+    @RolesAllowed("professor")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("students")
     public Response viewAllStudents() {
@@ -65,6 +53,7 @@ public class CoursesViewerResources {
     }
 
     @GET
+    @RolesAllowed("professor")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("students/{studentID}")
     public Response viewStudent(@PathParam("studentID") String studentID) {
