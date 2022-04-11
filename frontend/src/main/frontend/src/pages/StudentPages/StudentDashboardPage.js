@@ -36,7 +36,7 @@ function StudentDashboardPage() {
         <div className={"StudentDashboard"}>
             <SidebarComponent />
             <div id="student">
-                <h2> Hello {user_given_name}</h2>
+                <h1> Hello {user_given_name}</h1>
                     <div>
                         <button onClick={professorView} style={{marginRight: "10px"}}> Professor View </button>
                         <button onClick={originalView}> Original View </button>
