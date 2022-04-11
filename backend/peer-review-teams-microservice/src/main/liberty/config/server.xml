@@ -22,10 +22,5 @@
 
     <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
 
-    <cors domain="/"
-    allowedOrigins="*"
-    allowedMethods="POST"
-    allowCredentials="true"
-    allowedHeaders="Content-Type"
-    exposeHeaders="Content-Type"/>
+    <mpJwt id="cpr22s_access" signatureAlgorithm="RS512" tokenHeader="Authorization" issuer="edu.oswego.cs_CPR.22S.480" audiences="CPR.22S.480" jwksUri="${JWKS_URI}"/>
 </server>

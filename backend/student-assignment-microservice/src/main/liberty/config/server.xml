@@ -22,12 +22,5 @@
 
     <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
 
-    <mpJwt id="cpr22s_access" signatureAlgorithm="RS512" tokenHeader="Authorization" issuer="edu.oswego.cs-CPR.22S.480" audiences="CPR.22S.480" jwksUri="${jwksUrl}"/> 
-
-    <cors domain="/"
-          allowedOrigins="*"
-          allowedMethods="GET, DELETE, POST, PUT"
-          allowCredentials="true"
-          allowedHeaders="Content-Type"
-          exposeHeaders="Content-Type"/>   
+    <mpJwt id="cpr22s_access" signatureAlgorithm="RS512" tokenHeader="Authorization" issuer="edu.oswego.cs_CPR.22S.480" audiences="CPR.22S.480" jwksUri="${JWKS_URI}"/>
 </server>
