@@ -19,7 +19,6 @@ export const getTokenAsync = createAsyncThunk(
             .then(res => {
                 localStorage.setItem("jwt_token", res.data.access_token)
                 localStorage.setItem("refresh_token", res.data.refresh_token)
-                axios.defaults.headers.common["Authorization"] = `Bearer ${res.data.access_token}`;
                 return true
             })
             .catch(e => {
@@ -30,8 +29,16 @@ export const getTokenAsync = createAsyncThunk(
     }
 )
 
+const axiosInterceptor = () => {
+    let token = localStorage.getItem("jwt_token")
+    if (token) {
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+}
+
 const getUserInformation = () => {
     const alt_role = localStorage.getItem("alt_role")
+    axiosInterceptor()
     try {
         let decoded = jwtDecode(localStorage.getItem("jwt_token"))
         return {

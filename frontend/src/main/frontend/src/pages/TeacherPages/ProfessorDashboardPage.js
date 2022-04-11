@@ -28,11 +28,6 @@ function ProfessorDashboardPage() {
         dispatch(getCourseDetailsAsync(course.course_id))
     }
 
-    // this allows the courses to be received and rendered, hence this and useEffect
-    if (!courses) {
-        return <div><h1>LOADING</h1></div>
-    }
-
     return (
         <div className={"TeacherDashboard"}>
             <SidebarComponent />

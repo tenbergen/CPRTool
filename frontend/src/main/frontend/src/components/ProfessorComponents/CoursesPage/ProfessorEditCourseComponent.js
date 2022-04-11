@@ -8,7 +8,7 @@ import axios from "axios";
 import { Form, Field } from 'react-final-form'
 import { getCourseDetailsAsync } from "../../../redux/features/courseSlice";
 
-const deleteCourseUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/delete`
+const deleteCourseUrl = `${process.env.REACT_APP_URL}/manage/professor/courses`
 const updateUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/update`
 const uploadCsvUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/student/mass-add`
 const assignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`
@@ -70,7 +70,8 @@ const ProfessorEditCourseComponent = () => {
     }
 
     const deleteCourse = async () => {
-        await axios.post(deleteCourseUrl, currentCourse).then((response) => {
+        const url = `${deleteCourseUrl}/${courseId}/delete`
+        await axios.delete(url).then((response) => {
             console.log(response)
         })
         if (courseAssignments.length > 0) await deleteAssignments()
