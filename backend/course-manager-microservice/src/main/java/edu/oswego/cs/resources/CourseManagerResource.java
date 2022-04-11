@@ -45,17 +45,12 @@ public class CourseManagerResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("courses/course/student/add")
-    public Response addStudent(StudentDAO studentDAO) {
-        CourseDAO courseDAO = new CourseDAO(
-                studentDAO.abbreviation,
-                studentDAO.courseName,
-                studentDAO.courseSection,
-                studentDAO.crn,
-                studentDAO.semester,
-                studentDAO.year
-        );
-        new CourseInterface().addStudent(studentDAO.email, courseDAO);
+    @Path("courses/{courseID}/students/{studentID}/add")
+    public Response addStudent(
+            @PathParam("courseID")  String courseID,
+            @PathParam("studentID") String studentID){
+
+        new CourseInterface().addStudent(studentID, courseID);
         return Response.status(Response.Status.OK).entity("Student successfully added.").build();
     }
 

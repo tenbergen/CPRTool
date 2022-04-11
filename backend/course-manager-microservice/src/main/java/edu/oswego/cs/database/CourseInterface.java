@@ -81,30 +81,29 @@ public class CourseInterface {
      * array in the course using their name from the email and into the student database at the same time with the
      * student's course array updated to have the new course respectively.
      */
-    public void addStudent(String email, CourseDAO dao) {
-        if (!courseCollection.find(eq("course_id", dao.courseID)).iterator().hasNext()) {
-            addCourse(dao);
-        }
+    public void addStudent(String studentName, String courseID) {
+//        if (!courseCollection.find(eq("course_id", courseID)).iterator().hasNext()) {
+//            addCourse(dao);
+//        }
 
-        Document courseDocument = courseCollection.find(eq("course_id", dao.courseID)).first();
+        Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
 
         List<String> students = courseDocument.getList("students", String.class);
-        String studentName = email.split("@")[0];
         if (students.contains(studentName)) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This student is already in the course.").build());
-        courseCollection.updateOne(eq("course_id", dao.courseID), push("students", studentName));
+        courseCollection.updateOne(eq("course_id", courseID), push("students", studentName));
 
         MongoCursor<Document> query = studentCollection.find(eq("student_id", studentName)).iterator();
         if (query.hasNext()) {
             Document studentDocument = query.next();
             List<String> courseList = studentDocument.getList("courses", String.class);
             for (String course : courseList) {
-                if (course.equals(dao.courseID)) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This student is already in the course.").build());
+                if (course.equals(courseID)) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This student is already in the course.").build());
             }
-            studentCollection.updateOne(eq("student_id", studentName), push("courses", dao.courseID));
+            studentCollection.updateOne(eq("student_id", studentName), push("courses", courseID));
         } else {
             List<String> courseList = new ArrayList<>();
-            courseList.add(dao.courseID);
+            courseList.add(courseID);
             Document newStudent = new Document()
                     .append("student_id", studentName)
                     .append("courses", courseList);
@@ -194,7 +193,7 @@ public class CourseInterface {
             removeStudent(s, courseDAO.courseID);
         }
         for (String s : studentsToAdd) {
-            addStudent(s, courseDAO);
+            addStudent(s, courseDAO.courseID);
         }
     }
 }
