@@ -16,6 +16,7 @@ const CreateAssignmentPage = () => {
 
     const assignmentFileFormData = new FormData()
     const rubricFileFormData = new FormData()
+    const templateFileFormData = new FormData()
 
     const assignmentFileHandler = (event) => {
         let file = event.target.files[0];
@@ -27,37 +28,64 @@ const CreateAssignmentPage = () => {
         rubricFileFormData.set("file", file)
     }
 
+    const peerReviewTemplateHandler = (event) => {
+        let file = event.target.files[0];
+        templateFileFormData.set("file", file)
+    }
+
     const uploadFiles = async (assignmentId) => {
         console.log(assignmentFileFormData)
         console.log(assignmentFileFormData.get("file"))
 
-        const fileUrl = `${getAssUrl}/${assignmentId}/upload`
+        const assignmentFileUrl = `${getAssUrl}/${assignmentId}/upload`
+        const peerReviewFileUrl = `${getAssUrl}/${assignmentId}/peer-review/upload`
 
-        await axios.post(fileUrl, assignmentFileFormData)
+        await axios.post(assignmentFileUrl, assignmentFileFormData)
             .then(res => {
                 console.log(res)
             })
             .catch(e => {
                 console.log(e)
+                alert("Error uploading assignment file.")
+            })
+
+        await axios.post(peerReviewFileUrl, rubricFileFormData)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(e => {
+                console.log(e)
+                alert("Error uploading peer review rubric.")
+            })
+
+        await axios.post(peerReviewFileUrl, templateFileFormData)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(e => {
+                console.log(e)
+                alert("Error uploading peer review template.")
             })
     }
 
     const handleSubmit = async (data) => {
-        let { assignment_name, instructions, due_date, peer_review_instructions, points } = data;
+        let { points } = data;
         points = parseInt(points)
         const course_id = courseId
 
-        const sentData = { assignment_name, instructions, peer_review_instructions, due_date, points, course_id };
+        const sentData = { ...data, points, course_id };
         console.log(sentData)
 
         await axios.post(submitCourseUrl, sentData).then(res => {
             console.log(res)
         });
 
-        await axios.get(getAssUrl).then(res => {
+        const assignment_id = await axios.get(getAssUrl).then(res => {
             console.log(res)
-            uploadFiles(res.data.pop().assignment_id)
+            return res.data.pop().assignment_id
         });
+
+        await uploadFiles(assignment_id)
 
         navigate("/details/professor/" + courseId)
     }
@@ -65,8 +93,8 @@ const CreateAssignmentPage = () => {
     return (
         <div>
             <Form
-                onSubmit={formObj => {
-                    handleSubmit(formObj)
+                onSubmit={async formObj => {
+                    await handleSubmit(formObj)
                 }}>
                 {({ handleSubmit }) => (
                     <div className="cap-parent">
@@ -107,8 +135,8 @@ const CreateAssignmentPage = () => {
                                         <label> <b> Files: </b> </label>
                                         <input
                                             type="file"
-                                            name="AssignmentFiles"
-                                            accept=".pdf"
+                                            name="assignment_files"
+                                            accept=".pdf,.zip"
                                             onChange={(e) => assignmentFileHandler(e)}
                                         />
                                     </div>
@@ -157,20 +185,29 @@ const CreateAssignmentPage = () => {
                                         <label> <b> Rubric: </b> </label>
                                         <input
                                             type="file"
-                                            name="ReviewRubric"
-                                            accept=".pdf"
+                                            name="peer_review_rubric"
+                                            accept=".pdf,.zip"
                                             required
                                             onChange={(e) => peerReviewRubricHandler(e)}
+                                        />
+
+                                        <label> <b> Template: </b> </label>
+                                        <input
+                                            type="file"
+                                            name="peer_review_template"
+                                            accept=".pdf,.zip"
+                                            required
+                                            onChange={(e) => peerReviewTemplateHandler(e)}
                                         />
                                     </div>
 
                                     <div className="cap-assignment-info">
                                         <label> <b> Due Date: </b> </label>
-                                        <Field name="ReviewDueDate" >
+                                        <Field name="peer_review_due_date" >
                                             {({ input }) => (
                                                 <input
                                                     type="date"
-                                                    name="ReviewDueDate"
+                                                    name="peer_review_due_date"
                                                     {...input}
                                                     required
                                                 />
@@ -178,12 +215,12 @@ const CreateAssignmentPage = () => {
                                         </Field>
 
                                         <label> <b>Points: </b> </label>
-                                        <Field name="ReviewPoints" >
+                                        <Field name="peer_review_points" >
                                             {({ input }) => (
                                                 <input
                                                     type="number"
                                                     min="0"
-                                                    name="ReviewPoints"
+                                                    name="peer_review_points"
                                                     {...input}
                                                     required
                                                 />
