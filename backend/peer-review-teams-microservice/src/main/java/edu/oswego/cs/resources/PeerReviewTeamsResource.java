@@ -61,7 +61,6 @@ public class PeerReviewTeamsResource {
         return Response.status(Response.Status.OK).entity("Student successfully switch to a new team.").build();
     }
 
-
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("team/generate-team-name")

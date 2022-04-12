@@ -65,7 +65,8 @@ public class TeamInterface {
             
         /* Create Team */
         String teamID = new TeamService().generateTeamID(teamCollection);
-        TeamDAO newTeam = new TeamDAO(teamID, request.getCourseID(), request.getMaxSize(), request.getStudentID() );
+        int teamSize = new TeamService().getTeamSize(courseDocument, request);
+        TeamDAO newTeam = new TeamDAO(teamID, request.getCourseID(), teamSize, request.getStudentID() );
         newTeam.getTeamMembers().add(request.getStudentID());
         newTeam.setTeamMembers(newTeam.getTeamMembers());
 

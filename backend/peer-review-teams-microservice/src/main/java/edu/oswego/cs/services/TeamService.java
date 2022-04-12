@@ -11,6 +11,8 @@ import com.mongodb.client.MongoCursor;
 
 import org.bson.Document;
 
+import edu.oswego.cs.requests.TeamParam;
+
 public class TeamService {
 
     /**
@@ -37,5 +39,18 @@ public class TeamService {
         } finally { 
             cursor.close();
         } 
+    }
+
+    /**
+     * Get team size from course database
+     * @param courseDocument
+     * @param request
+     * @return integer
+     */
+    public int getTeamSize(Document courseDocument, TeamParam request) {
+        int teamSize = Integer.parseInt(courseDocument.getInteger("team_size").toString());
+        if (teamSize == 0) 
+            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Team size not initialized.").build());    
+        return teamSize;
     }
 }
