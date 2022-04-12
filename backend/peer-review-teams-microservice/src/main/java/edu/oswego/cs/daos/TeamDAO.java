@@ -22,7 +22,6 @@ public class TeamDAO {
     @JsonbProperty("max_size") private Integer maxSize;
     @JsonbProperty("team_lead") private String teamLead;
     @JsonbProperty("team_members") @ElementCollection private List<String> teamMembers;
-    @JsonbProperty("team_name") private String teamName;
     @JsonbProperty("is_finalized") @ElementCollection private List<String> isFinalized;
     @JsonbProperty("is_full") private Boolean isFull;
 
@@ -38,7 +37,6 @@ public class TeamDAO {
         this.maxSize = maxSize;
         this.teamLead = teamLead;
         this.teamMembers = new ArrayList<>();
-        this.teamName = null;
         this.isFinalized = new ArrayList<>();
         this.isFull = false;
     }
