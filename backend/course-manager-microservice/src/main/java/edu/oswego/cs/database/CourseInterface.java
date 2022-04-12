@@ -82,10 +82,6 @@ public class CourseInterface {
      * student's course array updated to have the new course respectively.
      */
     public void addStudent(String studentName, String courseID) {
-//        if (!courseCollection.find(eq("course_id", courseID)).iterator().hasNext()) {
-//            addCourse(dao);
-//        }
-
         Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
 
@@ -175,7 +171,6 @@ public class CourseInterface {
         ArrayList<String> newStudentList = new ArrayList<>();
         ArrayList<String> studentsToRemove = new ArrayList<>();
         ArrayList<String> studentsToAdd = new ArrayList<>();
-        System.out.println(oldStudentList);
         for (StudentDAO s : allStudents) {
             newStudentList.add(s.email.split("@")[0]);
         }
