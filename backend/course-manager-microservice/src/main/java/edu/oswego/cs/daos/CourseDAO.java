@@ -44,23 +44,4 @@ public class CourseDAO {
         this.teamSize = 0;
         this.courseID = this.abbreviation + "-" + this.courseSection + "-" + this.crn + "-" + this.semester + "-" + this.year;
     }
-    public CourseDAO(
-            @NonNull @JsonbProperty("abbreviation") String abbreviation,
-            @NonNull @JsonbProperty("course_name")  String courseName,
-            @NonNull @JsonbProperty("course_section") String courseSection,
-            @NonNull @JsonbProperty("crn") String crn,
-            @NonNull @JsonbProperty("semester") String semester,
-            @NonNull @JsonbProperty("year") String year,
-            @NonNull @JsonbProperty("team_size") int teamSize)
-    {
-        this.abbreviation = abbreviation;
-        this.courseName = courseName;
-        this.courseSection = courseSection;
-        this.crn = crn;
-        this.semester = semester;
-        this.students = new ArrayList<>();
-        this.year = year;
-        this.teamSize = teamSize;
-        this.courseID = this.abbreviation + "-" + this.courseSection + "-" + this.crn + "-" + this.semester + "-" + this.year;
-    }
 }
