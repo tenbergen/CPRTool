@@ -13,8 +13,8 @@ const CreateCoursePage = () => {
         course_section: '',
         semester: '',
         abbreviation: '',
-        year: '',
-        crn: ''
+        year: undefined,
+        crn: undefined
     });
 
     const { course_name, course_section, semester, abbreviation, year, crn } = formData;
@@ -24,21 +24,34 @@ const CreateCoursePage = () => {
     );
 
     const handleSubmit = async (e) => {
-        if (abbreviation === '' || course_name === '' || course_section === '' || semester === '' || year === '' || crn === '') {
+        if (abbreviation === '' || course_name === '' || course_section === '' || semester === '' || year === undefined || crn === undefined) {
             alert("Fields can't be empty!")
-        }
-        else {
+        } else {
+            if (year < new Date().getFullYear()) {
+                alert("Not a valid year!")
+                return
+            }
             e.preventDefault()
             const data = {
-                course_name: course_name,
-                course_section: course_section,
-                semester: semester,
-                abbreviation: abbreviation,
-                year: year,
-                crn: crn
+                course_name: course_name.trim(),
+                course_section: course_section.trim(),
+                semester: semester.trim(),
+                abbreviation: abbreviation.trim(),
+                year: year.toString(),
+                crn: crn.toString()
             };
-            await axios.post(submitCourseUrl, data);
-            navigate("/")
+            console.log(data)
+            await axios.post(submitCourseUrl, data)
+                .then(res => {
+                    if (res.data === "Course already existed.") {
+                        alert(res.data)
+                    } else {
+                        navigate("/")
+                    }
+                })
+                .catch(e => {
+                    console.log(e)
+                });
         }
     }
 
@@ -98,8 +111,10 @@ const CreateCoursePage = () => {
                         <div className="ccp-input-field">
                             <label> <b> Year: </b> </label>
                             <input
+                                type="number"
+                                min={new Date().getFullYear().toString()}
+                                step="1"
                                 name="year"
-                                type="text"
                                 value={year}
                                 required
                                 onChange={(e) => OnChange(e)}
@@ -110,7 +125,7 @@ const CreateCoursePage = () => {
                     <div className="ccp-input-field">
                         <label> <b> CRN: </b> </label>
                         <input
-                            type="text"
+                            type="number"
                             name="crn"
                             value={crn}
                             required
