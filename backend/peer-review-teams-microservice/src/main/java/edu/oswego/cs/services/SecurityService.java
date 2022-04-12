@@ -43,12 +43,10 @@ public class SecurityService {
                 Document teamDocument = cursor.next();
                 List<String> members = teamDocument.getList("team_members", String.class);
                 String teamDocumentCourseID = teamDocument.get("course_id").toString();
-                for (String member : members) {
-                    if (studentID.equals(member)){
+                for (String member : members) 
+                    if (studentID.equals(member))
                         if (courseID.equals(teamDocumentCourseID))
                             return true;
-                    }
-                }
             } 
         } finally { 
             cursor.close();
@@ -86,6 +84,7 @@ public class SecurityService {
         String teamDocumentCourseID = teamDocument.get("course_id").toString();
         if (teamDocument.getBoolean("is_full") && courseID.equals(teamDocumentCourseID)) 
             return true;
+
         return false;
     }
 
@@ -132,10 +131,7 @@ public class SecurityService {
         if (cursor.hasNext()) {
             if (isStudentAlreadyInATeam(teamCollection, request.getStudentID(), request.getCourseID())) 
                 throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student is already in a team.").build());
-            if (mode.equals("CREATE")) {
-                if (isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID())) 
-                    throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Team is already created.").build());
-            } else if (mode.equals("JOIN")) {
+            if (mode.equals("JOIN")) {
                 if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID())) 
                     throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
             }
