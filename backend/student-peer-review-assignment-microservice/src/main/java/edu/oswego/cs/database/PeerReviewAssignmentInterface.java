@@ -91,46 +91,4 @@ public class PeerReviewAssignmentInterface {
         }
         return true;
     }
-
-    /**
-     * Update the course DAO's courseID, then add the course if it is not already existed in the database. At the same
-     * time, update the students' course list in the student database if a student list in the request is specified.
-     */
-//    public void addCourse(CourseDAO dao) {
-//        Jsonb jsonb = JsonbBuilder.create();
-//        Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(dao), MediaType.APPLICATION_JSON_TYPE);
-//        Document course = Document.parse(courseDAOEntity.getEntity());
-//
-//        MongoCursor<Document> courseQuery = courseCollection.find(eq("course_id", dao.courseID)).iterator();
-//        if (courseQuery.hasNext()) throw new WebApplicationException(Response.status(Response.Status.OK).entity("Course already existed.").build());
-//        courseCollection.insertOne(course);
-//
-//        List<String> students = course.getList("students", String.class);
-//        for (String student : students) {
-//            MongoCursor<Document> studentQuery = studentCollection.find(eq("student_id", student)).iterator();
-//            if (!studentQuery.hasNext()) studentCollection.updateOne(eq("student_id", student), push("courses", dao.courseID));
-//        }
-//    }
-//
-//
-//    /**
-//     * Remove the course from the student's list of courses, and then remove the course itself from the course database.
-//     */
-//    public void removeCourse(CourseDAO dao) {
-//        MongoCursor<Document> courseQuery = courseCollection.find(eq("course_id", dao.courseID)).iterator();
-//        if (!courseQuery.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
-//
-//        Document courseDocument = courseQuery.next();
-//        List<String> students = courseDocument.getList("students", String.class);
-//        for (String student : students) {
-//            MongoCursor<Document> studentQuery = studentCollection.find(eq("student_id", student)).iterator();
-//            if (studentQuery.hasNext()) {
-//                Document studentDocument = studentQuery.next();
-//                List<String> courses = studentDocument.getList("courses", String.class);
-//                courses.remove(dao.courseID);
-//                studentCollection.updateOne(eq("student_id", student), set("courses", courses));
-//            }
-//        }
-//        courseCollection.findOneAndDelete(eq("course_id", dao.courseID));
-//    }
 }
