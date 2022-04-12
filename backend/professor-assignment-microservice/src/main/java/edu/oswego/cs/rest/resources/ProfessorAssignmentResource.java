@@ -157,6 +157,7 @@ public class ProfessorAssignmentResource {
     }
 
     @GET
+    @RolesAllowed({"professor", "student"})
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}/peer-review/view-files")
     public Response viewPeerReviewFiles(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
@@ -202,6 +203,7 @@ public class ProfessorAssignmentResource {
      * @return response
      **/
     @GET
+    @RolesAllowed({"professor", "student"})
     @Produces(MediaType.MULTIPART_FORM_DATA)
     @Path("/courses/{courseID}/assignments/{assignmentID}/peer-review/download/{fileName}")
     public Response downloadPeerReview(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("fileName") String fileName) {
