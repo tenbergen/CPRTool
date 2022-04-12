@@ -77,9 +77,8 @@ public class CourseInterface {
     }
 
     /**
-     * A course DAO is made from the student DAO. Attempt to create the course, then add the student into the student
-     * array in the course using their name from the email and into the student database at the same time with the
-     * student's course array updated to have the new course respectively.
+     * Add the student into the student array in the course using their name from the email and into the student
+     * database at the same time with the student's course array updated to have the new course respectively.
      */
     public void addStudent(String studentName, String courseID) {
         Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
