@@ -1,10 +1,12 @@
 package edu.oswego.cs.database;
 
 import com.mongodb.client.FindIterable;
+import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import edu.oswego.cs.daos.FileDAO;
 import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -16,6 +18,9 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -95,5 +100,19 @@ public class PeerReviewAssignmentInterface {
           new File(path+reg+team).mkdir();
         }
         return true;
+    }
+
+    public void uploadPeerReview(String courseID, int assignmentID, String srcTeamName, String destTeamName, IAttachment attachment) throws IOException {
+        String basePath = FileDAO.peer_review_submission_path+courseID+"/"+assignmentID+"/";
+        if (! new File(basePath).exists()) {
+            new File(basePath).mkdirs();
+        }
+
+        FileDAO fileDAO = FileDAO.fileFactory(courseID, srcTeamName, destTeamName, assignmentID, attachment);
+
+        OutputStream outputStream = new FileOutputStream(basePath+fileDAO.fileName+".pdf");
+        outputStream.write(fileDAO.inputStream.readAllBytes());
+        outputStream.close();
+
     }
 }
