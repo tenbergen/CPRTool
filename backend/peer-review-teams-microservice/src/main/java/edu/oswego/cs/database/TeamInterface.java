@@ -12,6 +12,7 @@ import edu.oswego.cs.daos.TeamDAO;
 import edu.oswego.cs.requests.SwitchTeamParam;
 import edu.oswego.cs.requests.TeamParam;
 import edu.oswego.cs.services.SecurityService;
+import edu.oswego.cs.services.TeamService;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -51,7 +52,7 @@ public class TeamInterface {
 
     /**
      * Allows user to create and write a team to TeamDatabase
-     * @param request TeamDAO:{"team_id", "course_id", "team_lead", "team_size"}
+     * @param request TeamDAO:{"course_id", "team_lead", "team_size"}
      */
     public void createTeam(TeamParam request) {
         /* Course Security Checks */
@@ -60,13 +61,16 @@ public class TeamInterface {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
         
         /* Param Security Checks */
-        new SecurityService().securityChecks(teamCollection, courseDocument, request, "CREATE");
+        new SecurityService().createTeamSecurityChecks(teamCollection, courseDocument, request);
             
         /* Create Team */
-        TeamDAO newTeam = new TeamDAO(request.getTeamID(), request.getCourseID(), request.getMaxSize(), request.getStudentID() );
+        String teamID = new TeamService().generateTeamID(teamCollection);
+        int teamSize = new TeamService().getTeamSize(courseDocument, request);
+        TeamDAO newTeam = new TeamDAO(teamID, request.getCourseID(), teamSize, request.getStudentID() );
         newTeam.getTeamMembers().add(request.getStudentID());
         newTeam.setTeamMembers(newTeam.getTeamMembers());
-        
+
+        /* Write to DB */
         Jsonb jsonb = JsonbBuilder.create();
         Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(newTeam), MediaType.APPLICATION_JSON_TYPE);
         Document teamDocument = Document.parse(courseDAOEntity.getEntity());
@@ -94,9 +98,8 @@ public class TeamInterface {
         try { 
             while(cursor.hasNext()) { 
                 Document teamDocument = cursor.next();
-                if (teamDocument.get("course_id").toString().equals(request.getCourseID())) {
-                    teams.add(teamDocument);
-                }
+                if (teamDocument.get("course_id").toString().equals(request.getCourseID())) 
+                    teams.add(teamDocument);     
             } 
         } finally { 
             cursor.close(); 
@@ -118,7 +121,7 @@ public class TeamInterface {
         
         /* Param Security Checks */
         if (!new SecurityService().isStudentValid(courseDocument, request.getStudentID())) 
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
 
         /* Get Team */
         List<Document> nonFullTeams = new ArrayList<>();
@@ -191,7 +194,7 @@ public class TeamInterface {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
         
         /* Param Security Checks */
-        new SecurityService().securityChecks(teamCollection, courseDocument, request, "JOIN");
+        new SecurityService().joinTeamSecurityChecks(teamCollection, courseDocument, request);
 
         /* Update Team */
         Document teamDocument = teamCollection.find(eq("team_id", request.getTeamID())).first();
@@ -202,7 +205,7 @@ public class TeamInterface {
         teamMembers.add(request.getStudentID());
         teamCollection.updateOne(Filters.eq("team_id", request.getTeamID()), Updates.set("team_members", teamMembers));
 
-        if (teamMembers.size() == teamDocument.getInteger("max_size")) 
+        if (teamMembers.size() == teamDocument.getInteger("team_size")) 
             teamCollection.updateOne(Filters.eq("team_id", request.getTeamID()), Updates.set("is_full", true));
     }
 
@@ -224,9 +227,9 @@ public class TeamInterface {
         List<String> currentTeamMembers = currentTeamDocument.getList("team_members", String.class);
         currentTeamMembers.remove(request.getStudentID());
 
-        if (currentTeamMembers.size() == 0) {
+        if (currentTeamMembers.size() < 1) 
             teamCollection.deleteOne(eq("team_id", request.getCurrentTeamID()));
-        } else {
+        else {
             Bson currentTeamUpdates = Updates.combine(
                 Updates.set("team_members", currentTeamMembers), 
                 Updates.set("team_lead", currentTeamMembers.get(0)), 
@@ -249,7 +252,7 @@ public class TeamInterface {
             Updates.set("team_members", targetTeamMembers),
             Updates.set("is_full", false));
 
-        if (targetTeamMembers.size() == targetTeamDocument.getInteger("max_size")) 
+        if (targetTeamMembers.size() == targetTeamDocument.getInteger("team_size")) 
             targetTeamUpdates = Updates.combine(targetTeamUpdates, Updates.set("is_full", true));
         
         UpdateOptions targetTeamOptions = new UpdateOptions().upsert(true);
@@ -261,5 +264,49 @@ public class TeamInterface {
         }
     }
 
-    
+    /**
+     * Generates a new name for the team
+     * @param request TeamParam:{"team_id", "course_id", "student_id", "team_name"}
+     */
+    public void generateTeamName(TeamParam request) {
+        /* Course Security check */
+        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
+        if (courseDocument == null) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+
+        /* Param Security Checks */
+        new SecurityService().generateTeamNameSecurity(teamCollection, studentCollection, courseDocument, request);
+
+        /* Update team name */
+        Bson teamNameUpdates = Updates.combine(
+            Updates.set("team_id", request.getTeamName()),
+            Updates.set("team_lock", true)
+        );
+        UpdateOptions teamNameOptions = new UpdateOptions().upsert(true);
+
+        try {
+            teamCollection.updateOne(new Document("team_id", request.getTeamID()), teamNameUpdates, teamNameOptions);
+        } catch (MongoException error){
+            error.printStackTrace();
+        }
+    }
+
+    /**
+     * Deketes a team
+     * @param request
+     */
+    public void deleteTeam(TeamParam request) {
+        /* Course Security check */
+        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
+        if (courseDocument == null)
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+        
+        /* Param Security Checks */
+        if (!new SecurityService().isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
+
+        /* Delete team*/
+        teamCollection.findOneAndDelete(eq("team_id", request.getTeamID()));
+    }
+
 }
