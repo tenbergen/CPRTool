@@ -22,7 +22,7 @@ public class SecurityService {
      * @param request 
      * @param mode
      */
-    public void createTeamSecurityChecks(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
+    public void createTeamSecurity(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
         if (!isStudentValid(courseDocument, request.getStudentID())) 
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
 
@@ -40,7 +40,7 @@ public class SecurityService {
      * @param request 
      * @param mode
      */
-    public void joinTeamSecurityChecks(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
+    public void joinTeamSecurity(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
 
         if (!isStudentValid(courseDocument, request.getStudentID())) 
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
@@ -55,6 +55,9 @@ public class SecurityService {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
         if (isTeamLock(teamCollection, request.getTeamID(), request.getCourseID())) 
             throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Team is locked.").build());
+        if (isTeamFull(teamCollection, request.getTeamID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Team is already full.").build());
+
     }
 
     /**
@@ -120,6 +123,45 @@ public class SecurityService {
     }
 
 
+
+
+    /* ---- Professor Role ---- */
+    /**
+     * Security checks on passed in params in editTeamName interface
+     * @param teamCollection
+     * @param studentCollection
+     * @param courseDocument
+     * @param request
+     */
+    public void editTeamNameSecurity(MongoCollection<Document> teamCollection,  MongoCollection<Document> studentCollection, Document courseDocument, TeamParam request) {
+        if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
+        if (isTeamLock(teamCollection, request.getTeamID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Team is locked.").build());
+        if (!isTeamNameUnique(teamCollection, courseDocument, request))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Not acceptable. Team name not unique.").build());
+        if (!isTeamNameValid(studentCollection, request.getTeamName(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Not acceptable. Team contains student's name.").build());
+    }
+
+    /**
+     * Security checks on passed in params in assignTeamLead interface
+     * @param teamCollection
+     * @param courseDocument
+     * @param request
+     */
+    public void assignTeamLeadSecurity(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
+        if (!isStudentValid(courseDocument, request.getStudentID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
+        if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
+        if (isTeamLock(teamCollection, request.getTeamID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Team is locked.").build());
+        if (!isStudentInThisTeam(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this team.").build());
+        if (isTeamLead(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student already a team lead.").build());
+    }
     
     /* ---Security Utils---*/
 
@@ -131,9 +173,10 @@ public class SecurityService {
      */
     public boolean isStudentValid(Document courseDocument, String studentID ) {
         List<String> students = courseDocument.getList("students", String.class);
+        if (students == null)
+            throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to retrieve students field.").build());
         for (String student : students) 
             if (studentID.equals(student)) return true;
-        
         return false;
     }
 
@@ -173,6 +216,9 @@ public class SecurityService {
      */
     public boolean isStudentInThisTeam(MongoCollection<Document> teamCollection, String teamID, String studentID, String courseID ) {
         Document teamDocument = teamCollection.find(eq("team_id", teamID)).first();
+        if (teamDocument == null) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
+
         List<String> members = teamDocument.getList("team_members", String.class);
         String teamDocumentCourseID = teamDocument.getString("course_id");
         for (String member : members) 
@@ -191,6 +237,9 @@ public class SecurityService {
      */
     public boolean isTeamLead(MongoCollection<Document> teamCollection, String teamID, String studentID, String courseID ) {
         Document teamDocument = teamCollection.find(eq("team_id", teamID)).first();
+        if (teamDocument == null) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
+
         String teamLead = teamDocument.getString("team_lead");
         String teamDocumentCourseID = teamDocument.getString("course_id");
         if (studentID.equals(teamLead) && courseID.equals(teamDocumentCourseID))
@@ -208,6 +257,9 @@ public class SecurityService {
      */
     public boolean isTeamFull(MongoCollection<Document> teamCollection, String teamID, String courseID ) {
         Document teamDocument = teamCollection.find(eq("team_id", teamID)).first();
+        if (teamDocument == null) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
+
         String teamDocumentCourseID = teamDocument.getString("course_id");
         if (teamDocument.getBoolean("is_full") && courseID.equals(teamDocumentCourseID)) 
             return true;
@@ -217,6 +269,9 @@ public class SecurityService {
 
     public boolean isTeamLock(MongoCollection<Document> teamCollection, String teamID, String courseID ) {
         Document teamDocument = teamCollection.find(eq("team_id", teamID)).first();
+        if (teamDocument == null) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
+
         String teamDocumentCourseID = teamDocument.getString("course_id");
         if (teamDocument.getBoolean("team_lock") && courseID.equals(teamDocumentCourseID)) 
             return true;
