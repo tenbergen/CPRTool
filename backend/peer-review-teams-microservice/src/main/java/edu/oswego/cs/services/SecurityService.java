@@ -13,6 +13,116 @@ import static com.mongodb.client.model.Filters.eq;
 
 
 public class SecurityService {
+
+    /* ----Securities---- */
+
+    /**
+     * Security checks on passed in params for createTeam interface
+     * @param courseDocument
+     * @param request 
+     * @param mode
+     */
+    public void createTeamSecurityChecks(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
+        if (!isStudentValid(courseDocument, request.getStudentID())) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
+
+        MongoCursor<Document> cursor = teamCollection.find().iterator();
+        if (cursor == null) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
+
+        if (isStudentAlreadyInATeam(teamCollection, request.getStudentID(), request.getCourseID())) 
+            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student is already in a team.").build());
+    }
+
+    /**
+     * Security checks on passed in params for joinTeam interface
+     * @param courseDocument
+     * @param request 
+     * @param mode
+     */
+    public void joinTeamSecurityChecks(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
+
+        if (!isStudentValid(courseDocument, request.getStudentID())) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
+
+        MongoCursor<Document> cursor = teamCollection.find().iterator();
+        if (cursor == null)
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
+
+        if (isStudentAlreadyInATeam(teamCollection, request.getStudentID(), request.getCourseID())) 
+            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student is already in a team.").build());
+        if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID())) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
+        if (isTeamLock(teamCollection, request.getTeamID(), request.getCourseID())) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Team is locked.").build());
+    }
+
+    /**
+     * Security checks on passed in params for switchTeam interface
+     * @param teamCollection
+     * @param courseDocument
+     * @param request
+     */
+    public void switchTeamSecurity(MongoCollection<Document> teamCollection, Document courseDocument, SwitchTeamParam request) {
+        MongoCursor<Document> cursor = teamCollection.find().iterator();
+        if (cursor == null) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
+
+        if (!isStudentValid(courseDocument, request.getStudentID())) 
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
+        if (!isTeamCreated(teamCollection, request.getCurrentTeamID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Current team not found.").build());
+        if (!isTeamCreated(teamCollection, request.getTargetTeamID(), request.getCourseID())) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Target team not found.").build());
+        if (!isStudentAlreadyInATeam(teamCollection, request.getStudentID(), request.getCourseID())) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in any team.").build());
+        if (!isStudentInThisTeam(teamCollection, request.getCurrentTeamID(), request.getStudentID(), request.getCourseID() ))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in current team.").build());
+        if (isStudentInThisTeam(teamCollection, request.getTargetTeamID(), request.getStudentID(), request.getCourseID() ))
+            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student already in target team.").build());
+        if (isTeamLock(teamCollection, request.getCurrentTeamID(), request.getCourseID())) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Current team is locked.").build());
+        if (isTeamLock(teamCollection, request.getTargetTeamID(), request.getCourseID())) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Target team is locked.").build());
+        if (isTeamFull(teamCollection, request.getTargetTeamID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Target team already full.").build());
+    }
+
+    /**
+     * Security checks on passed in params in generateTeamName interface
+     * @param teamCollection
+     * @param studentCollection
+     * @param courseDocument
+     * @param request
+     */
+    public void generateTeamNameSecurity(MongoCollection<Document> teamCollection, MongoCollection<Document> studentCollection, Document courseDocument, TeamParam request) {
+        if (!isStudentValid(courseDocument, request.getStudentID())) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
+
+        MongoCursor<Document> cursor = teamCollection.find().iterator();
+        if (cursor == null) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
+
+        if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID())) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
+        if (isTeamLock(teamCollection, request.getTeamID(), request.getCourseID())) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Team is locked.").build());
+        if (!isStudentAlreadyInATeam(teamCollection, request.getStudentID(), request.getCourseID())) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in any team.").build());
+        if (!isStudentInThisTeam(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this team.").build());
+        if (!isTeamLead(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized. Not team lead.").build());
+        if (!isTeamNameUnique(teamCollection, courseDocument, request))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Not acceptable. Team name not unique.").build());
+        if (!isTeamNameValid(studentCollection, request.getTeamName(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Not acceptable. Team contains student's name.").build());
+    }
+
+
+    
+    /* ---Security Utils---*/
+
     /**
      * Checks if the passed in studentID is in the right course
      * @param courseDocument Document
@@ -180,107 +290,7 @@ public class SecurityService {
         return true;
     }
 
-    /**
-     * Security checks on passed in params for createTeam interface
-     * @param courseDocument
-     * @param request 
-     * @param mode
-     */
-    public void createTeamSecurityChecks(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
-        if (!isStudentValid(courseDocument, request.getStudentID())) 
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
 
-        MongoCursor<Document> cursor = teamCollection.find().iterator();
-        if (cursor == null) 
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
 
-        if (isStudentAlreadyInATeam(teamCollection, request.getStudentID(), request.getCourseID())) 
-            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student is already in a team.").build());
-    }
-
-    /**
-     * Security checks on passed in params for joinTeam interface
-     * @param courseDocument
-     * @param request 
-     * @param mode
-     */
-    public void joinTeamSecurityChecks(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
-
-        if (!isStudentValid(courseDocument, request.getStudentID())) 
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
-
-        MongoCursor<Document> cursor = teamCollection.find().iterator();
-        if (cursor == null)
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
-
-        if (isStudentAlreadyInATeam(teamCollection, request.getStudentID(), request.getCourseID())) 
-            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student is already in a team.").build());
-        if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID())) 
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
-        if (isTeamLock(teamCollection, request.getTeamID(), request.getCourseID())) 
-            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Team is locked.").build());
-    }
-
-    /**
-     * Security checks on passed in params for switchTeam interface
-     * @param teamCollection
-     * @param courseDocument
-     * @param request
-     */
-    public void switchTeamSecurity(MongoCollection<Document> teamCollection, Document courseDocument, SwitchTeamParam request) {
-        MongoCursor<Document> cursor = teamCollection.find().iterator();
-        if (cursor == null) 
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
-
-        if (!isStudentValid(courseDocument, request.getStudentID())) 
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
-        if (!isTeamCreated(teamCollection, request.getCurrentTeamID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Current team not found.").build());
-        if (!isTeamCreated(teamCollection, request.getTargetTeamID(), request.getCourseID())) 
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Target team not found.").build());
-        if (!isStudentAlreadyInATeam(teamCollection, request.getStudentID(), request.getCourseID())) 
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in any team.").build());
-        if (!isStudentInThisTeam(teamCollection, request.getCurrentTeamID(), request.getStudentID(), request.getCourseID() ))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in current team.").build());
-        if (isStudentInThisTeam(teamCollection, request.getTargetTeamID(), request.getStudentID(), request.getCourseID() ))
-            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student already in target team.").build());
-        if (isTeamLock(teamCollection, request.getCurrentTeamID(), request.getCourseID())) 
-            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Current team is locked.").build());
-        if (isTeamLock(teamCollection, request.getTargetTeamID(), request.getCourseID())) 
-            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Target team is locked.").build());
-        if (isTeamFull(teamCollection, request.getTargetTeamID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Target team already full.").build());
-    }
-
-    /**
-     * Security checks on passed in params in generateTeamName interface
-     * @param teamCollection
-     * @param studentCollection
-     * @param courseDocument
-     * @param request
-     */
-    public void generateTeamNameSecurity(MongoCollection<Document> teamCollection, MongoCollection<Document> studentCollection, Document courseDocument, TeamParam request) {
-        if (!isStudentValid(courseDocument, request.getStudentID())) 
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
-
-        MongoCursor<Document> cursor = teamCollection.find().iterator();
-        if (cursor == null) 
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
-
-        if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID())) 
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
-        if (isTeamLock(teamCollection, request.getTeamID(), request.getCourseID())) 
-            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Team is locked.").build());
-        if (!isStudentAlreadyInATeam(teamCollection, request.getStudentID(), request.getCourseID())) 
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in any team.").build());
-        if (!isStudentInThisTeam(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this team.").build());
-        if (!isTeamLead(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized. Not team lead.").build());
-        if (!isTeamNameUnique(teamCollection, courseDocument, request))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Not acceptable. Team name not unique.").build());
-        if (!isTeamNameValid(studentCollection, request.getTeamName(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Not acceptable. Team contains student's name.").build());
-    }
 
 }

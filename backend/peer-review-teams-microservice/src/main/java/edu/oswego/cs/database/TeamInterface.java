@@ -266,7 +266,7 @@ public class TeamInterface {
 
     /**
      * Generates a new name for the team
-     * @param request
+     * @param request TeamParam:{"team_id", "course_id", "student_id", "team_name"}
      */
     public void generateTeamName(TeamParam request) {
         /* Course Security check */
@@ -289,6 +289,24 @@ public class TeamInterface {
         } catch (MongoException error){
             error.printStackTrace();
         }
+    }
+
+    /**
+     * Deketes a team
+     * @param request
+     */
+    public void deleteTeam(TeamParam request) {
+        /* Course Security check */
+        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
+        if (courseDocument == null)
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+        
+        /* Param Security Checks */
+        if (!new SecurityService().isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
+
+        /* Delete team*/
+        teamCollection.findOneAndDelete(eq("team_id", request.getTeamID()));
     }
 
 }

@@ -70,6 +70,15 @@ public class PeerReviewTeamsResource {
         return Response.status(Response.Status.OK).entity("Team name successfully generated").build(); 
     }
 
+    @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("team/professor/delete")
+    public Response deleteTeam(TeamParam request) {
+        new TeamInterface().deleteTeam(request);
+        return Response.status(Response.Status.OK).entity("Team successfully deleted").build(); 
+    }
+
     @PUT
     @Path("team/finalize-team")
     public Response finalizeTeam(String studenID, String targetedTeamID) {
