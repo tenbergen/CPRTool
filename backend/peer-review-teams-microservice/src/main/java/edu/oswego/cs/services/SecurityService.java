@@ -121,22 +121,37 @@ public class SecurityService {
      * @return boolean
      */
     public boolean isTeamCreated(MongoCollection<Document> teamCollection, String teamID, String courseID) {
+        Document teamDocument = teamCollection.find(eq("team_id", teamID)).first();
+        if (teamDocument == null)
+            return false;
+        return true;
+    }
+
+    /**
+     * Checks if team name is unique amongst the other teams
+     * @param teamCollection
+     * @param courseDocument
+     * @param request
+     * @return boolean
+     */
+    public boolean isTeamNameUnique(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
         MongoCursor<Document> cursor = teamCollection.find().iterator();
         if (cursor == null) 
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Teams not found.").build());
         
         try {
             while(cursor.hasNext()) {
                 Document teamDocument = cursor.next();
+                String teamName = teamDocument.getString("team_id");
                 String teamDocumentCourseID = teamDocument.getString("course_id");
-                String teamDocumentTeamID = teamDocument.getString("team_id");
-                if (courseID.equals(teamDocumentCourseID) && teamID.equals(teamDocumentTeamID))
-                        return true;
+                if (request.getCourseID().equals(teamDocumentCourseID) && request.getTeamName().toLowerCase().equals(teamName.toLowerCase()))
+                    return false;
             }
-            return false;
+            return true;
         } finally { 
             cursor.close();
-        } 
+        }
+
     }
 
     /**
@@ -252,18 +267,20 @@ public class SecurityService {
         if (cursor == null) 
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
 
-        if (isTeamLock(teamCollection, request.getTeamID(), request.getCourseID())) 
-            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Team is locked.").build());
         if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID())) 
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
+        if (isTeamLock(teamCollection, request.getTeamID(), request.getCourseID())) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Team is locked.").build());
         if (!isStudentAlreadyInATeam(teamCollection, request.getStudentID(), request.getCourseID())) 
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in any team.").build());
         if (!isStudentInThisTeam(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this team.").build());
         if (!isTeamLead(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized. Not team lead.").build());
+        if (!isTeamNameUnique(teamCollection, courseDocument, request))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Not acceptable. Team name not unique.").build());
         if (!isTeamNameValid(studentCollection, request.getTeamName(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Not acceptable. Invalid team name.").build());
+            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Not acceptable. Team contains student's name.").build());
     }
 
 }
