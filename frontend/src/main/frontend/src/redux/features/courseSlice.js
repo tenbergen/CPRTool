@@ -1,12 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from "axios";
 import React from "react";
+import {reduxInterceptor} from "../interceptors/reduxInterceptor";
 
 const viewCourseUrl = `${process.env.REACT_APP_URL}/view/professor`
 
 export const getStudentCoursesAsync = createAsyncThunk(
     'courses/getStudentCoursesAsync',
     async (studentId) => {
+        await reduxInterceptor()
         const courses = await axios.get(`${viewCourseUrl}/${studentId}/courses`).then(res => {
             console.log(res.data)
             return res.data.filter(course => course !== null);
@@ -17,6 +19,7 @@ export const getStudentCoursesAsync = createAsyncThunk(
 export const getCoursesAsync = createAsyncThunk(
     'courses/getCoursesAsync',
     async () => {
+        await reduxInterceptor()
         const courses = await axios.get(`${viewCourseUrl}/courses`).then(res => {
             console.log(res.data)
             return res.data
@@ -27,6 +30,7 @@ export const getCoursesAsync = createAsyncThunk(
 export const getCourseDetailsAsync = createAsyncThunk(
     'courses/getCourseDetailAsync',
     async (courseId )=> {
+        await reduxInterceptor()
         const url = `${viewCourseUrl}/courses/${courseId}`
         console.log(url)
         const currentCourse = await axios.get(url).then(res => {

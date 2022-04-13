@@ -1,32 +1,62 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import {reduxInterceptor} from "../interceptors/reduxInterceptor";
 
 const getAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`
+
+const getAssignments = async (courseId) => {
+    const courseAssignments = await axios.get(`${getAssignmentUrl}/${courseId}/assignments`)
+        .then(res => {
+            if(res.data != null) return res.data
+            return []
+        })
+        .catch(e => {
+            console.log(e)
+            return []
+        })
+    return courseAssignments
+}
 
 export const getCourseAssignmentsAsync = createAsyncThunk(
     'assignments/getCourseAssignmentsAsync',
     async (courseId) => {
-        const courseAssignments = await axios.get(`${getAssignmentUrl}/${courseId}/assignments`)
-            .then(res => {
-                return res.data
-            })
-            .catch(e => {
-                console.log(e)
-                return []
-            })
+        await reduxInterceptor()
+        const courseAssignments = await getAssignments(courseId)
         return { courseAssignments }
+    }
+)
+
+export const getCombinedAssignmentPeerReviews = createAsyncThunk(
+    'assignments/getCombinedAssignmentPeerReviews',
+    async (courseId) => {
+        await reduxInterceptor()
+        const courseAssignments = await getAssignments(courseId)
+        console.log(courseAssignments)
+        const peerReviews = [{"assignment_name": "something", "due_date": "2022-01-21"}]
+        const combined = [...courseAssignments, ...peerReviews]
+        combined.sort(function (a, b)  {
+            if (a.due_date < b.due_date) { return -1; }
+            if (a.due_date > b.due_date) { return 1; }
+            return 0;
+        });
+        console.log(combined)
+        return { combined }
     }
 )
 
 export const getAssignmentFilesAsync = createAsyncThunk(
     'assignments/getAssignmentFilesAsync',
     async (values) => {
+        await reduxInterceptor()
         const { courseId, assignment_id } = values;
         const url = `${getAssignmentUrl}/${courseId}/assignments/${assignment_id}/view-files`
         const currentAssignmentFiles = await axios.get(url)
             .then(res => {
                 console.log(res.data)
                 return res.data
+            })
+            .catch(e => {
+                console.log(e)
             })
         return { currentAssignmentFiles }
     }
@@ -35,6 +65,7 @@ export const getAssignmentFilesAsync = createAsyncThunk(
 export const getAssignmentDetailsAsync = createAsyncThunk(
     'assignments/getAssignmentDetailsAsync',
     async (values)=> {
+        await reduxInterceptor()
         console.log(values)
         let { courseId, assignmentId } = values;
         const url = `${getAssignmentUrl}/${courseId}/assignments/${assignmentId}`
@@ -55,6 +86,7 @@ const assignmentSlice = createSlice({
     name: "assignmentSlice",
     initialState: {
         courseAssignments: [],
+        combinedAssignmentPeerReviews: [],
         currentAssignment: null,
         currentAssignmentFiles: [],
         currentAssignmentLoaded: false
@@ -77,6 +109,9 @@ const assignmentSlice = createSlice({
         },
         [getAssignmentFilesAsync.fulfilled]: (state, action) => {
             state.currentAssignmentFiles = action.payload.currentAssignmentFiles
+        },
+        [getCombinedAssignmentPeerReviews.fulfilled]: (state, action) => {
+            state.combinedAssignmentPeerReviews = action.payload.combined
         }
     }
 })
