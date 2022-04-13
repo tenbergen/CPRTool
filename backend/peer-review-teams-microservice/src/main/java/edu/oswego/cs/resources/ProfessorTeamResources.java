@@ -20,4 +20,32 @@ public class ProfessorTeamResources {
     public Response moveTeamMember(TeamParam request) {
         new TeamInterface().toggleTeamLock(request);
         return Response.status(Response.Status.OK).entity("Team status successfully updated.").build(); 
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/team-name/edit")
+    public Response editTeamName(TeamParam request) {
+        new TeamInterface().editTeamName(request);
+        return Response.status(Response.Status.OK).entity("Team name successfully updated.").build(); 
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/team-lead/assign")
+    public Response assignTeamLead(TeamParam request) {
+        new TeamInterface().assignTeamLead(request);
+        return Response.status(Response.Status.OK).entity("Team lead successfully updated.").build(); 
+    }
+
+    // update team size bulk and single
+    // add remove move
+    @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("delete")
+    public Response deleteTeam(TeamParam request) {
+        new TeamInterface().deleteTeam(request);
+        return Response.status(Response.Status.OK).entity("Team successfully deleted.").build(); 
+    }
 }
