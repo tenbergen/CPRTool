@@ -21,7 +21,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.push;
@@ -57,6 +62,15 @@ public class PeerReviewAssignmentInterface {
             teamNames.add(teamName);
         }
         return teamNames;
+    }
+
+    public Document getAssignmentDocument(String courseID, int assignmentID) {
+        for (Document assignmentDocument : assignmentCollection.find(eq("course_id", courseID))) {
+            if ( (int) assignmentDocument.get("assignment_id") == assignmentID ) {
+                return assignmentDocument;
+            }
+        }
+        throw new WebApplicationException("No course/assignmentID found.");
     }
 
     public List<String> getCourseStudentIDs(String courseID) {
@@ -114,5 +128,32 @@ public class PeerReviewAssignmentInterface {
         outputStream.write(fileDAO.inputStream.readAllBytes());
         outputStream.close();
 
+    }
+
+    public String packagePeerReviewedAssignments(String courseID, int assignmentID, String teamName) {
+        if (!new File(FileDAO.peer_review_submission_path).exists())
+            throw new WebApplicationException("Peer reviews do not exist for this course yet.");
+
+        String dir = FileDAO.peer_review_submission_path+courseID+"/"+assignmentID+"/";
+        List<File> files = Arrays.asList(new File(dir).listFiles());
+
+        List<File> teamPeerReviews = files.stream()
+                .filter(f -> f.getName().split(".pdf")[0].endsWith(teamName))
+                .collect(Collectors.toList());
+
+        String zipPath = "peer-review-submissions/" + courseID+"/"+assignmentID+"/"+"for-"+teamName.concat(".zip");
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(zipPath);
+            ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
+            for (File f : teamPeerReviews) {
+               zipOutputStream.putNextEntry(new ZipEntry("for-"+teamName+"/"+f.getName()));
+               byte[] fileBytes = Files.readAllBytes(Paths.get(dir+f.getName()));
+               zipOutputStream.write(fileBytes, 0, fileBytes.length);
+               zipOutputStream.closeEntry();
+            }
+            zipOutputStream.close();
+            return zipPath;
+        } catch (Exception e) {e.printStackTrace();}
+        return "";
     }
 }

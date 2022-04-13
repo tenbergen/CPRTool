@@ -79,16 +79,28 @@ public class PeerReviewAssignmentResource {
         return Response.status(Response.Status.OK).entity("Successfully uploaded peer review.").build();
     }
 
-//    @GET
-//    @Path("{courseID}/{assignmentID}/{teamName}/download")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response downloadPeerReview(
-//        @PathParam("courseID") String courseID,
-//        @PathParam("assignmentID") int assignmentID,
-//        @PathParam("teamName") String teamName
-//        ) {
-//
-//    }
+    @GET
+    @Path("{courseID}/{assignmentID}/{teamName}/download")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response downloadPeerReview(
+        @PathParam("courseID") String courseID,
+        @PathParam("assignmentID") int assignmentID,
+        @PathParam("teamName") String teamName
+        ) {
+
+        PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
+        //Document assignmentDocument = peerReviewAssignmentInterface.getAssignmentDocument(courseID, assignmentID);
+        // check if the peer review due date is past
+        // if not then return a response saying peer review is not ready
+
+        // if is past due date then filter all uploads based on team name
+        String path = peerReviewAssignmentInterface.packagePeerReviewedAssignments(courseID, assignmentID, teamName);
+        File file = new File(path);
+
+        Response.ResponseBuilder response = Response.ok(file);
+        response.header("Content-Disposition", "attachment; filename=" + file.getName());
+        return response.build();
+    }
 
 
 
