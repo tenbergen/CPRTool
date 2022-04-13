@@ -312,6 +312,29 @@ public class TeamInterface {
         boolean teamLock = teamDocument.getBoolean("team_lock");
         teamCollection.findOneAndUpdate(Filters.eq("team_id", request.getTeamID()), Updates.set("team_lock", !teamLock));
     }
+    /**
+     * Edits a Team Name
+     * @param request TeamParam: {"team_id", "course_id", "team_name"}
+     */
+    public void editTeamName(TeamParam request) {
+        /* Course Security check */
+        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
+        if (courseDocument == null)
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+        
+        /* Param Security Checks */
+        new SecurityService().editTeamNameSecurity(teamCollection, studentCollection, courseDocument, request);
+        
+        /* Update Team name */
+        Bson editTeamNameUpdates = Updates.combine(
+            Updates.set("team_id", request.getTeamName()),
+            Updates.set("team_lock", true)
+        );
+        teamCollection.findOneAndUpdate(Filters.eq("team_id", request.getTeamID()), editTeamNameUpdates); 
+    }
+
+    /**
+     * Assigns a new Team lead for the team
      * @param request
      */
     public void assignTeamLead(TeamParam request) {
