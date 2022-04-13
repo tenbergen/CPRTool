@@ -264,5 +264,31 @@ public class TeamInterface {
         }
     }
 
-    
+    /**
+     * Generates a new name for the team
+     * @param request
+     */
+    public void generateTeamName(TeamParam request) {
+        /* Course Security check */
+        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
+        if (courseDocument == null) 
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+
+        /* Param Security Checks */
+        new SecurityService().generateTeamNameSecurity(teamCollection, studentCollection, courseDocument, request);
+
+        /* Update team name */
+        Bson teamNameUpdates = Updates.combine(
+            Updates.set("team_id", request.getTeamName()),
+            Updates.set("team_lock", true)
+        );
+        UpdateOptions teamNameOptions = new UpdateOptions().upsert(true);
+
+        try {
+            teamCollection.updateOne(new Document("team_id", request.getTeamID()), teamNameUpdates, teamNameOptions);
+        } catch (MongoException error){
+            error.printStackTrace();
+        }
+    }
+
 }
