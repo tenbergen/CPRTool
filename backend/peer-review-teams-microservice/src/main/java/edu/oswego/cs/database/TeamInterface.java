@@ -61,7 +61,7 @@ public class TeamInterface {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
         
         /* Param Security Checks */
-        new SecurityService().securityChecks(teamCollection, courseDocument, request, "CREATE");
+        new SecurityService().createTeamSecurityChecks(teamCollection, courseDocument, request);
             
         /* Create Team */
         String teamID = new TeamService().generateTeamID(teamCollection);
@@ -121,7 +121,7 @@ public class TeamInterface {
         
         /* Param Security Checks */
         if (!new SecurityService().isStudentValid(courseDocument, request.getStudentID())) 
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
 
         /* Get Team */
         List<Document> nonFullTeams = new ArrayList<>();
@@ -194,7 +194,7 @@ public class TeamInterface {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
         
         /* Param Security Checks */
-        new SecurityService().securityChecks(teamCollection, courseDocument, request, "JOIN");
+        new SecurityService().joinTeamSecurityChecks(teamCollection, courseDocument, request);
 
         /* Update Team */
         Document teamDocument = teamCollection.find(eq("team_id", request.getTeamID())).first();
@@ -205,7 +205,7 @@ public class TeamInterface {
         teamMembers.add(request.getStudentID());
         teamCollection.updateOne(Filters.eq("team_id", request.getTeamID()), Updates.set("team_members", teamMembers));
 
-        if (teamMembers.size() == teamDocument.getInteger("max_size")) 
+        if (teamMembers.size() == teamDocument.getInteger("team_size")) 
             teamCollection.updateOne(Filters.eq("team_id", request.getTeamID()), Updates.set("is_full", true));
     }
 
@@ -252,7 +252,7 @@ public class TeamInterface {
             Updates.set("team_members", targetTeamMembers),
             Updates.set("is_full", false));
 
-        if (targetTeamMembers.size() == targetTeamDocument.getInteger("max_size")) 
+        if (targetTeamMembers.size() == targetTeamDocument.getInteger("team_size")) 
             targetTeamUpdates = Updates.combine(targetTeamUpdates, Updates.set("is_full", true));
         
         UpdateOptions targetTeamOptions = new UpdateOptions().upsert(true);
