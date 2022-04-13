@@ -1,9 +1,11 @@
 package edu.oswego.cs.resources;
 
+import edu.oswego.cs.daos.FileDAO;
 import edu.oswego.cs.database.PeerReviewAssignmentInterface;
 import edu.oswego.cs.distribution.AssignmentDistribution;
 import org.bson.Document;
 
+import javax.print.attribute.standard.Media;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -26,6 +28,7 @@ public class PeerReviewAssignmentResource {
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
 
         List<String> teamNames = peerReviewAssignmentInterface.getCourseTeams(courseID);
+        //List<String> teamNames = peerReviewAssignmentInterface.getCourseStudentIDs(courseID);
         Map<String, List<String>> assignedTeams;
         try {
              assignedTeams = AssignmentDistribution.distribute(teamNames, count);
@@ -33,8 +36,12 @@ public class PeerReviewAssignmentResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("Number of reviews peer team is greater than the number of teams in the course.").build();
         }
 
+        FileDAO.zipPeerReview(assignedTeams, courseID, assignmentID);
+
         Document assignedTeamDocument = peerReviewAssignmentInterface.addAssignedTeams(assignedTeams, courseID, assignmentID);
         return Response.status(Response.Status.OK).entity(assignedTeamDocument).build();
     }
+
+
 
 }
