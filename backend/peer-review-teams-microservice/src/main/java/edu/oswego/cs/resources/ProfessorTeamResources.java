@@ -13,4 +13,11 @@ import edu.oswego.cs.requests.TeamParam;
 
 @Path("teams/professor/team")
 public class ProfessorTeamResources {
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/team-lock/toggle")
+    public Response moveTeamMember(TeamParam request) {
+        new TeamInterface().toggleTeamLock(request);
+        return Response.status(Response.Status.OK).entity("Team status successfully updated.").build(); 
 }
