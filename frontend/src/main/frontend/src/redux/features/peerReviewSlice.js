@@ -1,13 +1,13 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import axios from "axios";
-import {reduxInterceptor} from "../interceptors/reduxInterceptor";
+import {refreshTokenAsync} from "./authSlice";
 
 const peerReviewUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`
 
 export const getPeerReviewFilesAsync = createAsyncThunk(
     'peerReviewSlice/getPeerReviewFilesAsync',
-    async (values) => {
-        await reduxInterceptor()
+    async (values, thunkAPI) => {
+        thunkAPI.dispatch(refreshTokenAsync())
         const { courseId, assignmentId } = values
         const url = `${peerReviewUrl}/${courseId}/assignments/${assignmentId}/peer-review/view-files`
         console.log(url)

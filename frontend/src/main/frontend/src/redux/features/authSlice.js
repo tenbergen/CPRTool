@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import React from "react";
 import jwtDecode from "jwt-decode";
 import axios from "axios";
+import {reduxInterceptor} from "../interceptors/reduxInterceptor";
 
 const authURL = `${process.env.REACT_APP_URL}/auth`
 
@@ -26,6 +27,13 @@ export const getTokenAsync = createAsyncThunk(
                 return false
             })
         return { jwt_token }
+    }
+)
+
+export const refreshTokenAsync = createAsyncThunk(
+    'auth/refreshTokenAsync',
+    async () => {
+        await reduxInterceptor()
     }
 )
 

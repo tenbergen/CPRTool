@@ -9,7 +9,7 @@ export const reduxInterceptor = async () => {
     const access_token = localStorage.getItem("jwt_token")
 
     const currentTime = new Date()
-    const utcMilliseconds = currentTime.getTime() + (currentTime.getTimezoneOffset() * 60 * 1000)
+    const utcMilliseconds = currentTime.getTime()
     const utcSeconds = Math.round(utcMilliseconds / 1000)
 
     if (jwtDecode(refresh_token).exp <= utcSeconds) {

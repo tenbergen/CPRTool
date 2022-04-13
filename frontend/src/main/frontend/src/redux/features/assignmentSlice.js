@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import {reduxInterceptor} from "../interceptors/reduxInterceptor";
+import {refreshTokenAsync} from "./authSlice";
 
 const getAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`
 
@@ -19,8 +19,8 @@ const getAssignments = async (courseId) => {
 
 export const getCourseAssignmentsAsync = createAsyncThunk(
     'assignments/getCourseAssignmentsAsync',
-    async (courseId) => {
-        await reduxInterceptor()
+    async (courseId, thunkAPI) => {
+        thunkAPI.dispatch(refreshTokenAsync())
         const courseAssignments = await getAssignments(courseId)
         return { courseAssignments }
     }
@@ -28,8 +28,8 @@ export const getCourseAssignmentsAsync = createAsyncThunk(
 
 export const getCombinedAssignmentPeerReviews = createAsyncThunk(
     'assignments/getCombinedAssignmentPeerReviews',
-    async (courseId) => {
-        await reduxInterceptor()
+    async (courseId, thunkAPI) => {
+        thunkAPI.dispatch(refreshTokenAsync())
         const courseAssignments = await getAssignments(courseId)
         console.log(courseAssignments)
         const peerReviews = [{"assignment_name": "something", "due_date": "2022-01-21"}]
@@ -46,8 +46,8 @@ export const getCombinedAssignmentPeerReviews = createAsyncThunk(
 
 export const getAssignmentFilesAsync = createAsyncThunk(
     'assignments/getAssignmentFilesAsync',
-    async (values) => {
-        await reduxInterceptor()
+    async (values, thunkAPI) => {
+        thunkAPI.dispatch(refreshTokenAsync())
         const { courseId, assignment_id } = values;
         const url = `${getAssignmentUrl}/${courseId}/assignments/${assignment_id}/view-files`
         const currentAssignmentFiles = await axios.get(url)
@@ -64,9 +64,8 @@ export const getAssignmentFilesAsync = createAsyncThunk(
 
 export const getAssignmentDetailsAsync = createAsyncThunk(
     'assignments/getAssignmentDetailsAsync',
-    async (values)=> {
-        await reduxInterceptor()
-        console.log(values)
+    async (values, thunkAPI)=> {
+        thunkAPI.dispatch(refreshTokenAsync())
         let { courseId, assignmentId } = values;
         const url = `${getAssignmentUrl}/${courseId}/assignments/${assignmentId}`
         console.log(url)

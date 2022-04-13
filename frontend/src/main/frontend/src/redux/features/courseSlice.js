@@ -1,36 +1,46 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from "axios";
 import React from "react";
-import {reduxInterceptor} from "../interceptors/reduxInterceptor";
+import {refreshTokenAsync} from "./authSlice";
 
 const viewCourseUrl = `${process.env.REACT_APP_URL}/view/professor`
 
 export const getStudentCoursesAsync = createAsyncThunk(
     'courses/getStudentCoursesAsync',
-    async (studentId) => {
-        await reduxInterceptor()
-        const courses = await axios.get(`${viewCourseUrl}/${studentId}/courses`).then(res => {
-            console.log(res.data)
-            return res.data.filter(course => course !== null);
-        });
+    async (studentId, thunkAPI) => {
+        thunkAPI.dispatch(refreshTokenAsync())
+        const courses = await axios.get(`${viewCourseUrl}/${studentId}/courses`)
+            .then(res => {
+                console.log(res.data)
+                return res.data.filter(course => course !== null);
+            })
+            .catch(e => {
+                console.log(e)
+                return []
+            });
         return { courses }
     });
 
 export const getCoursesAsync = createAsyncThunk(
     'courses/getCoursesAsync',
-    async () => {
-        await reduxInterceptor()
-        const courses = await axios.get(`${viewCourseUrl}/courses`).then(res => {
-            console.log(res.data)
-            return res.data
-        })
+    async (_, thunkAPI) => {
+        thunkAPI.dispatch(refreshTokenAsync())
+        const courses = await axios.get(`${viewCourseUrl}/courses`)
+            .then(res => {
+                console.log(res.data)
+                return res.data
+            })
+            .catch(e => {
+                console.log(e)
+                return []
+            });
         return { courses }
-    });
+    })
 
 export const getCourseDetailsAsync = createAsyncThunk(
     'courses/getCourseDetailAsync',
-    async (courseId )=> {
-        await reduxInterceptor()
+    async (courseId, thunkAPI )=> {
+        thunkAPI.dispatch(refreshTokenAsync())
         const url = `${viewCourseUrl}/courses/${courseId}`
         console.log(url)
         const currentCourse = await axios.get(url).then(res => {
