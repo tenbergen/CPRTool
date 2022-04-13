@@ -79,22 +79,22 @@ public class AssignmentInterface {
 
     public static void writeToAssignment(FileDAO fileDAO) throws IOException {
         String FileStructure = getRelPath() + "assignments" + reg + fileDAO.courseID + reg + fileDAO.assignmentID + reg + "assignments";
-        fileDAO.writeFile(FileStructure + reg + fileDAO.filename);
+        fileDAO.writeFile(FileStructure + reg + fileDAO.fileName);
     }
 
     public static void writeToPeerReviews(FileDAO fileDAO) throws IOException {
         String FileStructure = getRelPath() + "assignments" + reg + fileDAO.courseID + reg + fileDAO.assignmentID + reg + "peer-reviews";
-        fileDAO.writeFile(FileStructure + reg + fileDAO.filename);
+        fileDAO.writeFile(FileStructure + reg + fileDAO.fileName);
     }
 
-    public static void removeFile(FileDAO fileDAO) {
-        String fileLocation = findFile(fileDAO.courseID, fileDAO.assignmentID, fileDAO.filename);
+    public static void removeFile(String courseID, String fileName, int assignmentID) {
+        String fileLocation = findFile(courseID, assignmentID, fileName);
         File file = new File(fileLocation);
         if (!file.delete()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist or could not be deleted.").build());
     }
 
-    public static void removePeerReviewFile(FileDAO fileDAO) {
-        String fileLocation = findPeerReviewFile(fileDAO.courseID, fileDAO.assignmentID, fileDAO.filename);
+    public static void removePeerReviewFile(String courseID, String fileName, int assignmentID) {
+        String fileLocation = findPeerReviewFile(courseID, assignmentID, fileName);
         File file = new File(fileLocation);
         if (!file.delete()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist or could not be deleted.").build());
     }
