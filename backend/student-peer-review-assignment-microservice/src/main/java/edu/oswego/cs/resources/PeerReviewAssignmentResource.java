@@ -4,9 +4,7 @@ import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.daos.FileDAO;
 import edu.oswego.cs.database.PeerReviewAssignmentInterface;
 import edu.oswego.cs.distribution.AssignmentDistribution;
-import org.bson.Document;
 
-import javax.print.attribute.standard.Media;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -60,14 +58,14 @@ public class PeerReviewAssignmentResource {
     }
 
     @POST
-    @Path("{courseID}/{assignmentID}/{srcTeamName}/{destTeamName}/upload")
+    @Path("{course-id}/{assignment-id}/{revewing-team}/{reviewed-team}/upload")
     @Produces(MediaType.MULTIPART_FORM_DATA)
     public Response uploadPeerReview(
             List<IAttachment> attachments,
-            @PathParam("courseID") String courseID,
-            @PathParam("assignmentID") int assignmentID,
-            @PathParam("srcTeamName") String srcTeamName,
-            @PathParam("destTeamName") String destTeamName
+            @PathParam("course-id") String courseID,
+            @PathParam("assignment-id") int assignmentID,
+            @PathParam("revewing-team") String srcTeamName,
+            @PathParam("reviewed-team") String destTeamName
     ) throws IOException {
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
         for (IAttachment attachment : attachments) {
@@ -80,12 +78,12 @@ public class PeerReviewAssignmentResource {
     }
 
     @GET
-    @Path("{courseID}/{assignmentID}/{teamName}/download")
+    @Path("{course-id}/{assignment-id}/{team-name}/download")
     @Produces(MediaType.APPLICATION_JSON)
     public Response downloadPeerReview(
-        @PathParam("courseID") String courseID,
-        @PathParam("assignmentID") int assignmentID,
-        @PathParam("teamName") String teamName
+        @PathParam("course-id") String courseID,
+        @PathParam("assignment-id") int assignmentID,
+        @PathParam("team-name") String teamName
         ) {
 
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
@@ -102,6 +100,24 @@ public class PeerReviewAssignmentResource {
         return response.build();
     }
 
+    @GET
+    @Path("{course-id}/{assignment-id}/{team-name}/peer-reviewed-assignments")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response viewPeerReviewedAssignments(@PathParam("course-id") String courseID,
+                                                @PathParam("assignment-id") int assignmentID,
+                                                @PathParam("team-name") String teamName)
+    {
 
+    }
+
+    @GET
+    @Path("{course-id}/{assignment-id}/{team-name}/peer-reviewed-assignments")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response viewPeerReviewedAssignments(@PathParam("course-id") String courseID,
+                                                @PathParam("assignment-id") int assignmentID,
+                                                @PathParam("team-name") String teamName)
+    {
+
+    }
 
 }

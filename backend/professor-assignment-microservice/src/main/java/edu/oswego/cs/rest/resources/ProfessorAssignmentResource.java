@@ -99,17 +99,18 @@ public class ProfessorAssignmentResource {
     @DELETE
     @RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/courses/assignments/remove-file")
-    public Response removeFileFromAssignment(FileDAO fileDAO) {
-        AssignmentInterface.removeFile(fileDAO);
+    @Path("/courses/{course-id}/assignments/{assignment-id}/remove-file/{file-name}")
+    public Response removeFileFromAssignment(@PathParam("course-id") String courseID, @PathParam("assignment-id") int assignmentID, @PathParam("file-name") String fileName) {
+        AssignmentInterface.removeFile(courseID, fileName, assignmentID);
         return Response.status(Response.Status.OK).entity("File successfully deleted.").build();
     }
 
     @DELETE
+    @RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/courses/assignments/peer-review/remove-file")
-    public Response removeFileFromPeerReview(FileDAO fileDAO) {
-        AssignmentInterface.removePeerReviewFile(fileDAO);
+    @Path("/courses/{course-id}/assignments/{assignment-id}/peer-review/remove-file/{file-name}")
+    public Response removeFileFromPeerReview(@PathParam("course-id") String courseID, @PathParam("assignment-id") int assignmentID, @PathParam("file-name") String fileName) {
+        AssignmentInterface.removePeerReviewFile(courseID, fileName, assignmentID);
         return Response.status(Response.Status.OK).entity("File successfully deleted.").build();
     }
 
