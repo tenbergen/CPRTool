@@ -77,6 +77,11 @@ public class CourseInterface {
         return dao.courseID;
     }
 
+
+    /**
+     * Add the student into the student array in the course using their name from the email and into the student
+     * database at the same time with the student's course array updated to have the new course respectively.
+     */
     public void addStudent(StudentDAO student, String courseID) {
         String studentId = student.email.split("@")[0];
         String studentLastName = student.fullName.split(", ")[0];
@@ -205,7 +210,6 @@ public class CourseInterface {
         ArrayList<String> newStudentList = new ArrayList<>();
         ArrayList<String> studentsToRemove = new ArrayList<>();
         ArrayList<String> studentsToAdd = new ArrayList<>();
-        System.out.println(oldStudentList);
         for (StudentDAO s : allStudents) {
             newStudentList.add(s.email.split("@")[0]);
         }
