@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Updates.push;
@@ -80,30 +81,32 @@ public class PeerReviewAssignmentInterface {
     }
 
     public void addSubmission(PeerReviewFileDAO fileDAO, String course_id, int assignment_id, String team_id, int grade, String file_name) {
-        String path = System.getProperty("user.dir") + reg + root_name + reg + course_id + reg + assignment_id + team_peer_reviews + reg + file_name;
+        String path = root_name + reg + course_id + reg + assignment_id + team_peer_reviews + reg + file_name;
         //write method in the filedao to the path
         Document team = teamDB.getCollection("teams").find(and(eq("course_id", course_id), eq("team_id", team_id))).first();
         if (team == null) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Team not found in DB").build());
         }
-        if (team.getList("members", String.class) == null) {
+        if (team.getList("team_members", String.class) == null) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Members not defined in team").build());
         }
-        assignmentDB.getCollection("submissions").insertOne(
-                new Document()
-                        .append("course_id", course_id)
-                        .append("assignment_id", assignment_id)
-                        .append("grade", grade)
-                        .append("file_name", file_name)
-                        .append("grade", grade)
-                        .append("members", team.getList("members", String.class))
-                        .append("path", path)
-                        .append("type","peer-review")
-        );
+        Document new_submission = new Document()
+                .append("course_id", course_id)
+                .append("assignment_id", assignment_id)
+                .append("grade", grade)
+                .append("submission_name", file_name)
+                .append("grade", grade)
+                .append("members", team.getList("team_members", String.class))
+                .append("path", path)
+                .append("type","peer_review")
+                .append("team_name",team.get("team_id"));
+        if(assignmentDB.getCollection("submissions").find(new_submission).iterator().hasNext()){
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("submission already exists").build());
+        }else assignmentDB.getCollection("submissions").insertOne(new_submission);
     }
 
     public void makeGrades(String course_id, int assignment_id) {
-        String path = System.getProperty("user.dir") + reg + root_name + reg + course_id + reg + assignment_id + team_peer_reviews + reg;
+        String path = root_name + reg + course_id + reg + assignment_id +reg+ team_peer_reviews + reg;
         Document assignment = assignmentCollection.find(and(eq("course_id", course_id), eq("assignment_id", assignment_id))).first();
         if (assignment == null) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment found in DB").build());
@@ -117,15 +120,16 @@ public class PeerReviewAssignmentInterface {
         while (teams.hasNext()) {
             Document team = teams.next();
             //generate all of the reviews for this team
+            String temp = "to-"+team.getString("team_id");
             MongoCursor<Document> team_submissions = assignmentDB.getCollection("submissions")
                     .find(and(
                             eq("course_id", course_id),
                             eq("assignment_id", assignment_id),
                             eq("type", "peer_review"),
-                            eq("team_name", team.get("team_name", String.class))
+                            eq("submission_name", Pattern.compile(temp))
                     )).iterator();
             List<Document> reviews = new ArrayList<>();
-            while (team_submissions.hasNext()) {
+            while(team_submissions.hasNext()) {
                 Document submission = team_submissions.next();
                 if (submission.get("submission_name") == null || submission.getInteger("grade") == null) {
                     throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Improperly formed submission").build());
@@ -135,7 +139,7 @@ public class PeerReviewAssignmentInterface {
                         .append("grade", submission.getInteger("grade"));
                 reviews.add(review);
             }
-            List<String> members = team.getList("members", String.class);
+            List<String> members = team.getList("team_members", String.class);
             for (String member : members) {
                 Document new_grade = new Document()
                         .append("course_id", course_id)
