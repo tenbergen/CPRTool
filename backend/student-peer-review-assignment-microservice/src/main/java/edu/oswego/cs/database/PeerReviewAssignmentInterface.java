@@ -54,6 +54,11 @@ public class PeerReviewAssignmentInterface {
         return teamNames;
     }
 
+    public List<String> getCourseStudentIDs(String courseID) {
+        Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
+        return (List<String>) courseDocument.get("students");
+    }
+
     public Document addAssignedTeams(Map<String, List<String>> peerReviewAssignments, String courseID, int assignmentID) {
 
         for (Document assignmentDocument : assignmentCollection.find(eq("course_id", courseID))) {
