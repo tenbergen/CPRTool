@@ -13,9 +13,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Path("assignments")
 public class PeerReviewAssignmentResource {
@@ -39,6 +37,15 @@ public class PeerReviewAssignmentResource {
 
         Document assignedTeamDocument = peerReviewAssignmentInterface.addAssignedTeams(assignedTeams, courseID, assignmentID);
         return Response.status(Response.Status.OK).entity(assignedTeamDocument).build();
+    }
+    @GET
+    @Path("test")
+    public void filePath(){
+        Set<String>nameset = new HashSet<>();
+        nameset.add("teamA");
+        nameset.add("teamB");
+        nameset.add("teamC");
+        System.out.println(new PeerReviewAssignmentInterface().makeFileStructure(nameset,"csc480",0));
     }
 
 }
