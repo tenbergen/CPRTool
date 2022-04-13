@@ -2,14 +2,12 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import React from "react";
 import jwtDecode from "jwt-decode";
 import axios from "axios";
-import { reduxInterceptor } from "../interceptors/reduxInterceptor";
 
 const authURL = `${process.env.REACT_APP_URL}/auth`
 
 export const getTokenAsync = createAsyncThunk(
     'auth/getTokenAsync',
     async ()=> {
-        await reduxInterceptor()
         const url = `${authURL}/token/generate`
         const google_token = localStorage.getItem("google_token")
         const axiosAuthInstance = axios.create({
