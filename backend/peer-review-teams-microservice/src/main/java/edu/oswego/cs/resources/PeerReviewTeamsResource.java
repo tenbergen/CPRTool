@@ -58,61 +58,25 @@ public class PeerReviewTeamsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response switchTeam(SwitchTeamParam request) {
         new TeamInterface().switchTeam(request);
-        return Response.status(Response.Status.OK).entity("Student successfully switch to a new team.").build();
+        return Response.status(Response.Status.OK).entity("Student successfully switched to a new team.").build();
     }
-
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("team/generate-team-name")
-    public Response generateTeamName(String studenID, String targetedTeamID, String teamName) {
-        /* DESCRIPTION
-            - requirements 4.2.3-7 : teamLead creates a name for the team
-            - requirements 4.2.3-8 & 4.2.3-9 : validate teamName (teamName is unique && !teamNames.contains(students' name in the team))
-            - requirements 4.2.3-10 : a finalize button will appear after teamName is valid and team is full
-            - only for team lead to create the name for the team
-            - For FE,
-                + if this API returns 200, that means
-                    * 3-8 && 3-9 is checked true
-                    * targetedTeam.isFull = true
-                    * new TeamName is sucessfuly generated
-                    => show the team name
-                    => the team is ready to show the "finalize" button
-                + if this API returns 400, that means
-                    * 3-8 && 3-9 is not true (409 or 400)
-                    * targetedTeam.isFull = false (400)
-                    => the team is not ready to show the "finalize" button
-        */
+    public Response generateTeamName(TeamParam request) {
+        new TeamInterface().generateTeamName(request);
+        return Response.status(Response.Status.OK).entity("Team name successfully generated").build(); 
+    }
 
-        /* TODO
-            - find the targetedTeam in DB using targetedTeamID
-            - make sure the param studentID is team lead's id
-            - make sure the param targetedTeam.isFull = true
-            - make sure the param teamName is unique
-                + TeamInterface::isTeamNameUnique(String teamName) {
-                    * loop through DB.teams (array), parse the team names and store the names into a String[] all team names array
-                    * then compare the param teamName to the array all team names to make sure the param teamName is unique
-                }
-            - make sure the param teamName does not contains students' name
-                + TeamInterface::containsName(String teamName){
-                    * String[] teamNameArr = teamName.split(" ") // regex can be applied here for - _ / \
-                    * ArrayList<String> memNameArr = memNameArr.add(memNames.split(" ")) // break into one word
-                    * loop through memNameArr to make sure it doesn't contain any element in teamNameArr
-                }
-
-            - NOTES: Technically, TeamInterface::isTeamNameUnique && TeamInterface::containName can be wrapped in one method TeamInterface::validateTeamName()
-
-            - If all the tests above passed,
-                + targetedTeam.teamName = teamName
-                + DB.teams.add(teamName) // Should we make an array for all the names of all teams (persisted)?
-                                            Or parse the team names from DB everytime we do the isTeamNameUnique check?
-                + HTTP 200 OK
-            - If one of the test failed,
-                + HTTP 400 BAD_REQUEST (409 CONFLICT if teamName is already existed)
-        */
-
-        return Response.status(Response.Status.OK).entity("Team Name Generated Successfully ").build(); // change the message
-
+    @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("team/professor/delete")
+    public Response deleteTeam(TeamParam request) {
+        new TeamInterface().deleteTeam(request);
+        return Response.status(Response.Status.OK).entity("Team successfully deleted").build(); 
     }
 
     @PUT
