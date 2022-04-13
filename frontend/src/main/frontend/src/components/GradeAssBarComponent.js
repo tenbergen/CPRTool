@@ -11,7 +11,7 @@ const GradeAssBarLink = ( {active, assignment, onClick})  => {
     const { courseId } = useParams()
 
     return (
-        <Link to={`/details/${role}/${courseId}/${assignment.assignment_name}/grade`} onClick={onClick}>
+        <Link to={`/details/${role}/${courseId}/${assignment.assignment_id}/grade`} onClick={onClick}>
             <tr>
                 <td style={active ? clickedStyle : normalStyle} >
                     <div className="colorForTable"/>
@@ -45,7 +45,7 @@ const GradeAssBarComponent = () => {
                 {courseAssignments.map(assignment =>
                     <GradeAssBarLink
                         onClick={()=> onAssClick(assignment)}
-                        active={assignment.assignment_name === chosen}
+                        active={assignment.assignment_id === chosen}
                         assignment={assignment}/>
                 )}
             </div>
