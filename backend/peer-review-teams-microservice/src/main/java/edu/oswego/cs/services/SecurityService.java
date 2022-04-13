@@ -36,16 +36,15 @@ public class SecurityService {
     public boolean isStudentAlreadyInATeam(MongoCollection<Document> teamCollection, String studentID, String courseID) {
         MongoCursor<Document> cursor = teamCollection.find().iterator();
         if (cursor == null) 
-            throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to retrieve team collection.").build());
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
         
         try { 
             while(cursor.hasNext()) { 
                 Document teamDocument = cursor.next();
                 List<String> members = teamDocument.getList("team_members", String.class);
-                String teamDocumentCourseID = teamDocument.get("course_id").toString();
+                String teamDocumentCourseID = teamDocument.getString("course_id");
                 for (String member : members) 
-                    if (studentID.equals(member))
-                        if (courseID.equals(teamDocumentCourseID))
+                    if (studentID.equals(member) && courseID.equals(teamDocumentCourseID))
                             return true;
             } 
         } finally { 
@@ -65,7 +64,7 @@ public class SecurityService {
     public boolean isStudentInThisTeam(MongoCollection<Document> teamCollection, String teamID, String studentID, String courseID ) {
         Document teamDocument = teamCollection.find(eq("team_id", teamID)).first();
         List<String> members = teamDocument.getList("team_members", String.class);
-        String teamDocumentCourseID = teamDocument.get("course_id").toString();
+        String teamDocumentCourseID = teamDocument.getString("course_id");
         for (String member : members) 
             if (studentID.equals(member) && courseID.equals(teamDocumentCourseID))
                 return true;
@@ -81,7 +80,7 @@ public class SecurityService {
      */
     public boolean isTeamFull(MongoCollection<Document> teamCollection, String teamID, String courseID ) {
         Document teamDocument = teamCollection.find(eq("team_id", teamID)).first();
-        String teamDocumentCourseID = teamDocument.get("course_id").toString();
+        String teamDocumentCourseID = teamDocument.getString("course_id");
         if (teamDocument.getBoolean("is_full") && courseID.equals(teamDocumentCourseID)) 
             return true;
 
@@ -97,21 +96,20 @@ public class SecurityService {
     public boolean isTeamCreated(MongoCollection<Document> teamCollection, String teamID, String courseID) {
         MongoCursor<Document> cursor = teamCollection.find().iterator();
         if (cursor == null) 
-            throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to retrieve team collection.").build());
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
         
-        try { 
+        try {
             while(cursor.hasNext()) {
                 Document teamDocument = cursor.next();
-                String teamDocumentCourseID = teamDocument.get("course_id").toString();
-                String teamDocumentTeamID = teamDocument.get("team_id").toString();
-                
+                String teamDocumentCourseID = teamDocument.getString("course_id");
+                String teamDocumentTeamID = teamDocument.getString("team_id");
                 if (courseID.equals(teamDocumentCourseID) && teamID.equals(teamDocumentTeamID))
                         return true;
             }
+            return false;
         } finally { 
             cursor.close();
         } 
-        return false;
     }
 
     /**
@@ -122,7 +120,7 @@ public class SecurityService {
      */
     public void securityChecks(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request, String mode) {
         if (!isStudentValid(courseDocument, request.getStudentID())) 
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
 
         MongoCursor<Document> cursor = teamCollection.find().iterator();
         if (cursor == null) 
@@ -147,7 +145,7 @@ public class SecurityService {
     public void switchTeamSecurity(MongoCollection<Document> teamCollection, Document courseDocument, SwitchTeamParam request) {
         MongoCursor<Document> cursor = teamCollection.find().iterator();
         if (cursor == null) 
-            throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to retrieve team collection.").build());
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
 
         if (!isStudentValid(courseDocument, request.getStudentID())) 
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
