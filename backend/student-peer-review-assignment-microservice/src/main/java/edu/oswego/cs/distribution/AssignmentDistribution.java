@@ -1,9 +1,6 @@
 package edu.oswego.cs.distribution;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AssignmentDistribution {
 
@@ -13,6 +10,7 @@ public class AssignmentDistribution {
             throw new IndexOutOfBoundsException();
 
         HashMap<String, List<String>> teamAssignments = new HashMap<>();
+        Collections.shuffle(teams);
 
         for (int teamIndex = 0; teamIndex < teams.size(); teamIndex++) {
             String team = teams.get(teamIndex);

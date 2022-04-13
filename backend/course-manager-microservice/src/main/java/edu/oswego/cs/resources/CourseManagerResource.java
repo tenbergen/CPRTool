@@ -89,7 +89,6 @@ public class CourseManagerResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("File corrupted. Try again.").build();
         }
         try {
-            System.out.println(fileDAO.getFilename().substring(0, fileDAO.getFilename().length() - 4));
             new CourseInterface().addStudentsFromCSV(fileDAO);
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Failed to add students.").build();
