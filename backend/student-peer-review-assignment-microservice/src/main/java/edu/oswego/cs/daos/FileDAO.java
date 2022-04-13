@@ -15,14 +15,20 @@ import java.util.zip.ZipOutputStream;
 
 public class FileDAO {
 
-    private static String assignment_path = "assignments/";
+    public static String assignment_path = "assignments/";
+    public static String peer_review_path = "peer-reviews/";
 
     public static void zipPeerReview(Map<String, List<String>> teamAssignments, String courseID, int assignmentID) throws IOException  {
         List<File> files = Arrays.asList(new File(assignment_path + courseID + "/" + assignmentID).listFiles());
         List<String> fileNames = files.stream().map(File::getName).collect(Collectors.toList());
 
         teamAssignments.keySet().forEach( (teamName) -> {
-            String zipfilename = "peer-reviews/for-"+teamName+".zip";
+            String path = "peer-reviews/" + courseID+"/"+assignmentID+"/";
+            if (! new File(path).exists()) {
+                new File(path).mkdirs();
+            }
+            String zipfilename = path+ "for-"+teamName+".zip";
+
             try {
                 FileOutputStream fileOutputStream = new FileOutputStream(zipfilename);
                 ZipOutputStream zipOutputStream  = new ZipOutputStream(fileOutputStream);
@@ -35,7 +41,7 @@ public class FileDAO {
                     zipOutputStream.closeEntry();
                 }
                 zipOutputStream.close();
-            } catch (IOException e) {  }
+            } catch (IOException e) { e.printStackTrace(); }
         });
 
     }
