@@ -22,6 +22,7 @@ public class TeamDAO {
     @JsonbProperty("is_finalized") @ElementCollection private List<String> isFinalized;
     @JsonbProperty("is_full") private Boolean isFull;
     @JsonbProperty("team_lead") private String teamLead;
+    @JsonbProperty("team_lock") private boolean teamLock;
     @JsonbProperty("team_members") @ElementCollection private List<String> teamMembers;
     @JsonbProperty("team_size") private Integer teamSize;
 
@@ -37,6 +38,7 @@ public class TeamDAO {
         this.isFinalized = new ArrayList<>();
         this.isFull = false;
         this.teamLead = teamLead;
+        this.teamLock = false;
         this.teamMembers = new ArrayList<>();
         this.teamSize = teamSize;
     }
