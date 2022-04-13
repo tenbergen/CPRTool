@@ -72,6 +72,24 @@ public class SecurityService {
     }
 
     /**
+     * Checks if passed in studentID is a team lead
+     * @param teamCollection
+     * @param teamID
+     * @param studentID
+     * @param courseID
+     * @return boolean
+     */
+    public boolean isTeamLead(MongoCollection<Document> teamCollection, String teamID, String studentID, String courseID ) {
+        Document teamDocument = teamCollection.find(eq("team_id", teamID)).first();
+        String teamLead = teamDocument.getString("team_lead");
+        String teamDocumentCourseID = teamDocument.getString("course_id");
+        if (studentID.equals(teamLead) && courseID.equals(teamDocumentCourseID))
+            return true;
+        return false;
+    }
+
+
+    /**
      * Checks if the team is already full
      * @param teamCollection
      * @param teamID
@@ -82,6 +100,15 @@ public class SecurityService {
         Document teamDocument = teamCollection.find(eq("team_id", teamID)).first();
         String teamDocumentCourseID = teamDocument.getString("course_id");
         if (teamDocument.getBoolean("is_full") && courseID.equals(teamDocumentCourseID)) 
+            return true;
+
+        return false;
+    }
+
+    public boolean isTeamLock(MongoCollection<Document> teamCollection, String teamID, String courseID ) {
+        Document teamDocument = teamCollection.find(eq("team_id", teamID)).first();
+        String teamDocumentCourseID = teamDocument.getString("course_id");
+        if (teamDocument.getBoolean("team_lock") && courseID.equals(teamDocumentCourseID)) 
             return true;
 
         return false;
@@ -113,7 +140,33 @@ public class SecurityService {
     }
 
     /**
-     * allows security checks on passed in information
+     * Checks if the team name passed in is a valid team name
+     * @param studentCollection
+     * @param teamName
+     * @param courseID
+     * @return boolean
+     */
+    public boolean isTeamNameValid(MongoCollection<Document> studentCollection , String teamName, String courseID) {
+        MongoCursor<Document> cursor = studentCollection.find().iterator();
+        if (cursor == null)
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No students found.").build());
+
+        while(cursor.hasNext()) {
+            Document studentDocument = cursor.next();
+            List<String> courses = studentDocument.getList("courses", String.class);
+            String lastName = studentDocument.getString("last_name").toLowerCase().trim();
+            String firstName = studentDocument.getString("first_name").split(" ")[0].toLowerCase().trim();
+
+            for (String course : courses) 
+                if (course.equals(courseID))
+                    if (teamName.toLowerCase().contains(lastName) || teamName.toLowerCase().contains(firstName))
+                        return false;
+        }
+        return true;
+    }
+
+    /**
+     * Security checks on passed in params for createTeam interface
      * @param courseDocument
      * @param request 
      * @param mode
