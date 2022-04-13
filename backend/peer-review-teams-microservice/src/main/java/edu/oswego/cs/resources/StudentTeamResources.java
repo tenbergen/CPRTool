@@ -8,12 +8,12 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/teams")
-public class PeerReviewTeamsResource {
+@Path("/teams/team")
+public class StudentTeamResources {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("team/create")
+    @Path("create")
     public Response createTeam(TeamParam request) {
         new TeamInterface().createTeam(request);
         return Response.status(Response.Status.CREATED).entity("Team successfully created.").build();
@@ -22,7 +22,7 @@ public class PeerReviewTeamsResource {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("team/get/all")
+    @Path("get/all")
     public Response getAllTeams(TeamParam request) {
         return Response.status(Response.Status.OK).entity(new TeamInterface().getAllTeams(request)).build();
     }
@@ -30,13 +30,13 @@ public class PeerReviewTeamsResource {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("team/get/student_id")
+    @Path("get/student_id")
     public Response getTeamByStudentID(TeamParam request) {
         return Response.status(Response.Status.OK).entity(new TeamInterface().getTeamByStudentID(request)).build();
     }
 
     @GET
-    @Path("team/get/team_id")
+    @Path("get/team_id")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTeamByTeamID(TeamParam request) {
@@ -46,14 +46,14 @@ public class PeerReviewTeamsResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("team/join")
+    @Path("join")
     public Response joinTeam(TeamParam request) {
         new TeamInterface().joinTeam(request);
         return Response.status(Response.Status.OK).entity("Student successfully added to team.").build();
     }
     
     @PUT
-    @Path("team/switch")
+    @Path("switch")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response switchTeam(SwitchTeamParam request) {
@@ -64,23 +64,15 @@ public class PeerReviewTeamsResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("team/generate-team-name")
+    @Path("generate-team-name")
     public Response generateTeamName(TeamParam request) {
         new TeamInterface().generateTeamName(request);
         return Response.status(Response.Status.OK).entity("Team name successfully generated").build(); 
     }
 
-    @DELETE
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("team/professor/delete")
-    public Response deleteTeam(TeamParam request) {
-        new TeamInterface().deleteTeam(request);
-        return Response.status(Response.Status.OK).entity("Team successfully deleted").build(); 
-    }
 
     @PUT
-    @Path("team/finalize-team")
+    @Path("finalize-team")
     public Response finalizeTeam(String studenID, String targetedTeamID) {
 
         /* DESCRIPTION
@@ -110,7 +102,7 @@ public class PeerReviewTeamsResource {
     }
 
     @GET
-    @Path("team/is-team-finalized")
+    @Path("is-team-finalized")
     public Boolean isTeamFinallized(String targetedTeamID) {
         /* DESCRIPTION
             - requirements 4.2.3-11: Make sure the whole team click the "finalize button" to move on with the course (see other assignments)
