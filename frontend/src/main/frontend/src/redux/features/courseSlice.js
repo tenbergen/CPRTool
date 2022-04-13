@@ -12,7 +12,8 @@ export const getStudentCoursesAsync = createAsyncThunk(
         const courses = await axios.get(`${viewCourseUrl}/${studentId}/courses`)
             .then(res => {
                 console.log(res.data)
-                return res.data.filter(course => course !== null);
+                if (res.data != null) return res.data.filter(course => course !== null);
+                return []
             })
             .catch(e => {
                 console.log(e)
@@ -27,8 +28,8 @@ export const getCoursesAsync = createAsyncThunk(
         thunkAPI.dispatch(refreshTokenAsync())
         const courses = await axios.get(`${viewCourseUrl}/courses`)
             .then(res => {
-                console.log(res.data)
-                return res.data
+                if (res.data != null) return res.data
+                return []
             })
             .catch(e => {
                 console.log(e)
