@@ -50,7 +50,7 @@ public class TeamService {
     public int getTeamSize(Document courseDocument, TeamParam request) {
         int teamSize = Integer.parseInt(courseDocument.getInteger("team_size").toString());
         if (teamSize == 0) 
-            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Team size not initialized.").build());    
+            throw new WebApplicationException(Response.status(Response.Status.NOT_MODIFIED).entity("Team size not initialized.").build());    
         return teamSize;
     }
 }
