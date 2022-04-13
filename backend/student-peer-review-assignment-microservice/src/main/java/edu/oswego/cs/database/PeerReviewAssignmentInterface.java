@@ -95,7 +95,6 @@ public class PeerReviewAssignmentInterface {
                 .append("assignment_id", assignment_id)
                 .append("grade", grade)
                 .append("submission_name", file_name)
-                .append("grade", grade)
                 .append("members", team.getList("team_members", String.class))
                 .append("path", path)
                 .append("type","peer_review")
