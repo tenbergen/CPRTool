@@ -77,7 +77,6 @@ public class CourseInterface {
         return dao.courseID;
     }
 
-
     /**
      * Add the student into the student array in the course using their name from the email and into the student
      * database at the same time with the student's course array updated to have the new course respectively.
@@ -112,39 +111,6 @@ public class CourseInterface {
             studentCollection.insertOne(newStudent);
         }
     }
-
-    /**
-     * A course DAO is made from the student DAO. Attempt to create the course, then add the student into the student
-     * array in the course using their name from the email and into the student database at the same time with the
-     * student's course array updated to have the new course respectively.
-     */
-//    public void addStudent(String studentName, String courseID) {
-//
-//        Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
-//        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
-//
-//        List<String> students = courseDocument.getList("students", String.class);
-//        if (students.contains(studentName)) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This student is already in the course.").build());
-//        courseCollection.updateOne(eq("course_id", courseID), push("students", studentName));
-//
-//        MongoCursor<Document> query = studentCollection.find(eq("student_id", studentName)).iterator();
-//        if (query.hasNext()) {
-//            Document studentDocument = query.next();
-//            List<String> courseList = studentDocument.getList("courses", String.class);
-//            for (String course : courseList) {
-//                if (course.equals(courseID)) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This student is already in the course.").build());
-//            }
-//            studentCollection.updateOne(eq("student_id", studentName), push("courses", courseID));
-//        } else {
-//            List<String> courseList = new ArrayList<>();
-//            courseList.add(courseID);
-//            Document newStudent = new Document()
-//                    .append("first_name", )
-//                    .append("student_id", studentName)
-//                    .append("courses", courseList);
-//            studentCollection.insertOne(newStudent);
-//        }
-//    }
 
     /**
      * Remove the course from the student's list of courses, and then remove the course itself from the course database.
@@ -226,14 +192,10 @@ public class CourseInterface {
         for (String s : studentsToRemove) {
             removeStudent(s, courseDAO.courseID);
         }
-        for (StudentDAO student  : allStudents.stream()
-                .filter( s -> studentsToAdd.contains(s.email.split("@")[0]) )
+        for (StudentDAO student : allStudents.stream()
+                .filter(s -> studentsToAdd.contains(s.email.split("@")[0]))
                 .collect(Collectors.toList())) {
             addStudent(student, courseDAO.courseID);
         }
-
-//        for (String s : studentsToAdd) {
-//            addStudent(s, courseDAO.courseID);
-//        }
     }
 }
