@@ -15,21 +15,17 @@ import java.util.Set;
 
 public class TeamService {
 
-    public String generateTeamID(MongoCollection<Document> teamCollection) {
-        MongoCursor<Document> cursor = teamCollection.find().iterator();
+    public String generateTeamID(MongoCollection<Document> teamCollection, String courseID){
+        List<Document> teamDocuments = new TeamInterface().getAllTeams(courseID);
+        if (teamDocuments == null || teamDocuments.size() == 0) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
+        
         Set<String> teamIDs = new HashSet<>();
-        while (cursor.hasNext()) {
-            Document teamDocument = cursor.next();
+        for (Document teamDocument : teamDocuments) 
             teamIDs.add(teamDocument.getString("team_id"));
-        }
-        for (int i = 0; i < teamIDs.size(); i++) {
-            if (!teamIDs.contains(String.valueOf(i))) {
-                cursor.close();
+        for (int i = 0; i < teamIDs.size(); i++)
+            if (!teamIDs.contains(String.valueOf(i))) 
                 return String.valueOf(i);
-            }
-        }
-
-        cursor.close();
+        
         return String.valueOf(teamIDs.size());
     }
 
