@@ -135,7 +135,6 @@ public class AssignmentInterface {
         }
 
         assignmentsCollection.insertOne(assignmentDocument);
-        query.close();
 
         FileStructure += reg + nextPos;
         if (!new File(FileStructure + reg + "team-submissions").mkdirs())
@@ -156,25 +155,18 @@ public class AssignmentInterface {
             Document document = query.next();
             assignments.add(document);
         }
-
-        query.close();
         return assignments;
     }
 
     public List<Document> getAssignmentsByCourse(String courseID) {
         MongoCursor<Document> query = assignmentsCollection.find(eq("course_id", courseID)).iterator();
-        if (!query.hasNext()) {
-            query.close();
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist").build());
-        }
+        if (!query.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist").build());
 
         List<Document> assignments = new ArrayList<>();
         while (query.hasNext()) {
             Document document = query.next();
             assignments.add(document);
         }
-
-        query.close();
         return assignments;
     }
 
@@ -197,13 +189,10 @@ public class AssignmentInterface {
     }
 
     public void removeAssignment(int AssignmentID, String courseID) throws IOException {
-        MongoCursor<Document> results = assignmentsCollection.find(new Document()
-                .append("assignment_id", AssignmentID)
-                .append("course_id", courseID)).iterator();
-        if (!results.hasNext()) {
-            results.close();
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
-        }
+        MongoCursor<Document> results = assignmentsCollection.find(and(
+                eq("assignment_id", AssignmentID),
+                eq("course_id", courseID))).iterator();
+        if (!results.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
 
         while (results.hasNext()) {
             Document assignment = results.next();
@@ -211,13 +200,11 @@ public class AssignmentInterface {
             FileUtils.deleteDirectory(new File(Destination));
             assignmentsCollection.findOneAndDelete(assignment);
         }
-        results.close();
     }
 
     public void removeCourse(String courseID) throws IOException {
         MongoCursor<Document> results = assignmentsCollection.find(eq("course_id", courseID)).iterator();
-        if (!results.hasNext())
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
+        if (!results.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
 
         while (results.hasNext()) {
             Document assignmentDocument = results.next();
@@ -226,14 +213,5 @@ public class AssignmentInterface {
 
         String Destination = getRelPath() + "assignments" + reg + courseID;
         FileUtils.deleteDirectory(new File(Destination));
-        results.close();
     }
-
-//    public void setPeerReviewPastDue(Document assignmentDocument) {
-//        assignmentsCollection.updateOne(eq("assignment_id", assignmentID), set("peer_review_assignment_past_due", true));
-//    }
-//
-//    public void setAssignmentPastDue(Document assignmentDocument) {
-//        assignmentsCollection.replaceOne(assignmentDocument, (Document) assignmentDocument.put("assignment_past_due", true));
-//    }
 }
