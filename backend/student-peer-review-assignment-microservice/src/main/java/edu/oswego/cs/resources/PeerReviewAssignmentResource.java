@@ -86,11 +86,11 @@ public class PeerReviewAssignmentResource {
     }
     @GET
     @RolesAllowed("student")
-    @Path("{course-id}/{assignment-id}/{student-id}/reviewed-by-me")
+    @Path("{course_id}/{assignment_id}/{student_id}/reviewed_by_me")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewUserReviewedAssignments(@PathParam("course-id") String courseID,
-                                                @PathParam("assignment-id") int assignmentID,
-                                                @PathParam("student-id") String teamName)
+    public Response viewUserReviewedAssignments(@PathParam("course_id") String courseID,
+                                                @PathParam("assignment_id") int assignmentID,
+                                                @PathParam("student_id") String teamName)
     {
         List<Document> documents = new PeerReviewAssignmentInterface().getAssignmentsReviewedByUser(courseID, assignmentID, teamName);
         return Response.status(Response.Status.OK).entity(documents).build();
@@ -98,11 +98,11 @@ public class PeerReviewAssignmentResource {
 
     @GET
     @RolesAllowed("student")
-    @Path("{course-id}/{assignment-id}/{student-id}/my-graded-assignments")
+    @Path("{course_id}/{assignment_id}/{student_id}/my_graded_assignments")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewAssignmentsReviewedOfUser(@PathParam("course-id") String courseID,
-                                                  @PathParam("assignment-id") int assignmentID,
-                                                  @PathParam("student-id") String teamName)
+    public Response viewAssignmentsReviewedOfUser(@PathParam("course_id") String courseID,
+                                                  @PathParam("assignment_id") int assignmentID,
+                                                  @PathParam("student_id") String teamName)
     {
         List<Document> documents = new PeerReviewAssignmentInterface().getUsersGradedAssignments(courseID, assignmentID, teamName);
         return Response.status(Response.Status.OK).entity(documents).build();
