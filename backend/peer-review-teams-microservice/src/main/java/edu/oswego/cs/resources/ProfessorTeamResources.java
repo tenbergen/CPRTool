@@ -19,7 +19,8 @@ public class ProfessorTeamResources {
     @Path("/team-lock/toggle")
     public Response moveTeamMember(TeamParam request) {
         new TeamInterface().toggleTeamLock(request);
-        return Response.status(Response.Status.OK).entity("Team status successfully updated.").build(); 
+        return Response.status(Response.Status.OK).entity("Team status successfully updated.").build();
+    }
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
