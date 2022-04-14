@@ -94,7 +94,7 @@ public class AssignmentInterface {
         return assignments;
     }
 
-    public static String findFile(String courseID, int assignmentID, String fileName){
+    public static String findFile(String courseID, int assignmentID, String fileName) {
         return getRelPath() + "courses" + reg + courseID + reg + assignmentID + reg + "assignments" + reg + fileName;
     }
 

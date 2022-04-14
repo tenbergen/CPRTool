@@ -36,7 +36,8 @@ public class StudentAssignmentResource {
             if (attachment == null) continue;
             String fileName = attachment.getDataHandler().getName();
 
-            if (!fileName.endsWith("pdf") && !fileName.endsWith("docx")) return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
+            if (!fileName.endsWith("pdf") && !fileName.endsWith("docx"))
+                return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
             new AssignmentInterface().writeToAssignment(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
         }
         return Response.status(Response.Status.OK).entity("Successfully uploaded assignment.").build();

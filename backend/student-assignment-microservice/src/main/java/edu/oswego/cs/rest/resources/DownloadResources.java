@@ -1,6 +1,7 @@
 package edu.oswego.cs.rest.resources;
 
 import edu.oswego.cs.rest.database.AssignmentInterface;
+
 import javax.ws.rs.Path;
 import javax.ws.rs.GET;
 import javax.annotation.security.DenyAll;
@@ -18,10 +19,10 @@ public class DownloadResources {
      * Retrieves the assignment from its location on the server and passes it to the front end via the request header
      * as a stream. The request entity passes an InputStream[] with the assignment files in each array.
      *
-     * @param courseID String
+     * @param courseID     String
      * @param assignmentID int
      * @return response
-     * **/
+     **/
     @GET
     @RolesAllowed({"professor", "student"})
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -33,7 +34,7 @@ public class DownloadResources {
             return Response.status(Response.Status.NOT_FOUND).entity("Assignment Does Not Exist").build();
 
         Response.ResponseBuilder response = Response.ok((Object) file);
-        response.header("Content-Disposition","attachment; filename=" + file.getName());
+        response.header("Content-Disposition", "attachment; filename=" + file.getName());
         return response.build();
     }
 

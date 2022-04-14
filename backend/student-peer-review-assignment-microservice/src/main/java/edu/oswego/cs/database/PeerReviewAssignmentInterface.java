@@ -7,15 +7,8 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import edu.oswego.cs.daos.FileDAO;
-import org.bson.BsonDocument;
 import org.bson.Document;
-import org.bson.conversions.Bson;
-
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,7 +22,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Updates.push;
 import static com.mongodb.client.model.Updates.set;
 
 public class PeerReviewAssignmentInterface {
@@ -66,7 +58,7 @@ public class PeerReviewAssignmentInterface {
 
     public Document getAssignmentDocument(String courseID, int assignmentID) {
         for (Document assignmentDocument : assignmentCollection.find(eq("course_id", courseID))) {
-            if ( (int) assignmentDocument.get("assignment_id") == assignmentID ) {
+            if ((int) assignmentDocument.get("assignment_id") == assignmentID) {
                 return assignmentDocument;
             }
         }
@@ -87,44 +79,46 @@ public class PeerReviewAssignmentInterface {
                 for (String team : peerReviewAssignments.keySet()) {
                     doc.put(team, peerReviewAssignments.get(team));
                 }
-                makeFileStructure(peerReviewAssignments.keySet(),courseID,assignmentID);
+                makeFileStructure(peerReviewAssignments.keySet(), courseID, assignmentID);
                 assignmentCollection.updateOne(assignmentDocument, set("assigned_teams", doc));
                 return doc;
             }
         }
         throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to add assigned teams.").build());
     }
-    public boolean makeFileStructure(Set<String> teams,String courseID,int assignmentID){
-        String path = System.getProperty("user.dir")+ reg + courseID + reg + assignmentID;
-        ArrayList<String>validNames = new ArrayList<>();
+
+    public boolean makeFileStructure(Set<String> teams, String courseID, int assignmentID) {
+        String path = System.getProperty("user.dir") + reg + courseID + reg + assignmentID;
+        ArrayList<String> validNames = new ArrayList<>();
         validNames.add("peer-reviews");
         validNames.add("assignments");
         validNames.add("team-submissions");
         validNames.add("peer-review-submissions");
         File[] structure = new File(path).listFiles();
-        for(File f : structure){
-            if(validNames.contains(f.getName())){
+        for (File f : structure) {
+            if (validNames.contains(f.getName())) {
                 validNames.remove(f.getName());
-            }else return false;
+            } else return false;
         }
-        if(validNames.size()!=0)return false;
-        if(Objects.requireNonNull(new File(path + reg + "peer-review-submissions").listFiles()).length!=0)return false;
+        if (validNames.size() != 0) return false;
+        if (Objects.requireNonNull(new File(path + reg + "peer-review-submissions").listFiles()).length != 0)
+            return false;
         path += reg + "peer-review-submissions";
-        for(String team: teams){
-          new File(path+reg+team).mkdir();
+        for (String team : teams) {
+            new File(path + reg + team).mkdir();
         }
         return true;
     }
 
     public void uploadPeerReview(String courseID, int assignmentID, String srcTeamName, String destTeamName, IAttachment attachment) throws IOException {
-        String basePath = FileDAO.peer_review_submission_path+courseID+"/"+assignmentID+"/";
-        if (! new File(basePath).exists()) {
+        String basePath = FileDAO.peer_review_submission_path + courseID + "/" + assignmentID + "/";
+        if (!new File(basePath).exists()) {
             new File(basePath).mkdirs();
         }
 
         FileDAO fileDAO = FileDAO.fileFactory(courseID, srcTeamName, destTeamName, assignmentID, attachment);
 
-        OutputStream outputStream = new FileOutputStream(basePath+fileDAO.fileName+".pdf");
+        OutputStream outputStream = new FileOutputStream(basePath + fileDAO.fileName + ".pdf");
         outputStream.write(fileDAO.inputStream.readAllBytes());
         outputStream.close();
 
@@ -134,26 +128,28 @@ public class PeerReviewAssignmentInterface {
         if (!new File(FileDAO.peer_review_submission_path).exists())
             throw new WebApplicationException("Peer reviews do not exist for this course yet.");
 
-        String dir = FileDAO.peer_review_submission_path+courseID+"/"+assignmentID+"/";
+        String dir = FileDAO.peer_review_submission_path + courseID + "/" + assignmentID + "/";
         List<File> files = Arrays.asList(new File(dir).listFiles());
 
         List<File> teamPeerReviews = files.stream()
                 .filter(f -> f.getName().split(".pdf")[0].endsWith(teamName))
                 .collect(Collectors.toList());
 
-        String zipPath = "peer-review-submissions/" + courseID+"/"+assignmentID+"/"+"for-"+teamName.concat(".zip");
+        String zipPath = "peer-review-submissions/" + courseID + "/" + assignmentID + "/" + "for-" + teamName.concat(".zip");
         try {
             FileOutputStream fileOutputStream = new FileOutputStream(zipPath);
             ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
             for (File f : teamPeerReviews) {
-               zipOutputStream.putNextEntry(new ZipEntry("for-"+teamName+"/"+f.getName()));
-               byte[] fileBytes = Files.readAllBytes(Paths.get(dir+f.getName()));
-               zipOutputStream.write(fileBytes, 0, fileBytes.length);
-               zipOutputStream.closeEntry();
+                zipOutputStream.putNextEntry(new ZipEntry("for-" + teamName + "/" + f.getName()));
+                byte[] fileBytes = Files.readAllBytes(Paths.get(dir + f.getName()));
+                zipOutputStream.write(fileBytes, 0, fileBytes.length);
+                zipOutputStream.closeEntry();
             }
             zipOutputStream.close();
             return zipPath;
-        } catch (Exception e) {e.printStackTrace();}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return "";
     }
 }
