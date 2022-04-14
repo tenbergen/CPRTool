@@ -21,12 +21,19 @@ const ProfessorRosterComponent = () => {
     const OnChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
     const handleSubmit = async (e) => {
+        const nameArray = Name.split(" ")
+        const first = nameArray[0]
+        const last = nameArray[1]
         if(Name === '' || Email === '') {
             alert("Please enter both name and email for the student!")
         }
+        else if(nameArray.length !== 2) {
+            alert("Please enter first and last name!")
+        }
         else {
             e.preventDefault()
-            const addStudentUrl = `${url}/${courseId}/students/${Email}/add`
+            const firstLastEmail = first + '-' + last + '-' + Email
+            const addStudentUrl = `${url}/${courseId}/students/${firstLastEmail}/add`
             await axios.post(addStudentUrl)
                 .then(res => {
                     console.log(res.data)
@@ -43,7 +50,6 @@ const ProfessorRosterComponent = () => {
     }
 
     const deleteStudent = async (Email) => {
-        console.log(Email)
         const deleteStudentUrl = `${url}/${courseId}/students/${Email}/delete`
         await axios.delete(deleteStudentUrl)
             .then(res => {
