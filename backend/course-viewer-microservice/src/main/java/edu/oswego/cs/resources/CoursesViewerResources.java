@@ -1,5 +1,6 @@
 package edu.oswego.cs.resources;
 
+import edu.oswego.cs.database.AssignmentInterface;
 import edu.oswego.cs.database.CourseInterface;
 import org.bson.Document;
 
@@ -62,11 +63,30 @@ public class CoursesViewerResources {
     }
 
     @GET
-    @RolesAllowed("professor")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/{courseID}/students")
     public Response viewStudentsInCourse(@PathParam("courseID") String courseID) {
-        List<Document> studentDocuments = new CourseInterface().getStudentsInCourse(courseID);
-        return Response.status(Response.Status.OK).entity(studentDocuments).build();
+        Document courseDocument = new CourseInterface().getCourse(courseID);
+        return Response.status(Response.Status.OK).entity(courseDocument.get("students")).build();
+    }
+
+    @GET
+    @RolesAllowed("professor")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("courses/{courseID}/grades")
+    public Response viewAllGrades(@PathParam("courseID") String courseID) {
+        List<Document> courseGrades = new AssignmentInterface().getAllGrades();
+        return Response.status(Response.Status.OK).entity(courseGrades).build();
+    }
+
+    @GET
+    @RolesAllowed("student")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("courses/{courseID}/assignments/{assignmentName}/grade")
+    public Response viewGrade(
+            @PathParam("courseID") String courseID,
+            @PathParam("assignmentName") String assignmentName) {
+        Document grade = new AssignmentInterface().getGrade(assignmentName);
+        return Response.status(Response.Status.OK).entity(grade).build();
     }
 }
