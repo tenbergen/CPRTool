@@ -1,6 +1,6 @@
 package edu.oswego.cs.resources;
 
-import edu.oswego.cs.database.AssignmentInterface;
+import edu.oswego.cs.database.GradeInterface;
 import edu.oswego.cs.database.CourseInterface;
 import org.bson.Document;
 
@@ -74,20 +74,23 @@ public class CoursesViewerResources {
     @GET
     @RolesAllowed("professor")
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("courses/{courseID}/grades")
-    public Response viewAllGrades(@PathParam("courseID") String courseID) {
-        List<Document> courseGrades = new AssignmentInterface().getAllGrades();
+    @Path("courses/{courseID}/students/{studentID}/grades")
+    public Response viewAllGrades(
+            @PathParam("courseID") String courseID,
+            @PathParam("studentID") String studentID) {
+        List<Document> courseGrades = new GradeInterface().getAllGrades(courseID, studentID);
         return Response.status(Response.Status.OK).entity(courseGrades).build();
     }
 
     @GET
     @RolesAllowed("student")
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("courses/{courseID}/assignments/{assignmentName}/grade")
+    @Path("courses/{courseID}/assignments/{assignmentID}/students/{studentID}/grade")
     public Response viewGrade(
             @PathParam("courseID") String courseID,
-            @PathParam("assignmentName") String assignmentName) {
-        Document grade = new AssignmentInterface().getGrade(assignmentName);
+            @PathParam("assignmentID") int assignmentID,
+            @PathParam("studentID") String studentID) {
+        Document grade = new GradeInterface().getGrade(courseID, assignmentID, studentID);
         return Response.status(Response.Status.OK).entity(grade).build();
     }
 }
