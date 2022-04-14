@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 
 public class AssignmentInterface {
@@ -71,32 +72,36 @@ public class AssignmentInterface {
     public static String findFile(String courseID, int assignmentID, String fileName) {
         return getRelPath() + "assignments" + reg + courseID + reg + assignmentID + reg + "assignments" + reg + fileName;
     }
+
     public static String findPeerReviewFile(String courseID, int assignmentID, String fileName) {
         String filePath = getRelPath() + "assignments" + reg + courseID + reg + assignmentID + reg + "peer-reviews" + reg + fileName;
-        if (!new File(filePath).exists()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(filePath + " does not exist.").build());
+        if (!new File(filePath).exists())
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity(filePath + " does not exist.").build());
         return filePath;
     }
 
     public static void writeToAssignment(FileDAO fileDAO) throws IOException {
         String FileStructure = getRelPath() + "assignments" + reg + fileDAO.courseID + reg + fileDAO.assignmentID + reg + "assignments";
-        fileDAO.writeFile(FileStructure + reg + fileDAO.filename);
+        fileDAO.writeFile(FileStructure + reg + fileDAO.fileName);
     }
 
     public static void writeToPeerReviews(FileDAO fileDAO) throws IOException {
         String FileStructure = getRelPath() + "assignments" + reg + fileDAO.courseID + reg + fileDAO.assignmentID + reg + "peer-reviews";
-        fileDAO.writeFile(FileStructure + reg + fileDAO.filename);
+        fileDAO.writeFile(FileStructure + reg + fileDAO.fileName);
     }
 
-    public static void removeFile(FileDAO fileDAO) {
-        String fileLocation = findFile(fileDAO.courseID, fileDAO.assignmentID, fileDAO.filename);
+    public static void removeFile(String courseID, String fileName, int assignmentID) {
+        String fileLocation = findFile(courseID, assignmentID, fileName);
         File file = new File(fileLocation);
-        if (!file.delete()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist or could not be deleted.").build());
+        if (!file.delete())
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist or could not be deleted.").build());
     }
 
-    public static void removePeerReviewFile(FileDAO fileDAO) {
-        String fileLocation = findPeerReviewFile(fileDAO.courseID, fileDAO.assignmentID, fileDAO.filename);
+    public static void removePeerReviewFile(String courseID, String fileName, int assignmentID) {
+        String fileLocation = findPeerReviewFile(courseID, assignmentID, fileName);
         File file = new File(fileLocation);
-        if (!file.delete()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist or could not be deleted.").build());
+        if (!file.delete())
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist or could not be deleted.").build());
     }
 
     public Document createAssignment(AssignmentDAO assignmentDAO) {
@@ -107,7 +112,8 @@ public class AssignmentInterface {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create directory at " + dir.getAbsolutePath()).build());
 
         String[] dirList = dir.list();
-        if (dirList == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Directory must exist to make file structure.").build());
+        if (dirList == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Directory must exist to make file structure.").build());
 
         int nextPos = 0;
         if (dirList.length != 0) {
@@ -123,8 +129,13 @@ public class AssignmentInterface {
         Document assignmentDocument = Document.parse(assignmentDAOEntity.getEntity());
 
         MongoCursor<Document> query = assignmentsCollection.find(assignmentDocument).iterator();
-        if (query.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This assignment already exists.").build());
+        if (query.hasNext()) {
+            query.close();
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This assignment already exists.").build());
+        }
+
         assignmentsCollection.insertOne(assignmentDocument);
+        query.close();
 
         FileStructure += reg + nextPos;
         if (!new File(FileStructure + reg + "team-submissions").mkdirs())
@@ -145,27 +156,34 @@ public class AssignmentInterface {
             Document document = query.next();
             assignments.add(document);
         }
+
+        query.close();
         return assignments;
     }
 
     public List<Document> getAssignmentsByCourse(String courseID) {
         MongoCursor<Document> query = assignmentsCollection.find(eq("course_id", courseID)).iterator();
+        if (!query.hasNext()) {
+            query.close();
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist").build());
+        }
+
         List<Document> assignments = new ArrayList<>();
         while (query.hasNext()) {
             Document document = query.next();
             assignments.add(document);
         }
-        if (assignments.isEmpty()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist").build());
 
+        query.close();
         return assignments;
     }
 
     public Document getSpecifiedAssignment(String courseID, int AssignmentID) {
-        MongoCursor<Document> results = assignmentsCollection.find(new Document()
-                .append("course_id", courseID)
-                .append("assignment_id", AssignmentID)).iterator();
-        if (!results.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
-        return results.next();
+        Document assignment = assignmentsCollection.find(and(
+                eq("course_id", courseID),
+                eq("assignment_id", AssignmentID))).first();
+        if (assignment == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
+        return assignment;
     }
 
     public void updateAssignment(AssignmentDAO assignmentDAO, String courseID, int assignmentID) {
@@ -182,7 +200,10 @@ public class AssignmentInterface {
         MongoCursor<Document> results = assignmentsCollection.find(new Document()
                 .append("assignment_id", AssignmentID)
                 .append("course_id", courseID)).iterator();
-        if (!results.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
+        if (!results.hasNext()) {
+            results.close();
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
+        }
 
         while (results.hasNext()) {
             Document assignment = results.next();
@@ -190,11 +211,13 @@ public class AssignmentInterface {
             FileUtils.deleteDirectory(new File(Destination));
             assignmentsCollection.findOneAndDelete(assignment);
         }
+        results.close();
     }
 
     public void removeCourse(String courseID) throws IOException {
         MongoCursor<Document> results = assignmentsCollection.find(eq("course_id", courseID)).iterator();
-        if (!results.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
+        if (!results.hasNext())
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
 
         while (results.hasNext()) {
             Document assignmentDocument = results.next();
@@ -203,6 +226,7 @@ public class AssignmentInterface {
 
         String Destination = getRelPath() + "assignments" + reg + courseID;
         FileUtils.deleteDirectory(new File(Destination));
+        results.close();
     }
 
 //    public void setPeerReviewPastDue(Document assignmentDocument) {

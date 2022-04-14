@@ -1,4 +1,4 @@
-package edu.oswego.cs.rest.cors;
+package edu.oswego.cs.cors;
 
 import java.io.IOException;
 

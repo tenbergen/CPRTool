@@ -22,7 +22,7 @@ public class FileDAO {
     public int assignmentID;
     public InputStream inputStream;
 
-    public FileDAO(String fileName, String courseID, String srcTeamName, String destTeamName, int assignmentID,  InputStream inputStream) {
+    public FileDAO(String fileName, String courseID, String srcTeamName, String destTeamName, int assignmentID, InputStream inputStream) {
         this.fileName = fileName;
         this.courseID = courseID;
         this.srcTeamName = srcTeamName;
