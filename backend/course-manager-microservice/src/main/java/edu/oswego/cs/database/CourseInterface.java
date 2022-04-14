@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.push;
@@ -50,11 +51,15 @@ public class CourseInterface {
         MongoCursor<Document> courseQuery = courseCollection.find(eq("course_id", dao.courseID)).iterator();
         if (courseQuery.hasNext()) throw new WebApplicationException(Response.status(Response.Status.OK).entity("Course already existed.").build());
         courseCollection.insertOne(course);
+        courseQuery.close();
 
         List<String> students = course.getList("students", String.class);
         for (String student : students) {
             MongoCursor<Document> studentQuery = studentCollection.find(eq("student_id", student)).iterator();
-            if (!studentQuery.hasNext()) studentCollection.updateOne(eq("student_id", student), push("courses", dao.courseID));
+            if (!studentQuery.hasNext()) {
+                studentCollection.updateOne(eq("student_id", student), push("courses", dao.courseID));
+                studentQuery.close();
+            }
         }
     }
 
@@ -77,35 +82,36 @@ public class CourseInterface {
     }
 
     /**
-     * A course DAO is made from the student DAO. Attempt to create the course, then add the student into the student
-     * array in the course using their name from the email and into the student database at the same time with the
-     * student's course array updated to have the new course respectively.
+     * Add the student into the student array in the course using their name from the email and into the student
+     * database at the same time with the student's course array updated to have the new course respectively.
      */
-    public void addStudent(String studentName, String courseID) {
-//        if (!courseCollection.find(eq("course_id", courseID)).iterator().hasNext()) {
-//            addCourse(dao);
-//        }
-
+    public void addStudent(StudentDAO student, String courseID) {
+        String studentId = student.email.split("@")[0];
+        String studentLastName = student.fullName.split(", ")[0];
+        String studentFirstName = student.fullName.split(", ")[1];
         Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
 
         List<String> students = courseDocument.getList("students", String.class);
-        if (students.contains(studentName)) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This student is already in the course.").build());
-        courseCollection.updateOne(eq("course_id", courseID), push("students", studentName));
+        if (students.contains(studentId)) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This student is already in the course.").build());
+        courseCollection.updateOne(eq("course_id", courseID), push("students", studentId));
 
-        MongoCursor<Document> query = studentCollection.find(eq("student_id", studentName)).iterator();
+        MongoCursor<Document> query = studentCollection.find(eq("student_id", studentId)).iterator();
         if (query.hasNext()) {
             Document studentDocument = query.next();
             List<String> courseList = studentDocument.getList("courses", String.class);
             for (String course : courseList) {
                 if (course.equals(courseID)) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This student is already in the course.").build());
             }
-            studentCollection.updateOne(eq("student_id", studentName), push("courses", courseID));
+            studentCollection.updateOne(eq("student_id", studentId), push("courses", courseID));
+            query.close();
         } else {
             List<String> courseList = new ArrayList<>();
             courseList.add(courseID);
             Document newStudent = new Document()
-                    .append("student_id", studentName)
+                    .append("first_name", studentFirstName)
+                    .append("last_name", studentLastName)
+                    .append("student_id", studentId)
                     .append("courses", courseList);
             studentCollection.insertOne(newStudent);
         }
@@ -127,9 +133,11 @@ public class CourseInterface {
                 List<String> courses = studentDocument.getList("courses", String.class);
                 courses.remove(courseID);
                 studentCollection.updateOne(eq("student_id", student), set("courses", courses));
+                studentQuery.close();
             }
         }
         courseCollection.findOneAndDelete(eq("course_id", courseID));
+        courseQuery.close();
     }
 
     /**
@@ -149,51 +157,44 @@ public class CourseInterface {
                 List<String> students = courseDocument.getList("students", String.class);
                 students.remove(studentName);
                 courseCollection.updateOne(eq("course_id", courseID), set("students", students));
+                courseQuery.close();
             }
         }
         courses.remove(courseID);
         studentCollection.updateOne(eq("student_id", studentName), set("courses", courses));
+        studentQuery.close();
     }
 
-    public void addStudentsFromCSV(FileDAO f) {
-        List<StudentDAO> allStudents = parseStudentCSV(f.getCsvLines());
+    public void addStudentsFromCSV(FileDAO fileDAO) {
+        List<StudentDAO> allStudents = parseStudentCSV(fileDAO.getCsvLines());
 
-        String cid = f.getFilename();
+        String cid = fileDAO.getFilename();
         cid = cid.substring(0, cid.length() - 4);
-        Document course = courseCollection.find(new Document("course_id", cid)).first();
-        assert course != null;
-        CourseDAO courseDAO = new CourseDAO(
-                course.get("abbreviation").toString(),
-                course.get("course_name").toString(),
-                course.get("course_section").toString(),
-                course.get("crn").toString(),
-                course.get("semester").toString(),
-                course.get("year").toString()
-        );
+        Document course = courseCollection.find(eq("course_id", cid)).first();
+        if (course == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
 
         List<String> oldStudentList = course.getList("students", String.class);
+        String courseID = course.getString("course_id");
         ArrayList<String> newStudentList = new ArrayList<>();
         ArrayList<String> studentsToRemove = new ArrayList<>();
         ArrayList<String> studentsToAdd = new ArrayList<>();
-        System.out.println(oldStudentList);
-        for (StudentDAO s : allStudents) {
-            newStudentList.add(s.email.split("@")[0]);
+
+        for (StudentDAO studentDAO : allStudents) newStudentList.add(studentDAO.email.split("@")[0]);
+
+        for (String student : oldStudentList) {
+            if (!newStudentList.contains(student)) studentsToRemove.add(student);
         }
-        for (Object d : oldStudentList) {
-            if (!newStudentList.contains(d.toString())) {
-                studentsToRemove.add(d.toString());
-            }
+
+        for (String student : newStudentList) {
+            if (!oldStudentList.contains(student)) studentsToAdd.add(student);
         }
-        for (String s : newStudentList) {
-            if (!oldStudentList.contains(s)) {
-                studentsToAdd.add(s);
-            }
-        }
-        for (String s : studentsToRemove) {
-            removeStudent(s, courseDAO.courseID);
-        }
-        for (String s : studentsToAdd) {
-            addStudent(s, courseDAO.courseID);
+
+        for (String student : studentsToRemove) removeStudent(student, courseID);
+
+        for (StudentDAO student : allStudents.stream()
+                .filter(s -> studentsToAdd.contains(s.email.split("@")[0]))
+                .collect(Collectors.toList())) {
+            addStudent(student, courseID);
         }
     }
 }

@@ -1,18 +1,15 @@
 package edu.oswego.cs.distribution;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AssignmentDistribution {
 
     public static Map<String, List<String>> distribute(List<String> teams, int assignmentsPerTeam) throws Exception {
 
-        if (assignmentsPerTeam >= teams.size())
-            throw new IndexOutOfBoundsException();
+        if (assignmentsPerTeam >= teams.size()) throw new IndexOutOfBoundsException();
 
         HashMap<String, List<String>> teamAssignments = new HashMap<>();
+        Collections.shuffle(teams);
 
         for (int teamIndex = 0; teamIndex < teams.size(); teamIndex++) {
             String team = teams.get(teamIndex);
@@ -21,8 +18,7 @@ public class AssignmentDistribution {
             for (int assignedTeamCount = 1; assignedTeamCount <= assignmentsPerTeam; assignedTeamCount++) {
                 int assignedTeamIndex = teamIndex + assignedTeamCount;
 
-                if (assignedTeamCount + teamIndex >= teams.size())
-                    assignedTeamIndex = assignedTeamIndex - teams.size();
+                if (assignedTeamCount + teamIndex >= teams.size()) assignedTeamIndex = assignedTeamIndex - teams.size();
 
                 String assignedTeam = teams.get(assignedTeamIndex);
                 teamAssignments.get(team).add(assignedTeam);

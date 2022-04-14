@@ -3,6 +3,7 @@ package edu.oswego.cs.resources;
 import com.ibm.websphere.jaxrs20.multipart.IMultipartBody;
 import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.daos.FileDAO;
+import edu.oswego.cs.daos.StudentDAO;
 import edu.oswego.cs.database.CourseInterface;
 
 import javax.annotation.security.DenyAll;
@@ -50,12 +51,15 @@ public class CourseManagerResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed("professor")
-    @Path("courses/{courseID}/students/{studentID}/add")
+    @Path("courses/{courseID}/students/{studentInfo}/add")
     public Response addStudent(
             @PathParam("courseID") String courseID,
-            @PathParam("studentID") String studentID) {
-
-        new CourseInterface().addStudent(studentID, courseID);
+            @PathParam("studentInfo") String studentInfo) {
+        String[] parsedStudentInfo = studentInfo.split("-");
+        if (parsedStudentInfo.length < 3)
+            return Response.status(Response.Status.BAD_REQUEST).entity("Add student field was not filled out properly.").build();
+        StudentDAO studentDAO = new StudentDAO(parsedStudentInfo[0], parsedStudentInfo[1], parsedStudentInfo[2]);
+        new CourseInterface().addStudent(studentDAO, courseID);
         return Response.status(Response.Status.OK).entity("Student successfully added.").build();
     }
 
@@ -85,7 +89,6 @@ public class CourseManagerResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("File corrupted. Try again.").build();
         }
         try {
-            System.out.println(fileDAO.getFilename().substring(0, fileDAO.getFilename().length() - 4));
             new CourseInterface().addStudentsFromCSV(fileDAO);
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Failed to add students.").build();
