@@ -24,7 +24,7 @@ public class StudentTeamResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("get/all")
     public Response getAllTeams(TeamParam request) {
-        return Response.status(Response.Status.OK).entity(new TeamInterface().getAllTeams(request)).build();
+        return Response.status(Response.Status.OK).entity(new TeamInterface().getAllTeams(request.getCourseID())).build();
     }
 
     @GET
@@ -49,7 +49,7 @@ public class StudentTeamResources {
     @Path("join")
     public Response joinTeam(TeamParam request) {
         new TeamInterface().joinTeam(request);
-        return Response.status(Response.Status.OK).entity("Student successfully added to team.").build();
+        return Response.status(Response.Status.OK).entity("Student successfully join team.").build();
     }
     
     @PUT
@@ -70,6 +70,7 @@ public class StudentTeamResources {
         return Response.status(Response.Status.OK).entity("Team name successfully generated").build(); 
     }
 
+    // student unimously agree to team name (agree-to-team-name) => create a securityCheck allAgreedTeamName to check generateTeamName
 
     @PUT
     @Path("finalize-team")

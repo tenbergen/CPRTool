@@ -17,10 +17,29 @@ public class ProfessorTeamResources {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/team-lock/toggle")
-    public Response moveTeamMember(TeamParam request) {
+    public Response toggleTeamLock(TeamParam request) {
         new TeamInterface().toggleTeamLock(request);
-        return Response.status(Response.Status.OK).entity("Team status successfully updated.").build();
+        return Response.status(Response.Status.OK).entity("Team status successfully updated.").build(); 
     }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/add-student")
+    public Response likeThePRofessorCanAddAStudentToATeamIfThatSudentIsNotCurrentInAnyTeamButIfTheStudentIsAlreadyInATeamThenMoveTheStudentFromTheOldTeamToTheNewTeam(TeamParam request) {
+        new TeamInterface().addStudentToTeam(request);
+        return Response.status(Response.Status.OK).entity("Student successfully added to team.").build(); 
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/remove-student")
+    public Response removeMember(TeamParam request) {
+        new TeamInterface().removeStudent(request);
+        return Response.status(Response.Status.OK).entity("Student successfully removed from team.").build(); 
+    }
+
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -39,8 +58,6 @@ public class ProfessorTeamResources {
         return Response.status(Response.Status.OK).entity("Team lead successfully updated.").build(); 
     }
 
-    // update team size bulk and single
-    // add remove move
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -49,4 +66,6 @@ public class ProfessorTeamResources {
         new TeamInterface().deleteTeam(request);
         return Response.status(Response.Status.OK).entity("Team successfully deleted.").build(); 
     }
+
+    // update team size bulk and single
 }
