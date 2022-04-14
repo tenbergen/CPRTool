@@ -45,6 +45,32 @@ public class PeerReviewAssignmentInterface {
         }
     }
 
+    public void addPeerReviewSubmission(String course_id,int assignment_id,String srcTeamName, String fileName){
+        Document team = teamCollection.find(eq("team_id", srcTeamName)).first();
+        if(team == null) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("no team for this student").build());
+        }
+        if (team.getList("team_members", String.class) == null) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Members not defined in team").build());
+        }
+        if (team.get("team_id", String.class) == null) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team_id not defined").build());
+        }
+        String path = "courses"+ reg+course_id+reg+assignment_id+reg+"peer-review-submissions";
+        Document new_submission = new Document()
+                .append("course_id",course_id)
+                .append("assignment_id",assignment_id)
+                .append("submision_name", fileName)
+                .append("team_name",team.getString("team_id"))
+                .append("members",team.getList("team_members",String.class))
+                .append("type","peer_review_submission")
+                .append("path",path+reg+fileName);
+        System.out.println(new_submission);
+        if(submissionsCollection.find(new_submission).iterator().hasNext()){
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("submission already exists").build());
+        }else submissionsCollection.insertOne(new_submission);
+    }
+
     public List<String> getCourseStudentIDs(String courseID) {
         Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
         return (List<String>) courseDocument.get("students");

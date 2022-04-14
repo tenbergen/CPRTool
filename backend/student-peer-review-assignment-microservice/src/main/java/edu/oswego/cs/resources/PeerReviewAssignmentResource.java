@@ -7,6 +7,7 @@ import edu.oswego.cs.distribution.AssignmentDistribution;
 import jdk.javadoc.doclet.Reporter;
 import org.bson.Document;
 
+import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Path("assignments")
+//@DenyAll
 public class PeerReviewAssignmentResource {
 
     /**
@@ -108,7 +110,7 @@ public class PeerReviewAssignmentResource {
      * @throws WebApplicationException A endpoint parameter error
      */
     @POST
-    @RolesAllowed("student")
+//    @RolesAllowed("student")
     @Path("{courseID}/{assignmentID}/{srcTeamName}/{destTeamName}/upload")
     @Consumes({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
     @Produces({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
@@ -125,6 +127,8 @@ public class PeerReviewAssignmentResource {
             String fileName = attachment.getDataHandler().getName();
             if (!fileName.endsWith("pdf")) return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
             peerReviewAssignmentInterface.uploadPeerReview(courseID, assignmentID, srcTeamName, destTeamName, attachment);
+            fileName = "from-"+srcTeamName+"-to-"+destTeamName + fileName.substring(fileName.indexOf("."));
+            peerReviewAssignmentInterface.addPeerReviewSubmission(courseID, assignmentID, srcTeamName, fileName);
         }
         return Response.status(Response.Status.OK).entity("Successfully uploaded peer review.").build();
     }
