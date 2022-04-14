@@ -47,8 +47,9 @@ public class CourseInterface {
         Jsonb jsonb = JsonbBuilder.create();
         Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(dao), MediaType.APPLICATION_JSON_TYPE);
         Document course = Document.parse(courseDAOEntity.getEntity());
-
-        MongoCursor<Document> courseQuery = courseCollection.find(eq("course_id", dao.courseID)).iterator();
+        String[] studentIDArr = dao.courseID.split("-");
+        String studentID = studentIDArr[studentIDArr.length - 1].split("@")[0];
+        MongoCursor<Document> courseQuery = courseCollection.find(eq("course_id", studentID)).iterator();
         if (courseQuery.hasNext()) throw new WebApplicationException(Response.status(Response.Status.OK).entity("Course already existed.").build());
         courseCollection.insertOne(course);
 
