@@ -4,6 +4,7 @@ import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.daos.FileDAO;
 import edu.oswego.cs.database.PeerReviewAssignmentInterface;
 import edu.oswego.cs.distribution.AssignmentDistribution;
+import jdk.javadoc.doclet.Reporter;
 import org.bson.Document;
 
 import javax.annotation.security.RolesAllowed;
@@ -18,11 +19,23 @@ import java.util.Map;
 @Path("assignments")
 public class PeerReviewAssignmentResource {
 
+    /**
+     * Endpoint to start the round robin team assignments
+     * @param courseID Course the peer review is being assigned in
+     * @param assignmentID The assignment that the peer review is for
+     * @param count The number of teams a team can be assigned
+     * @return Response if the teams were assigned
+     * @throws Exception If count > the number of teams in the course.
+     */
     @GET
     @RolesAllowed("professor")
     @Path("{courseID}/{assignmentID}/assign/{count_to_review}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response assignTeams(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("count_to_review") int count) throws Exception {
+    public Response assignTeams(
+            @PathParam("courseID") String courseID,
+            @PathParam("assignmentID") int assignmentID,
+            @PathParam("count_to_review") int count
+    ) throws Exception {
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
 
         List<String> teamNames = peerReviewAssignmentInterface.getCourseTeams(courseID);
@@ -35,6 +48,29 @@ public class PeerReviewAssignmentResource {
         Document teamAssignmentsDocument = peerReviewAssignmentInterface.addAssignedTeams(assignedTeams, courseID, assignmentID);
         return Response.status(Response.Status.OK).entity(teamAssignmentsDocument).build();
     }
+
+    /**
+     * Endpoint to get the teams that a team was assigned to peer review
+     * @param courseID The course that is peer review is assigned in.
+     * @param assignmentID The assignment is the peer review is for.
+     * @param teamName The team name that is requesting what teams to review
+     * @return A list of teams name that a team is going to review
+     */
+    @GET
+    @RolesAllowed({"professor", "student"})
+    @Path("{courseID}/{assignmentID}/peer-review-team-assignments/{teamName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTeamAssignments(
+            @PathParam("courseID") String courseID,
+            @PathParam("assignmentID") int assignmentID,
+            @PathParam("teamName") String teamName
+    ) {
+        PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
+        List<String> assignedTeams = peerReviewAssignmentInterface.getAssignedTeams(courseID, assignmentID, teamName);
+        if (assignedTeams == null) return Response.status(Response.Status.BAD_REQUEST).entity("Team name does not exist.").build();
+        return Response.status(Response.Status.OK).entity(assignedTeams).build();
+    }
+
 
     /**
      *  An endpoint for a team to download another team's assignment submission to be peer reviewed.
