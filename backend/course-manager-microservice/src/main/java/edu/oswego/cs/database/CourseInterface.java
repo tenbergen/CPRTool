@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.push;
 import static com.mongodb.client.model.Updates.set;
@@ -148,25 +149,24 @@ public class CourseInterface {
      * Remove the student from the course's arraylist of students, and then remove the course from the student's course
      * arraylist in the student database.
      */
-    public void removeStudent(String studentName, String courseID) {
-        MongoCursor<Document> studentQuery = studentCollection.find(eq("student_id", studentName)).iterator();
-        if (!studentQuery.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist.").build());
-
+    public void removeStudent(String studentID, String courseID) {
+        MongoCursor<Document> studentQuery = studentCollection.find(and(eq("student_id", studentID),
+                                                                        eq("courses", courseID))).iterator();
+        if (!studentQuery.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist in this course.").build());
         Document studentDocument = studentQuery.next();
         List<String> courses = studentDocument.getList("courses", String.class);
-        for (String course : courses) {
-            MongoCursor<Document> courseQuery = courseCollection.find(eq("course_id", course)).iterator();
-            if (courseQuery.hasNext()) {
-                Document courseDocument = courseQuery.next();
-                List<String> students = courseDocument.getList("students", String.class);
-                students.remove(studentName);
-                courseCollection.updateOne(eq("course_id", courseID), set("students", students));
-                courseQuery.close();
-            }
-        }
-        courses.remove(courseID);
-        studentCollection.updateOne(eq("student_id", studentName), set("courses", courses));
+        courses.remove(courses.indexOf(courseID));
+        studentCollection.updateOne(eq("student_id", studentID), set("courses", courses));
         studentQuery.close();
+
+        MongoCursor<Document> courseQuery = courseCollection.find(eq("course_id", courseID)).iterator();
+        if (!courseQuery.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist in this course.").build());
+        Document courseDocument = courseQuery.next();
+        List<String> students = courseDocument.getList("students", String.class);
+        students.remove(students.indexOf(studentID));
+        courseCollection.updateOne(eq("course_id", courseID), set("students", students));
+
+        courseQuery.close();
     }
 
     public void addStudentsFromCSV(FileDAO fileDAO) {
