@@ -29,17 +29,27 @@ public class StudentAssignmentResource {
      */
     @POST
     @RolesAllowed({"professor", "student"})
+    @Consumes({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
     @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
-    @Path("/courses/{courseID}/assignments/{assignmentID}/upload")
-    public Response addFileToAssignment(List<IAttachment> attachments, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) throws IOException {
+    @Path("/courses/{courseID}/{assignmentID}/{teamName}/upload")
+    public Response addFileToAssignment(
+            List<IAttachment> attachments,
+            @PathParam("courseID") String courseID,
+            @PathParam("assignmentID") int assignmentID,
+            @PathParam("teamName") String teamName
+    ) throws IOException {
+        AssignmentInterface assignmentInterface = new AssignmentInterface();
         for (IAttachment attachment : attachments) {
             if (attachment == null) continue;
             String fileName = attachment.getDataHandler().getName();
-
-            if (!fileName.endsWith("pdf") && !fileName.endsWith("docx")) return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
-            new AssignmentInterface().writeToAssignment(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
+            String fileExt = fileName.substring(fileName.indexOf("."));
+            if (!fileExt.equals("pdf") && !fileExt.equals("docx")) return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
+            assignmentInterface.writeToAssignment(FileDAO.fileFactory(teamName.concat(fileExt), courseID, attachment, assignmentID));
+            return Response.status(Response.Status.OK).entity("Assignment Added.").build();
+            //Document assignmentDocument = assignmentInterface.addAssignmentToSubmissions(courseID, assignmentID, teamName, teamName.concat(fileExt));
+//            return Response.status(Response.Status.OK).entity(assignmentDocument).build();
         }
-        return Response.status(Response.Status.OK).entity("Successfully uploaded assignment.").build();
+        return Response.status(Response.Status.BAD_REQUEST).entity("File Corrupted.").build();
     }
 
 }
