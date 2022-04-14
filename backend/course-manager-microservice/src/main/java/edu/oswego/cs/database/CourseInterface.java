@@ -160,7 +160,7 @@ public class CourseInterface {
         studentQuery.close();
 
         MongoCursor<Document> courseQuery = courseCollection.find(eq("course_id", courseID)).iterator();
-        if (!courseQuery.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist in this course.").build());
+        if (!courseQuery.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not contain this student").build());
         Document courseDocument = courseQuery.next();
         List<String> students = courseDocument.getList("students", String.class);
         students.remove(students.indexOf(studentID));
