@@ -13,7 +13,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Path("student")
 @DenyAll
@@ -31,14 +33,19 @@ public class studentAssignmentResource {
     @RolesAllowed({"professor", "student"})
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.MULTIPART_FORM_DATA)
-    @Path("/courses/{courseID}/assignments/{assignmentID}/download/{fileName}")
-    public Response downloadAssignment(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("fileName") String fileName) {
-        File file = new File(AssignmentInterface.findFile(courseID, assignmentID, fileName));
-        if (!file.exists())
-            return Response.status(Response.Status.NOT_FOUND).entity("Assignment Does Not Exist").build();
+    @Path("/courses/{courseID}/assignments/{assignmentID}/{teamName}/download/")
+    public Response downloadAssignment(
+            @PathParam("courseID") String courseID,
+            @PathParam("assignmentID") int assignmentID,
+            @PathParam("teamName") String teamName) {
 
-        Response.ResponseBuilder response = Response.ok(file);
-        response.header("Content-Disposition", "attachment; filename=" + file.getName());
+        String path = "courses/"+courseID+"/"+assignmentID+"/"+"team-submissions/";
+        Optional<File> file = Arrays.stream(new File(path).listFiles()).filter(f->f.getName().contains(teamName)).findFirst();
+        if (file.isEmpty())
+            return Response.status(Response.Status.BAD_REQUEST).entity("Assignment Does Not Exist").build();
+
+        Response.ResponseBuilder response = Response.ok(file.get());
+        response.header("Content-Disposition", "attachment; filename=" + file.get().getName());
         return response.build();
     }
 
@@ -75,11 +82,11 @@ public class studentAssignmentResource {
 
     @GET
     @RolesAllowed("student")
-    @Path("{course-id}/{assignment-id}/{student-id}/my-submissions")
+    @Path("{course_id}/{assignment_id}/{student_id}/my-submissions")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewMySubmissions(@PathParam("course-id") String courseID,
-                                      @PathParam("assignment-id") int assignmentID,
-                                      @PathParam("student-id") String teamName)
+    public Response viewMySubmissions(@PathParam("course_id") String courseID,
+                                      @PathParam("assignment_id") int assignmentID,
+                                      @PathParam("student_id") String teamName)
     {
         List<Document> documents = new AssignmentInterface().getAllUserAssignments(courseID, assignmentID, teamName);
         return Response.status(Response.Status.OK).entity(documents).build();
