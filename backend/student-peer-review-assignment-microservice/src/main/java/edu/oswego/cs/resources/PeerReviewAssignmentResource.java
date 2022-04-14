@@ -4,7 +4,6 @@ import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.daos.FileDAO;
 import edu.oswego.cs.database.PeerReviewAssignmentInterface;
 import edu.oswego.cs.distribution.AssignmentDistribution;
-import jdk.javadoc.doclet.Reporter;
 import org.bson.Document;
 
 import javax.annotation.security.DenyAll;
@@ -18,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Path("assignments")
-//@DenyAll
+@DenyAll
 public class PeerReviewAssignmentResource {
 
     /**
@@ -110,7 +109,7 @@ public class PeerReviewAssignmentResource {
      * @throws WebApplicationException A endpoint parameter error
      */
     @POST
-//    @RolesAllowed("student")
+    @RolesAllowed("student")
     @Path("{courseID}/{assignmentID}/{srcTeamName}/{destTeamName}/upload")
     @Consumes({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
     @Produces({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
