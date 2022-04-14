@@ -51,7 +51,7 @@ const getUserInformation = () => {
             isAuthenticated: true,
             user_given_name: decoded.full_name,
             email: decoded.upn,
-            lakerId: decoded.lakerID,
+            lakerId: decoded.laker_id,
             role: alt_role != null ? alt_role : decoded.groups[0],
             dataLoaded: true
         }
