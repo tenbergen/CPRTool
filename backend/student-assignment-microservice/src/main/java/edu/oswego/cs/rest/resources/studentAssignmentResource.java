@@ -3,6 +3,7 @@ package edu.oswego.cs.rest.resources;
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.rest.daos.FileDAO;
 import edu.oswego.cs.rest.database.AssignmentInterface;
+import org.bson.Document;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.GET;
@@ -67,4 +68,15 @@ public class studentAssignmentResource {
         return Response.status(Response.Status.OK).entity("Successfully uploaded assignment.").build();
     }
 
+    @GET
+    @RolesAllowed("student")
+    @Path("{course-id}/{assignment-id}/{student-id}/my-submissions")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response viewMySubmissions(@PathParam("course-id") String courseID,
+                                      @PathParam("assignment-id") int assignmentID,
+                                      @PathParam("student-id") String teamName)
+    {
+        List<Document> documents = new AssignmentInterface().getAllUserAssignments(courseID, assignmentID, teamName);
+        return Response.status(Response.Status.OK).entity(documents).build();
+    }
 }
