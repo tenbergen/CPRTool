@@ -152,15 +152,17 @@ public class CourseInterface {
     public void removeStudent(String studentID, String courseID) {
         MongoCursor<Document> studentQuery = studentCollection.find(and(eq("student_id", studentID),
                                                                         eq("courses", courseID))).iterator();
+        MongoCursor<Document> courseQuery = courseCollection.find(eq("course_id", courseID)).iterator();
+
         if (!studentQuery.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist in this course.").build());
+        if (!courseQuery.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not contain this student").build());
+
         Document studentDocument = studentQuery.next();
         List<String> courses = studentDocument.getList("courses", String.class);
         courses.remove(courses.indexOf(courseID));
         studentCollection.updateOne(eq("student_id", studentID), set("courses", courses));
         studentQuery.close();
 
-        MongoCursor<Document> courseQuery = courseCollection.find(eq("course_id", courseID)).iterator();
-        if (!courseQuery.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not contain this student").build());
         Document courseDocument = courseQuery.next();
         List<String> students = courseDocument.getList("students", String.class);
         students.remove(students.indexOf(studentID));
