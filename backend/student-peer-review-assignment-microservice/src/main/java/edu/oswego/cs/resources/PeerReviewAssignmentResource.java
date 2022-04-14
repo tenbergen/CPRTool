@@ -6,7 +6,7 @@ import edu.oswego.cs.database.PeerReviewAssignmentInterface;
 import edu.oswego.cs.distribution.AssignmentDistribution;
 import org.bson.Document;
 
-import javax.print.attribute.standard.Media;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -19,19 +19,16 @@ import java.util.Map;
 public class PeerReviewAssignmentResource {
 
     @GET
+    @RolesAllowed("professor")
     @Path("{courseID}/{assignmentID}/assign/{count_to_review}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response assignTeams(
-            @PathParam("courseID") String courseID,
-            @PathParam("assignmentID") int assignmentID,
-            @PathParam("count_to_review") int count) throws Exception {
+    public Response assignTeams(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("count_to_review") int count) throws Exception {
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
 
-        //List<String> teamNames = peerReviewAssignmentInterface.getCourseTeams(courseID);
         List<String> teamNames = peerReviewAssignmentInterface.getCourseStudentIDs(courseID);
         Map<String, List<String>> assignedTeams;
         try {
-             assignedTeams = AssignmentDistribution.distribute(teamNames, count);
+            assignedTeams = AssignmentDistribution.distribute(teamNames, count);
         } catch (IndexOutOfBoundsException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Number of reviews peer team is greater than the number of teams in the course.").build();
         }
@@ -39,8 +36,6 @@ public class PeerReviewAssignmentResource {
 //        FileDAO.zipPeerReview(assignedTeams, courseID, assignmentID);
 
         return Response.status(Response.Status.OK).build();
-        //Document assignedTeamDocument = peerReviewAssignmentInterface.addAssignedTeams(assignedTeams, courseID, assignmentID);
-        //return Response.status(Response.Status.OK).entity(assignedTeamDocument).build();
     }
 
     /**
@@ -52,6 +47,7 @@ public class PeerReviewAssignmentResource {
      * @throws WebApplicationException A endpoint parameter error
      */
     @GET
+    @RolesAllowed("student")
     @Path("{courseID}/{assignmentID}/{teamName}/download")
     @Produces(MediaType.MULTIPART_FORM_DATA)
     public Response downloadOtherTeamsAssignment(
@@ -78,6 +74,7 @@ public class PeerReviewAssignmentResource {
      * @throws WebApplicationException A endpoint parameter error
      */
     @POST
+    @RolesAllowed("student")
     @Path("{courseID}/{assignmentID}/{srcTeamName}/{destTeamName}/upload")
     @Consumes({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
     @Produces({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
@@ -109,6 +106,7 @@ public class PeerReviewAssignmentResource {
      * @throws WebApplicationException A endpoint parameter error
      */
     @GET
+    @RolesAllowed("student")
     @Path("{courseID}/{assignmentID}/{srcTeamName}/{destTeamName}/download")
     @Produces({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
     public Response downloadFinishedTeamPeerReview(
@@ -119,11 +117,38 @@ public class PeerReviewAssignmentResource {
         ) {
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
 
+
+        // check if the peer review due date is past
+        // if not then return a response saying peer review is not ready
+
         File file = peerReviewAssignmentInterface.downloadFinishedPeerReview(courseID, assignmentID, srcTeamName, destTeamName);
 
         Response.ResponseBuilder response = Response.ok(file);
         response.header("Content-Disposition", "attachment; filename=" + "peer-review-" + file.getName());
         return response.build();
+    }
+    @GET
+    @RolesAllowed("student")
+    @Path("{course-id}/{assignment-id}/{student-id}/reviewed-by-me")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response viewUserReviewedAssignments(@PathParam("course-id") String courseID,
+                                                @PathParam("assignment-id") int assignmentID,
+                                                @PathParam("student-id") String teamName)
+    {
+        List<Document> documents = new PeerReviewAssignmentInterface().getAssignmentsReviewedByUser(courseID, assignmentID, teamName);
+        return Response.status(Response.Status.OK).entity(documents).build();
+    }
+
+    @GET
+    @RolesAllowed("student")
+    @Path("{course-id}/{assignment-id}/{student-id}/my-graded-assignments")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response viewAssignmentsReviewedOfUser(@PathParam("course-id") String courseID,
+                                                  @PathParam("assignment-id") int assignmentID,
+                                                  @PathParam("student-id") String teamName)
+    {
+        List<Document> documents = new PeerReviewAssignmentInterface().getUsersGradedAssignments(courseID, assignmentID, teamName);
+        return Response.status(Response.Status.OK).entity(documents).build();
     }
 
 }
