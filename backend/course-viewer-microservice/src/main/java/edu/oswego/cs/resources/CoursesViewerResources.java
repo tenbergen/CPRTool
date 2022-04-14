@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("professor")
-//@DenyAll
+@DenyAll
 public class CoursesViewerResources {
     @GET
     @RolesAllowed("professor")
@@ -62,6 +62,7 @@ public class CoursesViewerResources {
     }
 
     @GET
+    @RolesAllowed("professor")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/{courseID}/students")
     public Response viewStudentsInCourse(@PathParam("courseID") String courseID) {
