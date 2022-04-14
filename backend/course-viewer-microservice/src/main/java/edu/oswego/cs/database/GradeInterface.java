@@ -29,20 +29,21 @@ public class GradeInterface {
     }
 
     public List<Document> getAllGrades(String courseID, String studentID) {
-        MongoCursor<Document> query = gradesCollection.find(and(eq("course_id", courseID),
+        MongoCursor<Document> query = gradesCollection.find(and(
+                eq("course_id", courseID),
                 eq("student_id", studentID))).iterator();
         List<Document> grades = new ArrayList<>();
         while (query.hasNext()) {
             Document document = query.next();
             grades.add(document);
         }
-        if (grades.isEmpty()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist").build());
-        query.close();
+        if (grades.isEmpty()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist.").build());
         return grades;
     }
 
     public Document getGrade(String courseID, int assignmentID, String studentID) {
-        Document document = gradesCollection.find(and(eq("course_id", courseID),
+        Document document = gradesCollection.find(and(
+                eq("course_id", courseID),
                 eq("assignment_id", assignmentID),
                 eq("student_id", studentID))).first();
         if (document == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This assignment does not exist.").build());
