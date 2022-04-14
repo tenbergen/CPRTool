@@ -1,44 +1,57 @@
 package edu.oswego.cs.rest.database;
 
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.rest.daos.AssignmentDAO;
 import edu.oswego.cs.rest.daos.FileDAO;
 import org.bson.Document;
 
+import javax.print.Doc;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.set;
+
 public class AssignmentInterface {
 
     static MongoDatabase assignmentDatabase;
+    static MongoDatabase teamsDatabase;
     static MongoCollection<Document> assignmentsCollection;
+    static MongoCollection<Document> teamsCollection;
+    static MongoCollection<Document> submissionCollection;
     private final List<AssignmentDAO> assignments = new ArrayList<>();
 
-    static String reg;
+
+    static String reg = "/";
     static int nextPos = 0;
 
     public AssignmentInterface() {
         try {
             DatabaseManager manager = new DatabaseManager();
             assignmentDatabase = manager.getAssignmentDB();
-            assignmentsCollection = assignmentDatabase.getCollection("assignments");
+
         } catch (WebApplicationException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
         }
     }
 
     public void writeToAssignment(FileDAO fileDAO) throws IOException {
-        String FileStructure = getRelPath()
-                + "courses" + reg
+        String path = "courses" + reg
                 + fileDAO.getCourseID() + reg
                 + fileDAO.getAssignmentID() + reg
-                + "TeamSubmissions";
-        fileDAO.writeFile(FileStructure + reg + fileDAO.getFilename());
+                + "team-submissions";
+
+        if (!new File(path).exists()) {
+            new File(path).mkdirs();
+        }
+        fileDAO.writeFile(path + reg + fileDAO.getFilename());
     }
 
     /**
@@ -63,6 +76,7 @@ public class AssignmentInterface {
         }
         return relativePathPrefix.toString();
     }
+
 
     public List<AssignmentDAO> getAssignmentsByCourse(String courseID) {
         for (Document document : assignmentsCollection.find()) {
