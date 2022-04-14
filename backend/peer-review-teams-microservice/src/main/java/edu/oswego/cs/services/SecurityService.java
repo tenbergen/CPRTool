@@ -1,10 +1,10 @@
 package edu.oswego.cs.services;
 
-import com.mongodb.client.MongoCollection;
+import org.bson.Document;
+
 import edu.oswego.cs.database.TeamInterface;
 import edu.oswego.cs.requests.SwitchTeamParam;
 import edu.oswego.cs.requests.TeamParam;
-import org.bson.Document;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -50,7 +50,7 @@ public class SecurityService {
         if (isTeamLock(request.getTargetTeamID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Target team is locked.").build());
         if (isTeamFull(request.getTargetTeamID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Target team already full.").build());
+            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Target team already full.").build());
     }
 
     public void generateTeamNameSecurity(Document courseDocument, TeamParam request) {

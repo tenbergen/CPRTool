@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class TeamService {
 
-    public String generateTeamID(MongoCollection<Document> teamCollection, String courseID){
+    public String generateTeamID(String courseID){
         List<Document> teamDocuments = new TeamInterface().getAllTeams(courseID);
         if (teamDocuments == null || teamDocuments.size() == 0) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
         
