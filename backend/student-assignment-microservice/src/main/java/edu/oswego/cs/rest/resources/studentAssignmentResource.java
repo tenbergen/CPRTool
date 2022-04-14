@@ -37,7 +37,7 @@ public class studentAssignmentResource {
         if (!file.exists())
             return Response.status(Response.Status.NOT_FOUND).entity("Assignment Does Not Exist").build();
 
-        Response.ResponseBuilder response = Response.ok((Object) file);
+        Response.ResponseBuilder response = Response.ok(file);
         response.header("Content-Disposition", "attachment; filename=" + file.getName());
         return response.build();
     }
@@ -55,15 +55,20 @@ public class studentAssignmentResource {
     @POST
     @RolesAllowed({"professor", "student"})
     @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
-    @Path("/courses/{courseID}/assignments/{assignmentID}/upload")
-    public Response addFileToAssignment(List<IAttachment> attachments, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) throws IOException {
+    @Path("/courses/{courseID}/assignments/{assignmentID}/{teamName}/upload")
+    public Response addFileToAssignment(
+            List<IAttachment> attachments,
+            @PathParam("courseID") String courseID,
+            @PathParam("assignmentID") int assignmentID,
+            @PathParam("teamName") String teamName
+    ) throws IOException {
         for (IAttachment attachment : attachments) {
             if (attachment == null) continue;
             String fileName = attachment.getDataHandler().getName();
-
+            String fileExt = fileName.substring(fileName.indexOf("."));
             if (!fileName.endsWith("pdf") && !fileName.endsWith("docx"))
                 return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
-            new AssignmentInterface().writeToAssignment(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
+            new AssignmentInterface().writeToAssignment(FileDAO.fileFactory(teamName.concat(fileExt), courseID, attachment, assignmentID));
         }
         return Response.status(Response.Status.OK).entity("Successfully uploaded assignment.").build();
     }

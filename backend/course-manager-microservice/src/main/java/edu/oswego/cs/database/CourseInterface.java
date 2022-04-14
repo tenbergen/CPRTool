@@ -48,7 +48,8 @@ public class CourseInterface {
         Jsonb jsonb = JsonbBuilder.create();
         Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(dao), MediaType.APPLICATION_JSON_TYPE);
         Document course = Document.parse(courseDAOEntity.getEntity());
-
+        String[] studentIDArr = dao.courseID.split("-");
+        String studentID = studentIDArr[studentIDArr.length - 1].split("@")[0];
         MongoCursor<Document> courseQuery = courseCollection.find(eq("course_id", dao.courseID)).iterator();
         if (courseQuery.hasNext()) {
             courseQuery.close();

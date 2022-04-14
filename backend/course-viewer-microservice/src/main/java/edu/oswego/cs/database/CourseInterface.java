@@ -9,6 +9,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -41,7 +42,8 @@ public class CourseInterface {
 
     public Document getCourse(String courseID) {
         Document document = courseCollection.find(eq("course_id", courseID)).first();
-        if (document == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
+        if (document == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
         return document;
     }
 
@@ -58,14 +60,16 @@ public class CourseInterface {
 
     public Document getStudent(String studentID) {
         Document document = studentCollection.find(eq("student_id", studentID)).first();
-        if (document == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist.").build());
+        if (document == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist.").build());
         return document;
     }
 
     public List<Document> getStudentCourses(String studentID) {
         Document studentDocument = studentCollection.find(eq("student_id", studentID)).first();
-        if (studentDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist.").build());
-        
+        if (studentDocument == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist.").build());
+
         List<String> courses = studentDocument.getList("courses", String.class);
         List<Document> courseDocuments = new ArrayList<>();
         for (String course : courses) {
@@ -73,5 +77,17 @@ public class CourseInterface {
             courseDocuments.add(courseDocument);
         }
         return courseDocuments;
+    }
+
+    public List<Document> getStudentsInCourse(String courseID) {
+        Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
+        if (courseDocument == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).build());
+
+        List<String> studentIDs = (List<String>) courseDocument.get("students");
+
+        return studentIDs.stream()
+                .map(id -> studentCollection.find(eq("student_id", id)).first())
+                .collect(Collectors.toList());
     }
 }

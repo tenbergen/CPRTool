@@ -13,12 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
@@ -78,44 +73,30 @@ public class PeerReviewAssignmentInterface {
     }
 
     public void uploadPeerReview(String courseID, int assignmentID, String srcTeamName, String destTeamName, IAttachment attachment) throws IOException {
-        String basePath = FileDAO.peer_review_submission_path + courseID + "/" + assignmentID + "/";
-        if (!new File(basePath).exists()) {
-            new File(basePath).mkdirs();
-        }
-
         FileDAO fileDAO = FileDAO.fileFactory(courseID, srcTeamName, destTeamName, assignmentID, attachment);
+        String path = "courses/"+courseID+"/"+assignmentID+"/peer-review-submissions/";
+        if (! new File(path).exists()) {
+            new File(path).mkdirs();
+        }
+        OutputStream outputStream = new FileOutputStream(path+fileDAO.fileName+".pdf");
 
-        OutputStream outputStream = new FileOutputStream(basePath + fileDAO.fileName + ".pdf");
         outputStream.write(fileDAO.inputStream.readAllBytes());
         outputStream.close();
 
     }
 
-    public String packagePeerReviewedAssignments(String courseID, int assignmentID, String teamName) {
-        if (!new File(FileDAO.peer_review_submission_path).exists())
+    public File downloadFinishedPeerReview(String courseID, int assignmentID, String srcTeamName, String destTeamName) {
+        String path = "courses/"+courseID+"/"+assignmentID+"/peer-review-submissions/";
+        if (!new File(path).exists())
             throw new WebApplicationException("Peer reviews do not exist for this course yet.");
 
-        String dir = FileDAO.peer_review_submission_path + courseID + "/" + assignmentID + "/";
-        List<File> files = Arrays.asList(new File(dir).listFiles());
+        Optional<File> file = Arrays.stream(new File(path).listFiles())
+                .filter( f -> f.getName().contains(srcTeamName) && f.getName().contains(destTeamName) )
+                .findFirst();
 
-        List<File> teamPeerReviews = files.stream().filter(f -> f.getName().split(".pdf")[0].endsWith(teamName)).collect(Collectors.toList());
+        if (file.isEmpty()) throw new WebApplicationException("No peer review from team " + srcTeamName + " for " + destTeamName);
+        return file.get();
 
-        String zipPath = "peer-review-submissions/" + courseID + "/" + assignmentID + "/" + "for-" + teamName.concat(".zip");
-        try {
-            FileOutputStream fileOutputStream = new FileOutputStream(zipPath);
-            ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
-            for (File f : teamPeerReviews) {
-                zipOutputStream.putNextEntry(new ZipEntry("for-" + teamName + "/" + f.getName()));
-                byte[] fileBytes = Files.readAllBytes(Paths.get(dir + f.getName()));
-                zipOutputStream.write(fileBytes, 0, fileBytes.length);
-                zipOutputStream.closeEntry();
-            }
-            zipOutputStream.close();
-            return zipPath;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
     }
 
     public List<Document> getUsersGradedAssignments(String courseID, int assignmentID, String studentID){

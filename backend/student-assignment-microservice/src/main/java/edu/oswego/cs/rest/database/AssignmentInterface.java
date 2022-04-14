@@ -1,5 +1,6 @@
 package edu.oswego.cs.rest.database;
 
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
@@ -7,25 +8,30 @@ import edu.oswego.cs.rest.daos.AssignmentDAO;
 import edu.oswego.cs.rest.daos.FileDAO;
 import org.bson.Document;
 
+import javax.print.Doc;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.mongodb.client.model.Filters.and;
+
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.and;
+
 
 public class AssignmentInterface {
 
     static MongoDatabase assignmentDatabase;
+    static MongoDatabase teamsDatabase;
     static MongoCollection<Document> assignmentsCollection;
-    private final MongoCollection<Document> submissionsCollection;
+    static MongoCollection<Document> teamsCollection;
+    static MongoCollection<Document> submissionCollection;
 
     private final List<AssignmentDAO> assignments = new ArrayList<>();
-
-    static String reg;
+    static String reg = "/";
     static int nextPos = 0;
 
     public AssignmentInterface() {
@@ -33,7 +39,7 @@ public class AssignmentInterface {
             DatabaseManager manager = new DatabaseManager();
             assignmentDatabase = manager.getAssignmentDB();
             assignmentsCollection = assignmentDatabase.getCollection("assignments");
-            submissionsCollection = assignmentDatabase.getCollection("submissions");
+            submissionCollection = assignmentDatabase.getCollection("submissions");
 
         } catch (WebApplicationException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
@@ -41,12 +47,15 @@ public class AssignmentInterface {
     }
 
     public void writeToAssignment(FileDAO fileDAO) throws IOException {
-        String FileStructure = getRelPath()
-                + "courses" + reg
+        String path = "courses" + reg
                 + fileDAO.getCourseID() + reg
                 + fileDAO.getAssignmentID() + reg
-                + "TeamSubmissions";
-        fileDAO.writeFile(FileStructure + reg + fileDAO.getFilename());
+                + "team-submissions";
+
+        if (!new File(path).exists()) {
+            new File(path).mkdirs();
+        }
+        fileDAO.writeFile(path + reg + fileDAO.getFilename());
     }
 
     /**
@@ -73,7 +82,7 @@ public class AssignmentInterface {
     }
 
     public List<Document> getAllUserAssignments(String courseID, int assignmentID, String studentID){
-        MongoCursor<Document> query = submissionsCollection.find(and(eq("course_id",courseID),
+        MongoCursor<Document> query = submissionCollection.find(and(eq("course_id",courseID),
                 eq("assignment_id",assignmentID),
                 eq("members",studentID),
                 eq("type","team_submission"))).iterator();

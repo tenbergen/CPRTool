@@ -62,10 +62,11 @@ public class CoursesViewerResources {
     }
 
     @GET
+    @RolesAllowed("professor")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/{courseID}/students")
     public Response viewStudentsInCourse(@PathParam("courseID") String courseID) {
-        Document courseDocument = new CourseInterface().getCourse(courseID);
-        return Response.status(Response.Status.OK).entity(courseDocument.get("students")).build();
+        List<Document> studentDocuments = new CourseInterface().getStudentsInCourse(courseID);
+        return Response.status(Response.Status.OK).entity(studentDocuments).build();
     }
 }
