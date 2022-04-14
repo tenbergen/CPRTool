@@ -161,41 +161,38 @@ public class CourseInterface {
 
         String cid = f.getFilename();
         cid = cid.substring(0, cid.length() - 4);
-        Document course = courseCollection.find(new Document("course_id", cid)).first();
-        assert course != null;
-        CourseDAO courseDAO = new CourseDAO(
-                course.get("abbreviation").toString(),
-                course.get("course_name").toString(),
-                course.get("course_section").toString(),
-                course.get("crn").toString(),
-                course.get("semester").toString(),
-                course.get("year").toString()
-        );
+        Document course = courseCollection.find(eq("course_id", cid)).first();
+        if (course == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
 
         List<String> oldStudentList = course.getList("students", String.class);
         ArrayList<String> newStudentList = new ArrayList<>();
         ArrayList<String> studentsToRemove = new ArrayList<>();
         ArrayList<String> studentsToAdd = new ArrayList<>();
+
         for (StudentDAO s : allStudents) {
             newStudentList.add(s.email.split("@")[0]);
         }
+
         for (Object d : oldStudentList) {
             if (!newStudentList.contains(d.toString())) {
                 studentsToRemove.add(d.toString());
             }
         }
+
         for (String s : newStudentList) {
             if (!oldStudentList.contains(s)) {
                 studentsToAdd.add(s);
             }
         }
+
         for (String s : studentsToRemove) {
-            removeStudent(s, courseDAO.courseID);
+            removeStudent(s, course.getString("course_id"));
         }
+
         for (StudentDAO student : allStudents.stream()
                 .filter(s -> studentsToAdd.contains(s.email.split("@")[0]))
                 .collect(Collectors.toList())) {
-            addStudent(student, courseDAO.courseID);
+            addStudent(student, course.getString("course_id"));
         }
     }
 }
