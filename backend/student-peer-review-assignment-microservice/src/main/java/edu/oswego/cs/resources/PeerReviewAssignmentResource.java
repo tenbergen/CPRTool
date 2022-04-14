@@ -25,17 +25,15 @@ public class PeerReviewAssignmentResource {
     public Response assignTeams(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("count_to_review") int count) throws Exception {
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
 
-        List<String> teamNames = peerReviewAssignmentInterface.getCourseStudentIDs(courseID);
+        List<String> teamNames = peerReviewAssignmentInterface.getCourseTeams(courseID);
         Map<String, List<String>> assignedTeams;
         try {
             assignedTeams = AssignmentDistribution.distribute(teamNames, count);
         } catch (IndexOutOfBoundsException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Number of reviews peer team is greater than the number of teams in the course.").build();
         }
-
-//        FileDAO.zipPeerReview(assignedTeams, courseID, assignmentID);
-
-        return Response.status(Response.Status.OK).build();
+        Document teamAssignmentsDocument = peerReviewAssignmentInterface.addAssignedTeams(assignedTeams, courseID, assignmentID);
+        return Response.status(Response.Status.OK).entity(teamAssignmentsDocument).build();
     }
 
     /**
