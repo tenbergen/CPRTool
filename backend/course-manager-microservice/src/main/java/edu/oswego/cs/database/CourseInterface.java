@@ -51,11 +51,15 @@ public class CourseInterface {
         MongoCursor<Document> courseQuery = courseCollection.find(eq("course_id", dao.courseID)).iterator();
         if (courseQuery.hasNext()) throw new WebApplicationException(Response.status(Response.Status.OK).entity("Course already existed.").build());
         courseCollection.insertOne(course);
+        courseQuery.close();
 
         List<String> students = course.getList("students", String.class);
         for (String student : students) {
             MongoCursor<Document> studentQuery = studentCollection.find(eq("student_id", student)).iterator();
-            if (!studentQuery.hasNext()) studentCollection.updateOne(eq("student_id", student), push("courses", dao.courseID));
+            if (!studentQuery.hasNext()) {
+                studentCollection.updateOne(eq("student_id", student), push("courses", dao.courseID));
+                studentQuery.close();
+            }
         }
     }
 
@@ -100,6 +104,7 @@ public class CourseInterface {
                 if (course.equals(courseID)) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This student is already in the course.").build());
             }
             studentCollection.updateOne(eq("student_id", studentId), push("courses", courseID));
+            query.close();
         } else {
             List<String> courseList = new ArrayList<>();
             courseList.add(courseID);
@@ -128,9 +133,11 @@ public class CourseInterface {
                 List<String> courses = studentDocument.getList("courses", String.class);
                 courses.remove(courseID);
                 studentCollection.updateOne(eq("student_id", student), set("courses", courses));
+                studentQuery.close();
             }
         }
         courseCollection.findOneAndDelete(eq("course_id", courseID));
+        courseQuery.close();
     }
 
     /**
@@ -150,10 +157,12 @@ public class CourseInterface {
                 List<String> students = courseDocument.getList("students", String.class);
                 students.remove(studentName);
                 courseCollection.updateOne(eq("course_id", courseID), set("students", students));
+                courseQuery.close();
             }
         }
         courses.remove(courseID);
         studentCollection.updateOne(eq("student_id", studentName), set("courses", courses));
+        studentQuery.close();
     }
 
     public void addStudentsFromCSV(FileDAO fileDAO) {

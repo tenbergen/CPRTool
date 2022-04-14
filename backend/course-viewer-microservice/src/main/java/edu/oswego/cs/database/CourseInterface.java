@@ -35,6 +35,7 @@ public class CourseInterface {
             Document document = query.next();
             courses.add(document);
         }
+        query.close();
         return courses;
     }
 
@@ -51,6 +52,7 @@ public class CourseInterface {
             Document document = query.next();
             students.add(document);
         }
+        query.close();
         return students;
     }
 

@@ -131,6 +131,7 @@ public class AssignmentInterface {
         if (query.hasNext())
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This assignment already exists.").build());
         assignmentsCollection.insertOne(assignmentDocument);
+        query.close();
 
         FileStructure += reg + nextPos;
         if (!new File(FileStructure + reg + "team-submissions").mkdirs())
@@ -151,6 +152,7 @@ public class AssignmentInterface {
             Document document = query.next();
             assignments.add(document);
         }
+        query.close();
         return assignments;
     }
 
@@ -161,9 +163,8 @@ public class AssignmentInterface {
             Document document = query.next();
             assignments.add(document);
         }
-        if (assignments.isEmpty())
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist").build());
-
+        if (assignments.isEmpty()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist").build());
+        query.close();
         return assignments;
     }
 
@@ -171,9 +172,10 @@ public class AssignmentInterface {
         MongoCursor<Document> results = assignmentsCollection.find(new Document()
                 .append("course_id", courseID)
                 .append("assignment_id", AssignmentID)).iterator();
-        if (!results.hasNext())
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
-        return results.next();
+        if (!results.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
+        Document assignmentDocument = results.next();
+        results.close();
+        return assignmentDocument;
     }
 
     public void updateAssignment(AssignmentDAO assignmentDAO, String courseID, int assignmentID) {
@@ -200,6 +202,7 @@ public class AssignmentInterface {
             FileUtils.deleteDirectory(new File(Destination));
             assignmentsCollection.findOneAndDelete(assignment);
         }
+        results.close();
     }
 
     public void removeCourse(String courseID) throws IOException {
@@ -214,5 +217,6 @@ public class AssignmentInterface {
 
         String Destination = getRelPath() + "assignments" + reg + courseID;
         FileUtils.deleteDirectory(new File(Destination));
+        results.close();
     }
 }
