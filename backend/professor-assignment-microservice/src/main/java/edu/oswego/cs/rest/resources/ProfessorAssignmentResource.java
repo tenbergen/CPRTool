@@ -40,7 +40,7 @@ public class ProfessorAssignmentResource {
     @RolesAllowed({"professor", "student"})
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}")
-    public Response viewSpecifiedAssignment(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID){
+    public Response viewSpecifiedAssignment(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
         return Response.status(Response.Status.OK).entity(new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID)).build();
     }
 
@@ -64,7 +64,8 @@ public class ProfessorAssignmentResource {
             if (attachment == null) continue;
             String fileName = attachment.getDataHandler().getName();
 
-            if (!fileName.endsWith("pdf") && !fileName.endsWith("zip")) return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
+            if (!fileName.endsWith("pdf") && !fileName.endsWith("zip"))
+                return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
             AssignmentInterface.writeToAssignment(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
         }
         return Response.status(Response.Status.OK).entity("Successfully added file to assignment.").build();
@@ -90,7 +91,8 @@ public class ProfessorAssignmentResource {
             if (attachment == null) continue;
             String fileName = attachment.getDataHandler().getName();
 
-            if (!fileName.endsWith("pdf") && !fileName.endsWith("zip")) return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
+            if (!fileName.endsWith("pdf") && !fileName.endsWith("zip"))
+                return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
             AssignmentInterface.writeToPeerReviews(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
         }
         return Response.status(Response.Status.OK).entity("Successfully added file to peer reviews.").build();
@@ -148,7 +150,8 @@ public class ProfessorAssignmentResource {
     @Path("/courses/{courseID}/assignments/{assignmentID}/view-files")
     public Response viewAssignmentFiles(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
         File file = new File(AssignmentInterface.findAssignment(courseID, assignmentID));
-        if (!file.exists()) return Response.status(Response.Status.NOT_FOUND).entity("Assignment does not exist.").build();
+        if (!file.exists())
+            return Response.status(Response.Status.NOT_FOUND).entity("Assignment does not exist.").build();
 
         File[] files = file.listFiles();
         ArrayList<String> fileNames = new ArrayList<>();
@@ -163,7 +166,8 @@ public class ProfessorAssignmentResource {
     @Path("/courses/{courseID}/assignments/{assignmentID}/peer-review/view-files")
     public Response viewPeerReviewFiles(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
         File file = new File(AssignmentInterface.findPeerReview(courseID, assignmentID));
-        if (!file.exists()) return Response.status(Response.Status.NOT_FOUND).entity("Assignment does not exist.").build();
+        if (!file.exists())
+            return Response.status(Response.Status.NOT_FOUND).entity("Assignment does not exist.").build();
 
         File[] files = file.listFiles();
         ArrayList<String> fileNames = new ArrayList<>();
