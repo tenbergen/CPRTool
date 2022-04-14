@@ -86,7 +86,7 @@ public class PeerReviewAssignmentResource {
     }
     @GET
     @RolesAllowed("student")
-    @Path("{course_id}/{assignment_id}/{student_id}/reviewed_by_me")
+    @Path("{course_id}/{assignment_id}/{student_id}/reviewed-by-me")
     @Produces(MediaType.APPLICATION_JSON)
     public Response viewUserReviewedAssignments(@PathParam("course_id") String courseID,
                                                 @PathParam("assignment_id") int assignmentID,
@@ -98,7 +98,7 @@ public class PeerReviewAssignmentResource {
 
     @GET
     @RolesAllowed("student")
-    @Path("{course_id}/{assignment_id}/{student_id}/my_graded_assignments")
+    @Path("{course_id}/{assignment_id}/{student_id}/my-graded-assignments")
     @Produces(MediaType.APPLICATION_JSON)
     public Response viewAssignmentsReviewedOfUser(@PathParam("course_id") String courseID,
                                                   @PathParam("assignment_id") int assignmentID,
