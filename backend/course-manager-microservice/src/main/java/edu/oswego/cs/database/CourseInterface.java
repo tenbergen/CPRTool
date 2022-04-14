@@ -49,16 +49,17 @@ public class CourseInterface {
         Document course = Document.parse(courseDAOEntity.getEntity());
 
         MongoCursor<Document> courseQuery = courseCollection.find(eq("course_id", dao.courseID)).iterator();
-        if (courseQuery.hasNext()) throw new WebApplicationException(Response.status(Response.Status.OK).entity("Course already existed.").build());
+        if (courseQuery.hasNext()) {
+            courseQuery.close();
+            throw new WebApplicationException(Response.status(Response.Status.OK).entity("Course already existed.").build());
+        }
         courseCollection.insertOne(course);
-        courseQuery.close();
 
         List<String> students = course.getList("students", String.class);
         for (String student : students) {
             MongoCursor<Document> studentQuery = studentCollection.find(eq("student_id", student)).iterator();
             if (!studentQuery.hasNext()) {
                 studentCollection.updateOne(eq("student_id", student), push("courses", dao.courseID));
-                studentQuery.close();
             }
         }
     }
@@ -101,7 +102,10 @@ public class CourseInterface {
             Document studentDocument = query.next();
             List<String> courseList = studentDocument.getList("courses", String.class);
             for (String course : courseList) {
-                if (course.equals(courseID)) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This student is already in the course.").build());
+                if (course.equals(courseID)) {
+                    query.close();
+                    throw new WebApplicationException(Response.status(Response.Status.OK).entity("This student is already in the course.").build());
+                }
             }
             studentCollection.updateOne(eq("student_id", studentId), push("courses", courseID));
             query.close();
