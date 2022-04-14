@@ -108,17 +108,6 @@ public class PeerReviewAssignmentResource {
         return Response.status(Response.Status.OK).entity(documents).build();
     }
 
-    @GET
-    @RolesAllowed("student")
-    @Path("{course-id}/{assignment-id}/{student-id}/my-submissions")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response viewMySubmissions(@PathParam("course-id") String courseID,
-                                      @PathParam("assignment-id") int assignmentID,
-                                      @PathParam("student-id") String teamName)
-    {
-        List<Document> documents = new PeerReviewAssignmentInterface().getAllUserAssignments(courseID, assignmentID, teamName);
-        return Response.status(Response.Status.OK).entity(documents).build();
-    }
 
 
 }

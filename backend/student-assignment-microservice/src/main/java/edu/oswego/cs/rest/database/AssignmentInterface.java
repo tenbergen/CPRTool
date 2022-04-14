@@ -1,6 +1,7 @@
 package edu.oswego.cs.rest.database;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.rest.daos.AssignmentDAO;
 import edu.oswego.cs.rest.daos.FileDAO;
@@ -13,10 +14,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.mongodb.client.model.Filters.and;
+import static com.mongodb.client.model.Filters.eq;
+
 public class AssignmentInterface {
 
     static MongoDatabase assignmentDatabase;
     static MongoCollection<Document> assignmentsCollection;
+    private final MongoCollection<Document> submissionsCollection;
+
     private final List<AssignmentDAO> assignments = new ArrayList<>();
 
     static String reg;
@@ -27,6 +33,8 @@ public class AssignmentInterface {
             DatabaseManager manager = new DatabaseManager();
             assignmentDatabase = manager.getAssignmentDB();
             assignmentsCollection = assignmentDatabase.getCollection("assignments");
+            submissionsCollection = assignmentDatabase.getCollection("submissions");
+
         } catch (WebApplicationException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
         }
@@ -62,6 +70,22 @@ public class AssignmentInterface {
             relativePathPrefix = new StringBuilder(relativePathPrefix.toString().replace("/", "\\"));
         }
         return relativePathPrefix.toString();
+    }
+
+    public List<Document> getAllUserAssignments(String courseID, int assignmentID, String studentID){
+        MongoCursor<Document> query = submissionsCollection.find(and(eq("course_id",courseID),
+                eq("assignment_id",assignmentID),
+                eq("members",studentID),
+                eq("type","team_submission"))).iterator();
+        List<Document> assignments = new ArrayList<>();
+        while (query.hasNext()) {
+            Document document = query.next();
+            assignments.add(document);
+        }
+        if (assignments.isEmpty())
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist").build());
+        query.close();
+        return assignments;
     }
 
     public List<AssignmentDAO> getAssignmentsByCourse(String courseID) {
