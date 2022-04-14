@@ -7,7 +7,6 @@ import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.daos.FileDAO;
 import org.bson.Document;
 
-import javax.print.Doc;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.io.File;
