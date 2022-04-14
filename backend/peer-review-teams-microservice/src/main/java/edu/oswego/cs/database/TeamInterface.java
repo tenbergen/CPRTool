@@ -49,7 +49,7 @@ public class TeamInterface {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
 
-        new SecurityService().createTeamSecurity(teamCollection, courseDocument, request);
+        new SecurityService().createTeamSecurity(courseDocument, request);
 
         String teamID = new TeamService().generateTeamID(teamCollection);
         int teamSize = new TeamService().getTeamSize(courseDocument);
@@ -73,7 +73,6 @@ public class TeamInterface {
             Document teamDocument = cursor.next();
             if (teamDocument.getString("course_id").equals(courseID)) teams.add(teamDocument);
         }
-        cursor.close();
         return teams;
     }
 
@@ -109,7 +108,6 @@ public class TeamInterface {
             }
             if (!teamDocument.getBoolean("is_full") && request.getCourseID().equals(courseID)) nonFullTeams.add(teamDocument);
         }
-        cursor.close();
         return nonFullTeams;
     }
 
@@ -127,14 +125,13 @@ public class TeamInterface {
                 return teamDocument;
             }
         }
-        cursor.close();
         throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
     }
 
     public void joinTeam(TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-        new SecurityService().joinTeamSecurity(teamCollection, courseDocument, request);
+        new SecurityService().joinTeamSecurity(courseDocument, request);
 
         List<Document> teamDocuments = getAllTeams(request.getCourseID());
         if (teamDocuments == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
@@ -156,7 +153,7 @@ public class TeamInterface {
     public void switchTeam(SwitchTeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-        new SecurityService().switchTeamSecurity(teamCollection, courseDocument, request);
+        new SecurityService().switchTeamSecurity(courseDocument, request);
 
         List<Document> currentTeamDocuments = getAllTeams(request.getCourseID());
         if (currentTeamDocuments == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
@@ -211,7 +208,7 @@ public class TeamInterface {
     public void generateTeamName(TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-        new SecurityService().generateTeamNameSecurity(teamCollection, studentCollection, courseDocument, request);
+        new SecurityService().generateTeamNameSecurity(courseDocument, request);
 
         List<Document> teamDocuments = getAllTeams(request.getCourseID());
         if (teamDocuments == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
@@ -235,7 +232,7 @@ public class TeamInterface {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
 
-        if (!new SecurityService().isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
+        if (!new SecurityService().isTeamCreated(request.getTeamID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
 
         List<Document> teamDocuments = getAllTeams(request.getCourseID());
@@ -255,10 +252,10 @@ public class TeamInterface {
     public void addStudentToTeam(TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-        new SecurityService().addStudentToTeamSecurity(teamCollection, courseDocument, request);
+        new SecurityService().addStudentToTeamSecurity(courseDocument, request);
 
-        if (!new SecurityService().isStudentAlreadyInATeam(teamCollection, request.getStudentID(), request.getCourseID())) joinTeam(request);
-        else if (new SecurityService().isStudentAlreadyInATeam(teamCollection, request.getStudentID(), request.getCourseID())) {
+        if (!new SecurityService().isStudentAlreadyInATeam(request.getStudentID(), request.getCourseID())) joinTeam(request);
+        else if (new SecurityService().isStudentAlreadyInATeam(request.getStudentID(), request.getCourseID())) {
             String currentTeamID = new TeamService().retrieveTeamID(request);
             SwitchTeamParam switchTeamParam = new SwitchTeamParam(request.getCourseID(), request.getStudentID(), currentTeamID, request.getTeamID());
             switchTeam(switchTeamParam);
@@ -268,7 +265,7 @@ public class TeamInterface {
     public void removeStudent(TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-        new SecurityService().removeStudent(teamCollection, courseDocument, request);
+        new SecurityService().removeStudent(courseDocument, request);
 
         List<Document> teamDocuments = getAllTeams(request.getCourseID());
         if (teamDocuments == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
@@ -298,7 +295,7 @@ public class TeamInterface {
     public void editTeamName(TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-        new SecurityService().editTeamNameSecurity(teamCollection, studentCollection, courseDocument, request);
+        new SecurityService().editTeamNameSecurity(request);
 
         List<Document> teamDocuments = getAllTeams(request.getCourseID());
         if (teamDocuments == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
@@ -322,7 +319,7 @@ public class TeamInterface {
     public void assignTeamLead(TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-        new SecurityService().assignTeamLeadSecurity(teamCollection, courseDocument, request);
+        new SecurityService().assignTeamLeadSecurity(courseDocument, request);
 
         List<Document> teamDocuments = getAllTeams(request.getCourseID());
         if (teamDocuments == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
@@ -352,10 +349,10 @@ public class TeamInterface {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
 
-        if (!new SecurityService().isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
+        if (!new SecurityService().isTeamCreated(request.getTeamID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
 
-        if (new SecurityService().isTeamLock(teamCollection, request.getTeamID(), request.getCourseID()))
+        if (new SecurityService().isTeamLock(request.getTeamID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Team is locked.").build());
 
         List<Document> teamDocuments = getAllTeams(request.getCourseID());
@@ -385,7 +382,6 @@ public class TeamInterface {
                 if (course.equals(courseID)) students.add(studentDocument);
             }
         }
-        cursor.close();
         return students;
     }
 }
