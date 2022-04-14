@@ -1,13 +1,14 @@
 package edu.oswego.cs.requests;
+import javax.json.bind.annotation.JsonbProperty;
+
+import com.mongodb.lang.NonNull;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 public class TeamParam {
-    private int team_size;
-    private String course_id;
-    private String student_id;
-    private String team_id;
+    @JsonbProperty("course_id") @NonNull String courseID;
+    @JsonbProperty("team_id") @NonNull private String teamID;
+    @JsonbProperty("student_id") @NonNull private String studentID;
+    @JsonbProperty("team_name") @NonNull private String teamName;
 }

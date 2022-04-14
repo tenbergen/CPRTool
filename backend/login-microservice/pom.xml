@@ -18,6 +18,19 @@
     <dependencies>
 
         <dependency>
+            <groupId>org.eclipse.microprofile</groupId>
+            <artifactId>microprofile</artifactId>
+            <version>5.0</version>
+            <type>pom</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse</groupId>
+            <artifactId>yasson</artifactId>
+            <version>1.0.0-RC1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.22</version>
@@ -64,6 +77,33 @@
             <artifactId>com.ibm.websphere.appserver.api.jwt</artifactId>
             <version>1.1.36</version>
             <scope>provided</scope>
+        </dependency>
+
+<!--        dependencies for testing -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.8.2</version>
+            <scope>test</scope>
+        </dependency>
+
+<!--        A note from Liam, bear with me here...
+            Only the apache dependency is required to get our login test to run,
+            but without it there, it says it can't find glassfish...
+            the presence of glassfish makes no difference to this error however.
+            So in other words... apache is more glassfish than glassfish...
+            Try it yourself to see what I mean... XD-->
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
+            <version>1.1.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-rs-client</artifactId>
+            <version>3.4.5</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

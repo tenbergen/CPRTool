@@ -1,113 +1,224 @@
- package edu.oswego.edu;
+package edu.oswego.edu;
 
- import edu.oswego.cs.daos.CourseDAO;
- import org.junit.jupiter.api.*;
+import edu.oswego.cs.daos.CourseDAO;
+import edu.oswego.cs.daos.StudentDAO;
+import org.junit.jupiter.api.*;
 
- import javax.json.bind.Jsonb;
- import javax.json.bind.JsonbBuilder;
- import javax.ws.rs.client.Client;
- import javax.ws.rs.client.ClientBuilder;
- import javax.ws.rs.client.Entity;
- import javax.ws.rs.client.WebTarget;
- import javax.ws.rs.core.MediaType;
- import javax.ws.rs.core.Response;
- import java.lang.reflect.Array;
- import java.util.ArrayList;
- import java.util.HashMap;
- import java.util.List;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
- public class CoursesViewerTest {
+// DISCLAIMER: Don't run all the tests at the same time. You'll likely screw up the database and fail the tests in some way.
+// Read through the tests to see what they create, update and delete before you run them please.
 
-     private static String port;
-     private static String baseUrl;
-     private static String targetUrl;
-     private Client client;
-     private static ArrayList<CourseDAO> expectedCourses;
+public class CoursesViewerTest {
 
-     private static Jsonb jsonb = JsonbBuilder.create();
+    private static final Jsonb jsonb = JsonbBuilder.create();
+    private static final ArrayList<CourseDAO> expectedCourses = new ArrayList<>();
+    private static final ArrayList<StudentDAO> expectedStudents = new ArrayList<>();
+    private static String port;
+    private static String baseUrl;
+    private static String targetUrl;
+    private Client client;
+    private static CourseDAO course1, course2, course3;
+    private static StudentDAO student1, student2, student3, student4;
 
-     @BeforeAll
-     public static void oneTimeSetup() {
-         port = "13128";
-         baseUrl = "http://moxie.cs.oswego.edu:" + port + "/view/professor/";
-         String course1Name = "Software Design I";
-         int course1Section = 9000;
-         String semester1 = "Spring";
-         String abbreviation1 = "CSC480T";
+    @BeforeAll
+    public static void oneTimeSetup() {
+        port = "13125";
+        baseUrl = "http://moxie.cs.oswego.edu:" + port + "/view/professor/";
 
-         String course2Name = "Software Design II";
-         int course2Section = 9000;
-         String semester2 = "Spring";
-         String abbreviation2 = "CSC481T";
 
-         String course3Name = "Software Design II";
-         int course3Section = 9000;
-         String semester3 = "Spring";
-         String abbreviation3 = "CSC482T";
+        // variables for inserted courses
+        String abbreviation1 = "CSC378";
+        String courseName1 = "JUnit Theory";
+        String courseSection1 = "800";
+        String crn1 = "54226";
+        String semester1 = "Spring";
+        String year1 = "2023";
 
-         expectedCourses = new ArrayList<>();
-         expectedCourses.add(new CourseDAO(course1Name, course1Section, semester1, abbreviation1));
-         expectedCourses.add(new CourseDAO(course2Name, course2Section, semester2, abbreviation2));
-         expectedCourses.add(new CourseDAO(course3Name, course3Section, semester3, abbreviation3));
-     }
+        String abbreviation2 = "CRW406";
+        String courseName2 = "Advanced Fiction Writing";
+        String courseSection2 = "700";
+        String crn2 = "54321";
+        String semester2 = "Spring";
+        String year2 = "2023";
 
-     @BeforeEach
-     public void setup() {
-         client = ClientBuilder.newClient();
+        String abbreviation3 = "PHL309";
+        String courseName3 = "Logic, Language, and Thought";
+        String courseSection3 = "HY1";
+        String crn3 = "24680";
+        String semester3 = "Fall";
+        String year3 = "2021";
 
-         expectedCourses.forEach( course -> {
-             String createURL = "http://moxie.cs.oswego.edu:13127/manage/professor/courses/course/create/";
-             WebTarget target = client.target(createURL);
-             target.request(MediaType.APPLICATION_JSON)
-                     .accept(MediaType.APPLICATION_JSON)
-                     .post(Entity.entity(jsonb.toJson(course), MediaType.APPLICATION_JSON));
-         });
-         client.close();
-         client = ClientBuilder.newClient();
-     }
+        course1 = new CourseDAO(abbreviation1, courseName1, courseSection1, crn1, semester1, year1);
+        course2 = new CourseDAO(abbreviation2, courseName2, courseSection2, crn2, semester2, year2);
+        course3 = new CourseDAO(abbreviation3, courseName3, courseSection3, crn3, semester3, year3);
 
-     @AfterEach
-     public void teardown() {
+        // add these courses to the database
+        expectedCourses.add(course1);
+        expectedCourses.add(course2);
+        expectedCourses.add(course3);
 
-         expectedCourses.forEach( course -> {
-             String deleteURL = "http://moxie.cs.oswego.edu:13127/manage/professor/courses/course/delete/";
-             WebTarget target = client.target(deleteURL);
-             target.request(MediaType.APPLICATION_JSON)
-                     .accept(MediaType.APPLICATION_JSON)
-                     .post(Entity.entity(jsonb.toJson(course), MediaType.APPLICATION_JSON));
-         });
-         client.close();
-     }
+        // variables for inserted students
+        String sID1 = "lmcmahan";
+        String sID2 = "tpark";
+        String sID3 = "ecuevas";
+        String sID4 = "cnoto";
+
+        student1 = new StudentDAO(sID1);
+        student2 = new StudentDAO(sID2);
+        student3 = new StudentDAO(sID3);
+        student4 = new StudentDAO(sID4);
+
+        // add these courses to the database
+        expectedStudents.add(student1);
+        expectedStudents.add(student2);
+        expectedStudents.add(student3);
+        expectedStudents.add(student4);
+    }
+
+    @BeforeEach
+    public void setup() {
+        client = ClientBuilder.newClient();
+
+        expectedCourses.forEach(course -> {
+            String createURL = "http://moxie.cs.oswego.edu:13125/manage/professor/courses/course/create/";
+            WebTarget target = client.target(createURL);
+            target.request(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .post(Entity.entity(jsonb.toJson(course), MediaType.APPLICATION_JSON));
+        });
+    }
+
+    @AfterEach
+    public void teardown() {
+
+        expectedCourses.forEach(course -> {
+            String deleteURL = "http://moxie.cs.oswego.edu:13125/manage/professor/courses/course/delete/";
+            WebTarget target = client.target(deleteURL);
+            target.request(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .post(Entity.entity(jsonb.toJson(course), MediaType.APPLICATION_JSON));
+        });
+        client.close();
+    }
+
+    @Test
+    public void viewCoursesTest() {
+        targetUrl = "courses/";
+
+        WebTarget target = client.target(baseUrl + targetUrl);
+        Response response = target.request().get();
+        System.out.println("response: " + response.readEntity(String.class));
+
+        // read each of the objects from the db as jsons!
+        List courseObjects = jsonb.fromJson(response.readEntity(String.class), ArrayList.class);
+        ArrayList<CourseDAO> courses = new ArrayList<>();
+
+        for (Object o : courseObjects) {
+            HashMap mapO = (HashMap) o;
+            courses.add(new CourseDAO(
+                    (String) mapO.get("abbreviation"),
+                    (String) mapO.get("course_name"),
+                    (String) mapO.get("course_section"),
+                    (String) mapO.get("crn"),
+                    (String) mapO.get("semester"),
+                    (String) mapO.get("year")
+            ));
+        }
+
+        ArrayList<CourseDAO> actualCourses = new ArrayList<>();
+
+        // compare the courses we actually entered to what we expect to see
+        courses.forEach(course -> {
+            for (CourseDAO c : expectedCourses) {
+                if (c.courseID.equals(course.courseID))
+                    actualCourses.add(course);
+            }
+        });
+
+        // test passes if the courses were successfully entered into the db
+        Assertions.assertEquals(expectedCourses.size(), actualCourses.size(), "Not all courses were retrieved.");
+    }
+
+    @Test
+    public void viewSpecificCourseTest() {
+
+        // view course1
+        targetUrl = "courses/CSC999-723-92674-Summer-2025/";
+
+        WebTarget target = client.target(baseUrl + targetUrl);
+        Response response = target.request().get();
+        System.out.println("response: " + response.readEntity(String.class));
+
+        Object o = jsonb.fromJson(response.readEntity(String.class), Object.class);
+        HashMap mapO = (HashMap) o;
+
+        CourseDAO courseFromDB = new CourseDAO(
+                (String) mapO.get("abbreviation"),
+                (String) mapO.get("course_name"),
+                (String) mapO.get("course_section"),
+                (String) mapO.get("crn"),
+                (String) mapO.get("semester"),
+                (String) mapO.get("year")
+        );
+
+        Assertions.assertEquals(courseFromDB, course1, "Course not found.");
+    }
 
      @Test
-     public void viewCoursesTest() {
-         targetUrl = "courses/";
+     public void viewStudentsTest() {
+         targetUrl = "students/";
 
          WebTarget target = client.target(baseUrl + targetUrl);
          Response response = target.request().get();
          System.out.println("response: " + response.readEntity(String.class));
-         List courseObjects = jsonb.fromJson(response.readEntity(String.class), ArrayList.class);
-         ArrayList<CourseDAO> courses = new ArrayList<>();
 
-         for (Object o : courseObjects) {
+         List studentObjects = jsonb.fromJson(response.readEntity(String.class), ArrayList.class);
+         ArrayList<StudentDAO> students = new ArrayList<>();
+
+         for (Object o : studentObjects) {
              HashMap mapO = (HashMap) o;
-             courses.add(new CourseDAO(
-                     (String) mapO.get("CourseName"),
-                     ((java.math.BigDecimal) mapO.get("CourseSection")).intValue(),
-                     (String) mapO.get("Semester"),
-                     (String) mapO.get("Abbreviation")
+             students.add(new StudentDAO(
+                     (String) mapO.get("student_id")
              ));
          }
 
-         ArrayList<CourseDAO> actualCourses = new ArrayList<>();
+         ArrayList<StudentDAO> actualStudents = new ArrayList<>();
 
-         courses.forEach(course -> {
-             for (CourseDAO c : expectedCourses) {
-                 if (c.courseID.equals(course.courseID))
-                     actualCourses.add(course);
+         // compare the courses we made before to the courses in the database.
+         // This should NOT work if we entered anything funky that could mess things up db side...
+         students.forEach(student -> {
+             for (StudentDAO sD : expectedStudents) {
+                 if (sD.studentID.equals(student.studentID))
+                     actualStudents.add(sD);
              }
          });
 
-         Assertions.assertEquals(expectedCourses.size(), actualCourses.size(), "Not all courses were retrieved.");
+         // test passes if the courses were successfully entered into the db
+         Assertions.assertEquals(expectedStudents.size(), actualStudents.size(), "Not all students were retrieved.");
      }
- }
+
+     @Test
+     public void viewSpecificStudentTest() {
+         targetUrl = "students/"+ student1.studentID +"/";
+         WebTarget target = client.target(baseUrl + targetUrl);
+         Response response = target.request().get();
+         System.out.println("response: " + response.readEntity(String.class));
+         Object o = jsonb.fromJson(response.readEntity(String.class), Object.class);
+         HashMap mapO = (HashMap) o;
+         StudentDAO studentFromDB = new StudentDAO(
+                 (String) mapO.get("student_id")
+         );
+         Assertions.assertEquals(studentFromDB.studentID, student1.studentID, "Student not found.");
+     }
+}

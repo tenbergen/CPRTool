@@ -1,0 +1,52 @@
+/*.courseBar {*/
+/*    padding-top: 2%;*/
+/*    flex-grow: 1;*/
+/*    background-color: rgba(255, 255, 255, 0.5);*/
+/*    border-radius: 50px;*/
+/*    margin-top: 3%;*/
+/*    margin-bottom: 3%;*/
+/*    font-style: normal;*/
+/*    font-weight: bold;*/
+/*    font-size: large;*/
+/*}*/
+
+.cbc-parent {
+    /*background-color: rgba(255, 255, 255, 0.5);*/
+    /*border-radius: 50px;*/
+    width: 22%;
+}
+
+.cbc-parent h2 {
+    margin: 15% 10% 12% 10%;
+}
+
+.cbc-courses {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    padding-bottom: 7%;
+}
+
+.TheTable{
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+tr:hover {background-color: white;}
+
+td {
+    table-layout: auto;
+    width: 1%;
+    height: fit-content;
+}
+
+.courseText{
+    padding-left: 6%;
+    text-align: center;
+}
+
+.colorForTable{
+    float: left;
+    height: 100px;
+    width: 4%;
+    background-color: #7398FF;
+}

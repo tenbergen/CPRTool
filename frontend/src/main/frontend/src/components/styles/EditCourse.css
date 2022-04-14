@@ -1,58 +1,22 @@
-.parent {
-    display: flex;
-    flex-direction: row;
-    overflow: auto;
-    background: conic-gradient(from 180deg at 50% 50%,
-    #7398FF -128.84deg,
-    #57E1B2 25.81deg,
-    #7398FF 231.16deg,
-    #57E1B2 385.81deg);
-}
-
-.container {
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 50px;
-    margin-top: 3%;
-    margin-bottom: 3%;
-    padding-right: 3%;
-    padding-left: 3%;
-    margin-right: 5%;
-    margin-left: 5%;
-    flex-grow: 1;
-}
-
-.container a {
-    text-decoration: underline;
-
-}
-
-.container a:hover {
-    cursor: pointer;
-}
-
-.container h1 {
-    margin-left: 1%;
-    margin-bottom: 1%;
-}
-
-form {
+.ecc-form {
     background-color: white;
     border-radius: 50px;
-    margin-top: 1%;
-    padding: 4% 3% 3% 3%;
+    margin-top: 0%;
+    margin-bottom: 3%;
+    padding: 5%;
 }
 
-.course-name {
+.ecc-input-field {
     width: 100%;
-    margin-bottom: 3%;
+    margin-bottom: 5%;
     display: flex;
 }
 
-.course-name label {
+.ecc-input-field label {
     margin-right: 2%;
 }
 
-.course-name input {
+.ecc-input-field input {
     flex-grow: 1;
     padding: 5px 5px 5px 5px;
     border: 2px solid #949494;
@@ -60,17 +24,23 @@ form {
     border-radius: 50px;
 }
 
-.course-csv {
+.ecc-row-multiple {
     display: flex;
-    flex-direction: column;
-    margin-bottom: 3%;
+    flex-direction: row;
+    gap: 30px;
 }
 
-.course-csv label {
-    margin-bottom: 1%;
+.ecc-button {
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
 }
 
-.course-csv input[type=file]::file-selector-button {
+.ecc-file-upload label {
+    margin-right: 1%;
+}
+
+.ecc-file-upload input::file-selector-button {
     background: #9CF0D3;
     border-radius: 50px;
     padding: 10px 45px 10px 45px;
@@ -79,17 +49,112 @@ form {
     font-weight: bold;
 }
 
-.team-size {
-    width: 100%;
-    margin-bottom: 3%;
-    display: flex;
+.ecc-button button {
+    background: #9CF0D3;
+    border-radius: 50px;
+    padding: 10px 45px 10px 45px;
+    border: none;
+    font-size: medium;
+    font-weight: bold;
 }
 
-.team-size label {
-    margin-right: 2%;
-}
 
-.editCourseButton {
+
+
+
+
+/*.parent {*/
+/*    display: flex;*/
+/*    flex-direction: row;*/
+/*    overflow: auto;*/
+/*    background: conic-gradient(from 180deg at 50% 50%,*/
+/*    #7398FF -128.84deg,*/
+/*    #57E1B2 25.81deg,*/
+/*    #7398FF 231.16deg,*/
+/*    #57E1B2 385.81deg);*/
+/*}*/
+
+/*.container {*/
+/*    background-color: rgba(255, 255, 255, 0.5);*/
+/*    border-radius: 50px;*/
+/*    margin-top: 3%;*/
+/*    margin-bottom: 3%;*/
+/*    padding-right: 3%;*/
+/*    padding-left: 3%;*/
+/*    margin-right: 5%;*/
+/*    margin-left: 5%;*/
+/*    flex-grow: 1;*/
+/*}*/
+
+/*.container a {*/
+/*    text-decoration: underline;*/
+
+/*}*/
+
+/*.container a:hover {*/
+/*    cursor: pointer;*/
+/*}*/
+
+/*.container h1 {*/
+/*    margin-left: 1%;*/
+/*    margin-bottom: 1%;*/
+/*}*/
+
+/*form {*/
+/*    background-color: white;*/
+/*    border-radius: 50px;*/
+/*    margin-top: 1%;*/
+/*    padding: 4% 3% 3% 3%;*/
+/*}*/
+
+/*.course-name {*/
+/*    width: 100%;*/
+/*    margin-bottom: 3%;*/
+/*    display: flex;*/
+/*}*/
+
+/*.course-name label {*/
+/*    margin-right: 2%;*/
+/*}*/
+
+/*.course-name input {*/
+/*    flex-grow: 1;*/
+/*    padding: 5px 5px 5px 5px;*/
+/*    border: 2px solid #949494;*/
+/*    box-sizing: border-box;*/
+/*    border-radius: 50px;*/
+/*}*/
+
+/*.course-csv {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    margin-bottom: 3%;*/
+/*}*/
+
+/*.course-csv label {*/
+/*    margin-bottom: 1%;*/
+/*}*/
+
+/*.course-csv input[type=file]::file-selector-button {*/
+/*    background: #9CF0D3;*/
+/*    border-radius: 50px;*/
+/*    padding: 10px 45px 10px 45px;*/
+/*    border: none;*/
+/*    font-size: medium;*/
+/*    font-weight: bold;*/
+/*}*/
+
+/*.team-size {*/
+/*    width: 100%;*/
+/*    margin-bottom: 3%;*/
+/*    display: flex;*/
+/*}*/
+
+/*.team-size label {*/
+/*    margin-right: 2%;*/
+/*}*/
+
+.ecc-button {
     display: flex;
     justify-content: center;
     margin-top: 7%;
@@ -100,7 +165,7 @@ form {
     font-weight: bold;
 }
 
-.editCourseButton button {
+.ecc-button button {
     background: #9CF0D3;
     border-radius: 50px;
     padding: 10px 45px 10px 45px;
@@ -109,7 +174,7 @@ form {
     font-weight: bold;
 }
 
-.editCourseButton a {
+.ecc-button a {
     margin-left: 30%;
     text-decoration: underline;
     color: black;

@@ -35,6 +35,7 @@ public class CourseInterface {
             Document document = query.next();
             courses.add(document);
         }
+        query.close();
         return courses;
     }
 
@@ -51,6 +52,7 @@ public class CourseInterface {
             Document document = query.next();
             students.add(document);
         }
+        query.close();
         return students;
     }
 
@@ -58,5 +60,18 @@ public class CourseInterface {
         Document document = studentCollection.find(eq("student_id", studentID)).first();
         if (document == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist.").build());
         return document;
+    }
+
+    public List<Document> getStudentCourses(String studentID) {
+        Document studentDocument = studentCollection.find(eq("student_id", studentID)).first();
+        if (studentDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist.").build());
+        
+        List<String> courses = studentDocument.getList("courses", String.class);
+        List<Document> courseDocuments = new ArrayList<>();
+        for (String course : courses) {
+            Document courseDocument = courseCollection.find(eq("course_id", course)).first();
+            courseDocuments.add(courseDocument);
+        }
+        return courseDocuments;
     }
 }
