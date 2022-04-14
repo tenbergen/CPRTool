@@ -4,7 +4,9 @@ import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.daos.FileDAO;
 import edu.oswego.cs.database.PeerReviewAssignmentInterface;
 import edu.oswego.cs.distribution.AssignmentDistribution;
+import org.bson.Document;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -17,6 +19,7 @@ import java.util.Map;
 public class PeerReviewAssignmentResource {
 
     @GET
+    @RolesAllowed("professor")
     @Path("{courseID}/{assignmentID}/assign/{count_to_review}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response assignTeams(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("count_to_review") int count) throws Exception {
@@ -36,6 +39,7 @@ public class PeerReviewAssignmentResource {
     }
 
     @GET
+    @RolesAllowed("student")
     @Path("{courseID}/{assignmentID}/{teamName}/package/download")
     @Produces(MediaType.MULTIPART_FORM_DATA)
     public Response downloadOtherTeamsAssignments(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("teamName") String teamName) {
@@ -48,6 +52,7 @@ public class PeerReviewAssignmentResource {
     }
 
     @POST
+    @RolesAllowed("student")
     @Path("{courseID}/{assignmentID}/{srcTeamName}/{destTeamName}/upload")
     @Produces(MediaType.MULTIPART_FORM_DATA)
     public Response uploadPeerReview(List<IAttachment> attachments, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("srcTeamName") String srcTeamName, @PathParam("destTeamName") String destTeamName) throws IOException {
@@ -62,6 +67,7 @@ public class PeerReviewAssignmentResource {
     }
 
     @GET
+    @RolesAllowed("student")
     @Path("{courseID}/{assignmentID}/{teamName}/download")
     @Produces(MediaType.APPLICATION_JSON)
     public Response downloadPeerReview(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("teamName") String teamName) {
@@ -77,6 +83,41 @@ public class PeerReviewAssignmentResource {
         Response.ResponseBuilder response = Response.ok(file);
         response.header("Content-Disposition", "attachment; filename=" + file.getName());
         return response.build();
+    }
+    @GET
+    @RolesAllowed("student")
+    @Path("{course-id}/{assignment-id}/{student-id}/reviewed-by-me")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response viewUserReviewedAssignments(@PathParam("course-id") String courseID,
+                                                @PathParam("assignment-id") int assignmentID,
+                                                @PathParam("student-id") String teamName)
+    {
+        List<Document> documents = new PeerReviewAssignmentInterface().getAssignmentsReviewedByUser(courseID, assignmentID, teamName);
+        return Response.status(Response.Status.OK).entity(documents).build();
+    }
+
+    @GET
+    @RolesAllowed("student")
+    @Path("{course-id}/{assignment-id}/{student-id}/my-graded-assignments")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response viewAssignmentsReviewedOfUser(@PathParam("course-id") String courseID,
+                                                  @PathParam("assignment-id") int assignmentID,
+                                                  @PathParam("student-id") String teamName)
+    {
+        List<Document> documents = new PeerReviewAssignmentInterface().getUsersGradedAssignments(courseID, assignmentID, teamName);
+        return Response.status(Response.Status.OK).entity(documents).build();
+    }
+
+    @GET
+    @RolesAllowed("student")
+    @Path("{course-id}/{assignment-id}/{student-id}/my-submissions")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response viewMySubmissions(@PathParam("course-id") String courseID,
+                                      @PathParam("assignment-id") int assignmentID,
+                                      @PathParam("student-id") String teamName)
+    {
+        List<Document> documents = new PeerReviewAssignmentInterface().getAllUserAssignments(courseID, assignmentID, teamName);
+        return Response.status(Response.Status.OK).entity(documents).build();
     }
 
 
