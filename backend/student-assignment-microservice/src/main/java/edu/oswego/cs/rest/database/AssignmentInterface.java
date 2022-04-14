@@ -38,8 +38,10 @@ public class AssignmentInterface {
         try {
             DatabaseManager manager = new DatabaseManager();
             assignmentDatabase = manager.getAssignmentDB();
+            teamsDatabase = manager.getTeamDB();
             assignmentsCollection = assignmentDatabase.getCollection("assignments");
             submissionCollection = assignmentDatabase.getCollection("submissions");
+            teamsCollection = teamsDatabase.getCollection("teams");
 
         } catch (WebApplicationException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
@@ -56,6 +58,8 @@ public class AssignmentInterface {
             new File(path).mkdirs();
         }
         fileDAO.writeFile(path + reg + fileDAO.getFilename());
+        String team = fileDAO.getFilename().substring(0, fileDAO.getFilename().indexOf(".")) ;
+        makeSubmission(fileDAO.getCourseID(), fileDAO.getAssignmentID(), fileDAO.getFilename(), team);
     }
 
     /**
@@ -125,6 +129,38 @@ public class AssignmentInterface {
             assignments.add(assignmentDAO);
         }
         return assignments;
+    }
+
+    public Document getTeam(String courseID,String studentID){
+        DatabaseManager manager = new DatabaseManager();
+        MongoCollection<Document> teams = manager.getTeamDB().getCollection("teams");
+        return teams.find(and(eq("course_id",courseID),eq("team_members",studentID))).first();
+    }
+
+    public void makeSubmission(String course_id,int assignment_id,String file_name,String teamName){
+        Document team = teamsCollection.find(eq("team_id", teamName)).first();
+        if(team == null) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("no team for this student").build());
+        }
+        if (team.getList("team_members", String.class) == null) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Members not defined in team").build());
+        }
+        if (team.get("team_id", String.class) == null) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team_id not defined").build());
+        }
+        String path = "courses"+ reg+course_id+reg+assignment_id+reg+"team_submissions";
+        Document new_submission = new Document()
+                .append("course_id",course_id)
+                .append("assignment_id",assignment_id)
+                .append("submision_name",file_name)
+                .append("team_name",team.getString("team_id"))
+                .append("members",team.getList("team_members",String.class))
+                .append("type","team_submission")
+                .append("path",path+reg+file_name);
+        System.out.println(new_submission);
+        if(submissionCollection.find(new_submission).iterator().hasNext()){
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("submission already exists").build());
+        }else submissionCollection.insertOne(new_submission);
     }
 
     public static String findFile(String courseID, int assignmentID, String fileName) {
