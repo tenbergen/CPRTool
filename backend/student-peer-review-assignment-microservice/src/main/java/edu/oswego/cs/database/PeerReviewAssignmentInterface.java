@@ -131,7 +131,7 @@ public class PeerReviewAssignmentInterface {
         if (assignments.isEmpty())
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist").build());
 
-        assignments.forEach(assignment -> assignment.remove("_id"));
+        query.close();
         return assignments;
     }
 
@@ -148,7 +148,7 @@ public class PeerReviewAssignmentInterface {
         if (assignments.isEmpty())
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist").build());
 
-        assignments.forEach(assignment -> assignment.remove("_id"));
+        query.close();
         return assignments;
     }
 
@@ -164,10 +164,11 @@ public class PeerReviewAssignmentInterface {
         }
         if (assignments.isEmpty())
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist").build());
-
-        assignments.forEach(assignment -> assignment.remove("_id"));
+        query.close();
         return assignments;
     }
+
+
 
     public List<String> getCourseTeams(String courseID) {
         ArrayList<String> teamNames = new ArrayList<>();
