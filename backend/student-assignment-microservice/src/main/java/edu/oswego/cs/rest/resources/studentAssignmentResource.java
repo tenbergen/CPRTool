@@ -16,7 +16,7 @@ import java.io.*;
 import java.util.List;
 
 @Path("student")
-//@DenyAll
+@DenyAll
 public class studentAssignmentResource {
 
     /**
@@ -53,7 +53,7 @@ public class studentAssignmentResource {
      * @return Response
      */
     @POST
-//    @RolesAllowed({"professor", "student"})
+    @RolesAllowed({"professor", "student"})
     @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
     @Path("/courses/{courseID}/{assignmentID}/{teamName}/upload")
     public Response addFileToAssignment(
