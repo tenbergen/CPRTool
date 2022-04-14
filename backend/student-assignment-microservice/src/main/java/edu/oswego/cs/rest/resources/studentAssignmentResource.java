@@ -13,7 +13,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Path("student")
 @DenyAll
@@ -31,14 +33,19 @@ public class studentAssignmentResource {
     @RolesAllowed({"professor", "student"})
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.MULTIPART_FORM_DATA)
-    @Path("/courses/{courseID}/assignments/{assignmentID}/download/{fileName}")
-    public Response downloadAssignment(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("fileName") String fileName) {
-        File file = new File(AssignmentInterface.findFile(courseID, assignmentID, fileName));
-        if (!file.exists())
-            return Response.status(Response.Status.NOT_FOUND).entity("Assignment Does Not Exist").build();
+    @Path("/courses/{courseID}/assignments/{assignmentID}/{teamName}/download/")
+    public Response downloadAssignment(
+            @PathParam("courseID") String courseID,
+            @PathParam("assignmentID") int assignmentID,
+            @PathParam("teamName") String teamName) {
 
-        Response.ResponseBuilder response = Response.ok(file);
-        response.header("Content-Disposition", "attachment; filename=" + file.getName());
+        String path = "courses/"+courseID+"/"+assignmentID+"/"+"team-submissions/";
+        Optional<File> file = Arrays.stream(new File(path).listFiles()).filter(f->f.getName().contains(teamName)).findFirst();
+        if (file.isEmpty())
+            return Response.status(Response.Status.BAD_REQUEST).entity("Assignment Does Not Exist").build();
+
+        Response.ResponseBuilder response = Response.ok(file.get());
+        response.header("Content-Disposition", "attachment; filename=" + file.get().getName());
         return response.build();
     }
 
@@ -55,7 +62,7 @@ public class studentAssignmentResource {
     @POST
     @RolesAllowed({"professor", "student"})
     @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
-    @Path("/courses/{courseID}/{assignmentID}/{teamName}/upload")
+    @Path("/courses/{courseID}/assignments/{assignmentID}/{teamName}/upload")
     public Response addFileToAssignment(
             List<IAttachment> attachments,
             @PathParam("courseID") String courseID,
