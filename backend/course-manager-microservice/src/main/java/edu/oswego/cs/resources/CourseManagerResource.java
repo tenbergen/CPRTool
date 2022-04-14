@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("professor")
-//@DenyAll
+@DenyAll
 public class CourseManagerResource {
 
     @POST
@@ -66,7 +66,7 @@ public class CourseManagerResource {
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-//    @RolesAllowed("professor")
+    @RolesAllowed("professor")
     @Path("courses/{courseID}/students/{studentID}/delete")
     public Response deleteStudent(
             @PathParam("courseID") String courseID,
