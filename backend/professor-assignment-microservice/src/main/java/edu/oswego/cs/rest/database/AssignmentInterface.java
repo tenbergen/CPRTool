@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 
 public class AssignmentInterface {
@@ -128,8 +129,11 @@ public class AssignmentInterface {
         Document assignmentDocument = Document.parse(assignmentDAOEntity.getEntity());
 
         MongoCursor<Document> query = assignmentsCollection.find(assignmentDocument).iterator();
-        if (query.hasNext())
+        if (query.hasNext()) {
+            query.close();
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This assignment already exists.").build());
+        }
+
         assignmentsCollection.insertOne(assignmentDocument);
         query.close();
 
@@ -152,37 +156,40 @@ public class AssignmentInterface {
             Document document = query.next();
             assignments.add(document);
         }
+
         query.close();
         return assignments;
     }
 
     public List<Document> getAssignmentsByCourse(String courseID) {
         MongoCursor<Document> query = assignmentsCollection.find(eq("course_id", courseID)).iterator();
+        if (!query.hasNext()) {
+            query.close();
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist").build());
+        }
+
         List<Document> assignments = new ArrayList<>();
         while (query.hasNext()) {
             Document document = query.next();
             assignments.add(document);
         }
-        if (assignments.isEmpty()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist").build());
+
         query.close();
         return assignments;
     }
 
     public Document getSpecifiedAssignment(String courseID, int AssignmentID) {
-        MongoCursor<Document> results = assignmentsCollection.find(new Document()
-                .append("course_id", courseID)
-                .append("assignment_id", AssignmentID)).iterator();
-        if (!results.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
-        Document assignmentDocument = results.next();
-        results.close();
-        return assignmentDocument;
+        Document assignment = assignmentsCollection.find(and(
+                eq("course_id", courseID),
+                eq("assignment_id", AssignmentID))).first();
+        if (assignment == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
+        return assignment;
     }
 
     public void updateAssignment(AssignmentDAO assignmentDAO, String courseID, int assignmentID) {
         assignmentDAO.assignmentID = assignmentID;
         Document assignmentDocument = assignmentsCollection.find(eq("assignment_id", assignmentID)).first();
-        if (assignmentDocument == null)
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
+        if (assignmentDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
         Jsonb jsonb = JsonbBuilder.create();
         Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(assignmentDAO), MediaType.APPLICATION_JSON_TYPE);
         Document course = Document.parse(courseDAOEntity.getEntity());
@@ -193,8 +200,10 @@ public class AssignmentInterface {
         MongoCursor<Document> results = assignmentsCollection.find(new Document()
                 .append("assignment_id", AssignmentID)
                 .append("course_id", courseID)).iterator();
-        if (!results.hasNext())
+        if (!results.hasNext()) {
+            results.close();
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
+        }
 
         while (results.hasNext()) {
             Document assignment = results.next();
