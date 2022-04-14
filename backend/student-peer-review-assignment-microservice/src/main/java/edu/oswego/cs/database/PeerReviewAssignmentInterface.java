@@ -7,6 +7,7 @@ import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.daos.FileDAO;
 import org.bson.Document;
 
+import javax.print.Doc;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.io.File;
@@ -133,8 +134,15 @@ public class PeerReviewAssignmentInterface {
         return assignments;
     }
 
-
-
+    public List<String> getAssignedTeams(String courseID, int assignmentID, String teamName) {
+        Document assignmentDocument = assignmentCollection.find(and(
+                                                                eq("course_id", courseID),
+                                                                eq("assignment_id", assignmentID)
+        )).first();
+        if (assignmentDocument == null) throw new WebApplicationException("Course/Assignment ID does not exist.");
+        Document teamAssignmentDocument = (Document) assignmentDocument.get("assigned_teams");
+        return (List<String>) teamAssignmentDocument.get(teamName);
+    }
 
 
     public List<String> getCourseTeams(String courseID) {
@@ -155,7 +163,6 @@ public class PeerReviewAssignmentInterface {
                 for (String team : peerReviewAssignments.keySet()) {
                     doc.put(team, peerReviewAssignments.get(team));
                 }
-                makeFileStructure(peerReviewAssignments.keySet(), courseID, assignmentID);
                 assignmentCollection.updateOne(assignmentDocument, set("assigned_teams", doc));
                 return doc;
             }
