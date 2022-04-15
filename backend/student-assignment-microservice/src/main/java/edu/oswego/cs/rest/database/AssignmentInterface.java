@@ -152,14 +152,20 @@ public class AssignmentInterface {
         Document new_submission = new Document()
                 .append("course_id",course_id)
                 .append("assignment_id",assignment_id)
-                .append("submision_name",file_name)
+                .append("submission_name",file_name)
                 .append("team_name",team.getString("team_id"))
                 .append("members",team.getList("team_members",String.class))
                 .append("type","team_submission")
                 .append("path",path+reg+file_name);
         System.out.println(new_submission);
-        if(submissionCollection.find(new_submission).iterator().hasNext()){
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("submission already exists").build());
+        boolean submissionCheck = submissionCollection.find(and(eq("course_id",course_id),eq("assignment_id",assignment_id),eq("team_name",team.getString("team_id")))).iterator().hasNext();
+        if(submissionCheck){
+            Document extensionCheck = submissionCollection.find(and(eq("course_id",course_id),eq("assignment_id",assignment_id),eq("team_name",team.getString("team_id")))).first();
+            if (extensionCheck.getString("submission_name") == file_name) {
+                throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("submission already exists").build());
+            }else {
+                submissionCollection.updateOne(extensionCheck,new_submission);
+            }
         }else submissionCollection.insertOne(new_submission);
     }
 
