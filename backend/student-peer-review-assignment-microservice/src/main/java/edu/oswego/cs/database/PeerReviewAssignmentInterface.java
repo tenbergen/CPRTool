@@ -190,29 +190,6 @@ public class PeerReviewAssignmentInterface {
         }
         throw new WebApplicationException("No course/assignmentID found.");
     }
-    public void addSubmission(String course_id, int assignment_id, String team_id, int grade, String file_name) {
-        String path = root_name + reg + course_id + reg + assignment_id + team_peer_reviews + reg + file_name;
-        //write method in the filedao to the path
-        Document team = teamDB.getCollection("teams").find(and(eq("course_id", course_id), eq("team_id", team_id))).first();
-        if (team == null) {
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Team not found in DB").build());
-        }
-        if (team.getList("team_members", String.class) == null) {
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Members not defined in team").build());
-        }
-        Document new_submission = new Document()
-                .append("course_id", course_id)
-                .append("assignment_id", assignment_id)
-                .append("grade", grade)
-                .append("submission_name", file_name)
-                .append("members", team.getList("team_members", String.class))
-                .append("path", path)
-                .append("type","peer_review")
-                .append("team_name",team.get("team_id"));
-        if(assignmentDB.getCollection("submissions").find(new_submission).iterator().hasNext()){
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("submission already exists").build());
-        }else assignmentDB.getCollection("submissions").insertOne(new_submission);
-    }
 
     public void makeGrades(String course_id, int assignment_id) {
         String path = root_name + reg + course_id + reg + assignment_id +reg+ team_peer_reviews + reg;
