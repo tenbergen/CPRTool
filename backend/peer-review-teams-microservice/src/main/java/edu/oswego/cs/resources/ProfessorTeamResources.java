@@ -35,8 +35,17 @@ public class ProfessorTeamResources {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("/team-lock/all/lock")
+    public Response lockAllTeams(TeamParam request) {
+        new TeamInterface().lockAllTeams(request);
+        return Response.status(Response.Status.OK).entity("Successfully lock all teams.").build(); 
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/add-student")
-    public Response likeThePRofessorCanAddAStudentToATeamIfThatSudentIsNotCurrentInAnyTeamButIfTheStudentIsAlreadyInATeamThenMoveTheStudentFromTheOldTeamToTheNewTeam(TeamParam request) {
+    public Response likeTheProfessorCanAddAStudentToATeamIfThatSudentIsNotCurrentInAnyTeamButIfTheStudentIsAlreadyInATeamThenMoveTheStudentFromTheOldTeamToTheNewTeam(TeamParam request) {
         new TeamInterface().addStudentToTeam(request);
         return Response.status(Response.Status.OK).entity("Student successfully added to team.").build(); 
     }
@@ -94,6 +103,4 @@ public class ProfessorTeamResources {
         new TeamInterface().deleteTeam(request);
         return Response.status(Response.Status.OK).entity("Team successfully deleted.").build(); 
     }
-
-    // update team size bulk and single
 }

@@ -190,6 +190,8 @@ public class TeamInterface {
             Document teamDocument = cursor.next();
             teams.add(teamDocument);
         }
+        cursor.close();
+        return teams;
     }
 
     public void toggleTeamLock(TeamParam request) {
