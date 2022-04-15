@@ -82,7 +82,7 @@ public class PeerReviewAssignmentResource {
      * @throws WebApplicationException A endpoint parameter error
      */
     @GET
-    @RolesAllowed("student")
+    @RolesAllowed({"professor", "student"})
     @Path("{courseID}/{assignmentID}/{teamName}/download")
     @Produces(MediaType.MULTIPART_FORM_DATA)
     public Response downloadOtherTeamsAssignment(
