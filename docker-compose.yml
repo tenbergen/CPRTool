@@ -178,7 +178,7 @@ services:
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     ports:
       - "27039:27017"
-        
+
   mongo4:
     image: mongo:5.0.6
     container_name: cpr-mongo4
