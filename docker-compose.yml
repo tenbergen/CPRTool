@@ -14,6 +14,8 @@ services:
       context: ./backend/login-microservice
     container_name: cpr-login
     restart: unless-stopped
+    volumes:
+      - ./professor-list.txt:/opt/ol/wlp/output/defaultServer/professor-list.txt:rw
     environment:
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
