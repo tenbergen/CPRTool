@@ -4,7 +4,7 @@ import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.rest.daos.AssignmentDAO;
 import edu.oswego.cs.rest.daos.FileDAO;
 import edu.oswego.cs.rest.database.AssignmentInterface;
-import edu.oswego.cs.rest.timer.DueDateChecker;
+//import edu.oswego.cs.rest.timer.DueDateChecker;
 import org.bson.Document;
 
 import javax.annotation.security.DenyAll;
@@ -149,7 +149,7 @@ public class ProfessorAssignmentResource {
     @Path("/courses/create-assignment")
     public Response createAssignment(AssignmentDAO assignmentDAO) {
         Document assignmentDocument = new AssignmentInterface().createAssignment(assignmentDAO);
-        DueDateChecker.assignmentDocuments.add(assignmentDocument);
+//        DueDateChecker.assignmentDocuments.add(assignmentDocument);
         return Response.status(Response.Status.OK).entity(assignmentDocument).build();
     }
 
