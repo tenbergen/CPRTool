@@ -146,7 +146,7 @@ public class TeamInterface {
     public void giveUpTeamLead(TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-        new SecurityService().giveUpTeamLead(teamCollection, courseDocument, request);
+        new SecurityService().giveUpTeamLeadSecurity(teamCollection, courseDocument, request);
        
         Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         Document teamDocument = teamCollection.find(teamDocumentFilter).first();
@@ -156,6 +156,27 @@ public class TeamInterface {
         students.add(request.getStudentID());
         Bson assignTeamLeadUpdates = Updates.combine(
                 Updates.set("team_lead", students.get(0)),
+                Updates.set("team_members", students)
+        );
+        UpdateOptions assignTeamLeadOptions = new UpdateOptions().upsert(true);
+        teamCollection.updateOne(teamDocumentFilter, assignTeamLeadUpdates, assignTeamLeadOptions);
+    }
+
+    public void nominateTeamLead(TeamParam request) {
+        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
+        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+        new SecurityService().nominateTeamLeadSecurity(teamCollection, courseDocument, request);
+
+        Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
+        Document teamDocument = teamCollection.find(teamDocumentFilter).first();
+
+        List<String> students = teamDocument.getList("team_members", String.class);
+        students.remove(request.getNominatedTeamLead());
+        Collections.reverse(students);
+        students.add(request.getNominatedTeamLead());
+        Collections.reverse(students);
+        Bson assignTeamLeadUpdates = Updates.combine(
+                Updates.set("team_lead", request.getNominatedTeamLead()),
                 Updates.set("team_members", students)
         );
         UpdateOptions assignTeamLeadOptions = new UpdateOptions().upsert(true);

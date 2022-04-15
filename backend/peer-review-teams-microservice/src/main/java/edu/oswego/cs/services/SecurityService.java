@@ -59,15 +59,30 @@ public class SecurityService {
             throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Target team already full.").build());
     }
 
-    public void giveUpTeamLead(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
+    public void giveUpTeamLeadSecurity(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
         if (!isStudentValid(courseDocument, request.getStudentID()))
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
         if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
-            if (!isStudentInThisTeam(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
+        if (!isStudentInThisTeam(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this team.").build());
         if (!isTeamLead(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized. Not team lead.").build());
+    }
+
+    public void nominateTeamLeadSecurity(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
+        if (!isStudentValid(courseDocument, request.getStudentID()) || !isStudentValid(courseDocument, request.getNominatedTeamLead()))
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
+        if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
+        if (!isStudentInThisTeam(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Current team lead not found in this team.").build());
+        if (!isTeamLead(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("Unauthorized. Not team lead.").build());
+        if (!isStudentInThisTeam(teamCollection, request.getTeamID(), request.getNominatedTeamLead(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Nominated team lead not found in this team.").build());
+        if (isTeamLead(teamCollection, request.getTeamID(), request.getNominatedTeamLead(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student already a team lead.").build());
     }
 
     public void generateTeamNameSecurity(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {

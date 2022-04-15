@@ -1,7 +1,6 @@
 package edu.oswego.cs.resources;
 
 import edu.oswego.cs.database.TeamInterface;
-import edu.oswego.cs.requests.SwitchTeamParam;
 import edu.oswego.cs.requests.TeamParam;
 
 import javax.ws.rs.*;
@@ -50,6 +49,15 @@ public class StudentTeamResources {
     @Path("team-lead/step-down")
     public Response giveUpTeamLead(TeamParam request) {
         new TeamInterface().giveUpTeamLead(request);
+        return Response.status(Response.Status.OK).entity("Team Lead successfully updated.").build();
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("team-lead/nominate")
+    public Response nominateTeamLead(TeamParam request) {
+        new TeamInterface().nominateTeamLead(request);
         return Response.status(Response.Status.OK).entity("Team Lead successfully updated.").build();
     }
     
