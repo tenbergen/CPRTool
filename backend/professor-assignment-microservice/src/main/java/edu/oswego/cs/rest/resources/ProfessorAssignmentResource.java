@@ -220,20 +220,20 @@ public class ProfessorAssignmentResource {
         return Response.status(Response.Status.OK).entity("Course successfully deleted from assignments database and assignments folder.").build();
     }
 
-    @GET
-    @RolesAllowed({"professor", "student"})
-    @Path("assignments-deadline-checker/aliveness")
-    public Response deadlineCheckerAliveness() {
-        AssignmentInterface assignmentInterface = new AssignmentInterface();
-        if (DueDateChecker.activeThreads.get())
-            return Response.status(Response.Status.OK).build();
-
-        List<Document> assignmentsNotPastDue = assignmentInterface.getAllAssignments().stream()
-                .filter(document -> ! ((Boolean) document.get("assignment_past_due")) || ! ((Boolean) document.get("peer_review_assignment_past_due")) )
-                .collect(Collectors.toList());
-
-        new DueDateChecker(assignmentsNotPastDue).start();
-
-        return Response.status(Response.Status.OK).build();
-    }
+//    @GET
+//    @RolesAllowed({"professor", "student"})
+//    @Path("assignments-deadline-checker/aliveness")
+//    public Response deadlineCheckerAliveness() {
+//        AssignmentInterface assignmentInterface = new AssignmentInterface();
+//        if (DueDateChecker.activeThreads.get())
+//            return Response.status(Response.Status.OK).build();
+//
+//        List<Document> assignmentsNotPastDue = assignmentInterface.getAllAssignments().stream()
+//                .filter(document -> ! ((Boolean) document.get("assignment_past_due")) || ! ((Boolean) document.get("peer_review_assignment_past_due")) )
+//                .collect(Collectors.toList());
+//
+//        new DueDateChecker(assignmentsNotPastDue).start();
+//
+//        return Response.status(Response.Status.OK).build();
+//    }
 }
