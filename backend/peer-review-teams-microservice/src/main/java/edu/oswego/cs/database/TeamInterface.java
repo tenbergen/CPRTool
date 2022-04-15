@@ -74,7 +74,6 @@ public class TeamInterface {
             Document teamDocument = cursor.next();
             allUnlockedTeams.add(teamDocument);
         }
-        cursor.close();
         return allUnlockedTeams;
     }
 
@@ -215,7 +214,6 @@ public class TeamInterface {
             Document teamDocument = cursor.next();
             teams.add(teamDocument);
         }
-        cursor.close();
         return teams;
     }
 
@@ -355,7 +353,6 @@ public class TeamInterface {
                 if (course.equals(courseID)) students.add(studentDocument);
             }
         }
-        cursor.close();
         return students;
     }
 }
