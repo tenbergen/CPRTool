@@ -55,7 +55,7 @@ public class StudentTeamResources {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("team-lead/nominate")
+    @Path("team-lead/cede")
     public Response nominateTeamLead(TeamParam request) {
         new TeamInterface().nominateTeamLead(request);
         return Response.status(Response.Status.OK).entity("Team Lead successfully updated.").build();
