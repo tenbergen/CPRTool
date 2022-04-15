@@ -13,12 +13,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+import java.util.regex.Pattern;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
@@ -31,14 +27,21 @@ public class PeerReviewAssignmentInterface {
     private final MongoCollection<Document> assignmentCollection;
     private final MongoCollection<Document> submissionsCollection;
     private final String reg = "/";
+    MongoDatabase assignmentDB;
+    private final String peer_review = "peer-reviews";
+    private final String assignments = "assignments";
+    private final String team_submissions = "team-submissions";
+    private final String team_peer_reviews = "peer-review-submissions";
+    private final String root_name = "courses";
+    private  MongoDatabase teamDB;
 
     public PeerReviewAssignmentInterface() {
         DatabaseManager databaseManager = new DatabaseManager();
         try {
             MongoDatabase studentDB = databaseManager.getStudentDB();
             MongoDatabase courseDB = databaseManager.getCourseDB();
-            MongoDatabase teamDB = databaseManager.getTeamDB();
-            MongoDatabase assignmentDB = databaseManager.getAssignmentDB();
+            teamDB = databaseManager.getTeamDB();
+            assignmentDB = databaseManager.getAssignmentDB();
             studentCollection = studentDB.getCollection("students");
             courseCollection = courseDB.getCollection("courses");
             teamCollection = teamDB.getCollection("teams");
@@ -49,73 +52,64 @@ public class PeerReviewAssignmentInterface {
         }
     }
 
+    public void addPeerReviewSubmission(String course_id,int assignment_id,String srcTeamName, String fileName, int grade){
+        Document team = teamCollection.find(eq("team_id", srcTeamName)).first();
+        if(team == null) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("no team for this student").build());
+        }
+        if (team.getList("team_members", String.class) == null) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Members not defined in team").build());
+        }
+        if (team.get("team_id", String.class) == null) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team_id not defined").build());
+        }
+        String path = "courses"+ reg+course_id+reg+assignment_id+reg+"peer-review-submissions";
+        Document new_submission = new Document()
+                .append("course_id",course_id)
+                .append("assignment_id",assignment_id)
+                .append("submision_name", fileName)
+                .append("team_name",team.getString("team_id"))
+                .append("members",team.getList("team_members",String.class))
+                .append("type","peer_review_submission")
+                .append("grade", grade)
+                .append("path",path+reg+fileName);
+        System.out.println(new_submission);
+        if(submissionsCollection.find(new_submission).iterator().hasNext()){
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("submission already exists").build());
+        }else submissionsCollection.insertOne(new_submission);
+    }
+
     public List<String> getCourseStudentIDs(String courseID) {
         Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
         return (List<String>) courseDocument.get("students");
     }
 
-    public boolean makeFileStructure(Set<String> teams, String courseID, int assignmentID) {
-        String path = System.getProperty("user.dir") + reg + courseID + reg + assignmentID;
-        ArrayList<String> validNames = new ArrayList<>();
-        validNames.add("peer-reviews");
-        validNames.add("assignments");
-        validNames.add("team-submissions");
-        validNames.add("peer-review-submissions");
-        File[] structure = new File(path).listFiles();
-        for (File f : structure) {
-            if (validNames.contains(f.getName())) {
-                validNames.remove(f.getName());
-            } else return false;
-        }
-        if (validNames.size() != 0) return false;
-        if (Objects.requireNonNull(new File(path + reg + "peer-review-submissions").listFiles()).length != 0)
-            return false;
-        path += reg + "peer-review-submissions";
-        for (String team : teams) {
-            new File(path + reg + team).mkdir();
-        }
-        return true;
-    }
 
     public void uploadPeerReview(String courseID, int assignmentID, String srcTeamName, String destTeamName, IAttachment attachment) throws IOException {
-        String basePath = FileDAO.peer_review_submission_path + courseID + "/" + assignmentID + "/";
-        if (!new File(basePath).exists()) {
-            new File(basePath).mkdirs();
-        }
-
         FileDAO fileDAO = FileDAO.fileFactory(courseID, srcTeamName, destTeamName, assignmentID, attachment);
+        String path = "courses/"+courseID+"/"+assignmentID+"/peer-review-submissions/";
+        if (! new File(path).exists()) {
+            new File(path).mkdirs();
+        }
+        OutputStream outputStream = new FileOutputStream(path+fileDAO.fileName+".pdf");
 
-        OutputStream outputStream = new FileOutputStream(basePath + fileDAO.fileName + ".pdf");
         outputStream.write(fileDAO.inputStream.readAllBytes());
         outputStream.close();
 
     }
 
-    public String packagePeerReviewedAssignments(String courseID, int assignmentID, String teamName) {
-        if (!new File(FileDAO.peer_review_submission_path).exists())
+    public File downloadFinishedPeerReview(String courseID, int assignmentID, String srcTeamName, String destTeamName) {
+        String path = "courses/"+courseID+"/"+assignmentID+"/peer-review-submissions/";
+        if (!new File(path).exists())
             throw new WebApplicationException("Peer reviews do not exist for this course yet.");
 
-        String dir = FileDAO.peer_review_submission_path + courseID + "/" + assignmentID + "/";
-        List<File> files = Arrays.asList(new File(dir).listFiles());
+        Optional<File> file = Arrays.stream(new File(path).listFiles())
+                .filter( f -> f.getName().contains(srcTeamName) && f.getName().contains(destTeamName) )
+                .findFirst();
 
-        List<File> teamPeerReviews = files.stream().filter(f -> f.getName().split(".pdf")[0].endsWith(teamName)).collect(Collectors.toList());
+        if (file.isEmpty()) throw new WebApplicationException("No peer review from team " + srcTeamName + " for " + destTeamName);
+        return file.get();
 
-        String zipPath = "peer-review-submissions/" + courseID + "/" + assignmentID + "/" + "for-" + teamName.concat(".zip");
-        try {
-            FileOutputStream fileOutputStream = new FileOutputStream(zipPath);
-            ZipOutputStream zipOutputStream = new ZipOutputStream(fileOutputStream);
-            for (File f : teamPeerReviews) {
-                zipOutputStream.putNextEntry(new ZipEntry("for-" + teamName + "/" + f.getName()));
-                byte[] fileBytes = Files.readAllBytes(Paths.get(dir + f.getName()));
-                zipOutputStream.write(fileBytes, 0, fileBytes.length);
-                zipOutputStream.closeEntry();
-            }
-            zipOutputStream.close();
-            return zipPath;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return "";
     }
 
     public List<Document> getUsersGradedAssignments(String courseID, int assignmentID, String studentID){
@@ -152,8 +146,15 @@ public class PeerReviewAssignmentInterface {
         return assignments;
     }
 
-
-
+    public List<String> getAssignedTeams(String courseID, int assignmentID, String teamName) {
+        Document assignmentDocument = assignmentCollection.find(and(
+                                                                eq("course_id", courseID),
+                                                                eq("assignment_id", assignmentID)
+        )).first();
+        if (assignmentDocument == null) throw new WebApplicationException("Course/Assignment ID does not exist.");
+        Document teamAssignmentDocument = (Document) assignmentDocument.get("assigned_teams");
+        return (List<String>) teamAssignmentDocument.get(teamName);
+    }
 
 
     public List<String> getCourseTeams(String courseID) {
@@ -174,7 +175,6 @@ public class PeerReviewAssignmentInterface {
                 for (String team : peerReviewAssignments.keySet()) {
                     doc.put(team, peerReviewAssignments.get(team));
                 }
-                makeFileStructure(peerReviewAssignments.keySet(), courseID, assignmentID);
                 assignmentCollection.updateOne(assignmentDocument, set("assigned_teams", doc));
                 return doc;
             }
@@ -189,5 +189,54 @@ public class PeerReviewAssignmentInterface {
             }
         }
         throw new WebApplicationException("No course/assignmentID found.");
+    }
+
+    public void makeGrades(String course_id, int assignment_id) {
+        String path = root_name + reg + course_id + reg + assignment_id +reg+ team_peer_reviews + reg;
+        Document assignment = assignmentCollection.find(and(eq("course_id", course_id), eq("assignment_id", assignment_id))).first();
+        if (assignment == null) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment found in DB").build());
+        }
+        if (assignment.get("points", Integer.class) == null) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No points defined in assignment").build());
+        }
+        int points = assignment.get("points", Integer.class);
+        MongoCursor<Document> teams = teamDB.getCollection("teams").find(eq("course_id", course_id)).iterator();
+        ArrayList<Document> grades_to_add = new ArrayList<>();
+        while (teams.hasNext()) {
+            Document team = teams.next();
+            //generate all of the reviews for this team
+            String temp = "to-"+team.getString("team_id");
+            MongoCursor<Document> team_submissions = assignmentDB.getCollection("submissions")
+                    .find(and(
+                            eq("course_id", course_id),
+                            eq("assignment_id", assignment_id),
+                            eq("type", "peer_review"),
+                            eq("submission_name", Pattern.compile(temp))
+                    )).iterator();
+            List<Document> reviews = new ArrayList<>();
+            while(team_submissions.hasNext()) {
+                Document submission = team_submissions.next();
+                if (submission.get("submission_name") == null || submission.getInteger("grade") == null) {
+                    throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Improperly formed submission").build());
+                }
+                Document review = new Document()
+                        .append("submission_name", submission.get("submission_name"))
+                        .append("grade", submission.getInteger("grade"));
+                reviews.add(review);
+            }
+            List<String> members = team.getList("team_members", String.class);
+            for (String member : members) {
+                Document new_grade = new Document()
+                        .append("course_id", course_id)
+                        .append("assignment_id", assignment_id)
+                        .append("student_id", member)
+                        .append("answer_path", path)
+                        .append("points", points)
+                        .append("reviews", reviews);
+                grades_to_add.add(new_grade);
+            }
+        }
+        assignmentDB.getCollection("grades").insertMany(grades_to_add);
     }
 }

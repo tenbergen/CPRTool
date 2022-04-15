@@ -4,6 +4,8 @@ import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.rest.daos.AssignmentDAO;
 import edu.oswego.cs.rest.daos.FileDAO;
 import edu.oswego.cs.rest.database.AssignmentInterface;
+import edu.oswego.cs.rest.timer.DueDateChecker;
+import org.bson.Document;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
@@ -13,6 +15,7 @@ import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("professor")
 @DenyAll
@@ -145,9 +148,9 @@ public class ProfessorAssignmentResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/create-assignment")
     public Response createAssignment(AssignmentDAO assignmentDAO) {
-        int assignmentID = new AssignmentInterface().createAssignment(assignmentDAO);
-        String response = assignmentDAO.courseID + ": " + assignmentDAO.assignmentName + " successfully created.";
-        return Response.status(Response.Status.OK).entity(response).header("assignment_id", assignmentID).build();
+        Document assignmentDocument = new AssignmentInterface().createAssignment(assignmentDAO);
+        DueDateChecker.assignmentDocuments.add(assignmentDocument);
+        return Response.status(Response.Status.OK).entity(assignmentDocument).build();
     }
 
     @DELETE
@@ -215,5 +218,22 @@ public class ProfessorAssignmentResource {
     public Response removeCourse(@PathParam("courseID") String courseID) throws IOException {
         new AssignmentInterface().removeCourse(courseID);
         return Response.status(Response.Status.OK).entity("Course successfully deleted from assignments database and assignments folder.").build();
+    }
+
+    @GET
+    @RolesAllowed({"professor", "student"})
+    @Path("assignments-deadline-checker/aliveness")
+    public Response deadlineCheckerAliveness() {
+        AssignmentInterface assignmentInterface = new AssignmentInterface();
+        if (DueDateChecker.activeThreads.get())
+            return Response.status(Response.Status.OK).build();
+
+        List<Document> assignmentsNotPastDue = assignmentInterface.getAllAssignments().stream()
+                .filter(document -> ! ((Boolean) document.get("assignment_past_due")) || ! ((Boolean) document.get("peer_review_assignment_past_due")) )
+                .collect(Collectors.toList());
+
+        new DueDateChecker(assignmentsNotPastDue).start();
+
+        return Response.status(Response.Status.OK).build();
     }
 }
