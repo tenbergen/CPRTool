@@ -46,7 +46,7 @@ public class ProfessorTeamResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/remove-student")
     public Response removeMember(TeamParam request) {
-        new TeamInterface().removeStudent(request);
+        new TeamInterface().leaveTeam(request);
         return Response.status(Response.Status.OK).entity("Student successfully removed from team.").build(); 
     }
 

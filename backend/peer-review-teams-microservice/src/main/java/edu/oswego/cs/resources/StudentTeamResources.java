@@ -48,11 +48,12 @@ public class StudentTeamResources {
     @Path("switch")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response switchTeam(SwitchTeamParam request) {
-        new TeamInterface().switchTeam(request);
-        return Response.status(Response.Status.OK).entity("Student successfully switched to a new team.").build();
+    @Path("leave")
+    public Response leaveTeam(TeamParam request) {
+        new TeamInterface().leaveTeam(request);
+        return Response.status(Response.Status.OK).entity("Student successfully leave team.").build();
     }
-
+    
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
