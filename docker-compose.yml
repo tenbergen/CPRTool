@@ -64,6 +64,22 @@ services:
       MONGO_PASSWORD: ${MONGO_PASSWORD}
       JWKS_URI: ${JWKS_URI}
 
+    peer-review-teams:
+    build:
+      context: ./backend/peer-review-teams-microservice
+    container_name: cpr-peer-review-teams
+    environment:
+      MONGO_HOSTNAME: ${MONGO_HOSTNAME}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO2_PORT: ${MONGO2_PORT}
+      MONGO3_PORT: ${MONGO3_PORT}
+      MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
+      MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+      JWKS_URI: ${JWKS_URI}
+
   professor-assignment:
     build:
       context: ./backend/professor-assignment-microservice
@@ -83,10 +99,26 @@ services:
       MONGO_PASSWORD: ${MONGO_PASSWORD}
       JWKS_URI: ${JWKS_URI}
 
-  peer-review-teams:
+  student-assignment:
     build:
-      context: ./backend/peer-review-teams-microservice
-    container_name: cpr-peer-review-teams
+      context: ./backend/student-assignment-microservice
+    container_name: cpr-student-assignment
+    environment:
+      MONGO_HOSTNAME: ${MONGO_HOSTNAME}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO2_PORT: ${MONGO2_PORT}
+      MONGO3_PORT: ${MONGO3_PORT}
+      MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
+      MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+      JWKS_URI: ${JWKS_URI}
+
+  student-peer-review-assignment:
+    build:
+      context: ./backend/student-peer-review-assignment-microservice
+    container_name: student-peer-review-assignment
     environment:
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
