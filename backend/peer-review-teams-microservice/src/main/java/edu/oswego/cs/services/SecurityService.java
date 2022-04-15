@@ -43,10 +43,6 @@ public class SecurityService {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Current team not found.").build());
         if (!isTeamCreated(teamCollection, request.getTargetTeamID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Target team not found.").build());
-        if (!isStudentAlreadyInATeam(request.getStudentID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in any team.").build());
-        if (!isStudentInThisTeam(teamCollection, request.getCurrentTeamID(), request.getStudentID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in current team.").build());
         if (isStudentInThisTeam(teamCollection, request.getTargetTeamID(), request.getStudentID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student already in target team.").build());
         if (isTeamLock(teamCollection, request.getCurrentTeamID(), request.getCourseID()))
@@ -140,19 +136,6 @@ public class SecurityService {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this team.").build());
         if (isTeamLead(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student already a team lead.").build());
-    }
-
-    public void addStudentToTeamSecurity(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
-        if (!isStudentValid(courseDocument, request.getStudentID()))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
-        if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
-        if (isTeamLock(teamCollection, request.getTeamID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Team is locked.").build());
-        if (isStudentInThisTeam(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student already in this team.").build());
-        if (isTeamFull(teamCollection, request.getTeamID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Team already full.").build());
     }
 
     public boolean isStudentValid(Document courseDocument, String studentID) {

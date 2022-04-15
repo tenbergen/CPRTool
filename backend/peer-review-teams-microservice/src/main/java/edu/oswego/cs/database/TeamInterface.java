@@ -254,20 +254,6 @@ public class TeamInterface {
         teamCollection.updateMany(teamDocumentFilter, teamDocumentUpdate);
     }
 
-    public void addStudentToTeam(TeamParam request) {
-        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
-        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-        new SecurityService().addStudentToTeamSecurity(teamCollection, courseDocument, request);
-
-        if (!new SecurityService().isStudentAlreadyInATeam(request.getStudentID(), request.getCourseID())) 
-            joinTeam(request);
-        else if (new SecurityService().isStudentAlreadyInATeam(request.getStudentID(), request.getCourseID())) {
-            String currentTeamID = new TeamService().retrieveTeamID(request);
-            SwitchTeamParam switchTeamParam = new SwitchTeamParam(request.getCourseID(), request.getStudentID(), currentTeamID, request.getTeamID());
-            switchTeam(switchTeamParam);
-        }
-    }
-
     public void editTeamName(TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
