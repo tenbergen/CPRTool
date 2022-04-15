@@ -1,21 +1,18 @@
 package edu.oswego.cs.services;
 
-import org.bson.Document;
-import org.bson.conversions.Bson;
-
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
 import edu.oswego.cs.database.TeamInterface;
 import edu.oswego.cs.requests.SwitchTeamParam;
 import edu.oswego.cs.requests.TeamParam;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Filters;
-import static com.mongodb.client.model.Filters.eq;
-
-
 import java.util.List;
+
+import static com.mongodb.client.model.Filters.eq;
 
 public class SecurityService {
     public void createTeamSecurity(Document courseDocument, TeamParam request) {
@@ -215,8 +212,8 @@ public class SecurityService {
 
     public boolean isTeamNameUnique(MongoCollection<Document> teamCollection, TeamParam request) {
         Bson teamDocumentFilter = Filters.and(
-                                    eq("team_id", request.getTeamName()), 
-                                    eq("course_id", request.getCourseID()));
+                eq("team_id", request.getTeamName()),
+                eq("course_id", request.getCourseID()));
         Document teamDocument = teamCollection.find(teamDocumentFilter).first();
         if (teamDocument == null) return true;
         return false;
