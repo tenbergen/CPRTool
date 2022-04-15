@@ -28,8 +28,6 @@ public class SecurityService {
     public void joinTeamSecurity(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
         if (!isStudentValid(courseDocument, request.getStudentID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
-        if (isStudentAlreadyInATeam(request.getStudentID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student is already in a team.").build());
         if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
         if (isTeamLock(teamCollection, request.getTeamID(), request.getCourseID()))
@@ -40,7 +38,7 @@ public class SecurityService {
 
     public void switchTeamSecurity(MongoCollection<Document> teamCollection, Document courseDocument, SwitchTeamParam request) {
         if (!isStudentValid(courseDocument, request.getStudentID()))
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
         if (!isTeamCreated(teamCollection, request.getCurrentTeamID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Current team not found.").build());
         if (!isTeamCreated(teamCollection, request.getTargetTeamID(), request.getCourseID()))
@@ -56,12 +54,12 @@ public class SecurityService {
         if (isTeamLock(teamCollection, request.getTargetTeamID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Target team is locked.").build());
         if (isTeamFull(teamCollection, request.getTargetTeamID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Target team already full.").build());
+            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Target team already full.").build());
     }
 
     public void giveUpTeamLeadSecurity(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
         if (!isStudentValid(courseDocument, request.getStudentID()))
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
         if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
         if (!isStudentInThisTeam(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
@@ -72,7 +70,7 @@ public class SecurityService {
 
     public void nominateTeamLeadSecurity(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
         if (!isStudentValid(courseDocument, request.getStudentID()) || !isStudentValid(courseDocument, request.getNominatedTeamLead()))
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found in this course.").build());
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
         if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
         if (!isStudentInThisTeam(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
