@@ -22,6 +22,7 @@ import java.util.List;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.set;
 
 public class AssignmentInterface {
     private final MongoCollection<Document> assignmentsCollection;
@@ -80,14 +81,28 @@ public class AssignmentInterface {
         return filePath;
     }
 
-    public static void writeToAssignment(FileDAO fileDAO) throws IOException {
+    public void writeToAssignment(FileDAO fileDAO) throws IOException {
         String FileStructure = getRelPath() + "assignments" + reg + fileDAO.courseID + reg + fileDAO.assignmentID + reg + "assignments";
         fileDAO.writeFile(FileStructure + reg + fileDAO.fileName);
+        assignmentsCollection.updateOne(and(eq("course_id", fileDAO.courseID),
+                                            eq("assignment_id", fileDAO.assignmentID)),
+                                            set("assignment_instructions", fileDAO.fileName));
     }
 
-    public static void writeToPeerReviews(FileDAO fileDAO) throws IOException {
+    public void writeRubricToPeerReviews(FileDAO fileDAO) throws IOException {
         String FileStructure = getRelPath() + "assignments" + reg + fileDAO.courseID + reg + fileDAO.assignmentID + reg + "peer-reviews";
         fileDAO.writeFile(FileStructure + reg + fileDAO.fileName);
+        assignmentsCollection.updateOne(and(eq("course_id", fileDAO.courseID),
+                                            eq("assignment_id", fileDAO.assignmentID)),
+                                            set("peer_review_rubric", fileDAO.fileName));
+    }
+
+    public void writeTemplateToPeerReviews(FileDAO fileDAO) throws IOException {
+        String FileStructure = getRelPath() + "assignments" + reg + fileDAO.courseID + reg + fileDAO.assignmentID + reg + "peer-reviews";
+        fileDAO.writeFile(FileStructure + reg + fileDAO.fileName);
+        assignmentsCollection.updateOne(and(eq("course_id", fileDAO.courseID),
+                                            eq("assignment_id", fileDAO.assignmentID)),
+                                            set("peer_review_template", fileDAO.fileName));
     }
 
     public static void removeFile(String courseID, String fileName, int assignmentID) {
