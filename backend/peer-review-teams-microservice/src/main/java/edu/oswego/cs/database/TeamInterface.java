@@ -48,7 +48,6 @@ public class TeamInterface {
     public void createTeam(TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-
         new SecurityService().createTeamSecurity(courseDocument, request);
 
         String teamID = new TeamService().generateTeamID(request.getCourseID());
@@ -63,48 +62,19 @@ public class TeamInterface {
         teamCollection.insertOne(teamDocument);
     }
 
-    public List<Document> getAllTeams(String courseID) {
-        Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
-        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-
-        MongoCursor<Document> cursor = teamCollection.find(eq("course_id", courseID)).iterator();
-        List<Document> teams = new ArrayList<>();
-        while (cursor.hasNext()) {
-            Document teamDocument = cursor.next();
-            teams.add(teamDocument);
-        }
-        return teams;
-    }
-
-    /**
-     * If requested student is not already in a team, shows non-full-teams.
-     * If requested student is already in a team, shows their team.
-     */
-    public List<Document> getTeamByStudentID(TeamParam request) {
+    public List<Document> getAllUnlockedTeamByStudentID(TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-        
         if (!new SecurityService().isStudentValid(courseDocument, request.getStudentID())) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
-
-        List<Document> nonFullTeams = new ArrayList<>();
-        MongoCursor<Document> cursor = teamCollection.find(eq("course_id", request.getCourseID())).iterator();
-
+        List<Document> allUnlockedTeams = new ArrayList<>();
+        Bson teamDocumentFilter = Filters.and(eq("course_id", request.getCourseID()), eq("team_lock", false));
+        MongoCursor<Document> cursor = teamCollection.find(teamDocumentFilter).iterator();
         while (cursor.hasNext()) {
             Document teamDocument = cursor.next();
-            List<String> members = teamDocument.getList("team_members", String.class);
-
-            for (String member : members) {
-                List<Document> teams = new ArrayList<>();
-                if (request.getStudentID().equals(member)) {
-                    teams.add(teamDocument);
-                    cursor.close();
-                    return teams;
-                }
-            }
-            if (!teamDocument.getBoolean("is_full")) 
-                nonFullTeams.add(teamDocument);
+            allUnlockedTeams.add(teamDocument);
         }
-        return nonFullTeams;
+        cursor.close();
+        return allUnlockedTeams;
     }
 
     public Document getTeamByTeamID(TeamParam request) {
