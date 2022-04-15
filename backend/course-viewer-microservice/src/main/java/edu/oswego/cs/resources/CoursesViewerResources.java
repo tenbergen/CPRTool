@@ -1,8 +1,11 @@
 package edu.oswego.cs.resources;
 
+import edu.oswego.cs.database.GradeInterface;
 import edu.oswego.cs.database.CourseInterface;
 import org.bson.Document;
 
+import javax.annotation.security.DenyAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -12,8 +15,10 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("professor")
+@DenyAll
 public class CoursesViewerResources {
     @GET
+    @RolesAllowed("professor")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses")
     public Response viewAllCourses() {
@@ -22,6 +27,7 @@ public class CoursesViewerResources {
     }
 
     @GET
+    @RolesAllowed("professor")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/{courseID}")
     public Response viewCourse(@PathParam("courseID") String courseID) {
@@ -30,6 +36,16 @@ public class CoursesViewerResources {
     }
 
     @GET
+    @RolesAllowed({"professor","student"})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{studentID}/courses")
+    public Response viewStudentCourses(@PathParam("studentID") String studentID) {
+        List<Document> courses = new CourseInterface().getStudentCourses(studentID);
+        return Response.status(Response.Status.OK).entity(courses).build();
+    }
+
+    @GET
+    @RolesAllowed("professor")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("students")
     public Response viewAllStudents() {
@@ -38,10 +54,43 @@ public class CoursesViewerResources {
     }
 
     @GET
+    @RolesAllowed("professor")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("students/{studentID}")
     public Response viewStudent(@PathParam("studentID") String studentID) {
         Document document = new CourseInterface().getStudent(studentID);
         return Response.status(Response.Status.OK).entity(document).build();
+    }
+
+    @GET
+    @RolesAllowed("professor")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("courses/{courseID}/students")
+    public Response viewStudentsInCourse(@PathParam("courseID") String courseID) {
+        List<Document> studentDocuments = new CourseInterface().getStudentsInCourse(courseID);
+        return Response.status(Response.Status.OK).entity(studentDocuments).build();
+    }
+
+    @GET
+    @RolesAllowed("professor")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("courses/{courseID}/students/{studentID}/grades")
+    public Response viewAllGrades(
+            @PathParam("courseID") String courseID,
+            @PathParam("studentID") String studentID) {
+        List<Document> courseGrades = new GradeInterface().getAllGrades(courseID, studentID);
+        return Response.status(Response.Status.OK).entity(courseGrades).build();
+    }
+
+    @GET
+    @RolesAllowed("student")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("courses/{courseID}/assignments/{assignmentID}/students/{studentID}/grade")
+    public Response viewGrade(
+            @PathParam("courseID") String courseID,
+            @PathParam("assignmentID") int assignmentID,
+            @PathParam("studentID") String studentID) {
+        Document grade = new GradeInterface().getGrade(courseID, assignmentID, studentID);
+        return Response.status(Response.Status.OK).entity(grade).build();
     }
 }

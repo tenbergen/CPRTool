@@ -1,32 +1,45 @@
 package edu.oswego.cs.daos;
 
-import java.util.HashMap;
-
-import javax.json.bind.annotation.JsonbCreator;
-import javax.json.bind.annotation.JsonbProperty;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
 import com.mongodb.lang.NonNull;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.json.bind.annotation.JsonbCreator;
+import javax.json.bind.annotation.JsonbProperty;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@NoArgsConstructor
 @Data
 public class TeamDAO {
-    @Id public @JsonbProperty("team_id") @NonNull String teamID; // teamID will be the pointer of the TeamDAO since teamName is not generated until .full = true
-    public @JsonbProperty("team_name") String teamName;
-    public @JsonbProperty("team_members") @NonNull HashMap<String, Boolean> teamMembers; // teamMembers = {"studID", isStudentFinalized:boolean}
-    public @JsonbProperty("is_full") @NonNull boolean isFull;
-    public @JsonbProperty("is_finalized") @NonNull boolean isFinalized; // make sure if everyone in the team hit the "finalize" button
-    public @JsonbProperty("team_size") int teamSize;
+    @Id @JsonbProperty("team_id") private String teamID;
+    @JsonbProperty("course_id") private String courseID;
+    @JsonbProperty("is_finalized") @ElementCollection private List<String> isFinalized;
+    @JsonbProperty("is_full") private Boolean isFull;
+    @JsonbProperty("team_lead") private String teamLead;
+    @JsonbProperty("team_lock") private boolean teamLock;
+    @JsonbProperty("team_members") @ElementCollection private List<String> teamMembers;
+    @JsonbProperty("team_size") private Integer teamSize;
 
-    @JsonbCreator public TeamDAO(@JsonbProperty("team_id") String teamID) {
-        this.teamID = teamID; // teamID can be the position of the team (index 0 index 1 ...) sent from FE
-        this.teamName = "";   // teamName is not generated until the .full is true
-        this.teamMembers = new HashMap<String, Boolean>(); // create the teamMembers hashMap in resources
+    @JsonbCreator
+    public TeamDAO( 
+        @NonNull @JsonbProperty("team_id") String teamID,
+        @NonNull @JsonbProperty("course_id") String courseID,
+        @NonNull @JsonbProperty("team_size") Integer teamSize,
+        @NonNull @JsonbProperty("team_lead") String teamLead
+        ) {
+        this.teamID = teamID;
+        this.courseID = courseID;
+        this.isFinalized = new ArrayList<>();
         this.isFull = false;
-        this.isFinalized = false;
-        this.teamSize = 0;
+        this.teamLead = teamLead;
+        this.teamLock = false;
+        this.teamMembers = new ArrayList<>();
+        this.teamSize = teamSize;
     }
 }

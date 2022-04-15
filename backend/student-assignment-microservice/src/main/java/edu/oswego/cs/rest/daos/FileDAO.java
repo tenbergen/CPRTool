@@ -1,10 +1,10 @@
 package edu.oswego.cs.rest.daos;
+
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
 import java.io.*;
-import java.util.Arrays;
-import java.util.regex.Pattern;
 
 @Getter
 @AllArgsConstructor
@@ -25,9 +25,7 @@ public class FileDAO {
      * @throws IOException File Corruption Exception
      */
     public static FileDAO fileFactory(String fileName, String courseID, IAttachment attachment, int assignmentID) throws IOException {
-//        String courseName = fileName.split("\\.")[0];
         InputStream inputStream = attachment.getDataHandler().getInputStream();
-        System.out.println("fileName: " + fileName + "courseID: " + courseID);
         return new FileDAO(fileName, courseID, inputStream, assignmentID);
     }
 
