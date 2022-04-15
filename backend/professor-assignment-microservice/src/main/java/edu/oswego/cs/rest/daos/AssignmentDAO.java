@@ -23,9 +23,9 @@ public class AssignmentDAO {
     @JsonbProperty("peer_review_instructions") public String peerReviewInstructions;
     @JsonbProperty("peer_review_due_date") public String peerReviewDueDate;
     @JsonbProperty("peer_review_points") public int peerReviewPoints;
-
-    @JsonbProperty("team_submissions") public @ElementCollection HashMap<String,String> teamSubmissions;
-    @JsonbProperty("team_review_submissions") public @ElementCollection HashMap<String,String> teamReviewSubmissions;
+    @JsonbProperty("assignment_instructions") public String assignmentInstruction = "";
+    @JsonbProperty("peer_review_template") public String peerReviewTemplate = "";
+    @JsonbProperty("peer_review_rubric") public String peerReviewRubric = "";
 
     @JsonbCreator
     public AssignmentDAO(
@@ -47,7 +47,5 @@ public class AssignmentDAO {
         this.points = points;
         this.peerReviewDueDate = peerReviewDueDate;
         this.peerReviewPoints = peerReviewPoints;
-        teamSubmissions = new HashMap<>();
-        teamReviewSubmissions = new HashMap<>();
     }
 }

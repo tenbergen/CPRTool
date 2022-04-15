@@ -36,7 +36,6 @@ public class CourseInterface {
             Document document = query.next();
             courses.add(document);
         }
-        query.close();
         return courses;
     }
 
@@ -54,7 +53,6 @@ public class CourseInterface {
             Document document = query.next();
             students.add(document);
         }
-        query.close();
         return students;
     }
 
@@ -81,11 +79,8 @@ public class CourseInterface {
 
     public List<Document> getStudentsInCourse(String courseID) {
         Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
-        if (courseDocument == null)
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).build());
-
-        List<String> studentIDs = (List<String>) courseDocument.get("students");
-
+        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).build());
+        List<String> studentIDs = courseDocument.getList("students", String.class);
         return studentIDs.stream()
                 .map(id -> studentCollection.find(eq("student_id", id)).first())
                 .collect(Collectors.toList());

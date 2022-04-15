@@ -4,7 +4,7 @@ import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.rest.daos.AssignmentDAO;
 import edu.oswego.cs.rest.daos.FileDAO;
 import edu.oswego.cs.rest.database.AssignmentInterface;
-import edu.oswego.cs.rest.timer.DueDateChecker;
+//import edu.oswego.cs.rest.timer.DueDateChecker;
 import org.bson.Document;
 
 import javax.annotation.security.DenyAll;
@@ -14,8 +14,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,7 +67,7 @@ public class ProfessorAssignmentResource {
 
             if (!fileName.endsWith("pdf") && !fileName.endsWith("zip"))
                 return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
-            AssignmentInterface.writeToAssignment(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
+            new AssignmentInterface().writeToAssignment(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
         }
         return Response.status(Response.Status.OK).entity("Successfully added file to assignment.").build();
     }
@@ -88,15 +86,41 @@ public class ProfessorAssignmentResource {
     @RolesAllowed("professor")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
-    @Path("/courses/{courseID}/assignments/{assignmentID}/peer-review/upload")
-    public Response addFileToPeerReview(List<IAttachment> attachments, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) throws Exception {
+    @Path("/courses/{courseID}/assignments/{assignmentID}/peer-review/rubric/upload")
+    public Response addRubricToPeerReview(List<IAttachment> attachments, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) throws Exception {
         for (IAttachment attachment : attachments) {
             if (attachment == null) continue;
             String fileName = attachment.getDataHandler().getName();
 
             if (!fileName.endsWith("pdf") && !fileName.endsWith("zip"))
                 return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
-            AssignmentInterface.writeToPeerReviews(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
+            new AssignmentInterface().writeRubricToPeerReviews(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
+        }
+        return Response.status(Response.Status.OK).entity("Successfully added file to peer reviews.").build();
+    }
+    /**
+     * File is uploaded as form-data and passed back as a List<IAttachment>
+     * The attachment is processed in FileDao.FileFactory, which reads and
+     * reconstructs the file through inputStream and outputStream respectively
+     *
+     * @param attachments  type List<IAttachment>: file(s) passed back as form-data
+     * @param courseID     type String
+     * @param assignmentID type int
+     * @return Response
+     */
+    @POST
+    @RolesAllowed("professor")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
+    @Path("/courses/{courseID}/assignments/{assignmentID}/peer-review/template/upload")
+    public Response addTemplateToPeerReview(List<IAttachment> attachments, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) throws Exception {
+        for (IAttachment attachment : attachments) {
+            if (attachment == null) continue;
+            String fileName = attachment.getDataHandler().getName();
+
+            if (!fileName.endsWith("pdf") && !fileName.endsWith("zip"))
+                return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
+            new AssignmentInterface().writeTemplateToPeerReviews(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
         }
         return Response.status(Response.Status.OK).entity("Successfully added file to peer reviews.").build();
     }
@@ -125,7 +149,7 @@ public class ProfessorAssignmentResource {
     @Path("/courses/create-assignment")
     public Response createAssignment(AssignmentDAO assignmentDAO) {
         Document assignmentDocument = new AssignmentInterface().createAssignment(assignmentDAO);
-        DueDateChecker.assignmentDocuments.add(assignmentDocument);
+//        DueDateChecker.assignmentDocuments.add(assignmentDocument);
         return Response.status(Response.Status.OK).entity(assignmentDocument).build();
     }
 
@@ -145,38 +169,6 @@ public class ProfessorAssignmentResource {
         new AssignmentInterface().updateAssignment(assignmentDAO, courseID, assignmentID);
         String response = assignmentDAO.courseID + ": " + assignmentDAO.assignmentName + " successfully updated.";
         return Response.status(Response.Status.OK).entity(response).build();
-    }
-
-    @GET
-    @RolesAllowed({"professor", "student"})
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/courses/{courseID}/assignments/{assignmentID}/view-files")
-    public Response viewAssignmentFiles(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
-        File file = new File(AssignmentInterface.findAssignment(courseID, assignmentID));
-        if (!file.exists())
-            return Response.status(Response.Status.NOT_FOUND).entity("Assignment does not exist.").build();
-
-        File[] files = file.listFiles();
-        ArrayList<String> fileNames = new ArrayList<>();
-        Arrays.asList(files).forEach(names -> fileNames.add(names.getName()));
-
-        return Response.status(Response.Status.OK).entity(fileNames).build();
-    }
-
-    @GET
-    @RolesAllowed({"professor", "student"})
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/courses/{courseID}/assignments/{assignmentID}/peer-review/view-files")
-    public Response viewPeerReviewFiles(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
-        File file = new File(AssignmentInterface.findPeerReview(courseID, assignmentID));
-        if (!file.exists())
-            return Response.status(Response.Status.NOT_FOUND).entity("Assignment does not exist.").build();
-
-        File[] files = file.listFiles();
-        ArrayList<String> fileNames = new ArrayList<>();
-        Arrays.asList(files).forEach(names -> fileNames.add(names.getName()));
-
-        return Response.status(Response.Status.OK).entity(fileNames).build();
     }
 
     /**
@@ -228,20 +220,20 @@ public class ProfessorAssignmentResource {
         return Response.status(Response.Status.OK).entity("Course successfully deleted from assignments database and assignments folder.").build();
     }
 
-    @GET
-    @RolesAllowed({"professor", "student"})
-    @Path("assignments-deadline-checker/aliveness")
-    public Response deadlineCheckerAliveness() {
-        AssignmentInterface assignmentInterface = new AssignmentInterface();
-        if (DueDateChecker.activeThreads.get())
-            return Response.status(Response.Status.OK).build();
-
-        List<Document> assignmentsNotPastDue = assignmentInterface.getAllAssignments().stream()
-                .filter(document -> ! ((Boolean) document.get("assignment_past_due")) || ! ((Boolean) document.get("peer_review_assignment_past_due")) )
-                .collect(Collectors.toList());
-
-        new DueDateChecker(assignmentsNotPastDue).start();
-
-        return Response.status(Response.Status.OK).build();
-    }
+//    @GET
+//    @RolesAllowed({"professor", "student"})
+//    @Path("assignments-deadline-checker/aliveness")
+//    public Response deadlineCheckerAliveness() {
+//        AssignmentInterface assignmentInterface = new AssignmentInterface();
+//        if (DueDateChecker.activeThreads.get())
+//            return Response.status(Response.Status.OK).build();
+//
+//        List<Document> assignmentsNotPastDue = assignmentInterface.getAllAssignments().stream()
+//                .filter(document -> ! ((Boolean) document.get("assignment_past_due")) || ! ((Boolean) document.get("peer_review_assignment_past_due")) )
+//                .collect(Collectors.toList());
+//
+//        new DueDateChecker(assignmentsNotPastDue).start();
+//
+//        return Response.status(Response.Status.OK).build();
+//    }
 }

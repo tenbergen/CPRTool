@@ -22,6 +22,7 @@ import java.util.List;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.set;
 
 public class AssignmentInterface {
     private final MongoCollection<Document> assignmentsCollection;
@@ -80,14 +81,28 @@ public class AssignmentInterface {
         return filePath;
     }
 
-    public static void writeToAssignment(FileDAO fileDAO) throws IOException {
+    public void writeToAssignment(FileDAO fileDAO) throws IOException {
         String FileStructure = getRelPath() + "assignments" + reg + fileDAO.courseID + reg + fileDAO.assignmentID + reg + "assignments";
         fileDAO.writeFile(FileStructure + reg + fileDAO.fileName);
+        assignmentsCollection.updateOne(and(eq("course_id", fileDAO.courseID),
+                                            eq("assignment_id", fileDAO.assignmentID)),
+                                            set("assignment_instructions", fileDAO.fileName));
     }
 
-    public static void writeToPeerReviews(FileDAO fileDAO) throws IOException {
+    public void writeRubricToPeerReviews(FileDAO fileDAO) throws IOException {
         String FileStructure = getRelPath() + "assignments" + reg + fileDAO.courseID + reg + fileDAO.assignmentID + reg + "peer-reviews";
         fileDAO.writeFile(FileStructure + reg + fileDAO.fileName);
+        assignmentsCollection.updateOne(and(eq("course_id", fileDAO.courseID),
+                                            eq("assignment_id", fileDAO.assignmentID)),
+                                            set("peer_review_rubric", fileDAO.fileName));
+    }
+
+    public void writeTemplateToPeerReviews(FileDAO fileDAO) throws IOException {
+        String FileStructure = getRelPath() + "assignments" + reg + fileDAO.courseID + reg + fileDAO.assignmentID + reg + "peer-reviews";
+        fileDAO.writeFile(FileStructure + reg + fileDAO.fileName);
+        assignmentsCollection.updateOne(and(eq("course_id", fileDAO.courseID),
+                                            eq("assignment_id", fileDAO.assignmentID)),
+                                            set("peer_review_template", fileDAO.fileName));
     }
 
     public static void removeFile(String courseID, String fileName, int assignmentID) {
@@ -135,7 +150,6 @@ public class AssignmentInterface {
         }
 
         assignmentsCollection.insertOne(assignmentDocument);
-        query.close();
 
         FileStructure += reg + nextPos;
         if (!new File(FileStructure + reg + "team-submissions").mkdirs())
@@ -156,25 +170,18 @@ public class AssignmentInterface {
             Document document = query.next();
             assignments.add(document);
         }
-
-        query.close();
         return assignments;
     }
 
     public List<Document> getAssignmentsByCourse(String courseID) {
         MongoCursor<Document> query = assignmentsCollection.find(eq("course_id", courseID)).iterator();
-        if (!query.hasNext()) {
-            query.close();
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist").build());
-        }
+        if (!query.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist").build());
 
         List<Document> assignments = new ArrayList<>();
         while (query.hasNext()) {
             Document document = query.next();
             assignments.add(document);
         }
-
-        query.close();
         return assignments;
     }
 
@@ -197,13 +204,10 @@ public class AssignmentInterface {
     }
 
     public void removeAssignment(int AssignmentID, String courseID) throws IOException {
-        MongoCursor<Document> results = assignmentsCollection.find(new Document()
-                .append("assignment_id", AssignmentID)
-                .append("course_id", courseID)).iterator();
-        if (!results.hasNext()) {
-            results.close();
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
-        }
+        MongoCursor<Document> results = assignmentsCollection.find(and(
+                eq("assignment_id", AssignmentID),
+                eq("course_id", courseID))).iterator();
+        if (!results.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
 
         while (results.hasNext()) {
             Document assignment = results.next();
@@ -211,13 +215,11 @@ public class AssignmentInterface {
             FileUtils.deleteDirectory(new File(Destination));
             assignmentsCollection.findOneAndDelete(assignment);
         }
-        results.close();
     }
 
     public void removeCourse(String courseID) throws IOException {
         MongoCursor<Document> results = assignmentsCollection.find(eq("course_id", courseID)).iterator();
-        if (!results.hasNext())
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
+        if (!results.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment by this name found.").build());
 
         while (results.hasNext()) {
             Document assignmentDocument = results.next();
@@ -226,14 +228,5 @@ public class AssignmentInterface {
 
         String Destination = getRelPath() + "assignments" + reg + courseID;
         FileUtils.deleteDirectory(new File(Destination));
-        results.close();
     }
-
-//    public void setPeerReviewPastDue(Document assignmentDocument) {
-//        assignmentsCollection.updateOne(eq("assignment_id", assignmentID), set("peer_review_assignment_past_due", true));
-//    }
-//
-//    public void setAssignmentPastDue(Document assignmentDocument) {
-//        assignmentsCollection.replaceOne(assignmentDocument, (Document) assignmentDocument.put("assignment_past_due", true));
-//    }
 }
