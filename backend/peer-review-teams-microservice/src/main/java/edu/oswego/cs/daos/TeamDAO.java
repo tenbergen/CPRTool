@@ -19,11 +19,11 @@ import java.util.List;
 public class TeamDAO {
     @Id @JsonbProperty("team_id") private String teamID;
     @JsonbProperty("course_id") private String courseID;
-    @JsonbProperty("is_finalized") @ElementCollection private List<String> isFinalized;
-    @JsonbProperty("is_full") private Boolean isFull;
+    @JsonbProperty("team_full") private Boolean teamFull;
     @JsonbProperty("team_lead") private String teamLead;
     @JsonbProperty("team_lock") private boolean teamLock;
     @JsonbProperty("team_members") @ElementCollection private List<String> teamMembers;
+    @JsonbProperty("team_name_votes") @ElementCollection private List<String> teamNameVotes;
     @JsonbProperty("team_size") private Integer teamSize;
 
     @JsonbCreator
@@ -35,11 +35,11 @@ public class TeamDAO {
         ) {
         this.teamID = teamID;
         this.courseID = courseID;
-        this.isFinalized = new ArrayList<>();
-        this.isFull = false;
+        this.teamFull = false;
         this.teamLead = teamLead;
         this.teamLock = false;
         this.teamMembers = new ArrayList<>();
+        this.teamNameVotes = new ArrayList<>();
         this.teamSize = teamSize;
     }
 }
