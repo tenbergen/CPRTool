@@ -11,4 +11,5 @@ public class TeamParam {
     @JsonbProperty("team_id") @NonNull private String teamID;
     @JsonbProperty("student_id") @NonNull private String studentID;
     @JsonbProperty("team_name") @NonNull private String teamName;
+    @JsonbProperty("team_size") @NonNull private Integer teamSize;
 }
