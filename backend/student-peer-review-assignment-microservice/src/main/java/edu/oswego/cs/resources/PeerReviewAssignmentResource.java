@@ -110,7 +110,7 @@ public class PeerReviewAssignmentResource {
      */
     @POST
     @RolesAllowed("student")
-    @Path("{courseID}/{assignmentID}/{srcTeamName}/{destTeamName}/upload")
+    @Path("{courseID}/{assignmentID}/{srcTeamName}/{destTeamName}/{grade}/upload")
     @Consumes({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
     @Produces({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
     public Response uploadPeerReview(
@@ -118,7 +118,8 @@ public class PeerReviewAssignmentResource {
             @PathParam("courseID") String courseID,
             @PathParam("assignmentID") int assignmentID,
             @PathParam("srcTeamName") String srcTeamName,
-            @PathParam("destTeamName") String destTeamName
+            @PathParam("destTeamName") String destTeamName,
+            @PathParam("grade") int grade
     ) throws IOException {
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
         for (IAttachment attachment : attachments) {
@@ -127,7 +128,7 @@ public class PeerReviewAssignmentResource {
             if (!fileName.endsWith("pdf")) return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
             peerReviewAssignmentInterface.uploadPeerReview(courseID, assignmentID, srcTeamName, destTeamName, attachment);
             fileName = "from-"+srcTeamName+"-to-"+destTeamName + fileName.substring(fileName.indexOf("."));
-            peerReviewAssignmentInterface.addPeerReviewSubmission(courseID, assignmentID, srcTeamName, fileName);
+            peerReviewAssignmentInterface.addPeerReviewSubmission(courseID, assignmentID, srcTeamName, fileName, grade);
         }
         return Response.status(Response.Status.OK).entity("Successfully uploaded peer review.").build();
     }

@@ -44,7 +44,7 @@ public class PeerReviewAssignmentInterface {
         }
     }
 
-    public void addPeerReviewSubmission(String course_id,int assignment_id,String srcTeamName, String fileName){
+    public void addPeerReviewSubmission(String course_id,int assignment_id,String srcTeamName, String fileName, int grade){
         Document team = teamCollection.find(eq("team_id", srcTeamName)).first();
         if(team == null) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("no team for this student").build());
@@ -63,6 +63,7 @@ public class PeerReviewAssignmentInterface {
                 .append("team_name",team.getString("team_id"))
                 .append("members",team.getList("team_members",String.class))
                 .append("type","peer_review_submission")
+                .append("grade", grade)
                 .append("path",path+reg+fileName);
         System.out.println(new_submission);
         if(submissionsCollection.find(new_submission).iterator().hasNext()){
