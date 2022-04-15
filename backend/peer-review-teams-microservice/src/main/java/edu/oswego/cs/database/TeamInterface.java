@@ -251,14 +251,33 @@ public class TeamInterface {
     public void assignTeamLead(TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+        new SecurityService().assignTeamLeadSecurity(teamCollection, courseDocument, request);
+
+        Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
+        Document teamDocument = teamCollection.find(teamDocumentFilter).first();
+        List<String> students = teamDocument.getList("team_members", String.class);
+        students.remove(request.getStudentID());
+        Collections.reverse(students);
+        students.add(request.getStudentID());
+        Collections.reverse(students);
+        Bson assignTeamLeadUpdates = Updates.combine(
+                Updates.set("team_lead", request.getStudentID()),
+                Updates.set("team_members", students)
+        );
+        UpdateOptions assignTeamLeadOptions = new UpdateOptions().upsert(true);
+        teamCollection.updateOne(teamDocumentFilter, assignTeamLeadUpdates, assignTeamLeadOptions);
     }
 
     public void deleteTeam(TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) 
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+        if (!new SecurityService().isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
+        if (new SecurityService().isTeamLock(teamCollection, request.getTeamID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Team is locked.").build());
+        Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
+        teamCollection.deleteOne(teamDocumentFilter);
     }
 
     public List<Document> getAllStudentsInThisCourse(String courseID) {
