@@ -9,6 +9,12 @@ docker container stop cpr-professor-assignment && docker container rm cpr-profes
 docker container stop cpr-peer-review-teams && docker container rm cpr-peer-review-teams
 docker container stop cpr-student-assignment && docker container rm cpr-student-assignment
 docker container stop cpr-student-peer-review-assignment && docker container rm cpr-student-peer-review-assignment
+docker container stop cpr-nginx && docker container rm cpr-nginx
+docker container stop cpr-mongo && docker container rm cpr-mongo
+docker container stop cpr-mongo2 && docker container rm cpr-mongo2
+docker container stop cpr-mongo3 && docker container rm cpr-mongo3
+docker container stop cpr-mongo4 && docker container rm cpr-mongo4
+docker container stop cpr-mongo5 && docker container rm cpr-mongo5
 
 # cd into the working directory.
 cd app/ || exit
