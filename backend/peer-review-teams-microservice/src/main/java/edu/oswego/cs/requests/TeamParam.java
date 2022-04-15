@@ -8,7 +8,9 @@ import lombok.Data;
 @Data
 public class TeamParam {
     @JsonbProperty("course_id") @NonNull String courseID;
+    @JsonbProperty("nominated_team_lead") @NonNull String nominatedTeamLead;
     @JsonbProperty("team_id") @NonNull private String teamID;
-    @JsonbProperty("student_id") @NonNull private String studentID;
     @JsonbProperty("team_name") @NonNull private String teamName;
+    @JsonbProperty("team_size") @NonNull private Integer teamSize;
+    @JsonbProperty("student_id") @NonNull private String studentID;
 }
