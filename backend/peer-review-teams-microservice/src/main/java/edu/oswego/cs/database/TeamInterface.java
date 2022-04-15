@@ -165,7 +165,6 @@ public class TeamInterface {
             UpdateOptions teamOptions = new UpdateOptions().upsert(true);
             teamCollection.updateOne(teamDocumentFilter, teamUpdates, teamOptions);
         }
-
     }
     
     public void generateTeamName(TeamParam request) {
@@ -228,7 +227,6 @@ public class TeamInterface {
         }
     }
 
-    public void removeStudent(TeamParam request) {
     public void editTeamName(TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
@@ -243,9 +241,21 @@ public class TeamInterface {
         teamCollection.updateOne(teamDocumentFilter, editTeamNameUpdates, editTeamNameOptions);
     }
 
-    public void editTeamName(TeamParam request) {
+    public void editTeamSizeInBulk(TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+        Bson editTeamSizeInBulkUpdates = Updates.set("team_size", request.getTeamSize());
+        teamCollection.updateMany(eq("course_id", request.getCourseID()), editTeamSizeInBulkUpdates);
+    }
+
+    public void editTeamSize(TeamParam request) {
+        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
+        if (courseDocument == null)
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+        new SecurityService().editTeamSizeSecurity(teamCollection, request);
+        Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
+        Bson editTeamSizeUpdates = Updates.set("team_size", request.getTeamSize());
+        teamCollection.updateOne(teamDocumentFilter, editTeamSizeUpdates);
     }
 
     public void assignTeamLead(TeamParam request) {

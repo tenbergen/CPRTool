@@ -62,6 +62,24 @@ public class ProfessorTeamResources {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("/team-size/edit/bulk")
+    public Response editTeamSizeInBulk(TeamParam request) {
+        new TeamInterface().editTeamSizeInBulk(request);
+        return Response.status(Response.Status.OK).entity("Team size successfully updated.").build(); 
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/team-size/edit")
+    public Response editTeamSize(TeamParam request) {
+        new TeamInterface().editTeamSize(request);
+        return Response.status(Response.Status.OK).entity("Team size successfully updated.").build(); 
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/team-lead/assign")
     public Response assignTeamLead(TeamParam request) {
         new TeamInterface().assignTeamLead(request);
