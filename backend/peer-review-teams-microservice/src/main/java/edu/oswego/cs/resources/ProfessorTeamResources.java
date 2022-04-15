@@ -2,6 +2,7 @@ package edu.oswego.cs.resources;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -13,6 +14,15 @@ import edu.oswego.cs.requests.TeamParam;
 
 @Path("teams/professor/team")
 public class ProfessorTeamResources {
+
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("get/all")
+    public Response getAllTeams(TeamParam request) {
+        return Response.status(Response.Status.OK).entity(new TeamInterface().getAllTeams(request.getCourseID())).build();
+    }
+
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

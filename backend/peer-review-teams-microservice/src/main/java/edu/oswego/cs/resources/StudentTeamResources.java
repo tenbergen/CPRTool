@@ -22,14 +22,6 @@ public class StudentTeamResources {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("get/all")
-    public Response getAllTeams(TeamParam request) {
-        return Response.status(Response.Status.OK).entity(new TeamInterface().getAllTeams(request.getCourseID())).build();
-    }
-
-    @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("get/student_id")
     public Response getTeamByStudentID(TeamParam request) {
         return Response.status(Response.Status.OK).entity(new TeamInterface().getTeamByStudentID(request)).build();

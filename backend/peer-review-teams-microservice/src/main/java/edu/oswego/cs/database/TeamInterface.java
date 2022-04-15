@@ -175,6 +175,15 @@ public class TeamInterface {
         teamCollection.updateOne(teamDocumentFilter, teamNameUpdates, teamNameOptions);
     }
 
+    public List<Document> getAllTeams(String courseID) {
+        Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
+        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+
+        MongoCursor<Document> cursor = teamCollection.find(eq("course_id", courseID)).iterator();
+        List<Document> teams = new ArrayList<>();
+        while (cursor.hasNext()) {
+            Document teamDocument = cursor.next();
+            teams.add(teamDocument);
         }
     }
 
