@@ -86,16 +86,14 @@ public class TeamInterface {
         return teamCollection.find(teamDocumentFilter).first();
     }
 
-        MongoCursor<Document> cursor = teamCollection.find(eq("course_id", request.getCourseID())).iterator();
-        while (cursor.hasNext()) {
-            Document teamDocument = cursor.next();
-            String teamID = teamDocument.getString("team_id");
-            if (request.getTeamID().equals(teamID)) {
-                cursor.close();
-                return teamDocument;
-            }
+    public void studentJoinTeam(TeamParam request) {
+        if (!new SecurityService().isStudentAlreadyInATeam(request.getStudentID(), request.getCourseID())) 
+            joinTeam(request);
+        else if (new SecurityService().isStudentAlreadyInATeam(request.getStudentID(), request.getCourseID())) {
+            String currentTeamID = new TeamService().retrieveTeamID(request);
+            SwitchTeamParam switchTeamParam = new SwitchTeamParam(request.getCourseID(), request.getStudentID(), currentTeamID, request.getTeamID());
+            switchTeam(switchTeamParam);
         }
-        throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
     }
 
     public void joinTeam(TeamParam request) {

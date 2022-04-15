@@ -48,7 +48,7 @@ public class StudentTeamResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("join")
     public Response joinTeam(TeamParam request) {
-        new TeamInterface().joinTeam(request);
+        new TeamInterface().studentJoinTeam(request);
         return Response.status(Response.Status.OK).entity("Student successfully join team.").build();
     }
     
