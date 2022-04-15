@@ -1,7 +1,6 @@
 package edu.oswego.cs.daos;
 
 import com.mongodb.lang.NonNull;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -27,12 +26,11 @@ public class TeamDAO {
     @JsonbProperty("team_size") private Integer teamSize;
 
     @JsonbCreator
-    public TeamDAO( 
-        @NonNull @JsonbProperty("team_id") String teamID,
-        @NonNull @JsonbProperty("course_id") String courseID,
-        @NonNull @JsonbProperty("team_size") Integer teamSize,
-        @NonNull @JsonbProperty("team_lead") String teamLead
-        ) {
+    public TeamDAO(
+            @NonNull @JsonbProperty("team_id") String teamID,
+            @NonNull @JsonbProperty("course_id") String courseID,
+            @NonNull @JsonbProperty("team_size") Integer teamSize,
+            @NonNull @JsonbProperty("team_lead") String teamLead) {
         this.teamID = teamID;
         this.courseID = courseID;
         this.teamFull = false;

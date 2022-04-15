@@ -64,7 +64,7 @@ services:
       MONGO_PASSWORD: ${MONGO_PASSWORD}
       JWKS_URI: ${JWKS_URI}
 
-    peer-review-teams:
+  peer-review-teams:
     build:
       context: ./backend/peer-review-teams-microservice
     container_name: cpr-peer-review-teams
@@ -178,7 +178,7 @@ services:
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     ports:
       - "27039:27017"
-        
+
   mongo4:
     image: mongo:5.0.6
     container_name: cpr-mongo4
