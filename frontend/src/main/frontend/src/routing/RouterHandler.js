@@ -34,7 +34,8 @@ const RouterHandler = () => {
                   {/*student routes*/}
                   <Route element={<RoleRouteHandler allowedRoles={["student", "professor"]}/>} >
                       <Route path='details/student/:courseId' element={<StudentCoursePage />} />
-                      <Route path='details/student/:courseId/:assignmentId' element={<AssignmentPage />}/>
+                      <Route path='details/student/:courseId/:assignmentId/:assignmentType' element={<AssignmentPage/>}/>
+                      <Route path='details/student/:courseId/:assignmentId/:assignmentType/:teamName' element={<AssignmentPage />}/>
                   </Route>
               </Route>
           </Route>

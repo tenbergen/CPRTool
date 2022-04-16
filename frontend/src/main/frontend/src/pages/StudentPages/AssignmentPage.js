@@ -10,9 +10,7 @@ import axios from "axios";
 function AssignmentPage() {
     const dispatch = useDispatch()
     const { currentAssignment, currentAssignmentLoaded, currentAssignmentFiles } = useSelector((state) => state.assignments)
-    const { courseId, assignmentId } = useParams()
-    console.log(courseId)
-    console.log(assignmentId)
+    const { courseId, assignmentId, assignmentType, teamName } = useParams()
 
     useEffect(() => {
         dispatch(getAssignmentDetailsAsync({ courseId, assignmentId }));
@@ -42,16 +40,21 @@ function AssignmentPage() {
                     <div className="ap-container">
                         <AssBarComponent/>
                         <div className="ap-component">
-                            <h2>{currentAssignment.assignment_name}</h2>
-                            <div className="ap-assignmentArea">
-                                <div className="ap-component-links">
-                                    <h3> Instructions: <br/><br/>{currentAssignment.instructions}
-                                        <br/> <br/> <br/>
-                                         Files: <div onClick={onAssignmentClick}> {currentAssignment.assignment_instructions} </div>
-                                    </h3>
-                                    <h3> Due Date: {currentAssignment.due_date}</h3>
-                                </div>
-                            </div>
+                            {/*<h2>{currentAssignment.assignment_name}</h2>*/}
+                            {/*<div className="ap-assignmentArea">*/}
+                            {/*    <div className="ap-component-links">*/}
+                            {/*        <h3> Instructions: <br/><br/>{currentAssignment.instructions}*/}
+                            {/*            <br/> <br/> <br/>*/}
+                            {/*             Files: <div onClick={onAssignmentClick}> {currentAssignment.assignment_instructions} </div>*/}
+                            {/*        </h3>*/}
+                            {/*        <h3> Due Date: {currentAssignment.due_date}</h3>*/}
+                            {/*    </div>*/}
+                            {/*</div>*/}
+                            {
+                                assignmentType === "peer-review"
+                                    ? <p> I'm a peer review</p>
+                                    : <p> I'm not a peer review</p>
+                            }
                         </div>
                     </div>
                 </div> : null
