@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import "./styles/TeacherAss.css"
 import {useDispatch, useSelector} from "react-redux";
 import {Link, useParams} from "react-router-dom";
-import { getCourseAssignmentsAsync, setCurrentAssignment } from "../redux/features/assignmentSlice";
+import { getAssignmentDetailsAsync, getCourseAssignmentsAsync } from "../redux/features/assignmentSlice";
 
 const GradeAssBarLink = ( {active, assignment, onClick})  => {
     const { role } = useSelector((state) => state.auth)
@@ -34,8 +34,9 @@ const GradeAssBarComponent = () => {
     },[])
 
     const onAssClick = (assignment) =>{
-        setChosen(assignment.assignment_name)
-        dispatch(setCurrentAssignment(assignment))
+        setChosen(assignment.assignment_id)
+        let assignmentId = assignment.assignment_id
+        dispatch(getAssignmentDetailsAsync({courseId, assignmentId}))
     }
 
     return (

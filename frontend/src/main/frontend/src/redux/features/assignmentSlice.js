@@ -44,24 +44,6 @@ export const getCombinedAssignmentPeerReviews = createAsyncThunk(
     }
 )
 
-export const getAssignmentFilesAsync = createAsyncThunk(
-    'assignments/getAssignmentFilesAsync',
-    async (values, thunkAPI) => {
-        thunkAPI.dispatch(refreshTokenAsync())
-        const { courseId, assignment_id } = values;
-        const url = `${getAssignmentUrl}/${courseId}/assignments/${assignment_id}/view-files`
-        const currentAssignmentFiles = await axios.get(url)
-            .then(res => {
-                console.log(res.data)
-                return res.data
-            })
-            .catch(e => {
-                console.log(e)
-            })
-        return { currentAssignmentFiles }
-    }
-)
-
 export const getAssignmentDetailsAsync = createAsyncThunk(
     'assignments/getAssignmentDetailsAsync',
     async (values, thunkAPI)=> {
@@ -87,8 +69,7 @@ const assignmentSlice = createSlice({
         courseAssignments: [],
         combinedAssignmentPeerReviews: [],
         currentAssignment: null,
-        currentAssignmentFiles: [],
-        currentAssignmentLoaded: false
+        assignmentFilesLoaded: false
     },
     reducers: {
         setCurrentAssignment: (state, action) => {
@@ -105,9 +86,6 @@ const assignmentSlice = createSlice({
         },
         [getAssignmentDetailsAsync.pending]: (state) => {
             state.currentAssignmentLoaded = false
-        },
-        [getAssignmentFilesAsync.fulfilled]: (state, action) => {
-            state.currentAssignmentFiles = action.payload.currentAssignmentFiles
         },
         [getCombinedAssignmentPeerReviews.fulfilled]: (state, action) => {
             state.combinedAssignmentPeerReviews = action.payload.combined
