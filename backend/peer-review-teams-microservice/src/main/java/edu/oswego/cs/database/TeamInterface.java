@@ -62,13 +62,13 @@ public class TeamInterface {
         teamCollection.insertOne(teamDocument);
     }
 
-    public List<Document> getAllUnlockedTeamByStudentID(TeamParam request) {
-        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
+    public List<Document> getAllUnlockedTeamByStudentID(String courseID, String studentID) {
+        Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-        if (!new SecurityService().isStudentValid(courseDocument, request.getStudentID()))
+        if (!new SecurityService().isStudentValid(courseDocument, studentID))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
         List<Document> allUnlockedTeams = new ArrayList<>();
-        Bson teamDocumentFilter = Filters.and(eq("course_id", request.getCourseID()), eq("team_lock", false));
+        Bson teamDocumentFilter = Filters.and(eq("course_id", courseID), eq("team_lock", false));
         MongoCursor<Document> cursor = teamCollection.find(teamDocumentFilter).iterator();
         while (cursor.hasNext()) {
             Document teamDocument = cursor.next();
@@ -77,14 +77,14 @@ public class TeamInterface {
         return allUnlockedTeams;
     }
 
-    public Document getTeamByTeamID(TeamParam request) {
-        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
+    public Document getTeamByTeamID(String courseID, String teamID) {
+        Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-        if (!new SecurityService().isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
+        if (!new SecurityService().isTeamCreated(teamCollection, teamID, courseID))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
-        if (new SecurityService().isTeamLock(teamCollection, request.getTeamID(), request.getCourseID()))
+        if (new SecurityService().isTeamLock(teamCollection, teamID, courseID))
             throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Team is locked.").build());
-        Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
+        Bson teamDocumentFilter = Filters.and(eq("team_id", teamID), eq("course_id", courseID));
         return teamCollection.find(teamDocumentFilter).first();
     }
 
