@@ -7,6 +7,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -19,12 +20,11 @@ import edu.oswego.cs.requests.TeamParam;
 public class ProfessorTeamResources {
 
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("get/all")
+    @Path("get/all/{course_id}")
     @RolesAllowed("professor")
-    public Response getAllTeams(TeamParam request) {
-        return Response.status(Response.Status.OK).entity(new TeamInterface().getAllTeams(request.getCourseID())).build();
+    public Response getAllTeams(@PathParam("course_id") String courseID) {
+        return Response.status(Response.Status.OK).entity(new TeamInterface().getAllTeams(courseID)).build();
     }
 
     @PUT
