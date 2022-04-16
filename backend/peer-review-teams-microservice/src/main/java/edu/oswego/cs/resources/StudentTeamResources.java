@@ -25,14 +25,23 @@ public class StudentTeamResources {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("get/unlocked-team/all/{course_id}/{student_id}")
-    @RolesAllowed("student")
+    @Path("get/unlocked-team/all/{course_id}")
+    @RolesAllowed({"professor", "student"})
+    public Response getAllUnlockedTeam(@PathParam("course_id") String courseID) {
+        return Response.status(Response.Status.OK).entity(new TeamInterface().getAllUnlockedTeams(courseID)).build();
+    }
+    
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("get/{course_id}/{student_id}")
+    @RolesAllowed({"professor", "student"})
     public Response getTeamByStudentID(@PathParam("course_id") String courseID, @PathParam("student_id") String studentID) {
-        return Response.status(Response.Status.OK).entity(new TeamInterface().getAllUnlockedTeamByStudentID(courseID, studentID)).build();
+        return Response.status(Response.Status.OK).entity(new TeamInterface().getTeamByStudentID(courseID, studentID)).build();
     }
 
     @GET
-    @Path("get/{course_id}/{team_id}")
+    @Path("{course_id}/get/{team_id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({"professor","student"})
