@@ -22,7 +22,7 @@ public class TeamDAO {
     @JsonbProperty("team_lead") private String teamLead;
     @JsonbProperty("team_lock") private boolean teamLock;
     @JsonbProperty("team_members") @ElementCollection private List<String> teamMembers;
-    @JsonbProperty("team_name_votes") @ElementCollection private List<String> teamNameVotes;
+    @JsonbProperty("team_confirmed_members") @ElementCollection private List<String> teamConfirmedMembers;
     @JsonbProperty("team_size") private Integer teamSize;
 
     @JsonbCreator
@@ -37,7 +37,7 @@ public class TeamDAO {
         this.teamLead = teamLead;
         this.teamLock = false;
         this.teamMembers = new ArrayList<>();
-        this.teamNameVotes = new ArrayList<>();
+        this.teamConfirmedMembers = new ArrayList<>();
         this.teamSize = teamSize;
     }
 }

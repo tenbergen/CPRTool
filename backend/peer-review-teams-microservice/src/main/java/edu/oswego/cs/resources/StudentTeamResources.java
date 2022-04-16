@@ -23,7 +23,6 @@ public class StudentTeamResources {
     }
 
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("get/unlocked-team/all/{course_id}")
     @RolesAllowed({"professor", "student"})
@@ -32,7 +31,6 @@ public class StudentTeamResources {
     }
     
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("get/{course_id}/{student_id}")
     @RolesAllowed({"professor", "student"})
@@ -42,7 +40,6 @@ public class StudentTeamResources {
 
     @GET
     @Path("{course_id}/get/{team_id}")
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({"professor","student"})
     public Response getTeamByTeamID(@PathParam("course_id") String courseID, @PathParam("team_id") String teamID) {
