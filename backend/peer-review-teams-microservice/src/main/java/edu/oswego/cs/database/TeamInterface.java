@@ -240,6 +240,11 @@ public class TeamInterface {
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
         new SecurityService().memberConfirmSecurity(teamCollection, courseDocument, request);
 
+        Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
+        Document teamDocument = teamCollection.find(teamDocumentFilter).first();
+        List<String> teamConfirmedMembers = teamDocument.getList("team_confirmed_members", String.class);
+        teamConfirmedMembers.add(request.getStudentID());
+        teamCollection.updateOne(teamDocumentFilter, Updates.set("team_confirmed_members", teamConfirmedMembers));
     }
 
     public void generateTeamName(TeamParam request) {

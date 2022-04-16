@@ -75,7 +75,18 @@ public class SecurityService {
         if (isTeamLead(teamCollection, request.getTeamID(), request.getNominatedTeamLead(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student already a team lead.").build());
     }
-
+    
+    public void memberConfirmSecurity(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
+        if (!isStudentValid(courseDocument, request.getStudentID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
+        if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
+        if (!isStudentInThisTeam(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this team.").build());
+        if (isStudentConfirmed(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student already confirmed.").build());
+    }
+    
     public void generateTeamNameSecurity(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
         if (!isStudentValid(courseDocument, request.getStudentID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
@@ -127,8 +138,6 @@ public class SecurityService {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
         if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
-        if (isTeamLock(teamCollection, request.getTeamID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Team is locked.").build());
         if (!isStudentInThisTeam(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this team.").build());
         if (isTeamLead(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
@@ -161,9 +170,19 @@ public class SecurityService {
     public boolean isStudentInThisTeam(MongoCollection<Document> teamCollection, String teamID, String studentID, String courseID) {
         Bson teamDocumentFilter = Filters.and(eq("team_id", teamID), eq("course_id", courseID));
         Document teamDocument = teamCollection.find(teamDocumentFilter).first();
-        List<String> members = teamDocument.getList("team_members", String.class);
-        for (String member : members)
-            if (studentID.equals(member))
+        List<String> teamDocumentMembers = teamDocument.getList("team_members", String.class);
+        for (String teamDocumentMember : teamDocumentMembers)
+            if (studentID.equals(teamDocumentMember))
+                return true;
+        return false;
+    }
+
+    public boolean isStudentConfirmed(MongoCollection<Document> teamCollection, String teamID, String studentID, String courseID) {
+        Bson teamDocumentFilter = Filters.and(eq("team_id", teamID), eq("course_id", courseID));
+        Document teamDocument = teamCollection.find(teamDocumentFilter).first();
+        List<String> teamDocumentConfirmedMembers = teamDocument.getList("team_confirmed_members", String.class);
+        for (String teamDocumentConfirmedMember : teamDocumentConfirmedMembers)
+            if (studentID.equals(teamDocumentConfirmedMember))
                 return true;
         return false;
     }
