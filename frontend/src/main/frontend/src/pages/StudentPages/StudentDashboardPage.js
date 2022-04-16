@@ -9,6 +9,7 @@ function StudentDashboardPage() {
     const dispatch = useDispatch()
     const courses = useSelector((state) => state.courses.courses)
     const { user_given_name, lakerId } = useSelector((state) => state.auth)
+    const alt_role = localStorage.getItem("alt_role")
 
     useEffect( ()=> {
        dispatch(getStudentCoursesAsync(lakerId))
@@ -22,11 +23,19 @@ function StudentDashboardPage() {
         dispatch(getCourseDetailsAsync(course.course_id))
     }
 
+    const changeView = () => {
+        localStorage.removeItem("alt_role")
+        window.location.reload(false);
+    }
+
     return (
         <div className={"StudentDashboard"}>
             <SidebarComponent />
             <div id="student">
                 <h2> Hello {user_given_name}</h2>
+                {
+                    alt_role && alt_role === "student" ? <button onClick={changeView}> Back to Professor View</button> : null
+                }
                 <div id="courseList">
                     {courses.map(course =>
                         <Link to={"/details/student/" + course.course_id} onClick={() => courseClickHandler(course)} state={{from: course}}>
