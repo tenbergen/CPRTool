@@ -1,0 +1,35 @@
+.eac-form {
+    background-color: white;
+    border-radius: 50px;
+    padding: 2%;
+    zoom:0.75;
+}
+
+.eac-assignment-files {
+    display: flex;
+    flex-grow: 1;
+    margin-bottom: 3%;
+}
+
+.eac-assignment-files label {
+    margin-bottom: 1%;
+}
+
+.eac-assignment-files input {
+    flex-grow: 1;
+}
+
+.eac-assignment-files p {
+    flex-grow: 1;
+}
+
+.eac-assignment-files input[type=file]::file-selector-button {
+    background: #91D8DF;
+    color: #393939;
+    margin-left: 10px;
+    border-radius: 50px;
+    padding: 10px 45px 10px 45px;
+    border: none;
+    font-size: medium;
+    font-weight: bold;
+}
