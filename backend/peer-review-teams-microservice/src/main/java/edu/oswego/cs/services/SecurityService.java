@@ -83,8 +83,6 @@ public class SecurityService {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
         if (!isStudentInThisTeam(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this team.").build());
-        if (isStudentConfirmed(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student already confirmed.").build());
     }
     
     public void generateTeamNameSecurity(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
@@ -148,8 +146,7 @@ public class SecurityService {
         List<String> students = courseDocument.getList("students", String.class);
         if (students == null)
             throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to retrieve students field.").build());
-        for (String student : students)
-            if (studentID.equals(student)) return true;
+        if (students.contains(studentID)) return true;
         return false;
     }
 
@@ -160,9 +157,7 @@ public class SecurityService {
 
         for (Document teamDocument : teamDocuments) {
             List<String> members = teamDocument.getList("team_members", String.class);
-            for (String member : members)
-                if (studentID.equals(member))
-                    return true;
+            if (members.contains(studentID)) return true;
         }
         return false;
     }
@@ -171,9 +166,7 @@ public class SecurityService {
         Bson teamDocumentFilter = Filters.and(eq("team_id", teamID), eq("course_id", courseID));
         Document teamDocument = teamCollection.find(teamDocumentFilter).first();
         List<String> teamDocumentMembers = teamDocument.getList("team_members", String.class);
-        for (String teamDocumentMember : teamDocumentMembers)
-            if (studentID.equals(teamDocumentMember))
-                return true;
+        if (teamDocumentMembers.contains(studentID)) return true;
         return false;
     }
 
@@ -181,9 +174,7 @@ public class SecurityService {
         Bson teamDocumentFilter = Filters.and(eq("team_id", teamID), eq("course_id", courseID));
         Document teamDocument = teamCollection.find(teamDocumentFilter).first();
         List<String> teamDocumentConfirmedMembers = teamDocument.getList("team_confirmed_members", String.class);
-        for (String teamDocumentConfirmedMember : teamDocumentConfirmedMembers)
-            if (studentID.equals(teamDocumentConfirmedMember))
-                return true;
+        if (teamDocumentConfirmedMembers.contains(studentID)) return true;
         return false;
     }
 
