@@ -235,16 +235,22 @@ public class TeamInterface {
         teamCollection.updateOne(teamDocumentFilter, assignTeamLeadUpdates, assignTeamLeadOptions);
     }
 
-    public void memberConfirm(TeamParam request) {
+    public void memberConfirmToggle(TeamParam request) { 
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-        new SecurityService().memberConfirmSecurity(teamCollection, courseDocument, request);
+        new SecurityService().memberConfirmToggleSecurity(teamCollection, courseDocument, request);
 
         Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         Document teamDocument = teamCollection.find(teamDocumentFilter).first();
         List<String> teamConfirmedMembers = teamDocument.getList("team_confirmed_members", String.class);
-        teamConfirmedMembers.add(request.getStudentID());
-        teamCollection.updateOne(teamDocumentFilter, Updates.set("team_confirmed_members", teamConfirmedMembers));
+
+        if (!new SecurityService().isStudentConfirmed(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID())) {
+            teamConfirmedMembers.add(request.getStudentID());
+            teamCollection.updateOne(teamDocumentFilter, Updates.set("team_confirmed_members", teamConfirmedMembers));
+        } else {
+            teamConfirmedMembers.remove(request.getStudentID());
+            teamCollection.updateOne(teamDocumentFilter, Updates.set("team_confirmed_members", teamConfirmedMembers));
+        }
     }
 
     public void generateTeamName(TeamParam request) {

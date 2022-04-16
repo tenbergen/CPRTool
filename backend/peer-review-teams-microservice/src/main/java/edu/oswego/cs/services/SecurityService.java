@@ -76,13 +76,15 @@ public class SecurityService {
             throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student already a team lead.").build());
     }
     
-    public void memberConfirmSecurity(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
+    public void memberConfirmToggleSecurity(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
         if (!isStudentValid(courseDocument, request.getStudentID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
         if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
         if (!isStudentInThisTeam(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this team.").build());
+        if (isTeamLead(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Team Lead can not be unconfirmed.").build());
     }
     
     public void generateTeamNameSecurity(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {

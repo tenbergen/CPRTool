@@ -79,13 +79,13 @@ public class StudentTeamResources {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("member/confirm")
+    @Path("member/confirm/toggle")
     @RolesAllowed("student")
-    public Response memberConfirm(TeamParam request) {
-        new TeamInterface().memberConfirm(request);
-        return Response.status(Response.Status.OK).entity("Successfully confirm member.").build();
+    public Response memberConfirmToggle(TeamParam request) {
+        new TeamInterface().memberConfirmToggle(request);
+        return Response.status(Response.Status.OK).entity("Confirmed members successfully updated.").build();
     }
-    
+
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
