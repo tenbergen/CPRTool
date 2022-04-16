@@ -9,7 +9,7 @@ import UnauthedErrorPage from '../pages/AuthPages/UnauthedErrorPage';
 import React from 'react';
 import RoleRouteHandler from "./RoleRouteHandler";
 import AuthRouteHandler from "./AuthRouteHandler";
-import ProfessorAssignmentView from "../pages/TeacherPages/ProfessorAssignmentView";
+import ProfessorAssignmentPage from "../pages/TeacherPages/ProfessorAssignmentPage";
 
 const RouterHandler = () => {
 
@@ -28,7 +28,7 @@ const RouterHandler = () => {
                       <Route path="create/course" element={<CreateCoursePage/>}/>
                       <Route path='details/professor/:courseId' element={<ProfessorCoursePage />} />
                       <Route path='details/professor/:courseId/create/assignment' element={<CreateAssignmentPage />} />
-                      <Route path='details/professor/:courseId/:assignmentId/grade' element={<ProfessorAssignmentView />} />
+                      <Route path='details/professor/:courseId/:assignmentId/grade' element={<ProfessorAssignmentPage />} />
                   </Route>
 
                   {/*student routes*/}
