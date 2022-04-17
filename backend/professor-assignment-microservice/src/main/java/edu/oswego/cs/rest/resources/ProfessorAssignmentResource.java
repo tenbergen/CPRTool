@@ -7,7 +7,6 @@ import edu.oswego.cs.rest.database.AssignmentInterface;
 //import edu.oswego.cs.rest.timer.DueDateChecker;
 import org.bson.Document;
 
-import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -15,10 +14,9 @@ import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Path("professor")
-@DenyAll
+//@DenyAll
 public class ProfessorAssignmentResource {
 
     @GET
@@ -56,7 +54,7 @@ public class ProfessorAssignmentResource {
      * @return Response
      */
     @POST
-    @RolesAllowed({"professor", "student"})
+//    @RolesAllowed({"professor", "student"})
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
     @Path("/courses/{courseID}/assignments/{assignmentID}/upload")
@@ -126,28 +124,37 @@ public class ProfessorAssignmentResource {
     }
 
     @DELETE
-    @RolesAllowed("professor")
+//    @RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/{course-id}/assignments/{assignment-id}/remove-file/{file-name}")
     public Response removeFileFromAssignment(@PathParam("course-id") String courseID, @PathParam("assignment-id") int assignmentID, @PathParam("file-name") String fileName) {
-        AssignmentInterface.removeFile(courseID, fileName, assignmentID);
+        new AssignmentInterface().removeFile(courseID, fileName, assignmentID);
         return Response.status(Response.Status.OK).entity("File successfully deleted.").build();
     }
 
     @DELETE
-    @RolesAllowed("professor")
+//    @RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/courses/{course-id}/assignments/{assignment-id}/peer-review/remove-file/{file-name}")
-    public Response removeFileFromPeerReview(@PathParam("course-id") String courseID, @PathParam("assignment-id") int assignmentID, @PathParam("file-name") String fileName) {
-        AssignmentInterface.removePeerReviewFile(courseID, fileName, assignmentID);
+    @Path("/courses/{course-id}/assignments/{assignment-id}/peer-review-template/remove-file/{file-name}")
+    public Response removeFileFromPeerReviewTemplate(@PathParam("course-id") String courseID, @PathParam("assignment-id") int assignmentID, @PathParam("file-name") String fileName) {
+        new AssignmentInterface().removePeerReviewTemplate(courseID, fileName, assignmentID);
+        return Response.status(Response.Status.OK).entity("File successfully deleted.").build();
+    }
+
+    @DELETE
+//    @RolesAllowed("professor")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/courses/{course-id}/assignments/{assignment-id}/peer-review-rubric/remove-file/{file-name}")
+    public Response removeFileFromPeerReviewRubric(@PathParam("course-id") String courseID, @PathParam("assignment-id") int assignmentID, @PathParam("file-name") String fileName) {
+        new AssignmentInterface().removePeerReviewRubric(courseID, fileName, assignmentID);
         return Response.status(Response.Status.OK).entity("File successfully deleted.").build();
     }
 
     @POST
-    @RolesAllowed({"professor", "student"})
+//    @RolesAllowed({"professor", "student"})
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/create-assignment")
-    public Response createAssignment(AssignmentDAO assignmentDAO) {
+    public Response createAssignment(AssignmentDAO assignmentDAO) throws IOException {
         Document assignmentDocument = new AssignmentInterface().createAssignment(assignmentDAO);
 //        DueDateChecker.assignmentDocuments.add(assignmentDocument);
         return Response.status(Response.Status.OK).entity(assignmentDocument).build();
@@ -162,7 +169,7 @@ public class ProfessorAssignmentResource {
     }
 
     @PUT
-    @RolesAllowed({"professor", "student"})
+//    @RolesAllowed({"professor", "student"})
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}/edit")
     public Response updateAssignment(AssignmentDAO assignmentDAO, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
