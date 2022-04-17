@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import { getCourseDetailsAsync, getCoursesAsync, getStudentCoursesAsync } from "../redux/features/courseSlice";
 import {Link, useParams} from "react-router-dom";
 import {setUserInformation} from "../redux/features/authSlice";
-import { getCombinedAssignmentPeerReviews } from "../redux/features/assignmentSlice";
+import { getCombinedAssignmentPeerReviews, getCourseAssignmentsAsync } from "../redux/features/assignmentSlice";
 
 const CourseBarLink = ({ active, course, onClick }) => {
     const role = useSelector((state) => state.auth.role)
@@ -43,7 +43,8 @@ const CourseBarComponent = () => {
         const courseId = course.course_id
         setChosen(courseId)
         dispatch(getCourseDetailsAsync(courseId))
-        dispatch(getCombinedAssignmentPeerReviews({courseId, teamId}))
+        dispatch(getCourseAssignmentsAsync(courseId))
+        role === "professor" ? dispatch(getCourseAssignmentsAsync(courseId)) : dispatch(getCombinedAssignmentPeerReviews({courseId, teamId}))
     }
 
     return (
