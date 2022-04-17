@@ -6,8 +6,8 @@
         <feature>microProfile-4.1</feature>
     </featureManager>
 
-    <variable name="default.http.port" defaultValue="13129"/>
-    <variable name="default.https.port" defaultValue="9447"/>
+    <variable name="default.http.port" defaultValue="13132"/>
+    <variable name="default.https.port" defaultValue="9449"/>
     <variable name="app.context.root" defaultValue="/"/>
 
     <httpEndpoint
