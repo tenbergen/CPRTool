@@ -1,97 +1,105 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import {refreshTokenAsync} from "./authSlice";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
+import { refreshTokenAsync } from './authSlice';
 
-const getAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`
+const getAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`;
 
 const getAssignments = async (courseId) => {
-    const courseAssignments = await axios.get(`${getAssignmentUrl}/${courseId}/assignments`)
-        .then(res => {
-            if(res.data != null) return res.data
-            return []
-        })
-        .catch(e => {
-            console.log(e)
-            return []
-        })
-    return courseAssignments
-}
+  const courseAssignments = await axios
+    .get(`${getAssignmentUrl}/${courseId}/assignments`)
+    .then((res) => {
+      if (res.data != null) return res.data;
+      return [];
+    })
+    .catch((e) => {
+      console.log(e);
+      return [];
+    });
+  return courseAssignments;
+};
 
 export const getCourseAssignmentsAsync = createAsyncThunk(
-    'assignments/getCourseAssignmentsAsync',
-    async (courseId, thunkAPI) => {
-        thunkAPI.dispatch(refreshTokenAsync())
-        const courseAssignments = await getAssignments(courseId)
-        return { courseAssignments }
-    }
-)
+  'assignments/getCourseAssignmentsAsync',
+  async (courseId, thunkAPI) => {
+    thunkAPI.dispatch(refreshTokenAsync());
+    const courseAssignments = await getAssignments(courseId);
+    return { courseAssignments };
+  }
+);
 
 export const getCombinedAssignmentPeerReviews = createAsyncThunk(
-    'assignments/getCombinedAssignmentPeerReviews',
-    async (courseId, thunkAPI) => {
-        thunkAPI.dispatch(refreshTokenAsync())
-        const courseAssignments = await getAssignments(courseId)
-        console.log(courseAssignments)
-        const peerReviews = [{"assignment_name": "something", "due_date": "2022-01-21"}]
-        const combined = [...courseAssignments, ...peerReviews]
-        combined.sort(function (a, b)  {
-            if (a.due_date < b.due_date) { return -1; }
-            if (a.due_date > b.due_date) { return 1; }
-            return 0;
-        });
-        console.log(combined)
-        return { combined }
-    }
-)
+  'assignments/getCombinedAssignmentPeerReviews',
+  async (courseId, thunkAPI) => {
+    thunkAPI.dispatch(refreshTokenAsync());
+    const courseAssignments = await getAssignments(courseId);
+    console.log(courseAssignments);
+    const peerReviews = [
+      { assignment_name: 'something', due_date: '2022-01-21' },
+    ];
+    const combined = [...courseAssignments, ...peerReviews];
+    combined.sort(function (a, b) {
+      if (a.due_date < b.due_date) {
+        return -1;
+      }
+      if (a.due_date > b.due_date) {
+        return 1;
+      }
+      return 0;
+    });
+    console.log(combined);
+    return { combined };
+  }
+);
 
 export const getAssignmentDetailsAsync = createAsyncThunk(
-    'assignments/getAssignmentDetailsAsync',
-    async (values, thunkAPI)=> {
-        thunkAPI.dispatch(refreshTokenAsync())
-        let { courseId, assignmentId } = values;
-        const url = `${getAssignmentUrl}/${courseId}/assignments/${assignmentId}`
-        console.log(url)
-        const currentAssignment = await axios.get(url)
-            .then(res => {
-                console.log(res.data)
-                return res.data
-            })
-            .catch(e => {
-                console.log(e)
-            })
-        return { currentAssignment }
-    }
-)
+  'assignments/getAssignmentDetailsAsync',
+  async (values, thunkAPI) => {
+    thunkAPI.dispatch(refreshTokenAsync());
+    let { courseId, assignmentId } = values;
+    const url = `${getAssignmentUrl}/${courseId}/assignments/${assignmentId}`;
+    console.log(url);
+    const currentAssignment = await axios
+      .get(url)
+      .then((res) => {
+        console.log(res.data);
+        return res.data;
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+    return { currentAssignment };
+  }
+);
 
 const assignmentSlice = createSlice({
-    name: "assignmentSlice",
-    initialState: {
-        courseAssignments: [],
-        combinedAssignmentPeerReviews: [],
-        currentAssignment: null,
-        assignmentFilesLoaded: false
+  name: 'assignmentSlice',
+  initialState: {
+    courseAssignments: [],
+    combinedAssignmentPeerReviews: [],
+    currentAssignment: null,
+    assignmentFilesLoaded: false,
+  },
+  reducers: {
+    setCurrentAssignment: (state, action) => {
+      state.currentAssignment = action.payload;
     },
-    reducers: {
-        setCurrentAssignment: (state, action) => {
-            state.currentAssignment = action.payload
-        }
+  },
+  extraReducers: {
+    [getCourseAssignmentsAsync.fulfilled]: (state, action) => {
+      state.courseAssignments = action.payload.courseAssignments;
     },
-    extraReducers: {
-        [getCourseAssignmentsAsync.fulfilled]: (state, action) => {
-            state.courseAssignments = action.payload.courseAssignments
-        },
-        [getAssignmentDetailsAsync.fulfilled]: (state, action) => {
-            state.currentAssignment = action.payload.currentAssignment
-            state.currentAssignmentLoaded = true
-        },
-        [getAssignmentDetailsAsync.pending]: (state) => {
-            state.currentAssignmentLoaded = false
-        },
-        [getCombinedAssignmentPeerReviews.fulfilled]: (state, action) => {
-            state.combinedAssignmentPeerReviews = action.payload.combined
-        }
-    }
-})
+    [getAssignmentDetailsAsync.fulfilled]: (state, action) => {
+      state.currentAssignment = action.payload.currentAssignment;
+      state.currentAssignmentLoaded = true;
+    },
+    [getAssignmentDetailsAsync.pending]: (state) => {
+      state.currentAssignmentLoaded = false;
+    },
+    [getCombinedAssignmentPeerReviews.fulfilled]: (state, action) => {
+      state.combinedAssignmentPeerReviews = action.payload.combined;
+    },
+  },
+});
 
-export const { setCurrentAssignment } = assignmentSlice.actions
-export default assignmentSlice.reducer
+export const { setCurrentAssignment } = assignmentSlice.actions;
+export default assignmentSlice.reducer;

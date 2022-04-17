@@ -1,76 +1,76 @@
 .cbc-parent {
-    width: 22%;
-    padding-bottom: 4%;
+  width: 22%;
+  padding-bottom: 4%;
 }
 
 .cbc-parent h2 {
-    margin: 15% 10% 12% 10%;
+  margin: 15% 10% 12% 10%;
 }
 
 .cbc-courses {
-    overflow-y:scroll;
-    height: 70vh;
+  overflow-y: scroll;
+  height: 70vh;
 }
 
 .cbc-courses::-webkit-scrollbar {
-    width: 20px;
+  width: 20px;
 }
 
 .cbc-courses::-webkit-scrollbar-track {
-    background-color: transparent;
+  background-color: transparent;
 }
 
 .cbc-courses::-webkit-scrollbar-thumb {
-    background-color: #d6dee1;
-    border-radius: 20px;
-    border: 6px solid transparent;
-    background-clip: content-box;
+  background-color: #d6dee1;
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
 }
 
 .cbc-courses::-webkit-scrollbar-thumb:hover {
-    background-color: #a8bbbf;
+  background-color: #a8bbbf;
 }
 
-.TheTable{
-    background-color: rgba(255, 255, 255, 0.25);
+.TheTable {
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 .course_id {
-    font-size: 12px;
-    margin-top: 16px;
-    margin-bottom: 0;
+  font-size: 12px;
+  margin-top: 16px;
+  margin-bottom: 0;
 }
 
 .course_text {
-    margin-top: 0;
+  margin-top: 0;
 }
 
 .course_info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-left: 15%;
-    margin-right: 10%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 15%;
+  margin-right: 10%;
 }
 
 tr:hover {
-    background-color: white;
+  background-color: white;
 }
 
 td {
-    table-layout: auto;
-    width: 1%;
-    height: fit-content;
+  table-layout: auto;
+  width: 1%;
+  height: fit-content;
 }
 
-.courseText{
-    padding-left: 6%;
-    text-align: center;
+.courseText {
+  padding-left: 6%;
+  text-align: center;
 }
 
-.colorForTable{
-    float: left;
-    height: 100px;
-    width: 4%;
-    background-color: #7398FF;
+.colorForTable {
+  float: left;
+  height: 100px;
+  width: 4%;
+  background-color: #7398ff;
 }

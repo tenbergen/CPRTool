@@ -1,9 +1,5 @@
-
 const ProfessorTeamComponent = () => {
+  return <h1>Waiting wireframe/in progress</h1>;
+};
 
-    return (
-        <h1>Waiting wireframe/in progress</h1>
-    )
-}
-
-export default ProfessorTeamComponent
+export default ProfessorTeamComponent;
