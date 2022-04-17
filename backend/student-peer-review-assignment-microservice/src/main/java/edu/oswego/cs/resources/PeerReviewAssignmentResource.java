@@ -167,25 +167,35 @@ public class PeerReviewAssignmentResource {
     }
     @GET
     @RolesAllowed("student")
-    @Path("{course_id}/{assignment_id}/{student_id}/reviewed-by-me")
+    @Path("{course_id}/{student_id}/reviewed-by-me")
     @Produces(MediaType.APPLICATION_JSON)
     public Response viewUserReviewedAssignments(@PathParam("course_id") String courseID,
-                                                @PathParam("assignment_id") int assignmentID,
                                                 @PathParam("student_id") String teamName)
     {
-        List<Document> documents = new PeerReviewAssignmentInterface().getAssignmentsReviewedByUser(courseID, assignmentID, teamName);
+        List<Document> documents = new PeerReviewAssignmentInterface().getAssignmentsReviewedByUser(courseID, teamName);
         return Response.status(Response.Status.OK).entity(documents).build();
     }
 
     @GET
     @RolesAllowed("student")
-    @Path("{course_id}/{assignment_id}/{student_id}/my-graded-assignments")
+    @Path("{course_id}/{assignment_id}/{student_id}/my-graded-assignment")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewAssignmentsReviewedOfUser(@PathParam("course_id") String courseID,
+    public Response viewAssignmentReviewedOfUser(@PathParam("course_id") String courseID,
                                                   @PathParam("assignment_id") int assignmentID,
                                                   @PathParam("student_id") String teamName)
     {
-        List<Document> documents = new PeerReviewAssignmentInterface().getUsersGradedAssignments(courseID, assignmentID, teamName);
+        List<Document> documents = new PeerReviewAssignmentInterface().getUsersGradedAssignment(courseID, assignmentID, teamName);
+        return Response.status(Response.Status.OK).entity(documents).build();
+    }
+
+    @GET
+    @RolesAllowed("student")
+    @Path("{course_id}/{student_id}/my-graded-assignments")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response viewAssignmentsReviewedOfUser(@PathParam("course_id") String courseID,
+                                                  @PathParam("student_id") String teamName)
+    {
+        List<Document> documents = new PeerReviewAssignmentInterface().getUsersGradedAssignments(courseID, teamName);
         return Response.status(Response.Status.OK).entity(documents).build();
     }
 

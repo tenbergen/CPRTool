@@ -82,13 +82,12 @@ public class studentAssignmentResource {
 
     @GET
     @RolesAllowed("student")
-    @Path("{course_id}/{assignment_id}/{student_id}/my-submissions")
+    @Path("{course_id}/{student_id}/my-submissions")
     @Produces(MediaType.APPLICATION_JSON)
     public Response viewMySubmissions(@PathParam("course_id") String courseID,
-                                      @PathParam("assignment_id") int assignmentID,
                                       @PathParam("student_id") String teamName)
     {
-        List<Document> documents = new AssignmentInterface().getAllUserAssignments(courseID, assignmentID, teamName);
+        List<Document> documents = new AssignmentInterface().getAllUserAssignments(courseID, teamName);
         return Response.status(Response.Status.OK).entity(documents).build();
     }
 }

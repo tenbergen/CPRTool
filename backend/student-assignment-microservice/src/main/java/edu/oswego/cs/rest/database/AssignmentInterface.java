@@ -85,9 +85,8 @@ public class AssignmentInterface {
         return relativePathPrefix.toString();
     }
 
-    public List<Document> getAllUserAssignments(String courseID, int assignmentID, String studentID){
+    public List<Document> getAllUserAssignments(String courseID, String studentID){
         MongoCursor<Document> query = submissionCollection.find(and(eq("course_id",courseID),
-                eq("assignment_id",assignmentID),
                 eq("members",studentID),
                 eq("type","team_submission"))).iterator();
         List<Document> assignments = new ArrayList<>();
