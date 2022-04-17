@@ -112,7 +112,7 @@ public class PeerReviewAssignmentInterface {
 
     }
 
-    public List<Document> getUsersGradedAssignments(String courseID, int assignmentID, String studentID){
+    public List<Document> getUsersGradedAssignment(String courseID, int assignmentID, String studentID){
         MongoCursor<Document> query = submissionsCollection.find(and(eq("course_id",courseID),
                                                                     eq("assignment_id",assignmentID),
                                                                     eq("members",studentID),

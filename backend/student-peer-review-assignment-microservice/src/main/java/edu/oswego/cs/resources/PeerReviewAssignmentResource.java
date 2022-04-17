@@ -180,11 +180,11 @@ public class PeerReviewAssignmentResource {
     @RolesAllowed("student")
     @Path("{course_id}/{assignment_id}/{student_id}/my-graded-assignments")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewAssignmentsReviewedOfUser(@PathParam("course_id") String courseID,
+    public Response viewAssignmentReviewedOfUser(@PathParam("course_id") String courseID,
                                                   @PathParam("assignment_id") int assignmentID,
                                                   @PathParam("student_id") String teamName)
     {
-        List<Document> documents = new PeerReviewAssignmentInterface().getUsersGradedAssignments(courseID, assignmentID, teamName);
+        List<Document> documents = new PeerReviewAssignmentInterface().getUsersGradedAssignment(courseID, assignmentID, teamName);
         return Response.status(Response.Status.OK).entity(documents).build();
     }
 
