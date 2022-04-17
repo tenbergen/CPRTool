@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import { getTokenAsync } from '../../redux/features/authSlice';
 import GoogleLogin from 'react-google-login';
 import { useNavigate } from 'react-router-dom';
-import Loader from '../../components/LoaderComponents/Loader';
 
 function LoginPage() {
   const dispatch = useDispatch();
