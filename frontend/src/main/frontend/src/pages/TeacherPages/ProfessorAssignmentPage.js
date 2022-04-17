@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCourseDetailsAsync } from "../../redux/features/courseSlice";
 import GradeAssBarComponent from "../../components/GradeAssBarComponent";
 import ProfessorSubmissionsComponent from "../../components/ProfessorComponents/AssignmentPage/ProfessorSubmissionsComponent";
+import ProfessorEditAssignmentComponent from "../../components/ProfessorComponents/AssignmentPage/ProfessorEditAssignmentComponent";
+import { getAssignmentDetailsAsync } from "../../redux/features/assignmentSlice";
 
 const AssComponent = ({ active, component, onClick }) => {
     return (
@@ -16,9 +18,9 @@ const AssComponent = ({ active, component, onClick }) => {
     );
 };
 
-function StudentCoursePage() {
+function ProfessorAssignmentPage() {
     let dispatch = useDispatch()
-    let { courseId } = useParams();
+    let { courseId, assignmentId } = useParams();
     const isDataLoaded = useSelector((state) => state.courses.currentCourseLoaded)
 
     const components = ["All Submissions", "Needs Grading", "Edit"];
@@ -27,6 +29,11 @@ function StudentCoursePage() {
     useEffect( () => {
         dispatch(getCourseDetailsAsync(courseId))
     }, [])
+
+    const onComponentClick = (component) => {
+        dispatch(getAssignmentDetailsAsync({courseId, assignmentId}))
+        setChosen(component)
+    }
 
     return (
         <div>
@@ -42,14 +49,14 @@ function StudentCoursePage() {
                                     key={t}
                                     component={t}
                                     active={t === chosen}
-                                    onClick={() => setChosen(t)}
+                                    onClick={() => onComponentClick(t)}
                                 />
                             ))}
                         </div>
                         <div>
                             {chosen === "All Submissions" && <ProfessorSubmissionsComponent/>}
                             {chosen === "Needs Grading" && <ProfessorSubmissionsComponent/>}
-                            {chosen === "Edit"}
+                            {chosen === "Edit" && <ProfessorEditAssignmentComponent />}
                         </div>
                     </div>
                 </div>
@@ -58,4 +65,4 @@ function StudentCoursePage() {
     );
 }
 
-export default StudentCoursePage;
+export default ProfessorAssignmentPage;

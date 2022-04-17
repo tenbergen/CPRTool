@@ -38,7 +38,8 @@ const CreateAssignmentPage = () => {
         console.log(assignmentFileFormData.get("file"))
 
         const assignmentFileUrl = `${getAssUrl}/${assignmentId}/upload`
-        const peerReviewFileUrl = `${getAssUrl}/${assignmentId}/peer-review/upload`
+        const rubricUrl = `${getAssUrl}/${assignmentId}/peer-review/rubric/upload`
+        const templateUrl = `${getAssUrl}/${assignmentId}/peer-review/template/upload`
 
         await axios.post(assignmentFileUrl, assignmentFileFormData)
             .then(res => {
@@ -49,7 +50,7 @@ const CreateAssignmentPage = () => {
                 alert("Error uploading assignment file.")
             })
 
-        await axios.post(peerReviewFileUrl, rubricFileFormData)
+        await axios.post(rubricUrl, rubricFileFormData)
             .then(res => {
                 console.log(res)
             })
@@ -58,7 +59,7 @@ const CreateAssignmentPage = () => {
                 alert("Error uploading peer review rubric.")
             })
 
-        await axios.post(peerReviewFileUrl, templateFileFormData)
+        await axios.post(templateUrl, templateFileFormData)
             .then(res => {
                 console.log(res)
             })
