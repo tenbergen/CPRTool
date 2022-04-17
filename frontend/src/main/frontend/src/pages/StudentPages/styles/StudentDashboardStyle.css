@@ -1,6 +1,41 @@
 body {
   overflow-y: hidden;
 }
+
+.welcome-banner-st {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 15px 0 5px 0;
+  width: 100%;
+}
+
+.student-welcome {
+  color: #2f4858;
+  font-size: 2em;
+  font-family: 'Merriweather', sans-serif;
+  padding-bottom: 10px;
+}
+
+.btn-wrapper {
+  display: flex;
+  justify-content: left;
+  width: 100%;
+}
+
+.prof-view-btn {
+  border: 1px solid #a8bbbf;
+  transition: all 0.2s ease-out;
+  border-radius: 8px;
+  margin-left: 10px;
+}
+
+.prof-view-btn:hover {
+  cursor: pointer;
+  color: #000;
+  filter: brightness(110%);
+}
 .StudentDashboard {
   display: flex;
 }
@@ -14,13 +49,13 @@ body {
   padding-left: 3%;
   margin-right: 5%;
   margin-left: 5%;
-  /*flex-grow: 1;*/
   height: 90vh;
   width: 100vw;
 }
 
 #courseList {
   overflow-y: scroll;
+  overflow-x: hidden;
   height: 75vh;
 }
 
@@ -61,6 +96,10 @@ body {
   white-space: pre-line;
   font-weight: bold;
   padding-left: 50px;
+}
+
+.courseListItem:hover {
+  transform: scale(1.02);
 }
 
 a {
