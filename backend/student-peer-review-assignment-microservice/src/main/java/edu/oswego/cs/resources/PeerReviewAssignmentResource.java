@@ -190,7 +190,7 @@ public class PeerReviewAssignmentResource {
 
     @GET
     @RolesAllowed("student")
-    @Path("{course_id}/{student_id}/my-graded-assignments")
+    @Path("{course_id}/{student_id}/my-graded-assignment")
     @Produces(MediaType.APPLICATION_JSON)
     public Response viewAssignmentsReviewedOfUser(@PathParam("course_id") String courseID,
                                                   @PathParam("student_id") String teamName)
