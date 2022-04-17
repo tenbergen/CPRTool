@@ -1,0 +1,38 @@
+#teamList {
+    width: 100%;
+}
+
+#teamListItem {
+    text-align: left;
+    background: linear-gradient(to right, #7398FF 0%, #7398FF 1%, #eeeeee 1%, #eeeeee 100%);
+    list-style-type: none;
+    font-size: .75em;
+    padding: 1%;
+    margin: 1%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    white-space: pre-line;
+    font-weight: bold;
+    padding-left: 2%;
+}
+
+#teamListItem:hover {
+    background: linear-gradient(to right, #7398FF 0%, #7398FF 3%, #eeeeee 3%, #eeeeee 100%);
+    padding-left: 4%;
+}
+
+#createTeamButton {
+    display: flex;
+    justify-content: center;
+    margin-top: 3%;
+}
+
+#createTeamButton button {
+    background: #9CF0D3;
+    color: #393939;
+    border-radius: 50px;
+    padding: 10px 45px 10px 45px;
+    border: none;
+    font-size: medium;
+    font-weight: bold;
+}
