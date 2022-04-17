@@ -75,7 +75,17 @@ public class StudentTeamResources {
         new TeamInterface().nominateTeamLead(request);
         return Response.status(Response.Status.OK).entity("Team Lead successfully updated.").build();
     }
-    
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("member/confirm/toggle")
+    @RolesAllowed("student")
+    public Response memberConfirmToggle(TeamParam request) {
+        new TeamInterface().memberConfirmToggle(request);
+        return Response.status(Response.Status.OK).entity("Confirmed members successfully updated.").build();
+    }
+
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
