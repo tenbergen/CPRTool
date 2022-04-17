@@ -1,6 +1,5 @@
 package edu.oswego.cs.rest.database;
 
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
@@ -8,7 +7,6 @@ import edu.oswego.cs.rest.daos.AssignmentDAO;
 import edu.oswego.cs.rest.daos.FileDAO;
 import org.bson.Document;
 
-import javax.print.Doc;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.io.File;
@@ -30,9 +28,7 @@ public class AssignmentInterface {
     static MongoCollection<Document> teamsCollection;
     static MongoCollection<Document> submissionCollection;
 
-    private final List<AssignmentDAO> assignments = new ArrayList<>();
     static String reg = "/";
-    static int nextPos = 0;
 
     public AssignmentInterface() {
         try {
@@ -100,40 +96,20 @@ public class AssignmentInterface {
         return assignments;
     }
 
-    public List<AssignmentDAO> getAssignmentsByCourse(String courseID) {
-        for (Document document : assignmentsCollection.find()) {
-            if (document.get("course_id").equals(courseID)) {
-                AssignmentDAO assignmentDAO = new AssignmentDAO(
-                        document.getString("assignment_name"),
-                        document.getString("instructions"),
-                        document.getString("due_date"),
-                        document.getString("course_id"),
-                        document.getInteger("points")
-                );
-                assignments.add(assignmentDAO);
-            }
+    public List<Document> getSpecifiedUserAssignment(String courseID, int assignmentID,String studentID){
+        MongoCursor<Document> query = submissionCollection.find(and(eq("course_id",courseID),
+                eq("members",studentID),
+                eq("assignment_id",assignmentID),
+                eq("type","team_submission"))).iterator();
+        List<Document> assignments = new ArrayList<>();
+        while (query.hasNext()) {
+            Document document = query.next();
+            assignments.add(document);
         }
+        if (assignments.isEmpty())
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist").build());
+        query.close();
         return assignments;
-    }
-
-    public List<AssignmentDAO> getAllAssignments() {
-        for (Document document : assignmentsCollection.find()) {
-            AssignmentDAO assignmentDAO = new AssignmentDAO(
-                    document.getString("assignment_name"),
-                    document.getString("course_id"),
-                    document.getString("due_date"),
-                    document.getString("instructions"),
-                    document.getInteger("points")
-            );
-            assignments.add(assignmentDAO);
-        }
-        return assignments;
-    }
-
-    public Document getTeam(String courseID,String studentID){
-        DatabaseManager manager = new DatabaseManager();
-        MongoCollection<Document> teams = manager.getTeamDB().getCollection("teams");
-        return teams.find(and(eq("course_id",courseID),eq("team_members",studentID))).first();
     }
 
     public void makeSubmission(String course_id,int assignment_id,String file_name,String teamName){
@@ -166,13 +142,5 @@ public class AssignmentInterface {
                 submissionCollection.updateOne(extensionCheck,new_submission);
             }
         }else submissionCollection.insertOne(new_submission);
-    }
-
-    public static String findFile(String courseID, int assignmentID, String fileName) {
-        return getRelPath() + "courses" + reg + courseID + reg + assignmentID + reg + "assignments" + reg + fileName;
-    }
-
-    public static String findAssignment(String courseID, int assID) {
-        return getRelPath() + "courses" + reg + courseID + reg + assID + reg + "assignments";
     }
 }
