@@ -1,4 +1,4 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import "../../styles/Roster.css"
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +11,17 @@ const ProfessorRosterComponent = () => {
     const { courseId } = useParams()
     const url = `${process.env.REACT_APP_URL}/manage/professor/courses`
     const { currentCourse } = useSelector((state) => state.courses)
+    const [studentList, setStudents] = useState(Array())
+
+    useEffect(() => {
+        axios.get('http://moxie.cs.oswego.edu:13125/view/professor/courses/'
+            + currentCourse.course_id + '/students').then(r => {
+                for(let i = 0; i < r.data.length; i++) {
+                    setStudents(arr => [...arr, r.data[i]])
+                }
+            })
+    }, [])
+
 
     const [formData, setFormData] = useState({
         Name: '',
@@ -91,10 +102,11 @@ const ProfessorRosterComponent = () => {
                         <th className="rosterHeader">Team</th>
                         <th className="rosterHeader">Remove</th>
                     </tr>
-                    {currentCourse.students.map(d =>
+                    {studentList.map(d =>
                         <tr>
-                            <th className="rosterComp">{d}</th>
-                            <th className="rosterComp">{d.Email}</th>
+                            <th className="rosterComp">{d.first_name ?
+                                d.first_name + " " + d.last_name : ""}</th>
+                            <th className="rosterComp">{d.student_id}</th>
                             <th className="rosterComp">{d.Team}</th>
                             <th className="rosterComp"> <span onClick={() => deleteStudent(d)} className="crossMark">&#10060;</span></th>
                         </tr>
