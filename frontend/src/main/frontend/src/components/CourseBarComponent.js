@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import { getCourseDetailsAsync, getCoursesAsync, getStudentCoursesAsync } from "../redux/features/courseSlice";
 import {Link, useParams} from "react-router-dom";
 import {setUserInformation} from "../redux/features/authSlice";
-import { getCourseAssignmentsAsync } from "../redux/features/assignmentSlice";
+import { getCombinedAssignmentPeerReviews } from "../redux/features/assignmentSlice";
 
 const CourseBarLink = ({ active, course, onClick }) => {
     const role = useSelector((state) => state.auth.role)
@@ -32,6 +32,7 @@ const CourseBarComponent = () => {
     const { courses } = useSelector((state) => state.courses)
     const { courseId } = useParams()
     const [chosen, setChosen] = useState(courseId);
+    const teamId = "1"
 
     useEffect(() => {
         dispatch(setUserInformation())
@@ -39,9 +40,10 @@ const CourseBarComponent = () => {
     }, [])
 
     const onCourseClick = (course) => {
-        setChosen(course.course_id)
-        dispatch(getCourseDetailsAsync(course.course_id))
-        dispatch(getCourseAssignmentsAsync(course.course_id))
+        const courseId = course.course_id
+        setChosen(courseId)
+        dispatch(getCourseDetailsAsync(courseId))
+        dispatch(getCombinedAssignmentPeerReviews({courseId, teamId}))
     }
 
     return (

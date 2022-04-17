@@ -43,7 +43,6 @@ const AssBarComponent = () => {
     const onAssClick = (assignment) =>{
         const curr = assignment.assignment_type === "peer-review" ? `${assignment.assignment_id}-${assignment.assignment_type}-${assignment.peer_review_team}` : parseInt(assignment.assignment_id)
         setChosen(curr)
-        dispatch(getCombinedAssignmentPeerReviews({courseId, teamId}))
     }
 
     return (
