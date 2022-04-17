@@ -18,7 +18,7 @@ function ProfessorDashboardPage() {
   useEffect(() => {
     setIsLoading(true);
     dispatch(getCoursesAsync());
-    const timer = setTimeout(() => setIsLoading(false), 900);
+    const timer = setTimeout(() => setIsLoading(false), 0);
   }, []);
 
   const studentView = () => {
@@ -43,14 +43,20 @@ function ProfessorDashboardPage() {
         <div className={'TeacherDashboard'}>
           <SidebarComponent />
           <div id='teacher'>
-            <h1>Hello {user}</h1>
-            <div>
-              <button onClick={studentView} style={{ marginRight: '10px' }}>
-                {' '}
-                Student View
-              </button>
-              <button onClick={originalView}> Original View</button>
+            <div className='welcome-banner'>
+              <h1>Hello, {user}!</h1>
+              <div className='views'>
+                <button className='student-view' onClick={studentView}>
+                  {' '}
+                  Student View
+                </button>
+                <button className='original-view' onClick={originalView}>
+                  {' '}
+                  Original View
+                </button>
+              </div>
             </div>
+
             <div id='proCourseList'>
               {courses.map((course) => (
                 <Link
