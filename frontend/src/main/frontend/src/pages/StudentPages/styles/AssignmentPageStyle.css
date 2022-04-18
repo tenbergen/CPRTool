@@ -1,71 +1,73 @@
 .ap-parent {
-    display: flex;
-    flex-direction: row;
-    overflow: auto;
-    background: conic-gradient(from 180deg at 50% 50%,
-    #7398FF -128.84deg,
-    #57E1B2 25.81deg,
-    #7398FF 231.16deg,
-    #57E1B2 385.81deg);
+  display: flex;
+  flex-direction: row;
+  overflow: auto;
+  background: conic-gradient(
+    from 180deg at 50% 50%,
+    #7398ff -128.84deg,
+    #57e1b2 25.81deg,
+    #7398ff 231.16deg,
+    #57e1b2 385.81deg
+  );
 }
 
 .ap-container {
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 50px;
-    margin: 3% 5% 3% 2%;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: row;
-    height: 90vh;
-    width: 100vw;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 50px;
+  margin: 3% 5% 3% 2%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  height: 90vh;
+  width: 100vw;
 }
 
 .ap-component {
-    border-radius: 50px;
-    flex-grow: 1;
-    padding: 2%;
-    background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 50px;
+  flex-grow: 1;
+  padding: 2%;
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 .ap-component-links {
-    display: flex;
-    width:100%;
-    flex-direction: row;
-    font-weight: bold;
-    text-align: left;
-    justify-content: space-between;
-    padding: 0 5% 0 5%;
-    margin-bottom: 5%;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  font-weight: bold;
+  text-align: left;
+  justify-content: space-between;
+  padding: 0 5% 0 5%;
+  margin-bottom: 5%;
 }
 
 .ap-component-links p:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .ap-component-link {
-    font-size: 24px;
-    padding-left: 24px;
+  font-size: 24px;
+  padding-left: 24px;
 }
 
 .ap-component-link-clicked {
-    font-size: 24px;
-    padding-left: 24px;
-    text-decoration: underline;
-    color: #5267A3
+  font-size: 24px;
+  padding-left: 24px;
+  text-decoration: underline;
+  color: #5267a3;
 }
 
 .ap-assignmentArea {
-    display: flex;
-    text-align: left;
-    padding: 2%;
-    background-color: #FFFFFF;
-    margin-top: 3%;
-    border-radius: 50px;
-    flex-grow: 1;
-    height: 400px;
+  display: flex;
+  text-align: left;
+  padding: 2%;
+  background-color: #ffffff;
+  margin-top: 3%;
+  border-radius: 50px;
+  flex-grow: 1;
+  height: 400px;
 }
-.ap-assignmentInstructions{
-    width:100%;
-    display: flex;
-    text-align: left;
+.ap-assignmentInstructions {
+  width: 100%;
+  display: flex;
+  text-align: left;
 }

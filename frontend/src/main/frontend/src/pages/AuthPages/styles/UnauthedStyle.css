@@ -1,21 +1,21 @@
 #unauth {
-    display: flex;
+  display: flex;
 }
 
 #unauthDiv {
-    background-color: rgba(255, 255, 255, 0.5);
-    margin: auto;
-    width: 50%;
-    padding: 5px;
-    border-radius: 50px;
-    margin-top: 15%;
+  background-color: rgba(255, 255, 255, 0.5);
+  margin: auto;
+  width: 50%;
+  padding: 5px;
+  border-radius: 50px;
+  margin-top: 15%;
 }
 
 .unauthContent {
-    margin-left: 30%;
-    padding: 5px;
+  margin-left: 30%;
+  padding: 5px;
 }
 
 #emoji {
-    font-size:25px;
+  font-size: 25px;
 }

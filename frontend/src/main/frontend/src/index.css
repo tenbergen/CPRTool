@@ -5,11 +5,13 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: conic-gradient(from 180deg at 50% 50%,
-  #7398FF -128.84deg,
-  #57E1B2 25.81deg,
-  #7398FF 231.16deg,
-  #57E1B2 385.81deg);
+  background: conic-gradient(
+    from 180deg at 50% 50%,
+    #7398ff -128.84deg,
+    #57e1b2 25.81deg,
+    #7398ff 231.16deg,
+    #57e1b2 385.81deg
+  );
 }
 
 code {
