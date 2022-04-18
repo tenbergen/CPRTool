@@ -105,21 +105,36 @@ public class AssignmentInterface {
                                             set("peer_review_template", fileDAO.fileName));
     }
 
-    public static void removeFile(String courseID, String fileName, int assignmentID) {
+    public void removeFile(String courseID, String fileName, int assignmentID) {
         String fileLocation = findFile(courseID, assignmentID, fileName);
         File file = new File(fileLocation);
         if (!file.delete())
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist or could not be deleted.").build());
+        assignmentsCollection.updateOne(and(eq("course_id", courseID),
+                                            eq("assignment_id", assignmentID)),
+                                            set("assignment_instructions", ""));
     }
 
-    public static void removePeerReviewFile(String courseID, String fileName, int assignmentID) {
+    public void removePeerReviewTemplate(String courseID, String fileName, int assignmentID) {
         String fileLocation = findPeerReviewFile(courseID, assignmentID, fileName);
         File file = new File(fileLocation);
         if (!file.delete())
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist or could not be deleted.").build());
+        assignmentsCollection.updateOne(and(eq("course_id", courseID),
+                                            eq("assignment_id", assignmentID)),
+                                            set("peer_review_template", ""));
     }
 
-    public Document createAssignment(AssignmentDAO assignmentDAO) {
+    public void removePeerReviewRubric(String courseID, String fileName, int assignmentID) {
+        String fileLocation = findPeerReviewFile(courseID, assignmentID, fileName);
+        File file = new File(fileLocation);
+        if (!file.delete())
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist or could not be deleted.").build());
+        assignmentsCollection.updateOne(and(eq("course_id", courseID),
+                                            eq("assignment_id", assignmentID)),
+                                            set("peer_review_rubric", ""));
+    }
+    public Document createAssignment(AssignmentDAO assignmentDAO) throws IOException {
         String FileStructure = getRelPath() + "assignments" + reg + assignmentDAO.courseID;
 
         File dir = new File(FileStructure);
@@ -139,6 +154,28 @@ public class AssignmentInterface {
         }
         assignmentDAO.assignmentID = nextPos;
 
+        FileStructure += reg + nextPos;
+        if (!new File(FileStructure + reg + "team-submissions").mkdirs())
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create team-submission directory.").build());
+
+        if (!new File(FileStructure + reg + "peer-reviews").mkdirs()) {
+            deleteFile(FileStructure + reg + "team-submissions");
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create peer-review directory.").build());
+        }
+
+        if (!new File(FileStructure + reg + "assignments").mkdirs()) {
+            deleteFile(FileStructure + reg + "team-submissions");
+            deleteFile(FileStructure + reg + "peer-reviews");
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create assignments directory.").build());
+        }
+
+        if (!new File(FileStructure + reg + "peer-review-submission").mkdirs()) {
+            deleteFile(FileStructure + reg + "team-submissions");
+            deleteFile(FileStructure + reg + "peer-reviews");
+            deleteFile(FileStructure + reg + "assignments");
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create peer-review-submission directory.").build());
+        }
+
         Jsonb jsonb = JsonbBuilder.create();
         Entity<String> assignmentDAOEntity = Entity.entity(jsonb.toJson(assignmentDAO), MediaType.APPLICATION_JSON_TYPE);
         Document assignmentDocument = Document.parse(assignmentDAOEntity.getEntity());
@@ -146,20 +183,17 @@ public class AssignmentInterface {
         MongoCursor<Document> query = assignmentsCollection.find(assignmentDocument).iterator();
         if (query.hasNext()) {
             query.close();
+            deleteFile(FileStructure + reg + "team-submissions");
+            deleteFile(FileStructure + reg + "peer-reviews");
+            deleteFile(FileStructure + reg + "assignments");
+            deleteFile(FileStructure + reg + "peer-review-submission");
+
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This assignment already exists.").build());
         }
 
         assignmentsCollection.insertOne(assignmentDocument);
 
-        FileStructure += reg + nextPos;
-        if (!new File(FileStructure + reg + "team-submissions").mkdirs())
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create team-submission directory.").build());
-        if (!new File(FileStructure + reg + "peer-reviews").mkdirs())
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create peer-review directory.").build());
-        if (!new File(FileStructure + reg + "assignments").mkdirs())
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create assignments directory.").build());
-        if (!new File(FileStructure + reg + "peer-review-submission").mkdirs())
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to create peer-review-submission directory.").build());
+
         return assignmentDocument;
     }
 
@@ -211,8 +245,7 @@ public class AssignmentInterface {
 
         while (results.hasNext()) {
             Document assignment = results.next();
-            String Destination = getRelPath() + "assignments" + reg + courseID + reg + assignment.get("assignment_id");
-            FileUtils.deleteDirectory(new File(Destination));
+            deleteFile(getRelPath() + "assignments" + reg + courseID + reg + assignment.get("assignment_id"));
             assignmentsCollection.findOneAndDelete(assignment);
         }
     }
@@ -226,7 +259,10 @@ public class AssignmentInterface {
             assignmentsCollection.findOneAndDelete(assignmentDocument);
         }
 
-        String Destination = getRelPath() + "assignments" + reg + courseID;
-        FileUtils.deleteDirectory(new File(Destination));
+        deleteFile(getRelPath() + "assignments" + reg + courseID);
+    }
+
+    private static void deleteFile(String destination) throws IOException {
+        FileUtils.deleteDirectory(new File(destination));
     }
 }

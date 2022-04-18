@@ -1,21 +1,18 @@
 package edu.oswego.cs.services;
 
-import org.bson.Document;
-import org.bson.conversions.Bson;
-
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
 import edu.oswego.cs.database.TeamInterface;
 import edu.oswego.cs.requests.SwitchTeamParam;
 import edu.oswego.cs.requests.TeamParam;
+import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Filters;
-import static com.mongodb.client.model.Filters.eq;
-
-
 import java.util.List;
+
+import static com.mongodb.client.model.Filters.eq;
 
 public class SecurityService {
     public void createTeamSecurity(Document courseDocument, TeamParam request) {
@@ -43,10 +40,6 @@ public class SecurityService {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Current team not found.").build());
         if (!isTeamCreated(teamCollection, request.getTargetTeamID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Target team not found.").build());
-        if (!isStudentAlreadyInATeam(request.getStudentID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in any team.").build());
-        if (!isStudentInThisTeam(teamCollection, request.getCurrentTeamID(), request.getStudentID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in current team.").build());
         if (isStudentInThisTeam(teamCollection, request.getTargetTeamID(), request.getStudentID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student already in target team.").build());
         if (isTeamLock(teamCollection, request.getCurrentTeamID(), request.getCourseID()))
@@ -82,12 +75,27 @@ public class SecurityService {
         if (isTeamLead(teamCollection, request.getTeamID(), request.getNominatedTeamLead(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student already a team lead.").build());
     }
-
+    
+    public void memberConfirmToggleSecurity(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
+        if (!isStudentValid(courseDocument, request.getStudentID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
+        if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
+        if (isTeamLock(teamCollection, request.getTeamID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Team is locked.").build());
+        if (!isStudentInThisTeam(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this team.").build());
+        if (isTeamLead(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Team Lead can not be unconfirmed.").build());
+    }
+    
     public void generateTeamNameSecurity(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
         if (!isStudentValid(courseDocument, request.getStudentID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
         if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
+        if (!isTeamConfirmed(teamCollection, request.getTeamID(), request.getCourseID()))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("All team members are not confirmed.").build());
         if (isTeamLock(teamCollection, request.getTeamID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Team is locked.").build());
         if (!isStudentInThisTeam(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
@@ -98,6 +106,7 @@ public class SecurityService {
             throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Not acceptable. Team name not unique.").build());
         if (!isTeamNameValid(request.getTeamName(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Not acceptable. Team Name contains student's name.").build());
+        
     }
 
     public void leaveTeamSecurity(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
@@ -134,33 +143,17 @@ public class SecurityService {
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
         if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
-        if (isTeamLock(teamCollection, request.getTeamID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Team is locked.").build());
         if (!isStudentInThisTeam(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this team.").build());
         if (isTeamLead(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student already a team lead.").build());
     }
 
-    public void addStudentToTeamSecurity(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
-        if (!isStudentValid(courseDocument, request.getStudentID()))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
-        if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
-        if (isTeamLock(teamCollection, request.getTeamID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity("Team is locked.").build());
-        if (isStudentInThisTeam(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Student already in this team.").build());
-        if (isTeamFull(teamCollection, request.getTeamID(), request.getCourseID()))
-            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Team already full.").build());
-    }
-
     public boolean isStudentValid(Document courseDocument, String studentID) {
         List<String> students = courseDocument.getList("students", String.class);
         if (students == null)
             throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to retrieve students field.").build());
-        for (String student : students)
-            if (studentID.equals(student)) return true;
+        if (students.contains(studentID)) return true;
         return false;
     }
 
@@ -171,9 +164,7 @@ public class SecurityService {
 
         for (Document teamDocument : teamDocuments) {
             List<String> members = teamDocument.getList("team_members", String.class);
-            for (String member : members)
-                if (studentID.equals(member))
-                    return true;
+            if (members.contains(studentID)) return true;
         }
         return false;
     }
@@ -181,10 +172,16 @@ public class SecurityService {
     public boolean isStudentInThisTeam(MongoCollection<Document> teamCollection, String teamID, String studentID, String courseID) {
         Bson teamDocumentFilter = Filters.and(eq("team_id", teamID), eq("course_id", courseID));
         Document teamDocument = teamCollection.find(teamDocumentFilter).first();
-        List<String> members = teamDocument.getList("team_members", String.class);
-        for (String member : members)
-            if (studentID.equals(member))
-                return true;
+        List<String> teamDocumentMembers = teamDocument.getList("team_members", String.class);
+        if (teamDocumentMembers.contains(studentID)) return true;
+        return false;
+    }
+
+    public boolean isStudentConfirmed(MongoCollection<Document> teamCollection, String teamID, String studentID, String courseID) {
+        Bson teamDocumentFilter = Filters.and(eq("team_id", teamID), eq("course_id", courseID));
+        Document teamDocument = teamCollection.find(teamDocumentFilter).first();
+        List<String> teamDocumentConfirmedMembers = teamDocument.getList("team_confirmed_members", String.class);
+        if (teamDocumentConfirmedMembers.contains(studentID)) return true;
         return false;
     }
 
@@ -213,10 +210,19 @@ public class SecurityService {
         return true;
     }
 
+    public boolean isTeamConfirmed(MongoCollection<Document> teamCollection, String teamID, String courseID) {
+        Bson teamDocumentFilter = Filters.and(eq("team_id", teamID), eq("course_id", courseID));
+        Document teamDocument = teamCollection.find(teamDocumentFilter).first();
+        List<String> teamMembers = teamDocument.getList("team_members", String.class);
+        List<String> teamConfirmedMembers = teamDocument.getList("team_confirmed_members", String.class);
+        if (teamMembers.size() == teamConfirmedMembers.size()) return true;
+        return false;
+    }
+
     public boolean isTeamNameUnique(MongoCollection<Document> teamCollection, TeamParam request) {
         Bson teamDocumentFilter = Filters.and(
-                                    eq("team_id", request.getTeamName()), 
-                                    eq("course_id", request.getCourseID()));
+            eq("team_id", request.getTeamName()),
+            eq("course_id", request.getCourseID()));
         Document teamDocument = teamCollection.find(teamDocumentFilter).first();
         if (teamDocument == null) return true;
         return false;

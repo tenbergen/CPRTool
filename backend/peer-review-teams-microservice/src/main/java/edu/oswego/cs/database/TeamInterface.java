@@ -21,7 +21,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -55,6 +54,8 @@ public class TeamInterface {
         TeamDAO newTeam = new TeamDAO(teamID, request.getCourseID(), teamSize, request.getStudentID());
         newTeam.getTeamMembers().add(request.getStudentID());
         newTeam.setTeamMembers(newTeam.getTeamMembers());
+        newTeam.getTeamConfirmedMembers().add(request.getStudentID());
+        newTeam.setTeamConfirmedMembers(newTeam.getTeamMembers());
 
         Jsonb jsonb = JsonbBuilder.create();
         Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(newTeam), MediaType.APPLICATION_JSON_TYPE);
@@ -62,12 +63,11 @@ public class TeamInterface {
         teamCollection.insertOne(teamDocument);
     }
 
-    public List<Document> getAllUnlockedTeamByStudentID(TeamParam request) {
-        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
+    public List<Document> getAllUnlockedTeams(String courseID) {
+        Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-        if (!new SecurityService().isStudentValid(courseDocument, request.getStudentID())) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
         List<Document> allUnlockedTeams = new ArrayList<>();
-        Bson teamDocumentFilter = Filters.and(eq("course_id", request.getCourseID()), eq("team_lock", false));
+        Bson teamDocumentFilter = Filters.and(eq("course_id", courseID), eq("team_lock", false));
         MongoCursor<Document> cursor = teamCollection.find(teamDocumentFilter).iterator();
         while (cursor.hasNext()) {
             Document teamDocument = cursor.next();
@@ -77,17 +77,42 @@ public class TeamInterface {
         return allUnlockedTeams;
     }
 
-    public Document getTeamByTeamID(TeamParam request) {
-        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
+    public Document getTeamByStudentID(String courseID, String studentID) {
+        Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-        if (!new SecurityService().isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
+        if (!new SecurityService().isStudentValid(courseDocument, studentID))
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
+        
+        if (new SecurityService().isStudentAlreadyInATeam(studentID, courseID)) {
+            Bson teamDocumentFilter = Filters.eq("course_id", courseID);
+            MongoCursor<Document> cursor = teamCollection.find(teamDocumentFilter).iterator();
+            while (cursor.hasNext()) {
+                Document teamDocument = cursor.next();
+                String teamDocumentTeamID = teamDocument.getString("team_id");
+                if (new SecurityService().isStudentInThisTeam(teamCollection, teamDocumentTeamID, studentID, courseID)) {
+                    cursor.close();
+                    return teamDocument;
+                }
+            }
+            cursor.close();
+        }
+        throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in any team.").build());
+    }
+
+    public Document getTeamByTeamID(String courseID, String teamID, String role) {
+        Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
+        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+        if (!new SecurityService().isTeamCreated(teamCollection, teamID, courseID))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
-        Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
+        if (role.equals("STUDENT"))
+            if (new SecurityService().isTeamLock(teamCollection, teamID, courseID))
+                throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team is locked.").build());
+        Bson teamDocumentFilter = Filters.and(eq("team_id", teamID), eq("course_id", courseID));
         return teamCollection.find(teamDocumentFilter).first();
     }
 
     public void studentJoinTeam(TeamParam request) {
-        if (!new SecurityService().isStudentAlreadyInATeam(request.getStudentID(), request.getCourseID())) 
+        if (!new SecurityService().isStudentAlreadyInATeam(request.getStudentID(), request.getCourseID()))
             joinTeam(request);
         else if (new SecurityService().isStudentAlreadyInATeam(request.getStudentID(), request.getCourseID())) {
             String currentTeamID = new TeamService().retrieveTeamID(request);
@@ -103,13 +128,17 @@ public class TeamInterface {
 
         Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         Document teamDocument = teamCollection.find(teamDocumentFilter).first();
+        if (teamDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
+        
         List<String> teamMembers = teamDocument.getList("team_members", String.class);
         teamMembers.add(request.getStudentID());
-        teamCollection.updateOne(teamDocumentFilter, Updates.set("team_members", teamMembers));
-        if (teamMembers.size() >= teamDocument.getInteger("team_size")) 
-            teamCollection.updateOne(teamDocumentFilter, Updates.set("team_full", true));
+        Bson teamUpdates = Updates.set("team_members", teamMembers);
+        if (teamMembers.size() >= teamDocument.getInteger("team_size"))
+            teamUpdates = Updates.combine(teamUpdates, Updates.set("team_full", true));
+        UpdateOptions teamOptions = new UpdateOptions().upsert(true);
+        teamCollection.updateOne(teamDocumentFilter, teamUpdates, teamOptions);
     }
-    
+
     public void switchTeam(SwitchTeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
@@ -117,13 +146,21 @@ public class TeamInterface {
 
         Bson currentTeamDocumentFilter = Filters.and(eq("team_id", request.getCurrentTeamID()), eq("course_id", request.getCourseID()));
         Document currentTeamDocument = teamCollection.find(currentTeamDocumentFilter).first();
+        if (currentTeamDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
+
         List<String> currentTeamMembers = currentTeamDocument.getList("team_members", String.class);
         currentTeamMembers.remove(request.getStudentID());
-        if (currentTeamMembers.size() < 1) 
+        List<String> currentTeamConfirmedMembers = currentTeamDocument.getList("team_confirmed_members", String.class);
+        currentTeamConfirmedMembers.remove(request.getStudentID());
+        
+        if (currentTeamMembers.size() < 1)
             teamCollection.deleteOne(currentTeamDocumentFilter);
         else {
+            currentTeamConfirmedMembers.remove(currentTeamMembers.get(0));
+            currentTeamConfirmedMembers.add(0, currentTeamMembers.get(0));
             Bson currentTeamUpdates = Updates.combine(
                 Updates.set("team_members", currentTeamMembers),
+                Updates.set("team_confirmed_members", currentTeamConfirmedMembers),
                 Updates.set("team_lead", currentTeamMembers.get(0)),
                 Updates.set("team_full", false));
             UpdateOptions currentTeamOptions = new UpdateOptions().upsert(true);
@@ -132,11 +169,13 @@ public class TeamInterface {
 
         Bson targetTeamDocumentFilter = Filters.and(eq("team_id", request.getTargetTeamID()), eq("course_id", request.getCourseID()));
         Document targetTeamDocument = teamCollection.find(targetTeamDocumentFilter).first();
+        if (targetTeamDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
+
         List<String> targetTeamMembers = targetTeamDocument.getList("team_members", String.class);
         targetTeamMembers.add(request.getStudentID());
         Bson targetTeamUpdates = Updates.combine(
-            Updates.set("team_members", targetTeamMembers),
-            Updates.set("team_full", false));
+                Updates.set("team_members", targetTeamMembers),
+                Updates.set("team_full", false));
         if (targetTeamMembers.size() >= targetTeamDocument.getInteger("team_size"))
             targetTeamUpdates = Updates.combine(targetTeamUpdates, Updates.set("team_full", true));
         UpdateOptions targetTeamOptions = new UpdateOptions().upsert(true);
@@ -147,16 +186,24 @@ public class TeamInterface {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
         new SecurityService().giveUpTeamLeadSecurity(teamCollection, courseDocument, request);
-       
+
         Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         Document teamDocument = teamCollection.find(teamDocumentFilter).first();
+        if (teamDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
 
-        List<String> students = teamDocument.getList("team_members", String.class);
-        students.remove(request.getStudentID());
-        students.add(request.getStudentID());
+        List<String> teamMembers = teamDocument.getList("team_members", String.class);
+        teamMembers.remove(request.getStudentID());
+        teamMembers.add(request.getStudentID());
+        List<String> teamConfirmedMembers = teamDocument.getList("team_confirmed_members", String.class);
+        if (!new SecurityService().isTeamLock(teamCollection, request.getTeamID(), request.getCourseID())) 
+            teamConfirmedMembers.remove(request.getStudentID());
+        teamConfirmedMembers.remove(teamMembers.get(0));
+        teamConfirmedMembers.add(0, teamMembers.get(0));
+
         Bson assignTeamLeadUpdates = Updates.combine(
-                Updates.set("team_lead", students.get(0)),
-                Updates.set("team_members", students)
+                Updates.set("team_lead", teamMembers.get(0)),
+                Updates.set("team_members", teamMembers),
+                Updates.set("team_confirmed_members", teamConfirmedMembers)
         );
         UpdateOptions assignTeamLeadOptions = new UpdateOptions().upsert(true);
         teamCollection.updateOne(teamDocumentFilter, assignTeamLeadUpdates, assignTeamLeadOptions);
@@ -169,20 +216,46 @@ public class TeamInterface {
 
         Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         Document teamDocument = teamCollection.find(teamDocumentFilter).first();
+        if (teamDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
 
-        List<String> students = teamDocument.getList("team_members", String.class);
-        students.remove(request.getNominatedTeamLead());
-        Collections.reverse(students);
-        students.add(request.getNominatedTeamLead());
-        Collections.reverse(students);
+        List<String> teamMembers = teamDocument.getList("team_members", String.class);
+        teamMembers.remove(request.getStudentID());
+        teamMembers.add(request.getStudentID());
+        teamMembers.remove(request.getNominatedTeamLead());
+        teamMembers.add(0, request.getNominatedTeamLead());
+        List<String> teamConfirmedMembers = teamDocument.getList("team_confirmed_members", String.class);
+        if (!new SecurityService().isTeamLock(teamCollection, request.getTeamID(), request.getCourseID())) 
+            teamConfirmedMembers.remove(request.getStudentID());
+        teamConfirmedMembers.remove(request.getNominatedTeamLead());
+        teamConfirmedMembers.add(0, request.getNominatedTeamLead());
+
         Bson assignTeamLeadUpdates = Updates.combine(
                 Updates.set("team_lead", request.getNominatedTeamLead()),
-                Updates.set("team_members", students)
+                Updates.set("team_members", teamMembers),
+                Updates.set("team_confirmed_members", teamConfirmedMembers)
         );
         UpdateOptions assignTeamLeadOptions = new UpdateOptions().upsert(true);
         teamCollection.updateOne(teamDocumentFilter, assignTeamLeadUpdates, assignTeamLeadOptions);
     }
-    
+
+    public void memberConfirmToggle(TeamParam request) { 
+        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
+        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+        new SecurityService().memberConfirmToggleSecurity(teamCollection, courseDocument, request);
+
+        Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
+        Document teamDocument = teamCollection.find(teamDocumentFilter).first();
+        List<String> teamConfirmedMembers = teamDocument.getList("team_confirmed_members", String.class);
+
+        if (!new SecurityService().isStudentConfirmed(teamCollection, request.getTeamID(), request.getStudentID(), request.getCourseID())) {
+            teamConfirmedMembers.add(request.getStudentID());
+            teamCollection.updateOne(teamDocumentFilter, Updates.set("team_confirmed_members", teamConfirmedMembers));
+        } else {
+            teamConfirmedMembers.remove(request.getStudentID());
+            teamCollection.updateOne(teamDocumentFilter, Updates.set("team_confirmed_members", teamConfirmedMembers));
+        }
+    }
+
     public void generateTeamName(TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
@@ -190,11 +263,41 @@ public class TeamInterface {
 
         Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         Bson teamNameUpdates = Updates.combine(
-            Updates.set("team_id", request.getTeamName()),
-            Updates.set("team_lock", true));
+                Updates.set("team_id", request.getTeamName()),
+                Updates.set("team_lock", true));
         UpdateOptions teamNameOptions = new UpdateOptions().upsert(true);
         teamCollection.updateOne(teamDocumentFilter, teamNameUpdates, teamNameOptions);
     }
+
+    public void leaveTeam(TeamParam request) {
+        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
+        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+        new SecurityService().leaveTeamSecurity(teamCollection, courseDocument, request);
+
+        Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
+        Document teamDocument = teamCollection.find(teamDocumentFilter).first();
+        if (teamDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
+
+        List<String> teamMembers = teamDocument.getList("team_members", String.class);
+        teamMembers.remove(request.getStudentID());
+        List<String> teamConfirmedMembers = teamDocument.getList("team_confirmed_members", String.class);
+        teamConfirmedMembers.remove(request.getStudentID());
+        
+        if (teamMembers.size() < 1)
+            teamCollection.deleteOne(teamDocumentFilter);
+        else {
+            teamConfirmedMembers.remove(teamMembers.get(0));
+            teamConfirmedMembers.add(0, teamMembers.get(0));
+            Bson teamUpdates = Updates.combine(
+                    Updates.set("team_members", teamMembers),
+                    Updates.set("team_confirmed_members", teamConfirmedMembers),
+                    Updates.set("team_lead", teamMembers.get(0)),
+                    Updates.set("team_full", false));
+            UpdateOptions teamOptions = new UpdateOptions().upsert(true);
+            teamCollection.updateOne(teamDocumentFilter, teamUpdates, teamOptions);
+        }
+    }
+
 
     public List<Document> getAllTeams(String courseID) {
         Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
@@ -206,31 +309,7 @@ public class TeamInterface {
             Document teamDocument = cursor.next();
             teams.add(teamDocument);
         }
-        cursor.close();
         return teams;
-    }
-
-    public void leaveTeam(TeamParam request) {
-        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
-        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-        new SecurityService().leaveTeamSecurity(teamCollection, courseDocument, request);
-
-        Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
-        Document teamDocument = teamCollection.find(teamDocumentFilter).first();
-
-        List<String> teamMembers = teamDocument.getList("team_members", String.class);
-        teamMembers.remove(request.getStudentID());
-        
-        if (teamMembers.size() < 1) 
-            teamCollection.deleteOne(teamDocumentFilter);
-        else {
-            Bson teamUpdates = Updates.combine(
-                Updates.set("team_members", teamMembers),
-                Updates.set("team_lead", teamMembers.get(0)),
-                Updates.set("team_full", false));
-            UpdateOptions teamOptions = new UpdateOptions().upsert(true);
-            teamCollection.updateOne(teamDocumentFilter, teamUpdates, teamOptions);
-        }
     }
 
     public void toggleTeamLock(TeamParam request) {
@@ -241,6 +320,8 @@ public class TeamInterface {
 
         Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         Document teamDocument = teamCollection.find(teamDocumentFilter).first();
+        if (teamDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
+
         boolean teamLock = teamDocument.getBoolean("team_lock");
         teamCollection.updateOne(teamDocumentFilter, Updates.set("team_lock", !teamLock));
     }
@@ -254,20 +335,6 @@ public class TeamInterface {
         teamCollection.updateMany(teamDocumentFilter, teamDocumentUpdate);
     }
 
-    public void addStudentToTeam(TeamParam request) {
-        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
-        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-        new SecurityService().addStudentToTeamSecurity(teamCollection, courseDocument, request);
-
-        if (!new SecurityService().isStudentAlreadyInATeam(request.getStudentID(), request.getCourseID())) 
-            joinTeam(request);
-        else if (new SecurityService().isStudentAlreadyInATeam(request.getStudentID(), request.getCourseID())) {
-            String currentTeamID = new TeamService().retrieveTeamID(request);
-            SwitchTeamParam switchTeamParam = new SwitchTeamParam(request.getCourseID(), request.getStudentID(), currentTeamID, request.getTeamID());
-            switchTeam(switchTeamParam);
-        }
-    }
-
     public void editTeamName(TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
@@ -275,8 +342,8 @@ public class TeamInterface {
 
         Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         Bson editTeamNameUpdates = Updates.combine(
-            Updates.set("team_id", request.getTeamName()),
-            Updates.set("team_lock", true)
+                Updates.set("team_id", request.getTeamName()),
+                Updates.set("team_lock", true)
         );
         UpdateOptions editTeamNameOptions = new UpdateOptions().upsert(true);
         teamCollection.updateOne(teamDocumentFilter, editTeamNameUpdates, editTeamNameOptions);
@@ -306,14 +373,21 @@ public class TeamInterface {
 
         Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         Document teamDocument = teamCollection.find(teamDocumentFilter).first();
-        List<String> students = teamDocument.getList("team_members", String.class);
-        students.remove(request.getStudentID());
-        Collections.reverse(students);
-        students.add(request.getStudentID());
-        Collections.reverse(students);
+        if (teamDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
+
+        List<String> teamMembers = teamDocument.getList("team_members", String.class);
+        teamMembers.remove(request.getStudentID());
+        teamMembers.add(0, request.getStudentID());
+        List<String> teamConfirmedMembers = teamDocument.getList("team_confirmed_members", String.class);
+        if (!new SecurityService().isTeamLock(teamCollection, request.getTeamID(), request.getCourseID())) 
+            teamConfirmedMembers.remove(teamDocument.getString("team_lead"));
+        teamConfirmedMembers.remove(request.getStudentID());
+        teamConfirmedMembers.add(0, request.getStudentID());
+
         Bson assignTeamLeadUpdates = Updates.combine(
                 Updates.set("team_lead", request.getStudentID()),
-                Updates.set("team_members", students)
+                Updates.set("team_members", teamMembers),
+                Updates.set("team_confirmed_members", teamConfirmedMembers)
         );
         UpdateOptions assignTeamLeadOptions = new UpdateOptions().upsert(true);
         teamCollection.updateOne(teamDocumentFilter, assignTeamLeadUpdates, assignTeamLeadOptions);
@@ -321,7 +395,7 @@ public class TeamInterface {
 
     public void deleteTeam(TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
-        if (courseDocument == null) 
+        if (courseDocument == null)
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
         if (!new SecurityService().isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
@@ -341,7 +415,6 @@ public class TeamInterface {
                 if (course.equals(courseID)) students.add(studentDocument);
             }
         }
-        cursor.close();
         return students;
     }
 }

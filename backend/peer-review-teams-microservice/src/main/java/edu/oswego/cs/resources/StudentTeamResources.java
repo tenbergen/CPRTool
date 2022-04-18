@@ -2,43 +2,65 @@ package edu.oswego.cs.resources;
 
 import edu.oswego.cs.database.TeamInterface;
 import edu.oswego.cs.requests.TeamParam;
+import edu.oswego.cs.services.IdentifyingService;
 
+import javax.annotation.security.DenyAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 @Path("/teams/team")
+@DenyAll
 public class StudentTeamResources {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("create")
-    public Response createTeam(TeamParam request) {
+    @RolesAllowed({"professor","student"})
+    public Response createTeam(@Context SecurityContext securityContext, TeamParam request) {
+        // new IdentifyingService().identifyingStudentService(securityContext, request.getStudentID());
         new TeamInterface().createTeam(request);
         return Response.status(Response.Status.CREATED).entity("Team successfully created.").build();
     }
 
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("get/student_id")
-    public Response getTeamByStudentID(TeamParam request) {
-        return Response.status(Response.Status.OK).entity(new TeamInterface().getAllUnlockedTeamByStudentID(request)).build();
+    @Path("get/unlocked-team/all/{course_id}")
+    @RolesAllowed({"professor", "student"})
+    public Response getAllUnlockedTeam(@PathParam("course_id") String courseID) {
+        return Response.status(Response.Status.OK).entity(new TeamInterface().getAllUnlockedTeams(courseID)).build();
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("get/{course_id}/{student_id}")
+    @RolesAllowed({"professor", "student"})
+    public Response getTeamByStudentID(@Context SecurityContext securityContext, @PathParam("course_id") String courseID, @PathParam("student_id") String studentID) {
+        // new IdentifyingService().identifyingStudentService(securityContext, studentID);
+        return Response.status(Response.Status.OK).entity(new TeamInterface().getTeamByStudentID(courseID, studentID)).build();
     }
 
     @GET
-    @Path("get/team_id")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("{course_id}/get/{team_id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTeamByTeamID(TeamParam request) {
-        return Response.status(Response.Status.OK).entity(new TeamInterface().getTeamByTeamID(request)).build();
+    @RolesAllowed({"professor","student"})
+    public Response getTeamByTeamID(@Context SecurityContext securityContext, @PathParam("course_id") String courseID, @PathParam("team_id") String teamID) {
+        if (securityContext.isUserInRole("professor")) 
+            return Response.status(Response.Status.OK).entity(new TeamInterface().getTeamByTeamID(courseID, teamID, "PROFESSOR")).build();
+        return Response.status(Response.Status.OK).entity(new TeamInterface().getTeamByTeamID(courseID, teamID, "STUDENT")).build();
+        
     }
     
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("join")
-    public Response joinTeam(TeamParam request) {
+    @RolesAllowed("student")
+    public Response joinTeam(@Context SecurityContext securityContext, TeamParam request) {
+        // new IdentifyingService().identifyingStudentService(securityContext, request.getStudentID());
         new TeamInterface().studentJoinTeam(request);
         return Response.status(Response.Status.OK).entity("Student successfully join team.").build();
     }
@@ -47,7 +69,9 @@ public class StudentTeamResources {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("team-lead/step-down")
-    public Response giveUpTeamLead(TeamParam request) {
+    @RolesAllowed("student")
+    public Response giveUpTeamLead(@Context SecurityContext securityContext, TeamParam request) {
+        // new IdentifyingService().identifyingStudentService(securityContext, request.getStudentID());
         new TeamInterface().giveUpTeamLead(request);
         return Response.status(Response.Status.OK).entity("Team Lead successfully updated.").build();
     }
@@ -56,16 +80,31 @@ public class StudentTeamResources {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("team-lead/cede")
-    public Response nominateTeamLead(TeamParam request) {
+    @RolesAllowed("student")
+    public Response nominateTeamLead(@Context SecurityContext securityContext, TeamParam request) {
+        // new IdentifyingService().identifyingStudentService(securityContext, request.getStudentID());
         new TeamInterface().nominateTeamLead(request);
         return Response.status(Response.Status.OK).entity("Team Lead successfully updated.").build();
     }
-    
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("member/confirm/toggle")
+    @RolesAllowed("student")
+    public Response memberConfirmToggle(@Context SecurityContext securityContext, TeamParam request) {
+        // new IdentifyingService().identifyingStudentService(securityContext, request.getStudentID());
+        new TeamInterface().memberConfirmToggle(request);
+        return Response.status(Response.Status.OK).entity("Confirmed members successfully updated.").build();
+    }
+
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("generate-team-name")
-    public Response generateTeamName(TeamParam request) {
+    @RolesAllowed("student")
+    public Response generateTeamName(@Context SecurityContext securityContext, TeamParam request) {
+        // new IdentifyingService().identifyingStudentService(securityContext, request.getStudentID());
         new TeamInterface().generateTeamName(request);
         return Response.status(Response.Status.OK).entity("Team name successfully generated").build(); 
     }
@@ -74,12 +113,12 @@ public class StudentTeamResources {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("leave")
-    public Response leaveTeam(TeamParam request) {
+    @RolesAllowed("student")
+    public Response leaveTeam(@Context SecurityContext securityContext, TeamParam request) {
+        // new IdentifyingService().identifyingStudentService(securityContext, request.getStudentID());
         new TeamInterface().leaveTeam(request);
         return Response.status(Response.Status.OK).entity("Student successfully leave team.").build();
     }
-
-
 }
 
 
