@@ -1,7 +1,14 @@
 import './styles/UnauthedStyle.css';
+import { useNavigate } from 'react-router-dom';
 
 const logoutURL = `${window.location.protocol}//${window.location.host}/logout`;
 const UnauthedErrorPage = () => {
+  let navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/');
+    window.location.reload(false);
+  };
   return (
     <div id='unauth'>
       <div className='unauthContent'>
@@ -15,9 +22,9 @@ const UnauthedErrorPage = () => {
             <span class='auth-oswego'> @oswego.edu </span> account!
             <br />
             <div className='go-back-wrapper'>
-              <a className='go-back-link' href={logoutURL}>
+              <button className='go-back-link' onClick={() => handleLogout()}>
                 Go Back
-              </a>
+              </button>
             </div>
           </div>
         </div>
