@@ -13,10 +13,11 @@
 }
 .delete-btn-wrapper {
   display: flex;
-  justify-content: right;
+  justify-content: end;
 }
+
 .delete-ass-btn {
-  width: 120px;
+  width: 125px;
   text-align: center;
   font-size: 1em;
   padding: 5px 3px;

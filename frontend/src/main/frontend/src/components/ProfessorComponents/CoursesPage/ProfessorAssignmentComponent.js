@@ -22,7 +22,9 @@ const ProfessorAssignmentComponent = () => {
     setIsLoading(false);
   }, []);
   const confirmDelete = (assignment) => {
-    let confirmAction = window.confirm('Are you sure to execute this action?');
+    let confirmAction = window.confirm(
+      'Are you sure to delete this assignment?'
+    );
     if (confirmAction) {
       deleteAssignment(assignment);
     }
