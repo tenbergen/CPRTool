@@ -18,7 +18,7 @@ function ProfessorDashboardPage() {
   useEffect(() => {
     setIsLoading(true);
     dispatch(getCoursesAsync());
-    const timer = setTimeout(() => setIsLoading(false), 473);
+    setTimeout(() => setIsLoading(false), 800);
   }, []);
 
   const studentView = () => {

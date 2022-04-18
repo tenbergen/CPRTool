@@ -11,6 +11,7 @@ import { getCourseDetailsAsync } from '../../redux/features/courseSlice';
 import CourseBarComponent from '../../components/CourseBarComponent';
 import ProfessorGradebookComponent from '../../components/ProfessorComponents/CoursesPage/ProfessorGradebookComponent';
 import ProfessorTeamComponent from '../../components/ProfessorComponents/CoursesPage/ProfessorTeamComponent';
+import Loader from '../../components/LoaderComponenets/Loader';
 
 const CourseComponent = ({ active, component, onClick }) => {
   return (
@@ -24,6 +25,7 @@ const CourseComponent = ({ active, component, onClick }) => {
 };
 
 function ProfessorCoursePage() {
+  const [isLoading, setIsLoading] = useState(false);
   let dispatch = useDispatch();
   let { courseId } = useParams();
 
@@ -31,36 +33,42 @@ function ProfessorCoursePage() {
   const [chosen, setChosen] = useState('Assignments');
 
   useEffect(() => {
+    setIsLoading(true);
     dispatch(getCourseDetailsAsync(courseId));
+    setTimeout(() => setIsLoading(false), 200);
   }, []);
 
   return (
     <div>
-      <div className='pcp-parent'>
-        <SidebarComponent />
-        <div className='pcp-container'>
-          <CourseBarComponent />
-          <div className='pcp-components'>
-            <div className='pcp-component-links'>
-              {components.map((t) => (
-                <CourseComponent
-                  key={t}
-                  component={t}
-                  active={t === chosen}
-                  onClick={() => setChosen(t)}
-                />
-              ))}
-            </div>
-            <div>
-              {chosen === 'Assignments' && <ProfessorAssignmentComponent />}
-              {chosen === 'Gradebook' && <ProfessorGradebookComponent />}
-              {chosen === 'Roster' && <ProfessorRosterComponent />}
-              {chosen === 'Teams' && <ProfessorTeamComponent />}
-              {chosen === 'Manage' && <ProfessorEditCourseComponent />}
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div className='pcp-parent'>
+          <SidebarComponent />
+          <div className='pcp-container'>
+            <CourseBarComponent />
+            <div className='pcp-components'>
+              <div className='pcp-component-links'>
+                {components.map((t) => (
+                  <CourseComponent
+                    key={t}
+                    component={t}
+                    active={t === chosen}
+                    onClick={() => setChosen(t)}
+                  />
+                ))}
+              </div>
+              <div>
+                {chosen === 'Assignments' && <ProfessorAssignmentComponent />}
+                {chosen === 'Gradebook' && <ProfessorGradebookComponent />}
+                {chosen === 'Roster' && <ProfessorRosterComponent />}
+                {chosen === 'Teams' && <ProfessorTeamComponent />}
+                {chosen === 'Manage' && <ProfessorEditCourseComponent />}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
