@@ -128,7 +128,7 @@ public class PeerReviewAssignmentResource {
             if (!fileName.endsWith("pdf")) return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
             peerReviewAssignmentInterface.uploadPeerReview(courseID, assignmentID, srcTeamName, destTeamName, attachment);
             fileName = "from-"+srcTeamName+"-to-"+destTeamName + fileName.substring(fileName.indexOf("."));
-            peerReviewAssignmentInterface.addPeerReviewSubmission(courseID, assignmentID, srcTeamName, fileName, grade);
+            peerReviewAssignmentInterface.addPeerReviewSubmission(courseID, assignmentID, srcTeamName, destTeamName, fileName, grade);
         }
         return Response.status(Response.Status.OK).entity("Successfully uploaded peer review.").build();
     }
@@ -151,8 +151,8 @@ public class PeerReviewAssignmentResource {
         @PathParam("courseID") String courseID,
         @PathParam("assignmentID") int assignmentID,
         @PathParam("srcTeamName") String srcTeamName,
-        @PathParam("destTeamName") String destTeamName
-        ) {
+        @PathParam("destTeamName") String destTeamName)
+    {
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
 
 
@@ -166,37 +166,26 @@ public class PeerReviewAssignmentResource {
         return response.build();
     }
     @GET
-    @RolesAllowed("student")
-    @Path("{course_id}/{student_id}/reviewed-by-me")
+    @RolesAllowed({"student", "professor"})
+    @Path("{course_id}/{assignment_id}/reviews-by/{student_id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewUserReviewedAssignments(@PathParam("course_id") String courseID,
-                                                @PathParam("student_id") String teamName)
+    public Response viewReviewsByUser(@PathParam("course_id") String courseID,
+                                                @PathParam("assignment_id") int assignmentID,
+                                                @PathParam("student_id") String studentID)
     {
-        List<Document> documents = new PeerReviewAssignmentInterface().getAssignmentsReviewedByUser(courseID, teamName);
+        List<Document> documents = new PeerReviewAssignmentInterface().getAssignmentsReviewedByUser(courseID, studentID);
         return Response.status(Response.Status.OK).entity(documents).build();
     }
 
     @GET
-    @RolesAllowed("student, professor")
-    @Path("{course_id}/{assignment_id}/{student_id}/graded-assignment")
+    @RolesAllowed({"student", "professor"})
+    @Path("{course_id}/{assignment_id}/reviews-of/{student_id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewAssignmentReviewedOfUser(@PathParam("course_id") String courseID,
+    public Response viewReviewsOfUser(@PathParam("course_id") String courseID,
                                                   @PathParam("assignment_id") int assignmentID,
-                                                  @PathParam("student_id") String teamName)
+                                                  @PathParam("student_id") String studentID)
     {
-        List<Document> documents = new PeerReviewAssignmentInterface().getUsersGradedAssignment(courseID, assignmentID, teamName);
+        List<Document> documents = new PeerReviewAssignmentInterface().getUsersReviewedAssignment(courseID, assignmentID, studentID);
         return Response.status(Response.Status.OK).entity(documents).build();
     }
-
-    @GET
-    @RolesAllowed("student, professor")
-    @Path("{course_id}/{student_id}/graded-assignments")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response viewAssignmentsReviewedOfUser(@PathParam("course_id") String courseID,
-                                                  @PathParam("student_id") String teamName)
-    {
-        List<Document> documents = new PeerReviewAssignmentInterface().getUsersGradedAssignments(courseID, teamName);
-        return Response.status(Response.Status.OK).entity(documents).build();
-    }
-
 }

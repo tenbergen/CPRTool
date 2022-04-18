@@ -112,6 +112,21 @@ public class AssignmentInterface {
         return assignments;
     }
 
+    public List<Document> getAssignmentSubmissions(String courseID, int assignmentID){
+        MongoCursor<Document> query = submissionCollection.find(and(eq("course_id",courseID),
+                eq("assignment_id",assignmentID),
+                eq("type","team_submission"))).iterator();
+        List<Document> assignments = new ArrayList<>();
+        while (query.hasNext()) {
+            Document document = query.next();
+            assignments.add(document);
+        }
+        if (assignments.isEmpty())
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist").build());
+        query.close();
+        return assignments;
+    }
+
     public void makeSubmission(String course_id,int assignment_id,String file_name,String teamName){
         Document team = teamsCollection.find(eq("team_id", teamName)).first();
         if(team == null) {
