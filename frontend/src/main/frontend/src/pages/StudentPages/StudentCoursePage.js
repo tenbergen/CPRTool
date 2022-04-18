@@ -23,7 +23,7 @@ function StudentCoursePage() {
     let dispatch = useDispatch()
     let { courseId } = useParams()
     let { lakerId } = useSelector((state) => state.auth)
-    const components = ["To Do", "Submitted"]
+    const components = ["Teams", "To Do", "Submitted"]
     const [chosen, setChosen] = useState("To Do");
 
     var inTeam = false
