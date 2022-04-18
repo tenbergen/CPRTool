@@ -6,23 +6,27 @@ import { refreshTokenAsync } from './authSlice';
 const viewCourseUrl = `${process.env.REACT_APP_URL}/view/professor`;
 
 export const getStudentCoursesAsync = createAsyncThunk(
-  'courses/getStudentCoursesAsync',
-  async (studentId, thunkAPI) => {
+    'courses/getStudentCoursesAsync',
+    async (studentId, thunkAPI) => {
     thunkAPI.dispatch(refreshTokenAsync());
-    const courses = await axios
-      .get(`${viewCourseUrl}/${studentId}/courses`)
+    const distinctCourses = []
+    const courses = []
+    await axios.get(`${viewCourseUrl}/${studentId}/courses`)
       .then((res) => {
         console.log(res.data);
         if (res.data != null)
-          return res.data.filter((course) => course !== null);
-        return [];
+            res.data.map(course => {
+                if (course !== null && !distinctCourses.includes(course.course_id)) {
+                    distinctCourses.push(course.course_id)
+                    courses.push(course)
+                }
+            })
       })
       .catch((e) => {
         console.log(e);
-        return [];
       });
     return { courses };
-  }
+    }
 );
 
 export const getCoursesAsync = createAsyncThunk(
