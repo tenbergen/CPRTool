@@ -19,7 +19,7 @@ function StudentDashboardPage() {
   useEffect(() => {
     setIsLoading(true);
     dispatch(getStudentCoursesAsync(lakerId));
-    const timer = setTimeout(() => setIsLoading(false), 800);
+    setTimeout(() => setIsLoading(false), 750);
   }, []);
 
   if (!courses) {

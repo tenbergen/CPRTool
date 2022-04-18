@@ -38,3 +38,18 @@
   font-weight: bold;
   padding-left: 50px;
 }
+
+.ass-title-st {
+  padding: 5px;
+  border-radius: 5px;
+  transition: all 0.1s ease-out;
+}
+
+.ass-due-date-st {
+  padding: 10px 10px;
+  font-size: 0.9em;
+}
+
+.ass-title-st:hover {
+  background-color: #faf7ff;
+}

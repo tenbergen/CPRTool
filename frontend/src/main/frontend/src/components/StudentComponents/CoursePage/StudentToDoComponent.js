@@ -21,10 +21,10 @@ const StudentToDoComponent = () => {
         {courseAssignments.map((assignment) => (
           <Link to={`/details/${role}/${courseId}/${assignment.assignment_id}`}>
             <li id='assListItem'>
-              {assignment.assignment_name +
-                '\n\n' +
-                'Due Date: ' +
-                assignment.due_date}
+              <div className='ass-title-st'>{assignment.assignment_name}</div>
+              <div className='ass-due-date-st'>
+                Due Date: {assignment.due_date}
+              </div>
             </li>
           </Link>
         ))}
