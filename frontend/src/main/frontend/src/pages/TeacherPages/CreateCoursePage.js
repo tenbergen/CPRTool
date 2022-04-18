@@ -67,7 +67,7 @@ const CreateCoursePage = () => {
     <div className='cpp-parent'>
       <SidebarComponent />
       <div className='cpp-container'>
-        <h2> Add new course </h2>
+        <h2 className='cpp-title'> Add new course </h2>
         <form className='ccp-form'>
           <div className='ccp-input-field'>
             <label>
