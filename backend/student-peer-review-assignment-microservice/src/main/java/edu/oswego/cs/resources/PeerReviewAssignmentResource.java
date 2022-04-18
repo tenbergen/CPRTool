@@ -188,4 +188,15 @@ public class PeerReviewAssignmentResource {
         List<Document> documents = new PeerReviewAssignmentInterface().getUsersReviewedAssignment(courseID, assignmentID, studentID);
         return Response.status(Response.Status.OK).entity(documents).build();
     }
+
+    @GET
+    @RolesAllowed({"student", "professor"})
+    @Path("{course_id}/reviews-of/{student_id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response viewReviewsOfUser(@PathParam("course_id") String courseID,
+                                      @PathParam("student_id") String studentID)
+    {
+        List<Document> documents = new PeerReviewAssignmentInterface().getUsersReviewedAssignment(courseID, studentID);
+        return Response.status(Response.Status.OK).entity(documents).build();
+    }
 }
