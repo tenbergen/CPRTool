@@ -5,7 +5,7 @@ import { refreshTokenAsync } from './authSlice';
 const getAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`;
 
 const getAssignments = async (courseId) => {
-  const courseAssignments = await axios
+  return await axios
     .get(`${getAssignmentUrl}/${courseId}/assignments`)
     .then((res) => {
       if (res.data != null) return res.data;
@@ -15,7 +15,54 @@ const getAssignments = async (courseId) => {
       console.log(e);
       return [];
     });
-  return courseAssignments;
+};
+
+const combine = (assignments, peerReviews) => {
+  const combined = [...assignments, ...peerReviews];
+
+  combined.sort(function (a, b) {
+    if (a.final_due_date < b.final_due_date) {
+      return -1;
+    }
+    if (a.final_due_date > b.final_due_date) {
+      return 1;
+    }
+    return 0;
+  });
+
+  console.log(combined);
+
+  return combined;
+};
+
+const getCombined = (courseAssignments, courseId, teamName) => {
+  const peerReviewAssignments = [];
+  const assignmentsArr = [];
+
+  courseAssignments.map(async (assignment) => {
+    assignmentsArr.push({
+      ...assignment,
+      final_due_date: assignment.due_date,
+      assignment_type: 'normal',
+      final_id: assignment.assignment_id,
+    });
+    const teams = assignment.assigned_teams[parseInt(teamName)];
+    console.log(teamName);
+
+    teams.map((team) => {
+      const final_id = `${assignment.assignment_id}-peer-review-${team}`;
+      console.log(final_id);
+      peerReviewAssignments.push({
+        ...assignment,
+        peer_review_team: team,
+        assignment_type: 'peer-review',
+        final_due_date: assignment.peer_review_due_date,
+        final_id: final_id,
+      });
+    });
+  });
+
+  return combine(assignmentsArr, peerReviewAssignments);
 };
 
 export const getCourseAssignmentsAsync = createAsyncThunk(
@@ -29,24 +76,12 @@ export const getCourseAssignmentsAsync = createAsyncThunk(
 
 export const getCombinedAssignmentPeerReviews = createAsyncThunk(
   'assignments/getCombinedAssignmentPeerReviews',
-  async (courseId, thunkAPI) => {
+  async (value, thunkAPI) => {
+    const { courseId, teamId } = value;
     thunkAPI.dispatch(refreshTokenAsync());
     const courseAssignments = await getAssignments(courseId);
     console.log(courseAssignments);
-    const peerReviews = [
-      { assignment_name: 'something', due_date: '2022-01-21' },
-    ];
-    const combined = [...courseAssignments, ...peerReviews];
-    combined.sort(function (a, b) {
-      if (a.due_date < b.due_date) {
-        return -1;
-      }
-      if (a.due_date > b.due_date) {
-        return 1;
-      }
-      return 0;
-    });
-    console.log(combined);
+    const combined = getCombined(courseAssignments, courseId, teamId);
     return { combined };
   }
 );
@@ -78,6 +113,7 @@ const assignmentSlice = createSlice({
     combinedAssignmentPeerReviews: [],
     currentAssignment: null,
     assignmentFilesLoaded: false,
+    assignmentsLoaded: false,
   },
   reducers: {
     setCurrentAssignment: (state, action) => {
@@ -95,7 +131,11 @@ const assignmentSlice = createSlice({
     [getAssignmentDetailsAsync.pending]: (state) => {
       state.currentAssignmentLoaded = false;
     },
+    [getCombinedAssignmentPeerReviews.pending]: (state) => {
+      state.assignmentsLoaded = false;
+    },
     [getCombinedAssignmentPeerReviews.fulfilled]: (state, action) => {
+      state.assignmentsLoaded = true;
       state.combinedAssignmentPeerReviews = action.payload.combined;
     },
   },
