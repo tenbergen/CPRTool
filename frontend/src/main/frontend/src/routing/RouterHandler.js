@@ -10,7 +10,7 @@ import React from 'react';
 import RoleRouteHandler from "./RoleRouteHandler";
 import AuthRouteHandler from "./AuthRouteHandler";
 import ProfessorAssignmentPage from "../pages/TeacherPages/ProfessorAssignmentPage";
-import SubmittedAssignmentPage from "../pages/StudentPages/SubmittedAssignmentPage";
+// import SubmittedAssignmentPage from "../pages/StudentPages/SubmittedAssignmentPage";
 
 const RouterHandler = () => {
 
@@ -37,7 +37,7 @@ const RouterHandler = () => {
                       <Route path='details/student/:courseId' element={<StudentCoursePage />} />
                       <Route path='details/student/:courseId/:assignmentId/:assignmentType' element={<AssignmentPage/>}/>
                       <Route path='details/student/:courseId/:assignmentId/:assignmentType/:teamName' element={<AssignmentPage />}/>
-                      <Route path='details/student/:courseId/:assignmentId/submitted' element={<SubmittedAssignmentPage />}/>
+                      {/*<Route path='details/student/:courseId/:assignmentId/submitted' element={<SubmittedAssignmentPage />}/>*/}
                   </Route>
               </Route>
           </Route>
