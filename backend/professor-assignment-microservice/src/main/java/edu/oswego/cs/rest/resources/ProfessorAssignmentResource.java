@@ -15,7 +15,6 @@ import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Path("professor")
 @DenyAll
@@ -130,16 +129,25 @@ public class ProfessorAssignmentResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/{course-id}/assignments/{assignment-id}/remove-file/{file-name}")
     public Response removeFileFromAssignment(@PathParam("course-id") String courseID, @PathParam("assignment-id") int assignmentID, @PathParam("file-name") String fileName) {
-        AssignmentInterface.removeFile(courseID, fileName, assignmentID);
+        new AssignmentInterface().removeFile(courseID, fileName, assignmentID);
         return Response.status(Response.Status.OK).entity("File successfully deleted.").build();
     }
 
     @DELETE
     @RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/courses/{course-id}/assignments/{assignment-id}/peer-review/remove-file/{file-name}")
-    public Response removeFileFromPeerReview(@PathParam("course-id") String courseID, @PathParam("assignment-id") int assignmentID, @PathParam("file-name") String fileName) {
-        AssignmentInterface.removePeerReviewFile(courseID, fileName, assignmentID);
+    @Path("/courses/{course-id}/assignments/{assignment-id}/peer-review-template/remove-file/{file-name}")
+    public Response removeFileFromPeerReviewTemplate(@PathParam("course-id") String courseID, @PathParam("assignment-id") int assignmentID, @PathParam("file-name") String fileName) {
+        new AssignmentInterface().removePeerReviewTemplate(courseID, fileName, assignmentID);
+        return Response.status(Response.Status.OK).entity("File successfully deleted.").build();
+    }
+
+    @DELETE
+    @RolesAllowed("professor")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/courses/{course-id}/assignments/{assignment-id}/peer-review-rubric/remove-file/{file-name}")
+    public Response removeFileFromPeerReviewRubric(@PathParam("course-id") String courseID, @PathParam("assignment-id") int assignmentID, @PathParam("file-name") String fileName) {
+        new AssignmentInterface().removePeerReviewRubric(courseID, fileName, assignmentID);
         return Response.status(Response.Status.OK).entity("File successfully deleted.").build();
     }
 
@@ -147,7 +155,7 @@ public class ProfessorAssignmentResource {
     @RolesAllowed({"professor", "student"})
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/create-assignment")
-    public Response createAssignment(AssignmentDAO assignmentDAO) {
+    public Response createAssignment(AssignmentDAO assignmentDAO) throws IOException {
         Document assignmentDocument = new AssignmentInterface().createAssignment(assignmentDAO);
 //        DueDateChecker.assignmentDocuments.add(assignmentDocument);
         return Response.status(Response.Status.OK).entity(assignmentDocument).build();
