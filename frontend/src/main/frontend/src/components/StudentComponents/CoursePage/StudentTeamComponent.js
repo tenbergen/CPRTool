@@ -5,15 +5,13 @@ import {useParams} from "react-router-dom";
 import axios from "axios";
 
 const TeamComponent = () => {
-    const store = useSelector((state) => state)
     const { courseId } = useParams()
     const getTeamsUrl = `${process.env.REACT_APP_URL}/teams/team/get/unlocked-team/all/` + courseId
     const [teams, setTeams] = useState(Array())
     const { lakerId } = useSelector((state) => state.auth)
 
-
-    useEffect(() => {
-        axios.get(getTeamsUrl).then(r => {
+    useEffect(async () => {
+        await axios.get(getTeamsUrl).then(r => {
             for(let i = 0; i < r.data.length; i++)
             {
                 setTeams(arr => [...arr, r.data[i]])
@@ -40,6 +38,7 @@ const TeamComponent = () => {
 
     return (
         <h3>
+            <h2 id="teamTitle"> Join a team </h2>
             <div id="teamList">
                 {teams.map(team =>
                         <li id="teamListItem" onClick={() => joinTeam(team.team_id)}>Team {team.team_id}</li>

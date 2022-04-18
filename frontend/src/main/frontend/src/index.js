@@ -5,14 +5,13 @@ import RouterHandler from './routing/RouterHandler';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import './interceptors/axiosInterceptor';
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Provider store={store}>
         <Routes>
-          <Route path='/*' element={<RouterHandler />}></Route>
+          <Route path='/*' element={<RouterHandler />} />
         </Routes>
       </Provider>
     </BrowserRouter>
