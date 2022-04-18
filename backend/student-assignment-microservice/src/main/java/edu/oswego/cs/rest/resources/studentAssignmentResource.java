@@ -81,10 +81,10 @@ public class studentAssignmentResource {
     }
 
     @GET
-    @RolesAllowed("student, professor")
+    @RolesAllowed({"student", "professor"})
     @Path("{course_id}/{student_id}/submissions")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewMySubmissions(@PathParam("course_id") String courseID,
+    public Response viewUsersSubmissions(@PathParam("course_id") String courseID,
                                       @PathParam("student_id") String teamName)
     {
         List<Document> documents = new AssignmentInterface().getAllUserAssignments(courseID, teamName);
@@ -92,14 +92,25 @@ public class studentAssignmentResource {
     }
 
     @GET
-    @RolesAllowed("student, professor")
+    @RolesAllowed({"student", "professor"})
     @Path("{course_id}/{assignment_id}/{student_id}/submission")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewMySubmissions(@PathParam("course_id") String courseID,
+    public Response viewUsersSubmission(@PathParam("course_id") String courseID,
                                       @PathParam("assignment_id") int assignmentID,
-                                      @PathParam("student_id") String teamName)
+                                      @PathParam("student_id") String studentID)
     {
-        List<Document> documents = new AssignmentInterface().getSpecifiedUserAssignment(courseID, assignmentID,teamName);
+        List<Document> documents = new AssignmentInterface().getSpecifiedUserAssignment(courseID, assignmentID,studentID);
+        return Response.status(Response.Status.OK).entity(documents).build();
+    }
+
+    @GET
+    @RolesAllowed("professor")
+    @Path("{course_id}/{assignment_id}/submissions")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response viewAllSubmissions(@PathParam("course_id") String courseID,
+                                      @PathParam("assignment_id") int assignmentID)
+    {
+        List<Document> documents = new AssignmentInterface().getAssignmentSubmissions(courseID, assignmentID);
         return Response.status(Response.Status.OK).entity(documents).build();
     }
 
