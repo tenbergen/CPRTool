@@ -45,9 +45,7 @@ public class CourseUtil {
         Bson documentFilter = Filters.eq("course_id", originalCourseID);
         collection.updateMany(documentFilter, Updates.set("course_id", newCourseID));
     }
-
-
-
+    
     public void collectionWipeOff(MongoCollection<Document> collection) {
         MongoCursor<Document> cursor = collection.find().iterator();
         while (cursor.hasNext()) {

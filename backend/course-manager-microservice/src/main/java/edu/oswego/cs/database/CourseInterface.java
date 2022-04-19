@@ -69,7 +69,7 @@ public class CourseInterface {
 
         String[] studentIDArr = dao.courseID.split("-");
         String studentID = studentIDArr[studentIDArr.length - 1].split("@")[0];
-        Document courseDocument = courseCollection.find(eq("course_id", studentID)).first();
+        Document courseDocument = courseCollection.find(eq("course_id", dao.courseID)).first();
         if (courseDocument != null) throw new WebApplicationException(Response.status(Response.Status.OK).entity("Course already existed.").build());
         courseCollection.insertOne(course);
 
