@@ -15,13 +15,13 @@ const ProfessorRosterComponent = () => {
     const [teamsMap, setMap] = useState(new Map())
 
     useEffect(() => {
-        axios.get('http://moxie.cs.oswego.edu:13125/view/professor/courses/'
+        axios.get(`${process.env.REACT_APP_URL}/view/professor/courses/`
             + currentCourse.course_id + '/students').then(r => {
             for (let i = 0; i < r.data.length; i++) {
                 setStudents(arr => [...arr, r.data[i]])
             }
         })
-        axios.get('http://moxie.cs.oswego.edu:13125/teams/professor/team/get/all/' +
+        axios.get(`${process.env.REACT_APP_URL}/teams/professor/team/get/all/` +
             currentCourse.course_id).then((r) => {
             for (let i = 0; i < r.data.length; i++) {
                 for (let j = 0; j < r.data[i].team_members.length; j++) {

@@ -6,7 +6,7 @@ import {useSelector} from 'react-redux';
 const ProfessorTeamComponent = () => {
     const {currentCourse} = useSelector((state) => state.courses);
     const getTeamsUrl =
-        'http://moxie.cs.oswego.edu:13125/teams/professor/team/get/all/' +
+        `${process.env.REACT_APP_URL}/teams/professor/team/get/all/` +
         currentCourse.course_id;
     const [teams, setTeams] = useState(Array());
     const [isActive, setActive] = useState(Array());
@@ -55,7 +55,7 @@ const ProfessorTeamComponent = () => {
 
             axios
                 .put(
-                    'http://moxie.cs.oswego.edu:13125/teams/professor/team/add-student',
+                    `${process.env.REACT_APP_URL}/teams/professor/team/add-student`,
                     data
                 )
                 .then((r) => {
@@ -80,7 +80,7 @@ const ProfessorTeamComponent = () => {
 
             axios
                 .put(
-                    'http://moxie.cs.oswego.edu:13125/teams/professor/team/remove-student',
+                    `${process.env.REACT_APP_URL}/teams/professor/team/remove-student`,
                     data
                 )
                 .then((r) => {
@@ -103,7 +103,7 @@ const ProfessorTeamComponent = () => {
 
             axios
                 .put(
-                    'http://moxie.cs.oswego.edu:13125/teams/professor/team/delete',
+                    `${process.env.REACT_APP_URL}/teams/professor/team/delete`,
                     data
                 )
                 .then((r) => {
