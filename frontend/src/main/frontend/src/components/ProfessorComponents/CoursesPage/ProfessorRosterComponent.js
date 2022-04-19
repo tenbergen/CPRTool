@@ -67,7 +67,7 @@ const ProfessorRosterComponent = () => {
     }
 
     const deleteStudent = async (Email) => {
-        const deleteStudentUrl = `${url}/${courseId}/students/${Email}/delete`
+        const deleteStudentUrl = `${url}/${courseId}/students/${Email.student_id}/delete`
         await axios.delete(deleteStudentUrl)
             .then(res => {
                 console.log(res)
