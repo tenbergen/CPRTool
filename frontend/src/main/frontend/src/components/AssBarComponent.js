@@ -36,7 +36,7 @@ const AssBarComponent = () => {
         (state) => state.assignments
     );
     const {courseId, assignmentId, assignmentType, teamName} = useParams();
-    const teamId = '1';
+    const {currentTeamId, teamLoaded} = useSelector((state) => state.teams)
 
     const curr =
         assignmentType === 'peer-review'
@@ -45,7 +45,7 @@ const AssBarComponent = () => {
     const [chosen, setChosen] = useState(curr);
 
     useEffect(() => {
-        dispatch(getCombinedAssignmentPeerReviews({courseId, teamId}));
+        dispatch(getCombinedAssignmentPeerReviews({courseId, currentTeamId}));
     }, []);
 
     const onAssClick = (assignment) => {

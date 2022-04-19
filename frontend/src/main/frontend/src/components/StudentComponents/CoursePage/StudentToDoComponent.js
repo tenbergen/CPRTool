@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import '../../styles/StudentAss.css';
 import {Link, useParams} from 'react-router-dom';
@@ -11,33 +11,41 @@ const StudentToDoComponent = () => {
     const {combinedAssignmentPeerReviews, assignmentsLoaded} =
         store.assignments;
     const {courseId} = useParams();
-    const teamId = '1';
+    const {currentTeamId, teamLoaded} = useSelector((state) => state.teams)
 
     const link = `/details/${role}/${courseId}`;
 
     useEffect(() => {
-        dispatch(getCombinedAssignmentPeerReviews({courseId, teamId}));
+        dispatch(getCombinedAssignmentPeerReviews({courseId, currentTeamId}));
     }, []);
 
     return (
         <h3>
-            {assignmentsLoaded ? (
+            {assignmentsLoaded && teamLoaded ? (
                 <div id='assList'>
                     {combinedAssignmentPeerReviews.map((assignment) => (
-                        <Link
-                            to={
-                                assignment.assignment_type === 'peer-review'
-                                    ? `${link}/${assignment.assignment_id}/peer-review/${assignment.peer_review_team}`
-                                    : `${link}/${assignment.assignment_id}/normal`
-                            }
-                        >
-                            <li id='assListItem'>
-                                {assignment.assignment_name +
-                                    '\n\n' +
-                                    'Due Date: ' +
-                                    assignment.final_due_date}
-                            </li>
-                        </Link>
+                        <div className='assListItem'>
+                            <Link
+                                to={
+                                    assignment.assignment_type === 'peer-review'
+                                        ? `${link}/${assignment.assignment_id}/peer-review/${assignment.peer_review_team}`
+                                        : `${link}/${assignment.assignment_id}/normal`
+                                }
+                            >
+                                <li>
+                                    <div className='ass-title'>
+                                        {assignment.assignment_name}
+                                        <span className="span1-ap">Due Date: {
+                                            assignment.assignment_type === "peer-review"
+                                                ? assignment.peer_review_due_date
+                                                : assignment.due_date
+                                        }
+                                        </span>
+                                        <br></br>
+                                    </div>
+                                </li>
+                            </Link>
+                        </div>
                     ))}
                 </div>
             ) : null}

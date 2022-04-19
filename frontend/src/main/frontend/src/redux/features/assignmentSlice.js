@@ -35,35 +35,55 @@ const combine = (assignments, peerReviews) => {
     return combined;
 };
 
+// const getCombined = (courseAssignments, courseId, teamName) => {
+//     const peerReviewAssignments = [];
+//     const assignmentsArr = [];
+//
+//     courseAssignments.map(async (assignment) => {
+//         assignmentsArr.push({
+//             ...assignment,
+//             final_due_date: assignment.due_date,
+//             assignment_type: 'normal',
+//             final_id: assignment.assignment_id,
+//         });
+//         const teams = assignment.assigned_teams[parseInt(teamName)];
+//         console.log(teamName);
+//
+//         teams.map((team) => {
+//             const final_id = `${assignment.assignment_id}-peer-review-${team}`;
+//             console.log(final_id);
+//             peerReviewAssignments.push({
+//                 ...assignment,
+//                 peer_review_team: team,
+//                 assignment_type: 'peer-review',
+//                 final_due_date: assignment.peer_review_due_date,
+//                 final_id: final_id,
+//             });
+//         });
+//     });
+//
+//     return combine(assignmentsArr, peerReviewAssignments);
+// };
+
 const getCombined = (courseAssignments, courseId, teamName) => {
-    const peerReviewAssignments = [];
-    const assignmentsArr = [];
+    const peerReviewAssignments = []
+    const assignmentsArr = []
 
-    courseAssignments.map(async (assignment) => {
-        assignmentsArr.push({
-            ...assignment,
-            final_due_date: assignment.due_date,
-            assignment_type: 'normal',
-            final_id: assignment.assignment_id,
-        });
-        const teams = assignment.assigned_teams[parseInt(teamName)];
-        console.log(teamName);
+    courseAssignments.map(async assignment => {
+        assignmentsArr.push({...assignment, final_due_date: assignment.due_date, assignment_type: "normal", final_id: assignment.assignment_id})
+        console.log(assignment)
+        if (assignment.assigned_teams) {
+            const teams = assignment.assigned_teams[teamName]
+            teams.map(team => {
+                const final_id = `${assignment.assignment_id}-peer-review-${team}`
+                console.log(final_id)
+                peerReviewAssignments.push({...assignment, peer_review_team: team, assignment_type: "peer-review", final_due_date: assignment.peer_review_due_date, final_id: final_id})
+            })
+        }
+    })
 
-        teams.map((team) => {
-            const final_id = `${assignment.assignment_id}-peer-review-${team}`;
-            console.log(final_id);
-            peerReviewAssignments.push({
-                ...assignment,
-                peer_review_team: team,
-                assignment_type: 'peer-review',
-                final_due_date: assignment.peer_review_due_date,
-                final_id: final_id,
-            });
-        });
-    });
-
-    return combine(assignmentsArr, peerReviewAssignments);
-};
+    return combine(assignmentsArr, peerReviewAssignments)
+}
 
 export const getCourseAssignmentsAsync = createAsyncThunk(
     'assignments/getCourseAssignmentsAsync',
