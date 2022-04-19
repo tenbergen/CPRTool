@@ -91,7 +91,7 @@ public class CourseInterface {
      * Find the course document from Mongo using the current course ID, then update the course document using the new information
      * passed from Frontend.
      */
-    public String updateCourse(CourseDAO dao) {
+    public String updateCourse(SecurityContext securityContext, CourseDAO dao) {
         Document courseDocument = courseCollection.find(eq("course_id", dao.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This course does not exist.").build());
 
@@ -106,8 +106,8 @@ public class CourseInterface {
         Document course = Document.parse(courseDAOEntity.getEntity());
         courseCollection.replaceOne(eq("course_id", originalCourseID), course);
 
-        new CourseUtil().updateCoursesArrayInDbs(studentCollection, originalCourseID, newCourseID);
-        // new CourseUtil().updateCoursesArrayInDbs(professorCollection, originalCourseID, newCourseID);
+        new CourseUtil().updateCoursesArrayInStudenDb(studentCollection, originalCourseID, newCourseID);
+        new CourseUtil().updateCoursesArrayInProfessorDb(securityContext, professorCollection, originalCourseID, newCourseID);
         new CourseUtil().updateCoursesKeyInDBs(assignmentCollection, originalCourseID, newCourseID);
         new CourseUtil().updateCoursesKeyInDBs(submissionsCollection, originalCourseID, newCourseID);
         new CourseUtil().updateCoursesKeyInDBs(teamCollection, originalCourseID, newCourseID);
@@ -222,6 +222,6 @@ public class CourseInterface {
 
     /* Delete this later */
     public void collectionWipeOff() {
-        new CourseUtil().collectionWipeOff(studentCollection);
+        new CourseUtil().collectionWipeOff(courseCollection);
     }
 }

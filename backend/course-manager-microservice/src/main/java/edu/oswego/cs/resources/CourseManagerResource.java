@@ -44,8 +44,8 @@ public class CourseManagerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/update")
     @RolesAllowed("professor")
-    public Response updateCourse(CourseDAO course) {
-        String courseID = new CourseInterface().updateCourse(course);
+    public Response updateCourse(@Context SecurityContext securityContext, CourseDAO course) {
+        String courseID = new CourseInterface().updateCourse(securityContext, course);
         return Response.status(Response.Status.OK).entity(courseID).build();
     }
 
@@ -96,13 +96,5 @@ public class CourseManagerResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("Failed to add students.").build();
         }
         return Response.status(Response.Status.OK).entity("Student(s) successfully added.").build();
-    }
-    
-    @POST
-    @Path("collection/wipe-off")
-    @RolesAllowed("professor")
-    public Response collectionWipeOff() {
-        new CourseInterface().collectionWipeOff();
-        return Response.status(Response.Status.OK).entity("Collection successfully wipe off.").build();
     }
 }
