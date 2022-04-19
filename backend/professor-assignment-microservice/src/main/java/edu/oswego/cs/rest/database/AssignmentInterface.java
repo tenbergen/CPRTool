@@ -16,9 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
@@ -38,7 +36,7 @@ public class AssignmentInterface {
             MongoDatabase assignmentDatabase = manager.getAssignmentDB();
             assignmentsCollection = assignmentDatabase.getCollection("assignments");
             MongoDatabase courseDatabase = manager.getCourseDB();
-            courseCollection = courseDatabase.getCollection("course");
+            courseCollection = courseDatabase.getCollection("courses");
         } catch (WebApplicationException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
         }
@@ -137,9 +135,10 @@ public class AssignmentInterface {
                                             eq("assignment_id", assignmentID)),
                                             set("peer_review_rubric", ""));
     }
+
     public Document createAssignment(AssignmentDAO assignmentDAO) throws IOException {
         Document courseDocument = courseCollection.find(eq("course_id", assignmentDAO.courseID)).first();
-        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Course not found.").build());
 
         String FileStructure = getRelPath() + "assignments" + reg + assignmentDAO.courseID;
 
@@ -151,13 +150,7 @@ public class AssignmentInterface {
         if (dirList == null)
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Directory must exist to make file structure.").build());
 
-        int nextPos = 0;
-        if (dirList.length != 0) {
-            nextPos = Arrays.stream(dirList)
-                    .map(Integer::parseInt)
-                    .max(Integer::compare)
-                    .orElse(-9999) + 1;
-        }
+        int nextPos = generateAssignmentID();
         assignmentDAO.assignmentID = nextPos;
 
         FileStructure += reg + nextPos;
@@ -271,4 +264,17 @@ public class AssignmentInterface {
     private static void deleteFile(String destination) throws IOException {
         FileUtils.deleteDirectory(new File(destination));
     }
+
+    public int generateAssignmentID(){
+        List<Document> assignmentsDocuments = getAllAssignments();
+
+        Set<String> assignmentIDs = new HashSet<>();
+        for (Document assignmentDocument : assignmentsDocuments)
+            assignmentIDs.add(assignmentDocument.getString("assignment_id"));
+        for (int i = 0; i < assignmentIDs.size(); i++)
+            if (!assignmentIDs.contains(String.valueOf(i)))
+                return i;
+        return assignmentIDs.size();
+    }
+
 }
