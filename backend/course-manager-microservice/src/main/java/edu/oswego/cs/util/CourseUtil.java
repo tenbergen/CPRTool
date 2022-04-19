@@ -35,7 +35,7 @@ public class CourseUtil {
         Document professorDocument = collection.find(professorDocumentFilter).first();
         List<String> professorDocumentCourses = professorDocument.getList("courses", String.class);
         if (professorDocumentCourses == null)
-            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Profesor profile is not set up properly").build());
+            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Professor profile is not set up properly.").build());
         Collections.replaceAll(professorDocumentCourses, originalCourseID, newCourseID);
         collection.updateOne(professorDocumentFilter, Updates.set("courses", professorDocumentCourses));
     }
@@ -45,7 +45,7 @@ public class CourseUtil {
         Bson documentFilter = Filters.eq("course_id", originalCourseID);
         collection.updateMany(documentFilter, Updates.set("course_id", newCourseID));
     }
-    
+
     public void collectionWipeOff(MongoCollection<Document> collection) {
         MongoCursor<Document> cursor = collection.find().iterator();
         while (cursor.hasNext()) {
