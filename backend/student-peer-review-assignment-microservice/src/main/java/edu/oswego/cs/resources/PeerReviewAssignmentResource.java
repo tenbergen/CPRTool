@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Path("assignments")
-@DenyAll
+//@DenyAll
 public class PeerReviewAssignmentResource {
 
     /**
@@ -29,7 +29,7 @@ public class PeerReviewAssignmentResource {
      * @throws Exception If count > the number of teams in the course.
      */
     @GET
-    @RolesAllowed("professor")
+    //@RolesAllowed("professor")
     @Path("{courseID}/{assignmentID}/assign/{count_to_review}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response assignTeams(
@@ -40,15 +40,76 @@ public class PeerReviewAssignmentResource {
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
 
         List<String> teamNames = peerReviewAssignmentInterface.getCourseTeams(courseID);
+        List<String> finalTeams = peerReviewAssignmentInterface.filterBySubmitted(teamNames,courseID,assignmentID);
         Map<String, List<String>> assignedTeams;
         try {
-            assignedTeams = AssignmentDistribution.distribute(teamNames, count);
+            assignedTeams = AssignmentDistribution.distribute(finalTeams, count);
         } catch (IndexOutOfBoundsException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Number of reviews peer team is greater than the number of teams in the course.").build();
         }
         Document teamAssignmentsDocument = peerReviewAssignmentInterface.addAssignedTeams(assignedTeams, courseID, assignmentID);
+        peerReviewAssignmentInterface.addAllTeams(teamNames,courseID,assignmentID);
+        peerReviewAssignmentInterface.addDistroToSubmissions(assignedTeams,courseID,assignmentID);
         return Response.status(Response.Status.OK).entity(teamAssignmentsDocument).build();
     }
+    /**
+     * Endpoint to get all of the teams for a given assignment
+     * @param courseID The course for the assignment
+     * @param assignmentID The assignment that is being looked up
+     * @return A list of teams that exist for a given assignment
+     */
+    @GET
+   // @RolesAllowed("professor")
+    @Path("{courseID}/{assignmentID}/allTeams")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response assignTeams(
+            @PathParam("courseID") String courseID,
+            @PathParam("assignmentID") int assignmentID
+    ) throws Exception {
+        PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
+        return Response.status(Response.Status.OK).entity(peerReviewAssignmentInterface.getTeams(courseID,assignmentID)).build();
+    }
+    /**
+     * Endpoint to get all of the teams for a given assignment
+     * @param courseID The course for the assignment
+     * @param assignmentID The assignment that is being looked up
+     * @param team_name The team name for the team looked up
+     * @return A list of teams that graded the input team and the grades given
+     */
+    @GET
+    // @RolesAllowed("professor")
+    @Path("{courseID}/{assignmentID}/{team_name}/getTeamGrades")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response team_name(
+            @PathParam("courseID") String courseID,
+            @PathParam("assignmentID") int assignmentID,
+            @PathParam("team_name") String team_name
+    ) throws Exception {
+        PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
+        return Response.status(Response.Status.OK).entity(peerReviewAssignmentInterface.getTeamGrades(courseID,assignmentID,team_name)).build();
+    }
+    /**
+     * Endpoint to get all of the teams for a given assignment
+     * @param courseID The course for the assignment
+     * @param assignmentID The assignment that is being looked up
+     * @param team_name The team name for the team looked up
+     * @param grade the grade to be updated for the team
+     * @return the team that was edited
+     */
+    @POST
+    // @RolesAllowed("professor")
+    @Path("{courseID}/{assignmentID}/{team_name}/{grade}/professor_update")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response professorUpdate(
+            @PathParam("courseID") String courseID,
+            @PathParam("assignmentID") int assignmentID,
+            @PathParam("team_name") String team_name,
+            @PathParam("grade") int grade
+    ) throws Exception {
+        PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
+        return Response.status(Response.Status.OK).entity(peerReviewAssignmentInterface.professorUpdate(courseID,assignmentID,team_name,grade)).build();
+    }
+
 
     /**
      * Endpoint to get the teams that a team was assigned to peer review
