@@ -25,15 +25,26 @@ import static edu.oswego.cs.util.CSVUtil.parseStudentCSV;
 
 public class CourseInterface {
     private final MongoCollection<Document> studentCollection;
+    private final MongoCollection<Document> professorCollection;
     private final MongoCollection<Document> courseCollection;
+    private final MongoCollection<Document> assignmentCollection;
+    private final MongoCollection<Document> submissionsCollection;
+    private final MongoCollection<Document> teamCollection;
 
     public CourseInterface() {
         DatabaseManager databaseManager = new DatabaseManager();
         try {
             MongoDatabase studentDB = databaseManager.getStudentDB();
+            MongoDatabase professorDB = databaseManager.getProfessorDB();
             MongoDatabase courseDB = databaseManager.getCourseDB();
+            MongoDatabase assignmentDB = databaseManager.getAssignmentDB();
+            MongoDatabase teamDB = databaseManager.getTeamDB();
             studentCollection = studentDB.getCollection("students");
+            professorCollection = professorDB.getCollection("professors");
             courseCollection = courseDB.getCollection("courses");
+            assignmentCollection = assignmentDB.getCollection("assignments");
+            submissionsCollection = assignmentDB.getCollection("submissions");
+            teamCollection = teamDB.getCollection("teams");
         } catch (WebApplicationException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
         }
