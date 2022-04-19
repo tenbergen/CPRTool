@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import './styles/AssBar.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, useParams} from 'react-router-dom';
-import {getCombinedAssignmentPeerReviews} from '../redux/features/assignmentSlice';
+import {getAssignmentDetailsAsync, getCombinedAssignmentPeerReviews} from '../redux/features/assignmentSlice';
 
 const AssBarLink = ({active, assignment, onClick}) => {
     const {role} = useSelector((state) => state.auth);
@@ -16,10 +16,8 @@ const AssBarLink = ({active, assignment, onClick}) => {
             to={
                 assignment.assignment_type === 'peer-review'
                     ? `${link}/${assignment.assignment_id}/peer-review/${assignment.peer_review_team}`
-                    : `${link}/${assignment.assignment_id}/normal`
-            }
-            onClick={onClick}
-        >
+                    : `${link}/${assignment.assignment_id}/normal`}
+                onClick={onClick}>
             <tr>
                 <td style={active ? clickedStyle : normalStyle}>
                     <div className='colorForTable'/>
@@ -32,16 +30,11 @@ const AssBarLink = ({active, assignment, onClick}) => {
 
 const AssBarComponent = () => {
     const dispatch = useDispatch();
-    const {combinedAssignmentPeerReviews} = useSelector(
-        (state) => state.assignments
-    );
+    const {combinedAssignmentPeerReviews} = useSelector((state) => state.assignments);
     const {courseId, assignmentId, assignmentType, teamName} = useParams();
-    const {currentTeamId, teamLoaded} = useSelector((state) => state.teams)
+    const {currentTeamId} = useSelector((state) => state.teams)
 
-    const curr =
-        assignmentType === 'peer-review'
-            ? `${assignmentId}-peer-review-${teamName}`
-            : parseInt(assignmentId);
+    const curr = assignmentType === 'peer-review' ? `${assignmentId}-peer-review-${teamName}` : parseInt(assignmentId);
     const [chosen, setChosen] = useState(curr);
 
     useEffect(() => {
@@ -49,11 +42,13 @@ const AssBarComponent = () => {
     }, []);
 
     const onAssClick = (assignment) => {
-        const curr =
-            assignment.assignment_type === 'peer-review'
+        const curr = assignment.assignment_type === 'peer-review'
                 ? `${assignment.assignment_id}-${assignment.assignment_type}-${assignment.peer_review_team}`
                 : parseInt(assignment.assignment_id);
         setChosen(curr);
+        const courseId = assignment.course_id
+        const assignmentId = assignment.assignment_id
+        dispatch(getAssignmentDetailsAsync({ courseId, assignmentId}))
     };
 
     return (
