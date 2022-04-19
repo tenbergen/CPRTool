@@ -95,4 +95,12 @@ public class CourseManagerResource {
         }
         return Response.status(Response.Status.OK).entity("Student(s) successfully added.").build();
     }
+    
+    @POST
+    @Path("collection/wipe-off")
+    @RolesAllowed("professor")
+    public Response collectionWipeOff() {
+        new CourseInterface().collectionWipeOff();
+        return Response.status(Response.Status.OK).entity("Collection successfully wipe off.").build();
+    }
 }
