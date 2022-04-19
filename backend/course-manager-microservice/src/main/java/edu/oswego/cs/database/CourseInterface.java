@@ -165,10 +165,6 @@ public class CourseInterface {
         courseCollection.deleteOne(eq("course_id", courseID));
     }
 
-    /**
-     * Remove the student from the course's arraylist of students, and then remove the course from the student's course
-     * arraylist in the student database.
-     */
     public void removeStudent(String studentID, String courseID) {
         Document studentDocument = studentCollection.find(and(eq("student_id", studentID), eq("courses", courseID))).first();
         Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
