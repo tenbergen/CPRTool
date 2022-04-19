@@ -2,10 +2,16 @@ package edu.oswego.cs.database;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+
 import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.daos.FileDAO;
 import edu.oswego.cs.daos.StudentDAO;
+import edu.oswego.cs.util.CourseUtil;
+
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
@@ -13,6 +19,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,15 +33,26 @@ import static edu.oswego.cs.util.CSVUtil.parseStudentCSV;
 
 public class CourseInterface {
     private final MongoCollection<Document> studentCollection;
+    private final MongoCollection<Document> professorCollection;
     private final MongoCollection<Document> courseCollection;
+    private final MongoCollection<Document> assignmentCollection;
+    private final MongoCollection<Document> submissionsCollection;
+    private final MongoCollection<Document> teamCollection;
 
     public CourseInterface() {
         DatabaseManager databaseManager = new DatabaseManager();
         try {
             MongoDatabase studentDB = databaseManager.getStudentDB();
+            MongoDatabase professorDB = databaseManager.getProfessorDB();
             MongoDatabase courseDB = databaseManager.getCourseDB();
+            MongoDatabase assignmentDB = databaseManager.getAssignmentDB();
+            MongoDatabase teamDB = databaseManager.getTeamDB();
             studentCollection = studentDB.getCollection("students");
+            professorCollection = professorDB.getCollection("professors");
             courseCollection = courseDB.getCollection("courses");
+            assignmentCollection = assignmentDB.getCollection("assignments");
+            submissionsCollection = assignmentDB.getCollection("submissions");
+            teamCollection = teamDB.getCollection("teams");
         } catch (WebApplicationException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
         }
@@ -43,15 +62,25 @@ public class CourseInterface {
      * Update the course DAO's courseID, then add the course if it is not already existed in the database. At the same
      * time, update the students' course list in the student database if a student list in the request is specified.
      */
-    public void addCourse(CourseDAO dao) {
-        Jsonb jsonb = JsonbBuilder.create();
-        Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(dao), MediaType.APPLICATION_JSON_TYPE);
-        Document course = Document.parse(courseDAOEntity.getEntity());
+    public void addCourse(SecurityContext securityContext, CourseDAO dao) {
+        Document courseDocument = courseCollection.find(eq("course_id", dao.courseID)).first();
+        if (courseDocument != null) throw new WebApplicationException(Response.status(Response.Status.OK).entity("Course already existed.").build());
+
+        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
+        Bson professorDocumentFilter = Filters.eq("professor_id", professorID);
+        Document professorDocument = professorCollection.find(professorDocumentFilter).first();
+        List<String> professorDocumentCourses = professorDocument.getList("courses", String.class);
+        if (professorDocumentCourses == null)
+            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Professor profile is not set up properly.").build());
+        professorDocumentCourses.add(dao.courseID);
+        professorCollection.updateOne(professorDocumentFilter, Updates.set("courses", professorDocumentCourses));
 
         String[] studentIDArr = dao.courseID.split("-");
         String studentID = studentIDArr[studentIDArr.length - 1].split("@")[0];
-        Document courseDocument = courseCollection.find(eq("course_id", studentID)).first();
-        if (courseDocument != null) throw new WebApplicationException(Response.status(Response.Status.OK).entity("Course already existed.").build());
+        
+        Jsonb jsonb = JsonbBuilder.create();
+        Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(dao), MediaType.APPLICATION_JSON_TYPE);
+        Document course = Document.parse(courseDAOEntity.getEntity());
         courseCollection.insertOne(course);
 
         List<String> students = course.getList("students", String.class);
@@ -65,17 +94,27 @@ public class CourseInterface {
      * Find the course document from Mongo using the current course ID, then update the course document using the new information
      * passed from Frontend.
      */
-    public String updateCourse(CourseDAO dao) {
+    public String updateCourse(SecurityContext securityContext, CourseDAO dao) {
         Document courseDocument = courseCollection.find(eq("course_id", dao.getCourseID())).first();
-        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
+        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This course does not exist.").build());
 
-        String courseID = dao.courseID;
-        dao.courseID = dao.abbreviation + "-" + dao.courseSection + "-" + dao.crn + "-" + dao.semester + "-" + dao.year;
+        String originalCourseID = dao.courseID;
+        String newCourseID = dao.abbreviation + "-" + dao.courseSection + "-" + dao.crn + "-" + dao.semester + "-" + dao.year;
+        dao.courseID = newCourseID;
+        List<String> students = courseDocument.getList("students", String.class);
+        dao.students = students;
+
+        new CourseUtil().updateCoursesArrayInProfessorDb(securityContext, professorCollection, originalCourseID, newCourseID);
+        new CourseUtil().updateCoursesArrayInStudenDb(studentCollection, originalCourseID, newCourseID);
+        new CourseUtil().updateCoursesKeyInDBs(assignmentCollection, originalCourseID, newCourseID);
+        new CourseUtil().updateCoursesKeyInDBs(submissionsCollection, originalCourseID, newCourseID);
+        new CourseUtil().updateCoursesKeyInDBs(teamCollection, originalCourseID, newCourseID);
 
         Jsonb jsonb = JsonbBuilder.create();
         Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(dao), MediaType.APPLICATION_JSON_TYPE);
         Document course = Document.parse(courseDAOEntity.getEntity());
-        courseCollection.replaceOne(eq("course_id", courseID), course);
+        courseCollection.replaceOne(eq("course_id", originalCourseID), course);
+
         return dao.courseID;
     }
 
@@ -182,5 +221,10 @@ public class CourseInterface {
                 .collect(Collectors.toList())) {
             addStudent(student, courseID);
         }
+    }
+
+    /* Delete this later */
+    public void collectionWipeOff() {
+        new CourseUtil().collectionWipeOff(courseCollection);
     }
 }
