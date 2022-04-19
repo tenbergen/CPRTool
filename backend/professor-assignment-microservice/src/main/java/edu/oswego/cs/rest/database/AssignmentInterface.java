@@ -26,6 +26,7 @@ import static com.mongodb.client.model.Updates.set;
 
 public class AssignmentInterface {
     private final MongoCollection<Document> assignmentsCollection;
+    private final MongoCollection<Document> courseCollection;
     private static String reg;
 
     // Set this to true if running on Windows.
@@ -36,6 +37,8 @@ public class AssignmentInterface {
             DatabaseManager manager = new DatabaseManager();
             MongoDatabase assignmentDatabase = manager.getAssignmentDB();
             assignmentsCollection = assignmentDatabase.getCollection("assignments");
+            MongoDatabase courseDatabase = manager.getCourseDB();
+            courseCollection = courseDatabase.getCollection("course");
         } catch (WebApplicationException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
         }
@@ -135,6 +138,9 @@ public class AssignmentInterface {
                                             set("peer_review_rubric", ""));
     }
     public Document createAssignment(AssignmentDAO assignmentDAO) throws IOException {
+        Document courseDocument = courseCollection.find(eq("course_id", assignmentDAO.courseID)).first();
+        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+
         String FileStructure = getRelPath() + "assignments" + reg + assignmentDAO.courseID;
 
         File dir = new File(FileStructure);
