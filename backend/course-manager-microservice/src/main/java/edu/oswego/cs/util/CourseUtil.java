@@ -26,9 +26,12 @@ public class CourseUtil {
         
         if (mode.equals("UPDATE")) Collections.replaceAll(professorDocumentCourses, originalCourseID, newCourseID);
         else if (mode.equals("DELETE")) professorDocumentCourses.remove(originalCourseID);
+
+        collection.updateOne(professorDocumentFilter, Updates.set("courses", professorDocumentCourses));
         
-        if (professorDocument.size() > 0) collection.updateOne(professorDocumentFilter, Updates.set("courses", professorDocumentCourses));
-        else collection.deleteOne(professorDocumentFilter);
+        /* production conditions */
+        // if (professorDocument.size() > 0) collection.updateOne(professorDocumentFilter, Updates.set("courses", professorDocumentCourses));
+        // else collection.deleteOne(professorDocumentFilter);
     }
 
     public void updateCoursesArrayInStudenDb(MongoCollection<Document> collection , String originalCourseID, String newCourseID, String mode ) {
