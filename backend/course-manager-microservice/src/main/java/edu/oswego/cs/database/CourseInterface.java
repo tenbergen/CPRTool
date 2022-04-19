@@ -1,14 +1,17 @@
 package edu.oswego.cs.database;
 
-import com.mongodb.Cursor;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+
 import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.daos.FileDAO;
 import edu.oswego.cs.daos.StudentDAO;
 import edu.oswego.cs.util.CourseUtil;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
@@ -16,6 +19,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,7 +62,7 @@ public class CourseInterface {
      * Update the course DAO's courseID, then add the course if it is not already existed in the database. At the same
      * time, update the students' course list in the student database if a student list in the request is specified.
      */
-    public void addCourse(CourseDAO dao) {
+    public void addCourse(SecurityContext securityContext, CourseDAO dao) {
         Jsonb jsonb = JsonbBuilder.create();
         Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(dao), MediaType.APPLICATION_JSON_TYPE);
         Document course = Document.parse(courseDAOEntity.getEntity());
@@ -73,6 +78,13 @@ public class CourseInterface {
             Document studentDocument = studentCollection.find(eq("student_id", student)).first();
             if (studentDocument != null) studentCollection.updateOne(eq("student_id", student), push("courses", dao.courseID));
         }
+
+        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
+        Bson professorDocumentFilter = Filters.eq("professor_id", professorID);
+        Document professorDocument = professorCollection.find(professorDocumentFilter).first();
+        List<String> professorDocumentCourses = professorDocument.getList("courses", String.class);
+        professorDocumentCourses.add(dao.courseID);
+        professorCollection.updateOne(professorDocumentFilter, Updates.set("courses", professorDocumentCourses));
     }
 
     /**

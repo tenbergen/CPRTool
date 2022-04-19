@@ -9,8 +9,10 @@ import edu.oswego.cs.database.CourseInterface;
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 @Path("professor")
 @DenyAll
@@ -21,8 +23,8 @@ public class CourseManagerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/create")
     @RolesAllowed("professor")
-    public Response createCourse(CourseDAO course) {
-        new CourseInterface().addCourse(course);
+    public Response createCourse(@Context SecurityContext securityContext, CourseDAO course) {
+        new CourseInterface().addCourse(securityContext, course);
         return Response.status(Response.Status.OK).entity("Course successfully added.").build();
     }
 
