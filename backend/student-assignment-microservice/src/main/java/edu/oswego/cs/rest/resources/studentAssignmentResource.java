@@ -75,7 +75,7 @@ public class studentAssignmentResource {
             String fileExt = fileName.substring(fileName.indexOf("."));
             if (!fileName.endsWith("pdf") && !fileName.endsWith("docx"))
                 return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
-            new AssignmentInterface().writeToAssignment(FileDAO.fileFactory(teamName.concat(fileExt), courseID, attachment, assignmentID));
+            new AssignmentInterface().writeToAssignment(FileDAO.fileFactory(teamName.concat(fileExt), courseID, attachment, assignmentID, teamName));
         }
         return Response.status(Response.Status.OK).entity("Successfully uploaded assignment.").build();
     }
