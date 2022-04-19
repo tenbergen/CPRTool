@@ -6,7 +6,7 @@ export const getCurrentCourseTeamAsync = createAsyncThunk(
     'team/getCurrentCourseTeamAsync',
     async (values, thunkAPI) => {
         thunkAPI.dispatch(refreshTokenAsync())
-        const { courseId, lakerId } = values
+        const {courseId, lakerId} = values
         const teamId = await axios.get(`${process.env.REACT_APP_URL}/teams/team/get/${courseId}/${lakerId}`)
             .then(res => {
                 console.log(res.data.team_id)
@@ -16,7 +16,7 @@ export const getCurrentCourseTeamAsync = createAsyncThunk(
                 console.log(e)
                 return null
             })
-        return { teamId }
+        return {teamId}
     }
 )
 
@@ -26,9 +26,7 @@ const teamSlice = createSlice({
         currentTeamId: null,
         teamLoaded: false
     },
-    reducers: {
-
-    },
+    reducers: {},
     extraReducers: {
         [getCurrentCourseTeamAsync.pending]: (state) => {
             state.teamLoaded = false

@@ -1,69 +1,69 @@
 #box {
-  position: absolute;
-  width: 25%;
-  height: 60%;
-  top: 50%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  background: #ffffff;
-  border-radius: 50px;
+    position: absolute;
+    width: 25%;
+    height: 60%;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    border-radius: 50px;
 }
 
 #bigBox {
-  position: absolute;
-  display: block;
-  flex-direction: row;
-  overflow: auto;
-  width: 100%;
-  height: 100%;
-  background-image: conic-gradient(
-    from 180deg at 50% 50%,
-    #7398ff -128.84deg,
-    #57e1b2 25.81deg,
-    #7398ff 231.16deg,
-    #57e1b2 385.81deg
-  );
+    position: absolute;
+    display: block;
+    flex-direction: row;
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+    background-image: conic-gradient(
+            from 180deg at 50% 50%,
+            #7398ff -128.84deg,
+            #57e1b2 25.81deg,
+            #7398ff 231.16deg,
+            #57e1b2 385.81deg
+    );
 }
 
 .google {
-  max-width: 20px;
-  max-height: 20px;
-  vertical-align: middle;
-  background: #ffffff;
+    max-width: 20px;
+    max-height: 20px;
+    vertical-align: middle;
+    background: #ffffff;
 }
 
 .googleButton {
-  white-space: nowrap;
-  text-align: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  background: #ffffff;
-  border: 2px solid #949494;
-  box-sizing: border-box;
-  border-radius: 50px;
-  font-style: normal;
-  font-weight: normal;
+    white-space: nowrap;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    border: 2px solid #949494;
+    box-sizing: border-box;
+    border-radius: 50px;
+    font-style: normal;
+    font-weight: normal;
 }
 
 .welcome {
-  position: absolute;
-  top: 25%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  font-weight: bold;
-  font-size: 40px;
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    font-size: 40px;
 }
 
 .started {
-  position: absolute;
-  bottom: 38%;
-  left: 50%;
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  font-size: 11px;
+    position: absolute;
+    bottom: 38%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    font-size: 11px;
 }

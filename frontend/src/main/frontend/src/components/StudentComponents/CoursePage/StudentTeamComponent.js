@@ -5,15 +5,14 @@ import {useParams} from "react-router-dom";
 import axios from "axios";
 
 const TeamComponent = () => {
-    const { courseId } = useParams()
+    const {courseId} = useParams()
     const getTeamsUrl = `${process.env.REACT_APP_URL}/teams/team/get/unlocked-team/all/` + courseId
     const [teams, setTeams] = useState(Array())
-    const { lakerId } = useSelector((state) => state.auth)
+    const {lakerId} = useSelector((state) => state.auth)
 
     useEffect(async () => {
         await axios.get(getTeamsUrl).then(r => {
-            for(let i = 0; i < r.data.length; i++)
-            {
+            for (let i = 0; i < r.data.length; i++) {
                 setTeams(arr => [...arr, r.data[i]])
             }
             console.log(r)
@@ -24,7 +23,7 @@ const TeamComponent = () => {
     const joinTeam = async (teamId) => {
         const joinUrl = `${process.env.REACT_APP_URL}/teams/team/join`
         console.log(teamId)
-        const data = JSON.parse(JSON.stringify({"team_id":teamId,"course_id":courseId,"student_id":lakerId}))
+        const data = JSON.parse(JSON.stringify({"team_id": teamId, "course_id": courseId, "student_id": lakerId}))
         await axios.put(joinUrl, data)
     }
 
@@ -32,7 +31,7 @@ const TeamComponent = () => {
         const createUrl = `${process.env.REACT_APP_URL}/teams/team/create`
         console.log(lakerId)
         console.log("Need to create teamS")
-        const createData = JSON.parse(JSON.stringify({"course_id":courseId,"student_id":lakerId}))
+        const createData = JSON.parse(JSON.stringify({"course_id": courseId, "student_id": lakerId}))
         await axios.post(createUrl, createData)
     }
 
@@ -41,11 +40,11 @@ const TeamComponent = () => {
             <h2 id="teamTitle"> Join a team </h2>
             <div id="teamList">
                 {teams.map(team =>
-                        <li id="teamListItem" onClick={() => joinTeam(team.team_id)}>Team {team.team_id}</li>
+                    <li id="teamListItem" onClick={() => joinTeam(team.team_id)}>Team {team.team_id}</li>
                 )}
             </div>
             <div id="createTeamButton">
-                <button onClick={createTeam}> Create Team </button>
+                <button onClick={createTeam}> Create Team</button>
             </div>
         </h3>
 

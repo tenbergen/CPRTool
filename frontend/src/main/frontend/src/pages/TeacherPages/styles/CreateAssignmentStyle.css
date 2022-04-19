@@ -1,144 +1,144 @@
 .cap-parent {
-  display: flex;
-  flex-direction: row;
-  overflow: hidden;
-  background: conic-gradient(
-    from 180deg at 50% 50%,
-    #7398ff -128.84deg,
-    #57e1b2 25.81deg,
-    #7398ff 231.16deg,
-    #57e1b2 385.81deg
-  );
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    background: conic-gradient(
+            from 180deg at 50% 50%,
+            #7398ff -128.84deg,
+            #57e1b2 25.81deg,
+            #7398ff 231.16deg,
+            #57e1b2 385.81deg
+    );
 }
 
 .cap-container {
-  padding: 0 2% 2% 2%;
-  flex-grow: 1;
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 50px;
-  margin: 1% 1%;
-  height: 90vh;
+    padding: 0 2% 2% 2%;
+    flex-grow: 1;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50px;
+    margin: 1% 1%;
+    height: 90vh;
 }
 
 .cap-form {
-  background-color: white;
-  border-radius: 50px;
-  padding: 2%;
-  zoom: 0.75;
-  height: 100vh;
+    background-color: white;
+    border-radius: 50px;
+    padding: 2%;
+    zoom: 0.75;
+    height: 100vh;
 }
 
 .cap-input-field {
-  width: 100%;
-  margin-bottom: 5%;
-  display: flex;
+    width: 100%;
+    margin-bottom: 5%;
+    display: flex;
 }
 
 .cap-input-field label {
-  margin-right: 2%;
+    margin-right: 2%;
 }
 
 .cap-input-field input {
-  flex-grow: 1;
-  padding: 5px 5px 5px 5px;
-  border: 2px solid #949494;
-  box-sizing: border-box;
-  border-radius: 50px;
+    flex-grow: 1;
+    padding: 5px 5px 5px 5px;
+    border: 2px solid #949494;
+    box-sizing: border-box;
+    border-radius: 50px;
 }
 
 .cap-instructions {
-  width: 100%;
-  margin-bottom: 5%;
-  display: flex;
+    width: 100%;
+    margin-bottom: 5%;
+    display: flex;
 }
 
 .cap-instructions label {
-  margin-right: 2%;
+    margin-right: 2%;
 }
 
 .cap-instructions input {
-  flex-grow: 1;
-  height: 80px;
-  padding: 5px 5px 5px 5px;
-  border: 2px solid #949494;
-  box-sizing: border-box;
-  border-radius: 50px;
+    flex-grow: 1;
+    height: 80px;
+    padding: 5px 5px 5px 5px;
+    border: 2px solid #949494;
+    box-sizing: border-box;
+    border-radius: 50px;
 }
 
 .cap-assignment-files {
-  display: flex;
-  flex-grow: 1;
-  margin-bottom: 3%;
+    display: flex;
+    flex-grow: 1;
+    margin-bottom: 3%;
 }
 
 .cap-assignment-files label {
-  margin-bottom: 1%;
+    margin-bottom: 1%;
 }
 
 .cap-assignment-files input {
-  flex-grow: 1;
+    flex-grow: 1;
 }
 
 .cap-assignment-files input[type='file']::file-selector-button {
-  background: #91d8df;
-  color: #393939;
-  margin-left: 10px;
-  border-radius: 50px;
-  padding: 10px 45px 10px 45px;
-  border: none;
-  font-size: medium;
-  font-weight: bold;
+    background: #91d8df;
+    color: #393939;
+    margin-left: 10px;
+    border-radius: 50px;
+    padding: 10px 45px 10px 45px;
+    border: none;
+    font-size: medium;
+    font-weight: bold;
 }
 
 .cap-assignment-info {
-  display: flex;
-  margin-bottom: 1%;
+    display: flex;
+    margin-bottom: 1%;
 }
 
 .cap-assignment-info label {
-  margin-bottom: 1%;
-  margin-right: 1%;
-  margin-left: 1%;
+    margin-bottom: 1%;
+    margin-right: 1%;
+    margin-left: 1%;
 }
 
 .cap-assignment-info input[type='date'] {
-  padding: 5px 5px 5px 5px;
-  flex-grow: 0.75;
-  border: 2px solid #949494;
-  box-sizing: border-box;
-  border-radius: 50px;
+    padding: 5px 5px 5px 5px;
+    flex-grow: 0.75;
+    border: 2px solid #949494;
+    box-sizing: border-box;
+    border-radius: 50px;
 }
 
 .cap-assignment-info input[type='number'] {
-  padding: 5px 5px 5px 5px;
-  flex-grow: 0.75;
-  border: 2px solid #949494;
-  box-sizing: border-box;
-  border-radius: 50px;
+    padding: 5px 5px 5px 5px;
+    flex-grow: 0.75;
+    border: 2px solid #949494;
+    box-sizing: border-box;
+    border-radius: 50px;
 }
 
 .cap-button {
-  display: flex;
-  justify-content: center;
-  margin-top: 3%;
+    display: flex;
+    justify-content: center;
+    margin-top: 3%;
 }
 
 .cap-button button {
-  background: #9cf0d3;
-  color: #393939;
-  border-radius: 50px;
-  padding: 10px 45px 10px 45px;
-  border: none;
-  font-size: medium;
-  font-weight: bold;
+    background: #9cf0d3;
+    color: #393939;
+    border-radius: 50px;
+    padding: 10px 45px 10px 45px;
+    border: none;
+    font-size: medium;
+    font-weight: bold;
 }
 
 .cap-altbutton {
-  display: flex;
-  justify-content: center;
-  margin-top: 1%;
+    display: flex;
+    justify-content: center;
+    margin-top: 1%;
 }
 
 .cap-altbutton a {
-  color: #5267a3;
+    color: #5267a3;
 }

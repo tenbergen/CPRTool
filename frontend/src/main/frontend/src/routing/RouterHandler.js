@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import {Route, Routes} from 'react-router-dom';
 import App from '../App';
 import CreateCoursePage from '../pages/TeacherPages/CreateCoursePage';
 import ProfessorCoursePage from '../pages/TeacherPages/ProfessorCoursePage';
@@ -13,60 +13,60 @@ import ProfessorAssignmentPage from '../pages/TeacherPages/ProfessorAssignmentPa
 // import SubmittedAssignmentPage from '../pages/StudentPages/SubmittedAssignmentPage';
 
 const RouterHandler = () => {
-  return (
-    <Routes>
-      <Route>
-        {/*public routes*/}
-        <Route path='unauthenticated' element={<UnauthedErrorPage />} />
-        <Route path='*' element={<p> Page doesn't exist </p>} />
+    return (
+        <Routes>
+            <Route>
+                {/*public routes*/}
+                <Route path='unauthenticated' element={<UnauthedErrorPage/>}/>
+                <Route path='*' element={<p> Page doesn't exist </p>}/>
 
-        <Route element={<AuthRouteHandler />}>
-          <Route path='/' element={<App />} />
+                <Route element={<AuthRouteHandler/>}>
+                    <Route path='/' element={<App/>}/>
 
-          {/*professor-only routes*/}
-          <Route element={<RoleRouteHandler allowedRoles={['professor']} />}>
-            <Route path='create/course' element={<CreateCoursePage />} />
-            <Route
-              path='details/professor/:courseId'
-              element={<ProfessorCoursePage />}
-            />
-            <Route
-              path='details/professor/:courseId/create/assignment'
-              element={<CreateAssignmentPage />}
-            />
-            <Route
-              path='details/professor/:courseId/:assignmentId/grade'
-              element={<ProfessorAssignmentPage />}
-            />
-          </Route>
+                    {/*professor-only routes*/}
+                    <Route element={<RoleRouteHandler allowedRoles={['professor']}/>}>
+                        <Route path='create/course' element={<CreateCoursePage/>}/>
+                        <Route
+                            path='details/professor/:courseId'
+                            element={<ProfessorCoursePage/>}
+                        />
+                        <Route
+                            path='details/professor/:courseId/create/assignment'
+                            element={<CreateAssignmentPage/>}
+                        />
+                        <Route
+                            path='details/professor/:courseId/:assignmentId/grade'
+                            element={<ProfessorAssignmentPage/>}
+                        />
+                    </Route>
 
-          {/*student routes*/}
-          <Route
-            element={
-              <RoleRouteHandler allowedRoles={['student', 'professor']} />
-            }
-          >
-            <Route
-              path='details/student/:courseId'
-              element={<StudentCoursePage />}
-            />
-            <Route
-              path='details/student/:courseId/:assignmentId/:assignmentType'
-              element={<AssignmentPage />}
-            />
-            <Route
-              path='details/student/:courseId/:assignmentId/:assignmentType/:teamName'
-              element={<AssignmentPage />}
-            />
-            {/* <Route
+                    {/*student routes*/}
+                    <Route
+                        element={
+                            <RoleRouteHandler allowedRoles={['student', 'professor']}/>
+                        }
+                    >
+                        <Route
+                            path='details/student/:courseId'
+                            element={<StudentCoursePage/>}
+                        />
+                        <Route
+                            path='details/student/:courseId/:assignmentId/:assignmentType'
+                            element={<AssignmentPage/>}
+                        />
+                        <Route
+                            path='details/student/:courseId/:assignmentId/:assignmentType/:teamName'
+                            element={<AssignmentPage/>}
+                        />
+                        {/* <Route
               path='details/student/:courseId/:assignmentId/submitted'
               element={<SubmittedAssignmentPage />}
             /> */}
-          </Route>
-        </Route>
-      </Route>
-    </Routes>
-  );
+                    </Route>
+                </Route>
+            </Route>
+        </Routes>
+    );
 };
 
 export default RouterHandler;

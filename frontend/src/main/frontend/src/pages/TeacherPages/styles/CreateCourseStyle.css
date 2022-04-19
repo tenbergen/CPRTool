@@ -1,88 +1,89 @@
 .cpp-parent {
-  display: flex;
-  flex-direction: row;
-  overflow: auto;
-  background: conic-gradient(
-    from 180deg at 50% 50%,
-    #7398ff -128.84deg,
-    #57e1b2 25.81deg,
-    #7398ff 231.16deg,
-    #57e1b2 385.81deg
-  );
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
+    background: conic-gradient(
+            from 180deg at 50% 50%,
+            #7398ff -128.84deg,
+            #57e1b2 25.81deg,
+            #7398ff 231.16deg,
+            #57e1b2 385.81deg
+    );
 }
 
 .cpp-container {
-  padding: 2% 4% 0 4%;
-  flex-grow: 1;
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 50px;
-  margin: 3% 5%;
+    padding: 2% 4% 0 4%;
+    flex-grow: 1;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50px;
+    margin: 3% 5%;
 }
+
 .cpp-title {
-  color: #2f4858;
-  font-size: 1.9em;
-  font-family: 'Merriweather', sans-serif;
-  text-align: center;
+    color: #2f4858;
+    font-size: 1.9em;
+    font-family: 'Merriweather', sans-serif;
+    text-align: center;
 }
 
 .ccp-form {
-  background-color: white;
-  border-radius: 50px;
-  margin-top: 1%;
-  padding: 5%;
+    background-color: white;
+    border-radius: 50px;
+    margin-top: 1%;
+    padding: 5%;
 }
 
 .ccp-input-field {
-  width: 100%;
-  margin-bottom: 5%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    width: 100%;
+    margin-bottom: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .ccp-input-field label {
-  margin-right: 2%;
+    margin-right: 2%;
 }
 
 .ccp-input-field input {
-  flex-grow: 1;
-  padding: 5px 5px 5px 5px;
-  border: 2px solid #949494;
-  box-sizing: border-box;
-  border-radius: 8px;
+    flex-grow: 1;
+    padding: 5px 5px 5px 5px;
+    border: 2px solid #949494;
+    box-sizing: border-box;
+    border-radius: 8px;
 }
 
 .cpp-row-multiple {
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
 }
 
 .ccp-button {
-  display: flex;
-  justify-content: center;
-  margin-top: 5%;
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
 }
 
 .ccp-button button {
-  color: #324b4d;
-  cursor: pointer;
-  justify-self: center;
-  padding: 10px 45px 10px 45px;
-  border: none;
-  font-size: 1.1em;
-  font-weight: bold;
-  border-radius: 8px;
-  border: 1px solid #79bedc;
-  font-family: 'Merriweather', sans-serif;
-  background-color: #91d8df;
-  transition: all 0.2s ease-out;
+    color: #324b4d;
+    cursor: pointer;
+    justify-self: center;
+    padding: 10px 45px 10px 45px;
+    border: none;
+    font-size: 1.1em;
+    font-weight: bold;
+    border-radius: 8px;
+    border: 1px solid #79bedc;
+    font-family: 'Merriweather', sans-serif;
+    background-color: #91d8df;
+    transition: all 0.2s ease-out;
 }
 
 .ccp-button button:hover {
-  background-color: #79bedc;
-  color: #000;
-  opacity: 0.8;
-  font-size: 1.135em;
-  border: 1px solid #79bedc;
+    background-color: #79bedc;
+    color: #000;
+    opacity: 0.8;
+    font-size: 1.135em;
+    border: 1px solid #79bedc;
 }

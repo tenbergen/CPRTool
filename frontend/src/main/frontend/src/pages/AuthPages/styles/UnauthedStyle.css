@@ -1,59 +1,59 @@
 #unauth {
-  display: flex;
-  justify-content: center;
-  height: 100vh;
+    display: flex;
+    justify-content: center;
+    height: 100vh;
 }
 
 .unauthContent {
-  background-color: rgba(255, 255, 255, 0.5);
-  margin: auto;
-  width: 40%;
-  height: 18%;
-  padding: 5px;
-  border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin: auto;
+    width: 40%;
+    height: 18%;
+    padding: 5px;
+    border-radius: 20px;
 }
 
 .unauth-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  height: 100%;
-  margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+    margin-left: 20px;
 }
 
 .auth-oswego {
-  font-weight: 700;
-  font-style: italic;
+    font-weight: 700;
+    font-style: italic;
 }
 
 .unauth-stm {
-  font-weight: bold;
-  font-size: 1.3em;
+    font-weight: bold;
+    font-size: 1.3em;
 }
 
 .unauth-instruction {
-  font-weight: 500;
-  font-size: 1.1em;
+    font-weight: 500;
+    font-size: 1.1em;
 }
 
 #emoji {
-  font-size: 25px;
+    font-size: 25px;
 }
 
 .go-back-wrapper {
-  margin-top: 10px;
+    margin-top: 10px;
 }
 
 .go-back-link {
-  padding: 3px 10px;
-  border-radius: 8px;
-  border: 1px solid #a8bbbf;
-  background-color: #fff;
-  font-weight: 400;
+    padding: 3px 10px;
+    border-radius: 8px;
+    border: 1px solid #a8bbbf;
+    background-color: #fff;
+    font-weight: 400;
 }
 
 .go-back-link:hover {
-  cursor: pointer;
-  color: #000;
-  opacity: 0.8;
+    cursor: pointer;
+    color: #000;
+    opacity: 0.8;
 }

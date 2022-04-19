@@ -1,25 +1,25 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
 import "../../styles/Roster.css"
-import { useDispatch, useSelector } from "react-redux";
-import { getCourseDetailsAsync } from "../../../redux/features/courseSlice";
-import { useParams } from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {getCourseDetailsAsync} from "../../../redux/features/courseSlice";
+import {useParams} from "react-router-dom";
 
 
 const ProfessorRosterComponent = () => {
     const dispatch = useDispatch()
-    const { courseId } = useParams()
+    const {courseId} = useParams()
     const url = `${process.env.REACT_APP_URL}/manage/professor/courses`
-    const { currentCourse } = useSelector((state) => state.courses)
+    const {currentCourse} = useSelector((state) => state.courses)
     const [studentList, setStudents] = useState(Array())
 
     useEffect(() => {
         axios.get('http://moxie.cs.oswego.edu:13125/view/professor/courses/'
             + currentCourse.course_id + '/students').then(r => {
-                for(let i = 0; i < r.data.length; i++) {
-                    setStudents(arr => [...arr, r.data[i]])
-                }
-            })
+            for (let i = 0; i < r.data.length; i++) {
+                setStudents(arr => [...arr, r.data[i]])
+            }
+        })
     }, [])
 
     const [formData, setFormData] = useState({
@@ -27,20 +27,18 @@ const ProfessorRosterComponent = () => {
         Email: ''
     });
 
-    const { Name, Email } = formData
-    const OnChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+    const {Name, Email} = formData
+    const OnChange = (e) => setFormData({...formData, [e.target.name]: e.target.value});
 
     const handleSubmit = async (e) => {
         const nameArray = Name.split(" ")
         const first = nameArray[0]
         const last = nameArray[1]
-        if(Name === '' || Email === '') {
+        if (Name === '' || Email === '') {
             alert("Please enter both name and email for the student!")
-        }
-        else if(nameArray.length !== 2) {
+        } else if (nameArray.length !== 2) {
             alert("Please enter first and last name!")
-        }
-        else {
+        } else {
             e.preventDefault()
             const firstLastEmail = first + '-' + last + '-' + Email
             const addStudentUrl = `${url}/${courseId}/students/${firstLastEmail}/add`
@@ -107,12 +105,13 @@ const ProfessorRosterComponent = () => {
                                 d.first_name + " " + d.last_name : ""}</th>
                             <th className="rosterComp">{d.student_id}</th>
                             <th className="rosterComp">{d.Team}</th>
-                            <th className="rosterComp"> <span onClick={() => deleteStudent(d)} className="crossMark">&#10060;</span></th>
+                            <th className="rosterComp"><span onClick={() => deleteStudent(d)}
+                                                             className="crossMark">&#10060;</span></th>
                         </tr>
                     )}
                 </table>
             </div>
-            {show ? addsStudent(): <button className="button_plus" onClick={setTrue}>
+            {show ? addsStudent() : <button className="button_plus" onClick={setTrue}>
                 <img className="button_plus" src={require("../../styles/plus-purple.png")} alt="plus_button"/></button>}
         </div>
     )
