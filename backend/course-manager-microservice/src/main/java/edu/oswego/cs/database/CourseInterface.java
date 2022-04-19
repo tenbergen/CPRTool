@@ -1,10 +1,13 @@
 package edu.oswego.cs.database;
 
+import com.mongodb.Cursor;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.daos.FileDAO;
 import edu.oswego.cs.daos.StudentDAO;
+import edu.oswego.cs.util.CourseUtil;
+
 import org.bson.Document;
 
 import javax.json.bind.Jsonb;
@@ -78,15 +81,25 @@ public class CourseInterface {
      */
     public String updateCourse(CourseDAO dao) {
         Document courseDocument = courseCollection.find(eq("course_id", dao.getCourseID())).first();
-        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
+        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This course does not exist.").build());
 
-        String courseID = dao.courseID;
-        dao.courseID = dao.abbreviation + "-" + dao.courseSection + "-" + dao.crn + "-" + dao.semester + "-" + dao.year;
+        String originalCourseID = dao.courseID;
+        String newCourseID = dao.abbreviation + "-" + dao.courseSection + "-" + dao.crn + "-" + dao.semester + "-" + dao.year;
+        dao.courseID = newCourseID;
+        List<String> students = courseDocument.getList("students", String.class);
+        dao.students = students;
 
         Jsonb jsonb = JsonbBuilder.create();
         Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(dao), MediaType.APPLICATION_JSON_TYPE);
         Document course = Document.parse(courseDAOEntity.getEntity());
-        courseCollection.replaceOne(eq("course_id", courseID), course);
+        courseCollection.replaceOne(eq("course_id", originalCourseID), course);
+
+        new CourseUtil().updateCoursesArrayInDbs(studentCollection, originalCourseID, newCourseID);
+        // new CourseUtil().updateCoursesArrayInDbs(professorCollection, originalCourseID, newCourseID);
+        new CourseUtil().updateCoursesKeyInDBs(assignmentCollection, originalCourseID, newCourseID);
+        new CourseUtil().updateCoursesKeyInDBs(submissionsCollection, originalCourseID, newCourseID);
+        new CourseUtil().updateCoursesKeyInDBs(teamCollection, originalCourseID, newCourseID);
+
         return dao.courseID;
     }
 
@@ -193,5 +206,10 @@ public class CourseInterface {
                 .collect(Collectors.toList())) {
             addStudent(student, courseID);
         }
+    }
+
+    /* Delete this later */
+    public void collectionWipeOff() {
+        new CourseUtil().collectionWipeOff(studentCollection);
     }
 }
