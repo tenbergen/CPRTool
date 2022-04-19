@@ -101,16 +101,16 @@ public class CourseInterface {
         List<String> students = courseDocument.getList("students", String.class);
         dao.students = students;
 
+        new CourseUtil().updateCoursesArrayInProfessorDb(securityContext, professorCollection, originalCourseID, newCourseID);
+        new CourseUtil().updateCoursesArrayInStudenDb(studentCollection, originalCourseID, newCourseID);
+        new CourseUtil().updateCoursesKeyInDBs(assignmentCollection, originalCourseID, newCourseID);
+        new CourseUtil().updateCoursesKeyInDBs(submissionsCollection, originalCourseID, newCourseID);
+        new CourseUtil().updateCoursesKeyInDBs(teamCollection, originalCourseID, newCourseID);
+
         Jsonb jsonb = JsonbBuilder.create();
         Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(dao), MediaType.APPLICATION_JSON_TYPE);
         Document course = Document.parse(courseDAOEntity.getEntity());
         courseCollection.replaceOne(eq("course_id", originalCourseID), course);
-
-        new CourseUtil().updateCoursesArrayInStudenDb(studentCollection, originalCourseID, newCourseID);
-        new CourseUtil().updateCoursesArrayInProfessorDb(securityContext, professorCollection, originalCourseID, newCourseID);
-        new CourseUtil().updateCoursesKeyInDBs(assignmentCollection, originalCourseID, newCourseID);
-        new CourseUtil().updateCoursesKeyInDBs(submissionsCollection, originalCourseID, newCourseID);
-        new CourseUtil().updateCoursesKeyInDBs(teamCollection, originalCourseID, newCourseID);
 
         return dao.courseID;
     }
