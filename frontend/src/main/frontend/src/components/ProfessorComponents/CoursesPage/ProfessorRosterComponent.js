@@ -12,12 +12,21 @@ const ProfessorRosterComponent = () => {
     const url = `${process.env.REACT_APP_URL}/manage/professor/courses`
     const {currentCourse} = useSelector((state) => state.courses)
     const [studentList, setStudents] = useState(Array())
+    const [teamsMap, setMap] = useState(new Map())
 
     useEffect(() => {
         axios.get('http://moxie.cs.oswego.edu:13125/view/professor/courses/'
             + currentCourse.course_id + '/students').then(r => {
             for (let i = 0; i < r.data.length; i++) {
                 setStudents(arr => [...arr, r.data[i]])
+            }
+        })
+        axios.get('http://moxie.cs.oswego.edu:13125/teams/professor/team/get/all/' +
+            currentCourse.course_id).then((r) => {
+            for (let i = 0; i < r.data.length; i++) {
+                for (let j = 0; j < r.data[i].team_members.length; j++) {
+                    setMap( teamsMap.set(r.data[i].team_members[j], r.data[i].team_id))
+                }
             }
         })
     }, [])
@@ -104,7 +113,8 @@ const ProfessorRosterComponent = () => {
                             <th className="rosterComp">{d.first_name ?
                                 d.first_name + " " + d.last_name : ""}</th>
                             <th className="rosterComp">{d.student_id}</th>
-                            <th className="rosterComp">{d.Team}</th>
+                            <th className="rosterComp">{teamsMap.has(d.student_id) ?
+                                teamsMap.get(d.student_id): ""}</th>
                             <th className="rosterComp"><span onClick={() => deleteStudent(d)}
                                                              className="crossMark">&#10060;</span></th>
                         </tr>

@@ -21,7 +21,6 @@ const ProfessorTeamComponent = () => {
             for (let i = 0; i < r.data.length; i++) {
                 setTeams((arr) => [...arr, r.data[i]]);
             }
-            console.log(r);
         });
     }, []);
 
@@ -122,7 +121,8 @@ const ProfessorTeamComponent = () => {
             <div className='accordionItem'>
                 <div className='accordionTitle' onClick={handleSetActive}>
                     <div>
-                        {team.team_id}
+                        {isActive.includes(team) ? '-' : '+'}
+                        <text className="accordionTeamTitle">{team.team_id}</text>
                         <span
                             onClick={() => handleDeleteTeam(team.team_id)}
                             className='crossMarkTeam'
@@ -130,9 +130,9 @@ const ProfessorTeamComponent = () => {
               &#10060;
             </span>
                     </div>
-                    <div className='plusMinusTeam'>
-                        {isActive.includes(team) ? '-' : '+'}
-                    </div>
+                    {/*<div className='plusMinusTeam'>*/}
+                    {/*    {isActive.includes(team) ? '-' : '+'}*/}
+                    {/*</div>*/}
                 </div>
                 {isActive.includes(team) && (
                     <div className='accordionContent'>
