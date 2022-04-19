@@ -58,10 +58,6 @@ public class CourseInterface {
         }
     }
 
-    /**
-     * Update the course DAO's courseID, then add the course if it is not already existed in the database. At the same
-     * time, update the students' course list in the student database if a student list in the request is specified.
-     */
     public void addCourse(SecurityContext securityContext, CourseDAO dao) {
         Document courseDocument = courseCollection.find(eq("course_id", dao.courseID)).first();
         if (courseDocument != null) throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Course already existed.").build());
@@ -87,10 +83,6 @@ public class CourseInterface {
         }
     }
 
-    /**
-     * Find the course document from Mongo using the current course ID, then update the course document using the new information
-     * passed from Frontend.
-     */
     public String updateCourse(SecurityContext securityContext, CourseDAO dao) {
         Document courseDocument = courseCollection.find(eq("course_id", dao.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This course does not exist.").build());
@@ -115,28 +107,27 @@ public class CourseInterface {
         return dao.courseID;
     }
 
-    /**
-     * Add the student into the student array in the course using their name from the email and into the student
-     * database at the same time with the student's course array updated to have the new course respectively.
-     */
     public void addStudent(StudentDAO student, String courseID) {
         String studentId = student.email.split("@")[0];
         String studentLastName = student.fullName.split(", ")[0];
         String studentFirstName = student.fullName.split(", ")[1];
         Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
-        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
+        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This course does not exist.").build());
 
         List<String> students = courseDocument.getList("students", String.class);
-        if (students.contains(studentId)) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This student is already in the course.").build());
+        if (students.contains(studentId)) throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("This student is already in the course.").build());
         courseCollection.updateOne(eq("course_id", courseID), push("students", studentId));
 
         Document studentDocument = studentCollection.find(eq("student_id", studentId)).first();
         if (studentDocument != null) {
             List<String> courseList = studentDocument.getList("courses", String.class);
             for (String course : courseList) {
-                if (course.equals(courseID)) throw new WebApplicationException(Response.status(Response.Status.OK).entity("This student is already in the course.").build());
-                studentCollection.updateOne(eq("student_id", studentId), push("courses", courseID));
+                if (course.equals(courseID)) {
+                    Response response = Response.status(Response.Status.CONFLICT).entity("This student is already in the course.").build();
+                    throw new WebApplicationException(response);
+                }
             }
+            studentCollection.updateOne(eq("student_id", studentId), push("courses", courseID));
         } else {
             List<String> courseList = new ArrayList<>();
             courseList.add(courseID);
@@ -149,19 +140,14 @@ public class CourseInterface {
         }
     }
 
-    /**
-     * Remove the course from the student's list of courses, and then remove the course itself from the course database.
-     */
     public void removeCourse(SecurityContext securityContext, String courseID) {
         Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
-
         new CourseUtil().updateCoursesArrayInProfessorDb(securityContext, professorCollection, courseID, null, "DELETE");
         new CourseUtil().updateCoursesArrayInStudenDb(studentCollection, courseID, null, "DELETE");
         new CourseUtil().updateCoursesKeyInDBs(assignmentCollection, courseID, null, "DELETE");
         new CourseUtil().updateCoursesKeyInDBs(submissionCollection, courseID, null, "DELETE");
         new CourseUtil().updateCoursesKeyInDBs(teamCollection, courseID, null, "DELETE");
-        
         courseCollection.deleteOne(eq("course_id", courseID));
     }
 
@@ -213,7 +199,6 @@ public class CourseInterface {
         }
     }
 
-    /* Delete this later */
     public void collectionWipeOff() {
         new CourseUtil().collectionWipeOff(studentCollection);
     }
