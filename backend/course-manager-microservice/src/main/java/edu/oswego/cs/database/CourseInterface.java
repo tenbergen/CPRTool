@@ -63,14 +63,24 @@ public class CourseInterface {
      * time, update the students' course list in the student database if a student list in the request is specified.
      */
     public void addCourse(SecurityContext securityContext, CourseDAO dao) {
-        Jsonb jsonb = JsonbBuilder.create();
-        Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(dao), MediaType.APPLICATION_JSON_TYPE);
-        Document course = Document.parse(courseDAOEntity.getEntity());
+        Document courseDocument = courseCollection.find(eq("course_id", dao.courseID)).first();
+        if (courseDocument != null) throw new WebApplicationException(Response.status(Response.Status.OK).entity("Course already existed.").build());
+
+        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
+        Bson professorDocumentFilter = Filters.eq("professor_id", professorID);
+        Document professorDocument = professorCollection.find(professorDocumentFilter).first();
+        List<String> professorDocumentCourses = professorDocument.getList("courses", String.class);
+        if (professorDocumentCourses == null)
+            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Professor profile is not set up properly.").build());
+        professorDocumentCourses.add(dao.courseID);
+        professorCollection.updateOne(professorDocumentFilter, Updates.set("courses", professorDocumentCourses));
 
         String[] studentIDArr = dao.courseID.split("-");
         String studentID = studentIDArr[studentIDArr.length - 1].split("@")[0];
-        Document courseDocument = courseCollection.find(eq("course_id", dao.courseID)).first();
-        if (courseDocument != null) throw new WebApplicationException(Response.status(Response.Status.OK).entity("Course already existed.").build());
+        
+        Jsonb jsonb = JsonbBuilder.create();
+        Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(dao), MediaType.APPLICATION_JSON_TYPE);
+        Document course = Document.parse(courseDAOEntity.getEntity());
         courseCollection.insertOne(course);
 
         List<String> students = course.getList("students", String.class);
@@ -78,13 +88,6 @@ public class CourseInterface {
             Document studentDocument = studentCollection.find(eq("student_id", student)).first();
             if (studentDocument != null) studentCollection.updateOne(eq("student_id", student), push("courses", dao.courseID));
         }
-
-        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
-        Bson professorDocumentFilter = Filters.eq("professor_id", professorID);
-        Document professorDocument = professorCollection.find(professorDocumentFilter).first();
-        List<String> professorDocumentCourses = professorDocument.getList("courses", String.class);
-        professorDocumentCourses.add(dao.courseID);
-        professorCollection.updateOne(professorDocumentFilter, Updates.set("courses", professorDocumentCourses));
     }
 
     /**
