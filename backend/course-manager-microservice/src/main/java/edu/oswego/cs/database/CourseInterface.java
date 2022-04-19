@@ -36,7 +36,7 @@ public class CourseInterface {
     private final MongoCollection<Document> professorCollection;
     private final MongoCollection<Document> courseCollection;
     private final MongoCollection<Document> assignmentCollection;
-    private final MongoCollection<Document> submissionsCollection;
+    private final MongoCollection<Document> submissionCollection;
     private final MongoCollection<Document> teamCollection;
 
     public CourseInterface() {
@@ -51,7 +51,7 @@ public class CourseInterface {
             professorCollection = professorDB.getCollection("professors");
             courseCollection = courseDB.getCollection("courses");
             assignmentCollection = assignmentDB.getCollection("assignments");
-            submissionsCollection = assignmentDB.getCollection("submissions");
+            submissionCollection = assignmentDB.getCollection("submissions");
             teamCollection = teamDB.getCollection("teams");
         } catch (WebApplicationException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
@@ -64,7 +64,7 @@ public class CourseInterface {
      */
     public void addCourse(SecurityContext securityContext, CourseDAO dao) {
         Document courseDocument = courseCollection.find(eq("course_id", dao.courseID)).first();
-        if (courseDocument != null) throw new WebApplicationException(Response.status(Response.Status.OK).entity("Course already existed.").build());
+        if (courseDocument != null) throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Course already existed.").build());
 
         String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
         Bson professorDocumentFilter = Filters.eq("professor_id", professorID);
@@ -75,9 +75,6 @@ public class CourseInterface {
         professorDocumentCourses.add(dao.courseID);
         professorCollection.updateOne(professorDocumentFilter, Updates.set("courses", professorDocumentCourses));
 
-        String[] studentIDArr = dao.courseID.split("-");
-        String studentID = studentIDArr[studentIDArr.length - 1].split("@")[0];
-        
         Jsonb jsonb = JsonbBuilder.create();
         Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(dao), MediaType.APPLICATION_JSON_TYPE);
         Document course = Document.parse(courseDAOEntity.getEntity());
@@ -104,11 +101,11 @@ public class CourseInterface {
         List<String> students = courseDocument.getList("students", String.class);
         dao.students = students;
 
-        new CourseUtil().updateCoursesArrayInProfessorDb(securityContext, professorCollection, originalCourseID, newCourseID);
-        new CourseUtil().updateCoursesArrayInStudenDb(studentCollection, originalCourseID, newCourseID);
-        new CourseUtil().updateCoursesKeyInDBs(assignmentCollection, originalCourseID, newCourseID);
-        new CourseUtil().updateCoursesKeyInDBs(submissionsCollection, originalCourseID, newCourseID);
-        new CourseUtil().updateCoursesKeyInDBs(teamCollection, originalCourseID, newCourseID);
+        new CourseUtil().updateCoursesArrayInProfessorDb(securityContext, professorCollection, originalCourseID, newCourseID, "UPDATE");
+        new CourseUtil().updateCoursesArrayInStudenDb(studentCollection, originalCourseID, newCourseID, "UPDATE");
+        new CourseUtil().updateCoursesKeyInDBs(assignmentCollection, originalCourseID, newCourseID, "UPDATE");
+        new CourseUtil().updateCoursesKeyInDBs(submissionCollection, originalCourseID, newCourseID, "UPDATE");
+        new CourseUtil().updateCoursesKeyInDBs(teamCollection, originalCourseID, newCourseID, "UPDATE");
 
         Jsonb jsonb = JsonbBuilder.create();
         Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(dao), MediaType.APPLICATION_JSON_TYPE);
@@ -155,20 +152,17 @@ public class CourseInterface {
     /**
      * Remove the course from the student's list of courses, and then remove the course itself from the course database.
      */
-    public void removeCourse(String courseID) {
+    public void removeCourse(SecurityContext securityContext, String courseID) {
         Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
 
-        List<String> students = courseDocument.getList("students", String.class);
-        for (String student : students) {
-            Document studentDocument = studentCollection.find(eq("student_id", student)).first();
-            if (studentDocument != null) {
-                List<String> courses = studentDocument.getList("courses", String.class);
-                courses.remove(courseID);
-                studentCollection.updateOne(eq("student_id", student), set("courses", courses));
-            }
-        }
-        courseCollection.findOneAndDelete(eq("course_id", courseID));
+        new CourseUtil().updateCoursesArrayInProfessorDb(securityContext, professorCollection, courseID, null, "DELETE");
+        new CourseUtil().updateCoursesArrayInStudenDb(studentCollection, courseID, null, "DELETE");
+        new CourseUtil().updateCoursesKeyInDBs(assignmentCollection, courseID, null, "DELETE");
+        new CourseUtil().updateCoursesKeyInDBs(submissionCollection, courseID, null, "DELETE");
+        new CourseUtil().updateCoursesKeyInDBs(teamCollection, courseID, null, "DELETE");
+        
+        courseCollection.deleteOne(eq("course_id", courseID));
     }
 
     /**
@@ -225,6 +219,6 @@ public class CourseInterface {
 
     /* Delete this later */
     public void collectionWipeOff() {
-        new CourseUtil().collectionWipeOff(courseCollection);
+        new CourseUtil().collectionWipeOff(studentCollection);
     }
 }
