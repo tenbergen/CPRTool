@@ -54,8 +54,7 @@ public class AssignmentInterface {
             new File(path).mkdirs();
         }
         fileDAO.writeFile(path + reg + fileDAO.getFilename());
-        String team = fileDAO.getFilename().substring(0, fileDAO.getFilename().indexOf(".")) ;
-        makeSubmission(fileDAO.getCourseID(), fileDAO.getAssignmentID(), fileDAO.getFilename(), team);
+        makeSubmission(fileDAO.getCourseID(), fileDAO.getAssignmentID(), fileDAO.getFilename(), fileDAO.getTeamName());
     }
 
     /**
@@ -127,10 +126,10 @@ public class AssignmentInterface {
         return assignments;
     }
 
-    public void makeSubmission(String course_id,int assignment_id,String file_name,String teamName){
-        Document team = teamsCollection.find(eq("team_id", teamName)).first();
+    public void makeSubmission(String course_id,int assignment_id,String file_name, String teamName){
+        Document team = teamsCollection.find(and(eq("team_id", teamName), eq("course_id", course_id))).first();
         if(team == null) {
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("no team for this student").build());
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("this team was not found in this course").build());
         }
         if (team.getList("team_members", String.class) == null) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Members not defined in team").build());

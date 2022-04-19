@@ -13,6 +13,7 @@ public class FileDAO {
     private String courseID;
     private InputStream file;
     private int assignmentID;
+    private String teamName;
 
     /**
      * Takes form-data from a POST request, converts it to an inputStream, and return the FileDOA containing
@@ -24,9 +25,9 @@ public class FileDAO {
      * @return FileDAO Instance
      * @throws IOException File Corruption Exception
      */
-    public static FileDAO fileFactory(String fileName, String courseID, IAttachment attachment, int assignmentID) throws IOException {
+    public static FileDAO fileFactory(String fileName, String courseID, IAttachment attachment, int assignmentID, String teamName) throws IOException {
         InputStream inputStream = attachment.getDataHandler().getInputStream();
-        return new FileDAO(fileName, courseID, inputStream, assignmentID);
+        return new FileDAO(fileName, courseID, inputStream, assignmentID, teamName);
     }
 
     /**
