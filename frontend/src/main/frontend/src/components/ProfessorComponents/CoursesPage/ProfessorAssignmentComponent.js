@@ -61,7 +61,12 @@ const ProfessorAssignmentComponent = () => {
                                         <li>
                                             <div className='ass-title'>
                                                 {assignment.assignment_name}
-                                                <span1>Due Date: {assignment.due_date}</span1>
+                                                <span1>Due Date: {
+                                                    assignment.assignment_type === "peer-review"
+                                                        ? assignment.peer_review_due_date
+                                                        : assignment.due_date
+                                                }
+                                                </span1>
                                                 <br></br>
                                             </div>
                                         </li>
