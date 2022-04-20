@@ -154,8 +154,8 @@ public class CourseInterface {
     public void removeStudent(String studentID, String courseID) {
         Document studentDocument = studentCollection.find(and(eq("student_id", studentID), eq("courses", courseID))).first();
         Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
-        if (studentDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist.").build());
-        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
+        if (studentDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This student does not exist.").build());
+        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This course does not exist.").build());
 
         List<String> courses = studentDocument.getList("courses", String.class);
         courses.remove(courseID);
