@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import {useSelector} from "react-redux";
 import "../../styles/StudentTeamStyle.css"
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 
 const TeamComponent = () => {
+    const navigate = useNavigate()
     const {courseId} = useParams()
     const getTeamsUrl = `${process.env.REACT_APP_URL}/teams/team/get/unlocked-team/all/` + courseId
     const [teams, setTeams] = useState(Array())
@@ -22,17 +23,18 @@ const TeamComponent = () => {
 
     const joinTeam = async (teamId) => {
         const joinUrl = `${process.env.REACT_APP_URL}/teams/team/join`
-        console.log(teamId)
         const data = JSON.parse(JSON.stringify({"team_id": teamId, "course_id": courseId, "student_id": lakerId}))
         await axios.put(joinUrl, data)
+        navigate(`/`)
+        navigate(`/details/student/` + courseId)
     }
 
     const createTeam = async () => {
         const createUrl = `${process.env.REACT_APP_URL}/teams/team/create`
-        console.log(lakerId)
-        console.log("Need to create teamS")
         const createData = JSON.parse(JSON.stringify({"course_id": courseId, "student_id": lakerId}))
         await axios.post(createUrl, createData)
+        navigate(`/`)
+        navigate(`/details/student/` + courseId)
     }
 
     return (
