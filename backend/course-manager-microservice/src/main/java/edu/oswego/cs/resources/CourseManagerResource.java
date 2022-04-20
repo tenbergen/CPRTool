@@ -9,8 +9,10 @@ import edu.oswego.cs.database.CourseInterface;
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 @Path("professor")
 @DenyAll
@@ -21,8 +23,8 @@ public class CourseManagerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/create")
     @RolesAllowed("professor")
-    public Response createCourse(CourseDAO course) {
-        new CourseInterface().addCourse(course);
+    public Response createCourse(@Context SecurityContext securityContext, CourseDAO course) {
+        new CourseInterface().addCourse(securityContext, course);
         return Response.status(Response.Status.OK).entity("Course successfully added.").build();
     }
 
@@ -32,8 +34,8 @@ public class CourseManagerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/{courseID}/delete")
     @RolesAllowed("professor")
-    public Response deleteCourse(@PathParam("courseID") String courseID) {
-        new CourseInterface().removeCourse(courseID);
+    public Response deleteCourse(@Context SecurityContext securityContext, @PathParam("courseID") String courseID) {
+        new CourseInterface().removeCourse(securityContext, courseID);
         return Response.status(Response.Status.OK).entity("Course successfully deleted.").build();
     }
 
@@ -42,8 +44,8 @@ public class CourseManagerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/update")
     @RolesAllowed("professor")
-    public Response updateCourse(CourseDAO course) {
-        String courseID = new CourseInterface().updateCourse(course);
+    public Response updateCourse(@Context SecurityContext securityContext, CourseDAO course) {
+        String courseID = new CourseInterface().updateCourse(securityContext, course);
         return Response.status(Response.Status.OK).entity(courseID).build();
     }
 
@@ -94,5 +96,13 @@ public class CourseManagerResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("Failed to add students.").build();
         }
         return Response.status(Response.Status.OK).entity("Student(s) successfully added.").build();
+    }
+
+    @DELETE
+    @Path("collection/wipe-off")
+    @RolesAllowed("admin")
+    public Response collectionWipeOff() {
+        new CourseInterface().collectionWipeOff();
+        return Response.status(Response.Status.OK).entity("Collection successfully wiped off.").build();
     }
 }
