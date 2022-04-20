@@ -15,6 +15,8 @@ const ProfessorAssignmentComponent = () => {
     const {courseAssignments, currentAssignmentLoaded} = useSelector(
         (state) => state.assignments
     );
+    const ass = "Assignment"
+    const peer = "Peer Review"
 
     useEffect(() => {
         setIsLoading(true);
@@ -59,6 +61,14 @@ const ProfessorAssignmentComponent = () => {
                                         to={`/details/professor/${courseId}/${assignment.assignment_id}/grade`}
                                     >
                                         <li>
+                                            <span className='ass-span'>
+                                            {
+                                                assignment.assignment_type === 'peer-review'
+                                                    ? peer
+                                                    : ass
+                                            }
+                                            </span>
+                                            <br></br>
                                             <div className='ass-title'>
                                                 {assignment.assignment_name}
                                                 <span1>Due Date: {
@@ -73,8 +83,6 @@ const ProfessorAssignmentComponent = () => {
                                     </Link>
                                     <div>
                                         <p>
-                                            {/*{assignment}*/}
-                                            <br></br>
                                             <div className='delete-btn-wrapper'>
                                                 <div
                                                     className='delete-ass-btn'

@@ -56,7 +56,7 @@ const RegularAssignmentComponent = () => {
                 <div>
                     <h2>{currentAssignment.assignment_name}</h2>
                     <div className="ap-assignmentArea">
-                        <div>
+                        <h3>
                             Instructions:
                             <span className="span1-ap">Due Date: {currentAssignment.due_date}</span>
                             <br/>
@@ -82,7 +82,7 @@ const RegularAssignmentComponent = () => {
                             <div className="ap-button">
                                 <button onClick={handleSubmit}> Submit </button>
                             </div>
-                        </div>
+                        </h3>
                     </div>
                 </div> : null
             }
