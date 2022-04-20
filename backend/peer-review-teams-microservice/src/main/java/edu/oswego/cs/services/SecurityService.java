@@ -110,8 +110,6 @@ public class SecurityService {
     }
 
     public void leaveTeamSecurity(MongoCollection<Document> teamCollection, Document courseDocument, TeamParam request) {
-        if (!isStudentValid(courseDocument, request.getStudentID()))
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
         if (!isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
         if (isTeamLock(teamCollection, request.getTeamID(), request.getCourseID()))
