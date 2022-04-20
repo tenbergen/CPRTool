@@ -16,34 +16,47 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 
 public class CourseUtil {
-    public void updateCoursesArrayInStudenDb(MongoCollection<Document> collection , String originalCourseID, String newCourseID ) {
+    public void updateCoursesArrayInProfessorDb(SecurityContext securityContext, MongoCollection<Document> collection , String originalCourseID, String newCourseID, String mode) {
+        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
+        Bson professorDocumentFilter = Filters.eq("professor_id", professorID);
+        Document professorDocument = collection.find(professorDocumentFilter).first();
         
+        List<String> professorDocumentCourses = professorDocument.getList("courses", String.class);
+        if (professorDocumentCourses == null) throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Professor profile is not set up properly.").build());
+        
+        if (mode.equals("UPDATE")) Collections.replaceAll(professorDocumentCourses, originalCourseID, newCourseID);
+        else if (mode.equals("DELETE")) professorDocumentCourses.remove(originalCourseID);
+
+        collection.updateOne(professorDocumentFilter, Updates.set("courses", professorDocumentCourses));
+        
+        /* production conditions */
+        // if (professorDocument.size() > 0) collection.updateOne(professorDocumentFilter, Updates.set("courses", professorDocumentCourses));
+        // else collection.deleteOne(professorDocumentFilter);
+    }
+
+    public void updateCoursesArrayInStudenDb(MongoCollection<Document> collection , String originalCourseID, String newCourseID, String mode ) {
         MongoCursor<Document> cursor = collection.find().iterator();
         while (cursor.hasNext()) {
             Document studentDocument = cursor.next();
-            List<String> courses = studentDocument.getList("courses", String.class);
-            Collections.replaceAll(courses, originalCourseID, newCourseID);
+            List<String> studentDocumentCourses = studentDocument.getList("courses", String.class);
             Bson studentFilter = Filters.eq("student_id", studentDocument.getString("student_id"));
-            collection.updateOne(studentFilter, Updates.set("courses", courses));
+
+            if (mode.equals("UPDATE")) Collections.replaceAll(studentDocumentCourses, originalCourseID, newCourseID);
+            else if (mode.equals("DELETE")) studentDocumentCourses.remove(originalCourseID);
+            
+            if (studentDocument.size() > 0) collection.updateOne(studentFilter, Updates.set("courses", studentDocumentCourses));
+            else collection.deleteOne(studentFilter);
         }
         cursor.close();
     }
 
-    public void updateCoursesArrayInProfessorDb(SecurityContext securityContext, MongoCollection<Document> collection , String originalCourseID, String newCourseID ) {
-        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
-        Bson professorDocumentFilter = Filters.eq("professor_id", professorID);
-        Document professorDocument = collection.find(professorDocumentFilter).first();
-        List<String> professorDocumentCourses = professorDocument.getList("courses", String.class);
-        if (professorDocumentCourses == null)
-            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Professor profile is not set up properly.").build());
-        Collections.replaceAll(professorDocumentCourses, originalCourseID, newCourseID);
-        collection.updateOne(professorDocumentFilter, Updates.set("courses", professorDocumentCourses));
-    }
-
-
-    public void updateCoursesKeyInDBs(MongoCollection<Document> collection, String originalCourseID, String newCourseID) {
+    public void updateCoursesKeyInDBs(MongoCollection<Document> collection, String originalCourseID, String newCourseID, String mode) {
         Bson documentFilter = Filters.eq("course_id", originalCourseID);
-        collection.updateMany(documentFilter, Updates.set("course_id", newCourseID));
+        if (mode.equals("UPDATE")) {
+            collection.updateMany(documentFilter, Updates.set("course_id", newCourseID));
+        } else if (mode.equals("DELETE")) {
+            collection.deleteMany(documentFilter);
+        }
     }
 
     public void collectionWipeOff(MongoCollection<Document> collection) {

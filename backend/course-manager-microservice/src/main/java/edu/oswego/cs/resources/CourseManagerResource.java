@@ -34,8 +34,8 @@ public class CourseManagerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/{courseID}/delete")
     @RolesAllowed("professor")
-    public Response deleteCourse(@PathParam("courseID") String courseID) {
-        new CourseInterface().removeCourse(courseID);
+    public Response deleteCourse(@Context SecurityContext securityContext, @PathParam("courseID") String courseID) {
+        new CourseInterface().removeCourse(securityContext, courseID);
         return Response.status(Response.Status.OK).entity("Course successfully deleted.").build();
     }
 
@@ -96,5 +96,13 @@ public class CourseManagerResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("Failed to add students.").build();
         }
         return Response.status(Response.Status.OK).entity("Student(s) successfully added.").build();
+    }
+
+    @DELETE
+    @Path("collection/wipe-off")
+    @RolesAllowed("admin")
+    public Response collectionWipeOff() {
+        new CourseInterface().collectionWipeOff();
+        return Response.status(Response.Status.OK).entity("Collection successfully wiped off.").build();
     }
 }
