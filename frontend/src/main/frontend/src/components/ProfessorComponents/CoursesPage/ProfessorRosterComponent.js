@@ -21,7 +21,7 @@ const ProfessorRosterComponent = () => {
                 setStudents(arr => [...arr, r.data[i]])
             }
         })
-        axios.get(`${process.env.REACT_APP_URL}/teams/professor/team/get/all/` +
+        axios.get(`${process.env.REACT_APP_URL}/teams/team/get/all/` +
             currentCourse.course_id).then((r) => {
             for (let i = 0; i < r.data.length; i++) {
                 for (let j = 0; j < r.data[i].team_members.length; j++) {

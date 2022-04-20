@@ -6,7 +6,7 @@ import {useSelector} from 'react-redux';
 const ProfessorTeamComponent = () => {
     const {currentCourse} = useSelector((state) => state.courses);
     const getTeamsUrl =
-        `${process.env.REACT_APP_URL}/teams/professor/team/get/all/` +
+        `${process.env.REACT_APP_URL}/teams/team/get/all/` +
         currentCourse.course_id;
     const [teams, setTeams] = useState(Array());
     const [isActive, setActive] = useState(Array());
@@ -18,6 +18,7 @@ const ProfessorTeamComponent = () => {
 
     useEffect(() => {
         axios.get(getTeamsUrl).then((r) => {
+            console.log(r)
             for (let i = 0; i < r.data.length; i++) {
                 setTeams((arr) => [...arr, r.data[i]]);
             }
