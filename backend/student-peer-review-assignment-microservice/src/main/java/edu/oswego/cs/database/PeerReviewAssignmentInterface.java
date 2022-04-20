@@ -74,16 +74,6 @@ public class PeerReviewAssignmentInterface {
         return courseDocument.getList("students", String.class);
     }
 
-    public List<String> filterBySubmitted(List<String> allTeams, String course_id, int assignment_id) {
-        List<String> finalTeams = new ArrayList<>();
-        for (String teamName : allTeams) {
-            if (submissionsCollection.find(and(eq("course_id", course_id), eq("assignment_id", assignment_id), eq("team_name", teamName))).iterator().hasNext()) {
-                finalTeams.add(teamName);
-            }
-        }
-        return finalTeams;
-    }
-
     public void uploadPeerReview(String courseID, int assignmentID, String srcTeamName, String destTeamName, IAttachment attachment) throws IOException {
         FileDAO fileDAO = FileDAO.fileFactory(courseID, srcTeamName, destTeamName, assignmentID, attachment);
         String path = "courses/" + courseID + "/" + assignmentID + "/peer-review-submissions/";
@@ -217,28 +207,6 @@ public class PeerReviewAssignmentInterface {
             if ((int) assignmentDocument.get("assignment_id") == assignmentID) return assignmentDocument;
         }
         throw new WebApplicationException("No course/assignmentID found.");
-    }
-    public void addAllTeams(List<String> allteams,String course_id, int assignment_id){
-        Document result = assignmentCollection.findOneAndUpdate(and(eq("course_id",course_id),eq("assignment_id",assignment_id)),set("all_teams",allteams));
-        if(result == null){
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to set all teams to assignment").build());
-        }
-    }
-    public void addDistroToSubmissions(Map<String,List<String>>distro,String course_id,int assignment_id){
-        for(String team : distro.keySet()){
-            Document result = submissionsCollection.findOneAndUpdate(
-                    and(eq("course_id",course_id),eq("assignment_id",assignment_id),eq("team_name",team)),
-                    set("reviews",distro.get(team))
-            );
-            if(result == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to add teams to submission: " + team).build());
-        }
-    }
-    public List<String> getTeams(String course_id,int assignment_id){
-        Document assignment = assignmentCollection.find(and(eq("course_id",course_id),eq("assignment_id",assignment_id))).first();
-        if(assignment == null)throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment found").build());
-        List<String> teams = assignment.getList("all_teams",String.class);
-        if(teams == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("all teams not found for: " + course_id).build());
-        return teams;
     }
 
 
