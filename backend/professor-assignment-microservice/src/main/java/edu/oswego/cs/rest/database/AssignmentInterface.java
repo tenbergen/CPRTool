@@ -178,6 +178,10 @@ public class AssignmentInterface {
         Jsonb jsonb = JsonbBuilder.create();
         Entity<String> assignmentDAOEntity = Entity.entity(jsonb.toJson(assignmentDAO), MediaType.APPLICATION_JSON_TYPE);
         Document assignmentDocument = Document.parse(assignmentDAOEntity.getEntity());
+        assignmentDocument
+                .append("submission_is_past_due",false)
+                .append("peer_review_is_past_due",false);
+
 
         MongoCursor<Document> query = assignmentsCollection.find(assignmentDocument).iterator();
         if (query.hasNext()) {
