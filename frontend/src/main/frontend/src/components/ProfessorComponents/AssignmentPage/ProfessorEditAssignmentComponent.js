@@ -47,8 +47,7 @@ const ProfessorEditAssignmentComponent = () => {
             ? `${url}/peer-review/remove-file/${fileName}`
             : `${url}/remove-file/${fileName}`;
 
-        await axios
-            .delete(deleteUrl)
+        await axios.delete(deleteUrl)
             .then((res) => {
                 console.log(res);
             })
@@ -98,15 +97,11 @@ const ProfessorEditAssignmentComponent = () => {
                 onSubmit={async (formObj) => {
                     await handleSubmit(formObj);
                 }}
-                initialValues={() => initialValue()}
-            >
+                initialValues={() => initialValue()}>
                 {({handleSubmit}) => (
                     <form onSubmit={handleSubmit}>
-                        <div className='cap-input-field'>
-                            <label>
-                                {' '}
-                                <b> Name of assignment: </b>{' '}
-                            </label>
+                        <div className='eac-input-field'>
+                            <label><b> Name of assignment: </b></label>
                             <Field name='assignment_name'>
                                 {({input}) => (
                                     <input
@@ -119,11 +114,8 @@ const ProfessorEditAssignmentComponent = () => {
                             </Field>
                         </div>
 
-                        <div className='cap-instructions'>
-                            <label>
-                                {' '}
-                                <b> Instructions:</b>{' '}
-                            </label>
+                        <div className='eac-instructions'>
+                            <label><b> Instructions:</b></label>
                             <Field name='instructions'>
                                 {({input}) => (
                                     <input type='text' name='instructions' {...input} required/>
@@ -132,9 +124,21 @@ const ProfessorEditAssignmentComponent = () => {
                         </div>
 
                         <div className='eac-assignment-files'>
+                            Current files:
+                            <span onClick={() => onFileClick(currentAssignment.assignment_instructions, false)}>
+                                  {currentAssignmentLoaded
+                                      ? currentAssignment.assignment_instructions
+                                      : null}
+                                </span>
+                            <span
+                                onClick={() => deleteFile(currentAssignment.assignment_instructions, false)}
+                                className={currentAssignmentLoaded && currentAssignment.assignment_instructions !== "" ? 'eac-crossmark' : 'eac-crossmark-gone'}>
+                                    &#10060;
+                                </span>
+                        </div>
+                        <div className='eac-assignment-files'>
                             <label>
-                                {' '}
-                                <b> Files: </b>{' '}
+                                <b> New files: </b>
                             </label>
                             <input
                                 type='file'
@@ -142,36 +146,11 @@ const ProfessorEditAssignmentComponent = () => {
                                 accept='.pdf,.zip'
                                 // onChange={(e) => assignmentFileHandler(e)}
                             />
-                            <p>
-                                {' '}
-                                Current files:
-                                <span
-                                    onClick={() =>
-                                        onFileClick(
-                                            currentAssignment.assignment_instructions,
-                                            false
-                                        )
-                                    }
-                                >
-                  {currentAssignmentLoaded
-                      ? currentAssignment.assignment_instructions
-                      : null}
-                </span>
-                                <span
-                                    onClick={() =>
-                                        deleteFile(currentAssignment.assignment_instructions, false)
-                                    }
-                                    className='crossMark'
-                                >
-                  &#10060;
-                </span>
-                            </p>
                         </div>
 
-                        <div className='cap-assignment-info'>
+                        <div className='eac-assignment-info'>
                             <label>
-                                {' '}
-                                <b> Due Date: </b>{' '}
+                                <b> Due Date: </b>
                             </label>
                             <Field name='due_date'>
                                 {({input}) => (
@@ -180,8 +159,7 @@ const ProfessorEditAssignmentComponent = () => {
                             </Field>
 
                             <label>
-                                {' '}
-                                <b> Points: </b>{' '}
+                                <b> Points: </b>
                             </label>
                             <Field name='points'>
                                 {({input}) => (
@@ -190,10 +168,9 @@ const ProfessorEditAssignmentComponent = () => {
                             </Field>
                         </div>
 
-                        <div className='cap-instructions'>
+                        <div className='eac-instructions'>
                             <label>
-                                {' '}
-                                <b> Peer Review Instructions:</b>{' '}
+                                <b> Peer Review Instructions:</b>
                             </label>
                             <Field name='peer_review_instructions'>
                                 {({input}) => (
@@ -207,80 +184,63 @@ const ProfessorEditAssignmentComponent = () => {
                             </Field>
                         </div>
 
-                        <div className='eac-assignment-files'>
-                            <label>
-                                {' '}
-                                <b> Rubric: </b>{' '}
-                            </label>
-                            <input
-                                type='file'
-                                name='peer_review_rubric'
-                                accept='.pdf,.zip'
-                                required
-                                //onChange={(e) => peerReviewRubricHandler(e)}
-                            />
-                            <p>
-                                {' '}
-                                Current files:
-                                <span
-                                    onClick={() =>
-                                        onFileClick(currentAssignment.peer_review_rubric, true)
-                                    }
-                                >
-                  {currentAssignmentLoaded
-                      ? currentAssignment.peer_review_rubric
-                      : null}
-                </span>
-                                <span
-                                    onClick={() =>
-                                        deleteFile(currentAssignment.peer_review_rubric, true)
-                                    }
-                                    className='crossMark'
-                                >
-                  &#10060;
-                </span>
-                            </p>
+                        <div className='eac-assignment-files-multiple'>
+                            <div>
+                                <div className='eac-assignment-files' style={{marginBottom: "6%"}}>
+                                    Current files:
+                                    <span onClick={() => onFileClick(currentAssignment.peer_review_rubric, true)}>
+                                  {currentAssignmentLoaded
+                                      ? currentAssignment.peer_review_rubric
+                                      : null}
+                                    </span>
+                                    <span onClick={() => deleteFile(currentAssignment.peer_review_rubric, true)}
+                                          className={currentAssignmentLoaded && currentAssignment.peer_review_rubric !== "" ? 'eac-crossmark' : 'eac-crossmark-gone'}>
+                                        &#10060;
+                                    </span>
+                                </div>
+
+                                <div className='eac-assignment-files'>
+                                    <label><b> New files: </b></label>
+                                    <input
+                                        type='file'
+                                        name='peer_review_rubric'
+                                        accept='.pdf,.zip'
+                                        required
+                                        //onChange={(e) => peerReviewRubricHandler(e)}
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <div className='eac-assignment-files' style={{marginBottom: "6%"}}>
+                                    Current files:
+                                    <span onClick={() => onFileClick(currentAssignment.peer_review_template, true)}>
+                                      {currentAssignmentLoaded
+                                          ? currentAssignment.peer_review_template
+                                          : null}
+                                    </span>
+                                    <span
+                                        onClick={() => deleteFile(currentAssignment.peer_review_template, true)}
+                                        className={currentAssignmentLoaded && currentAssignment.peer_review_template !== "" ? 'eac-crossmark' : 'eac-crossmark-gone'}>
+                                        &#10060;
+                                    </span>
+                                </div>
+
+                                <div className='eac-assignment-files'>
+                                    <label><b> New files: </b></label>
+                                    <input
+                                        type='file'
+                                        name='peer_review_template'
+                                        accept='.pdf,.zip'
+                                        required
+                                        //onChange={(e) => peerReviewTemplateHandler(e)}
+                                    />
+                                </div>
+                            </div>
                         </div>
 
-                        <div className='eac-assignment-files'>
-                            <label>
-                                {' '}
-                                <b> Template: </b>{' '}
-                            </label>
-                            <input
-                                type='file'
-                                name='peer_review_template'
-                                accept='.pdf,.zip'
-                                required
-                                //onChange={(e) => peerReviewTemplateHandler(e)}
-                            />
-                            <p>
-                                Current files:
-                                <span
-                                    onClick={() =>
-                                        onFileClick(currentAssignment.peer_review_template, true)
-                                    }
-                                >
-                  {currentAssignmentLoaded
-                      ? currentAssignment.peer_review_template
-                      : null}
-                </span>
-                                <span
-                                    onClick={() =>
-                                        deleteFile(currentAssignment.peer_review_template, true)
-                                    }
-                                    className='crossMark'
-                                >
-                  &#10060;
-                </span>
-                            </p>
-                        </div>
-
-                        <div className='cap-assignment-info'>
-                            <label>
-                                {' '}
-                                <b> Due Date: </b>{' '}
-                            </label>
+                        <div className='eac-assignment-info'>
+                            <label><b> Due Date: </b></label>
                             <Field name='peer_review_due_date'>
                                 {({input}) => (
                                     <input
@@ -292,10 +252,7 @@ const ProfessorEditAssignmentComponent = () => {
                                 )}
                             </Field>
 
-                            <label>
-                                {' '}
-                                <b>Points: </b>{' '}
-                            </label>
+                            <label><b>Points: </b></label>
                             <Field name='peer_review_points'>
                                 {({input}) => (
                                     <input
