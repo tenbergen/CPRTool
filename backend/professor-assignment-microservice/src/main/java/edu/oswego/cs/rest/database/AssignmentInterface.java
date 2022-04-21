@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
@@ -272,12 +273,13 @@ public class AssignmentInterface {
     public int generateAssignmentID(){
         List<Document> assignmentsDocuments = getAllAssignments();
 
-        Set<String> assignmentIDs = new HashSet<>();
+        Set<Integer> assignmentIDs = new HashSet<>();
         for (Document assignmentDocument : assignmentsDocuments)
-            assignmentIDs.add(assignmentDocument.getString("assignment_id"));
-        for (int i = 0; i < assignmentIDs.size(); i++)
-            if (!assignmentIDs.contains(String.valueOf(i)))
+            assignmentIDs.add(assignmentDocument.getInteger("assignment_id"));
+        for (int i = 0; i < assignmentIDs.size(); i++) {
+            if (!assignmentIDs.contains(i))
                 return i;
+        }
         return assignmentIDs.size();
     }
 
