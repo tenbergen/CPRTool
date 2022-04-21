@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 
 import static com.mongodb.client.model.Filters.eq;
@@ -128,6 +129,7 @@ public class AssignmentInterface {
 
     public void makeSubmission(String course_id,int assignment_id,String file_name, String teamName){
         Document team = teamsCollection.find(and(eq("team_id", teamName), eq("course_id", course_id))).first();
+        System.out.println(team);
         if(team == null) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("this team was not found in this course").build());
         }
@@ -150,10 +152,11 @@ public class AssignmentInterface {
         boolean submissionCheck = submissionCollection.find(and(eq("course_id",course_id),eq("assignment_id",assignment_id),eq("team_name",team.getString("team_id")))).iterator().hasNext();
         if(submissionCheck){
             Document extensionCheck = submissionCollection.find(and(eq("course_id",course_id),eq("assignment_id",assignment_id),eq("team_name",team.getString("team_id")))).first();
-            if (extensionCheck.getString("submission_name") == file_name) {
+            if (extensionCheck.getString("submission_name").equals(file_name)) {
                 throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("submission already exists").build());
             }else {
-                submissionCollection.updateOne(extensionCheck,new_submission);
+                submissionCollection.deleteOne(extensionCheck);
+                submissionCollection.insertOne(new_submission);
             }
         }else submissionCollection.insertOne(new_submission);
     }
