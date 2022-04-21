@@ -105,7 +105,7 @@ public class PeerReviewAssignmentInterface {
         MongoCursor<Document> query = submissionsCollection.find(and(eq("course_id", courseID),
                 eq("assignment_id", assignmentID),
                 eq("reviewed_team_members", studentID),
-                eq("type", "peer_review"))).iterator();
+                eq("type", "peer_review_submission"))).iterator();
         List<Document> assignments = new ArrayList<>();
         while (query.hasNext()) {
             Document document = query.next();
@@ -118,26 +118,12 @@ public class PeerReviewAssignmentInterface {
     public List<Document> getUsersReviewedAssignment(String courseID, String studentID) {
         MongoCursor<Document> query = submissionsCollection.find(and(eq("course_id", courseID),
                 eq("reviewed_team_members", studentID),
-                eq("type", "peer_review"))).iterator();
+                eq("type", "peer_review_submission"))).iterator();
         List<Document> assignments = new ArrayList<>();
         while (query.hasNext()) {
             Document document = query.next();
             assignments.add(document);
         }
-        if (assignments.isEmpty()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist").build());
-        return assignments;
-    }
-
-    public List<Document> getUsersGradedAssignments(String courseID, String studentID) {
-        MongoCursor<Document> query = submissionsCollection.find(and(eq("course_id", courseID),
-                eq("members", studentID),
-                eq("type", "peer_review"))).iterator();
-        List<Document> assignments = new ArrayList<>();
-        while (query.hasNext()) {
-            Document document = query.next();
-            assignments.add(document);
-        }
-
         if (assignments.isEmpty()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist").build());
         return assignments;
     }
@@ -146,7 +132,7 @@ public class PeerReviewAssignmentInterface {
         MongoCursor<Document> query = submissionsCollection.find(and(
                 eq("course_id", courseID),
                 eq("reviewed_by_members", studentID),
-                eq("type", "peer_review"))).iterator();
+                eq("type", "peer_review_submission"))).iterator();
         List<Document> assignments = new ArrayList<>();
         while (query.hasNext()) {
             Document document = query.next();
