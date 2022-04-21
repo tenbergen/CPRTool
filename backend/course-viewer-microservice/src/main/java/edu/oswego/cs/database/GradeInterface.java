@@ -31,7 +31,7 @@ public class GradeInterface {
         Document result = submissionsCollection.find(
                 and(
                         eq("course_id",course_id),
-                        eq("assignmnt_id",assignment_id),
+                        eq("assignment_id",assignment_id),
                         eq("members",student_id),
                         eq("type","team_submission")
                 )
