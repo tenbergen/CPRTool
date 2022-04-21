@@ -22,7 +22,8 @@ public class ProfessorTeamResources {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("get/all/{course_id}")
-    @RolesAllowed("professor")
+    @RolesAllowed("admin")
+    /* Deprecated */
     public Response getAllTeams(@PathParam("course_id") String courseID) {
         return Response.status(Response.Status.OK).entity(new TeamInterface().getAllTeams(courseID)).build();
     }
@@ -31,7 +32,8 @@ public class ProfessorTeamResources {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/team-lock/toggle")
-    @RolesAllowed("professor")
+    @RolesAllowed("admin")
+    /* Deprecated */
     public Response toggleTeamLock(TeamParam request) {
         new TeamInterface().toggleTeamLock(request);
         return Response.status(Response.Status.OK).entity("Team status successfully updated.").build(); 
@@ -41,7 +43,8 @@ public class ProfessorTeamResources {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/team-lock/all/lock")
-    @RolesAllowed("professor")
+    @RolesAllowed("admin")
+    /* Deprecated */
     public Response lockAllTeams(TeamParam request) {
         new TeamInterface().lockAllTeams(request);
         return Response.status(Response.Status.OK).entity("Successfully lock all teams.").build(); 
@@ -52,8 +55,8 @@ public class ProfessorTeamResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/add-student")
     @RolesAllowed("professor")
-    public Response likeTheProfessorCanAddAStudentToATeamIfThatSudentIsNotCurrentInAnyTeamButIfTheStudentIsAlreadyInATeamThenMoveTheStudentFromTheOldTeamToTheNewTeam(TeamParam request) {
-        new TeamInterface().studentJoinTeam(request);
+    public Response addStudent(TeamParam request) {
+        new TeamInterface().joinTeam(request);
         return Response.status(Response.Status.OK).entity("Student successfully added to team.").build(); 
     }
 
@@ -62,8 +65,8 @@ public class ProfessorTeamResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/remove-student")
     @RolesAllowed("professor")
-    public Response removeMember(TeamParam request) {
-        new TeamInterface().leaveTeam(request);
+    public Response removeTeamMember(TeamParam request) {
+        new TeamInterface().removeTeamMember(request);
         return Response.status(Response.Status.OK).entity("Student successfully removed from team.").build(); 
     }
 
@@ -71,7 +74,8 @@ public class ProfessorTeamResources {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/team-name/edit")
-    @RolesAllowed("professor")
+    @RolesAllowed("admin")
+    /* Deprecated */
     public Response editTeamName(TeamParam request) {
         new TeamInterface().editTeamName(request);
         return Response.status(Response.Status.OK).entity("Team name successfully updated.").build(); 
@@ -81,7 +85,8 @@ public class ProfessorTeamResources {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/team-size/edit/bulk")
-    @RolesAllowed("professor")
+    @RolesAllowed("admin")
+    /* Deprecated */
     public Response editTeamSizeInBulk(TeamParam request) {
         new TeamInterface().editTeamSizeInBulk(request);
         return Response.status(Response.Status.OK).entity("Team size successfully updated.").build(); 
@@ -91,7 +96,8 @@ public class ProfessorTeamResources {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/team-size/edit")
-    @RolesAllowed("professor")
+    @RolesAllowed("admin")
+    /* Deprecated */
     public Response editTeamSize(TeamParam request) {
         new TeamInterface().editTeamSize(request);
         return Response.status(Response.Status.OK).entity("Team size successfully updated.").build(); 
@@ -101,7 +107,8 @@ public class ProfessorTeamResources {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/team-lead/assign")
-    @RolesAllowed("professor")
+    @RolesAllowed("admin")
+    /* Deprecated */
     public Response assignTeamLead(TeamParam request) {
         new TeamInterface().assignTeamLead(request);
         return Response.status(Response.Status.OK).entity("Team lead successfully updated.").build(); 
