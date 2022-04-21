@@ -16,9 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Filters.and;
+import static com.mongodb.client.model.Filters.*;
 
 
 public class AssignmentInterface {
@@ -159,5 +157,39 @@ public class AssignmentInterface {
                 submissionCollection.insertOne(new_submission);
             }
         }else submissionCollection.insertOne(new_submission);
+    }
+    public Document allAssignments(String couse_id,String student_id){
+        MongoCursor<Document> submissions = submissionCollection.find(
+                and(
+                        eq("course_id",couse_id),
+                        or(eq("members",student_id),eq("reviewed_by_members",student_id)),
+                        or(eq("type","team_submission"),eq("type","peer_review_submission"))
+                )
+        ).iterator();
+        if(!submissions.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No submissions").build());
+        List<Document>AllSubmissions = new ArrayList<>();
+        while(submissions.hasNext()){
+            Document submission = submissions.next();
+            if(submission.getInteger("assignment_id")==null){
+                throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No ID in this submission").build());
+            }
+            Document Assignment = assignmentsCollection.find(
+                    and(
+                            eq("course_id",couse_id),
+                            eq("assignment_id",submission.getInteger("assignment_id"))
+                    )
+            ).first();
+            if(Assignment == null){
+                throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment matching the ID for this course").build());
+            }
+            int grade = -1;
+            if(Assignment.getInteger("grade")!=null){
+                grade = Assignment.getInteger("grade");
+            }
+            AllSubmissions.add(new Document()
+                    .append("assignment_name",Assignment.getString("assignment_name"))
+                    .append("grade", grade));
+        }
+        return new Document("submissions",AllSubmissions);
     }
 }
