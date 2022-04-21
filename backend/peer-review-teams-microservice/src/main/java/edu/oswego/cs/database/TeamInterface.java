@@ -274,17 +274,12 @@ public class TeamInterface {
 
         List<String> teamMembers = teamDocument.getList("team_members", String.class);
         teamMembers.remove(request.getStudentID());
-        List<String> teamConfirmedMembers = teamDocument.getList("team_confirmed_members", String.class);
-        teamConfirmedMembers.remove(request.getStudentID());
         
         if (teamMembers.size() < 1)
             teamCollection.deleteOne(teamDocumentFilter);
         else {
-            teamConfirmedMembers.remove(teamMembers.get(0));
-            teamConfirmedMembers.add(0, teamMembers.get(0));
             Bson teamUpdates = Updates.combine(
                     Updates.set("team_members", teamMembers),
-                    Updates.set("team_confirmed_members", teamConfirmedMembers),
                     Updates.set("team_lead", teamMembers.get(0)),
                     Updates.set("team_full", false));
             UpdateOptions teamOptions = new UpdateOptions().upsert(true);
