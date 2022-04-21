@@ -113,5 +113,17 @@ public class studentAssignmentResource {
         List<Document> documents = new AssignmentInterface().getAssignmentSubmissions(courseID, assignmentID);
         return Response.status(Response.Status.OK).entity(documents).build();
     }
+    @GET
+    @RolesAllowed("student")
+    @Path("{course_id}/{laker_id}/submission")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response viewSubmissions(
+            @PathParam("course_id") String course_id,
+            @PathParam("laker_id")String student_id)
+    {
+        Document result = new AssignmentInterface().allAssignments(course_id,student_id);
+        return Response.status(Response.Status.OK).entity(result).build();
+    }
+
 
 }

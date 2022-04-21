@@ -55,7 +55,7 @@ public class StudentTeamResources {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("join")
-    @RolesAllowed("student")
+    @RolesAllowed({"professor", "student"})
     public Response joinTeam(@Context SecurityContext securityContext, TeamParam request) {
         // new IdentifyingService().identifyingStudentService(securityContext, request.getStudentID());
         new TeamInterface().joinTeam(request);
