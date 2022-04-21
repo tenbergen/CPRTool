@@ -7,34 +7,46 @@ import axios from "axios";
 const TeamComponent = () => {
     const navigate = useNavigate()
     const {courseId} = useParams()
-    const getTeamsUrl = `${process.env.REACT_APP_URL}/teams/team/get/unlocked-team/all/` + courseId
+    const getTeamsUrl = `${process.env.REACT_APP_URL}/teams/team/get/all/` + courseId
     const [teams, setTeams] = useState(Array())
     const {lakerId} = useSelector((state) => state.auth)
-
+    
     useEffect(async () => {
         await axios.get(getTeamsUrl).then(r => {
             for (let i = 0; i < r.data.length; i++) {
-                setTeams(arr => [...arr, r.data[i]])
+                if(r.data[i].team_full === false) setTeams(arr => [...arr, r.data[i]])
             }
             console.log(r)
         })
     }, [])
 
-
     const joinTeam = async (teamId) => {
         const joinUrl = `${process.env.REACT_APP_URL}/teams/team/join`
         const data = JSON.parse(JSON.stringify({"team_id": teamId, "course_id": courseId, "student_id": lakerId}))
         await axios.put(joinUrl, data)
-        navigate(`/`)
-        navigate(`/details/student/` + courseId)
+        .then(res => {
+            console.log(res)
+            navigate(`/`)
+            navigate(`/details/student/` + courseId)
+        }).catch((e) => {
+            console.log(e)
+            alert("Error joining team")
+        })
     }
 
     const createTeam = async () => {
+        const team_name = prompt("Enter team name: ")
         const createUrl = `${process.env.REACT_APP_URL}/teams/team/create`
-        const createData = JSON.parse(JSON.stringify({"course_id": courseId, "student_id": lakerId}))
+        const createData = JSON.parse(JSON.stringify({"course_id": courseId, "student_id": lakerId, "team_name": team_name}))
         await axios.post(createUrl, createData)
-        navigate(`/`)
-        navigate(`/details/student/` + courseId)
+        .then(res => {
+            console.log(res)
+            navigate(`/`)
+            navigate(`/details/student/` + courseId)
+        }).catch((e) => {
+            console.log(e)
+            alert("Error creating team")
+        })
     }
 
     return (
@@ -46,7 +58,7 @@ const TeamComponent = () => {
                 )}
             </div>
             <div id="createTeamButton">
-                <button onClick={createTeam}> Create Team</button>
+                <button onClick={createTeam}> Create New Team</button>
             </div>
         </h3>
 
