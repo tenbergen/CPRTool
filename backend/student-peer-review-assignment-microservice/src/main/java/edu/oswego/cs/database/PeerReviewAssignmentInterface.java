@@ -276,4 +276,56 @@ public class PeerReviewAssignmentInterface {
         if (team == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team not found").build());
         return team;
     }
+    public void makeFinalGrades(String course_id,int assignment_id){
+        Document assignment = assignmentCollection.find(and(eq("course_id",course_id),eq("assignment_id",assignment_id))).first();
+        if(assignment == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("assignment not found").build());
+        List<String>allTeams = assignment.getList("all_teams",String.class);
+        int points = assignment.getInteger("points");
+        for(String team : allTeams){
+            Document team_submission = submissionsCollection.find(
+                    and(
+                            eq("course_id",course_id),
+                            eq("assignment_id",assignment_id),
+                            eq("team_name",team),
+                            eq("type","team_submission")
+                    )
+            ).first();
+            //No team submission
+            if(team_submission == null){
+                Document blank_submission = new Document()
+                        .append("course_id",course_id)
+                        .append("assignment_id",assignment_id)
+                        .append("team_name",team)
+                        .append("type","team_submission")
+                        .append("grade",0);
+                submissionsCollection.insertOne(blank_submission);
+            }else{
+                List<String>teams_that_graded = team_submission.getList("reviews",String.class);
+                if(teams_that_graded == null)throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("assigned teams not found for: " + team + "for assignment: " + assignment_id).build());
+                int total_points = 0;
+                int count_of_reviews_submitted = teams_that_graded.size();
+                for(String review: teams_that_graded){
+                    Document team_review = submissionsCollection.find(
+                            and(
+                                    eq("course_id",course_id),
+                                    eq("assignemnt_id",assignment_id),
+                                    eq("reviewed_by",review),
+                                    eq("type","peer_review_submission")
+                            )
+                    ).first();
+                    if(team_review == null){
+                        count_of_reviews_submitted --;
+                    }else {
+                        if(team_review.get("grade",Integer.class) == null){
+                           throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team: " +review+"'s review has no points").build());
+                        }else{
+                            total_points += team_review.get("grade",Integer.class);
+                        }
+                    }
+                }
+                int final_grade = (total_points/count_of_reviews_submitted)/points;
+                submissionsCollection.findOneAndUpdate(team_submission,set("grade",final_grade));
+            }
+        }
+    }
 }
