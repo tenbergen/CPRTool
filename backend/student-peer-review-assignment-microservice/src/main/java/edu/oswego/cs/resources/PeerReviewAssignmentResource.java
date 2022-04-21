@@ -215,9 +215,8 @@ public class PeerReviewAssignmentResource {
      * @return A file that contains the peer review for the team's submitted assignment
      * @throws WebApplicationException A endpoint parameter error
      */
-    @Deprecated
     @GET
-    @RolesAllowed("student")
+    @RolesAllowed({"professor", "student"})
     @Path("{courseID}/{assignmentID}/{srcTeamName}/{destTeamName}/download")
     @Produces({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
     public Response downloadFinishedTeamPeerReview(
