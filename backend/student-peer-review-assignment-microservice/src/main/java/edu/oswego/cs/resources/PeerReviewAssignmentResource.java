@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Path("assignments")
-//@DenyAll
+@DenyAll
 public class PeerReviewAssignmentResource {
 
     /**
@@ -180,7 +180,7 @@ public class PeerReviewAssignmentResource {
      * @throws WebApplicationException A endpoint parameter error
      */
     @POST
-//    @RolesAllowed({"professor", "student"})
+    @RolesAllowed({"professor", "student"})
     @Path("{courseID}/{assignmentID}/{srcTeamName}/{destTeamName}/{grade}/upload")
     @Consumes({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
     @Produces({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
