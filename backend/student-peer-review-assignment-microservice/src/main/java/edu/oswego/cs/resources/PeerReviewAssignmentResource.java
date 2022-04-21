@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Path("assignments")
-@DenyAll
+//@DenyAll
 public class PeerReviewAssignmentResource {
 
     /**
@@ -180,7 +180,7 @@ public class PeerReviewAssignmentResource {
      * @throws WebApplicationException A endpoint parameter error
      */
     @POST
-    @RolesAllowed({"professor", "student"})
+//    @RolesAllowed({"professor", "student"})
     @Path("{courseID}/{assignmentID}/{srcTeamName}/{destTeamName}/{grade}/upload")
     @Consumes({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
     @Produces({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
@@ -196,10 +196,11 @@ public class PeerReviewAssignmentResource {
         for (IAttachment attachment : attachments) {
             if (attachment == null) continue;
             String fileName = attachment.getDataHandler().getName();
-            if (!fileName.endsWith("pdf")) return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
-            peerReviewAssignmentInterface.uploadPeerReview(courseID, assignmentID, srcTeamName, destTeamName, attachment);
-            fileName = "from-" + srcTeamName + "-to-" + destTeamName + fileName.substring(fileName.indexOf("."));
-            peerReviewAssignmentInterface.addPeerReviewSubmission(courseID, assignmentID, srcTeamName, destTeamName, fileName, grade);
+            if (fileName.endsWith("pdf") || fileName.endsWith("docx")) {
+                peerReviewAssignmentInterface.uploadPeerReview(courseID, assignmentID, srcTeamName, destTeamName, attachment);
+                fileName = "from-" + srcTeamName + "-to-" + destTeamName + fileName.substring(fileName.indexOf("."));
+                peerReviewAssignmentInterface.addPeerReviewSubmission(courseID, assignmentID, srcTeamName, destTeamName, fileName, grade);
+            } else return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
         }
         return Response.status(Response.Status.OK).entity("Successfully uploaded peer review.").build();
     }
