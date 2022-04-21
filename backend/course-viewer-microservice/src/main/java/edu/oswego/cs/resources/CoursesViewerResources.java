@@ -83,7 +83,7 @@ public class CoursesViewerResources {
     }
 
     @GET
-    @RolesAllowed("student")
+    @RolesAllowed({"professor","student"})
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/{courseID}/assignments/{assignmentID}/students/{studentID}/grade")
     public Response viewGrade(
