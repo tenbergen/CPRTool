@@ -314,4 +314,19 @@ public class PeerReviewAssignmentInterface {
             }
         }
     }
+    public Document getGradeForTeam(String course_id,int assignment_id, String team_name){
+        Document result = submissionsCollection.find(
+                and(
+                        eq("course_id",course_id),
+                        eq("assignment_id",assignment_id),
+                        eq("team_name",team_name),
+                        eq("type","team_submission")
+                )
+        ).first();
+        if(result == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team: " +team_name +" was not found for assignment").build());
+        if(result.getInteger("grade")==null){
+            return new Document("grade",-1);
+        }else
+            return new Document("grade",result.getInteger("grade"));
+    }
 }

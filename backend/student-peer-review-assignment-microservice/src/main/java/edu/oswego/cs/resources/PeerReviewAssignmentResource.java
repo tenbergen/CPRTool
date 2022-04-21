@@ -116,7 +116,21 @@ public class PeerReviewAssignmentResource {
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
         return Response.status(Response.Status.OK).entity(peerReviewAssignmentInterface.professorUpdate(courseID, assignmentID, team_name, grade)).build();
     }
-
+    /**
+     *
+     *
+     */
+    @GET@RolesAllowed("professor")
+    @Path("{course_id}/{assignment_id}/{team_id}/grade")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTeamGrade(
+            @PathParam("course_id") String course_id,
+            @PathParam("assignment_id") int assignment_id,
+            @PathParam("team_id")String team_id
+    ){
+        PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
+        return Response.status(Response.Status.OK).entity(peerReviewAssignmentInterface.getGradeForTeam(course_id,assignment_id,team_id)).build();
+    }
 
     /**
      * Endpoint to get the teams that a team was assigned to peer review
