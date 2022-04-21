@@ -70,7 +70,7 @@ public class CoursesViewerResources {
         List<Document> studentDocuments = new CourseInterface().getStudentsInCourse(courseID);
         return Response.status(Response.Status.OK).entity(studentDocuments).build();
     }
-
+/*
     @GET
     @RolesAllowed("professor")
     @Produces(MediaType.APPLICATION_JSON)
@@ -81,6 +81,8 @@ public class CoursesViewerResources {
         List<Document> courseGrades = new GradeInterface().getAllGrades(courseID, studentID);
         return Response.status(Response.Status.OK).entity(courseGrades).build();
     }
+
+ */
 
     @GET
     @RolesAllowed({"professor","student"})
