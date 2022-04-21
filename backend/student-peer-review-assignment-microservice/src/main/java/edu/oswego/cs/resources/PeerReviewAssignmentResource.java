@@ -180,7 +180,7 @@ public class PeerReviewAssignmentResource {
      * @throws WebApplicationException A endpoint parameter error
      */
     @POST
-    @RolesAllowed("student")
+    @RolesAllowed({"professor", "student"})
     @Path("{courseID}/{assignmentID}/{srcTeamName}/{destTeamName}/{grade}/upload")
     @Consumes({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
     @Produces({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
@@ -216,7 +216,7 @@ public class PeerReviewAssignmentResource {
      * @throws WebApplicationException A endpoint parameter error
      */
     @GET
-    @RolesAllowed("student")
+    @RolesAllowed({"professor", "student"})
     @Path("{courseID}/{assignmentID}/{srcTeamName}/{destTeamName}/download")
     @Produces({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
     public Response downloadFinishedTeamPeerReview(
