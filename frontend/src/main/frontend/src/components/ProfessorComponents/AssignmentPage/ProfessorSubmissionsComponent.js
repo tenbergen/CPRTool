@@ -1,36 +1,41 @@
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import '../../styles/TeamSubmission.css';
 import {Link, useParams} from 'react-router-dom';
-import {getCourseAssignmentsAsync, setCurrentAssignment,} from '../../../redux/features/assignmentSlice';
+import axios from "axios";
+import {getAssignmentDetailsAsync} from '../../../redux/features/assignmentSlice';
 
 const ToDoComponent = () => {
-    const dispatch = useDispatch();
-    const store = useSelector((state) => state);
-    const {role} = store.auth;
-    const {courseAssignments} = store.assignments;
     const {courseId} = useParams();
+    const {assignmentId} = useParams();
+    const [teams, TeamAssignments] = useState(Array());
+    const dispatch = useDispatch();
+    const {currentAssignment, currentAssignmentLoaded} = useSelector(
+        (state) => state.assignments
+    );
 
     useEffect(() => {
-        dispatch(getCourseAssignmentsAsync(courseId));
+        dispatch(getAssignmentDetailsAsync({courseId, assignmentId}));
+        axios.get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/allTeams`)
+            .then((r) => {
+                console.log("teams" + r)
+                for (let i = 0; i < r.data.length; i++) {
+                    TeamAssignments((arr) => [...arr, r.data[i]]);
+                }
+            });
     }, []);
-
-    const assignmentClickHandler = (assignment) => {
-        dispatch(setCurrentAssignment(assignment));
-    };
-
-    const teamsubs = ['Team A : Assignment 1', 'Team B: Assignment 1'];
 
     return (
         <h3>
             <div id='assList'>
-                {teamsubs.map((teamsub) => (
-                    <Link to={''} onClick={() => assignmentClickHandler(teamsub)}>
-                        <li id='assListItem'>
-                            {teamsub + '\n\n' + 'Grade : ' + 'Pending'}
-                        </li>
-                    </Link>
-                ))}
+                {teams.map((team) => (
+                        <Link to={`/details/professor/${courseId}/${assignmentId}/grade/${team}`}>
+                            <li id='assListItem'>
+                                {team + ": " + currentAssignment.assignment_name + '\n\n' + 'Grade : ' + 'Pending'}
+                            </li>
+                        </Link>
+                    ))
+                }
             </div>
         </h3>
     );
