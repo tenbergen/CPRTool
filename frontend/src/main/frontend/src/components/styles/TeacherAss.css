@@ -24,15 +24,19 @@
   text-align: center;
   padding: 5px 3px;
   border-radius: 5px;
-  color: #5267a3;
+  color: #f07371;
   font-family: 'Roboto', sans-serif;
   text-decoration: underline;
   font-weight: bold;
+  transition: all 0.2s ease-out;
 }
 
 .delete-ass-btn:hover {
   cursor: pointer;
+  background-color: #ff0000;
+  color: #fff;
   opacity: 0.8;
+  text-decoration: none;
 }
 
 .ass-title {
