@@ -4,6 +4,7 @@
     display: flex;
     overflow-y: scroll;
     height: 70vh;
+    font-family: 'Kumbh Sans', sans-serif;
 }
 
 .loader-wrapper {
