@@ -1,0 +1,19 @@
+button {
+    padding: 10px 45px 10px 45px;
+    border: none;
+    font-size: medium;
+    font-weight: bold;
+}
+
+.yellow-button {
+    padding: 15px 45px 15px 45px;
+    margin-top: 3%;
+    background: #F8D377;
+    border-radius: 50px;
+    transition: all 0.2s ease-out;
+}
+
+.yellow-button:hover {
+    background: #deb140;
+    border-radius: 50px;
+}

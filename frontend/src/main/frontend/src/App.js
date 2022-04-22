@@ -1,6 +1,6 @@
 import ProfessorDashboardPage from './pages/TeacherPages/ProfessorDashboardPage';
 import {useDispatch, useSelector} from 'react-redux';
-import './global_styles/global.css';
+import './global_styles/fonts.css';
 import React, {useEffect} from 'react';
 import {refreshTokenAsync, setUserInformation,} from './redux/features/authSlice';
 import StudentDashboardPage from './pages/StudentPages/StudentDashboardPage';

@@ -1,14 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap');
-
 .TeacherDashboard {
     display: flex;
 }
 
 .welcome-banner {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: left;
     flex-direction: column;
+    padding-left: 2%;
+    padding-top: 2%;
 }
 
 h1 {
@@ -19,7 +18,7 @@ h1 {
 
 .views {
     display: flex;
-    justify-content: space-between;
+    /*justify-content: space-between;*/
 }
 
 .student-view {
@@ -35,17 +34,8 @@ h1 {
     filter: brightness(110%);
 }
 
-.original-view {
-    margin-left: 5px;
-    border: 1px solid #a8bbbf;
-    transition: all 0.2s ease-out;
-    border-radius: 8px;
-}
-
-.original-view:hover {
-    cursor: pointer;
-    color: #000;
-    filter: brightness(110%);
+.pdp-coursename {
+    margin-bottom: 1%;
 }
 
 #teacher {
@@ -56,7 +46,6 @@ h1 {
     padding-right: 3%;
     padding-left: 3%;
     margin-right: 5%;
-    margin-left: 5%;
     flex-grow: 1;
     height: 90vh;
     width: 100vw;
@@ -65,7 +54,7 @@ h1 {
 #proCourseList {
     overflow-y: scroll;
     overflow-x: hidden;
-    height: 65vh;
+    height: 55vh;
     margin-top: 5px;
 }
 
@@ -96,29 +85,14 @@ h1 {
 }
 
 #addButton {
-    color: #324b4d;
     cursor: pointer;
     justify-self: center;
-    padding: 10px 45px 10px 45px;
-    border: none;
-    font-size: 1.1em;
-    font-weight: bold;
-    border-radius: 8px;
-    border: 1px solid #79bedc;
-    font-family: 'Merriweather', sans-serif;
-    background-color: #91d8df;
-    transition: all 0.2s ease-out;
-}
 
-#addButton:hover {
-    background-color: #79bedc;
-    color: #000;
-    opacity: 0.8;
-    font-size: 1.135em;
-    border: 1px solid #79bedc;
 }
 
 .courseListItem {
+    display: flex;
+    flex-direction: column;
     height: 10vh;
     text-align: left;
     background: linear-gradient(

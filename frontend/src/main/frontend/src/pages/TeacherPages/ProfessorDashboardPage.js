@@ -23,11 +23,6 @@ function ProfessorDashboardPage() {
         window.location.reload(false);
     };
 
-    const originalView = () => {
-        localStorage.removeItem('alt_role');
-        window.location.reload(false);
-    };
-
     const onCourseClick = (course) => {
         dispatch(getCourseDetailsAsync(course.course_id));
     };
@@ -41,15 +36,10 @@ function ProfessorDashboardPage() {
                     <SidebarComponent/>
                     <div id='teacher'>
                         <div className='welcome-banner'>
-                            <h1>Hello, {user}!</h1>
+                            <h1 className="kumba-30">Hello, {user}!</h1>
                             <div className='views'>
-                                <button className='student-view' onClick={studentView}>
-                                    {' '}
+                                <button className='kumba-20 student-view' onClick={studentView}>
                                     Student View
-                                </button>
-                                <button className='original-view' onClick={originalView}>
-                                    {' '}
-                                    Original View
                                 </button>
                             </div>
                         </div>
@@ -58,17 +48,17 @@ function ProfessorDashboardPage() {
                             {courses.map((course) => (
                                 <Link
                                     to={'/details/professor/' + course.course_id}
-                                    onClick={() => onCourseClick(course)}
-                                >
+                                    onClick={() => onCourseClick(course)}>
                                     <li className='courseListItem'>
-                                        {course.course_id + '\n\n' + course.course_name}
+                                        <span className="outfit-13 pdp-coursename">{course.course_id}</span>
+                                        <span className="kumba-20">{course.course_name}</span>
                                     </li>
                                 </Link>
                             ))}
                         </div>
                         <div id='addClass'>
                             <Link to='/create/course'>
-                                <button id='addButton'>Create new course</button>
+                                <button className="yellow-button" id='addButton'>Create new course</button>
                             </Link>
                         </div>
                     </div>
