@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react';
 import SidebarComponent from "../../components/SidebarComponent";
-import AssBarComponent from "../../components/AssBarComponent";
 import "./styles/AssignmentPageStyle.css"
 import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
 import {getSubmittedAssignmentDetailsAsync} from "../../redux/features/assignmentSlice";
 import SubmittedAssignmentComponent from "../../components/StudentComponents/AssignmentPage/SubmittedAssignmentComponent";
+import SubmittedAssBarComponent from "../../components/SubmittedAssBarComponent";
 
 function SubmittedAssignmentPage() {
     const dispatch = useDispatch()
@@ -22,7 +22,7 @@ function SubmittedAssignmentPage() {
             <div className='ap-parent'>
                 <SidebarComponent/>
                 <div className='ap-container'>
-                    <AssBarComponent/>
+                    <SubmittedAssBarComponent/>
                     <div className='ap-component'>
                         <SubmittedAssignmentComponent
                             currentAssignmentLoaded={currentAssignmentLoaded}
