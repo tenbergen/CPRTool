@@ -103,6 +103,9 @@ services:
     build:
       context: ./backend/student-assignment-microservice
     container_name: cpr-student-assignment
+    restart: unless-stopped
+    volumes:
+      - ./assignments:/opt/ol/wlp/output/defaultServer/assignments:r
     environment:
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
@@ -119,6 +122,9 @@ services:
     build:
       context: ./backend/student-peer-review-assignment-microservice
     container_name: student-peer-review-assignment
+    restart: unless-stopped
+    volumes:
+      - ./assignments:/opt/ol/wlp/output/defaultServer/assignments:r
     environment:
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
