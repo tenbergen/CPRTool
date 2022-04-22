@@ -44,7 +44,7 @@ const StudentPeerReviewComponent = () => {
     const onTeamFileClick = async () => {
         const srcTeamName = currentTeamId
         console.log(srcTeamName)
-        const url = `${process.env.REACT_APP_URL}/peer-review/assignments/{courseID}/${assignmentId}/${srcTeamName}/${destTeamName}/download`
+        const url = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${srcTeamName}/${destTeamName}/download`
 
         await axios.get(url, {responseType: 'blob'})
             .then(res => downloadFile(res.data, teamName))

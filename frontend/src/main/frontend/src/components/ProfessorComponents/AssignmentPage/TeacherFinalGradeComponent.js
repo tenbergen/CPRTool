@@ -11,22 +11,18 @@ import ProfessorSubmissionsComponent from "./ProfessorSubmissionsComponent";
 
 function TeacherFinalGradeComponent() {
     const dispatch = useDispatch();
-    const isDataLoaded = useSelector(
-        (state) => state.courses.currentCourseLoaded
-    );
-    const {currentAssignment, currentAssignmentLoaded} = useSelector(
-        (state) => state.assignments
-    );
+    const isDataLoaded = useSelector((state) => state.courses.currentCourseLoaded);
+    const {currentAssignment, currentAssignmentLoaded} = useSelector((state) => state.assignments);
     const {courseId, assignmentId,teamId} = useParams();
-    //const teamId = "java"
+    const {currentTeamId, teamLoaded} = useSelector((state) => state.teams)
 
 
     const [teams, setTeams] = useState(Array());
-    const urlPeerReivewTeams = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/peer-review-team-assignments/${teamId}`;
+    const urlPeerReviewTeams = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/peer-review-team-assignments/${teamId}`;
 
     useEffect(() => {
         dispatch(getAssignmentDetailsAsync({courseId, assignmentId}));
-        {axios.get(urlPeerReivewTeams)
+        {axios.get(urlPeerReviewTeams)
             .then((r) => {
                 // console.log("Response: "+r.data)
                 for (let i = 0; i < r.data.length; i++) {
@@ -49,7 +45,7 @@ function TeacherFinalGradeComponent() {
     };
 
     const onFileClick = async (fileName) => {
-        const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/peer-review/download/${fileName}`;
+        const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/peer-review/download/${fileName}`
 
         await axios
             .get(url, {responseType: 'blob'})
@@ -57,7 +53,7 @@ function TeacherFinalGradeComponent() {
     };
 
     const onFeedBackClick = async (teamName) => {
-        const url = `${process.env.REACT_APP_URL}peer-review/assignments/${courseId}/${assignmentId}/${teamName}/${teamId}/download`;
+        const url = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${teamName}/${teamId}/download`;
 
         await axios
             .get(url, {responseType: 'blob'})
@@ -104,21 +100,21 @@ in Calib
                                             <div>
                                                 <div className="ap-assignment-files">
                                                     <span className="sac-title"> Rubric: </span>
-                                                    <span className="sac-filename" onClick={onFileClick(currentAssignment.peer_review_rubric)}>
+                                                    <span className="sac-filename" onClick={() => onFileClick(currentAssignment.peer_review_rubric)}>
                                     {currentAssignment.peer_review_rubric}
                                 </span>
                                                 </div>
 
                                                 <div className="ap-assignment-files">
                                                     <span className="sac-title">Template:</span>
-                                                    <span className="sac-filename" onClick={onFileClick(currentAssignment.peer_review_template)}>
+                                                    <span className="sac-filename" onClick={() => onFileClick(currentAssignment.peer_review_template)}>
                                     {currentAssignment.peer_review_template}
                                 </span>
                                                 </div>
 
                                                 <div className="ap-assignment-files">
                                                     <span className="sac-title">Team Files:</span>
-                                                    <span className="sac-filename" onClick={currentAssignment.team_file}>
+                                                    <span className="sac-filename" onClick={() => currentAssignment.team_file}>
                                     {currentAssignment.team_file}
                                 </span>
                                                 </div>
