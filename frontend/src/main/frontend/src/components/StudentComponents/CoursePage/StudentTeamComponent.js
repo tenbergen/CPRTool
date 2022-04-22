@@ -38,15 +38,29 @@ const TeamComponent = () => {
         const team_name = prompt("Enter team name: ")
         const createUrl = `${process.env.REACT_APP_URL}/teams/team/create`
         const createData = JSON.parse(JSON.stringify({"course_id": courseId, "student_id": lakerId, "team_name": team_name}))
-        await axios.post(createUrl, createData)
-        .then(res => {
-            console.log(res)
-            navigate(`/`)
-            navigate(`/details/student/` + courseId)
-        }).catch((e) => {
-            console.log(e)
-            alert("Error creating team")
-        })
+        if(team_name.split(" ").length > 1) {
+            alert("Please enter a team name with no spaces!")
+        }
+        else {
+            await axios.post(createUrl, createData)
+                .then(res => {
+                    console.log(res)
+                    navigate(`/`)
+                    navigate(`/details/student/` + courseId)
+                }).catch((e) => {
+                    console.log(e)
+                    alert("Error creating team")
+                })
+        }
+        // await axios.post(createUrl, createData)
+        // .then(res => {
+        //     console.log(res)
+        //     navigate(`/`)
+        //     navigate(`/details/student/` + courseId)
+        // }).catch((e) => {
+        //     console.log(e)
+        //     alert("Error creating team")
+        // })
     }
 
     return (
