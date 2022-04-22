@@ -18,6 +18,11 @@
   margin-right: 2%;
 }
 
+.ecc-input-field label b,
+.ecc-file-upload label b {
+  font-weight: 500;
+}
+
 .ecc-input-field input {
   flex-grow: 1;
   padding: 5px 5px 5px 5px;
@@ -37,7 +42,7 @@
 }
 
 .ecc-file-upload input::file-selector-button {
-  background: #9cf0d3;
+  background: #82dfe8;
   border-radius: 50px;
   padding: 10px 45px 10px 45px;
   border: none;
@@ -48,7 +53,7 @@
 
 .ecc-file-upload input::file-selector-button:hover {
   cursor: pointer;
-  background-color: #58eeba;
+  background-color: #58d5e1;
 }
 
 .ecc-button {
