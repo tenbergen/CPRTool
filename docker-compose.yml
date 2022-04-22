@@ -121,7 +121,7 @@ services:
   student-peer-review-assignment:
     build:
       context: ./backend/student-peer-review-assignment-microservice
-    container_name: student-peer-review-assignment
+    container_name: cpr-student-peer-review-assignment
     restart: unless-stopped
     volumes:
       - ./assignments:/opt/ol/wlp/output/defaultServer/assignments:r
