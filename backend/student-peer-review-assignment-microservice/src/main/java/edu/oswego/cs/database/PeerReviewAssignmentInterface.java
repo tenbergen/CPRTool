@@ -59,7 +59,7 @@ public class PeerReviewAssignmentInterface {
                 .append("submission_name", fileName)
                 .append("reviewed_by", reviewedByTeam.getString("team_id"))
                 .append("reviewed_by_members", reviewedByTeam.getList("team_members", String.class))
-                .append("reviewed_team", reviewedTeam.getList("team_members", String.class))
+                .append("reviewed_team", reviewedTeam.getString("team_id"))
                 .append("reviewed_team_members", reviewedTeam.getList("team_members", String.class))
                 .append("type", "peer_review_submission")
                 .append("grade", grade)
