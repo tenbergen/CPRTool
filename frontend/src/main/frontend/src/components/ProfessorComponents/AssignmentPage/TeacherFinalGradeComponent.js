@@ -1,28 +1,43 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import '../../styles/FinalGrade.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import {getAssignmentDetailsAsync} from '../../../redux/features/assignmentSlice';
-import {getPeerReviewFilesAsync} from '../../../redux/features/peerReviewSlice';
 import axios from 'axios';
+import AssBarComponent from "../../AssBarComponent";
+import SidebarComponent from "../../SidebarComponent";
+import GradeAssBarComponent from "../../GradeAssBarComponent";
+import ProfessorSubmissionsComponent from "./ProfessorSubmissionsComponent";
 
 function TeacherFinalGradeComponent() {
     const dispatch = useDispatch();
+    const isDataLoaded = useSelector(
+        (state) => state.courses.currentCourseLoaded
+    );
     const {currentAssignment, currentAssignmentLoaded} = useSelector(
         (state) => state.assignments
     );
-    const {courseId, assignmentId} = useParams();
-    const {peerReviewFiles, peerReviewTeamFiles} = useSelector(
-        (state) => state.peerReviews
-    );
+    const {courseId, assignmentId,teamId} = useParams();
+    //const teamId = "java"
+
+
+    const [teams, setTeams] = useState(Array());
+    const urlPeerReivewTeams = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/peer-review-team-assignments/${teamId}`;
 
     useEffect(() => {
         dispatch(getAssignmentDetailsAsync({courseId, assignmentId}));
-        dispatch(getPeerReviewFilesAsync({courseId, assignmentId}));
+        {axios.get(urlPeerReivewTeams)
+            .then((r) => {
+                // console.log("Response: "+r.data)
+                for (let i = 0; i < r.data.length; i++) {
+                    setTeams((arr) => [...arr, r.data[i]]);
+                }
+            });
+        };
     }, []);
 
-    const onDownloadClick2 = async (fileName) => {
-        return `${process.env.REACT_APP_URL}/manage/courses/${courseId}/assignments/${assignmentId}/download/${fileName}`;
+    const print = () =>{
+        console.log(teams)
     };
 
     const downloadFile = (blob, fileName) => {
@@ -41,94 +56,104 @@ function TeacherFinalGradeComponent() {
             .then((res) => downloadFile(res.data, fileName));
     };
 
-    return currentAssignmentLoaded ? (
-        <div className='ap-component'>
-            <h2>{currentAssignment.assignment_name}</h2>
-            <div className='ap-assignmentArea'>
-                <div className='ap-component-links'>
-                    <h3>
-                        {' '}
-                        Instructions: <br/> <br/>
-                        {currentAssignment.instructions}
-                    </h3>
-                    <h3 id='dueDate' className='dueDate'>
-                        Due Date: {currentAssignment.due_date}
-                    </h3>
-                    <div className='ap-teams'>
-                        <label className='fileLables'>
-                            {' '}
-                            <b>
-                                {' '}
-                                Rubric:{' '}
-                                <div onClick={() => onFileClick(peerReviewFiles[0])}>
-                                    {' '}
-                                    {peerReviewFiles[0]}{' '}
-                                </div>
-                                {' '}
-                            </b>{' '}
-                        </label>
-                        <br/>
-                        <label className='fileLables'>
-                            {' '}
-                            <b>
-                                {' '}
-                                Template:{' '}
-                                <div onClick={() => onFileClick(peerReviewFiles[1])}>
-                                    {' '}
-                                    {peerReviewFiles[1]}{' '}
-                                </div>
-                                {' '}
-                            </b>{' '}
-                        </label>
-                        <br/>
-                        <label className='fileLables'>
-                            {' '}
-                            <b> Team Files: {/*peerReviewTeamFiles*/}</b>{' '}
-                        </label>
-                        <br/>
-                        <label>
-                            {' '}
-                            <b> Peer Review: </b>{' '}
-                        </label>
-                        <table className='teamTable'>
-                            <td>
-                                <div className='colorForTable'/>
-                                <div className='teamName'>Team Testers</div>
-                            </td>
-                        </table>
-                        <div className='cap-assignment-info'>
-                            <label>
-                                {' '}
-                                <b> Grade: </b>{' '}
-                            </label>
-                            <input
-                                type='number'
-                                min='0'
-                                name='Grade'
-                                // value={Grade}
-                                required
-                                // onChange={(e) => OnChange(e)}
-                            />
-                        </div>
-                        <div className='cap-assignment-files'>
-                            <label>
-                                {' '}
-                                <b> Feedback: </b>{' '}
-                            </label>
-                            <input
-                                type='file'
-                                name='Feedback'
-                                // value={Feedback}
-                                required
-                                //onChange={(e) => OnChange(e)}
-                            />
+    const onFeedBackClick = async (teamName) => {
+        const url = `${process.env.REACT_APP_URL}peer-review/assignments/${courseId}/${assignmentId}/${teamName}/${teamId}/download`;
+
+        await axios
+            .get(url, {responseType: 'blob'})
+            .then((res) => downloadFile(res.data, teamName));
+    };
+
+    /*
+    *
+    * moxie.cs.oswego.edu:13125/peer-review/assignments/{course_id}/{assignment_id}/{team_name}/getTeamGrades
+    *
+    * In Agreed Upon Endpoints
+    *
+    * {courseID}/{assignmentID}/{srcTeamName}/{destTeamName}/download
+
+Description: Endpoint for a team to get a peer review given by another team
+in Calib
+    *
+    *
+    * */
+
+    return (
+        <div>
+            {isDataLoaded ? (
+                <div className='scp-parent'>
+                    <SidebarComponent/>
+                    <div className='scp-container'>
+                        <GradeAssBarComponent/>
+                        <div className='scp-component'>
+                            <div>
+                                {currentAssignmentLoaded ?
+                                    <div className="sac-parent">
+                                        <h2 className="assignment-name">{currentAssignment.assignment_name}</h2>
+                                        <div className="sac-content">
+                                            <div>
+                                                <span className="sac-title"> Instructions </span>
+                                                <span className="sac-date sac-title">Due Date: {currentAssignment.due_date}</span>
+                                                <br/>
+                                                <p>
+                                                    <span className="sac-text"> {currentAssignment.instructions} </span>
+                                                </p>
+                                            </div>
+                                            <br/>
+
+                                            <div>
+                                                <div className="ap-assignment-files">
+                                                    <span className="sac-title"> Rubric: </span>
+                                                    <span className="sac-filename" onClick={onFileClick(currentAssignment.peer_review_rubric)}>
+                                    {currentAssignment.peer_review_rubric}
+                                </span>
+                                                </div>
+
+                                                <div className="ap-assignment-files">
+                                                    <span className="sac-title">Template:</span>
+                                                    <span className="sac-filename" onClick={onFileClick(currentAssignment.peer_review_template)}>
+                                    {currentAssignment.peer_review_template}
+                                </span>
+                                                </div>
+
+                                                <div className="ap-assignment-files">
+                                                    <span className="sac-title">Team Files:</span>
+                                                    <span className="sac-filename" onClick={currentAssignment.team_file}>
+                                    {currentAssignment.team_file}
+                                </span>
+                                                </div>
+                                            </div>
+                                            <br/>
+                                            <div>
+                                                <div>
+                                                    <span className="sac-title"> Peer reviews: </span>
+                                                    <div className='peerReviewList'>
+                                                        {teams.map(team => (
+                                                            <li className='peerReviewListItem'>
+                                                                <b> {team.grade === -1 ? "Pending" : team.grade}
+                                                                </b> <span className="sac-filename"> {team.submission_name} </span>
+                                                            </li>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br/><br/>
+                                            <div>
+                                                <span className="sac-title"> Grade: {teams.grade}</span>
+                                            </div>
+                                        </div>
+                                    </div> : null
+                                }
+                            </div>
                         </div>
                     </div>
-                    <button className='submitButton'>Submit</button>
                 </div>
-            </div>
+            ) : null}
         </div>
-    ) : null;
+    );
 }
 
 export default TeacherFinalGradeComponent;
+
+
+
