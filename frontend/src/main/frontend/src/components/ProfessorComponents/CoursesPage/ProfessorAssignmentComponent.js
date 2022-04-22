@@ -55,7 +55,7 @@ const ProfessorAssignmentComponent = () => {
             ) : (
                 <div className={'TeacherAss'}>
                     <div id='ass'>
-                        <div id='assList'>
+                        <div id='teacherAssList'>
                             {courseAssignments.map((assignment) => (
                                 <div className='assListItem'>
                                     <Link
