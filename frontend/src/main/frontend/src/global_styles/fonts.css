@@ -10,7 +10,7 @@
     font-family: 'Kumbh Sans', sans-serif;
     font-style: normal;
     font-weight: 900;
-    font-size: 30px;
+    font-size: 25px;
     color: #393939;
 }
 
@@ -18,26 +18,11 @@
     font-family: 'Kumbh Sans', sans-serif;
     font-style: normal;
     font-weight: 900;
-    font-size: 25px;
-    color: #393939;
-}
-
-.kumba-20 {
-    font-family: 'Kumbh Sans', sans-serif;
-    font-style: normal;
-    font-weight: 900;
-    font-size: 20px;
+    font-size: 18px;
     color: #393939;
 }
 
 .outfit-16 {
-    font-family: 'Outfit', sans-serif;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-}
-
-.outfit-13 {
     font-family: 'Outfit', sans-serif;
     font-style: normal;
     font-weight: 400;
@@ -48,5 +33,5 @@
     font-family: 'Outfit', sans-serif;
     font-style: normal;
     font-weight: 400;
-    font-size: 20px;
+    font-size: 18px;
 }

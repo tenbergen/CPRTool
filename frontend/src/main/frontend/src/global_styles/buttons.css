@@ -31,3 +31,15 @@ button {
     border-radius: 50px;
 }
 
+.blue-button-filled {
+    background: #7398FF;
+    color: white;
+    border-radius: 50px;
+}
+
+.blue-button-filled:hover {
+    background: #4976f3;
+    color: white;
+    border-radius: 50px;
+}
+

@@ -15,7 +15,7 @@ import Loader from '../../components/LoaderComponenets/Loader';
 
 const CourseComponent = ({active, component, onClick}) => {
     return (
-        <p onClick={onClick} className={active ? 'pcp-component-link-clicked' : 'pcp-component-link'}>
+        <p onClick={onClick} className={active ? 'kumba-30 pcp-component-link-clicked' : 'kumba-30 pcp-component-link'}>
             {component}
         </p>
     );

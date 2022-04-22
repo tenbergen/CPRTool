@@ -38,7 +38,7 @@ function ProfessorDashboardPage() {
                         <div className='welcome-banner'>
                             <h1 className="kumba-30">Hello, {user}!</h1>
                             <div className='views'>
-                                <button className='kumba-20 student-view' onClick={studentView}>
+                                <button className='kumba-25 student-view' onClick={studentView}>
                                     Student View
                                 </button>
                             </div>
@@ -50,8 +50,8 @@ function ProfessorDashboardPage() {
                                     to={'/details/professor/' + course.course_id}
                                     onClick={() => onCourseClick(course)}>
                                     <li className='courseListItem'>
-                                        <span className="outfit-13 pdp-coursename">{course.course_id}</span>
-                                        <span className="kumba-20">{course.course_name}</span>
+                                        <span className="outfit-16 pdp-coursename">{course.course_id}</span>
+                                        <span className="kumba-25">{course.course_name}</span>
                                     </li>
                                 </Link>
                             ))}
