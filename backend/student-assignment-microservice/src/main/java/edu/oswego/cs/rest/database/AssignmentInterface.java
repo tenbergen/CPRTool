@@ -44,7 +44,7 @@ public class AssignmentInterface {
     }
 
     public void writeToAssignment(FileDAO fileDAO) throws IOException {
-        String path = "courses" + reg
+        String path = "assignments" + reg
                 + fileDAO.getCourseID() + reg
                 + fileDAO.getAssignmentID() + reg
                 + "team-submissions";
@@ -137,7 +137,7 @@ public class AssignmentInterface {
         if (team.get("team_id", String.class) == null) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team_id not defined").build());
         }
-        String path = "courses"+ reg+course_id+reg+assignment_id+reg+"team_submissions";
+        String path = "assignments"+ reg+course_id+reg+assignment_id+reg+"team_submissions";
         Document new_submission = new Document()
                 .append("course_id",course_id)
                 .append("assignment_id",assignment_id)
