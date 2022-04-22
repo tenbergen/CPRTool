@@ -52,7 +52,7 @@ public class PeerReviewAssignmentInterface {
         if (reviewedTeam.get("team_id", String.class) == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team_id not defined").build());
 
         String reg = "/";
-        String path = "courses" + reg + course_id + reg + assignment_id + reg + "peer-review-submissions";
+        String path = "assignments" + reg + course_id + reg + assignment_id + reg + "peer-review-submissions";
         Document new_submission = new Document()
                 .append("course_id", course_id)
                 .append("assignment_id", assignment_id)
@@ -76,7 +76,7 @@ public class PeerReviewAssignmentInterface {
 
     public void uploadPeerReview(String courseID, int assignmentID, String srcTeamName, String destTeamName, IAttachment attachment) throws IOException {
         FileDAO fileDAO = FileDAO.fileFactory(courseID, srcTeamName, destTeamName, assignmentID, attachment);
-        String path = "courses/" + courseID + "/" + assignmentID + "/peer-review-submissions/";
+        String path = "assignments/" + courseID + "/" + assignmentID + "/peer-review-submissions/";
         if (!new File(path).exists()) {
             new File(path).mkdirs();
         }
@@ -88,7 +88,7 @@ public class PeerReviewAssignmentInterface {
     }
 
     public File downloadFinishedPeerReview(String courseID, int assignmentID, String srcTeamName, String destTeamName) {
-        String path = "courses/" + courseID + "/" + assignmentID + "/peer-review-submissions/";
+        String path = "assignments/" + courseID + "/" + assignmentID + "/peer-review-submissions/";
         if (!new File(path).exists())
             throw new WebApplicationException("Peer reviews do not exist for this course yet.");
 
