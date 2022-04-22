@@ -103,9 +103,9 @@ const ProfessorTeamComponent = () => {
             console.log(data);
 
             axios
-                .put(
+                .delete(
                     `${process.env.REACT_APP_URL}/teams/professor/team/delete`,
-                    data
+                    {data}
                 )
                 .then((r) => {
                     console.log(r);
