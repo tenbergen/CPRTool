@@ -23,6 +23,9 @@ button {
     margin-top: 3%;
     background: #9CF0D3;
     border-radius: 50px;
+    color: #393939;
+    font-family: 'Outfit', sans-serif;
+    font-size: 20px;
     transition: all 0.2s ease-out;
 }
 
@@ -41,5 +44,12 @@ button {
     background: #4976f3;
     color: white;
     border-radius: 50px;
+}
+
+.teal-button {
+    background: #82DFE8;
+    color: #393939;
+    font-family: 'Outfit', sans-serif;
+    font-size: 20px;
 }
 
