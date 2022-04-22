@@ -65,12 +65,13 @@ const SubmittedAssignmentComponent = ({currentAssignmentLoaded, currentSubmitted
                             <div>
                                 <span className="sac-title"> Peer reviews: </span>
                                 <div className='peerReviewList'>
-                                    {currentSubmittedAssignment.peer_reviews.map(peerReview => (
-                                        <li className='peerReviewListItem'>
-                                            <b> {peerReview.grade === -1 ? "Pending" : peerReview.grade}
-                                            </b> <span className="sac-filename"> {peerReview.submission_name} </span>
-                                        </li>
-                                    ))}
+                                    {currentSubmittedAssignment.peer_reviews !== null ?
+                                        currentSubmittedAssignment.peer_reviews.map(peerReview => (
+                                            <li className='peerReviewListItem'>
+                                                <b> {peerReview.grade === -1 ? "Pending" : peerReview.grade}
+                                                </b> <span className="sac-filename"> {peerReview.submission_name} </span>
+                                            </li>
+                                    )): null}
                                 </div>
                             </div>
                         </div>

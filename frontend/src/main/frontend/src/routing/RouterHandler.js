@@ -11,7 +11,7 @@ import RoleRouteHandler from './RoleRouteHandler';
 import AuthRouteHandler from './AuthRouteHandler';
 import ProfessorAssignmentPage from '../pages/TeacherPages/ProfessorAssignmentPage';
 import TeacherFinalGradeComponent from "../components/ProfessorComponents/AssignmentPage/TeacherFinalGradeComponent";
-// import SubmittedAssignmentPage from '../pages/StudentPages/SubmittedAssignmentPage';
+import SubmittedAssignmentPage from "../pages/StudentPages/SubmittedAssignmentPage";
 
 const RouterHandler = () => {
     return (
@@ -27,46 +27,18 @@ const RouterHandler = () => {
                     {/*professor-only routes*/}
                     <Route element={<RoleRouteHandler allowedRoles={['professor']}/>}>
                         <Route path='create/course' element={<CreateCoursePage/>}/>
-                        <Route
-                            path='details/professor/:courseId'
-                            element={<ProfessorCoursePage/>}
-                        />
-                        <Route
-                            path='details/professor/:courseId/create/assignment'
-                            element={<CreateAssignmentPage/>}
-                        />
-                        <Route
-                            path='details/professor/:courseId/:assignmentId/grade'
-                            element={<ProfessorAssignmentPage/>}
-                        />
-                        <Route
-                            path='details/professor/:courseId/:assignmentId/grade/:teamId'
-                            element={<TeacherFinalGradeComponent/>}
-                        />
+                        <Route path='details/professor/:courseId' element={<ProfessorCoursePage/>}/>
+                        <Route path='details/professor/:courseId/create/assignment' element={<CreateAssignmentPage/>}/>
+                        <Route path='details/professor/:courseId/:assignmentId/grade' element={<ProfessorAssignmentPage/>}/>
+                        <Route path='details/professor/:courseId/:assignmentId/grade/:teamId' element={<TeacherFinalGradeComponent/>}/>
                     </Route>
 
                     {/*student routes*/}
-                    <Route
-                        element={
-                            <RoleRouteHandler allowedRoles={['student', 'professor']}/>
-                        }
-                    >
-                        <Route
-                            path='details/student/:courseId'
-                            element={<StudentCoursePage/>}
-                        />
-                        <Route
-                            path='details/student/:courseId/:assignmentId/:assignmentType'
-                            element={<AssignmentPage/>}
-                        />
-                        <Route
-                            path='details/student/:courseId/:assignmentId/:assignmentType/:teamName'
-                            element={<AssignmentPage/>}
-                        />
-                        {/* <Route
-              path='details/student/:courseId/:assignmentId/submitted'
-              element={<SubmittedAssignmentPage />}
-            /> */}
+                    <Route element={<RoleRouteHandler allowedRoles={['student', 'professor']}/>}>
+                        <Route path='details/student/:courseId' element={<StudentCoursePage/>}/>
+                        <Route path='details/student/:courseId/:assignmentId/:assignmentType' element={<AssignmentPage/>}/>
+                        <Route path='details/student/:courseId/:assignmentId/:assignmentType/:teamName' element={<AssignmentPage/>}/>
+                        <Route path='details/student/:courseId/:assignmentId/:currentTeamId/submitted' element={<SubmittedAssignmentPage />}/>
                     </Route>
                 </Route>
             </Route>

@@ -161,6 +161,10 @@ const getSubmittedAssignmentDetails = async (courseId, assignmentId, lakerId, te
             console.log(res.data)
             return res.data
         })
+        .catch(e => {
+            console.log(e)
+            return null
+        })
 
     const gradeUrl = `${process.env.REACT_APP_URL}/view/professor/courses/${courseId}/assignments/${assignmentId}/students/${lakerId}/grade`
     const grade = await axios.get(gradeUrl)

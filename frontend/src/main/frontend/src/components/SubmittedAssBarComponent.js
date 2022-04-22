@@ -1,18 +1,17 @@
 import React, {useEffect, useState} from "react";
 import {Link, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {getSubmittedAssignmentsAsync} from "../redux/features/assignmentSlice";
+import {getSubmittedAssignmentDetailsAsync, getSubmittedAssignmentsAsync} from "../redux/features/assignmentSlice";
 
 const SubAssBarLink = ({active, assignment, onClick, teamName}) => {
     const {role} = useSelector((state) => state.auth);
     const normalStyle = {backgroundColor: 'rgba(255, 255, 255, 0.25)'};
     const clickedStyle = {backgroundColor: 'white'};
     const {courseId} = useParams();
-    const currentTeamId = teamName;
 
     return (
         <Link
-            to={`/details/${role}/${courseId}/${assignment.assignment_id}/${currentTeamId}/submitted`}
+            to={`/details/${role}/${courseId}/${assignment.assignment_id}/${teamName}/submitted`}
             onClick={onClick}>
             <tr>
                 <td style={active ? clickedStyle : normalStyle}>
@@ -28,8 +27,7 @@ const SubmittedAssBarComponent = () => {
     const dispatch = useDispatch();
     const {courseSubmittedAssignments} = useSelector((state) => state.assignments);
     const {courseId, assignmentId, currentTeamId} = useParams();
-    const curr = assignmentId
-    const [chosen, setChosen] = useState(curr);
+    const [chosen, setChosen] = useState(parseInt(assignmentId));
     const {lakerId} = useSelector((state) => state.auth);
 
     useEffect(() => {
@@ -37,11 +35,9 @@ const SubmittedAssBarComponent = () => {
     }, []);
 
     const onSubAssClick = (assignment) => {
-        const curr = assignment.assignment_id
-        setChosen(curr);
-        const courseId = assignment.course_id
         const assignmentId = assignment.assignment_id
-        dispatch(getSubmittedAssignmentsAsync({courseId, currentTeamId, lakerId}))
+        setChosen(assignmentId);
+        dispatch(getSubmittedAssignmentDetailsAsync({courseId, assignmentId, lakerId, currentTeamId}))
     };
 
     return (
