@@ -9,18 +9,10 @@ export const getStudentCoursesAsync = createAsyncThunk(
     'courses/getStudentCoursesAsync',
     async (studentId, thunkAPI) => {
         thunkAPI.dispatch(refreshTokenAsync());
-        const distinctCourses = []
-        const courses = []
-        await axios.get(`${viewCourseUrl}/${studentId}/courses`)
+        const courses = await axios.get(`${viewCourseUrl}/${studentId}/courses`)
             .then((res) => {
                 console.log(res.data);
-                if (res.data != null)
-                    res.data.map(course => {
-                        if (course !== null && !distinctCourses.includes(course.course_id)) {
-                            distinctCourses.push(course.course_id)
-                            courses.push(course)
-                        }
-                    })
+                if (res.data != null) return res.data.filter(course => course !== null).slice(0).reverse();
             })
             .catch((e) => {
                 console.log(e);
@@ -36,7 +28,7 @@ export const getCoursesAsync = createAsyncThunk(
         const courses = await axios
             .get(`${viewCourseUrl}/courses`)
             .then((res) => {
-                if (res.data != null) return res.data;
+                if (res.data != null) return res.data.filter(course => course !== null).slice(0).reverse();
                 return [];
             })
             .catch((e) => {
