@@ -30,3 +30,5 @@ docker volume prune
 
 # Set the permission of the mounted volume from "root" to "default" for write permission.
 docker exec -u 0:0 cpr-professor-assignment chown -R 1001 /opt/ol/wlp/output/defaultServer/assignments/
+docker exec -u 0:0 cpr-student-assignment chown -R 1001 /opt/ol/wlp/output/defaultServer/assignments/
+docker exec -u 0:0 cpr-student-peer-review-assignment chown -R 1001 /opt/ol/wlp/output/defaultServer/assignments/
