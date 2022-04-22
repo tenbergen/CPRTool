@@ -158,6 +158,7 @@ public class AssignmentInterface {
             }
         }else submissionCollection.insertOne(new_submission);
     }
+
     public Document allAssignments(String couse_id,String student_id){
         MongoCursor<Document> submissions = submissionCollection.find(
                 and(
@@ -191,5 +192,24 @@ public class AssignmentInterface {
                     .append("grade", grade));
         }
         return new Document("submissions",AllSubmissions);
+    }
+
+    public List<Document> getToDosByCourse(String courseID, String studentID) {
+        MongoCursor<Document> query = assignmentsCollection.find(eq("course_id", courseID)).iterator();
+
+        if (!query.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist").build());
+
+        List<Document> assignments = new ArrayList<>();
+        while (query.hasNext()) {
+            Document document = query.next();
+            Document ifNotSubmitted =submissionCollection.find(and(
+                                                            eq("course_id", courseID),
+                                                            eq("assignment_id", document.get("assignment_id")),
+                                                            eq("type", "team_submission"),
+                                                            eq("members", studentID))).first();
+            if (ifNotSubmitted == null)
+                assignments.add(document);
+        }
+        return assignments;
     }
 }
