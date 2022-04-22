@@ -83,7 +83,7 @@ const CreateCoursePage = () => {
                     <div className='ccp-container'>
                         <CourseBarComponent title={`Hello, ${user_given_name}!`}/>
                         <div className='pcp-components'>
-                            <h2 className='kumba-25 cpp-title'> Add new course </h2>
+                            <h2 className='kumba-30 cpp-title'> Add new course </h2>
                             <form className='ccp-form'>
                                 <div className='input-field ccp-input-field'>
                                     <label> Course name: </label>

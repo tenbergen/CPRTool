@@ -115,7 +115,7 @@
 
 .assListItem span2 {
     float: right;
-    padding-right: 0px;
+    padding-right: 0;
     font-weight: normal;
     font-size: small;
     cursor: pointer;
@@ -130,26 +130,13 @@
 }
 
 #assAddButton {
-    color: #324b4d;
     cursor: pointer;
     justify-self: center;
-    padding: 8px 25px;
-    border: none;
-    font-size: 1.1em;
-    font-weight: bold;
-    border-radius: 8px;
-    border: 1px solid #79bedc;
-    font-family: 'Merriweather', sans-serif;
-    background-color: #91d8df;
     transition: all 0.2s ease-out;
-}
-
-#assAddButton:hover {
-    background-color: #79bedc;
-    color: #000;
-    opacity: 0.8;
-    font-size: 1.135em;
-    border: 1px solid #79bedc;
+    margin-top: 4%;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    font-weight: bold;
 }
 
 .ass-span {

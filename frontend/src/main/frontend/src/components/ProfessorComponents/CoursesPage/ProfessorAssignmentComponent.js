@@ -23,6 +23,7 @@ const ProfessorAssignmentComponent = () => {
         dispatch(getCourseAssignmentsAsync(courseId));
         setIsLoading(false);
     }, []);
+
     const confirmDelete = (assignment) => {
         let confirmAction = window.confirm(
             'Are you sure to delete this assignment?'
@@ -68,7 +69,7 @@ const ProfessorAssignmentComponent = () => {
                                                     : ass
                                             }
                                             </span>
-                                            <br></br>
+                                            <br/>
                                             <div className='ass-title'>
                                                 {assignment.assignment_name}
                                                 <span1>Due Date: {
@@ -77,7 +78,7 @@ const ProfessorAssignmentComponent = () => {
                                                         : assignment.due_date
                                                 }
                                                 </span1>
-                                                <br></br>
+                                                <br/>
                                             </div>
                                         </li>
                                     </Link>
@@ -98,7 +99,7 @@ const ProfessorAssignmentComponent = () => {
                         </div>
                         <div id='assAddClass'>
                             <Link to='create/assignment'>
-                                <button id='assAddButton'>Create new assignment</button>
+                                <button className="blue-button-filled outfit-20" id='assAddButton'>Create new assignment</button>
                             </Link>
                         </div>
                     </div>
