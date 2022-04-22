@@ -5,13 +5,28 @@ import '../../styles/SubmittedAssignmentComponent.css'
 
 const SubmittedAssignmentComponent = ({currentAssignmentLoaded, currentSubmittedAssignment}) => {
 
-    const {courseId, assignmentId} = useParams()
+    const {courseId, assignmentId, currentTeamId} = useParams()
 
-    const onAssignmentClick = async (filename) => {
+    const onAssignmentFileClick = async (filename) => {
         const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/download/${filename}`
 
         await axios.get(url, {responseType: 'blob'})
             .then(res => downloadFile(res.data, filename))
+    }
+
+    const onTeamFileClick = async () => {
+        const url = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${currentTeamId}/download`
+
+        await axios.get(url, {responseType: 'blob'})
+            .then(res => downloadFile(res.data, currentSubmittedAssignment.team_file))
+    }
+
+    const onFeedbackClick = async (peerReview) => {
+        const srcTeamName = peerReview.reviewed_by
+        const url = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${srcTeamName}/${currentTeamId}/download`
+
+        await axios.get(url, {responseType: 'blob'})
+            .then(res => downloadFile(res.data, peerReview.submission_name))
     }
 
     const downloadFile = (blob, fileName) => {
@@ -41,21 +56,21 @@ const SubmittedAssignmentComponent = ({currentAssignmentLoaded, currentSubmitted
                         <div>
                             <div className="ap-assignment-files">
                                 <span className="sac-title"> Rubric: </span>
-                                <span className="sac-filename" onClick={onAssignmentClick}>
+                                <span className="sac-filename" onClick={() => onAssignmentFileClick(currentSubmittedAssignment.peer_review_rubric)}>
                                     {currentSubmittedAssignment.peer_review_rubric}
                                 </span>
                             </div>
 
                             <div className="ap-assignment-files">
                                 <span className="sac-title">Template:</span>
-                                <span className="sac-filename" onClick={onAssignmentClick}>
+                                <span className="sac-filename" onClick={() => onAssignmentFileClick(currentSubmittedAssignment.peer_review_template)}>
                                     {currentSubmittedAssignment.peer_review_template}
                                 </span>
                             </div>
 
                             <div className="ap-assignment-files">
                                 <span className="sac-title">Team Files:</span>
-                                <span className="sac-filename" onClick={onAssignmentClick}>
+                                <span className="sac-filename" onClick={onTeamFileClick}>
                                     {currentSubmittedAssignment.team_file}
                                 </span>
                             </div>
@@ -69,7 +84,10 @@ const SubmittedAssignmentComponent = ({currentAssignmentLoaded, currentSubmitted
                                         currentSubmittedAssignment.peer_reviews.map(peerReview => (
                                             <li className='peerReviewListItem'>
                                                 <b> {peerReview.grade === -1 ? "Pending" : peerReview.grade}
-                                                </b> <span className="sac-filename"> {peerReview.submission_name} </span>
+                                                </b>
+                                                <span className="sac-filename" onClick={() => onFeedbackClick(peerReview)}>
+                                                    {peerReview.submission_name}
+                                                </span>
                                             </li>
                                     )): null}
                                 </div>
