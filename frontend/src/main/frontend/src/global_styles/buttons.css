@@ -3,6 +3,16 @@ button {
     border: none;
     font-size: medium;
     font-weight: bold;
+    cursor: pointer;
+}
+
+input::file-selector-button {
+    cursor: pointer;
+    background: #9CF0D3;
+    border-radius: 50px;
+    color: #393939;
+    font-family: 'Outfit', sans-serif;
+    font-size: 20px;
 }
 
 .yellow-button {

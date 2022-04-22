@@ -46,7 +46,7 @@
 .ecc-button {
     display: flex;
     justify-content: center;
-    margin-top: 7%;
+    margin-top: 3%;
     padding: 10px 45px 10px 45px;
     border: none;
     font-size: medium;
@@ -85,5 +85,6 @@
 .ecc-delete a {
     margin-left: 30%;
     text-decoration: underline;
-    color: black;
+    color: #F07371;
+    font-weight: bold;
 }
