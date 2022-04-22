@@ -19,9 +19,13 @@ const getAssignments = async (courseId) => {
 const combine = (assignments, peerReviews) => {
     const combined = [...assignments, ...peerReviews]
 
-    combined.sort(function (a, b)  {
-        if (a.final_due_date < b.final_due_date) { return -1; }
-        if (a.final_due_date > b.final_due_date) { return 1; }
+    combined.sort(function (a, b) {
+        if (a.final_due_date < b.final_due_date) {
+            return -1;
+        }
+        if (a.final_due_date > b.final_due_date) {
+            return 1;
+        }
         return 0;
     });
 
@@ -35,14 +39,25 @@ const getCombined = (courseAssignments, courseId, teamName) => {
     const assignmentsArr = []
 
     courseAssignments.map(async assignment => {
-        assignmentsArr.push({...assignment, final_due_date: assignment.due_date, assignment_type: "normal", final_id: assignment.assignment_id})
+        assignmentsArr.push({
+            ...assignment,
+            final_due_date: assignment.due_date,
+            assignment_type: "normal",
+            final_id: assignment.assignment_id
+        })
         console.log(assignment)
         if (assignment.assigned_teams) {
             const teams = assignment.assigned_teams[teamName]
             teams.map(team => {
                 const final_id = `${assignment.assignment_id}-peer-review-${team}`
                 console.log(final_id)
-                peerReviewAssignments.push({...assignment, peer_review_team: team, assignment_type: "peer-review", final_due_date: assignment.peer_review_due_date, final_id: final_id})
+                peerReviewAssignments.push({
+                    ...assignment,
+                    peer_review_team: team,
+                    assignment_type: "peer-review",
+                    final_due_date: assignment.peer_review_due_date,
+                    final_id: final_id
+                })
             })
         }
     })
@@ -55,7 +70,7 @@ export const getCourseAssignmentsAsync = createAsyncThunk(
     async (courseId, thunkAPI) => {
         thunkAPI.dispatch(refreshTokenAsync())
         const courseAssignments = await getAssignments(courseId)
-        return { courseAssignments }
+        return {courseAssignments}
     }
 )
 
@@ -63,8 +78,8 @@ export const getSubmittedAssignmentsAsync = createAsyncThunk(
     'assignments/getSubmittedAssignmentsAsync',
     async (values, thunkAPI) => {
         thunkAPI.dispatch(refreshTokenAsync())
-        const { courseId, currentTeamId, lakerId } = values
-        const url = `${process.env.REACT_APP_URL}/assignments/student/${courseId}/${currentTeamId}/submissions`
+        const {courseId, currentTeamId, lakerId} = values
+        const url = `${process.env.REACT_APP_URL}/assignments/student/${courseId}/${lakerId}/submissions`
         const submittedAssignments = await axios.get(url)
             .then(res => {
                 console.log(res.data)
@@ -73,87 +88,120 @@ export const getSubmittedAssignmentsAsync = createAsyncThunk(
             .catch(e => {
                 console.log(e)
             })
-        await getSubmittedAssignmentDetails(submittedAssignments, lakerId)
-        return { submittedAssignments }
+        const detailedSubmittedAssignments = await getSubmittedTileDetails(submittedAssignments, lakerId)
+        return {detailedSubmittedAssignments}
     }
 )
 
-const getSubmittedAssignmentDetails = async (submittedAssignments, lakerId) => {
-    const submittedAssignmentDetails = []
-    submittedAssignments.map(async assignment => {
-        const courseId = assignment.course_id
-        const assignmentId = assignment.assignment_id
-        const teamId = assignment.team_name
-        // get assignment details -- assignments/professor/courses/{courseID}/assignments/{assignmentID}
+const getSubmittedTileDetails = async (submittedAssignments, lakerId) => {
+    const detailsSubmittedAssignments = [];
+    console.log(submittedAssignments)
 
-        //{courseID}/assignments/{assignmentID}
+    for (let i = 0; i < submittedAssignments.length; i++) {
+        const assignment = submittedAssignments[i]
+        const assignmentId = assignment.assignment_id
+        const courseId = assignment.course_id
+
         const assUrl = `${getAssignmentUrl}/${courseId}/assignments/${assignmentId}`
         const details = await axios.get(assUrl)
             .then(res => {
                 console.log(res.data)
+                if (res.data !== null) return res.data
+                return null
+            })
+            .catch(e => {
+                console.log(e)
+                return null
             })
 
-        const assignmentDetails = {...details, }
-        // // team file name -- assignments/student/{course_id}/{assignment_id}/{student_id}/submission
-        const teamUrl = `${process.env.REACT_APP_URL}/assignments/student/${courseId}/${assignmentId}/${teamId}/submission`
-        await axios.get(teamUrl)
+        const teamUrl = `${process.env.REACT_APP_URL}/assignments/student/${courseId}/${assignmentId}/${lakerId}/submission`
+        const teamFile = await axios.get(teamUrl)
             .then(res => {
-                console.log(res)
+                console.log(res.data)
+                return res.data[0]
             })
 
-        // // downloading file (not needed here) -- assignments/student/courses/{courseID}/assignments/{assignmentID}/{teamName}/download
-        //
-        // // get reviews for that student -- peer-review/assignments/{course_id}/{assignment_id}/reviews-of/{student_id}
-        // const peerReviewUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/reviews-of/${lakerId}`
-        // await axios.get(peerReviewUrl)
-        //     .then(res => {
-        //         console.log(res)
-        //     })
-        //
-        // // get grade -- view/professor/courses/{courseID}/assignments/{assignmentID}/students/{studentID}/grade
-        // const gradeUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/reviews-of/${lakerId}`
-        // await axios.get(gradeUrl)
-        //     .then(res => {
-        //         console.log(res)
-        //     })
-    })
+        // get grade
+        const gradeUrl = `${process.env.REACT_APP_URL}/view/professor/courses/${courseId}/assignments/${assignmentId}/students/${lakerId}/grade`
+        const grade = await axios.get(gradeUrl)
+            .then(res => {
+                console.log(res.data.grade)
+                if (res.data !== null) return res.data.grade
+                // return "Pending"
+            })
+
+        detailsSubmittedAssignments.push({...details, grade: grade})
+    }
+
+    return detailsSubmittedAssignments
+}
+
+const getSubmittedAssignmentDetails = async (courseId, assignmentId, lakerId, teamId) => {
+
+    // get assignment details
+    const assUrl = `${getAssignmentUrl}/${courseId}/assignments/${assignmentId}`
+    const details = await axios.get(assUrl)
+        .then(res => {
+            console.log(res.data)
+            return res.data
+        })
+
+    // team file name
+    const teamUrl = `${process.env.REACT_APP_URL}/assignments/student/${courseId}/${assignmentId}/${lakerId}/submission`
+    const teamFile = await axios.get(teamUrl)
+        .then(res => {
+            console.log(res.data[0])
+            return res.data[0]
+        })
+
+    // get reviews for that student
+    const peerReviewUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/reviews-of/${lakerId}`
+    const peerReviews = await axios.get(peerReviewUrl)
+        .then(res => {
+            console.log(res.data)
+            return res.data
+        })
+
+    const gradeUrl = `${process.env.REACT_APP_URL}/view/professor/courses/${courseId}/assignments/${assignmentId}/students/${lakerId}/grade`
+    const grade = await axios.get(gradeUrl)
+        .then(res => {
+            console.log(res.data)
+            if (res.data.grade === -1) return "Pending"
+            return res.data.grade
+        })
+
+    console.log({team_file: teamFile, peer_reviews: peerReviews, grade: grade})
+    return {...details, team_file: teamFile.submission_name, peer_reviews: peerReviews, grade: grade}
 }
 
 export const getSubmittedAssignmentDetailsAsync = createAsyncThunk(
     'assignments/getSubmittedAssignmentDetailsAsync',
     async (values, thunkAPI) => {
         thunkAPI.dispatch(refreshTokenAsync())
-        const { courseId, assignmentId, lakerId } = values
-        const url = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${lakerId}/graded-assignment`
-        const submittedAssignment = await axios.get(url)
-            .then(res => {
-                console.log(res)
-                return res.data
-            })
-            .catch(e => {
-                console.log(e)
-            })
-        return { submittedAssignment }
+        const {courseId, assignmentId, lakerId, currentTeamId} = values
+        console.log(values)
+        const submittedAssignment = await getSubmittedAssignmentDetails(courseId, assignmentId, lakerId, currentTeamId)
+        return {submittedAssignment}
     }
 )
 
 export const getCombinedAssignmentPeerReviews = createAsyncThunk(
     'assignments/getCombinedAssignmentPeerReviews',
     async (value, thunkAPI) => {
-        const { courseId, teamId } = value
+        const {courseId, teamId} = value
         thunkAPI.dispatch(refreshTokenAsync())
         const courseAssignments = await getAssignments(courseId)
         console.log(courseAssignments)
         const combined = getCombined(courseAssignments, courseId, teamId)
-        return { combined }
+        return {combined}
     }
 )
 
 export const getAssignmentDetailsAsync = createAsyncThunk(
     'assignments/getAssignmentDetailsAsync',
-    async (values, thunkAPI)=> {
+    async (values, thunkAPI) => {
         thunkAPI.dispatch(refreshTokenAsync())
-        let { courseId, assignmentId } = values;
+        let {courseId, assignmentId} = values;
         const url = `${getAssignmentUrl}/${courseId}/assignments/${assignmentId}`
         console.log(url)
         const currentAssignment = await axios.get(url)
@@ -164,7 +212,7 @@ export const getAssignmentDetailsAsync = createAsyncThunk(
             .catch(e => {
                 console.log(e)
             })
-        return { currentAssignment }
+        return {currentAssignment}
     }
 )
 
@@ -203,14 +251,22 @@ const assignmentSlice = createSlice({
             state.assignmentsLoaded = true
             state.combinedAssignmentPeerReviews = action.payload.combined
         },
+        [getSubmittedAssignmentsAsync.pending]: (state) => {
+            state.assignmentsLoaded = false
+        },
         [getSubmittedAssignmentsAsync.fulfilled]: (state, action) => {
-            state.courseSubmittedAssignments = action.payload.submittedAssignments
+            state.courseSubmittedAssignments = action.payload.detailedSubmittedAssignments
+            state.assignmentsLoaded = true
+        },
+        [getSubmittedAssignmentDetailsAsync.pending]: (state) => {
+            state.currentAssignmentLoaded = false
         },
         [getSubmittedAssignmentDetailsAsync.fulfilled]: (state, action) => {
             state.currentSubmittedAssignment = action.payload.submittedAssignment
+            state.currentAssignmentLoaded = true
         }
     }
 })
 
-export const { setCurrentAssignment } = assignmentSlice.actions
+export const {setCurrentAssignment} = assignmentSlice.actions
 export default assignmentSlice.reducer

@@ -1,26 +1,44 @@
-import {useSelector} from 'react-redux';
-import '../../styles/StudentAss.css';
+import {useDispatch, useSelector} from "react-redux";
+import "../../styles/StudentAss.css"
+import {Link, useParams} from "react-router-dom";
+import React, {useEffect} from "react";
+import { getSubmittedAssignmentsAsync } from "../../../redux/features/assignmentSlice";
 
 const StudentSubmittedComponent = () => {
-    // Need assingment endpoints
-    const currentCourse = useSelector((state) => state.courses.currentCourse);
-    console.log(currentCourse);
-    const assUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses/${currentCourse.course_id}/assignments/`;
-    const assignments = ['Thesis First Draft', 'Thesis Submission'];
+    const dispatch = useDispatch()
+    const { courseSubmittedAssignments, assignmentsLoaded } = useSelector((state) => state.assignments)
+    const { lakerId } = useSelector((state) => state.auth)
+    const { courseId } = useParams()
+    const { currentTeamId, teamLoaded } = useSelector((state) => state.teams)
+
+    useEffect(() => {
+        dispatch(getSubmittedAssignmentsAsync({courseId, currentTeamId, lakerId}))
+    }, [])
 
     return (
         <h3>
-            <div id='assList'>
-                {assignments.map(
-                    (assignment) => (
-                        // <Link to={}> add this for functionality
-                        <li id='assListItem'>{assignment}</li>
-                    )
-                    // </Link>
-                )}
-            </div>
+            {teamLoaded && assignmentsLoaded ? (
+                <div id='assList'>
+                    {courseSubmittedAssignments.map(assignment => (
+                        <div className='assListItem'>
+                            <Link to={`/details/student/${courseId}/${assignment.assignment_id}/${currentTeamId}/submitted`}>
+                                <li>
+                                    <br/>
+                                    <div className='ass-title'>
+                                        {assignment.assignment_name}
+                                        <span className="span1-ap">
+                                            {assignment.grade === -1 ? "Pending" : assignment.grade}
+                                        </span>
+                                        <br/>
+                                    </div>
+                                </li>
+                            </Link>
+                        </div>
+                    ))}
+                </div>
+            ) : null}
         </h3>
     );
-};
+}
 
-export default StudentSubmittedComponent;
+export default StudentSubmittedComponent
