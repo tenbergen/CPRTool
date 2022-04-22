@@ -39,7 +39,7 @@ public class studentAssignmentResource {
             @PathParam("assignmentID") int assignmentID,
             @PathParam("teamName") String teamName) {
 
-        String path = "courses/"+courseID+"/"+assignmentID+"/"+"team-submissions/";
+        String path = "assignments/"+courseID+"/"+assignmentID+"/"+"team-submissions/";
         Optional<File> file = Arrays.stream(new File(path).listFiles()).filter(f->f.getName().contains(teamName)).findFirst();
         if (file.isEmpty())
             return Response.status(Response.Status.BAD_REQUEST).entity("Assignment Does Not Exist").build();
