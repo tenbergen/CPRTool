@@ -64,7 +64,8 @@ function StudentDashboardPage() {
                                     state={{from: course}}
                                 >
                                     <li className='courseListItem'>
-                                        {course.course_id + '\n\n' + course.course_name}
+                                        <span className="outfit-16 pdp-coursename">{course.course_id}</span>
+                                        <span className="kumba-25">{course.course_name}</span>
                                     </li>
                                 </Link>
                             ))}
