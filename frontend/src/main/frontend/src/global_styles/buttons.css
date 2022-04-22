@@ -17,3 +17,17 @@ button {
     background: #deb140;
     border-radius: 50px;
 }
+
+.green-button {
+    padding: 15px 45px 15px 45px;
+    margin-top: 3%;
+    background: #9CF0D3;
+    border-radius: 50px;
+    transition: all 0.2s ease-out;
+}
+
+.green-button:hover {
+    background: #66c9a3;
+    border-radius: 50px;
+}
+

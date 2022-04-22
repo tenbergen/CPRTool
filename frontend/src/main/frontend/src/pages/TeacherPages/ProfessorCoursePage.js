@@ -15,10 +15,7 @@ import Loader from '../../components/LoaderComponenets/Loader';
 
 const CourseComponent = ({active, component, onClick}) => {
     return (
-        <p
-            onClick={onClick}
-            className={active ? 'pcp-component-link-clicked' : 'pcp-component-link'}
-        >
+        <p onClick={onClick} className={active ? 'pcp-component-link-clicked' : 'pcp-component-link'}>
             {component}
         </p>
     );
@@ -46,7 +43,7 @@ function ProfessorCoursePage() {
                 <div className='pcp-parent'>
                     <SidebarComponent/>
                     <div className='pcp-container'>
-                        <CourseBarComponent/>
+                        <CourseBarComponent title={"Courses"}/>
                         <div className='pcp-components'>
                             <div className='pcp-component-links'>
                                 {components.map((t) => (

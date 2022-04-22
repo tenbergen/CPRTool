@@ -31,15 +31,22 @@
 }
 
 .outfit-16 {
-    font-family: 'Kumbh Sans', sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
 }
 
 .outfit-13 {
-    font-family: 'Kumbh Sans', sans-serif;
+    font-family: 'Outfit', sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 13px;
+}
+
+.outfit-20 {
+    font-family: 'Outfit', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
 }

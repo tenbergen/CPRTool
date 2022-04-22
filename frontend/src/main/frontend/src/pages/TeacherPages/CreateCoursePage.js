@@ -4,9 +4,12 @@ import './styles/CreateCourseStyle.css';
 import SidebarComponent from '../../components/SidebarComponent';
 import {useNavigate} from 'react-router-dom';
 import Loader from '../../components/LoaderComponenets/Loader';
+import CourseBarComponent from "../../components/CourseBarComponent";
+import {useSelector} from "react-redux";
 
 const CreateCoursePage = () => {
     const submitCourseUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/create`;
+    const {user_given_name} = useSelector((state) => state.auth)
     let navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -75,105 +78,93 @@ const CreateCoursePage = () => {
             {isLoading ? (
                 <Loader/>
             ) : (
-                <div className='cpp-parent'>
+                <div className='pcp-parent'>
                     <SidebarComponent/>
-                    <div className='cpp-container'>
-                        <h2 className='cpp-title'> Add new course </h2>
-                        <form className='ccp-form'>
-                            <div className='ccp-input-field'>
-                                <label>
-                                    {' '}
-                                    <b> Course name: </b>{' '}
-                                </label>
-                                <input
-                                    type='text'
-                                    name='course_name'
-                                    value={course_name}
-                                    required
-                                    onChange={(e) => OnChange(e)}
-                                />
-                            </div>
-
-                            <div className='cpp-row-multiple'>
-                                <div className='ccp-input-field'>
-                                    <label>
-                                        {' '}
-                                        <b> Course abbreviation: </b>{' '}
-                                    </label>
+                    <div className='ccp-container'>
+                        <CourseBarComponent title={`Hello, ${user_given_name}!`}/>
+                        <div className='pcp-components'>
+                            <h2 className='kumba-25 cpp-title'> Add new course </h2>
+                            <form className='ccp-form'>
+                                <div className='input-field ccp-input-field'>
+                                    <label> Course name: </label>
                                     <input
                                         type='text'
-                                        name='abbreviation'
-                                        value={abbreviation}
+                                        name='course_name'
+                                        value={course_name}
                                         required
                                         onChange={(e) => OnChange(e)}
                                     />
                                 </div>
 
-                                <div className='ccp-input-field'>
-                                    <label>
-                                        {' '}
-                                        <b> Course section: </b>{' '}
-                                    </label>
-                                    <input
-                                        type='text'
-                                        name='course_section'
-                                        value={course_section}
-                                        required
-                                        onChange={(e) => OnChange(e)}
-                                    />
-                                </div>
-                            </div>
+                                <div className='cpp-row-multiple'>
+                                    <div className='input-field ccp-input-field'>
+                                        <label> Course abbreviation: </label>
+                                        <input
+                                            type='text'
+                                            name='abbreviation'
+                                            value={abbreviation}
+                                            required
+                                            onChange={(e) => OnChange(e)}
+                                        />
+                                    </div>
 
-                            <div className='cpp-row-multiple'>
-                                <div className='ccp-input-field'>
-                                    <label>
-                                        {' '}
-                                        <b> Semester: </b>{' '}
-                                    </label>
-                                    <input
-                                        type='text'
-                                        name='semester'
-                                        value={semester}
-                                        required
-                                        onChange={(e) => OnChange(e)}
-                                    />
+                                    <div className='input-field ccp-input-field'>
+                                        <label> Course section: </label>
+                                        <input
+                                            type='text'
+                                            name='course_section'
+                                            value={course_section}
+                                            required
+                                            onChange={(e) => OnChange(e)}
+                                        />
+                                    </div>
                                 </div>
 
-                                <div className='ccp-input-field'>
-                                    <label>
-                                        {' '}
-                                        <b> Year: </b>{' '}
-                                    </label>
-                                    <input
-                                        type='number'
-                                        min={new Date().getFullYear().toString()}
-                                        step='1'
-                                        name='year'
-                                        value={year}
-                                        required
-                                        onChange={(e) => OnChange(e)}
-                                    />
+                                <div className='cpp-row-multiple'>
+                                    <div className='input-field ccp-input-field'>
+                                        <label> Semester: </label>
+                                        <input
+                                            type='text'
+                                            name='semester'
+                                            value={semester}
+                                            required
+                                            onChange={(e) => OnChange(e)}
+                                        />
+                                    </div>
+
+                                    <div className='input-field ccp-input-field'>
+                                        <label> Year: </label>
+                                        <input
+                                            type='number'
+                                            min={new Date().getFullYear().toString()}
+                                            step='1'
+                                            name='year'
+                                            value={year}
+                                            required
+                                            onChange={(e) => OnChange(e)}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div className='ccp-input-field'>
-                                <label>
-                                    {' '}
-                                    <b> CRN: </b>{' '}
-                                </label>
-                                <input
-                                    type='number'
-                                    name='crn'
-                                    value={crn}
-                                    required
-                                    onChange={(e) => OnChange(e)}
-                                />
-                            </div>
+                                <div className='cpp-row-multiple'>
+                                    <div className='input-field ccp-input-field'>
+                                        <label> CRN: </label>
+                                        <input
+                                            type='number'
+                                            name='crn'
+                                            value={crn}
+                                            required
+                                            onChange={(e) => OnChange(e)}
+                                        />
+                                    </div>
+                                    <div className='input-field ccp-input-field'/>
+                                </div>
 
-                            <div className='ccp-button'>
-                                <button onClick={handleSubmit}> Create</button>
-                            </div>
-                        </form>
+                                <div className='ccp-button'>
+                                    <button className="green-button" onClick={handleSubmit}> Create</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             )}

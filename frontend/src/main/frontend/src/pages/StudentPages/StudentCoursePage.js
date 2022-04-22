@@ -13,10 +13,7 @@ import {getCurrentCourseTeamAsync} from "../../redux/features/teamSlice";
 
 const CourseComponent = ({active, component, onClick}) => {
     return (
-        <p
-            onClick={onClick}
-            className={active ? 'scp-component-link-clicked' : 'scp-component-link'}
-        >
+        <p onClick={onClick} className={active ? 'scp-component-link-clicked' : 'scp-component-link'}>
             {component}
         </p>
     );
@@ -41,7 +38,7 @@ function StudentCoursePage() {
             <div className="scp-parent">
                 <SidebarComponent/>
                 <div className="scp-container">
-                    <CourseBarComponent/>
+                    <CourseBarComponent title={"Courses"}/>
                     <div className="scp-component">
                         {teamLoaded && currentTeamId === null
                             ? <StudentTeamComponent/>

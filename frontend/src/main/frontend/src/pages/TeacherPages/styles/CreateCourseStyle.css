@@ -1,7 +1,6 @@
-.cpp-parent {
+.ccp-parent {
     display: flex;
     flex-direction: row;
-    overflow: auto;
     background: conic-gradient(
             from 180deg at 50% 50%,
             #7398ff -128.84deg,
@@ -11,19 +10,19 @@
     );
 }
 
-.cpp-container {
-    padding: 2% 4% 0 4%;
-    flex-grow: 1;
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 50px;
-    margin: 3% 5%;
+.cpp-title {
+    margin-left: 2%;
 }
 
-.cpp-title {
-    color: #2f4858;
-    font-size: 1.9em;
-    font-family: 'Merriweather', sans-serif;
-    text-align: center;
+.ccp-container {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50px;
+    margin: 3% 2% 0 1%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    height: 90vh;
+    width: 100vw;
 }
 
 .ccp-form {
@@ -35,7 +34,7 @@
 
 .ccp-input-field {
     width: 100%;
-    margin-bottom: 5%;
+    margin-bottom: 7%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -48,9 +47,7 @@
 .ccp-input-field input {
     flex-grow: 1;
     padding: 5px 5px 5px 5px;
-    border: 2px solid #949494;
-    box-sizing: border-box;
-    border-radius: 8px;
+    margin-left: 1%;
 }
 
 .cpp-row-multiple {
@@ -62,28 +59,5 @@
 .ccp-button {
     display: flex;
     justify-content: center;
-    margin-top: 5%;
-}
-
-.ccp-button button {
-    color: #324b4d;
-    cursor: pointer;
-    justify-self: center;
-    padding: 10px 45px 10px 45px;
-    border: none;
-    font-size: 1.1em;
-    font-weight: bold;
-    border-radius: 8px;
-    border: 1px solid #79bedc;
-    font-family: 'Merriweather', sans-serif;
-    background-color: #91d8df;
-    transition: all 0.2s ease-out;
-}
-
-.ccp-button button:hover {
-    background-color: #79bedc;
-    color: #000;
-    opacity: 0.8;
-    font-size: 1.135em;
-    border: 1px solid #79bedc;
+    margin-top: 1%;
 }

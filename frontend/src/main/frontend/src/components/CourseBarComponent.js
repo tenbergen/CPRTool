@@ -27,7 +27,7 @@ const CourseBarLink = ({active, course, onClick}) => {
     );
 }
 
-const CourseBarComponent = () => {
+const CourseBarComponent = ({title}) => {
     const dispatch = useDispatch()
     const {role, lakerId, dataLoaded} = useSelector((state) => state.auth)
     const {courses} = useSelector((state) => state.courses)
@@ -54,7 +54,7 @@ const CourseBarComponent = () => {
 
     return (
         <div className="cbc-parent">
-            <h2> Courses </h2>
+            <h2 className="kumba-25"> {title} </h2>
             <div className="cbc-courses">
                 <div>
                     {courses.map(course =>
