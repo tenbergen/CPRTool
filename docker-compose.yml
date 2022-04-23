@@ -68,6 +68,7 @@ services:
     build:
       context: ./backend/peer-review-teams-microservice
     container_name: cpr-peer-review-teams
+    restart: unless-stopped
     environment:
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
