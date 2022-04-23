@@ -103,6 +103,15 @@ const CreateAssignmentPage = () => {
                                 <h2 className="kumba-30"> Add new assignment </h2>
                                 <div className='cap-form'>
                                     <form onSubmit={handleSubmit}>
+
+                                        {/*assignment field*/}
+                                        {/*<div className="field-container">*/}
+                                        {/*    <div className="field-title"> <span> Homework</span> </div>*/}
+                                        {/*    <div className="field-content">*/}
+                                        {/*       */}
+                                        {/*    </div>*/}
+                                        {/*</div>*/}
+
                                         <div className='input-field cap-input-field'>
                                             <label> Name of assignment: </label>
                                             <Field name='assignment_name'>
@@ -119,10 +128,10 @@ const CreateAssignmentPage = () => {
 
                                         <div className="input-field cap-instructions">
                                             <label> Instructions: </label>
+
                                             <Field name='instructions'>
                                                 {({input}) => (
-                                                    <input
-                                                        type='text'
+                                                    <textarea
                                                         name='instructions'
                                                         {...input}
                                                         required
@@ -167,12 +176,19 @@ const CreateAssignmentPage = () => {
                                             </Field>
                                         </div>
 
+                                        {/*peer review fields*/}
+                                        {/*<div className="field-container">*/}
+                                        {/*    <div className="field-title"> <span> Peer Review </span></div>*/}
+                                        {/*    <div className="field-content">*/}
+                                        {/*       */}
+                                        {/*    </div>*/}
+                                        {/*</div>*/}
+
                                         <div className='input-field cap-instructions'>
                                             <label className="outfit-25"> Peer Review Instructions: </label>
                                             <Field name='peer_review_instructions'>
                                                 {({input}) => (
-                                                    <input
-                                                        type='text'
+                                                    <textarea
                                                         name='peer_review_instructions'
                                                         {...input}
                                                         required
@@ -227,6 +243,7 @@ const CreateAssignmentPage = () => {
                                                 )}
                                             </Field>
                                         </div>
+
                                         <div className='cap-button'>
                                             <button className="green-button" type='submit'> Create </button>
                                         </div>
