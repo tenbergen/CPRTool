@@ -10,3 +10,7 @@
     font-weight: 400;
     font-size: 20px;
 }
+
+textarea, input {
+    font-family: 'Outfit', sans-serif;
+}

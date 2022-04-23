@@ -3,42 +3,98 @@ import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {getAssignmentDetailsAsync} from '../../../redux/features/assignmentSlice';
 import {useParams} from 'react-router-dom';
-import '../../styles/ProfEditStyle.css';
+import '../../styles/EditAssignmentStyle.css';
 import axios from 'axios';
+
+const profAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`;
 
 const ProfessorEditAssignmentComponent = () => {
     const dispatch = useDispatch();
     const {courseId, assignmentId} = useParams();
-    const {currentAssignment, currentAssignmentLoaded} = useSelector(
-        (state) => state.assignments
-    );
+    const {currentAssignment, currentAssignmentLoaded} = useSelector((state) => state.assignments);
+
+    const assignmentFileFormData = new FormData();
+    const rubricFileFormData = new FormData();
+    const templateFileFormData = new FormData();
+
+    const getAssUrl = `${profAssignmentUrl}/${courseId}/assignments`;
 
     useEffect(() => {
         dispatch(getAssignmentDetailsAsync({courseId, assignmentId}));
     }, []);
 
+    const fileChangeHandler = (event, fileType) => {
+        let file = event.target.files[0];
+        if (fileType === "assignment") {
+            assignmentFileFormData.set('file', file);
+        } else if (fileType === "rubric"){
+            rubricFileFormData.set('file', file);
+        } else {
+            templateFileFormData.set('file', file);
+        }
+    };
+
     const handleSubmit = async (formObj) => {
-        const editUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/edit`;
+        const editUrl = `${getAssUrl}/${assignmentId}/edit`;
 
         if (JSON.stringify(() => initialValue()) === JSON.stringify(formObj)) {
             alert('Nothing to save!');
             return;
         }
 
-        const data = {
-            ...formObj,
-            course_id: courseId,
-        };
-
-        await axios
-            .put(editUrl, data)
+        await axios.put(editUrl, {...formObj, course_id: courseId,})
             .then((res) => {
                 console.log(res.data);
             })
             .catch((e) => {
                 console.log(e);
             });
+
+        await submitNewFiles()
     };
+
+    const submitNewFiles = async () => {
+        const assignmentFileUrl = `${getAssUrl}/${assignmentId}/upload`;
+        const rubricUrl = `${getAssUrl}/${assignmentId}/peer-review/rubric/upload`;
+        const templateUrl = `${getAssUrl}/${assignmentId}/peer-review/template/upload`;
+
+        console.log(assignmentFileFormData.get('file'))
+        console.log(rubricFileFormData.get('file'))
+        console.log(templateFileFormData.get('file'))
+
+        if (assignmentFileFormData.get('file')) {
+            await axios.post(assignmentFileUrl, assignmentFileFormData)
+                .then((res) => {
+                    console.log(res);
+                })
+                .catch((e) => {
+                    console.log(e);
+                    alert('Error uploading assignment file.');
+                });
+        }
+
+        if (assignmentFileFormData.get('file')) {
+            await axios.post(rubricUrl, rubricFileFormData)
+                .then((res) => {
+                    console.log(res);
+                })
+                .catch((e) => {
+                    console.log(e);
+                    alert('Error uploading peer review rubric.');
+                });
+        }
+
+        if (templateFileFormData.get('file')) {
+            await axios.post(templateUrl, templateFileFormData)
+                .then((res) => {
+                    console.log(res);
+                })
+                .catch((e) => {
+                    console.log(e);
+                    alert('Error uploading peer review template.');
+                });
+        }
+    }
 
     const deleteFile = async (fileName, isPeerReview) => {
         const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}`;
@@ -72,8 +128,7 @@ const ProfessorEditAssignmentComponent = () => {
             ? `${url}/peer-review/download/${fileName}`
             : `${url}/download/${fileName}`;
 
-        await axios
-            .get(downloadUrl, {responseType: 'blob'})
+        await axios.get(downloadUrl, {responseType: 'blob'})
             .then((res) => downloadFile(res.data, fileName));
     };
 
@@ -101,7 +156,7 @@ const ProfessorEditAssignmentComponent = () => {
                 {({handleSubmit}) => (
                     <form onSubmit={handleSubmit}>
                         <div className='eac-input-field'>
-                            <label><b> Name of assignment: </b></label>
+                            <label> Name of assignment: </label>
                             <Field name='assignment_name'>
                                 {({input}) => (
                                     <input
@@ -115,67 +170,73 @@ const ProfessorEditAssignmentComponent = () => {
                         </div>
 
                         <div className='eac-instructions'>
-                            <label><b> Instructions:</b></label>
+                            <label> Instructions: </label>
                             <Field name='instructions'>
                                 {({input}) => (
-                                    <input type='text' name='instructions' {...input} required/>
+                                    <textarea
+                                        name='instructions'
+                                        {...input}
+                                        required
+                                    />
                                 )}
                             </Field>
                         </div>
 
                         <div className='eac-assignment-files'>
                             Current files:
-                            <span onClick={() => onFileClick(currentAssignment.assignment_instructions, false)}>
+                            <span
+                                className="eac-file-name"
+                                onClick={() => onFileClick(currentAssignment.assignment_instructions, false)}>
                                   {currentAssignmentLoaded
                                       ? currentAssignment.assignment_instructions
                                       : null}
-                                </span>
+                            </span>
                             <span
                                 onClick={() => deleteFile(currentAssignment.assignment_instructions, false)}
                                 className={currentAssignmentLoaded && currentAssignment.assignment_instructions !== "" ? 'eac-crossmark' : 'eac-crossmark-gone'}>
                                     &#10060;
                                 </span>
                         </div>
+
                         <div className='eac-assignment-files'>
-                            <label>
-                                <b> New files: </b>
-                            </label>
+                            <label> New files: </label>
                             <input
                                 type='file'
                                 name='assignment_files'
                                 accept='.pdf,.zip'
-                                // onChange={(e) => assignmentFileHandler(e)}
+                                onChange={(e) => fileChangeHandler(e, "assignment")}
                             />
                         </div>
 
                         <div className='eac-assignment-info'>
-                            <label>
-                                <b> Due Date: </b>
-                            </label>
+                            <label> Due Date: </label>
                             <Field name='due_date'>
                                 {({input}) => (
-                                    <input type='date' name='due_date' {...input} required/>
+                                    <input
+                                        type='date'
+                                        name='due_date'
+                                        {...input}
+                                        required/>
                                 )}
                             </Field>
 
-                            <label>
-                                <b> Points: </b>
-                            </label>
+                            <label> Points: </label>
                             <Field name='points'>
                                 {({input}) => (
-                                    <input type='number' name='points' {...input} required/>
+                                    <input
+                                        type='number'
+                                        name='points'
+                                        {...input}
+                                        required/>
                                 )}
                             </Field>
                         </div>
 
                         <div className='eac-instructions'>
-                            <label>
-                                <b> Peer Review Instructions:</b>
-                            </label>
+                            <label> Peer Review Instructions: </label>
                             <Field name='peer_review_instructions'>
                                 {({input}) => (
-                                    <input
-                                        type='text'
+                                    <textarea
                                         name='peer_review_instructions'
                                         {...input}
                                         required
@@ -186,12 +247,14 @@ const ProfessorEditAssignmentComponent = () => {
 
                         <div className='eac-assignment-files-multiple'>
                             <div>
-                                <div className='eac-assignment-files' style={{marginBottom: "6%"}}>
+                                <div className='eac-assignment-files' style={{marginBottom: "8%"}}>
                                     Current files:
-                                    <span onClick={() => onFileClick(currentAssignment.peer_review_rubric, true)}>
-                                  {currentAssignmentLoaded
-                                      ? currentAssignment.peer_review_rubric
-                                      : null}
+                                    <span
+                                        className="eac-file-name"
+                                        onClick={() => onFileClick(currentAssignment.peer_review_rubric, true)}>
+                                              {currentAssignmentLoaded
+                                                  ? currentAssignment.peer_review_rubric
+                                                  : null}
                                     </span>
                                     <span onClick={() => deleteFile(currentAssignment.peer_review_rubric, true)}
                                           className={currentAssignmentLoaded && currentAssignment.peer_review_rubric !== "" ? 'eac-crossmark' : 'eac-crossmark-gone'}>
@@ -199,20 +262,20 @@ const ProfessorEditAssignmentComponent = () => {
                                     </span>
                                 </div>
 
-                                <div className='eac-assignment-files'>
-                                    <label><b> New files: </b></label>
+                                <div className='eac-assignment-files' style={{marginBottom: "0"}}>
+                                    <label> New rubric: </label>
                                     <input
                                         type='file'
                                         name='peer_review_rubric'
                                         accept='.pdf,.zip'
                                         required
-                                        //onChange={(e) => peerReviewRubricHandler(e)}
+                                        onChange={(e) => fileChangeHandler(e, "rubric")}
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <div className='eac-assignment-files' style={{marginBottom: "6%"}}>
+                                <div className='eac-assignment-files' style={{marginBottom: "8%"}}>
                                     Current files:
                                     <span onClick={() => onFileClick(currentAssignment.peer_review_template, true)}>
                                       {currentAssignmentLoaded
@@ -226,21 +289,21 @@ const ProfessorEditAssignmentComponent = () => {
                                     </span>
                                 </div>
 
-                                <div className='eac-assignment-files'>
-                                    <label><b> New files: </b></label>
+                                <div className='eac-assignment-files' style={{marginBottom: "0"}}>
+                                    <label> New template: </label>
                                     <input
                                         type='file'
                                         name='peer_review_template'
                                         accept='.pdf,.zip'
                                         required
-                                        //onChange={(e) => peerReviewTemplateHandler(e)}
+                                        onChange={(e) => fileChangeHandler(e, "template")}
                                     />
                                 </div>
                             </div>
                         </div>
 
                         <div className='eac-assignment-info'>
-                            <label><b> Due Date: </b></label>
+                            <label> Due Date: </label>
                             <Field name='peer_review_due_date'>
                                 {({input}) => (
                                     <input
@@ -252,7 +315,7 @@ const ProfessorEditAssignmentComponent = () => {
                                 )}
                             </Field>
 
-                            <label><b>Points: </b></label>
+                            <label> Points: </label>
                             <Field name='peer_review_points'>
                                 {({input}) => (
                                     <input
