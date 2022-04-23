@@ -1,7 +1,12 @@
 import React, {useEffect, useState} from "react";
 import "./styles/CourseBar.css"
 import {useDispatch, useSelector} from "react-redux";
-import {getCourseDetailsAsync, getCoursesAsync, getStudentCoursesAsync} from "../redux/features/courseSlice";
+import {
+    getCourseDetailsAsync,
+    getCoursesAsync,
+    getCurrentCourseStudentsAsync,
+    getStudentCoursesAsync
+} from "../redux/features/courseSlice";
 import {Link, useParams} from "react-router-dom";
 import {setUserInformation} from "../redux/features/authSlice";
 import {getCombinedAssignmentPeerReviews, getCourseAssignmentsAsync} from "../redux/features/assignmentSlice";
@@ -44,6 +49,7 @@ const CourseBarComponent = ({title}) => {
         const courseId = course.course_id
         setChosen(courseId)
         dispatch(getCourseDetailsAsync(courseId))
+        dispatch(getCurrentCourseStudentsAsync(courseId))
         dispatch(getCourseAssignmentsAsync(courseId))
         dispatch(getCurrentCourseTeamAsync({courseId, lakerId}))
         role === "professor" ? dispatch(getCourseAssignmentsAsync(courseId)) : dispatch(getCombinedAssignmentPeerReviews({

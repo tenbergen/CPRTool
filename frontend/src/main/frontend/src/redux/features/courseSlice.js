@@ -53,11 +53,64 @@ export const getCourseDetailsAsync = createAsyncThunk(
     }
 );
 
+export const getCurrentCourseStudentsAsync = createAsyncThunk(
+    'courses/getCurrentCourseStudentsAsync',
+    async (courseId, thunkAPI) => {
+        thunkAPI.dispatch(refreshTokenAsync());
+        const url = `${process.env.REACT_APP_URL}/view/professor/courses/${courseId}/students`
+        let finalStudentArray = []
+
+        const students = await axios.get(url)
+            .then(res => {
+                console.log(res)
+                return res.data
+            })
+            .catch(e => {
+                console.log(e)
+                return []
+            })
+
+        const teamUrl = `${process.env.REACT_APP_URL}/teams/team/get/all/${courseId}`
+        const teams = await axios.get(teamUrl)
+            .then(res => {
+                console.log(res)
+                return res.data
+            })
+            .catch(e => {
+                console.log(e)
+                return []
+            })
+
+        if (teams.length < 1) {
+            finalStudentArray.push(...students)
+            return {finalStudentArray}
+        }
+
+        // if there are teams
+        students.map(student => {
+            let inTeam = false
+            for (let i = 0; i < teams.length; i++) {
+                let currentTeam = teams[i]
+                if (currentTeam.team_members.includes(student.student_id)) {
+                    finalStudentArray.push({...student, team:  currentTeam.team_id})
+                    inTeam = true
+                    break;
+                }
+            }
+            if (!inTeam) finalStudentArray.push({...student, team:  null})
+        })
+
+        return {finalStudentArray}
+    }
+)
+
 const courseSlice = createSlice({
     name: 'courseSlice',
     initialState: {
         courses: [],
         currentCourse: null,
+        currentCourseStudents: [],
+        currentCourseStudentsLoaded: false,
         currentCourseLoaded: false,
     },
     reducers: {
@@ -82,6 +135,13 @@ const courseSlice = createSlice({
         [getCourseDetailsAsync.pending]: (state) => {
             state.currentCourseLoaded = false;
         },
+        [getCurrentCourseStudentsAsync.pending]: (state) => {
+            state.currentCourseStudentsLoaded = false;
+        },
+        [getCurrentCourseStudentsAsync.fulfilled]: (state, action) => {
+            state.currentCourseStudents = action.payload.finalStudentArray
+            state.currentCourseStudentsLoaded = true;
+        }
     },
 });
 

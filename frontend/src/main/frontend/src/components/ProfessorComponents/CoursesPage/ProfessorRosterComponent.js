@@ -2,41 +2,18 @@ import {useEffect, useState} from 'react';
 import axios from 'axios';
 import '../../styles/Roster.css';
 import {useDispatch, useSelector} from 'react-redux';
-import {getCourseDetailsAsync} from '../../../redux/features/courseSlice';
+import {getCourseDetailsAsync, getCurrentCourseStudentsAsync} from '../../../redux/features/courseSlice';
 import {useParams} from 'react-router-dom';
+import React from "react-dom";
 
 const ProfessorRosterComponent = () => {
     const dispatch = useDispatch();
     const {courseId} = useParams();
     const url = `${process.env.REACT_APP_URL}/manage/professor/courses`;
-    const {currentCourse} = useSelector((state) => state.courses);
-    const [studentList, setStudents] = useState(Array());
-    const [teamsMap, setMap] = useState(new Map());
+    const {currentCourseStudents, currentCourseStudentsLoaded} = useSelector((state) => state.courses);
 
     useEffect(() => {
-        axios
-            .get(
-                `${process.env.REACT_APP_URL}/view/professor/courses/` +
-                currentCourse.course_id +
-                '/students'
-            )
-            .then((r) => {
-                for (let i = 0; i < r.data.length; i++) {
-                    setStudents((arr) => [...arr, r.data[i]]);
-                }
-            });
-        axios
-            .get(
-                `${process.env.REACT_APP_URL}/teams/team/get/all/` +
-                currentCourse.course_id
-            )
-            .then((r) => {
-                for (let i = 0; i < r.data.length; i++) {
-                    for (let j = 0; j < r.data[i].team_members.length; j++) {
-                        setMap(teamsMap.set(r.data[i].team_members[j], r.data[i].team_id));
-                    }
-                }
-            });
+        dispatch(getCurrentCourseStudentsAsync(courseId))
     }, []);
 
     const [formData, setFormData] = useState({
@@ -45,8 +22,7 @@ const ProfessorRosterComponent = () => {
     });
 
     const {Name, Email} = formData;
-    const OnChange = (e) =>
-        setFormData({...formData, [e.target.name]: e.target.value});
+    const OnChange = (e) => setFormData({...formData, [e.target.name]: e.target.value});
 
     const handleSubmit = async (e) => {
         const nameArray = Name.split(' ');
@@ -78,8 +54,7 @@ const ProfessorRosterComponent = () => {
 
     const deleteStudent = async (Email) => {
         const deleteStudentUrl = `${url}/${courseId}/students/${Email.student_id}/delete`;
-        await axios
-            .delete(deleteStudentUrl)
+        await axios.delete(deleteStudentUrl)
             .then((res) => {
                 console.log(res);
                 alert('Successfully deleted student.');
@@ -126,32 +101,36 @@ const ProfessorRosterComponent = () => {
     return (
         <div className='RosterPage'>
             <div id='roster'>
-                <table className='rosterTable'>
-                    <tr>
-                        <th className='rosterHeader'>Name</th>
-                        <th className='rosterHeader'>Email</th>
-                        <th className='rosterHeader'>Team</th>
-                        <th className='rosterHeader'></th>
-                    </tr>
-                    {studentList.map((d) => (
+                {!currentCourseStudentsLoaded ? (
+                    <h1> Loading </h1>
+                ) : (
+                    <table className='rosterTable'>
+                        <tr>
+                            <th className='rosterHeader'>Name</th>
+                            <th className='rosterHeader'>Email</th>
+                            <th className='rosterHeader'>Team</th>
+                            <th className='rosterHeader'></th>
+                        </tr>
+                        {currentCourseStudents.map(student => (
                         <tr>
                             <th className='rosterComp'>
-                                {d.first_name ? d.first_name + ' ' + d.last_name : ''}
+                                {student.first_name ? student.first_name + ' ' + student.last_name : ''}
                             </th>
-                            <th className='rosterComp'>{d.student_id}</th>
+                            <th className='rosterComp'>{student.student_id}</th>
                             <th className='rosterComp'>
-                                {teamsMap.has(d.student_id) ? teamsMap.get(d.student_id) : ''}
+                                {student.team !== null ? student.team : ''}
                             </th>
                             <th className='rosterComp'>
                                 <div className='crossMark-wrapper'>
-                                    <div onClick={() => deleteStudent(d)} className='crossMark'>
+                                    <div onClick={() => deleteStudent(student)} className='crossMark'>
                                         X
                                     </div>
                                 </div>
                             </th>
                         </tr>
-                    ))}
-                </table>
+                        ))}
+                    </table>
+                )}
             </div>
             {show ? (
                 addsStudent()
