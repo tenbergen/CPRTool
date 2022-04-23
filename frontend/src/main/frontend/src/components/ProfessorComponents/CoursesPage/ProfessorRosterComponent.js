@@ -54,7 +54,7 @@ const ProfessorRosterComponent = () => {
     const last = nameArray[1];
     if (Name === '' || Email === '') {
       alert('Please enter both name and email for the student!');
-    } else if (nameArray.length <= 2) {
+    } else if (nameArray.length < 2) {
       alert('Please enter first and last name!');
     } else {
       e.preventDefault();
