@@ -19,7 +19,6 @@ const ProfessorEditCourseComponent = () => {
   const { currentCourse } = useSelector((state) => state.courses);
   const { courseAssignments } = useSelector((state) => state.assignments);
   let { courseId } = useParams();
-
   const [showModal, setShow] = useState(false);
   const csvFormData = new FormData();
 
@@ -110,18 +109,18 @@ const ProfessorEditCourseComponent = () => {
     abbreviation: currentCourse.abbreviation,
     year: currentCourse.year,
     crn: currentCourse.crn,
+    team_size: currentCourse.team_size,
   };
 
   const handleSubmit = async (formObj) => {
-    if (JSON.stringify(initialData) === JSON.stringify(formObj)) {
-      if (csvFormData.get('csv_file') != null) {
-        await uploadCsv();
-      } else {
-        alert('Nothing to save!');
-      }
-    } else {
-      await updateCourse(formObj);
+    if (
+      JSON.stringify(initialData) === JSON.stringify(formObj) &&
+      csvFormData.get('csv_file') == null
+    ) {
+      alert('Nothing to save!');
+      return;
     }
+    await updateCourse(formObj);
   };
 
   return (
@@ -135,10 +134,7 @@ const ProfessorEditCourseComponent = () => {
         {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
             <div className='ecc-input-field'>
-              <label>
-                {' '}
-                <b> Name of course: </b>{' '}
-              </label>
+              <label>Name of course:</label>
               <Field name='course_name'>
                 {({ input }) => (
                   <input type='text' name='course_name' {...input} required />
@@ -148,10 +144,7 @@ const ProfessorEditCourseComponent = () => {
 
             <div className='ecc-row-multiple'>
               <div className='ecc-input-field'>
-                <label>
-                  {' '}
-                  <b> Course abbreviation: </b>{' '}
-                </label>
+                <label>Course abbreviation:</label>
                 <Field name='abbreviation'>
                   {({ input }) => (
                     <input
@@ -165,10 +158,7 @@ const ProfessorEditCourseComponent = () => {
               </div>
 
               <div className='ecc-input-field'>
-                <label>
-                  {' '}
-                  <b> Course section: </b>{' '}
-                </label>
+                <label>Course section:</label>
                 <Field name='course_section'>
                   {({ input }) => (
                     <input
@@ -184,10 +174,7 @@ const ProfessorEditCourseComponent = () => {
 
             <div className='ecc-row-multiple'>
               <div className='ecc-input-field'>
-                <label>
-                  {' '}
-                  <b> Semester: </b>{' '}
-                </label>
+                <label>Semester:</label>
                 <Field name='semester'>
                   {({ input }) => (
                     <input type='text' name='semester' {...input} required />
@@ -195,10 +182,7 @@ const ProfessorEditCourseComponent = () => {
                 </Field>
               </div>
               <div className='ecc-input-field'>
-                <label>
-                  {' '}
-                  <b> Year: </b>{' '}
-                </label>
+                <label>Year:</label>
                 <Field name='year'>
                   {({ input }) => (
                     <input type='text' name='year' {...input} required />
@@ -209,20 +193,14 @@ const ProfessorEditCourseComponent = () => {
 
             <div className='ecc-row-multiple'>
               <div className='ecc-input-field'>
-                <label>
-                  {' '}
-                  <b> CRN: </b>{' '}
-                </label>
+                <label>CRN:</label>
                 <Field name='crn'>
                   {({ input }) => <input type='text' name='crn' {...input} />}
                 </Field>
               </div>
 
               <div className='ecc-input-field'>
-                <label>
-                  {' '}
-                  <b> Team size: </b>{' '}
-                </label>
+                <label>Team size:</label>
                 <Field name='team_size'>
                   {({ input }) => (
                     <input type='number' min='1' name='team_size' {...input} />
@@ -232,35 +210,182 @@ const ProfessorEditCourseComponent = () => {
             </div>
 
             <div className='ecc-file-upload'>
-              <label>
-                {' '}
-                <b> Course CSV: </b>{' '}
-              </label>
+              <label>Course CSV:</label>
               <input
                 onChange={fileChangeHandler}
                 type='file'
                 name='course_csv'
                 accept='.csv'
+                // required
               />
             </div>
             <div className='ecc-button'>
-              <button type='submit'>Save</button>
+              <button className='green-button' type='submit'>
+                {' '}
+                Save
+              </button>
             </div>
           </form>
         )}
       </Form>
       <div className='ecc-delete'>
-        <div
-          className='ecc-anchor'
-          onClick={() => setShow(true)}
-          target='_blank'
-        >
+        <a onClick={() => setShow(true)} target='_blank'>
           Delete course
-        </div>
+        </a>
         <div>{showModal ? Modal() : null}</div>
       </div>
     </div>
   );
 };
+
+const initialData = {
+  course_name: currentCourse.course_name,
+  course_section: currentCourse.course_section,
+  semester: currentCourse.semester,
+  abbreviation: currentCourse.abbreviation,
+  year: currentCourse.year,
+  crn: currentCourse.crn,
+};
+
+const handleSubmit = async (formObj) => {
+  if (JSON.stringify(initialData) === JSON.stringify(formObj)) {
+    if (csvFormData.get('csv_file') != null) {
+      await uploadCsv();
+    } else {
+      alert('Nothing to save!');
+    }
+  } else {
+    await updateCourse(formObj);
+  }
+};
+
+return (
+  <div className='ecc-form'>
+    <Form
+      onSubmit={async (formObj) => {
+        await handleSubmit(formObj);
+      }}
+      initialValues={initialData}
+    >
+      {({ handleSubmit }) => (
+        <form onSubmit={handleSubmit}>
+          <div className='ecc-input-field'>
+            <label>
+              {' '}
+              <b> Name of course: </b>{' '}
+            </label>
+            <Field name='course_name'>
+              {({ input }) => (
+                <input type='text' name='course_name' {...input} required />
+              )}
+            </Field>
+          </div>
+
+          <div className='ecc-row-multiple'>
+            <div className='ecc-input-field'>
+              <label>
+                {' '}
+                <b> Course abbreviation: </b>{' '}
+              </label>
+              <Field name='abbreviation'>
+                {({ input }) => (
+                  <input type='text' name='abbreviation' {...input} required />
+                )}
+              </Field>
+            </div>
+
+            <div className='ecc-input-field'>
+              <label>
+                {' '}
+                <b> Course section: </b>{' '}
+              </label>
+              <Field name='course_section'>
+                {({ input }) => (
+                  <input
+                    type='text'
+                    name='course_section'
+                    {...input}
+                    required
+                  />
+                )}
+              </Field>
+            </div>
+          </div>
+
+          <div className='ecc-row-multiple'>
+            <div className='ecc-input-field'>
+              <label>
+                {' '}
+                <b> Semester: </b>{' '}
+              </label>
+              <Field name='semester'>
+                {({ input }) => (
+                  <input type='text' name='semester' {...input} required />
+                )}
+              </Field>
+            </div>
+            <div className='ecc-input-field'>
+              <label>
+                {' '}
+                <b> Year: </b>{' '}
+              </label>
+              <Field name='year'>
+                {({ input }) => (
+                  <input type='text' name='year' {...input} required />
+                )}
+              </Field>
+            </div>
+          </div>
+
+          <div className='ecc-row-multiple'>
+            <div className='ecc-input-field'>
+              <label>
+                {' '}
+                <b> CRN: </b>{' '}
+              </label>
+              <Field name='crn'>
+                {({ input }) => <input type='text' name='crn' {...input} />}
+              </Field>
+            </div>
+
+            <div className='ecc-input-field'>
+              <label>
+                {' '}
+                <b> Team size: </b>{' '}
+              </label>
+              <Field name='team_size'>
+                {({ input }) => (
+                  <input type='number' min='1' name='team_size' {...input} />
+                )}
+              </Field>
+            </div>
+          </div>
+
+          <div className='ecc-file-upload'>
+            <label>
+              {' '}
+              <b> Course CSV: </b>{' '}
+            </label>
+            <input
+              onChange={fileChangeHandler}
+              type='file'
+              name='course_csv'
+              accept='.csv'
+            />
+          </div>
+          <div className='ecc-button'>
+            <button type='submit'>Save</button>
+          </div>
+        </form>
+      )}
+    </Form>
+    <div className='ecc-delete'>
+      <div className='ecc-anchor' onClick={() => setShow(true)} target='_blank'>
+        Delete course
+      </div>
+      <div>{showModal ? Modal() : null}</div>
+    </div>
+  </div>
+);
 
 export default ProfessorEditCourseComponent;
