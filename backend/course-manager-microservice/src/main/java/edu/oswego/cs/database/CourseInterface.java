@@ -8,6 +8,7 @@ import com.mongodb.client.model.Updates;
 import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.daos.FileDAO;
 import edu.oswego.cs.daos.StudentDAO;
+import edu.oswego.cs.services.IdentifyingService;
 import edu.oswego.cs.util.CourseUtil;
 
 import org.bson.Document;
@@ -85,7 +86,9 @@ public class CourseInterface {
     }
 
     public String updateCourse(SecurityContext securityContext, CourseDAO dao) {
-        Document courseDocument = courseCollection.find(eq("course_id", dao.getCourseID())).first();
+        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
+
+        Document courseDocument = courseCollection.find(and(eq("course_id", dao.getCourseID()), eq("professor_id", professorID))).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This course does not exist.").build());
 
         String originalCourseID = dao.courseID;
@@ -93,6 +96,8 @@ public class CourseInterface {
         dao.courseID = newCourseID;
         List<String> students = courseDocument.getList("students", String.class);
         dao.students = students;
+        dao.professorID = professorID;
+
 
         new CourseUtil().updateCoursesArrayInProfessorDb(securityContext, professorCollection, originalCourseID, newCourseID, "UPDATE");
         new CourseUtil().updateCoursesArrayInStudenDb(studentCollection, originalCourseID, newCourseID, "UPDATE");
