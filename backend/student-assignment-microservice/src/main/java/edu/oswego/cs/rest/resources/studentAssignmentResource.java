@@ -5,14 +5,13 @@ import edu.oswego.cs.rest.daos.FileDAO;
 import edu.oswego.cs.rest.database.AssignmentInterface;
 import org.bson.Document;
 
-import javax.ws.rs.Path;
-import javax.ws.rs.GET;
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -39,8 +38,8 @@ public class studentAssignmentResource {
             @PathParam("assignmentID") int assignmentID,
             @PathParam("teamName") String teamName) {
 
-        String path = "courses/"+courseID+"/"+assignmentID+"/"+"team-submissions/";
-        Optional<File> file = Arrays.stream(new File(path).listFiles()).filter(f->f.getName().contains(teamName)).findFirst();
+        String path = "assignments" + "/" + courseID + "/" + assignmentID + "/" + "team-submissions" + "/";
+        Optional<File> file = Arrays.stream(new File(path).listFiles()).filter(f -> f.getName().contains(teamName)).findFirst();
         if (file.isEmpty())
             return Response.status(Response.Status.BAD_REQUEST).entity("Assignment Does Not Exist").build();
 
@@ -85,8 +84,7 @@ public class studentAssignmentResource {
     @Path("{course_id}/{student_id}/submissions")
     @Produces(MediaType.APPLICATION_JSON)
     public Response viewUsersSubmissions(@PathParam("course_id") String courseID,
-                                      @PathParam("student_id") String teamName)
-    {
+                                         @PathParam("student_id") String teamName) {
         List<Document> documents = new AssignmentInterface().getAllUserAssignments(courseID, teamName);
         return Response.status(Response.Status.OK).entity(documents).build();
     }
@@ -96,10 +94,9 @@ public class studentAssignmentResource {
     @Path("{course_id}/{assignment_id}/{student_id}/submission")
     @Produces(MediaType.APPLICATION_JSON)
     public Response viewUsersSubmission(@PathParam("course_id") String courseID,
-                                      @PathParam("assignment_id") int assignmentID,
-                                      @PathParam("student_id") String studentID)
-    {
-        List<Document> documents = new AssignmentInterface().getSpecifiedUserAssignment(courseID, assignmentID,studentID);
+                                        @PathParam("assignment_id") int assignmentID,
+                                        @PathParam("student_id") String studentID) {
+        List<Document> documents = new AssignmentInterface().getSpecifiedUserAssignment(courseID, assignmentID, studentID);
         return Response.status(Response.Status.OK).entity(documents).build();
     }
 
@@ -108,20 +105,19 @@ public class studentAssignmentResource {
     @Path("{course_id}/{assignment_id}/submissions")
     @Produces(MediaType.APPLICATION_JSON)
     public Response viewAllSubmissions(@PathParam("course_id") String courseID,
-                                      @PathParam("assignment_id") int assignmentID)
-    {
+                                       @PathParam("assignment_id") int assignmentID) {
         List<Document> documents = new AssignmentInterface().getAssignmentSubmissions(courseID, assignmentID);
         return Response.status(Response.Status.OK).entity(documents).build();
     }
+
     @GET
     @RolesAllowed("student")
     @Path("{course_id}/{laker_id}/submission")
     @Produces(MediaType.APPLICATION_JSON)
     public Response viewSubmissions(
             @PathParam("course_id") String course_id,
-            @PathParam("laker_id")String student_id)
-    {
-        Document result = new AssignmentInterface().allAssignments(course_id,student_id);
+            @PathParam("laker_id") String student_id) {
+        Document result = new AssignmentInterface().allAssignments(course_id, student_id);
         return Response.status(Response.Status.OK).entity(result).build();
     }
 
@@ -132,5 +128,4 @@ public class studentAssignmentResource {
     public Response viewAssignmentsByCourse(@PathParam("courseID") String courseID, @PathParam("student_id") String student_id) {
         return Response.status(Response.Status.OK).entity(new AssignmentInterface().getToDosByCourse(courseID, student_id)).build();
     }
-
 }
