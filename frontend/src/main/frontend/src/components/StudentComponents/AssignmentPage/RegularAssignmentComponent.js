@@ -4,15 +4,18 @@ import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
 import axios from "axios";
 import {getAssignmentDetailsAsync } from "../../../redux/features/assignmentSlice";
+import {getCurrentCourseTeamAsync} from "../../../redux/features/teamSlice";
 
 const RegularAssignmentComponent = () => {
     const dispatch = useDispatch()
     const { currentAssignment, currentAssignmentLoaded } = useSelector((state) => state.assignments)
+    const { lakerId } = useSelector((state) => state.auth)
     const { courseId, assignmentId } = useParams()
     const { currentTeamId } = useSelector((state) => state.teams)
     const assignmentFileFormData = new FormData()
 
     useEffect(() => {
+        dispatch(getCurrentCourseTeamAsync({courseId, lakerId}))
         dispatch(getAssignmentDetailsAsync({ courseId, assignmentId}))
     }, [])
 

@@ -13,7 +13,7 @@ import {getCurrentCourseTeamAsync} from "../../redux/features/teamSlice";
 
 const CourseComponent = ({active, component, onClick}) => {
     return (
-        <p onClick={onClick} className={active ? 'scp-component-link-clicked' : 'scp-component-link'}>
+        <p onClick={onClick} className={active ? 'kumba-30 scp-component-link-clicked' : 'kumba-30 scp-component-link'}>
             {component}
         </p>
     );

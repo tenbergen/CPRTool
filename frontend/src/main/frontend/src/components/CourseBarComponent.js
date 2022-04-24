@@ -24,7 +24,7 @@ const CourseBarLink = ({active, course, onClick}) => {
                     <div className="colorForTable"/>
                     <div className="course_info">
                         <p className="outfit-16 course_id"> {course.abbreviation}-{course.course_section} </p>
-                        <p className="kumba-25 course_text"><b> {course.course_name} </b></p>
+                        <p className="kumba-25 course_text"> {course.course_name} </p>
                     </div>
                 </td>
             </tr>

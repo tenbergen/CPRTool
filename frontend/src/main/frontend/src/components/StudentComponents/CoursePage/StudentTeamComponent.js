@@ -63,7 +63,7 @@ const TeamComponent = () => {
 
     return (
         <h3>
-            <h2 id="teamTitle"> Join a team </h2>
+            <h2 className="kumba-30" id="teamTitle"> Join a team </h2>
             <div id="teamList">
                 {teams.map(team =>
                     <li id="teamListItem" onClick={() => joinTeam(team.team_id)}>Team {team.team_id}</li>

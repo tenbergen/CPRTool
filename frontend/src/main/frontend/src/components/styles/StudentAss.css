@@ -55,7 +55,6 @@
     font-size: 15px;
     margin: 10px;
     white-space: pre-line;
-    font-weight: bold;
     padding-left: 20px;
 }
 
@@ -77,7 +76,6 @@
 .ass-span-student {
     float: right;
     padding-right: 22px;
-    font-weight: bold;
 }
 
 .ass-instructions {
@@ -87,4 +85,8 @@
     color:#7398FF;
     font-size: small;
     cursor: pointer;
+}
+
+.add-tile-files {
+    width: fit-content;
 }
