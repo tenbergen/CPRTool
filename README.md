@@ -14,7 +14,7 @@ This web application is made to be built on bare metal Linux environment using D
 
 On the very first run of the web application, initialize the specified login credentials in your `.env` file for the databases as following:
 1. `docker exec -it <database container> bash`
-2. Execute the content from `mongo-init.sh`
+2. Copy paste and execute the content from `mongo-init.sh`
 
 The web application should be running on the specified domain in your `.env` file.
 
