@@ -2,9 +2,7 @@
 
 A highly scalable web application that assists the process of coordinating and evaluating peer reviews of student work.
 
-## Deployment Guide
-
-### Running the Project
+## Running the Project
 
 This web application is made to be built on bare metal Linux environment using Docker. This guide will assume that [Docker](https://docs.docker.com/engine/install/) and [Docker Compose](https://docs.docker.com/compose/install/) are already installed on your machine.
 
@@ -20,7 +18,7 @@ On the very first run of the web application, initialize the specified login cre
 
 The web application should be running on the specified domain in your `.env` file.
 
-### Local Development Environment
+## Local Development Environment
 
 For local development environment, a Docker setup is not necessary. This guide assumes you already have [Maven](https://maven.apache.org/guides/getting-started/windows-prerequisites.html) 3.8.4 or higher and [JDK 17](https://openjdk.java.net/projects/jdk/17/) or higher installed. For Windows users:
 
@@ -41,7 +39,7 @@ On Linux-based operating systems, you may achieve the similar result by executin
 
 **Step 4:** Run `mvn liberty:dev` to start the project in developer mode. The web app should be running on http://localhost:13126 (the port depends on which microservice you are running).
 
-### Contributing
+## Contributing
 
 Contributors are more than welcome to improve the project by creating a new issue to report bugs, suggest new features, or make changes to the source code by making a pull request. To have your work merged in, please make sure the following is done:
 
@@ -49,7 +47,7 @@ Contributors are more than welcome to improve the project by creating a new issu
 2. If you’ve fixed a bug or added something new, add a comprehensive list of changes.
 3. Ensure that your code is tested, functional, and is linted.
 
-### Built On
+## Built On
 
 This project is built on:
 
