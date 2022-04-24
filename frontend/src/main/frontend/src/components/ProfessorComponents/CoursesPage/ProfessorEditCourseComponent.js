@@ -109,6 +109,7 @@ const ProfessorEditCourseComponent = () => {
         abbreviation: currentCourse.abbreviation,
         year: currentCourse.year,
         crn: currentCourse.crn,
+        team_size: currentCourse.team_size
     };
 
     const handleSubmit = async (formObj) => {
@@ -251,8 +252,7 @@ const ProfessorEditCourseComponent = () => {
             <div className='ecc-delete'>
                 <div
                     className='ecc-anchor'
-                    onClick={() => setShow(true)}
-                    target='_blank'>
+                    onClick={() => setShow(true)}>
                     Delete course
                 </div>
                 <div>{showModal ? Modal() : null}</div>
