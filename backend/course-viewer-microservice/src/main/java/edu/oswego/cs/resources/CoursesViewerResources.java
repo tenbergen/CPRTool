@@ -10,8 +10,11 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+
 import java.util.List;
 
 @Path("professor")
@@ -21,8 +24,8 @@ public class CoursesViewerResources {
     @RolesAllowed("professor")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses")
-    public Response viewAllCourses() {
-        List<Document> courses = new CourseInterface().getAllCourses();
+    public Response viewAllCourses(@Context SecurityContext securityContext) {
+        List<Document> courses = new CourseInterface().getAllCourses(securityContext);
         return Response.status(Response.Status.OK).entity(courses).build();
     }
 

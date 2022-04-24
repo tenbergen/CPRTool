@@ -7,6 +7,8 @@ import org.bson.Document;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,8 +31,9 @@ public class CourseInterface {
         }
     }
 
-    public List<Document> getAllCourses() {
-        MongoCursor<Document> query = courseCollection.find().iterator();
+    public List<Document> getAllCourses(SecurityContext securityContext) {
+        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
+        MongoCursor<Document> query = courseCollection.find(eq("professor_id", professorID)).iterator();
         List<Document> courses = new ArrayList<>();
         while (query.hasNext()) {
             Document document = query.next();
