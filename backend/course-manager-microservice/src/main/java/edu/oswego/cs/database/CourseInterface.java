@@ -169,6 +169,7 @@ public class CourseInterface {
         Document studentDocument = studentCollection.find(and(eq("student_id", studentID), eq("courses", courseID))).first();
         Document courseDocument = courseCollection.find(and(eq("course_id", courseID), eq("professor_id", professorID))).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This course does not exist.").build());
+        if (studentDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This student does not exist.").build());
 
         List<String> courses = studentDocument.getList("courses", String.class);
         courses.remove(courseID);
@@ -179,12 +180,13 @@ public class CourseInterface {
         courseCollection.updateOne(eq("course_id", courseID), set("students", students));
     }
 
-    public void addStudentsFromCSV(FileDAO fileDAO) {
+    public void addStudentsFromCSV(SecurityContext securityContext, FileDAO fileDAO) {
+        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
         List<StudentDAO> allStudents = parseStudentCSV(fileDAO.getCsvLines());
 
         String cid = fileDAO.getFilename();
         cid = cid.substring(0, cid.length() - 4);
-        Document course = courseCollection.find(eq("course_id", cid)).first();
+        Document course = courseCollection.find(and(eq("course_id", cid), eq("professor_id", professorID))).first();
         if (course == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
 
         List<String> oldStudentList = course.getList("students", String.class);
@@ -203,12 +205,12 @@ public class CourseInterface {
             if (!oldStudentList.contains(student)) studentsToAdd.add(student);
         }
 
-        for (String student : studentsToRemove) removeStudent(student, courseID);
+        for (String student : studentsToRemove) removeStudent(securityContext, student, courseID);
 
         for (StudentDAO student : allStudents.stream()
                 .filter(s -> studentsToAdd.contains(s.email.split("@")[0]))
                 .collect(Collectors.toList())) {
-            addStudent(student, courseID);
+            addStudent(securityContext, student, courseID);
         }
     }
 
