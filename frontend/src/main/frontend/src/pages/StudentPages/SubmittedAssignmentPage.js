@@ -9,7 +9,7 @@ import SubmittedAssBarComponent from "../../components/SubmittedAssBarComponent"
 
 function SubmittedAssignmentPage() {
     const dispatch = useDispatch()
-    const {currentSubmittedAssignment, currentAssignmentLoaded} = useSelector((state) => state.assignments)
+    const {currentSubmittedAssignment, currentSubmittedAssignmentLoaded} = useSelector((state) => state.assignments)
     const {lakerId} = useSelector((state) => state.auth)
     const {courseId, assignmentId, currentTeamId} = useParams()
 
@@ -24,10 +24,10 @@ function SubmittedAssignmentPage() {
                 <div className='ap-container'>
                     <SubmittedAssBarComponent/>
                     <div className='ap-component'>
-                        <SubmittedAssignmentComponent
-                            currentAssignmentLoaded={currentAssignmentLoaded}
-                            currentSubmittedAssignment={currentSubmittedAssignment}
-                        />
+                        {currentSubmittedAssignmentLoaded ?
+                            <SubmittedAssignmentComponent
+                                currentSubmittedAssignment={currentSubmittedAssignment}
+                            /> : null}
                     </div>
                 </div>
             </div>

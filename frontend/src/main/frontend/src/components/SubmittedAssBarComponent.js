@@ -16,7 +16,7 @@ const SubAssBarLink = ({active, assignment, onClick, teamName}) => {
             <tr>
                 <td style={active ? clickedStyle : normalStyle}>
                     <div className='colorForTable'/>
-                    <p className='courseText'> {assignment.assignment_name} </p>
+                    <p className='kumba-25 courseText'> {assignment.assignment_name} </p>
                 </td>
             </tr>
         </Link>
@@ -42,7 +42,7 @@ const SubmittedAssBarComponent = () => {
 
     return (
         <div className='abc-parent'>
-            <h2> Assignments </h2>
+            <h2 className="kumba-30"> Assignments </h2>
             <div className='abc-assignments'>
                 {courseSubmittedAssignments.map((assignment) => (
                     <SubAssBarLink

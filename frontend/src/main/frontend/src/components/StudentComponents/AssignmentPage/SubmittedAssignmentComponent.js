@@ -3,7 +3,7 @@ import axios from "axios";
 import {useParams} from "react-router-dom";
 import '../../styles/SubmittedAssignmentComponent.css'
 
-const SubmittedAssignmentComponent = ({currentAssignmentLoaded, currentSubmittedAssignment}) => {
+const SubmittedAssignmentComponent = ({currentSubmittedAssignment}) => {
 
     const {courseId, assignmentId, currentTeamId} = useParams()
 
@@ -39,67 +39,67 @@ const SubmittedAssignmentComponent = ({currentAssignmentLoaded, currentSubmitted
 
     return (
         <div>
-            {currentAssignmentLoaded ?
-                <div className="sac-parent">
-                    <h2 className="assignment-name">{currentSubmittedAssignment.assignment_name}</h2>
-                    <div className="sac-content">
-                        <div>
-                            <span className="sac-title"> Instructions </span>
-                            <span className="sac-date sac-title">Due Date: {currentSubmittedAssignment.due_date}</span>
-                            <br/>
-                            <p>
-                                <span className="sac-text"> {currentSubmittedAssignment.instructions} </span>
-                            </p>
-                        </div>
+            <div className="sac-parent">
+                <h2 className="assignment-name">{currentSubmittedAssignment.assignment_name}</h2>
+                <div className="sac-content">
+                    <div>
+                        <span className="sac-title"> Instructions </span>
+                        <span className="sac-date sac-title">Due Date: {currentSubmittedAssignment.due_date}</span>
                         <br/>
+                        <p>
+                            <span className="sac-text"> {currentSubmittedAssignment.instructions} </span>
+                        </p>
+                    </div>
+                    <br/>
 
-                        <div>
-                            <div className="ap-assignment-files">
-                                <span className="sac-title"> Rubric: </span>
-                                <span className="sac-filename" onClick={() => onAssignmentFileClick(currentSubmittedAssignment.peer_review_rubric)}>
-                                    {currentSubmittedAssignment.peer_review_rubric}
-                                </span>
-                            </div>
-
-                            <div className="ap-assignment-files">
-                                <span className="sac-title">Template:</span>
-                                <span className="sac-filename" onClick={() => onAssignmentFileClick(currentSubmittedAssignment.peer_review_template)}>
-                                    {currentSubmittedAssignment.peer_review_template}
-                                </span>
-                            </div>
-
-                            <div className="ap-assignment-files">
-                                <span className="sac-title">Team Files:</span>
-                                <span className="sac-filename" onClick={onTeamFileClick}>
-                                    {currentSubmittedAssignment.team_file}
-                                </span>
-                            </div>
+                    <div>
+                        <div className="ap-assignment-files">
+                            <span className="sac-title"> Rubric: </span>
+                            <span className="sac-filename"
+                                  onClick={() => onAssignmentFileClick(currentSubmittedAssignment.peer_review_rubric)}>
+                                {currentSubmittedAssignment.peer_review_rubric}
+                            </span>
                         </div>
-                        <br/>
-                        <div>
-                            <div>
-                                <span className="sac-title"> Peer reviews: </span>
-                                <div className='peerReviewList'>
-                                    {currentSubmittedAssignment.peer_reviews !== null ?
-                                        currentSubmittedAssignment.peer_reviews.map(peerReview => (
-                                            <li className='peerReviewListItem'>
-                                                <b> {peerReview.grade === -1 ? "Pending" : peerReview.grade}
-                                                </b>
-                                                <span className="sac-filename" onClick={() => onFeedbackClick(peerReview)}>
-                                                    {peerReview.submission_name}
-                                                </span>
-                                            </li>
-                                    )): null}
-                                </div>
-                            </div>
+
+                        <div className="ap-assignment-files">
+                            <span className="sac-title">Template:</span>
+                            <span className="sac-filename"
+                                  onClick={() => onAssignmentFileClick(currentSubmittedAssignment.peer_review_template)}>
+                                {currentSubmittedAssignment.peer_review_template}
+                            </span>
                         </div>
-                        <br/><br/>
-                        <div>
-                            <span className="sac-title"> Grade: {currentSubmittedAssignment.grade}</span>
+
+                        <div className="ap-assignment-files">
+                            <span className="sac-title">Team Files:</span>
+                            <span className="sac-filename" onClick={onTeamFileClick}>
+                                {currentSubmittedAssignment.team_file}
+                            </span>
                         </div>
                     </div>
-                </div> : null
-            }
+                    <br/>
+                    <div>
+                        <div>
+                            <span className="sac-title"> Peer reviews: </span>
+                            <div className='peerReviewList'>
+                                {currentSubmittedAssignment.peer_reviews !== null ?
+                                    currentSubmittedAssignment.peer_reviews.map(peerReview => (
+                                        <li className='peerReviewListItem'>
+                                            <b> {peerReview.grade === -1 ? "Pending" : peerReview.grade}
+                                            </b>
+                                            <span className="sac-filename" onClick={() => onFeedbackClick(peerReview)}>
+                                                {peerReview.submission_name}
+                                            </span>
+                                        </li>
+                                    )) : null}
+                            </div>
+                        </div>
+                    </div>
+                    <br/><br/>
+                    <div>
+                        <span className="sac-title"> Grade: {currentSubmittedAssignment.grade}</span>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

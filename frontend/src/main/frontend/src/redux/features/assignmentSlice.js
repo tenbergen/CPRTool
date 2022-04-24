@@ -229,6 +229,7 @@ const assignmentSlice = createSlice({
         currentAssignment: null,
         currentAssignmentLoaded: false,
         currentSubmittedAssignment: null,
+        currentSubmittedAssignmentLoaded: false,
         assignmentFilesLoaded: false,
         assignmentsLoaded: false
     },
@@ -263,11 +264,11 @@ const assignmentSlice = createSlice({
             state.assignmentsLoaded = true
         },
         [getSubmittedAssignmentDetailsAsync.pending]: (state) => {
-            state.currentAssignmentLoaded = false
+            state.currentSubmittedAssignmentLoaded = false
         },
         [getSubmittedAssignmentDetailsAsync.fulfilled]: (state, action) => {
             state.currentSubmittedAssignment = action.payload.submittedAssignment
-            state.currentAssignmentLoaded = true
+            state.currentSubmittedAssignmentLoaded = true
         }
     }
 })

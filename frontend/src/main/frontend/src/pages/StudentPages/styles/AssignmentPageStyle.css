@@ -75,8 +75,7 @@
 
 .span1-ap {
     float: right;
-    padding-right: 11px;
-    font-weight: bold;
+    margin-right: 4%;
 }
 
 .ap-assignmentArea p {
@@ -132,6 +131,6 @@
 }
 
 .p2 {
-    color:#7398FF;
+    color:#5267A3;
     text-decoration-line: underline;
 }

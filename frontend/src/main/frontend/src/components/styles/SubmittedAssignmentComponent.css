@@ -18,7 +18,6 @@
 }
 
 .assignment-name {
-    font-family: 'Kumbh Sans';
     font-size: 30px;
     color: #393939;
 }
@@ -32,7 +31,6 @@
 }
 
 .sac-text {
-    font-family: 'Outfit';
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -61,7 +59,7 @@
     margin-top: 3%;
     border-radius: 50px;
     flex-grow: 1;
-    height: 70vh;
+    height: 60vh;
 }
 
 a {
