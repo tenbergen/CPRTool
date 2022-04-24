@@ -164,10 +164,10 @@ public class CourseInterface {
         courseCollection.deleteOne(eq("course_id", courseID));
     }
 
-    public void removeStudent(String studentID, String courseID) {
+    public void removeStudent(SecurityContext securityContext, String studentID, String courseID) {
+        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
         Document studentDocument = studentCollection.find(and(eq("student_id", studentID), eq("courses", courseID))).first();
-        Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
-        if (studentDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This student does not exist.").build());
+        Document courseDocument = courseCollection.find(and(eq("course_id", courseID), eq("professor_id", professorID))).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This course does not exist.").build());
 
         List<String> courses = studentDocument.getList("courses", String.class);

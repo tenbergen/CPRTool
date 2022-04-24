@@ -72,6 +72,7 @@ public class CourseManagerResource {
     @RolesAllowed("professor")
     @Path("courses/{courseID}/students/{studentID}/delete")
     public Response deleteStudent(
+            @Context SecurityContext securityContext,
             @PathParam("courseID") String courseID,
             @PathParam("studentID") String studentID) {
 
