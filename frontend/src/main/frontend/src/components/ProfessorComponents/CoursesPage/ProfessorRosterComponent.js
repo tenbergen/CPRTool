@@ -24,32 +24,35 @@ const ProfessorRosterComponent = () => {
     const {Name, Email} = formData;
     const OnChange = (e) => setFormData({...formData, [e.target.name]: e.target.value});
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async () => {
         const nameArray = Name.split(' ');
         const first = nameArray[0];
         const last = nameArray[1];
         if (Name === '' || Email === '') {
             alert('Please enter both name and email for the student!');
-        } else if (nameArray.length < 2) {
-            alert('Please enter first and last name!');
-        } else {
-            e.preventDefault();
-            const firstLastEmail = first + '-' + last + '-' + Email;
-            const addStudentUrl = `${url}/${courseId}/students/${firstLastEmail}/add`;
-            await axios
-                .post(addStudentUrl)
-                .then((res) => {
-                    console.log(res.data);
-                    alert('Successfully added student.');
-                    dispatch(getCourseDetailsAsync(courseId));
-                })
-                .catch((e) => {
-                    console.log(e);
-                    alert('Error adding student.');
-                });
-            setFalse();
-            setFormData({...formData, Name: '', Email: ''});
+            return
         }
+        if (nameArray.length < 2) {
+            alert('Please enter first and last name!');
+            return
+        }
+
+        const firstLastEmail = first + '-' + last + '-' + Email;
+        const addStudentUrl = `${url}/${courseId}/students/${firstLastEmail}/add`;
+        await axios
+            .post(addStudentUrl)
+            .then((res) => {
+                console.log(res.data);
+                alert('Successfully added student.');
+                dispatch(getCourseDetailsAsync(courseId));
+            })
+            .catch((e) => {
+                console.log(e);
+                alert('Error adding student.');
+            });
+        setFalse();
+        setFormData({...formData, Name: '', Email: ''});
+        dispatch(getCurrentCourseStudentsAsync(courseId))
     };
 
     const deleteStudent = async (Email) => {
@@ -58,6 +61,7 @@ const ProfessorRosterComponent = () => {
             .then((res) => {
                 console.log(res);
                 alert('Successfully deleted student.');
+                dispatch(getCurrentCourseStudentsAsync(courseId))
             })
             .catch((e) => {
                 console.log(e);
