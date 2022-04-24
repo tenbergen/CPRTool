@@ -153,7 +153,8 @@ public class CourseInterface {
     }
 
     public void removeCourse(SecurityContext securityContext, String courseID) {
-        Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
+        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
+        Document courseDocument = courseCollection.find(and(eq("course_id", courseID), eq("professor_id", professorID))).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
         new CourseUtil().updateCoursesArrayInProfessorDb(securityContext, professorCollection, courseID, null, "DELETE");
         new CourseUtil().updateCoursesArrayInStudenDb(studentCollection, courseID, null, "DELETE");
