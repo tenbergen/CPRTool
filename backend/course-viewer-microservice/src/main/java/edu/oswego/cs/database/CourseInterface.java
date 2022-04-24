@@ -51,23 +51,6 @@ public class CourseInterface {
         return document;
     }
 
-    public List<Document> getAllStudents() {
-        MongoCursor<Document> query = studentCollection.find().iterator();
-        List<Document> students = new ArrayList<>();
-        while (query.hasNext()) {
-            Document document = query.next();
-            students.add(document);
-        }
-        return students;
-    }
-
-    public Document getStudent(String studentID) {
-        Document document = studentCollection.find(eq("student_id", studentID)).first();
-        if (document == null)
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This student does not exist.").build());
-        return document;
-    }
-
     public List<Document> getStudentCourses(String studentID) {
         Document studentDocument = studentCollection.find(eq("student_id", studentID)).first();
         if (studentDocument == null)
@@ -82,8 +65,29 @@ public class CourseInterface {
         return courseDocuments;
     }
 
-    public List<Document> getStudentsInCourse(String courseID) {
-        Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
+    public List<Document> getAllStudents() {
+        MongoCursor<Document> query = studentCollection.find().iterator();
+        List<Document> students = new ArrayList<>();
+        while (query.hasNext()) {
+            Document document = query.next();
+            students.add(document);
+        }
+        query.close();
+        return students;
+    }
+
+    public Document getStudent(String studentID) {
+        Document document = studentCollection.find(eq("student_id", studentID)).first();
+        if (document == null)
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This student does not exist.").build());
+        return document;
+    }
+
+    
+
+    public List<Document> getStudentsInCourse(SecurityContext securityContext, String courseID) {
+        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
+        Document courseDocument = courseCollection.find(and(eq("course_id", courseID), eq("professor_id", professorID))).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).build());
         List<String> studentIDs = courseDocument.getList("students", String.class);
         return studentIDs.stream()

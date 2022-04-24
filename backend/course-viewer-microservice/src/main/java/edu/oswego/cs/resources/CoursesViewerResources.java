@@ -69,8 +69,8 @@ public class CoursesViewerResources {
     @RolesAllowed("professor")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/{courseID}/students")
-    public Response viewStudentsInCourse(@PathParam("courseID") String courseID) {
-        List<Document> studentDocuments = new CourseInterface().getStudentsInCourse(courseID);
+    public Response viewStudentsInCourse(@Context SecurityContext securityContext, @PathParam("courseID") String courseID) {
+        List<Document> studentDocuments = new CourseInterface().getStudentsInCourse(securityContext, courseID);
         return Response.status(Response.Status.OK).entity(studentDocuments).build();
     }
 /*
