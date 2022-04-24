@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.and;
 
 public class CourseInterface {
     private final MongoCollection<Document> studentCollection;
@@ -42,8 +43,9 @@ public class CourseInterface {
         return courses;
     }
 
-    public Document getCourse(String courseID) {
-        Document document = courseCollection.find(eq("course_id", courseID)).first();
+    public Document getCourse(SecurityContext securityContext, String courseID) {
+        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
+        Document document = courseCollection.find(and(eq("course_id", courseID), eq("professor_id", professorID))).first();
         if (document == null)
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This course does not exist.").build());
         return document;
