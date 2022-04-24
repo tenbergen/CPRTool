@@ -117,11 +117,13 @@ public class CourseInterface {
         return dao.courseID;
     }
 
-    public void addStudent(StudentDAO student, String courseID) {
+    public void addStudent(SecurityContext securityContext, StudentDAO student, String courseID) {
+        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
         String studentId = student.email.split("@")[0];
         String studentLastName = student.fullName.split(", ")[0];
         String studentFirstName = student.fullName.split(", ")[1];
-        Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
+
+        Document courseDocument = courseCollection.find(and(eq("course_id", courseID), eq("professor_id", professorID))).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This course does not exist.").build());
 
         List<String> students = courseDocument.getList("students", String.class);

@@ -55,13 +55,14 @@ public class CourseManagerResource {
     @RolesAllowed("professor")
     @Path("courses/{courseID}/students/{studentInfo}/add")
     public Response addStudent(
+            @Context SecurityContext securityContext,
             @PathParam("courseID") String courseID,
             @PathParam("studentInfo") String studentInfo) {
         String[] parsedStudentInfo = studentInfo.split("-");
         if (parsedStudentInfo.length < 3)
             return Response.status(Response.Status.BAD_REQUEST).entity("Add student field was not filled out properly.").build();
         StudentDAO studentDAO = new StudentDAO(parsedStudentInfo[0], parsedStudentInfo[1], parsedStudentInfo[2]);
-        new CourseInterface().addStudent(studentDAO, courseID);
+        new CourseInterface().addStudent(securityContext, studentDAO, courseID);
         return Response.status(Response.Status.OK).entity("Student successfully added.").build();
     }
 
