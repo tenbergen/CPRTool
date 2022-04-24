@@ -40,9 +40,11 @@ function StudentCoursePage() {
                 <div className="scp-container">
                     <CourseBarComponent title={"Courses"}/>
                     <div className="scp-component">
-                        {teamLoaded && currentTeamId === null
-                            ? <StudentTeamComponent/>
-                            :
+                        {/* Not in a team yet */}
+                        {teamLoaded && currentTeamId === null && <StudentTeamComponent/>}
+
+                        {/* Already in a team */}
+                        {teamLoaded && currentTeamId !== null &&
                             <div>
                                 <div className="scp-component-links">
                                     {components.map(t => (
