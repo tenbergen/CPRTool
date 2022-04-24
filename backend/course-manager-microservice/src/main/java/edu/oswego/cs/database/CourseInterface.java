@@ -59,15 +59,16 @@ public class CourseInterface {
     }
 
     public void addCourse(SecurityContext securityContext, CourseDAO dao) {
-        Document courseDocument = courseCollection.find(eq("course_id", dao.courseID)).first();
+        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
+        dao.professorID = professorID;
+
+        Document courseDocument = courseCollection.find(and(eq("course_id", dao.courseID), eq("professor_id", professorID))).first();
         if (courseDocument != null) throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Course already existed.").build());
 
-        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
         Bson professorDocumentFilter = Filters.eq("professor_id", professorID);
         Document professorDocument = professorCollection.find(professorDocumentFilter).first();
         List<String> professorDocumentCourses = professorDocument.getList("courses", String.class);
-        if (professorDocumentCourses == null)
-            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Professor profile is not set up properly.").build());
+        if (professorDocumentCourses == null) throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Professor profile is not set up properly.").build());
         professorDocumentCourses.add(dao.courseID);
         professorCollection.updateOne(professorDocumentFilter, Updates.set("courses", professorDocumentCourses));
 

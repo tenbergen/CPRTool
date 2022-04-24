@@ -20,6 +20,7 @@ public class CourseDAO {
     @JsonbProperty("course_name") public String courseName;
     @JsonbProperty("course_section") public String courseSection;
     @JsonbProperty("crn") public String crn;
+    @JsonbProperty("professor_id") public String professorID;
     @JsonbProperty("semester") public String semester;
     @JsonbProperty("students") @ElementCollection public List<String> students;
     @JsonbProperty("year") public String year;
@@ -38,6 +39,7 @@ public class CourseDAO {
         this.courseName = courseName;
         this.courseSection = courseSection;
         this.crn = crn;
+        this.professorID = "";
         this.semester = semester;
         this.students = new ArrayList<>();
         this.year = year;
