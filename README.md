@@ -24,7 +24,7 @@ The web application should be running on the specified domain in your `.env` fil
 
 For local development environment, a Docker setup is not necessary. This guide assumes you already have [Maven](https://maven.apache.org/guides/getting-started/windows-prerequisites.html) 3.8.4 or higher and [JDK 17](https://openjdk.java.net/projects/jdk/17/) or higher installed. For Windows users:
 
-**Step 1:** Install [MongoDB for Windows](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/#install-mongodb-community-edition) (or Mac and Linux counterparts respectively if you are using one). Optionally, install [MongoDB Compass](https://www.mongodb.com/products/compass) for a  and [mongosh](https://docs.mongodb.com/mongodb-shell/) for your own convenience of executing shell commands.
+**Step 1:** Install [MongoDB for Windows](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/#install-mongodb-community-edition) (or Mac and Linux counterparts respectively if you are using one). Optionally, install [MongoDB Compass](https://www.mongodb.com/products/compass) for a database manager GUI (which also include a built-in terminal), or [mongosh](https://docs.mongodb.com/mongodb-shell/) to execute shell commands without a GUI.
 
 **Step 2:** On Windows, hit `Windows + R`, enter `sysdm.cpl` and navigate to `Advanced -> Environment Variables...` and add the following variables:
 - `MONGO_HOSTNAME`: `localhost`
