@@ -24,7 +24,7 @@ const SidebarComponent = () => {
 
     return (
         <>
-            <div id='sidebar'>
+            <div className="outfit-16" id='sidebar'>
                 <ProSidebar>
                     <SidebarContent>
                         {/* Need to use jwt to decide which dashboard to goto*/}

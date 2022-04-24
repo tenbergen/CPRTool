@@ -1,8 +1,3 @@
-body {
-    overflow-y: hidden;
-    font-family: 'Kumbh Sans', sans-serif;
-}
-
 .welcome-banner-st {
     display: flex;
     justify-content: left;
@@ -16,9 +11,7 @@ body {
 }
 
 .student-welcome {
-    color: #2f4858;
-    font-size: 2em;
-    padding-bottom: 10px;
+    padding-bottom: 2%;
 }
 
 .btn-wrapper {
@@ -31,7 +24,6 @@ body {
     border: 1px solid #a8bbbf;
     transition: all 0.2s ease-out;
     border-radius: 8px;
-    margin-left: 10px;
     font-family: 'Kumbh Sans', sans-serif;
 }
 
@@ -53,7 +45,6 @@ body {
     padding-right: 3%;
     padding-left: 3%;
     margin-right: 5%;
-    margin-left: 5%;
     height: 90vh;
     width: 100vw;
 }

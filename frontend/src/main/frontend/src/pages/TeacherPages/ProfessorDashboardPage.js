@@ -36,7 +36,7 @@ function ProfessorDashboardPage() {
                     <SidebarComponent/>
                     <div id='teacher'>
                         <div className='welcome-banner'>
-                            <h1 className="kumba-30">Hello, {user}!</h1>
+                            <h1 className="kumba-35">Hello, {user}!</h1>
                             <div className='views'>
                                 <button className='kumba-25 student-view' onClick={studentView}>
                                     Student View

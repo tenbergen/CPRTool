@@ -45,11 +45,10 @@ function StudentDashboardPage() {
                     <SidebarComponent/>
                     <div id='student'>
                         <div className='welcome-banner-st'>
-                            <div className='student-welcome'> Hello, {user_given_name}!</div>
+                            <div className='kumba-35 student-welcome'> Hello, {user_given_name}!</div>
                             {alt_role && alt_role === 'student' ? (
                                 <div className='btn-wrapper'>
                                     <button className='prof-view-btn' onClick={changeView}>
-                                        {' '}
                                         Back to Professor View
                                     </button>
                                 </div>
@@ -60,9 +59,7 @@ function StudentDashboardPage() {
                             {courses.map((course) => (
                                 <Link
                                     to={'/details/student/' + course.course_id}
-                                    onClick={() => courseClickHandler(course)}
-                                    state={{from: course}}
-                                >
+                                    onClick={() => courseClickHandler(course)}>
                                     <li className='courseListItem'>
                                         <span className="outfit-16 pdp-coursename">{course.course_id}</span>
                                         <span className="kumba-25">{course.course_name}</span>
