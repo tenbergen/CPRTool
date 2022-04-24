@@ -45,7 +45,7 @@ public class CourseInterface {
     public Document getCourse(String courseID) {
         Document document = courseCollection.find(eq("course_id", courseID)).first();
         if (document == null)
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This course does not exist.").build());
         return document;
     }
 
@@ -62,14 +62,14 @@ public class CourseInterface {
     public Document getStudent(String studentID) {
         Document document = studentCollection.find(eq("student_id", studentID)).first();
         if (document == null)
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist.").build());
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This student does not exist.").build());
         return document;
     }
 
     public List<Document> getStudentCourses(String studentID) {
         Document studentDocument = studentCollection.find(eq("student_id", studentID)).first();
         if (studentDocument == null)
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This student does not exist.").build());
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This student does not exist.").build());
 
         List<String> courses = studentDocument.getList("courses", String.class);
         List<Document> courseDocuments = new ArrayList<>();
@@ -82,7 +82,7 @@ public class CourseInterface {
 
     public List<Document> getStudentsInCourse(String courseID) {
         Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
-        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).build());
+        if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).build());
         List<String> studentIDs = courseDocument.getList("students", String.class);
         return studentIDs.stream()
                 .map(id -> studentCollection.find(eq("student_id", id)).first())
