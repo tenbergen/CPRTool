@@ -21,7 +21,7 @@ import java.util.Map;
 public class PeerReviewAssignmentResource {
 
     /**
-     * Endpoint to start the round robin team assignments
+     * Endpoint to start the round-robin team assignments
      *
      * @param courseID     Course the peer review is being assigned in
      * @param assignmentID The assignment that the peer review is for
@@ -31,13 +31,9 @@ public class PeerReviewAssignmentResource {
      */
     @GET
     @RolesAllowed("professor")
-    @Path("{courseID}/{assignmentID}/assign/{count_to_review}")
+    @Path("{courseID}/{assignmentID}/assign/{countToReview}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response assignTeams(
-            @PathParam("courseID") String courseID,
-            @PathParam("assignmentID") int assignmentID,
-            @PathParam("count_to_review") int count
-    ) throws Exception {
+    public Response assignTeams(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("countToReview") int count) throws Exception {
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
 
         List<String> teamNames = peerReviewAssignmentInterface.getCourseTeams(courseID);
@@ -55,7 +51,7 @@ public class PeerReviewAssignmentResource {
     }
 
     /**
-     * Endpoint to get all of the teams for a given assignment
+     * Endpoint to get all the teams for a given assignment.
      *
      * @param courseID     The course for the assignment
      * @param assignmentID The assignment that is being looked up
@@ -65,16 +61,13 @@ public class PeerReviewAssignmentResource {
     @RolesAllowed("professor")
     @Path("{courseID}/{assignmentID}/allTeams")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response assignTeams(
-            @PathParam("courseID") String courseID,
-            @PathParam("assignmentID") int assignmentID
-    ) throws Exception {
+    public Response assignTeams(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
         return Response.status(Response.Status.OK).entity(peerReviewAssignmentInterface.getTeams(courseID, assignmentID)).build();
     }
 
     /**
-     * Endpoint to get all of the teams for a given assignment
+     * Endpoint to get all the team grades.
      *
      * @param courseID     The course for the assignment
      * @param assignmentID The assignment that is being looked up
@@ -83,19 +76,15 @@ public class PeerReviewAssignmentResource {
      */
     @GET
     @RolesAllowed("professor")
-    @Path("{courseID}/{assignmentID}/{team_name}/getTeamGrades")
+    @Path("{courseID}/{assignmentID}/{teamName}/getTeamGrades")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response team_name(
-            @PathParam("courseID") String courseID,
-            @PathParam("assignmentID") int assignmentID,
-            @PathParam("team_name") String team_name
-    ) {
+    public Response teamName(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("teamName") String team_name) {
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
         return Response.status(Response.Status.OK).entity(peerReviewAssignmentInterface.getTeamGrades(courseID, assignmentID, team_name)).build();
     }
 
     /**
-     * Endpoint to get all of the teams for a given assignment
+     * Endpoint to update grade for a team.
      *
      * @param courseID     The course for the assignment
      * @param assignmentID The assignment that is being looked up
@@ -105,35 +94,29 @@ public class PeerReviewAssignmentResource {
      */
     @POST
     @RolesAllowed("professor")
-    @Path("{courseID}/{assignmentID}/{team_name}/{grade}/professor_update")
+    @Path("{courseID}/{assignmentID}/{teamName}/{grade}/professor_update")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response professorUpdate(
-            @PathParam("courseID") String courseID,
-            @PathParam("assignmentID") int assignmentID,
-            @PathParam("team_name") String team_name,
-            @PathParam("grade") int grade
-    ) {
+    public Response professorUpdate(@PathParam("courseID") String courseID,
+                                    @PathParam("assignmentID") int assignmentID,
+                                    @PathParam("teamName") String team_name,
+                                    @PathParam("grade") int grade) {
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
         return Response.status(Response.Status.OK).entity(peerReviewAssignmentInterface.professorUpdate(courseID, assignmentID, team_name, grade)).build();
     }
-    /**
-     *
-     *
-     */
-    @GET@RolesAllowed("professor")
-    @Path("{course_id}/{assignment_id}/{team_id}/grade")
+
+    @GET
+    @RolesAllowed("professor")
+    @Path("{courseID}/{assignmentID}/{teamID}/grade")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTeamGrade(
-            @PathParam("course_id") String course_id,
-            @PathParam("assignment_id") int assignment_id,
-            @PathParam("team_id")String team_id
-    ){
+    public Response getTeamGrade(@PathParam("courseID") String courseID,
+                                 @PathParam("assignmentID") int assignmentID,
+                                 @PathParam("teamID") String teamID) {
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
-        return Response.status(Response.Status.OK).entity(peerReviewAssignmentInterface.getGradeForTeam(course_id,assignment_id,team_id)).build();
+        return Response.status(Response.Status.OK).entity(peerReviewAssignmentInterface.getGradeForTeam(courseID, assignmentID, teamID)).build();
     }
 
     /**
-     * Endpoint to get the teams that a team was assigned to peer review
+     * Endpoint to get the teams that a team was assigned to peer review.
      *
      * @param courseID     The course that is peer review is assigned in.
      * @param assignmentID The assignment is the peer review is for.
@@ -144,17 +127,14 @@ public class PeerReviewAssignmentResource {
     @RolesAllowed({"professor", "student"})
     @Path("{courseID}/{assignmentID}/peer-review-team-assignments/{teamName}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTeamAssignments(
-            @PathParam("courseID") String courseID,
-            @PathParam("assignmentID") int assignmentID,
-            @PathParam("teamName") String teamName
-    ) {
+    public Response getTeamAssignments(@PathParam("courseID") String courseID,
+                                       @PathParam("assignmentID") int assignmentID,
+                                       @PathParam("teamName") String teamName) {
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
         List<String> assignedTeams = peerReviewAssignmentInterface.getAssignedTeams(courseID, assignmentID, teamName);
         if (assignedTeams == null) return Response.status(Response.Status.BAD_REQUEST).entity("Team name does not exist.").build();
         return Response.status(Response.Status.OK).entity(assignedTeams).build();
     }
-
 
     /**
      * An endpoint for a team to download another team's assignment submission to be peer reviewed.
@@ -172,8 +152,7 @@ public class PeerReviewAssignmentResource {
     public Response downloadOtherTeamsAssignment(
             @PathParam("courseID") String courseID,
             @PathParam("assignmentID") int assignmentID,
-            @PathParam("teamName") String teamName
-    ) {
+            @PathParam("teamName") String teamName) {
 
         File file = new File(FileDAO.peer_review_path + courseID + "/" + assignmentID + "/for-" + teamName.concat(".pdf"));
 
@@ -198,14 +177,12 @@ public class PeerReviewAssignmentResource {
     @Path("{courseID}/{assignmentID}/{srcTeamName}/{destTeamName}/{grade}/upload")
     @Consumes({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
     @Produces({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
-    public Response uploadPeerReview(
-            List<IAttachment> attachments,
-            @PathParam("courseID") String courseID,
-            @PathParam("assignmentID") int assignmentID,
-            @PathParam("srcTeamName") String srcTeamName,
-            @PathParam("destTeamName") String destTeamName,
-            @PathParam("grade") int grade
-    ) throws IOException {
+    public Response uploadPeerReview(List<IAttachment> attachments,
+                                     @PathParam("courseID") String courseID,
+                                     @PathParam("assignmentID") int assignmentID,
+                                     @PathParam("srcTeamName") String srcTeamName,
+                                     @PathParam("destTeamName") String destTeamName,
+                                     @PathParam("grade") int grade) throws IOException {
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
         for (IAttachment attachment : attachments) {
             if (attachment == null) continue;
@@ -234,11 +211,10 @@ public class PeerReviewAssignmentResource {
     @RolesAllowed({"professor", "student"})
     @Path("{courseID}/{assignmentID}/{srcTeamName}/{destTeamName}/download")
     @Produces({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
-    public Response downloadFinishedTeamPeerReview(
-            @PathParam("courseID") String courseID,
-            @PathParam("assignmentID") int assignmentID,
-            @PathParam("srcTeamName") String srcTeamName,
-            @PathParam("destTeamName") String destTeamName) {
+    public Response downloadFinishedTeamPeerReview(@PathParam("courseID") String courseID,
+                                                   @PathParam("assignmentID") int assignmentID,
+                                                   @PathParam("srcTeamName") String srcTeamName,
+                                                   @PathParam("destTeamName") String destTeamName) {
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
 
         // check if the peer review due date is past
@@ -252,32 +228,34 @@ public class PeerReviewAssignmentResource {
 
     @GET
     @RolesAllowed({"student", "professor"})
-    @Path("{course_id}/{assignment_id}/reviews-by/{student_id}")
+    @Path("{courseID}/{assignmentID}/reviews-by/{studentID}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewReviewsByUser(@PathParam("course_id") String courseID,
-                                      @PathParam("assignment_id") int assignmentID,
-                                      @PathParam("student_id") String studentID) {
+    public Response viewReviewsByUser(@PathParam("courseID") String courseID,
+                                      @PathParam("assignmentID") int assignmentID,
+                                      @PathParam("studentID") String studentID) {
         List<Document> documents = new PeerReviewAssignmentInterface().getAssignmentsReviewedByUser(courseID, studentID);
         return Response.status(Response.Status.OK).entity(documents).build();
     }
 
     @GET
     @RolesAllowed({"student", "professor"})
-    @Path("{course_id}/{assignment_id}/reviews-of/{student_id}")
+    @Path("{courseID}/{assignmentID}/reviews-of/{studentID}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewReviewsOfUser(@PathParam("course_id") String courseID,
-                                      @PathParam("assignment_id") int assignmentID,
-                                      @PathParam("student_id") String studentID) {
+    public Response viewReviewsOfUser(
+            @PathParam("courseID") String courseID,
+            @PathParam("assignmentID") int assignmentID,
+            @PathParam("studentID") String studentID) {
         List<Document> documents = new PeerReviewAssignmentInterface().getUsersReviewedAssignment(courseID, assignmentID, studentID);
         return Response.status(Response.Status.OK).entity(documents).build();
     }
 
     @GET
     @RolesAllowed({"student", "professor"})
-    @Path("{course_id}/reviews-of/{student_id}")
+    @Path("{courseID}/reviews-of/{studentID}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response viewReviewsOfUser(@PathParam("course_id") String courseID,
-                                      @PathParam("student_id") String studentID) {
+    public Response viewReviewsOfUser(
+            @PathParam("courseID") String courseID,
+            @PathParam("studentID") String studentID) {
         List<Document> documents = new PeerReviewAssignmentInterface().getUsersReviewedAssignment(courseID, studentID);
         return Response.status(Response.Status.OK).entity(documents).build();
     }
