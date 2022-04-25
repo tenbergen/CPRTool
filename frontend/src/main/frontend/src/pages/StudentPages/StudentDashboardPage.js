@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import SidebarComponent from '../../components/SidebarComponent';
 import './styles/StudentDashboardStyle.css';
@@ -7,25 +7,14 @@ import Loader from '../../components/LoaderComponenets/Loader';
 import {getCourseDetailsAsync, getStudentCoursesAsync,} from '../../redux/features/courseSlice';
 
 function StudentDashboardPage() {
-    const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
-    const courses = useSelector((state) => state.courses.courses);
+    const {courses, coursesLoaded} = useSelector((state) => state.courses);
     const {user_given_name, lakerId} = useSelector((state) => state.auth);
     const alt_role = localStorage.getItem('alt_role');
 
     useEffect(() => {
-        setIsLoading(true);
         dispatch(getStudentCoursesAsync(lakerId));
-        setTimeout(() => setIsLoading(false), 750);
     }, []);
-
-    if (!courses) {
-        return (
-            <div>
-                <Loader/>
-            </div>
-        );
-    }
 
     const courseClickHandler = (course) => {
         dispatch(getCourseDetailsAsync(course.course_id));
@@ -38,7 +27,7 @@ function StudentDashboardPage() {
 
     return (
         <div>
-            {isLoading ? (
+            {!coursesLoaded ? (
                 <Loader/>
             ) : (
                 <div className={'StudentDashboard'}>

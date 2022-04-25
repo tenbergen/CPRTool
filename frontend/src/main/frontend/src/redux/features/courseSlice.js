@@ -16,6 +16,7 @@ export const getStudentCoursesAsync = createAsyncThunk(
             })
             .catch((e) => {
                 console.log(e);
+                return []
             });
         return {courses};
     }
@@ -109,6 +110,7 @@ const courseSlice = createSlice({
     initialState: {
         courses: [],
         currentCourse: null,
+        coursesLoaded: false,
         currentCourseStudents: [],
         currentCourseStudentsLoaded: false,
         currentCourseLoaded: false,
@@ -122,11 +124,19 @@ const courseSlice = createSlice({
         },
     },
     extraReducers: {
+        [getCoursesAsync.pending]: (state) => {
+            state.coursesLoaded = false;
+        },
         [getCoursesAsync.fulfilled]: (state, action) => {
             state.courses = action.payload.courses;
+            state.coursesLoaded = true;
+        },
+        [getStudentCoursesAsync.pending]: (state) => {
+            state.coursesLoaded = false;
         },
         [getStudentCoursesAsync.fulfilled]: (state, action) => {
             state.courses = action.payload.courses;
+            state.coursesLoaded = true;
         },
         [getCourseDetailsAsync.fulfilled]: (state, action) => {
             state.currentCourseLoaded = true;

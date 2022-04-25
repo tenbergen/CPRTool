@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import SidebarComponent from '../../components/SidebarComponent';
 import './styles/ProfessorDashboardStyle.css';
@@ -7,15 +7,12 @@ import {useDispatch, useSelector} from 'react-redux';
 import {getCourseDetailsAsync, getCoursesAsync} from '../../redux/features/courseSlice';
 
 function ProfessorDashboardPage() {
-    const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
-    const courses = useSelector((state) => state.courses.courses);
+    const {courses, coursesLoaded} = useSelector((state) => state.courses);
     const user = useSelector((state) => state.auth.user_given_name);
 
     useEffect(() => {
-        setIsLoading(true);
         dispatch(getCoursesAsync());
-        setTimeout(() => setIsLoading(false), 750);
     }, []);
 
     const studentView = () => {
@@ -29,7 +26,7 @@ function ProfessorDashboardPage() {
 
     return (
         <div>
-            {isLoading ? (
+            {!coursesLoaded ? (
                 <Loader/>
             ) : (
                 <div className={'TeacherDashboard'}>
