@@ -1,8 +1,9 @@
 import {useDispatch, useSelector} from "react-redux";
 import "../../styles/StudentAss.css"
-import {Link, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import React, {useEffect} from "react";
-import { getSubmittedAssignmentsAsync } from "../../../redux/features/assignmentSlice";
+import {getSubmittedAssignmentsAsync} from "../../../redux/features/assignmentSlice";
+import AssignmentTile from "../../AssignmentTile";
 
 const StudentSubmittedComponent = () => {
     const dispatch = useDispatch()
@@ -20,20 +21,7 @@ const StudentSubmittedComponent = () => {
             {teamLoaded && assignmentsLoaded ? (
                 <div id='assList'>
                     {courseSubmittedAssignments.map(assignment => (
-                        <div className='assListItem'>
-                            <Link to={`/details/student/${courseId}/${assignment.assignment_id}/${currentTeamId}/submitted`}>
-                                <li>
-                                    <br/>
-                                    <div className='ass-title'>
-                                        {assignment.assignment_name}
-                                        <span className="span1-ap">
-                                            {assignment.grade === -1 ? "Pending" : assignment.grade}
-                                        </span>
-                                        <br/>
-                                    </div>
-                                </li>
-                            </Link>
-                        </div>
+                        <AssignmentTile assignment={assignment} submitted={true}/>
                     ))}
                 </div>
             ) : null}

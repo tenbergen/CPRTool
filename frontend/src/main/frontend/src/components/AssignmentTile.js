@@ -7,12 +7,13 @@ import {getCourseAssignmentsAsync} from "../redux/features/assignmentSlice";
 
 const assignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`;
 
-const AssignmentTile = ({assignment}) => {
+const AssignmentTile = ({assignment, submitted}) => {
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const title =  assignment.assignment_type === 'peer-review' ? "Peer Review" : "Assignment"
 
     const {role} = useSelector((state) => state.auth);
+    const {currentTeamId} = useSelector((state) => state.teams);
     const {courseId} = useParams();
     const link = `/details/${role}/${courseId}/${assignment.assignment_id}`;
 
@@ -52,6 +53,7 @@ const AssignmentTile = ({assignment}) => {
 
     const onTileClick = () => {
         const tileLink =
+            submitted ? `/details/student/${courseId}/${assignment.assignment_id}/${currentTeamId}/submitted` :
             role === "student" ?
                 assignment.assignment_type === 'peer-review'
                     ? `${link}/peer-review/${assignment.peer_review_team}`
@@ -68,15 +70,21 @@ const AssignmentTile = ({assignment}) => {
                 <div className="ass-tile-content">
                     <div className="ass-tile-info" onClick={onTileClick}>
                         <span className="kumba-27"> {assignment.assignment_name} </span>
-                        <span className="kumba-25"> {assignment.due_date} </span>
-                    </div>
-                    <div className="ass-tile-links">
-                        <span className="outfit-16 ass-tile-files" onClick={onFileClick}>
-                            {assignment.assignment_type === 'peer-review' ? assignment.peer_review_rubric : assignment.assignment_instructions}
+                        <span className="kumba-25">
+                            {submitted
+                                ? assignment.grade === -1
+                                    ? "Pending" : assignment.grade
+                                : assignment.due_date}
                         </span>
-
-                        { role === "professor" ? <span className="ass-tile-delete outfit-16" onClick={confirmDelete}> Delete assignment </span> : null }
                     </div>
+                    { !submitted &&
+                        <div className="ass-tile-links">
+                            <span className="outfit-16 ass-tile-files" onClick={onFileClick}>
+                                {assignment.assignment_type === 'peer-review' ? assignment.peer_review_rubric : assignment.assignment_instructions}
+                            </span>
+                            { role === "professor" ? <span className="ass-tile-delete outfit-16" onClick={confirmDelete}> Delete assignment </span> : null }
+                        </div>
+                    }
                 </div>
             </div>
         </div>
