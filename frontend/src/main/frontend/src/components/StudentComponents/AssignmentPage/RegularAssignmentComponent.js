@@ -1,13 +1,14 @@
 import React, {useEffect} from 'react';
 import "../../../pages/StudentPages/styles/AssignmentPageStyle.css";
 import {useDispatch, useSelector} from "react-redux";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import {getAssignmentDetailsAsync } from "../../../redux/features/assignmentSlice";
 import {getCurrentCourseTeamAsync} from "../../../redux/features/teamSlice";
 
 const RegularAssignmentComponent = () => {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const { currentAssignment, currentAssignmentLoaded } = useSelector((state) => state.assignments)
     const { lakerId } = useSelector((state) => state.auth)
     const { courseId, assignmentId } = useParams()
@@ -16,7 +17,7 @@ const RegularAssignmentComponent = () => {
 
     useEffect(() => {
         dispatch(getCurrentCourseTeamAsync({courseId, lakerId}))
-        dispatch(getAssignmentDetailsAsync({ courseId, assignmentId}))
+        dispatch(getAssignmentDetailsAsync({courseId, assignmentId}))
     }, [])
 
     const assignmentFileHandler = (event) => {
@@ -46,6 +47,8 @@ const RegularAssignmentComponent = () => {
         await axios.post(submitAssUrl, assignmentFileFormData)
             .then(res => {
                 console.log(res)
+                alert("Successfully uploaded assignment")
+                navigate(`/details/student/${courseId}`)
             })
             .catch(e => {
                 console.log(e)
@@ -55,25 +58,24 @@ const RegularAssignmentComponent = () => {
 
     return (
         <div>
-            { currentAssignmentLoaded ?
+            { currentAssignmentLoaded &&
                 <div>
-                    <h2>{currentAssignment.assignment_name}</h2>
+                    <h2 className="kumba-30">{currentAssignment.assignment_name}</h2>
                     <div className="ap-assignmentArea">
                         <h3>
-                            Instructions:
-                            <span className="span1-ap">Due Date: {currentAssignment.due_date}</span>
+                            <span className="outfit-25"> Instructions: </span>
+                            <span className="outfit-25 span1-ap">Due: {currentAssignment.due_date}</span>
                             <br/>
-                            <p>
+                            <p className="outfit-18">
                                 {currentAssignment.instructions}
                             </p>
                             <br/><br/>
-                            Files:
-                            <p className="p2" onClick={onAssignmentClick}>
+                            <span className="outfit-25"> Files: </span>
+                            <span className="outfit-18 p2" onClick={onAssignmentClick}>
                                 {currentAssignment.assignment_instructions}
-                            </p>
+                            </span>
                             <br/><br/>
                             <div className="ap-assignment-files">
-                                Upload:
                                 <input
                                     type="file"
                                     name="assignment_files"
@@ -83,11 +85,11 @@ const RegularAssignmentComponent = () => {
                                 />
                             </div>
                             <div className="ap-button">
-                                <button onClick={handleSubmit}> Submit </button>
+                                <button className="green-button" onClick={handleSubmit}> Submit </button>
                             </div>
                         </h3>
                     </div>
-                </div> : null
+                </div>
             }
         </div>
     )
