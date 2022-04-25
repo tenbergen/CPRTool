@@ -61,6 +61,7 @@ const CourseBarComponent = ({title}) => {
     return (
         <div className="cbc-parent">
             <h2 className="kumba-30"> {title} </h2>
+            {courses.length < 1 ? <p className="outfit-16" style={{marginLeft: "10%"}}> Create your first course</p> : null}
             <div className="cbc-courses">
                 <div>
                     {courses.map(course =>

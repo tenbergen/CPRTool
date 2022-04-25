@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import SidebarComponent from '../../components/SidebarComponent';
 import './styles/ProfessorDashboardStyle.css';
 import Loader from '../../components/LoaderComponenets/Loader';
@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {getCourseDetailsAsync, getCoursesAsync} from '../../redux/features/courseSlice';
 
 function ProfessorDashboardPage() {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const {courses, coursesLoaded} = useSelector((state) => state.courses);
     const user = useSelector((state) => state.auth.user_given_name);
@@ -29,6 +30,7 @@ function ProfessorDashboardPage() {
             {!coursesLoaded ? (
                 <Loader/>
             ) : (
+                courses.length < 1 ? navigate('/create/course') :
                 <div className={'TeacherDashboard'}>
                     <SidebarComponent/>
                     <div id='teacher'>
