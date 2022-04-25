@@ -140,6 +140,7 @@ services:
 
   mongo:
     image: mongo:5.0.6
+    command: mongod --port 27037
     container_name: cpr-mongo
     restart: unless-stopped
     volumes:
@@ -152,10 +153,11 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     ports:
-      - "27037:27017"
+      - "27037:27037"
 
   mongo2:
     image: mongo:5.0.6
+    command: mongod --port 27038
     container_name: cpr-mongo2
     restart: unless-stopped
     volumes:
@@ -168,10 +170,11 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     ports:
-      - "27038:27017"
+      - "27038:27038"
   
   mongo3:
     image: mongo:5.0.6
+    command: mongod --port 27039
     container_name: cpr-mongo3
     restart: unless-stopped
     volumes:
@@ -184,10 +187,11 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     ports:
-      - "27039:27017"
+      - "27039:27039"
 
   mongo4:
     image: mongo:5.0.6
+    command: mongod --port 27040
     container_name: cpr-mongo4
     restart: unless-stopped
     volumes:
@@ -200,10 +204,11 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     ports:
-      - "27040:27017"
+      - "27040:27040"
 
   mongo5:
     image: mongo:5.0.6
+    command: mongod --port 27041
     container_name: cpr-mongo5
     restart: unless-stopped
     volumes:
@@ -216,7 +221,7 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     ports:
-      - "27041:27017"
+      - "27041:27041"
 
   nginx:
     image: nginx:1.21.6
