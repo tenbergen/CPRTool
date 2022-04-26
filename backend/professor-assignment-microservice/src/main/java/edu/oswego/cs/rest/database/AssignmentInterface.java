@@ -16,8 +16,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
@@ -86,25 +88,28 @@ public class AssignmentInterface {
     public void writeToAssignment(FileDAO fileDAO) throws IOException {
         String FileStructure = getRelPath() + "assignments" + reg + fileDAO.courseID + reg + fileDAO.assignmentID + reg + "assignments";
         fileDAO.writeFile(FileStructure + reg + fileDAO.fileName);
-        assignmentsCollection.updateOne(and(eq("course_id", fileDAO.courseID),
-                                            eq("assignment_id", fileDAO.assignmentID)),
-                                            set("assignment_instructions", fileDAO.fileName));
+        assignmentsCollection.updateOne(and(
+                        eq("course_id", fileDAO.courseID),
+                        eq("assignment_id", fileDAO.assignmentID)),
+                set("assignment_instructions", fileDAO.fileName));
     }
 
     public void writeRubricToPeerReviews(FileDAO fileDAO) throws IOException {
         String FileStructure = getRelPath() + "assignments" + reg + fileDAO.courseID + reg + fileDAO.assignmentID + reg + "peer-reviews";
         fileDAO.writeFile(FileStructure + reg + fileDAO.fileName);
-        assignmentsCollection.updateOne(and(eq("course_id", fileDAO.courseID),
-                                            eq("assignment_id", fileDAO.assignmentID)),
-                                            set("peer_review_rubric", fileDAO.fileName));
+        assignmentsCollection.updateOne(and(
+                        eq("course_id", fileDAO.courseID),
+                        eq("assignment_id", fileDAO.assignmentID)),
+                set("peer_review_rubric", fileDAO.fileName));
     }
 
     public void writeTemplateToPeerReviews(FileDAO fileDAO) throws IOException {
         String FileStructure = getRelPath() + "assignments" + reg + fileDAO.courseID + reg + fileDAO.assignmentID + reg + "peer-reviews";
         fileDAO.writeFile(FileStructure + reg + fileDAO.fileName);
-        assignmentsCollection.updateOne(and(eq("course_id", fileDAO.courseID),
-                                            eq("assignment_id", fileDAO.assignmentID)),
-                                            set("peer_review_template", fileDAO.fileName));
+        assignmentsCollection.updateOne(and(
+                        eq("course_id", fileDAO.courseID),
+                        eq("assignment_id", fileDAO.assignmentID)),
+                set("peer_review_template", fileDAO.fileName));
     }
 
     public void removeFile(String courseID, String fileName, int assignmentID) {
@@ -113,8 +118,8 @@ public class AssignmentInterface {
         if (!file.delete())
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist or could not be deleted.").build());
         assignmentsCollection.updateOne(and(eq("course_id", courseID),
-                                            eq("assignment_id", assignmentID)),
-                                            set("assignment_instructions", ""));
+                        eq("assignment_id", assignmentID)),
+                set("assignment_instructions", ""));
     }
 
     public void removePeerReviewTemplate(String courseID, String fileName, int assignmentID) {
@@ -122,9 +127,10 @@ public class AssignmentInterface {
         File file = new File(fileLocation);
         if (!file.delete())
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist or could not be deleted.").build());
-        assignmentsCollection.updateOne(and(eq("course_id", courseID),
-                                            eq("assignment_id", assignmentID)),
-                                            set("peer_review_template", ""));
+        assignmentsCollection.updateOne(and(
+                        eq("course_id", courseID),
+                        eq("assignment_id", assignmentID)),
+                set("peer_review_template", ""));
     }
 
     public void removePeerReviewRubric(String courseID, String fileName, int assignmentID) {
@@ -132,9 +138,10 @@ public class AssignmentInterface {
         File file = new File(fileLocation);
         if (!file.delete())
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist or could not be deleted.").build());
-        assignmentsCollection.updateOne(and(eq("course_id", courseID),
-                                            eq("assignment_id", assignmentID)),
-                                            set("peer_review_rubric", ""));
+        assignmentsCollection.updateOne(and(
+                        eq("course_id", courseID),
+                        eq("assignment_id", assignmentID)),
+                set("peer_review_rubric", ""));
     }
 
     public Document createAssignment(AssignmentDAO assignmentDAO) throws IOException {
@@ -180,9 +187,8 @@ public class AssignmentInterface {
         Entity<String> assignmentDAOEntity = Entity.entity(jsonb.toJson(assignmentDAO), MediaType.APPLICATION_JSON_TYPE);
         Document assignmentDocument = Document.parse(assignmentDAOEntity.getEntity());
         assignmentDocument
-                .append("submission_is_past_due",false)
-                .append("peer_review_is_past_due",false);
-
+                .append("submission_is_past_due", false)
+                .append("peer_review_is_past_due", false);
 
         MongoCursor<Document> query = assignmentsCollection.find(assignmentDocument).iterator();
         if (query.hasNext()) {
@@ -196,8 +202,6 @@ public class AssignmentInterface {
         }
 
         assignmentsCollection.insertOne(assignmentDocument);
-
-
         return assignmentDocument;
     }
 
@@ -270,7 +274,7 @@ public class AssignmentInterface {
         FileUtils.deleteDirectory(new File(destination));
     }
 
-    public int generateAssignmentID(){
+    public int generateAssignmentID() {
         List<Document> assignmentsDocuments = getAllAssignments();
 
         Set<Integer> assignmentIDs = new HashSet<>();
@@ -282,5 +286,4 @@ public class AssignmentInterface {
         }
         return assignmentIDs.size();
     }
-
 }
