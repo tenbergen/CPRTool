@@ -10,6 +10,7 @@ import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {getCourseDetailsAsync} from "../../redux/features/courseSlice";
 import {getCurrentCourseTeamAsync} from "../../redux/features/teamSlice";
+import MyTeamComponent from "../../components/StudentComponents/CoursePage/MyTeamComponent";
 
 const CourseComponent = ({active, component, onClick}) => {
     return (
@@ -25,7 +26,7 @@ function StudentCoursePage() {
     const {lakerId} = useSelector((state) => state.auth)
     const {currentTeamId, teamLoaded} = useSelector((state) => state.teams)
 
-    const components = ["To Do", "Submitted"]
+    const components = ["To Do", "Submitted", "My Team"]
     const [chosen, setChosen] = useState("To Do");
 
     useEffect(() => {
@@ -59,6 +60,7 @@ function StudentCoursePage() {
                                 <div>
                                     {chosen === "To Do" && <StudentToDoComponent/>}
                                     {chosen === "Submitted" && <StudentSubmittedComponent/>}
+                                    {chosen === "My Team" && <MyTeamComponent/>}
                                 </div>
                             </div>
                         }
