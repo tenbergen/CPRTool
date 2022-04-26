@@ -4,10 +4,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import {getAssignmentDetailsAsync} from '../../../redux/features/assignmentSlice';
 import axios from 'axios';
-import AssBarComponent from "../../AssBarComponent";
 import SidebarComponent from "../../SidebarComponent";
 import GradeAssBarComponent from "../../GradeAssBarComponent";
-import ProfessorSubmissionsComponent from "./ProfessorSubmissionsComponent";
 
 function TeacherFinalGradeComponent() {
     const dispatch = useDispatch();
@@ -61,20 +59,6 @@ function TeacherFinalGradeComponent() {
             .then((res) => downloadFile(res.data, teamName));
     };
 
-    /*
-    *
-    * moxie.cs.oswego.edu:13125/peer-review/assignments/{course_id}/{assignment_id}/{team_name}/getTeamGrades
-    *
-    * In Agreed Upon Endpoints
-    *
-    * {courseID}/{assignmentID}/{srcTeamName}/{destTeamName}/download
-
-Description: Endpoint for a team to get a peer review given by another team
-in Calib
-    *
-    *
-    * */
-
     return (
         <div>
             { isLoaded ? (
@@ -115,8 +99,8 @@ in Calib
 
                                                 <div className="ap-assignment-files">
                                                     <span className="sac-title">Team Files:</span>
-                                                    <span className="sac-filename" onClick={() => currentAssignment.team_file}>
-                                    {currentAssignment.team_file}
+                                                    <span className="sac-filename" onClick={() => onFeedBackClick(teamId)}>
+                                    {teamId} File
                                 </span>
                                                 </div>
                                             </div>
