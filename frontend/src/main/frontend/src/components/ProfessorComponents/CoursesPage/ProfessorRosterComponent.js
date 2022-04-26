@@ -37,7 +37,7 @@ const ProfessorRosterComponent = () => {
             return
         }
         if(!Email.includes('oswego.edu')) {
-            alert('Please enter a valid Oswego email!')
+            alert('Please enter a valid Oswego email!');
             return
         }
 

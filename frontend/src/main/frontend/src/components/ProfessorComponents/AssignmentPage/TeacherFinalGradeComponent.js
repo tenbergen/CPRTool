@@ -11,25 +11,26 @@ import ProfessorSubmissionsComponent from "./ProfessorSubmissionsComponent";
 
 function TeacherFinalGradeComponent() {
     const dispatch = useDispatch();
-    const isDataLoaded = useSelector((state) => state.courses.currentCourseLoaded);
     const {currentAssignment, currentAssignmentLoaded} = useSelector((state) => state.assignments);
     const {courseId, assignmentId,teamId} = useParams();
-    const {currentTeamId, teamLoaded} = useSelector((state) => state.teams)
 
 
     const [teams, setTeams] = useState(Array());
-    const urlPeerReviewTeams = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/peer-review-team-assignments/${teamId}`;
+    const [isLoaded, setLoaded] = useState(false)
 
     useEffect(() => {
         dispatch(getAssignmentDetailsAsync({courseId, assignmentId}));
-        {axios.get(urlPeerReviewTeams)
-            .then((r) => {
-                // console.log("Response: "+r.data)
-                for (let i = 0; i < r.data.length; i++) {
-                    setTeams((arr) => [...arr, r.data[i]]);
-                }
-            });
-        };
+        const urlGrade = 'http://moxie.cs.oswego.edu:13125/peer-review/assignments/'
+            + courseId  + '/' + currentAssignment.assignment_id + '/' + teamId + '/getTeamGrades'
+
+        {axios.get(urlGrade).then(r => {
+            console.log(r)
+            for (let i = 0; i < r.data.teams.length; i++) {
+                setTeams((arr) => [...arr, r.data.teams[i]]);
+            }
+        })}
+
+        setLoaded(true)
     }, []);
 
     const print = () =>{
@@ -76,7 +77,7 @@ in Calib
 
     return (
         <div>
-            {isDataLoaded ? (
+            { isLoaded ? (
                 <div className='scp-parent'>
                     <SidebarComponent/>
                     <div className='scp-container'>
@@ -126,8 +127,8 @@ in Calib
                                                     <div className='peerReviewList'>
                                                         {teams.map(team => (
                                                             <li className='peerReviewListItem'>
-                                                                <b> {team.grade === -1 ? "Pending" : team.grade}
-                                                                </b> <span className="sac-filename"> {team.submission_name} </span>
+                                                                <b> {team.team_name}
+                                                                </b> <span className="sac-filename"> {team.grade_given} </span>
                                                             </li>
                                                         ))}
                                                     </div>

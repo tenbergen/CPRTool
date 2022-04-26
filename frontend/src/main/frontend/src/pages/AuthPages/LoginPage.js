@@ -45,9 +45,6 @@ function LoginPage() {
                             cookiePolicy={'single_host_origin'}
                             prompt='select_account'
                         />
-                        <a href='' className='started'>
-                            Get started as an Instructor
-                        </a>
                     </div>
                 </div>
             )}
