@@ -1,12 +1,13 @@
 import {useDispatch, useSelector} from "react-redux";
 import axios from "axios";
 import "../../../pages/StudentPages/styles/AssignmentPageStyle.css";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {getAssignmentDetailsAsync} from "../../../redux/features/assignmentSlice";
 
 const StudentPeerReviewComponent = () => {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const {courseId, assignmentId, teamName} = useParams()
 
     const {currentAssignment, currentAssignmentLoaded} = useSelector((state) => state.assignments)
@@ -44,7 +45,7 @@ const StudentPeerReviewComponent = () => {
     const onTeamFileClick = async () => {
         const srcTeamName = currentTeamId
         console.log(srcTeamName)
-        const url = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${srcTeamName}/${destTeamName}/download`
+        const url = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${currentTeamId}/download`
 
         await axios.get(url, {responseType: 'blob'})
             .then(res => downloadFile(res.data, teamName))
@@ -61,6 +62,8 @@ const StudentPeerReviewComponent = () => {
         await axios.post(submitAssUrl, feedbackFileFormData)
             .then(res => {
                 console.log(res)
+                alert("Successfully uploaded assignment")
+                navigate(`/details/student/${courseId}`)
             })
             .catch(e => {
                 console.log(e)
