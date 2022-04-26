@@ -9,7 +9,6 @@ import ProfessorAssignmentComponent from '../../components/ProfessorComponents/C
 import {useDispatch} from 'react-redux';
 import {getCourseDetailsAsync} from '../../redux/features/courseSlice';
 import CourseBarComponent from '../../components/CourseBarComponent';
-import ProfessorGradebookComponent from '../../components/ProfessorComponents/CoursesPage/ProfessorGradebookComponent';
 import ProfessorTeamComponent from '../../components/ProfessorComponents/CoursesPage/ProfessorTeamComponent';
 import Loader from '../../components/LoaderComponenets/Loader';
 
@@ -26,7 +25,7 @@ function ProfessorCoursePage() {
     let dispatch = useDispatch();
     let {courseId} = useParams();
 
-    const components = ['Assignments', 'Gradebook', 'Roster', 'Teams', 'Manage'];
+    const components = ['Assignments', 'Roster', 'Teams', 'Manage'];
     const [chosen, setChosen] = useState('Assignments');
 
     useEffect(() => {
@@ -57,7 +56,6 @@ function ProfessorCoursePage() {
                             </div>
                             <div>
                                 {chosen === 'Assignments' && <ProfessorAssignmentComponent/>}
-                                {chosen === 'Gradebook' && <ProfessorGradebookComponent/>}
                                 {chosen === 'Roster' && <ProfessorRosterComponent/>}
                                 {chosen === 'Teams' && <ProfessorTeamComponent/>}
                                 {chosen === 'Manage' && <ProfessorEditCourseComponent/>}
