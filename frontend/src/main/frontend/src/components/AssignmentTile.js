@@ -65,7 +65,7 @@ const AssignmentTile = ({assignment, submitted}) => {
 
     return (
         <div>
-            <div className="ass-tile">
+            <div className={assignment.assignment_type === "peer-review" ? "ass-tile ass-tile-yellow" : "ass-tile"}>
                 <div className="outfit-16 ass-tile-title"> <span> {title} </span></div>
                 <div className="ass-tile-content">
                     <div className="ass-tile-info" onClick={onTileClick}>

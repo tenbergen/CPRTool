@@ -8,6 +8,11 @@
     margin-right: 3%;
 }
 
+.ass-tile-yellow {
+    border: 3px solid #F8D377;
+    background-color: #F8D377;
+}
+
 .ass-tile-title {
     display: flex;
     justify-content: right;

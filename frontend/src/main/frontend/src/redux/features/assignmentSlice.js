@@ -45,7 +45,7 @@ const getCombined = (courseAssignments, courseId, teamName) => {
             assignment_type: "normal",
             final_id: assignment.assignment_id
         })
-        console.log(assignment)
+
         if (assignment.assigned_teams) {
             const teams = assignment.assigned_teams[teamName]
             teams.map(team => {
@@ -192,11 +192,11 @@ export const getSubmittedAssignmentDetailsAsync = createAsyncThunk(
 export const getCombinedAssignmentPeerReviews = createAsyncThunk(
     'assignments/getCombinedAssignmentPeerReviews',
     async (value, thunkAPI) => {
-        const {courseId, teamId} = value
+        const {courseId, currentTeamId} = value
         thunkAPI.dispatch(refreshTokenAsync())
         const courseAssignments = await getAssignments(courseId)
         console.log(courseAssignments)
-        const combined = getCombined(courseAssignments, courseId, teamId)
+        const combined = getCombined(courseAssignments, courseId, currentTeamId)
         return {combined}
     }
 )
