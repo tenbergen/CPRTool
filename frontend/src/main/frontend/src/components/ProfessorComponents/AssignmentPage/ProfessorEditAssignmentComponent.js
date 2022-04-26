@@ -51,16 +51,13 @@ const ProfessorEditAssignmentComponent = () => {
             });
 
         await submitNewFiles()
+        alert("Successfully updated assignment!")
     };
 
     const submitNewFiles = async () => {
         const assignmentFileUrl = `${getAssUrl}/${assignmentId}/upload`;
         const rubricUrl = `${getAssUrl}/${assignmentId}/peer-review/rubric/upload`;
         const templateUrl = `${getAssUrl}/${assignmentId}/peer-review/template/upload`;
-
-        console.log(assignmentFileFormData.get('file'))
-        console.log(rubricFileFormData.get('file'))
-        console.log(templateFileFormData.get('file'))
 
         if (assignmentFileFormData.get('file')) {
             await axios.post(assignmentFileUrl, assignmentFileFormData)
@@ -268,7 +265,6 @@ const ProfessorEditAssignmentComponent = () => {
                                         type='file'
                                         name='peer_review_rubric'
                                         accept='.pdf,.zip'
-                                        required
                                         onChange={(e) => fileChangeHandler(e, "rubric")}
                                     />
                                 </div>
@@ -295,7 +291,6 @@ const ProfessorEditAssignmentComponent = () => {
                                         type='file'
                                         name='peer_review_template'
                                         accept='.pdf,.zip'
-                                        required
                                         onChange={(e) => fileChangeHandler(e, "template")}
                                     />
                                 </div>
