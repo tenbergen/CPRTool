@@ -8,7 +8,7 @@ const SubmittedAssignmentComponent = ({currentSubmittedAssignment}) => {
     const {courseId, assignmentId, currentTeamId} = useParams()
 
     const onAssignmentFileClick = async (filename) => {
-        const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/download/${filename}`
+        const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/peer-review/download/${filename}`
 
         await axios.get(url, {responseType: 'blob'})
             .then(res => downloadFile(res.data, filename))
