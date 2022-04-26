@@ -16,7 +16,7 @@ const ProfessorAssignmentComponent = () => {
 
     return (
         <div>
-            <div className={'TeacherAss'}>
+            <div className='TeacherAss'>
                 <div id='teacherAssList'>
                     {courseAssignments.map(assignment => (
                         <AssignmentTile
