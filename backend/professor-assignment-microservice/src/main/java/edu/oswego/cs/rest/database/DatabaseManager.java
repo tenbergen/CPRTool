@@ -11,15 +11,15 @@ import javax.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class DatabaseManager {
 
-    int studentPort = 27037;//Integer.parseInt(System.getenv("MONGO_PORT"));
-    int professorPort = 27038;//Integer.parseInt(System.getenv("MONGO2_PORT"));
-    int coursePort = 27039;//Integer.parseInt(System.getenv("MONGO3_PORT"));
-    int assignmentPort = 27040;//Integer.parseInt(System.getenv("MONGO4_PORT"));
-    int teamPort = 27041;//Integer.parseInt(System.getenv("MONGO5_PORT"));
+    int studentPort = Integer.parseInt(System.getenv("MONGO_PORT"));
+    int professorPort = Integer.parseInt(System.getenv("MONGO2_PORT"));
+    int coursePort = Integer.parseInt(System.getenv("MONGO3_PORT"));
+    int assignmentPort = Integer.parseInt(System.getenv("MONGO4_PORT"));
+    int teamPort = Integer.parseInt(System.getenv("MONGO5_PORT"));
     String hostname = System.getenv("MONGO_HOSTNAME");
     String mongoDatabase = System.getenv("MONGO_DATABASE");
-    String mongoUser = "csc480";//System.getenv("MONGO_USERNAME");
-    String mongoPassword = "BaI2dktnzj1di6DRWcgobX37yPYZ7rmg";//System.getenv("MONGO_PASSWORD");
+    String mongoUser = System.getenv("MONGO_USERNAME");
+    String mongoPassword = System.getenv("MONGO_PASSWORD");
 
     public MongoDatabase getStudentDB() {
         MongoCredential credentials = MongoCredential.createCredential(mongoUser, mongoDatabase, mongoPassword.toCharArray());
