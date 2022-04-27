@@ -31,7 +31,7 @@ const ToDoComponent = () => {
                 {teams.map((team) => (
                         <Link to={`/details/professor/${courseId}/${assignmentId}/grade/${team}`}>
                             <li id='assListItem'>
-                                {team + ": " + currentAssignment.assignment_name + '\n\n' + 'Grade : ' + 'Pending'}
+                                {team + ": " + currentAssignment.assignment_name}
                             </li>
                         </Link>
                     ))
