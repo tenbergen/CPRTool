@@ -17,6 +17,7 @@ import java.util.*;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.push;
 import static com.mongodb.client.model.Updates.set;
 
 public class PeerReviewAssignmentInterface {
@@ -70,25 +71,23 @@ public class PeerReviewAssignmentInterface {
         if (submissionsCollection.find(new_submission).iterator().hasNext()) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("submission already exists").build());
         } else submissionsCollection.insertOne(new_submission);
-        addCompletedTeam(course_id, assignment_id, srcTeamName, destinationTeam);
 
+        addCompletedTeam(course_id, assignment_id, srcTeamName, destinationTeam);
     }
 
     public void addCompletedTeam(String courseID, int assignmentID, String sourceTeam, String targetTeam) {
 
-        for (Document assignmentDocument : assignmentCollection.find(eq("course_id", courseID))) {
-            if ((int) assignmentDocument.get("assignment_id") == assignmentID) {
-                Map<String, List<String>> assignedTeams =  (Map<String, List<String>>) assignmentDocument.get("assigned_teams");
-                Document doc = new Document();
-                List<String> temp = assignedTeams.get(sourceTeam);
+        Document assignmentDocument = assignmentCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        if(assignmentDocument == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to find assignment. As a result the assignment could not update the completed_teams").build());
+
+        Map<String, List<String>> completedTeams =  (Map<String, List<String>>) assignmentDocument.get("completed_teams");
+                Map<String, List<String>> finalTeams = completedTeams;
+                List<String> temp = completedTeams.get(sourceTeam);
                 temp.add(targetTeam);
-//                assignedTeams.put(sourceTeam, temp);
-                doc.put(sourceTeam, temp);
-                assignmentCollection.updateOne(assignmentDocument, set("assigned_teams", doc));
-//                return doc;
-            }
-        }
-        throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to add assigned teams.").build());
+                finalTeams.put(sourceTeam, temp);
+                assignmentDocument.replace("completed_teams",completedTeams, finalTeams);
+                assignmentCollection.replaceOne(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), assignmentDocument);
     }
 
     public List<String> getCourseStudentIDs(String courseID) {
@@ -195,8 +194,10 @@ public class PeerReviewAssignmentInterface {
 
     public Document addAssignedTeams(Map<String, List<String>> peerReviewAssignments, String courseID, int assignmentID) {
 
-        for (Document assignmentDocument : assignmentCollection.find(eq("course_id", courseID))) {
-            if ((int) assignmentDocument.get("assignment_id") == assignmentID) {
+        Document assignmentDocument = assignmentCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        if(assignmentDocument == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to add assigned teams").build());
+
                 Document doc = new Document();
                 Document completedTeamsDoc = new Document();
                 for (String team : peerReviewAssignments.keySet()) {
@@ -207,9 +208,6 @@ public class PeerReviewAssignmentInterface {
                 assignmentCollection.updateOne(assignmentDocument, set("completed_teams", completedTeamsDoc));
 
                 return doc;
-            }
-        }
-        throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to add assigned teams.").build());
     }
 
     public Document getAssignmentDocument(String courseID, int assignmentID) {
