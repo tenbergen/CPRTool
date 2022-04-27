@@ -50,5 +50,16 @@
 .ass-tile-delete {
     margin-top: 2%;
     color: #F07371;
+    padding: 5px 3px;
+    border-radius: 5px;
     text-decoration: underline;
+    transition: all 0.2s ease-out;
+}
+
+.ass-tile-delete:hover {
+    cursor: pointer;
+    background-color: #ff0000;
+    color: #fff;
+    opacity: 0.8;
+    text-decoration: none;
 }
