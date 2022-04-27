@@ -54,7 +54,7 @@ public class ProfessorAssignmentResource {
      * @return Response
      */
     @POST
-    @RolesAllowed({"professor", "student"})
+    @RolesAllowed("professor")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
     @Path("/courses/{courseID}/assignments/{assignmentID}/upload")
@@ -152,7 +152,7 @@ public class ProfessorAssignmentResource {
     }
 
     @POST
-    @RolesAllowed({"professor", "student"})
+    @RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/create-assignment")
     public Response createAssignment(AssignmentDAO assignmentDAO) throws IOException {
@@ -162,7 +162,7 @@ public class ProfessorAssignmentResource {
     }
 
     @DELETE
-    @RolesAllowed({"professor", "student"})
+    @RolesAllowed("professor")
     @Path("/courses/{courseID}/assignments/{assignmentID}/remove")
     public Response removeAssignment(@PathParam("assignmentID") int assignmentID, @PathParam("courseID") String courseID) throws IOException {
         new AssignmentInterface().removeAssignment(assignmentID, courseID);
@@ -170,7 +170,7 @@ public class ProfessorAssignmentResource {
     }
 
     @PUT
-    @RolesAllowed({"professor", "student"})
+    @RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}/edit")
     public Response updateAssignment(AssignmentDAO assignmentDAO, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
