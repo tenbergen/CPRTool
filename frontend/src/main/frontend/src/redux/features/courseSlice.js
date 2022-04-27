@@ -11,11 +11,10 @@ export const getStudentCoursesAsync = createAsyncThunk(
         thunkAPI.dispatch(refreshTokenAsync());
         const courses = await axios.get(`${viewCourseUrl}/${studentId}/courses`)
             .then((res) => {
-                console.log(res.data);
                 if (res.data != null) return res.data.filter(course => course !== null).slice(0).reverse();
             })
             .catch((e) => {
-                console.log(e);
+                console.log(e.response);
                 return []
             });
         return {courses};
@@ -33,7 +32,7 @@ export const getCoursesAsync = createAsyncThunk(
                 return [];
             })
             .catch((e) => {
-                console.log(e);
+                console.log(e.response);
                 return [];
             });
         return {courses};
@@ -45,11 +44,9 @@ export const getCourseDetailsAsync = createAsyncThunk(
     async (courseId, thunkAPI) => {
         thunkAPI.dispatch(refreshTokenAsync());
         const url = `${viewCourseUrl}/courses/${courseId}`;
-        console.log(url);
         const currentCourse = await axios.get(url).then((res) => {
             return res.data;
         });
-        console.log(currentCourse);
         return {currentCourse};
     }
 );
@@ -63,22 +60,20 @@ export const getCurrentCourseStudentsAsync = createAsyncThunk(
 
         const students = await axios.get(url)
             .then(res => {
-                console.log(res)
                 return res.data
             })
             .catch(e => {
-                console.log(e)
+                console.log(e.response)
                 return []
             })
 
         const teamUrl = `${process.env.REACT_APP_URL}/teams/team/get/all/${courseId}`
         const teams = await axios.get(teamUrl)
             .then(res => {
-                console.log(res)
                 return res.data
             })
             .catch(e => {
-                console.log(e)
+                console.log(e.response)
                 return []
             })
 
