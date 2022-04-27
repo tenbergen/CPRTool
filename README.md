@@ -37,7 +37,15 @@ On Linux-based operating systems, you may achieve the similar result by executin
 
 - `db.createUser({user: "<your username>", pwd: "<your password>", roles: [{role: "readWrite", db: "cpr"}]});`
 
-**Step 4:** Run `mvn liberty:dev` to start the project in developer mode. The web app should be running on http://localhost:13126 (the port depends on which microservice you are running).
+**Step 4:** Run `mvn liberty:dev` to start the project in developer mode. The web app should be running on http://localhost:xxxxx - the port depends on which microservice you are running as following:
+- Frontend: 13125
+- Login: 13126
+- Course manager: 13127
+- Course viewer: 13128
+- Peer review teams: 13129
+- Professor assignment: 13130
+- Student assignment: 13131
+- Student peer review assignment: 13132
 
 ## Contributing
 
