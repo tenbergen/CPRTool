@@ -25,11 +25,11 @@ For local development environment, a Docker setup is not necessary. This guide a
 **Step 1:** Install [MongoDB for Windows](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/#install-mongodb-community-edition) (or Mac and Linux counterparts respectively if you are using one). Optionally, install [MongoDB Compass](https://www.mongodb.com/products/compass) for a database manager GUI (which also include a built-in terminal), or [mongosh](https://docs.mongodb.com/mongodb-shell/) to execute shell commands without a GUI.
 
 **Step 2:** On Windows, hit `Windows + R`, enter `sysdm.cpl` and navigate to `Advanced -> Environment Variables...` and add the following variables:
-- `MONGO_HOSTNAME`: `localhost`
-- `MONGO_PORT`: `27017`
-- `MONGO_DATABASE`: `cpr`
-- `MONGO_USERNAME`: `<your choice>`
-- `MONGO_PASSWORD`: `<your choice>`
+- `MONGO_HOSTNAME` - `localhost`
+- `MONGO_PORT`- `27017`
+- `MONGO_DATABASE` - `cpr`
+- `MONGO_USERNAME` - Your choice
+- `MONGO_PASSWORD` - Your choice
 
 On Linux-based operating systems, you may achieve the similar result by executing `EXPORT <NAME>=<VALUE>`. 
 
