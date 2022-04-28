@@ -26,7 +26,7 @@ For local development environment, a Docker setup is not necessary. This guide a
 
 **Step 2:** On Windows, hit `Windows + R`, enter `sysdm.cpl` and navigate to `Advanced -> Environment Variables...` and add the following variables:
 - `MONGO_HOSTNAME` - `localhost`
-- `MONGO_PORT`- `27017`
+- `MONGO_PORT` - `27017`
 - `MONGO_DATABASE` - `cpr`
 - `MONGO_USERNAME` - Your choice
 - `MONGO_PASSWORD` - Your choice
