@@ -11,12 +11,10 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Updates.set;
 
 
 public class AssignmentInterface {
@@ -28,7 +26,6 @@ public class AssignmentInterface {
     static MongoCollection<Document> submissionCollection;
 
     static String reg = "/";
-    static String root = "assignments/";
 
     public AssignmentInterface() {
         try {
@@ -45,7 +42,7 @@ public class AssignmentInterface {
     }
 
     public void writeToAssignment(FileDAO fileDAO) throws IOException {
-        String path = root
+        String path = "assignments" + reg
                 + fileDAO.getCourseID() + reg
                 + fileDAO.getAssignmentID() + reg
                 + "team-submissions";
@@ -128,7 +125,15 @@ public class AssignmentInterface {
 
     public void makeSubmission(String course_id,int assignment_id,String file_name, String teamName){
         Document team = teamsCollection.find(and(eq("team_id", teamName), eq("course_id", course_id))).first();
+        Document assignment = assignmentsCollection.find(and(
+                                                            eq("course_id", course_id),
+                                                            eq("assignment_id", assignment_id)
+                                                            )).first();
+        if(assignment == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("this assignment was not found in this course").build());
+        String assignmentName = assignment.getString("assignment_name");
         System.out.println(team);
+
         if(team == null) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("this team was not found in this course").build());
         }
@@ -138,10 +143,11 @@ public class AssignmentInterface {
         if (team.get("team_id", String.class) == null) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team_id not defined").build());
         }
-        String path = root+course_id+reg+assignment_id+reg+"team_submissions";
+        String path = "assignments"+ reg+course_id+reg+assignment_id+reg+"team_submissions";
         Document new_submission = new Document()
                 .append("course_id",course_id)
                 .append("assignment_id",assignment_id)
+                .append("assigment_name", assignmentName)
                 .append("submission_name",file_name)
                 .append("team_name",team.getString("team_id"))
                 .append("members",team.getList("team_members",String.class))
@@ -159,6 +165,7 @@ public class AssignmentInterface {
             }
         }else submissionCollection.insertOne(new_submission);
     }
+
     public Document allAssignments(String couse_id,String student_id){
         MongoCursor<Document> submissions = submissionCollection.find(
                 and(
@@ -192,5 +199,24 @@ public class AssignmentInterface {
                     .append("grade", grade));
         }
         return new Document("submissions",AllSubmissions);
+    }
+
+    public List<Document> getToDosByCourse(String courseID, String studentID) {
+        MongoCursor<Document> query = assignmentsCollection.find(eq("course_id", courseID)).iterator();
+
+        if (!query.hasNext()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist").build());
+
+        List<Document> assignments = new ArrayList<>();
+        while (query.hasNext()) {
+            Document document = query.next();
+            Document ifNotSubmitted =submissionCollection.find(and(
+                                                            eq("course_id", courseID),
+                                                            eq("assignment_id", document.get("assignment_id")),
+                                                            eq("type", "team_submission"),
+                                                            eq("members", studentID))).first();
+            if (ifNotSubmitted == null)
+                assignments.add(document);
+        }
+        return assignments;
     }
 }

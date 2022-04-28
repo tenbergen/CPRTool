@@ -4,7 +4,6 @@ import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.rest.daos.AssignmentDAO;
 import edu.oswego.cs.rest.daos.FileDAO;
 import edu.oswego.cs.rest.database.AssignmentInterface;
-//import edu.oswego.cs.rest.timer.DueDateChecker;
 import org.bson.Document;
 
 import javax.annotation.security.DenyAll;
@@ -55,7 +54,7 @@ public class ProfessorAssignmentResource {
      * @return Response
      */
     @POST
-    @RolesAllowed({"professor", "student"})
+    @RolesAllowed("professor")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
     @Path("/courses/{courseID}/assignments/{assignmentID}/upload")
@@ -97,6 +96,7 @@ public class ProfessorAssignmentResource {
         }
         return Response.status(Response.Status.OK).entity("Successfully added file to peer reviews.").build();
     }
+
     /**
      * File is uploaded as form-data and passed back as a List<IAttachment>
      * The attachment is processed in FileDao.FileFactory, which reads and
@@ -152,7 +152,7 @@ public class ProfessorAssignmentResource {
     }
 
     @POST
-    @RolesAllowed({"professor", "student"})
+    @RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/create-assignment")
     public Response createAssignment(AssignmentDAO assignmentDAO) throws IOException {
@@ -162,7 +162,7 @@ public class ProfessorAssignmentResource {
     }
 
     @DELETE
-    @RolesAllowed({"professor", "student"})
+    @RolesAllowed("professor")
     @Path("/courses/{courseID}/assignments/{assignmentID}/remove")
     public Response removeAssignment(@PathParam("assignmentID") int assignmentID, @PathParam("courseID") String courseID) throws IOException {
         new AssignmentInterface().removeAssignment(assignmentID, courseID);
@@ -170,7 +170,7 @@ public class ProfessorAssignmentResource {
     }
 
     @PUT
-    @RolesAllowed({"professor", "student"})
+    @RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}/edit")
     public Response updateAssignment(AssignmentDAO assignmentDAO, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
@@ -227,21 +227,4 @@ public class ProfessorAssignmentResource {
         new AssignmentInterface().removeCourse(courseID);
         return Response.status(Response.Status.OK).entity("Course successfully deleted from assignments database and assignments folder.").build();
     }
-
-//    @GET
-//    @RolesAllowed({"professor", "student"})
-//    @Path("assignments-deadline-checker/aliveness")
-//    public Response deadlineCheckerAliveness() {
-//        AssignmentInterface assignmentInterface = new AssignmentInterface();
-//        if (DueDateChecker.activeThreads.get())
-//            return Response.status(Response.Status.OK).build();
-//
-//        List<Document> assignmentsNotPastDue = assignmentInterface.getAllAssignments().stream()
-//                .filter(document -> ! ((Boolean) document.get("assignment_past_due")) || ! ((Boolean) document.get("peer_review_assignment_past_due")) )
-//                .collect(Collectors.toList());
-//
-//        new DueDateChecker(assignmentsNotPastDue).start();
-//
-//        return Response.status(Response.Status.OK).build();
-//    }
 }

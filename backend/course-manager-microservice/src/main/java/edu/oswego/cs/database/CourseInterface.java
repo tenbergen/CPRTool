@@ -90,8 +90,7 @@ public class CourseInterface {
         String originalCourseID = dao.courseID;
         String newCourseID = dao.abbreviation + "-" + dao.courseSection + "-" + dao.crn + "-" + dao.semester + "-" + dao.year;
         dao.courseID = newCourseID;
-        List<String> students = courseDocument.getList("students", String.class);
-        dao.students = students;
+        dao.students = courseDocument.getList("students", String.class);
 
         new CourseUtil().updateCoursesArrayInProfessorDb(securityContext, professorCollection, originalCourseID, newCourseID, "UPDATE");
         new CourseUtil().updateCoursesArrayInStudenDb(studentCollection, originalCourseID, newCourseID, "UPDATE");
