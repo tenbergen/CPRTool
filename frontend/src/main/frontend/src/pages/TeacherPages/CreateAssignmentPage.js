@@ -118,143 +118,139 @@ const CreateAssignmentPage = () => {
                                         <form onSubmit={handleSubmit}>
 
                                             {/*assignment field*/}
-                                            {/*<div className="field-container">*/}
-                                            {/*    <div className="field-title"> <span> Homework</span> </div>*/}
-                                            {/*    <div className="field-content">*/}
-                                            {/*       */}
-                                            {/*    </div>*/}
-                                            {/*</div>*/}
+                                            <div className="field-container">
+                                                <div className="field-title"> <span> Homework</span> </div>
+                                                <div className="field-content">
+                                                    <div className='input-field cap-input-field'>
+                                                        <label> Name of assignment: </label>
+                                                        <Field name='assignment_name'>
+                                                            {({input}) => (
+                                                                <input
+                                                                    type='text'
+                                                                    name='assignment_name'
+                                                                    {...input}
+                                                                    required
+                                                                />
+                                                            )}
+                                                        </Field>
+                                                    </div>
 
-                                            <div className='input-field cap-input-field'>
-                                                <label> Name of assignment: </label>
-                                                <Field name='assignment_name'>
-                                                    {({input}) => (
+                                                    <div className="input-field cap-instructions">
+                                                        <label> Instructions: </label>
+
+                                                        <Field name='instructions'>
+                                                            {({input}) => (
+                                                                <textarea
+                                                                    name='instructions'
+                                                                    {...input}
+                                                                    required
+                                                                />
+                                                            )}
+                                                        </Field>
+                                                    </div>
+
+                                                    <div className='cap-assignment-files'>
+                                                        <label className="outfit-25">Files:</label>
                                                         <input
-                                                            type='text'
-                                                            name='assignment_name'
-                                                            {...input}
-                                                            required
+                                                            type='file'
+                                                            name='assignment_files'
+                                                            accept='.pdf,.zip'
+                                                            onChange={(e) => fileChangeHandler(e, "assignment")}
                                                         />
-                                                    )}
-                                                </Field>
-                                            </div>
+                                                    </div>
 
-                                            <div className="input-field cap-instructions">
-                                                <label> Instructions: </label>
+                                                    <div className='input-field cap-assignment-info'>
+                                                        <label> Due Date: </label>
+                                                        <Field name='due_date'>
+                                                            {({input}) => (
+                                                                <input
+                                                                    type='date'
+                                                                    name='due_date'
+                                                                    {...input}
+                                                                    required
+                                                                />
+                                                            )}
+                                                        </Field>
 
-                                                <Field name='instructions'>
-                                                    {({input}) => (
-                                                        <textarea
-                                                            name='instructions'
-                                                            {...input}
-                                                            required
-                                                        />
-                                                    )}
-                                                </Field>
-                                            </div>
-
-                                            <div className='cap-assignment-files'>
-                                                <label className="outfit-25">Files:</label>
-                                                <input
-                                                    type='file'
-                                                    name='assignment_files'
-                                                    accept='.pdf,.zip'
-                                                    onChange={(e) => fileChangeHandler(e, "assignment")}
-                                                />
-                                            </div>
-
-                                            <div className='input-field cap-assignment-info'>
-                                                <label> Due Date: </label>
-                                                <Field name='due_date'>
-                                                    {({input}) => (
-                                                        <input
-                                                            type='date'
-                                                            name='due_date'
-                                                            {...input}
-                                                            required
-                                                        />
-                                                    )}
-                                                </Field>
-
-                                                <label> Points: </label>
-                                                <Field name='points'>
-                                                    {({input}) => (
-                                                        <input
-                                                            type='number'
-                                                            name='points'
-                                                            {...input}
-                                                            required
-                                                        />
-                                                    )}
-                                                </Field>
+                                                        <label> Points: </label>
+                                                        <Field name='points'>
+                                                            {({input}) => (
+                                                                <input
+                                                                    type='number'
+                                                                    name='points'
+                                                                    {...input}
+                                                                    required
+                                                                />
+                                                            )}
+                                                        </Field>
+                                                    </div>
+                                                </div>
                                             </div>
 
                                             {/*peer review fields*/}
-                                            {/*<div className="field-container">*/}
-                                            {/*    <div className="field-title"> <span> Peer Review </span></div>*/}
-                                            {/*    <div className="field-content">*/}
-                                            {/*       */}
-                                            {/*    </div>*/}
-                                            {/*</div>*/}
+                                            <div className="field-container">
+                                                <div className="field-title"> <span> Peer Review </span></div>
+                                                <div className="field-content">
+                                                    <div className='input-field cap-instructions'>
+                                                        <label className="outfit-25"> Peer Review Instructions: </label>
+                                                        <Field name='peer_review_instructions'>
+                                                            {({input}) => (
+                                                                <textarea
+                                                                    name='peer_review_instructions'
+                                                                    {...input}
+                                                                    required
+                                                                />
+                                                            )}
+                                                        </Field>
+                                                    </div>
 
-                                            <div className='input-field cap-instructions'>
-                                                <label className="outfit-25"> Peer Review Instructions: </label>
-                                                <Field name='peer_review_instructions'>
-                                                    {({input}) => (
-                                                        <textarea
-                                                            name='peer_review_instructions'
-                                                            {...input}
-                                                            required
-                                                        />
-                                                    )}
-                                                </Field>
-                                            </div>
-
-                                            <div className='cap-assignment-files'>
-                                                <label className="outfit-25"> Rubric: </label>
-                                                <input
-                                                    type='file'
-                                                    name='peer_review_rubric'
-                                                    accept='.pdf,.zip'
-                                                    required
-                                                    onChange={(e) => fileChangeHandler(e, "rubric")}
-                                                />
-
-                                                <label className="outfit-25"> Template: </label>
-                                                <input
-                                                    type='file'
-                                                    name='peer_review_template'
-                                                    accept='.pdf,.zip'
-                                                    required
-                                                    onChange={(e) => fileChangeHandler(e, "template")}
-                                                />
-                                            </div>
-
-                                            <div className='input-field cap-assignment-info'>
-                                                <label> Due Date: </label>
-                                                <Field name='peer_review_due_date'>
-                                                    {({input}) => (
+                                                    <div className='cap-assignment-files'>
+                                                        <label className="outfit-25"> Rubric: </label>
                                                         <input
-                                                            type='date'
-                                                            name='peer_review_due_date'
-                                                            {...input}
+                                                            type='file'
+                                                            name='peer_review_rubric'
+                                                            accept='.pdf,.zip'
                                                             required
+                                                            onChange={(e) => fileChangeHandler(e, "rubric")}
                                                         />
-                                                    )}
-                                                </Field>
 
-                                                <label> Points: </label>
-                                                <Field name='peer_review_points'>
-                                                    {({input}) => (
+                                                        <label className="outfit-25"> Template: </label>
                                                         <input
-                                                            type='number'
-                                                            min='0'
-                                                            name='peer_review_points'
-                                                            {...input}
+                                                            type='file'
+                                                            name='peer_review_template'
+                                                            accept='.pdf,.zip'
                                                             required
+                                                            onChange={(e) => fileChangeHandler(e, "template")}
                                                         />
-                                                    )}
-                                                </Field>
+                                                    </div>
+
+                                                    <div className='input-field cap-assignment-info'>
+                                                        <label> Due Date: </label>
+                                                        <Field name='peer_review_due_date'>
+                                                            {({input}) => (
+                                                                <input
+                                                                    type='date'
+                                                                    name='peer_review_due_date'
+                                                                    {...input}
+                                                                    required
+                                                                />
+                                                            )}
+                                                        </Field>
+
+                                                        <label> Points: </label>
+                                                        <Field name='peer_review_points'>
+                                                            {({input}) => (
+                                                                <input
+                                                                    type='number'
+                                                                    min='0'
+                                                                    name='peer_review_points'
+                                                                    {...input}
+                                                                    required
+                                                                />
+                                                            )}
+                                                        </Field>
+                                                    </div>
+                                                </div>
                                             </div>
 
                                             <div className='cap-button'>
