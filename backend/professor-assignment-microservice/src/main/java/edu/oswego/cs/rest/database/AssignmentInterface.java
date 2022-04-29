@@ -16,10 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
@@ -28,6 +25,7 @@ import static com.mongodb.client.model.Updates.set;
 public class AssignmentInterface {
     private final MongoCollection<Document> assignmentsCollection;
     private final MongoCollection<Document> courseCollection;
+    private final MongoCollection<Document> submissionCollection;
     private static String reg;
 
     // Set this to true if running on Windows.
@@ -38,6 +36,7 @@ public class AssignmentInterface {
             DatabaseManager manager = new DatabaseManager();
             MongoDatabase assignmentDatabase = manager.getAssignmentDB();
             assignmentsCollection = assignmentDatabase.getCollection("assignments");
+            submissionCollection = assignmentDatabase.getCollection("submissions");
             MongoDatabase courseDatabase = manager.getCourseDB();
             courseCollection = courseDatabase.getCollection("courses");
         } catch (WebApplicationException e) {
@@ -240,9 +239,9 @@ public class AssignmentInterface {
         Document assignmentDocument = assignmentsCollection.find(eq("assignment_id", assignmentID)).first();
         if (assignmentDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
         Jsonb jsonb = JsonbBuilder.create();
-        Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(assignmentDAO), MediaType.APPLICATION_JSON_TYPE);
-        Document course = Document.parse(courseDAOEntity.getEntity());
-        assignmentsCollection.replaceOne(eq("course_id", courseID), course);
+        Entity<String> assignmentDAOEntity = Entity.entity(jsonb.toJson(assignmentDAO), MediaType.APPLICATION_JSON_TYPE);
+        Document assignment = Document.parse(assignmentDAOEntity.getEntity());
+        assignmentsCollection.replaceOne(eq("course_id", courseID), assignment);
     }
 
     public void removeAssignment(int AssignmentID, String courseID) throws IOException {
@@ -256,6 +255,12 @@ public class AssignmentInterface {
             deleteFile(getRelPath() + "assignments" + reg + courseID + reg + assignment.get("assignment_id"));
             assignmentsCollection.findOneAndDelete(assignment);
         }
+        removeSubmissions(AssignmentID, courseID);
+    }
+
+    public void removeSubmissions(int AssignmentID, String courseID) throws IOException {
+        for (Document submissionDoc : submissionCollection.find(and(eq("assignment_id", AssignmentID), eq("course_id", courseID))))
+             submissionCollection.findOneAndDelete(submissionDoc);
     }
 
     public void removeCourse(String courseID) throws IOException {
@@ -280,10 +285,11 @@ public class AssignmentInterface {
         Set<Integer> assignmentIDs = new HashSet<>();
         for (Document assignmentDocument : assignmentsDocuments)
             assignmentIDs.add(assignmentDocument.getInteger("assignment_id"));
-        for (int i = 0; i < assignmentIDs.size(); i++) {
-            if (!assignmentIDs.contains(i))
-                return i;
+        int max = 0;
+        for (Integer assignmentID : assignmentIDs) {
+            if (max < assignmentID)
+                max = assignmentID;
         }
-        return assignmentIDs.size();
+        return ++max;
     }
 }

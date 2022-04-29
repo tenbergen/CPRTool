@@ -7,6 +7,7 @@ import lombok.Getter;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
@@ -22,7 +23,7 @@ public class FileDAO {
      * @throws Exception File Corruption Exception
      */
     public static FileDAO FileFactory(List<IAttachment> attachments) throws Exception {
-        ArrayList<String> csvLines = new ArrayList<>();
+        List<String> csvLines = new ArrayList<>();
 
         for (IAttachment attachment : attachments) {
             if (attachment == null) continue;
@@ -37,6 +38,11 @@ public class FileDAO {
                         if (!line.isEmpty()) csvLines.add(line);
                     if (csvLines.size() == 0) continue;
                     reader.close();
+
+                    csvLines = csvLines.stream()
+                            .map( str -> str.replaceAll("[!#$%^&*(){}|?<>:;]", "") )
+                            .collect(Collectors.toList());
+
                     return new FileDAO(fileName, csvLines);
                 } catch (IOException ignored) {}
             }

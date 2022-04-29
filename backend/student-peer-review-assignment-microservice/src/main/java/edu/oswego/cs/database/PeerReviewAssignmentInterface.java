@@ -17,6 +17,7 @@ import java.util.*;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.push;
 import static com.mongodb.client.model.Updates.set;
 
 public class PeerReviewAssignmentInterface {
@@ -44,7 +45,8 @@ public class PeerReviewAssignmentInterface {
     public void addPeerReviewSubmission(String course_id, int assignment_id, String srcTeamName, String destinationTeam, String fileName, int grade) {
         Document reviewedByTeam = teamCollection.find(eq("team_id", srcTeamName)).first();
         Document reviewedTeam = teamCollection.find(eq("team_id", destinationTeam)).first();
-
+        Document assignment = assignmentCollection.find(and(eq("course_id", course_id), eq("assignment_id", assignment_id))).first();
+        if(assignment == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("this assignment was not found in this course").build());
         if (reviewedByTeam == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("no team for this student").build());
         if (reviewedTeam == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("no team for this student").build());
         if (reviewedByTeam.getList("team_members", String.class) == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Members not defined in team").build());
@@ -57,6 +59,7 @@ public class PeerReviewAssignmentInterface {
         Document new_submission = new Document()
                 .append("course_id", course_id)
                 .append("assignment_id", assignment_id)
+                .append("assigment_name", assignment.getString("assignment_name"))
                 .append("submission_name", fileName)
                 .append("reviewed_by", reviewedByTeam.getString("team_id"))
                 .append("reviewed_by_members", reviewedByTeam.getList("team_members", String.class))
@@ -68,6 +71,23 @@ public class PeerReviewAssignmentInterface {
         if (submissionsCollection.find(new_submission).iterator().hasNext()) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("submission already exists").build());
         } else submissionsCollection.insertOne(new_submission);
+
+        addCompletedTeam(course_id, assignment_id, srcTeamName, destinationTeam);
+    }
+
+    public void addCompletedTeam(String courseID, int assignmentID, String sourceTeam, String targetTeam) {
+
+        Document assignmentDocument = assignmentCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        if(assignmentDocument == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to find assignment. As a result the assignment could not update the completed_teams").build());
+
+        Map<String, List<String>> completedTeams =  (Map<String, List<String>>) assignmentDocument.get("completed_teams");
+                Map<String, List<String>> finalTeams = completedTeams;
+                List<String> temp = completedTeams.get(sourceTeam);
+                temp.add(targetTeam);
+                finalTeams.put(sourceTeam, temp);
+                assignmentDocument.replace("completed_teams",completedTeams, finalTeams);
+                assignmentCollection.replaceOne(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), assignmentDocument);
     }
 
     public List<String> getCourseStudentIDs(String courseID) {
@@ -174,17 +194,20 @@ public class PeerReviewAssignmentInterface {
 
     public Document addAssignedTeams(Map<String, List<String>> peerReviewAssignments, String courseID, int assignmentID) {
 
-        for (Document assignmentDocument : assignmentCollection.find(eq("course_id", courseID))) {
-            if ((int) assignmentDocument.get("assignment_id") == assignmentID) {
+        Document assignmentDocument = assignmentCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        if(assignmentDocument == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to add assigned teams").build());
+
                 Document doc = new Document();
+                Document completedTeamsDoc = new Document();
                 for (String team : peerReviewAssignments.keySet()) {
                     doc.put(team, peerReviewAssignments.get(team));
+                    completedTeamsDoc.put(team, new ArrayList<>());
                 }
                 assignmentCollection.updateOne(assignmentDocument, set("assigned_teams", doc));
+                assignmentCollection.updateOne(assignmentDocument, set("completed_teams", completedTeamsDoc));
+
                 return doc;
-            }
-        }
-        throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to add assigned teams.").build());
     }
 
     public Document getAssignmentDocument(String courseID, int assignmentID) {

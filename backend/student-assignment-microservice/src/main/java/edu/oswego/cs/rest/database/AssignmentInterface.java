@@ -11,12 +11,10 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Updates.set;
 
 
 public class AssignmentInterface {
@@ -127,7 +125,15 @@ public class AssignmentInterface {
 
     public void makeSubmission(String course_id,int assignment_id,String file_name, String teamName){
         Document team = teamsCollection.find(and(eq("team_id", teamName), eq("course_id", course_id))).first();
+        Document assignment = assignmentsCollection.find(and(
+                                                            eq("course_id", course_id),
+                                                            eq("assignment_id", assignment_id)
+                                                            )).first();
+        if(assignment == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("this assignment was not found in this course").build());
+        String assignmentName = assignment.getString("assignment_name");
         System.out.println(team);
+
         if(team == null) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("this team was not found in this course").build());
         }
@@ -141,6 +147,7 @@ public class AssignmentInterface {
         Document new_submission = new Document()
                 .append("course_id",course_id)
                 .append("assignment_id",assignment_id)
+                .append("assigment_name", assignmentName)
                 .append("submission_name",file_name)
                 .append("team_name",team.getString("team_id"))
                 .append("members",team.getList("team_members",String.class))

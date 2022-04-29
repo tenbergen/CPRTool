@@ -125,7 +125,7 @@ public class studentAssignmentResource {
     @RolesAllowed({"professor", "student"})
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/{student_id}/to-dos")
-    public Response viewAssignmentsByCourse(@PathParam("courseID") String courseID, @PathParam("student_id") String student_id) {
+    public Response viewToDos(@PathParam("courseID") String courseID, @PathParam("student_id") String student_id) {
         return Response.status(Response.Status.OK).entity(new AssignmentInterface().getToDosByCourse(courseID, student_id)).build();
     }
 }
