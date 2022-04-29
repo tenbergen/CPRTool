@@ -1,45 +1,70 @@
 import React, {useEffect} from 'react';
-import { Link } from "react-router-dom";
-import SidebarComponent from "../../components/SidebarComponent";
-import "./styles/ProfessorDashboardStyle.css"
-import { useDispatch, useSelector } from "react-redux";
-import {getCoursesAsync} from "../../redux/features/courseSlice";
+import {Link, useNavigate} from 'react-router-dom';
+import SidebarComponent from '../../components/SidebarComponent';
+import './styles/ProfessorDashboardStyle.css';
+import Loader from '../../components/LoaderComponenets/Loader';
+import {useDispatch, useSelector} from 'react-redux';
+import {getCourseDetailsAsync, getCoursesAsync} from '../../redux/features/courseSlice';
 
 function ProfessorDashboardPage() {
-    const dispatch = useDispatch()
-    const courses = useSelector((state) => state.courses.courses)
-    const user = useSelector((state) => state.auth.user_given_name)
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const {courses, coursesLoaded} = useSelector((state) => state.courses);
+    const user = useSelector((state) => state.auth.user_given_name);
 
     useEffect(() => {
-        dispatch(getCoursesAsync())
+        dispatch(getCoursesAsync());
     }, []);
 
-    // this allows the courses to be received and rendered, hence this and useEffect
-    if (!courses) {
-        return <div><h1>LOADING</h1></div>
-    }
+    const studentView = () => {
+        localStorage.setItem('alt_role', 'student');
+        window.location.reload(false);
+    };
+
+    const onCourseClick = (course) => {
+        dispatch(getCourseDetailsAsync(course.course_id));
+    };
 
     return (
-        <div className={"TeacherDashboard"}>
-            <SidebarComponent />
-            <div id="teacher">
-                <h1>Hello {user}</h1>
-                <div id="courseList">
-                    {courses.map(course =>
-                    <Link to={"/details/professor/" + course.course_id}>
-                        <li className="courseListItem">{course.course_id + "\n\n"  + course.course_name}</li>
-                    </Link>)}
+        <div>
+            {!coursesLoaded ? (
+                <Loader/>
+            ) : (
+                courses.length < 1 ? navigate('/create/course') :
+                <div className={'TeacherDashboard'}>
+                    <SidebarComponent/>
+                    <div id='teacher'>
+                        <div className='welcome-banner'>
+                            <h1 className="kumba-35">Hello, {user}!</h1>
+                            <div className='views'>
+                                <button className='kumba-25 student-view' onClick={studentView}>
+                                    Student View
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id='proCourseList'>
+                            {courses.map((course) => (
+                                <Link
+                                    to={'/details/professor/' + course.course_id}
+                                    onClick={() => onCourseClick(course)}>
+                                    <li className='courseListItem'>
+                                        <span className="outfit-16 pdp-coursename">{course.course_id}</span>
+                                        <span className="kumba-25">{course.course_name}</span>
+                                    </li>
+                                </Link>
+                            ))}
+                        </div>
+                        <div id='addClass'>
+                            <Link to='/create/course'>
+                                <button className="yellow-button" id='addButton'>Create new course</button>
+                            </Link>
+                        </div>
+                    </div>
                 </div>
-                <div id="addClass">
-                    <Link to="/create/course">
-                        <button id="addButton">
-                            Create new course
-                        </button>
-                    </Link>
-                </div>
-            </div>
+            )}
         </div>
     );
 }
 
-export default  ProfessorDashboardPage;
+export default ProfessorDashboardPage;

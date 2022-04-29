@@ -1,71 +1,71 @@
-import React, {useEffect, useState} from "react";
-import "./styles/AssBar.css"
-import {useSelector} from "react-redux";
-import {Link} from "react-router-dom";
-import axios from "axios";
+import React, {useEffect, useState} from 'react';
+import './styles/AssBar.css';
+import {useDispatch, useSelector} from 'react-redux';
+import {Link, useParams} from 'react-router-dom';
+import {getAssignmentDetailsAsync, getCombinedAssignmentPeerReviews} from '../redux/features/assignmentSlice';
 
 const AssBarLink = ({active, assignment, onClick}) => {
-    const currentCourse = useSelector((state) => state.courses.currentCourse)
-    const role = useSelector((state) => state.auth.role)
-    const normalStyle = { backgroundColor: "rgba(255, 255, 255, 0.25)" }
-    const clickedStyle = { backgroundColor: "white" }
+    const {role} = useSelector((state) => state.auth);
+    const normalStyle = {backgroundColor: 'rgba(255, 255, 255, 0.25)'};
+    const clickedStyle = {backgroundColor: 'white'};
+    const {courseId} = useParams();
+    const link = `/details/${role}/${courseId}`;
 
     return (
-        <Link to={`/details/${role}/${currentCourse.course_id}/${assignment.assignment_name}`} params={{ assignmentName:  assignment.assignment_name }} onClick={onClick}>
+        <Link
+            to={
+                assignment.assignment_type === 'peer-review'
+                    ? `${link}/${assignment.assignment_id}/peer-review/${assignment.peer_review_team}`
+                    : `${link}/${assignment.assignment_id}/normal`}
+                onClick={onClick}>
             <tr>
-                <td style={active ? clickedStyle : normalStyle} >
-                    <div className="colorForTable"/>
-                    <p className="courseText"> {assignment.assignment_name} </p>
+                <td style={active ? clickedStyle : normalStyle}>
+                    <div className='colorForTable'/>
+                    <p className='kumba-25 courseText'> {assignment.assignment_name} </p>
                 </td>
             </tr>
         </Link>
     );
-}
+};
 
 const AssBarComponent = () => {
-    const currentCourse = useSelector((state) => state.courses.currentCourse)
-    const assUrl = `${window.location.protocol}//${window.location.host}/assignments/professor/courses/${currentCourse.course_id}/assignments/`
-    //const assUrl = `http://moxie.cs.oswego.edu:13125/assignments/professor/courses/${currentCourse.course_id}/assignments/`
-    const [assignments, setAssignments] = useState()
-    const [isLoading, setLoad] = useState(true)
-    const [chosen, setChosen] = useState(currentCourse.course_id);
+    const dispatch = useDispatch();
+    const {combinedAssignmentPeerReviews} = useSelector((state) => state.assignments);
+    const {courseId, assignmentId, assignmentType, teamId} = useParams();
+    const {currentTeamId} = useSelector((state) => state.teams)
+    const {lakerId} = useSelector((state) => state.auth)
 
-    useEffect(async() => {
-        try {
-            await axios.get(assUrl).then( r=> {
-                setAssignments(Array.from(r.data))
-            })
-        }
-        catch (e) {
-            setAssignments(Array())
-        }
-        setLoad(false)
-    },[])
-    //console.log(assignments)
+    const curr = assignmentType === 'peer-review' ? `${assignmentId}-peer-review-${teamId}` : parseInt(assignmentId);
+    const [chosen, setChosen] = useState(curr);
 
-    const onAssClick = (assignment) =>{
-        setChosen(assignment.assignment_name)
-    }
+    useEffect(() => {
+        dispatch(getCombinedAssignmentPeerReviews({courseId, currentTeamId, lakerId}));
+    }, []);
 
-
-    if(isLoading) {
-        return <div><h1>LOADING</h1></div>
-    }
+    const onAssClick = (assignment) => {
+        const curr = assignment.assignment_type === 'peer-review'
+                ? `${assignment.assignment_id}-${assignment.assignment_type}-${assignment.peer_review_team}`
+                : parseInt(assignment.assignment_id);
+        setChosen(curr);
+        const courseId = assignment.course_id
+        const assignmentId = assignment.assignment_id
+        dispatch(getAssignmentDetailsAsync({ courseId, assignmentId}))
+    };
 
     return (
-        <div className="abc-parent">
-            <h2> Assignments </h2>
-            <div className="abc-assignments">
-                {assignments.map(assignment =>
-                <AssBarLink
-                    onClick={()=> onAssClick(assignment)}
-                    active={assignment.assignment_name === chosen}
-                    assignment={assignment}
+        <div className='abc-parent'>
+            <h2 className="kumba-30"> Assignments </h2>
+            <div className='abc-assignments'>
+                {combinedAssignmentPeerReviews.map((assignment) => (
+                    <AssBarLink
+                        onClick={() => onAssClick(assignment)}
+                        active={assignment.final_id === chosen}
+                        assignment={assignment}
                     />
-                )}
+                ))}
             </div>
         </div>
     );
-}
+};
 
 export default AssBarComponent;
