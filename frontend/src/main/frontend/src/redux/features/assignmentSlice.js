@@ -8,7 +8,7 @@ const getStudentAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/studen
 const getAssignments = async (courseId) => {
     return await axios.get(`${getAssignmentUrl}/${courseId}/assignments`)
         .then(res => {
-            if (res.data != null) return res.data
+            if (res.data.length > 0) return res.data
             return []
         })
         .catch(e => {
@@ -48,7 +48,7 @@ const getPeerReviews = async (courseId, teamId) => {
     const assignments = await getAssignments(courseId);
     console.log(assignments)
     assignments.map(assignment => {
-        if (assignment.assigned_teams !== null) {
+        if (assignment.assigned_teams) {
             const teams = assignment.assigned_teams[teamId]
             teams.map(team => {
                 if (!assignment.completed_teams[team].includes(teamId)) {
@@ -64,7 +64,6 @@ const getPeerReviews = async (courseId, teamId) => {
             })
         }
     })
-    console.log(peerReviewAssignments)
     return peerReviewAssignments
 }
 
@@ -148,8 +147,8 @@ const assignmentSlice = createSlice({
             state.assignmentsLoaded = false
         },
         [getCombinedAssignmentPeerReviews.fulfilled]: (state, action) => {
-            state.assignmentsLoaded = true
             state.combinedAssignmentPeerReviews = action.payload.combined
+            state.assignmentsLoaded = true
         },
     }
 })
