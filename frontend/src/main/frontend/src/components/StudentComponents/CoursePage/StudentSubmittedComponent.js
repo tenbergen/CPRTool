@@ -2,18 +2,18 @@ import {useDispatch, useSelector} from "react-redux";
 import "../../styles/StudentAss.css"
 import {useParams} from "react-router-dom";
 import React, {useEffect} from "react";
-import {getSubmittedAssignmentsAsync} from "../../../redux/features/assignmentSlice";
+import {getStudentSubmittedAssignmentsAsync} from "../../../redux/features/submittedAssignmentSlice";
 import AssignmentTile from "../../AssignmentTile";
 
 const StudentSubmittedComponent = () => {
     const dispatch = useDispatch()
-    const { courseSubmittedAssignments, assignmentsLoaded } = useSelector((state) => state.assignments)
+    const { courseSubmittedAssignments, assignmentsLoaded } = useSelector((state) => state.submittedAssignments)
     const { lakerId } = useSelector((state) => state.auth)
     const { courseId } = useParams()
     const { currentTeamId, teamLoaded } = useSelector((state) => state.teams)
 
     useEffect(() => {
-        dispatch(getSubmittedAssignmentsAsync({courseId, currentTeamId, lakerId}))
+        dispatch(getStudentSubmittedAssignmentsAsync({courseId, currentTeamId, lakerId}))
     }, [])
 
     return (
@@ -21,7 +21,9 @@ const StudentSubmittedComponent = () => {
             {teamLoaded && assignmentsLoaded ? (
                 <div id='assList'>
                     {courseSubmittedAssignments.map(assignment => (
-                        <AssignmentTile assignment={assignment} submitted={true}/>
+                        <AssignmentTile
+                            assignment={assignment}
+                            submitted={true}/>
                     ))}
                 </div>
             ) : null}

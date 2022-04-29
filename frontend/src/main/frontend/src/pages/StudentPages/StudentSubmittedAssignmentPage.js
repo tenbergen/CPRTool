@@ -3,18 +3,17 @@ import SidebarComponent from "../../components/SidebarComponent";
 import "./styles/AssignmentPageStyle.css"
 import {useDispatch, useSelector} from "react-redux";
 import {useParams} from "react-router-dom";
-import {getSubmittedAssignmentDetailsAsync} from "../../redux/features/assignmentSlice";
+import {getSubmittedAssignmentDetailsAsync} from "../../redux/features/submittedAssignmentSlice";
 import SubmittedAssignmentComponent from "../../components/StudentComponents/AssignmentPage/SubmittedAssignmentComponent";
 import SubmittedAssBarComponent from "../../components/SubmittedAssBarComponent";
 
-function SubmittedAssignmentPage() {
+function StudentSubmittedAssignmentPage() {
     const dispatch = useDispatch()
-    const {currentSubmittedAssignment, currentSubmittedAssignmentLoaded} = useSelector((state) => state.assignments)
-    const {lakerId} = useSelector((state) => state.auth)
-    const {courseId, assignmentId, currentTeamId} = useParams()
+    const {currentSubmittedAssignment, currentSubmittedAssignmentLoaded} = useSelector((state) => state.submittedAssignments)
+    const {courseId, assignmentId, teamId} = useParams()
 
     useEffect(() => {
-        dispatch(getSubmittedAssignmentDetailsAsync({courseId, assignmentId, lakerId, currentTeamId}));
+        dispatch(getSubmittedAssignmentDetailsAsync({courseId, assignmentId, teamId}));
     }, [])
 
     return (
@@ -35,4 +34,4 @@ function SubmittedAssignmentPage() {
     )
 }
 
-export default SubmittedAssignmentPage;
+export default StudentSubmittedAssignmentPage;

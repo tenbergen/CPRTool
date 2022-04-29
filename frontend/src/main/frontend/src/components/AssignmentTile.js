@@ -53,12 +53,15 @@ const AssignmentTile = ({assignment, submitted}) => {
 
     const onTileClick = () => {
         const tileLink =
-            submitted ? `/details/student/${courseId}/${assignment.assignment_id}/${currentTeamId}/submitted` :
-            role === "student" ?
-                assignment.assignment_type === 'peer-review'
-                    ? `${link}/peer-review/${assignment.peer_review_team}`
-                    : `${link}/normal`
-                : `${link}/grade`
+            submitted ?
+                role === "student"
+                    ? `/details/student/${courseId}/${assignment.assignment_id}/${currentTeamId}/submitted`
+                    : `${link}/${assignment.team_name}/submitted`
+                : role === "student" ?
+                    assignment.assignment_type === 'peer-review'
+                        ? `${link}/peer-review/${assignment.peer_review_team}`
+                        : `${link}/normal`
+                    : `${link}`
 
         navigate(tileLink)
     }
@@ -69,12 +72,18 @@ const AssignmentTile = ({assignment, submitted}) => {
                 <div className="outfit-16 ass-tile-title"> <span> {title} </span></div>
                 <div className="ass-tile-content">
                     <div className="ass-tile-info" onClick={onTileClick}>
-                        <span className="kumba-27"> {assignment.assignment_name} </span>
+                        <span className="kumba-27">
+                            { submitted
+                                ? role === "professor"
+                                    ? <span> {assignment.team_name} {assignment.assignment_name} Submission </span>
+                                    : <span> {assignment.assigment_name} </span>
+                                : assignment.assignment_type === "peer-review"
+                                    ? <span> {assignment.assignment_name} <br/> (Team {assignment.peer_review_team})  </span>
+                                    : <span> {assignment.assignment_name} </span>
+                            }
+                        </span>
                         <span className="kumba-25">
-                            {submitted
-                                ? assignment.grade === -1
-                                    ? "Pending" : assignment.grade
-                                : assignment.due_date}
+                            {submitted ? assignment.grade : assignment.due_date}
                         </span>
                     </div>
                     { !submitted &&

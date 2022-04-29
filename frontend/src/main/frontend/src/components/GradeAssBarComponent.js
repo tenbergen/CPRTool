@@ -12,13 +12,12 @@ const GradeAssBarLink = ({active, assignment, onClick}) => {
 
     return (
         <Link
-            to={`/details/${role}/${courseId}/${assignment.assignment_id}/grade`}
-            onClick={onClick}
-        >
+            to={`/details/${role}/${courseId}/${assignment.assignment_id}`}
+            onClick={onClick}>
             <tr>
                 <td style={active ? clickedStyle : normalStyle}>
                     <div className='colorForTable'/>
-                    <p className='courseText'> {assignment.assignment_name} </p>
+                    <p className='courseText kumba-25'> {assignment.assignment_name} </p>
                 </td>
             </tr>
         </Link>
@@ -44,7 +43,7 @@ const GradeAssBarComponent = () => {
 
     return (
         <div className='abc-parent'>
-            <h2> Assignments </h2>
+            <h2 className="kumba-30"> Assignments </h2>
             <div className='abc-assignments'>
                 {courseAssignments.map((assignment) => (
                     <GradeAssBarLink

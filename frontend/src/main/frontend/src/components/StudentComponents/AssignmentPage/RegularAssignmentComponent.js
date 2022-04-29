@@ -51,7 +51,7 @@ const RegularAssignmentComponent = () => {
                 navigate(`/details/student/${courseId}`)
             })
             .catch(e => {
-                console.log(e)
+                console.log(e.response)
                 alert("Error uploading assignment")
             })
     }

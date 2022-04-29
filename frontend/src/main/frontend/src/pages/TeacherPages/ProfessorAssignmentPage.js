@@ -6,13 +6,13 @@ import {useParams} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {getCourseDetailsAsync} from '../../redux/features/courseSlice';
 import GradeAssBarComponent from '../../components/GradeAssBarComponent';
-import ProfessorSubmissionsComponent from '../../components/ProfessorComponents/AssignmentPage/ProfessorSubmissionsComponent';
+import ProfessorAllSubmissionsComponent from '../../components/ProfessorComponents/AssignmentPage/ProfessorAllSubmissionsComponent';
 import ProfessorEditAssignmentComponent from '../../components/ProfessorComponents/AssignmentPage/ProfessorEditAssignmentComponent';
 import {getAssignmentDetailsAsync} from '../../redux/features/assignmentSlice';
 
 const AssComponent = ({active, component, onClick}) => {
     return (
-        <p onClick={onClick} className={active ? 'scp-component-link-clicked' : 'scp-component-link'}>
+        <p onClick={onClick} className={active ? 'kumba-25 scp-component-link-clicked' : 'kumba-25 scp-component-link'}>
             {component}
         </p>
     );
@@ -56,12 +56,8 @@ function ProfessorAssignmentPage() {
                                 ))}
                             </div>
                             <div>
-                                {chosen === 'All Submissions' && (
-                                    <ProfessorSubmissionsComponent/>
-                                )}
-                                {chosen === 'Needs Grading' && (
-                                    <ProfessorSubmissionsComponent/>
-                                )}
+                                {chosen === 'All Submissions' && <ProfessorAllSubmissionsComponent/>}
+                                {chosen === 'Needs Grading' && <ProfessorAllSubmissionsComponent/>}
                                 {chosen === 'Edit' && <ProfessorEditAssignmentComponent/>}
                             </div>
                         </div>

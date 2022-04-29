@@ -118,6 +118,7 @@
 .ap-button {
     display: flex;
     justify-content: center;
+    margin-top: 2%;
 }
 
 .ap-button button {
@@ -133,4 +134,5 @@
 .p2 {
     color:#5267A3;
     text-decoration-line: underline;
+    cursor: pointer;
 }

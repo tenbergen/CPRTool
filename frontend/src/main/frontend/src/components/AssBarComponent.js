@@ -31,14 +31,15 @@ const AssBarLink = ({active, assignment, onClick}) => {
 const AssBarComponent = () => {
     const dispatch = useDispatch();
     const {combinedAssignmentPeerReviews} = useSelector((state) => state.assignments);
-    const {courseId, assignmentId, assignmentType, teamName} = useParams();
+    const {courseId, assignmentId, assignmentType, teamId} = useParams();
     const {currentTeamId} = useSelector((state) => state.teams)
+    const {lakerId} = useSelector((state) => state.auth)
 
-    const curr = assignmentType === 'peer-review' ? `${assignmentId}-peer-review-${teamName}` : parseInt(assignmentId);
+    const curr = assignmentType === 'peer-review' ? `${assignmentId}-peer-review-${teamId}` : parseInt(assignmentId);
     const [chosen, setChosen] = useState(curr);
 
     useEffect(() => {
-        dispatch(getCombinedAssignmentPeerReviews({courseId, currentTeamId}));
+        dispatch(getCombinedAssignmentPeerReviews({courseId, currentTeamId, lakerId}));
     }, []);
 
     const onAssClick = (assignment) => {

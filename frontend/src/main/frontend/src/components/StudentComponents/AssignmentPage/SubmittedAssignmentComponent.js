@@ -5,7 +5,7 @@ import '../../styles/SubmittedAssignmentComponent.css'
 
 const SubmittedAssignmentComponent = ({currentSubmittedAssignment}) => {
 
-    const {courseId, assignmentId, currentTeamId} = useParams()
+    const {courseId, assignmentId, teamId} = useParams()
 
     const onAssignmentFileClick = async (filename) => {
         const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/peer-review/download/${filename}`
@@ -15,7 +15,7 @@ const SubmittedAssignmentComponent = ({currentSubmittedAssignment}) => {
     }
 
     const onTeamFileClick = async () => {
-        const url = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${currentTeamId}/download`
+        const url = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${teamId}/download`
 
         await axios.get(url, {responseType: 'blob'})
             .then(res => downloadFile(res.data, currentSubmittedAssignment.team_file))
@@ -23,10 +23,11 @@ const SubmittedAssignmentComponent = ({currentSubmittedAssignment}) => {
 
     const onFeedbackClick = async (peerReview) => {
         const srcTeamName = peerReview.reviewed_by
-        const url = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${srcTeamName}/${currentTeamId}/download`
+        const url = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${srcTeamName}/${teamId}/download`
 
         await axios.get(url, {responseType: 'blob'})
             .then(res => downloadFile(res.data, peerReview.submission_name))
+            .catch(e => console.log(e.response.data))
     }
 
     const downloadFile = (blob, fileName) => {
@@ -72,7 +73,7 @@ const SubmittedAssignmentComponent = ({currentSubmittedAssignment}) => {
                         <div className="ap-assignment-files">
                             <span className="sac-title">Team Files:</span>
                             <span className="sac-filename" onClick={onTeamFileClick}>
-                                {currentSubmittedAssignment.team_file}
+                                {currentSubmittedAssignment.submission_name}
                             </span>
                         </div>
                     </div>

@@ -20,7 +20,7 @@ const TeamComponent = () => {
                 return []
             })
             .catch(e => {
-                console.log(e)
+                console.log(e.response.data)
                 return []
             })
         const openTeams = allTeams.filter(team => !team.team_full)

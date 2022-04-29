@@ -8,14 +8,12 @@ import {getAssignmentDetailsAsync} from "../../../redux/features/assignmentSlice
 const StudentPeerReviewComponent = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
-    const {courseId, assignmentId, teamName} = useParams()
+    const {courseId, assignmentId, teamId} = useParams()
 
     const {currentAssignment, currentAssignmentLoaded} = useSelector((state) => state.assignments)
     const {currentTeamId, teamLoaded} = useSelector((state) => state.teams)
 
-    const destTeamName = currentTeamId
-
-    const [grade, setGrade] = useState(0)
+    const [grade, setGrade] = useState(undefined)
     const feedbackFileFormData = new FormData()
 
     const onFeedbackFileHandler = (e) => {
@@ -43,87 +41,97 @@ const StudentPeerReviewComponent = () => {
     }
 
     const onTeamFileClick = async () => {
-        const srcTeamName = currentTeamId
-        console.log(srcTeamName)
         const url = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${currentTeamId}/download`
 
         await axios.get(url, {responseType: 'blob'})
-            .then(res => downloadFile(res.data, teamName))
+            .then(res => downloadFile(res.data, teamId))
 
     }
 
     const handleSubmit = async () => {
-        const srcTeamName = teamName
         console.log(feedbackFileFormData)
         console.log(grade)
 
-        const submitAssUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${srcTeamName}/${destTeamName}/${grade}/upload`
+        const submitAssUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${currentTeamId}/${teamId}/${grade}/upload`
 
+        console.log(submitAssUrl)
         await axios.post(submitAssUrl, feedbackFileFormData)
             .then(res => {
                 console.log(res)
-                alert("Successfully uploaded assignment")
+                alert("Successfully uploaded peer review")
                 navigate(`/details/student/${courseId}`)
             })
             .catch(e => {
-                console.log(e)
-                alert("Error uploading assignment")
+                console.log(e.response)
+                alert("Error uploading peer review")
             })
+        setGrade(undefined)
     }
 
     return (
         <div>
             { currentAssignmentLoaded && teamLoaded ? (
                 <div>
-                    <h2>Team {teamName} {currentAssignment.assignment_name} Peer Review </h2>
+                    <h2 className="kumba-30">Team {teamId} Peer Review</h2>
                     <div className="ap-assignmentArea">
-                        <h3> Instructions:
-                            <span className="span1-ap">Due Date: {currentAssignment.peer_review_due_date}</span>
+                        <h3>
+                            <span className="outfit-25"> Instructions: </span>
+                            <span className="outfit-25 span1-ap">Due: {currentAssignment.peer_review_due_date}</span>
                             <br/>
-                            <p>
+                            <p className="outfit-18">
                                 {currentAssignment.peer_review_instructions}
                             </p>
+                            <br/>
+
+                            <span className="outfit-25" onClick={() => onFileClick(currentAssignment.peer_review_rubric)}> Rubric: </span>
+                            <span className="outfit-18 p2">
+                                {currentAssignment.peer_review_rubric}
+                            </span>
                             <br/><br/>
-                            Rubric: <p className={"p2"}
-                                onClick={() => onFileClick(currentAssignment.peer_review_rubric)}> {currentAssignment.peer_review_rubric} </p>
+
+                            <span className="outfit-25" onClick={() => currentAssignment.peer_review_template}> Template: </span>
+                            <span className="outfit-18 p2">
+                                {currentAssignment.peer_review_template}
+                            </span>
+                            <br/><br/>
+
+                            <span className="outfit-25"> Team Files: </span>
+                            <span className="outfit-18 p2" onClick={onTeamFileClick}>
+                                {teamId}Files
+                            </span>
+                            <br/><br/><br/>
+
+                            <div className="input-field">
+                                <label> Grade: </label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    name="peer_review_grade"
+                                    value={grade}
+                                    required
+                                    onChange={e => setGrade(e.target.value)}
+                                />
+                            </div>
                             <br/>
-                            Template: <p className={"p2"}
-                                onClick={() => onFileClick(currentAssignment.peer_review_template)}> {currentAssignment.peer_review_template} </p>
-                            <br/>
-                            Team Files: <p className={"p2"}
-                                onClick={() => onTeamFileClick(teamName)}> {teamName} File
-                            </p>
-                            <br/>
-                            <div>
-                                <div>
-                                    <label> <b> Grade: </b></label>
-                                    <input
-                                        type="number"
-                                        min="0"
-                                        name="peer_review_grade"
-                                        value={grade}
-                                        required
-                                        onChange={e => setGrade(e.target.value)}
-                                    />
-                                </div>
-                                <br/><br/>
-                                <div className="ap-assignment-files">
-                                    <label> <b> Feedback: </b></label>
-                                    <input
-                                        type="file"
-                                        accept=".pdf,.docx"
-                                        required
-                                        name="peer_review_grade"
-                                        onChange={onFeedbackFileHandler}
-                                    />
-                                </div>
+
+                            <div className="ap-assignment-files">
+                                <label className="outfit-25"> Feedback: </label>
+                                <input
+                                    type="file"
+                                    name="assignment_files"
+                                    accept=".pdf,.docx"
+                                    onChange={onFeedbackFileHandler}
+                                    required
+                                />
+                            </div>
+                            <div className="ap-button">
                                 <div className="ap-button">
-                                    <button onClick={handleSubmit}> Submit</button>
+                                    <button className="green-button" onClick={handleSubmit}> Submit</button>
                                 </div>
                             </div>
                         </h3>
                     </div>
-                </div> ): null
+                </div>) : null
             }
         </div>
     )

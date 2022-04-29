@@ -18,7 +18,7 @@
 }
 
 .assignment-name {
-    font-family: 'Kumbh Sans';
+    font-family: 'Kumbh Sans', sans-serif;
     font-size: 30px;
     color: #393939;
 }
@@ -32,14 +32,16 @@
 }
 
 .sac-text {
-    font-family: 'Outfit';
+    font-family: 'Outfit', sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
 }
 
-.peerReviewListItem {
-    text-align: left;
+.psa-peerReviewListItem {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     background: linear-gradient(
             to right,
             #7398ff 0%,
@@ -49,7 +51,7 @@
     );
     list-style-type: none;
     font-size: 15px;
-    padding: 10px 0 10px 30px;
+    padding: 10px 10px 10px 30px;
     margin: 10px;
     white-space: pre-line;
 }
@@ -69,10 +71,10 @@ a {
     color: black;
 }
 
-.sac-filename {
+.psa-sac-filename {
     text-decoration: underline;
     color: #5267A3;
-    margin-left: 2%;
+    cursor: pointer;
 }
 
 .sac-filename:hover {

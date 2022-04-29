@@ -8,7 +8,7 @@ import { getAssignmentDetailsAsync } from '../../redux/features/assignmentSlice'
 import RegularAssignmentComponent from "../../components/StudentComponents/AssignmentPage/RegularAssignmentComponent";
 import StudentPeerReviewComponent from "../../components/StudentComponents/AssignmentPage/StudentPeerReviewComponent";
 
-function AssignmentPage() {
+function StudentAssignmentPage() {
     const dispatch = useDispatch();
     const { courseId, assignmentId, assignmentType } = useParams();
 
@@ -34,4 +34,4 @@ function AssignmentPage() {
     );
 }
 
-export default AssignmentPage;
+export default StudentAssignmentPage;

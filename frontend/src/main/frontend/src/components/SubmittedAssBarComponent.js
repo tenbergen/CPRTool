@@ -1,57 +1,62 @@
 import React, {useEffect, useState} from "react";
-import {Link, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {getSubmittedAssignmentDetailsAsync, getSubmittedAssignmentsAsync} from "../redux/features/assignmentSlice";
+import {
+    getSubmittedAssignmentDetailsAsync,
+    getStudentSubmittedAssignmentsAsync,
+    getSubmittedAssignmentsAsync
+} from "../redux/features/submittedAssignmentSlice";
 
-const SubAssBarLink = ({active, assignment, onClick, teamName}) => {
-    const {role} = useSelector((state) => state.auth);
+const SubAssBarLink = ({active, assignment, onClick}) => {
     const normalStyle = {backgroundColor: 'rgba(255, 255, 255, 0.25)'};
     const clickedStyle = {backgroundColor: 'white'};
-    const {courseId} = useParams();
 
     return (
-        <Link
-            to={`/details/${role}/${courseId}/${assignment.assignment_id}/${teamName}/submitted`}
-            onClick={onClick}>
+        <div onClick={onClick}>
             <tr>
                 <td style={active ? clickedStyle : normalStyle}>
                     <div className='colorForTable'/>
-                    <p className='kumba-25 courseText'> {assignment.assignment_name} </p>
+                    <p className='kumba-25 courseText'> {assignment.assigment_name} </p>
                 </td>
             </tr>
-        </Link>
+        </div>
     );
 };
 
 const SubmittedAssBarComponent = () => {
+    const navigate = useNavigate()
     const dispatch = useDispatch();
-    const {courseSubmittedAssignments} = useSelector((state) => state.assignments);
-    const {courseId, assignmentId, currentTeamId} = useParams();
-    const [chosen, setChosen] = useState(parseInt(assignmentId));
-    const {lakerId} = useSelector((state) => state.auth);
+    const {courseSubmittedAssignments, assignmentsLoaded} = useSelector((state) => state.submittedAssignments);
+    const {courseId, assignmentId, teamId} = useParams();
+    const [chosen, setChosen] = useState(assignmentId + teamId);
+    const {lakerId, role} = useSelector((state) => state.auth);
 
     useEffect(() => {
-        dispatch(getSubmittedAssignmentsAsync({courseId, currentTeamId, lakerId}))
+        role === "professor"
+            ? dispatch(getSubmittedAssignmentsAsync({courseId, assignmentId}))
+            : dispatch(getStudentSubmittedAssignmentsAsync({courseId, teamId, lakerId}))
     }, []);
 
     const onSubAssClick = (assignment) => {
-        const assignmentId = assignment.assignment_id
-        setChosen(assignmentId);
-        dispatch(getSubmittedAssignmentDetailsAsync({courseId, assignmentId, lakerId, currentTeamId}))
+        const teamId =  assignment.team_name
+        const chosen = assignment.assignment_id + teamId
+        setChosen(chosen);
+        dispatch(getSubmittedAssignmentDetailsAsync({courseId, assignmentId, lakerId, teamId}))
+        navigate(`/details/${role}/${courseId}/${assignment.assignment_id}/${assignment.team_name}/submitted`)
     };
 
     return (
         <div className='abc-parent'>
             <h2 className="kumba-30"> Assignments </h2>
             <div className='abc-assignments'>
-                {courseSubmittedAssignments.map((assignment) => (
-                    <SubAssBarLink
-                        onClick={() => onSubAssClick(assignment)}
-                        active={assignment.assignment_id === chosen}
-                        assignment={assignment}
-                        teamName={currentTeamId}
-                    />
-                ))}
+                {assignmentsLoaded ?
+                    courseSubmittedAssignments.map(assignment => (
+                        <SubAssBarLink
+                            active={assignment.assignment_id + assignment.team_name  === chosen}
+                            assignment={assignment}
+                            onClick={() => onSubAssClick(assignment)}
+                        />
+                )) : null}
             </div>
         </div>
     )

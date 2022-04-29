@@ -34,8 +34,7 @@ const ProfessorEditCourseComponent = () => {
     const updateCourse = async (data) => {
         const finalData = {...data, course_id: currentCourse.course_id};
 
-        await axios
-            .put(updateUrl, finalData)
+        await axios.put(updateUrl, finalData)
             .then((res) => {
                 console.log(res);
                 courseId = res.data;
@@ -54,8 +53,7 @@ const ProfessorEditCourseComponent = () => {
     };
 
     const uploadCsv = async () => {
-        await axios
-            .post(uploadCsvUrl, csvFormData, {
+        await axios.post(uploadCsvUrl, csvFormData, {
                 headers: {'Content-Type': 'multipart/form-data'},
             })
             .then((res) => {
@@ -63,7 +61,7 @@ const ProfessorEditCourseComponent = () => {
                 window.alert('CSV successfully uploaded!');
             })
             .catch((e) => {
-                console.log(e);
+                console.log(e.response.data);
                 window.alert('Error uploading CSV. Please try again.');
             });
         dispatch(getCourseDetailsAsync(courseId));
@@ -72,27 +70,32 @@ const ProfessorEditCourseComponent = () => {
 
     const deleteCourse = async () => {
         const url = `${deleteCourseUrl}/${courseId}/delete`;
-        await axios.delete(url).then((response) => {
-            console.log(response);
-        });
+        await axios.delete(url)
+            .then((response) => {
+                console.log(response);
+            })
+            .catch(e => console.log(e.response.data));
         if (courseAssignments.length > 0) await deleteAssignments();
         navigate('/');
     };
 
     const deleteAssignments = async () => {
         const url = `${assignmentUrl}/${courseId}/remove`;
-        await axios.delete(url).then((response) => {
-            console.log(response);
-        });
+        await axios.delete(url)
+            .then((response) => {
+                console.log(response);
+            })
+            .catch(e => e.response.data)
     };
 
     const Modal = () => {
         return (
             <div id='deleteModal'>
                 <div id='modalContent'>
-          <span id='deleteSpan'>
-            Are you sure you want to delete this course?
-          </span>
+                    <span id='deleteSpan'>
+                    Are you sure you want to delete this course?
+                    </span>
+
                     <div id='deleteButtons'>
                         <button onClick={deleteCourse}>Yes</button>
                         <button onClick={() => setShow(false)}>No</button>
@@ -130,8 +133,7 @@ const ProfessorEditCourseComponent = () => {
                 onSubmit={async (formObj) => {
                     await handleSubmit(formObj);
                 }}
-                initialValues={initialData}
-            >
+                initialValues={initialData}>
                 {({handleSubmit}) => (
                     <form onSubmit={handleSubmit}>
                         <div className='ecc-input-field'>

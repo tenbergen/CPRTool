@@ -11,9 +11,10 @@ const StudentToDoComponent = () => {
     const {combinedAssignmentPeerReviews, assignmentsLoaded} = store.assignments;
     const {currentTeamId, teamLoaded} = store.teams
     const {courseId} = useParams();
+    const {lakerId} = store.auth
 
     useEffect(() => {
-        dispatch(getCombinedAssignmentPeerReviews({courseId, currentTeamId}));
+        dispatch(getCombinedAssignmentPeerReviews({courseId, currentTeamId, lakerId}));
     }, []);
 
     return (
