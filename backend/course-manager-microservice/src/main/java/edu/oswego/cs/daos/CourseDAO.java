@@ -41,7 +41,7 @@ public class CourseDAO {
         this.semester = semester;
         this.students = new ArrayList<>();
         this.year = year;
-        this.teamSize = 0;
+        this.teamSize = 1;
         this.courseID = this.abbreviation + "-" + this.courseSection + "-" + this.crn + "-" + this.semester + "-" + this.year;
     }
 }
