@@ -215,5 +215,9 @@ public class CourseInterface {
 
     public void collectionWipeOff() {
         new CourseUtil().collectionWipeOff(studentCollection);
+        new CourseUtil().collectionWipeOff(courseCollection);
+        new CourseUtil().collectionWipeOff(assignmentCollection);
+        new CourseUtil().collectionWipeOff(submissionCollection);
+        new CourseUtil().collectionWipeOff(teamCollection);
     }
 }
