@@ -235,13 +235,17 @@ public class AssignmentInterface {
     }
 
     public void updateAssignment(AssignmentDAO assignmentDAO, String courseID, int assignmentID) {
-        assignmentDAO.assignmentID = assignmentID;
-        Document assignmentDocument = assignmentsCollection.find(eq("assignment_id", assignmentID)).first();
-        if (assignmentDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This course does not exist.").build());
-        Jsonb jsonb = JsonbBuilder.create();
-        Entity<String> assignmentDAOEntity = Entity.entity(jsonb.toJson(assignmentDAO), MediaType.APPLICATION_JSON_TYPE);
-        Document assignment = Document.parse(assignmentDAOEntity.getEntity());
-        assignmentsCollection.replaceOne(eq("course_id", courseID), assignment);
+        Document assignmentDocument = assignmentsCollection.find(and(eq("assignment_id", assignmentID),eq("course_id", courseID))).first();
+        if (assignmentDocument == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("This assignment does not exist.").build());
+        assignmentDocument.replace("assignment_name", assignmentDAO.assignmentName);
+        assignmentDocument.replace("due_date", assignmentDAO.dueDate);
+        assignmentDocument.replace("instructions", assignmentDAO.instructions);
+        assignmentDocument.replace("points", assignmentDAO.points);
+        assignmentDocument.replace("peer_review_instructions", assignmentDAO.peerReviewInstructions);
+        assignmentDocument.replace("peer_review_due_date", assignmentDAO.peerReviewDueDate);
+        assignmentDocument.replace("peer_review_points", assignmentDAO.peerReviewPoints);
+
+        assignmentsCollection.replaceOne(and(eq("assignment_id", assignmentID),eq("course_id", courseID)), assignmentDocument);
     }
 
     public void removeAssignment(int AssignmentID, String courseID) throws IOException {
