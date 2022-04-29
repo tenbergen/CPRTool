@@ -40,7 +40,7 @@ public class FileDAO {
                     reader.close();
 
                     csvLines = csvLines.stream()
-                            .map( str -> str.replaceAll("[!@#$%^&*(){}|?<>:;]", "") )
+                            .map( str -> str.replaceAll("[!#$%^&*(){}|?<>:;]", "") )
                             .collect(Collectors.toList());
 
                     return new FileDAO(fileName, csvLines);
