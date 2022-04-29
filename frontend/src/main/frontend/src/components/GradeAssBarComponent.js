@@ -3,6 +3,7 @@ import './styles/TeacherAss.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link, useParams} from 'react-router-dom';
 import {getSubmittedAssignmentsAsync} from "../redux/features/submittedAssignmentSlice";
+import {getAssignmentDetailsAsync} from "../redux/features/assignmentSlice";
 
 const GradeAssBarLink = ({active, assignment, onClick}) => {
     const {role} = useSelector((state) => state.auth);
@@ -39,6 +40,7 @@ const GradeAssBarComponent = () => {
         setChosen(assignment.assignment_id);
         let assignmentId = assignment.assignment_id;
         dispatch(getSubmittedAssignmentsAsync({courseId, assignmentId}));
+        dispatch(getAssignmentDetailsAsync({ courseId, assignmentId}))
     };
 
     return (
