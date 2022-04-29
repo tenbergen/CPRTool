@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {
     getSubmittedAssignmentDetailsAsync,
@@ -24,7 +24,6 @@ const SubAssBarLink = ({active, assignment, onClick}) => {
 };
 
 const SubmittedAssBarComponent = () => {
-    const navigate = useNavigate()
     const dispatch = useDispatch();
     const {courseSubmittedAssignments, assignmentsLoaded} = useSelector((state) => state.submittedAssignments);
     const {courseId, assignmentId, teamId} = useParams();
@@ -42,7 +41,6 @@ const SubmittedAssBarComponent = () => {
         const chosen = assignment.assignment_id + teamId
         setChosen(chosen);
         dispatch(getSubmittedAssignmentDetailsAsync({courseId, assignmentId, lakerId, teamId}))
-        navigate(`/details/${role}/${courseId}/${assignment.assignment_id}/${assignment.team_name}/submitted`)
     };
 
     return (
