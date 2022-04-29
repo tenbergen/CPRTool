@@ -9,6 +9,7 @@ import GradeAssBarComponent from '../../components/GradeAssBarComponent';
 import ProfessorAllSubmissionsComponent from '../../components/ProfessorComponents/AssignmentPage/ProfessorAllSubmissionsComponent';
 import ProfessorEditAssignmentComponent from '../../components/ProfessorComponents/AssignmentPage/ProfessorEditAssignmentComponent';
 import {getAssignmentDetailsAsync} from '../../redux/features/assignmentSlice';
+import Loader from "../../components/LoaderComponenets/Loader";
 
 const AssComponent = ({active, component, onClick}) => {
     return (
@@ -21,9 +22,7 @@ const AssComponent = ({active, component, onClick}) => {
 function ProfessorAssignmentPage() {
     let dispatch = useDispatch();
     let {courseId, assignmentId} = useParams();
-    const isDataLoaded = useSelector(
-        (state) => state.courses.currentCourseLoaded
-    );
+    const {currentCourseLoaded} = useSelector((state) => state.courses);
 
     const components = ['All Submissions', 'Needs Grading', 'Edit'];
     const [chosen, setChosen] = useState('All Submissions');
@@ -39,7 +38,7 @@ function ProfessorAssignmentPage() {
 
     return (
         <div>
-            {isDataLoaded ? (
+            {currentCourseLoaded ? (
                 <div className='scp-parent'>
                     <SidebarComponent/>
                     <div className='scp-container'>
@@ -63,7 +62,7 @@ function ProfessorAssignmentPage() {
                         </div>
                     </div>
                 </div>
-            ) : null}
+            ) : <Loader/>}
         </div>
     );
 }
