@@ -51,7 +51,7 @@ const getPeerReviews = async (courseId, teamId) => {
         if (assignment.assigned_teams) {
             const teams = assignment.assigned_teams[teamId]
             teams.map(team => {
-                if (!assignment.completed_teams[team].includes(teamId)) {
+                if (!assignment.completed_teams[teamId].includes(team)) {
                     const final_id = `${assignment.assignment_id}-peer-review-${team}`
                     peerReviewAssignments.push({
                         ...assignment,
