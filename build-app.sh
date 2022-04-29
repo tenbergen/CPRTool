@@ -20,9 +20,9 @@ docker container stop cpr-mongo5 && docker container rm cpr-mongo5
 docker-compose -f "docker-compose.yml" up -d --build
 
 # Set the permission of the mounted volume from "root" to "default" for write permission.
-docker exec -u 0:0 cpr-professor-assignment chown -R 1001 /opt/ol/wlp/output/defaultServer/assignments/
-docker exec -u 0:0 cpr-student-assignment chown -R 1001 /opt/ol/wlp/output/defaultServer/assignments/
-docker exec -u 0:0 cpr-student-peer-review-assignment chown -R 1001 /opt/ol/wlp/output/defaultServer/assignments/
+docker exec -u 0:0 cpr-professor-assignment chown 1001 /opt/ol/wlp/output/defaultServer/assignments/
+docker exec -u 0:0 cpr-student-assignment chown 1001 /opt/ol/wlp/output/defaultServer/assignments/
+docker exec -u 0:0 cpr-student-peer-review-assignment chown 1001 /opt/ol/wlp/output/defaultServer/assignments/
 
 # Prune any dangling images.
 docker image prune
