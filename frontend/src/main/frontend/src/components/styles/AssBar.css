@@ -52,6 +52,7 @@ td {
 .courseText {
     padding-left: 6%;
     text-align: center;
+    cursor: pointer;
 }
 
 .colorForTable {
