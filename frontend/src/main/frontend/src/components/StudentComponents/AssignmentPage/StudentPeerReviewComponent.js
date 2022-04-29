@@ -83,14 +83,14 @@ const StudentPeerReviewComponent = () => {
                             </p>
                             <br/>
 
-                            <span className="outfit-25" onClick={() => onFileClick(currentAssignment.peer_review_rubric)}> Rubric: </span>
-                            <span className="outfit-18 p2">
+                            <span className="outfit-25"> Rubric: </span>
+                            <span className="outfit-18 p2" onClick={() => onFileClick(currentAssignment.peer_review_rubric)}>
                                 {currentAssignment.peer_review_rubric}
                             </span>
                             <br/><br/>
 
-                            <span className="outfit-25" onClick={() => currentAssignment.peer_review_template}> Template: </span>
-                            <span className="outfit-18 p2">
+                            <span className="outfit-25"> Template: </span>
+                            <span className="outfit-18 p2" onClick={() => onFileClick(currentAssignment.peer_review_template)}>
                                 {currentAssignment.peer_review_template}
                             </span>
                             <br/><br/>
