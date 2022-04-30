@@ -68,12 +68,14 @@ const ProfessorTeamComponent = () => {
         };
 
         const handleRemoveStudent = async (id) => {
+            let confirmAction = window.confirm(`Are you sure you want to delete this student from team ${team.team_id}?`);
+            if (!confirmAction) return;
+
             const data = {
                 team_id: team.team_id,
                 course_id: currentCourse.course_id,
                 student_id: id,
             };
-            console.log(data);
 
             await axios.put(`${process.env.REACT_APP_URL}/teams/professor/team/remove-student`, data)
                 .then((r) => {
@@ -88,6 +90,9 @@ const ProfessorTeamComponent = () => {
         };
 
         const handleDeleteTeam = async (name) => {
+            let confirmAction = window.confirm(`Are you sure you want to delete team ${team.team_id}?`);
+            if (!confirmAction) return;
+
             const data = {
                 team_id: team.team_id,
                 course_id: currentCourse.course_id,
@@ -130,8 +135,7 @@ const ProfessorTeamComponent = () => {
                                 <text className='teamMember'>{name}</text>
                                 <span
                                     onClick={() => handleRemoveStudent(name)}
-                                    className='crossMarkTeam'
-                                >
+                                    className='crossMarkTeam'>
                   &#10060;
                 </span>
                             </div>
