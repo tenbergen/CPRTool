@@ -12,13 +12,19 @@ const SubmittedAssignmentComponent = ({currentSubmittedAssignment}) => {
 
         await axios.get(url, {responseType: 'blob'})
             .then(res => downloadFile(res.data, filename))
+            .catch(e => {
+                alert(`Error : ${e.response.data}`)
+            })
     }
 
     const onTeamFileClick = async () => {
         const url = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${teamId}/download`
 
         await axios.get(url, {responseType: 'blob'})
-            .then(res => downloadFile(res.data, currentSubmittedAssignment.team_file))
+            .then(res => downloadFile(res.data, currentSubmittedAssignment.submission_name))
+            .catch(e => {
+                alert(`Error : ${e.response.data}`)
+            })
     }
 
     const onFeedbackClick = async (peerReview) => {
@@ -27,7 +33,9 @@ const SubmittedAssignmentComponent = ({currentSubmittedAssignment}) => {
 
         await axios.get(url, {responseType: 'blob'})
             .then(res => downloadFile(res.data, peerReview.submission_name))
-            .catch(e => console.log(e.response.data))
+            .catch(e => {
+                alert(`Error : ${e.response.data}`)
+            })
     }
 
     const downloadFile = (blob, fileName) => {
