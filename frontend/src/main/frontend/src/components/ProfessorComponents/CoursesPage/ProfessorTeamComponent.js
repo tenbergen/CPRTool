@@ -16,8 +16,8 @@ const ProfessorTeamComponent = () => {
     });
     const {id} = studentId;
 
-    useEffect(() => {
-        axios.get(getTeamsUrl).then((r) => {
+    useEffect(async () => {
+        await axios.get(getTeamsUrl).then((r) => {
             console.log(r);
             for (let i = 0; i < r.data.length; i++) {
                 setTeams((arr) => [...arr, r.data[i]]);
