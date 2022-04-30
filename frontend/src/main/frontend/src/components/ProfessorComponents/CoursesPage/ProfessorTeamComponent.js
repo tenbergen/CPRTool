@@ -5,9 +5,7 @@ import {useSelector} from 'react-redux';
 
 const ProfessorTeamComponent = () => {
     const {currentCourse} = useSelector((state) => state.courses);
-    const getTeamsUrl =
-        `${process.env.REACT_APP_URL}/teams/team/get/all/` +
-        currentCourse.course_id;
+    const getTeamsUrl = `${process.env.REACT_APP_URL}/teams/team/get/all/${currentCourse.course_id}`;
     const [teams, setTeams] = useState([]);
     const [isActive, setActive] = useState(Array());
     const [isAdd, setAdd] = useState(Array());
@@ -48,7 +46,7 @@ const ProfessorTeamComponent = () => {
         const handleStudentId = (e) =>
             setStudentId({...studentId, [e.target.name]: e.target.value});
 
-        const handleAddStudent = () => {
+        const handleAddStudent = async () => {
             const data = {
                 team_id: team.team_id,
                 course_id: currentCourse.course_id,
@@ -56,11 +54,7 @@ const ProfessorTeamComponent = () => {
             };
             console.log(data);
 
-            axios
-                .put(
-                    `${process.env.REACT_APP_URL}/teams/professor/team/add-student`,
-                    data
-                )
+            await axios.put(`${process.env.REACT_APP_URL}/teams/professor/team/add-student`, data)
                 .then((r) => {
                     console.log(r);
                     alert('Successfully added student.');
@@ -73,7 +67,7 @@ const ProfessorTeamComponent = () => {
                 });
         };
 
-        const handleRemoveStudent = (id) => {
+        const handleRemoveStudent = async (id) => {
             const data = {
                 team_id: team.team_id,
                 course_id: currentCourse.course_id,
@@ -81,11 +75,7 @@ const ProfessorTeamComponent = () => {
             };
             console.log(data);
 
-            axios
-                .put(
-                    `${process.env.REACT_APP_URL}/teams/professor/team/remove-student`,
-                    data
-                )
+            await axios.put(`${process.env.REACT_APP_URL}/teams/professor/team/remove-student`, data)
                 .then((r) => {
                     console.log(r);
                     alert('Successfully removed student.');
@@ -97,17 +87,14 @@ const ProfessorTeamComponent = () => {
                 });
         };
 
-        const handleDeleteTeam = (name) => {
+        const handleDeleteTeam = async (name) => {
             const data = {
                 team_id: team.team_id,
                 course_id: currentCourse.course_id,
             };
             console.log(data);
 
-            axios
-                .delete(`${process.env.REACT_APP_URL}/teams/professor/team/delete`, {
-                    data,
-                })
+            await axios.delete(`${process.env.REACT_APP_URL}/teams/professor/team/delete`, {data})
                 .then((r) => {
                     console.log(r);
                     alert('Successfully removed team.');
@@ -169,6 +156,7 @@ const ProfessorTeamComponent = () => {
                                 onClick={handleSetAdd}
                                 className='buttonPlusTeam'
                                 type='image'
+                                alt="plus-button"
                                 src={require('../../styles/plus-purple.png')}
                             />
                         )}
