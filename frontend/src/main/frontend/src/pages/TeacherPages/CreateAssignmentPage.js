@@ -182,6 +182,7 @@ const CreateAssignmentPage = () => {
                                                                     name='points'
                                                                     {...input}
                                                                     required
+                                                                    onWheel={(e) => e.target.blur()}
                                                                 />
                                                             )}
                                                         </Field>
@@ -249,6 +250,7 @@ const CreateAssignmentPage = () => {
                                                                     name='peer_review_points'
                                                                     {...input}
                                                                     required
+                                                                    onWheel={(e) => e.target.blur()}
                                                                 />
                                                             )}
                                                         </Field>
