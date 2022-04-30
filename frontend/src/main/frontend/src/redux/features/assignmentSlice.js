@@ -67,16 +67,13 @@ const getPeerReviews = async (courseId, teamId) => {
     return peerReviewAssignments
 }
 
-const getCombined = (courseAssignments, peerReviews) => {
-    const combined = [...courseAssignments, ...peerReviews]
-
-    combined.sort(function (a, b) {
+const sortByDueDate = (arr) => {
+    arr.sort(function (a, b) {
         if (a.final_due_date < b.final_due_date) {return -1;}
         if (a.final_due_date > b.final_due_date) {return 1;}
         return 0;
     });
-
-    return combined
+    console.log(arr)
 }
 
 export const getCourseAssignmentsAsync = createAsyncThunk(
@@ -95,7 +92,8 @@ export const getCombinedAssignmentPeerReviews = createAsyncThunk(
         thunkAPI.dispatch(refreshTokenAsync())
         const courseAssignments = await getToDos(courseId, lakerId)
         const peerReviews = await getPeerReviews(courseId, currentTeamId);
-        const combined = getCombined(courseAssignments, peerReviews)
+        const combined = [...courseAssignments, ...peerReviews]
+        sortByDueDate(combined)
         return {combined}
     }
 )
