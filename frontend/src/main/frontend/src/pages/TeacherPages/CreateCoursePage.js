@@ -137,6 +137,7 @@ const CreateCoursePage = () => {
                                             value={year}
                                             required
                                             onChange={(e) => OnChange(e)}
+                                            onWheel={(e) => e.target.blur()}
                                         />
                                     </div>
                                 </div>
@@ -150,6 +151,7 @@ const CreateCoursePage = () => {
                                             value={crn}
                                             required
                                             onChange={(e) => OnChange(e)}
+                                            onWheel={(e) => e.target.blur()}
                                         />
                                     </div>
                                     <div className='input-field ccp-input-field'/>

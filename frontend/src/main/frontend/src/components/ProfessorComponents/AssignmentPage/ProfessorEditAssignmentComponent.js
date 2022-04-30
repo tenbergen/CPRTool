@@ -230,7 +230,9 @@ const ProfessorEditAssignmentComponent = () => {
                                         type='number'
                                         name='points'
                                         {...input}
-                                        required/>
+                                        required
+                                        onWheel={(e) => e.target.blur()}
+                                    />
                                 )}
                             </Field>
                         </div>
@@ -326,6 +328,7 @@ const ProfessorEditAssignmentComponent = () => {
                                         name='peer_review_points'
                                         {...input}
                                         required
+                                        onWheel={(e) => e.target.blur()}
                                     />
                                 )}
                             </Field>
