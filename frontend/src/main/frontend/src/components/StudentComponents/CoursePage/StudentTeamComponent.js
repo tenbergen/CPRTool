@@ -61,12 +61,19 @@ const TeamComponent = () => {
             })
     }
 
+    const confirmJoin = async (teamId) => {
+        let confirmAction = window.confirm('Are you sure you want to join this team?');
+        if (confirmAction) {
+            await joinTeam(teamId);
+        }
+    };
+
     return (
         <h3>
             <h2 className="kumba-30" id="teamTitle"> Join a team </h2>
             <div id="teamList">
                 {teams.map(team =>
-                    <li id="teamListItem" onClick={() => joinTeam(team.team_id)}>Team {team.team_id}</li>
+                    <li id="teamListItem" onClick={() => confirmJoin(team.team_id)}>Team {team.team_id}</li>
                 )}
             </div>
             <div id="createTeamButton">
