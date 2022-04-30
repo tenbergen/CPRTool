@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './styles/TeacherAss.css';
 import {useDispatch, useSelector} from 'react-redux';
-import {Link, useParams} from 'react-router-dom';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import {getSubmittedAssignmentsAsync} from "../redux/features/submittedAssignmentSlice";
 import {getAssignmentDetailsAsync} from "../redux/features/assignmentSlice";
 
@@ -29,6 +29,7 @@ const GradeAssBarComponent = () => {
     const dispatch = useDispatch();
     const {courseAssignments} = useSelector((state) => state.assignments);
     const {courseId, assignmentId} = useParams();
+    const navigate = useNavigate()
 
     const [chosen, setChosen] = useState(parseInt(assignmentId));
 
@@ -43,9 +44,16 @@ const GradeAssBarComponent = () => {
         dispatch(getAssignmentDetailsAsync({ courseId, assignmentId}))
     };
 
+    const onCourseClick = () => {
+        navigate(`/details/professor/${courseId}`)
+    }
+
     return (
         <div className='abc-parent'>
-            <h2 className="kumba-30"> Assignments </h2>
+            <div className="abc-title">
+                <span className="outfit-16 link" style={{fontSize: "11px"}} onClick={onCourseClick}>{courseId}</span>
+                <h2 className="kumba-30"> Assignments </h2>
+            </div>
             <div className='abc-assignments'>
                 {courseAssignments.map((assignment) => (
                     <GradeAssBarLink

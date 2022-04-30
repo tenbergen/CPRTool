@@ -4,6 +4,10 @@
 }
 
 .abc-parent h2 {
+    margin-top: 0;
+}
+
+.abc-title {
     margin: 15% 10% 12% 10%;
 }
 
