@@ -204,7 +204,7 @@ const ProfessorEditAssignmentComponent = () => {
                             <input
                                 type='file'
                                 name='assignment_files'
-                                accept='.pdf,.zip'
+                                accept='.pdf,.zip,.docx'
                                 onChange={(e) => fileChangeHandler(e, "assignment")}
                             />
                         </div>
@@ -217,7 +217,9 @@ const ProfessorEditAssignmentComponent = () => {
                                         type='date'
                                         name='due_date'
                                         {...input}
-                                        required/>
+                                        required
+                                        min={new Date().toISOString().split('T')[0]}
+                                    />
                                 )}
                             </Field>
 
@@ -268,7 +270,7 @@ const ProfessorEditAssignmentComponent = () => {
                                     <input
                                         type='file'
                                         name='peer_review_rubric'
-                                        accept='.pdf,.zip'
+                                        accept='.pdf,.zip,.docx'
                                         onChange={(e) => fileChangeHandler(e, "rubric")}
                                     />
                                 </div>
@@ -294,7 +296,7 @@ const ProfessorEditAssignmentComponent = () => {
                                     <input
                                         type='file'
                                         name='peer_review_template'
-                                        accept='.pdf,.zip'
+                                        accept='.pdf,.zip..docx'
                                         onChange={(e) => fileChangeHandler(e, "template")}
                                     />
                                 </div>
@@ -310,6 +312,7 @@ const ProfessorEditAssignmentComponent = () => {
                                         name='peer_review_due_date'
                                         {...input}
                                         required
+                                        min={new Date().toISOString().split('T')[0]}
                                     />
                                 )}
                             </Field>
