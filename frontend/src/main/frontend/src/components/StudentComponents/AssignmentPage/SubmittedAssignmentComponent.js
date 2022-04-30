@@ -96,7 +96,7 @@ const SubmittedAssignmentComponent = ({currentSubmittedAssignment}) => {
                                             <b> {peerReview.grade === -1 ? "Pending" : peerReview.grade}
                                             </b>
                                             <span className="sac-filename" onClick={() => onFeedbackClick(peerReview)}>
-                                                {peerReview.submission_name}
+                                                View feedback
                                             </span>
                                         </li>
                                     )) : null}
