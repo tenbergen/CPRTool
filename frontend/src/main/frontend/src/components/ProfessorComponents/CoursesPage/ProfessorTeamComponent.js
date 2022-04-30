@@ -58,13 +58,13 @@ const ProfessorTeamComponent = () => {
                 .then((r) => {
                     console.log(r);
                     alert('Successfully added student.');
-                    setStudentId({...studentId, id: ''});
                     window.location.reload();
                 })
                 .catch((e) => {
-                    console.log(e);
-                    alert('Error adding student.');
+                    console.log(e.response.data);
+                    alert(`Error adding student: ${e.response.data}`);
                 });
+            setStudentId({...studentId, id: ''});
         };
 
         const handleRemoveStudent = async (id) => {
