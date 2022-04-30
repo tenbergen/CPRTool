@@ -8,21 +8,23 @@ const ProfessorTeamComponent = () => {
     const getTeamsUrl =
         `${process.env.REACT_APP_URL}/teams/team/get/all/` +
         currentCourse.course_id;
-    const [teams, setTeams] = useState(Array());
+    const [teams, setTeams] = useState([]);
     const [isActive, setActive] = useState(Array());
     const [isAdd, setAdd] = useState(Array());
-    const [studentId, setStudentId] = useState({
-        id: '',
-    });
+    const [studentId, setStudentId] = useState({id: ''});
     const {id} = studentId;
 
     useEffect(async () => {
-        await axios.get(getTeamsUrl).then((r) => {
-            console.log(r);
-            for (let i = 0; i < r.data.length; i++) {
-                setTeams((arr) => [...arr, r.data[i]]);
-            }
-        });
+        const allTeams = await axios.get(getTeamsUrl)
+            .then((res) => {
+                if (res.data.length > 0) return res.data
+                return []
+            })
+            .catch(e => {
+                alert(e.response.data)
+                return []
+            });
+        setTeams(allTeams);
     }, []);
 
     const ProfessorTeamAccordion = (team) => {
