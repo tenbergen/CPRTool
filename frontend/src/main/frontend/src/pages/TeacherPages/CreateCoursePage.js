@@ -58,17 +58,12 @@ const CreateCoursePage = () => {
                 crn: crn.toString(),
             };
             console.log(data);
-            await axios
-                .post(submitCourseUrl, data)
-                .then((res) => {
-                    if (res.data === 'Course already existed.') {
-                        alert(res.data);
-                    } else {
-                        navigate('/');
-                    }
+            await axios.post(submitCourseUrl, data)
+                .then((_) => {
+                    navigate('/');
                 })
                 .catch((e) => {
-                    console.log(e);
+                    alert(`Error: ${e.response.data}`);
                 });
         }
     };
