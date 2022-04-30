@@ -23,7 +23,6 @@
     box-sizing: border-box;
     border-radius: 25px;
     background-color: #9CF0D3;
-    margin-bottom: 3%;
 }
 
 .field-title {
@@ -42,15 +41,20 @@
 }
 
 .cap-form {
-    background-color: white;
-    border-radius: 50px;
-    padding: 5% 5% 2% 5%;
+    border-radius: 25px;
     overflow-y: scroll;
     height: 65vh;
 }
 
+.cap-form form {
+    border-radius: 25px;
+    padding: 0 0 5% 0;
+    background-color: white;
+}
+
 .cap-form::-webkit-scrollbar {
     width: 20px;
+    background-color: transparent;
 }
 
 .cap-form::-webkit-scrollbar-track {
