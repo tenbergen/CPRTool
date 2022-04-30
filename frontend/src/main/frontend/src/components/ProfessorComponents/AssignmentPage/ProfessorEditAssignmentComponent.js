@@ -1,7 +1,7 @@
 import {Field, Form} from 'react-final-form';
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {getAssignmentDetailsAsync} from '../../../redux/features/assignmentSlice';
+import {getAssignmentDetailsAsync, getCourseAssignmentsAsync} from '../../../redux/features/assignmentSlice';
 import {useParams} from 'react-router-dom';
 import '../../styles/EditAssignmentStyle.css';
 import axios from 'axios';
@@ -36,21 +36,25 @@ const ProfessorEditAssignmentComponent = () => {
 
     const handleSubmit = async (formObj) => {
         const editUrl = `${getAssUrl}/${assignmentId}/edit`;
+        console.log(editUrl)
+        console.log({...formObj, course_id: courseId})
 
         if (JSON.stringify(() => initialValue()) === JSON.stringify(formObj)) {
             alert('Nothing to save!');
             return;
         }
 
-        await axios.put(editUrl, {...formObj, course_id: courseId,})
+        await axios.put(editUrl, {...formObj, course_id: courseId})
             .then((res) => {
                 console.log(res.data);
             })
             .catch((e) => {
-                console.log(e);
+                console.log(e.response);
             });
 
         await submitNewFiles()
+        dispatch(getCourseAssignmentsAsync(courseId))
+        dispatch(getAssignmentDetailsAsync({courseId, assignmentId}))
         alert("Successfully updated assignment!")
     };
 
