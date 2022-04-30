@@ -154,7 +154,8 @@ const CreateAssignmentPage = () => {
                                                         <input
                                                             type='file'
                                                             name='assignment_files'
-                                                            accept='.pdf,.zip'
+                                                            accept='.pdf,.zip,.docx'
+                                                            required
                                                             onChange={(e) => fileChangeHandler(e, "assignment")}
                                                         />
                                                     </div>
@@ -168,6 +169,7 @@ const CreateAssignmentPage = () => {
                                                                     name='due_date'
                                                                     {...input}
                                                                     required
+                                                                    min={new Date().toISOString().split('T')[0]}
                                                                 />
                                                             )}
                                                         </Field>
@@ -209,7 +211,7 @@ const CreateAssignmentPage = () => {
                                                         <input
                                                             type='file'
                                                             name='peer_review_rubric'
-                                                            accept='.pdf,.zip'
+                                                            accept='.pdf,.zip,.docx'
                                                             required
                                                             onChange={(e) => fileChangeHandler(e, "rubric")}
                                                         />
@@ -218,7 +220,7 @@ const CreateAssignmentPage = () => {
                                                         <input
                                                             type='file'
                                                             name='peer_review_template'
-                                                            accept='.pdf,.zip'
+                                                            accept='.pdf,.zip,.docx'
                                                             required
                                                             onChange={(e) => fileChangeHandler(e, "template")}
                                                         />
@@ -233,6 +235,7 @@ const CreateAssignmentPage = () => {
                                                                     name='peer_review_due_date'
                                                                     {...input}
                                                                     required
+                                                                    min={new Date().toISOString().split('T')[0]}
                                                                 />
                                                             )}
                                                         </Field>
