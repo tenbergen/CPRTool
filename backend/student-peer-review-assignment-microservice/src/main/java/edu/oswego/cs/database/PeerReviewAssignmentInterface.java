@@ -73,6 +73,7 @@ public class PeerReviewAssignmentInterface {
         } else submissionsCollection.insertOne(new_submission);
 
         addCompletedTeam(course_id, assignment_id, srcTeamName, destinationTeam);
+
     }
 
     public void addCompletedTeam(String courseID, int assignmentID, String sourceTeam, String targetTeam) {
@@ -82,12 +83,16 @@ public class PeerReviewAssignmentInterface {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to find assignment. As a result the assignment could not update the completed_teams").build());
 
         Map<String, List<String>> completedTeams =  (Map<String, List<String>>) assignmentDocument.get("completed_teams");
-                Map<String, List<String>> finalTeams = completedTeams;
-                List<String> temp = completedTeams.get(sourceTeam);
-                temp.add(targetTeam);
-                finalTeams.put(sourceTeam, temp);
-                assignmentDocument.replace("completed_teams",completedTeams, finalTeams);
-                assignmentCollection.replaceOne(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), assignmentDocument);
+        Map<String, List<String>> finalTeams = completedTeams;
+        List<String> temp = completedTeams.get(sourceTeam);
+        temp.add(targetTeam);
+        finalTeams.put(sourceTeam, temp);
+        assignmentDocument.replace("completed_teams",completedTeams, finalTeams);
+        assignmentCollection.replaceOne(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), assignmentDocument);
+        assignmentDocument = assignmentCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        if (assignmentDocument.get("completed_teams") == assignmentDocument.get("assigned_teams")){
+            makeFinalGrades(courseID, assignmentID);
+        }
     }
 
     public List<String> getCourseStudentIDs(String courseID) {
