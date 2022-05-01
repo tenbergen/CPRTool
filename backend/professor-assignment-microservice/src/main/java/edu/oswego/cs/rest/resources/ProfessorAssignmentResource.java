@@ -63,7 +63,7 @@ public class ProfessorAssignmentResource {
             if (attachment == null) continue;
             String fileName = attachment.getDataHandler().getName();
 
-            if (!fileName.endsWith("pdf") && !fileName.endsWith("zip"))
+            if (!fileName.endsWith("pdf") && !fileName.endsWith("zip") && !fileName.endsWith("docx"))
                 return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
             new AssignmentInterface().writeToAssignment(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
         }
@@ -90,7 +90,7 @@ public class ProfessorAssignmentResource {
             if (attachment == null) continue;
             String fileName = attachment.getDataHandler().getName();
 
-            if (!fileName.endsWith("pdf") && !fileName.endsWith("zip"))
+            if (!fileName.endsWith("pdf") && !fileName.endsWith("zip") && !fileName.endsWith("docx"))
                 return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
             new AssignmentInterface().writeRubricToPeerReviews(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
         }
@@ -117,7 +117,7 @@ public class ProfessorAssignmentResource {
             if (attachment == null) continue;
             String fileName = attachment.getDataHandler().getName();
 
-            if (!fileName.endsWith("pdf") && !fileName.endsWith("zip"))
+            if (!fileName.endsWith("pdf") && !fileName.endsWith("zip") && !fileName.endsWith("docx"))
                 return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
             new AssignmentInterface().writeTemplateToPeerReviews(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
         }

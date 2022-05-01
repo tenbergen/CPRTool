@@ -260,4 +260,13 @@ public class PeerReviewAssignmentResource {
         List<Document> documents = new PeerReviewAssignmentInterface().getUsersReviewedAssignment(courseID, studentID);
         return Response.status(Response.Status.OK).entity(documents).build();
     }
+
+    @PUT
+    @RolesAllowed("Professor")
+    @Path("{course_id}/{assignment_id}/finalize-grades")
+    public Response finalizeGrades(@PathParam("course_id") String courseID,
+                                   @PathParam("assignment_id") int assignmentID){
+        new PeerReviewAssignmentInterface().makeFinalGrades(courseID, assignmentID);
+        return Response.status(Response.Status.OK).entity("Peer reviews have been averaged to make final grades.").build();
+    }
 }
