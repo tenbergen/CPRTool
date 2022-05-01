@@ -152,6 +152,7 @@ public class AssignmentInterface {
                 .append("team_name",team.getString("team_id"))
                 .append("members",team.getList("team_members",String.class))
                 .append("type","team_submission")
+                .append("grade", -1)
                 .append("path",path+reg+file_name);
         System.out.println(new_submission);
         boolean submissionCheck = submissionCollection.find(and(eq("course_id",course_id),eq("assignment_id",assignment_id),eq("team_name",team.getString("team_id")))).iterator().hasNext();
