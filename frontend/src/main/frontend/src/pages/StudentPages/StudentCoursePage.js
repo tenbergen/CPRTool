@@ -6,7 +6,7 @@ import StudentTeamComponent from "../../components/StudentComponents/CoursePage/
 import StudentToDoComponent from "../../components/StudentComponents/CoursePage/StudentToDoComponent";
 import CourseBarComponent from "../../components/CourseBarComponent";
 import StudentSubmittedComponent from "../../components/StudentComponents/CoursePage/StudentSubmittedComponent";
-import {useParams} from "react-router-dom";
+import {useLocation, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {getCourseDetailsAsync} from "../../redux/features/courseSlice";
 import {getCurrentCourseTeamAsync} from "../../redux/features/teamSlice";
@@ -22,12 +22,15 @@ const CourseComponent = ({active, component, onClick}) => {
 
 function StudentCoursePage() {
     const dispatch = useDispatch()
+    const location = useLocation();
     const {courseId} = useParams()
     const {lakerId} = useSelector((state) => state.auth)
     const {currentTeamId, teamLoaded} = useSelector((state) => state.teams)
 
+    const initialState = location.state !== null ? location.state.initialComponent : "To Do"
+    const [chosen, setChosen] = useState(initialState);
+
     const components = ["To Do", "Submitted", "My Team"]
-    const [chosen, setChosen] = useState("To Do");
 
     useEffect(() => {
         dispatch(getCourseDetailsAsync(courseId))

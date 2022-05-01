@@ -48,7 +48,7 @@ const RegularAssignmentComponent = () => {
             .then(res => {
                 console.log(res)
                 alert("Successfully uploaded assignment")
-                navigate(`/details/student/${courseId}`)
+                navigate(`/details/student/${courseId}`, {state: {initialComponent: "Submitted"}})
             })
             .catch(e => {
                 console.log(e.response)

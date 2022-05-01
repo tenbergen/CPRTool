@@ -59,7 +59,7 @@ const StudentPeerReviewComponent = () => {
             .then(res => {
                 console.log(res)
                 alert("Successfully uploaded peer review")
-                navigate(`/details/student/${courseId}`)
+                navigate(`/details/student/${courseId}`, {state: {initialComponent: "Submitted"}})
             })
             .catch(e => {
                 console.log(e.response)
