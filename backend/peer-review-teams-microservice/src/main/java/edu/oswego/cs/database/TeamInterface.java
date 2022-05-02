@@ -54,6 +54,8 @@ public class TeamInterface {
         newTeam.getTeamMembers().add(request.getStudentID());
         newTeam.setTeamMembers(newTeam.getTeamMembers());
 
+        if (teamSize == 1) newTeam.setTeamFull(true);
+
         Jsonb jsonb = JsonbBuilder.create();
         Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(newTeam), MediaType.APPLICATION_JSON_TYPE);
         Document teamDocument = Document.parse(courseDAOEntity.getEntity());
