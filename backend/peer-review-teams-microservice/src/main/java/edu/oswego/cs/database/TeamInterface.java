@@ -286,9 +286,10 @@ public class TeamInterface {
         teamCollection.updateOne(teamDocumentFilter, teamNameUpdates, teamNameOptions);
     }
 
-    public void removeTeamMember(TeamParam request) {
+    public void removeTeamMember(@Context SecurityContext securityContext, TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+        new IdentifyingService().identifyingProfessorService(securityContext, courseCollection, request.getCourseID());
         new SecurityService().removeTeamMemberSecurity(teamCollection, courseDocument, request);
 
         Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));

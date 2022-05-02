@@ -67,8 +67,8 @@ public class ProfessorTeamResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/remove-student")
     @RolesAllowed("professor")
-    public Response removeTeamMember(TeamParam request) {
-        new TeamInterface().removeTeamMember(request);
+    public Response removeTeamMember(@Context SecurityContext securityContext, TeamParam request) {
+        new TeamInterface().removeTeamMember(securityContext, request);
         return Response.status(Response.Status.OK).entity("Student successfully removed from team.").build(); 
     }
 

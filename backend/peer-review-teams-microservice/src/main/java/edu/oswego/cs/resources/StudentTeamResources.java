@@ -114,7 +114,7 @@ public class StudentTeamResources {
     /* deprecated */
     public Response leaveTeam(@Context SecurityContext securityContext, TeamParam request) {
         // new IdentifyingService().identifyingStudentService(securityContext, request.getStudentID());
-        new TeamInterface().removeTeamMember(request);
+        new TeamInterface().removeTeamMember(securityContext, request);
         return Response.status(Response.Status.OK).entity("Student successfully leave team.").build();
     }
 }
