@@ -93,8 +93,10 @@ public class TeamInterface {
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
         if (!new SecurityService().isStudentValid(courseDocument, studentID))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in this course.").build());
-        
-        if (new SecurityService().isStudentAlreadyInATeam(studentID, courseID)) {
+        new IdentifyingService().identifyingStudentService(securityContext, studentID);
+        new IdentifyingService().identifyingProfessorService(securityContext, courseCollection, courseID);
+
+        if (new SecurityService().isStudentAlreadyInATeam(securityContext, studentID, courseID)) {
             MongoCursor<Document> cursor = teamCollection.find(eq("course_id", courseID)).iterator();
             while (cursor.hasNext()) {
                 Document teamDocument = cursor.next();
