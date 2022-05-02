@@ -46,7 +46,7 @@ public class StudentTeamResources {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({"professor","student"})
     public Response getTeamByTeamID(@Context SecurityContext securityContext, @PathParam("course_id") String courseID, @PathParam("team_id") String teamID) {
-        return Response.status(Response.Status.OK).entity(new TeamInterface().getTeamByTeamID(courseID, teamID)).build();
+        return Response.status(Response.Status.OK).entity(new TeamInterface().getTeamByTeamID(securityContext, courseID, teamID)).build();
     }
     
     @PUT

@@ -111,11 +111,17 @@ public class TeamInterface {
         throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Student not found in any team.").build());
     }
 
-    public Document getTeamByTeamID(String courseID, String teamID) {
+    public Document getTeamByTeamID(SecurityContext securityContext, String courseID, String teamID) {
+        String userID = securityContext.getUserPrincipal().getName().split("@")[0];
         Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+        new IdentifyingService().identifyingProfessorService(securityContext, courseCollection, courseID);
         if (!new SecurityService().isTeamCreated(teamCollection, teamID, courseID))
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Team not found.").build());
+        if (securityContext.isUserInRole("student"))
+            if (!new SecurityService().isStudentInThisTeam(teamCollection, teamID, userID, courseID))
+                throw new WebApplicationException(Response.status(Response.Status.FORBIDDEN).entity("Principal User is not in this team.").build());
+        
         Bson teamDocumentFilter = Filters.and(eq("team_id", teamID), eq("course_id", courseID));
         return teamCollection.find(teamDocumentFilter).first();
     }
