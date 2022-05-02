@@ -17,7 +17,6 @@ import java.util.*;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Updates.push;
 import static com.mongodb.client.model.Updates.set;
 
 public class PeerReviewAssignmentInterface {
@@ -90,8 +89,17 @@ public class PeerReviewAssignmentInterface {
         assignmentDocument.replace("completed_teams",completedTeams, finalTeams);
         assignmentCollection.replaceOne(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), assignmentDocument);
         assignmentDocument = assignmentCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
-        if (assignmentDocument.get("completed_teams") == assignmentDocument.get("assigned_teams")){
-            makeFinalGrades(courseID, assignmentID);
+        completedTeams =  (Map<String, List<String>>) assignmentDocument.get("completed_teams");
+        int currentNumOfReviews = 0;
+        for (Map.Entry<String, List<String>> entry: completedTeams.entrySet()){
+            List<String> list = entry.getValue();
+            for (String s : list) {
+                if (s.equals(targetTeam))
+                    currentNumOfReviews++;
+            }
+        }
+        if (currentNumOfReviews == (int) assignmentDocument.get("reviews_per_team")){
+            makeFinalGrade(courseID, assignmentID, targetTeam);
         }
     }
 
@@ -223,9 +231,11 @@ public class PeerReviewAssignmentInterface {
     }
 
 
-    public void addAllTeams(List<String> allTeams, String courseID, int assignmentID) {
+    public void addAllTeams(List<String> allTeams, String courseID, int assignmentID, int reviewsPerTeam) {
         Document result = assignmentCollection.findOneAndUpdate(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), set("all_teams", allTeams));
         if (result == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to set all teams to assignment").build());
+        result = assignmentCollection.findOneAndUpdate(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), set("reviews_per_team", reviewsPerTeam));
+        if (result == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to add number of reviews per team to database document").build());
     }
 
     public void addDistroToSubmissions(Map<String, List<String>> distro, String course_id, int assignment_id) {
@@ -283,6 +293,42 @@ public class PeerReviewAssignmentInterface {
         return team;
     }
 
+    public void makeFinalGrade(String courseID, int assignmentID, String teamName) {
+        Document assignment = assignmentCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        if (assignment == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment not found.").build());
+        int points = assignment.getInteger("points");
+        Document team_submission = submissionsCollection.find(and(
+                eq("course_id", courseID),
+                eq("assignment_id", assignmentID),
+                eq("team_name", teamName),
+                eq("type", "team_submission"))).first();
+
+        List<String> teams_that_graded = team_submission.getList("reviews", String.class);
+        if (teams_that_graded == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assigned teams not found for: " + teamName + "for assignment: " + assignmentID).build());
+        int total_points = 0;
+        int count_of_reviews_submitted = teams_that_graded.size();
+        for (String review : teams_that_graded) {
+            Document team_review = submissionsCollection.find(and(
+                    eq("course_id", courseID),
+                    eq("assignment_id", assignmentID),
+                    eq("reviewed_by", review),
+                    eq("type", "peer_review_submission"))).first();
+            if (team_review == null) {
+                count_of_reviews_submitted--;
+            } else {
+                if (team_review.get("grade", Integer.class) == null) {
+                    throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team: " + review + "'s review has no points.").build());
+                } else {
+                    total_points += team_review.get("grade", Integer.class);
+                }
+            }
+        }
+        double final_grade = (((double)total_points / count_of_reviews_submitted) / points) * 100;
+        final_grade = ((int)(final_grade * 100)/100.0); //round to the nearest 10th
+        submissionsCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
+    }
+
     public void makeFinalGrades(String courseID, int assignmentID) {
         Document assignment = assignmentCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
         if (assignment == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment not found.").build());
@@ -312,7 +358,7 @@ public class PeerReviewAssignmentInterface {
                 for (String review : teams_that_graded) {
                     Document team_review = submissionsCollection.find(and(
                             eq("course_id", courseID),
-                            eq("assignemnt_id", assignmentID),
+                            eq("assignment_id", assignmentID),
                             eq("reviewed_by", review),
                             eq("type", "peer_review_submission"))).first();
                     if (team_review == null) {
@@ -325,7 +371,8 @@ public class PeerReviewAssignmentInterface {
                         }
                     }
                 }
-                int final_grade = (total_points / count_of_reviews_submitted) / points;
+                double final_grade = (((double)total_points / count_of_reviews_submitted) / points) * 100;
+                final_grade = ((int)(final_grade * 100)/100.0); //round to the nearest 10th
                 submissionsCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
             }
         }

@@ -45,7 +45,7 @@ public class PeerReviewAssignmentResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("Number of reviews peer team is greater than the number of teams in the course.").build();
         }
         Document teamAssignmentsDocument = peerReviewAssignmentInterface.addAssignedTeams(assignedTeams, courseID, assignmentID);
-        peerReviewAssignmentInterface.addAllTeams(teamNames, courseID, assignmentID);
+        peerReviewAssignmentInterface.addAllTeams(teamNames, courseID, assignmentID, count);
         peerReviewAssignmentInterface.addDistroToSubmissions(assignedTeams, courseID, assignmentID);
         return Response.status(Response.Status.OK).entity(teamAssignmentsDocument).build();
     }
