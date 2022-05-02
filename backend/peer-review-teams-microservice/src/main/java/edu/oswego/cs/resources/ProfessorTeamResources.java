@@ -121,8 +121,8 @@ public class ProfessorTeamResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("delete")
     @RolesAllowed("professor")
-    public Response deleteTeam(TeamParam request) {
-        new TeamInterface().deleteTeam(request);
+    public Response deleteTeam(@Context SecurityContext securityContext, TeamParam request) {
+        new TeamInterface().deleteTeam(securityContext, request);
         return Response.status(Response.Status.OK).entity("Team successfully deleted.").build(); 
     }
 }
