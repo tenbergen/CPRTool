@@ -187,7 +187,8 @@ public class AssignmentInterface {
         Document assignmentDocument = Document.parse(assignmentDAOEntity.getEntity());
         assignmentDocument
                 .append("submission_is_past_due", false)
-                .append("peer_review_is_past_due", false);
+                .append("peer_review_is_past_due", false)
+                .append("grade-finalized", false);
 
         MongoCursor<Document> query = assignmentsCollection.find(assignmentDocument).iterator();
         if (query.hasNext()) {

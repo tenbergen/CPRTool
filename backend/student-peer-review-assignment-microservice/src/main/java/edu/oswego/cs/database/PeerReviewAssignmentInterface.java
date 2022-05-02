@@ -327,6 +327,7 @@ public class PeerReviewAssignmentInterface {
         double final_grade = (((double)total_points / count_of_reviews_submitted) / points) * 100;
         final_grade = ((int)(final_grade * 100)/100.0); //round to the nearest 10th
         submissionsCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
+        assignmentCollection.findOneAndUpdate(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), set("grade-finalized", true));
     }
 
     public void makeFinalGrades(String courseID, int assignmentID) {
@@ -374,6 +375,7 @@ public class PeerReviewAssignmentInterface {
                 double final_grade = (((double)total_points / count_of_reviews_submitted) / points) * 100;
                 final_grade = ((int)(final_grade * 100)/100.0); //round to the nearest 10th
                 submissionsCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
+                assignmentCollection.findOneAndUpdate(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), set("grade-finalized", true));
             }
         }
     }
