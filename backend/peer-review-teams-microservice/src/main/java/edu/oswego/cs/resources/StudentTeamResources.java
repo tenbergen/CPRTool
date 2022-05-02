@@ -21,7 +21,6 @@ public class StudentTeamResources {
     @Path("create")
     @RolesAllowed({"professor","student"})
     public Response createTeam(@Context SecurityContext securityContext, TeamParam request) {
-        new IdentifyingService().identifyingStudentService(securityContext, request.getStudentID());
         new TeamInterface().createTeam(securityContext, request);
         return Response.status(Response.Status.CREATED).entity("Team successfully created.").build();
     }
@@ -30,8 +29,8 @@ public class StudentTeamResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("get/all/{course_id}")
     @RolesAllowed({"professor", "student"})
-    public Response getAllUnlockedTeam(@PathParam("course_id") String courseID) {
-        return Response.status(Response.Status.OK).entity(new TeamInterface().getAllTeams(courseID)).build();
+    public Response getAllUnlockedTeam(@Context SecurityContext securityContext, @PathParam("course_id") String courseID) {
+        return Response.status(Response.Status.OK).entity(new TeamInterface().getAllTeams(securityContext, courseID)).build();
     }
     
     @GET

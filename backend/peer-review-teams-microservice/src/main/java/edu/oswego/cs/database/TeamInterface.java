@@ -24,6 +24,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,14 +68,19 @@ public class TeamInterface {
         teamCollection.insertOne(teamDocument);
     }
 
-    public List<Document> getAllTeams(String courseID) {
+    public List<Document> getAllTeams(SecurityContext securityContext, String courseID) {
         Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+        new IdentifyingService().identifyingProfessorService(securityContext, courseCollection, courseID);
 
         MongoCursor<Document> cursor = teamCollection.find(eq("course_id", courseID)).iterator();
         List<Document> teams = new ArrayList<>();
         while (cursor.hasNext()) {
             Document teamDocument = cursor.next();
+            if (securityContext.isUserInRole("student")) {
+                teamDocument.remove("team_members");
+                teamDocument.remove("team_lead");
+            }
             teams.add(teamDocument);
         }
         cursor.close();
