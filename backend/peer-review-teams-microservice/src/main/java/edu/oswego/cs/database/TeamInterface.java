@@ -54,7 +54,7 @@ public class TeamInterface {
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
         new IdentifyingService().identifyingStudentService(securityContext, request.getStudentID());
         new IdentifyingService().identifyingProfessorService(securityContext, courseCollection, request.getCourseID());
-        new SecurityService().generateTeamNameSecurity(teamCollection, courseDocument, request);
+        new SecurityService().generateTeamNameSecurity(securityContext, teamCollection, courseDocument, request);
 
         int teamSize = new TeamService().getTeamSize(courseDocument);
         TeamDAO newTeam = new TeamDAO(request.getTeamName(), request.getCourseID(), teamSize, request.getStudentID());
@@ -88,7 +88,7 @@ public class TeamInterface {
         return teams;
     }
 
-    public Document getTeamByStudentID(String courseID, String studentID) {
+    public Document getTeamByStudentID(SecurityContext securityContext, String courseID, String studentID) {
         Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
         if (!new SecurityService().isStudentValid(courseDocument, studentID))
@@ -119,20 +119,20 @@ public class TeamInterface {
     }
 
     /* Deprecated */
-    public void studentJoinTeam(TeamParam request) {
-        if (!new SecurityService().isStudentAlreadyInATeam(request.getStudentID(), request.getCourseID()))
-            joinTeam(request);
-        else if (new SecurityService().isStudentAlreadyInATeam(request.getStudentID(), request.getCourseID())) {
-            String currentTeamID = new TeamService().retrieveTeamID(request);
+    public void studentJoinTeam(SecurityContext securityContext, TeamParam request) {
+        if (!new SecurityService().isStudentAlreadyInATeam(securityContext, request.getStudentID(), request.getCourseID()))
+            joinTeam(securityContext, request);
+        else if (new SecurityService().isStudentAlreadyInATeam(securityContext, request.getStudentID(), request.getCourseID())) {
+            String currentTeamID = new TeamService().retrieveTeamID(securityContext, request);
             SwitchTeamParam switchTeamParam = new SwitchTeamParam(request.getCourseID(), request.getStudentID(), currentTeamID, request.getTeamID());
             switchTeam(switchTeamParam);
         }
     }
 
-    public void joinTeam(TeamParam request) {
+    public void joinTeam(SecurityContext securityContext, TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-        new SecurityService().joinTeamSecurity(teamCollection, courseDocument, request);
+        new SecurityService().joinTeamSecurity(securityContext,teamCollection, courseDocument, request);
 
         Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         Document teamDocument = teamCollection.find(teamDocumentFilter).first();
@@ -264,10 +264,10 @@ public class TeamInterface {
         }
     }
 
-    public void generateTeamName(TeamParam request) {
+    public void generateTeamName(SecurityContext securityContext, TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
-        new SecurityService().generateTeamNameSecurity(teamCollection, courseDocument, request);
+        new SecurityService().generateTeamNameSecurity(securityContext, teamCollection, courseDocument, request);
 
         Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         Bson teamNameUpdates = Updates.combine(

@@ -38,8 +38,7 @@ public class StudentTeamResources {
     @Path("get/{course_id}/{student_id}")
     @RolesAllowed({"professor", "student"})
     public Response getTeamByStudentID(@Context SecurityContext securityContext, @PathParam("course_id") String courseID, @PathParam("student_id") String studentID) {
-        new IdentifyingService().identifyingStudentService(securityContext, studentID);
-        return Response.status(Response.Status.OK).entity(new TeamInterface().getTeamByStudentID(courseID, studentID)).build();
+        return Response.status(Response.Status.OK).entity(new TeamInterface().getTeamByStudentID(securityContext, courseID, studentID)).build();
     }
 
     @GET
@@ -57,7 +56,7 @@ public class StudentTeamResources {
     @RolesAllowed({"professor", "student"})
     public Response joinTeam(@Context SecurityContext securityContext, TeamParam request) {
         // new IdentifyingService().identifyingStudentService(securityContext, request.getStudentID());
-        new TeamInterface().joinTeam(request);
+        new TeamInterface().joinTeam(securityContext,request);
         return Response.status(Response.Status.OK).entity("Student successfully join team.").build();
     }
 
@@ -105,7 +104,7 @@ public class StudentTeamResources {
     /* deprecated */
     public Response generateTeamName(@Context SecurityContext securityContext, TeamParam request) {
         // new IdentifyingService().identifyingStudentService(securityContext, request.getStudentID());
-        new TeamInterface().generateTeamName(request);
+        new TeamInterface().generateTeamName(securityContext, request);
         return Response.status(Response.Status.OK).entity("Team name successfully generated").build(); 
     }
 
