@@ -2,7 +2,6 @@ package edu.oswego.cs.resources;
 
 import edu.oswego.cs.database.TeamInterface;
 import edu.oswego.cs.requests.TeamParam;
-import edu.oswego.cs.services.IdentifyingService;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
