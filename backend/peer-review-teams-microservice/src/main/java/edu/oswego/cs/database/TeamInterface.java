@@ -9,6 +9,7 @@ import com.mongodb.client.model.Updates;
 import edu.oswego.cs.daos.TeamDAO;
 import edu.oswego.cs.requests.SwitchTeamParam;
 import edu.oswego.cs.requests.TeamParam;
+import edu.oswego.cs.services.IdentifyingService;
 import edu.oswego.cs.services.SecurityService;
 import edu.oswego.cs.services.TeamService;
 import org.bson.Document;
@@ -18,8 +19,11 @@ import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,9 +48,10 @@ public class TeamInterface {
         }
     }
 
-    public void createTeam(TeamParam request) {
+    public void createTeam(@Context SecurityContext securityContext, TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+        new IdentifyingService().identifyingProfessorService(securityContext, courseCollection, request.getCourseID());
         new SecurityService().generateTeamNameSecurity(teamCollection, courseDocument, request);
 
         int teamSize = new TeamService().getTeamSize(courseDocument);
