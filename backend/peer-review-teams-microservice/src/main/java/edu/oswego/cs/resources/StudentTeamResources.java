@@ -55,7 +55,6 @@ public class StudentTeamResources {
     @Path("join")
     @RolesAllowed({"professor", "student"})
     public Response joinTeam(@Context SecurityContext securityContext, TeamParam request) {
-        // new IdentifyingService().identifyingStudentService(securityContext, request.getStudentID());
         new TeamInterface().joinTeam(securityContext,request);
         return Response.status(Response.Status.OK).entity("Student successfully join team.").build();
     }

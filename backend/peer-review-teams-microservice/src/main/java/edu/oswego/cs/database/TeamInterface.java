@@ -140,6 +140,8 @@ public class TeamInterface {
     public void joinTeam(SecurityContext securityContext, TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Course not found.").build());
+        new IdentifyingService().identifyingStudentService(securityContext, request.getStudentID());
+        new IdentifyingService().identifyingProfessorService(securityContext, courseCollection, request.getCourseID());
         new SecurityService().joinTeamSecurity(securityContext,teamCollection, courseDocument, request);
 
         Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
