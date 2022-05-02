@@ -17,9 +17,6 @@ const CreateAssignmentPage = () => {
     const getAssUrl = `${profAssignmentUrl}/${courseId}/assignments`;
     const [loading, setLoading] = useState(false)
 
-    const [assignmentFocus, setAssignmentFocus] = useState(true)
-    const [peerReviewFocus, setPeerReviewFocus] = useState(false)
-
     const assignmentFileFormData = new FormData();
     const rubricFileFormData = new FormData();
     const templateFileFormData = new FormData();
@@ -80,6 +77,10 @@ const CreateAssignmentPage = () => {
 
         const sentData = {...data, points, course_id};
 
+        console.log(assignmentFileFormData.get('file'));
+        // console.log(rubricFileFormData.get('file'));
+        // console.log(templateFileFormData.get('file'));
+
         await axios.post(submitCourseUrl, sentData)
             .then((res) => {
                 console.log(res);
@@ -103,16 +104,6 @@ const CreateAssignmentPage = () => {
         navigate('/details/professor/' + courseId);
     };
 
-    const toggleAssignmentFocus = () => {
-        setPeerReviewFocus(false)
-        setAssignmentFocus(true)
-    }
-
-    const togglePeerReviewFocus = () => {
-        setAssignmentFocus(false)
-        setPeerReviewFocus(true)
-    }
-
     return (
         <div>
             { loading ? <Loader /> :
@@ -130,8 +121,8 @@ const CreateAssignmentPage = () => {
                                     <div className='cap-form'>
                                         <form onSubmit={handleSubmit}>
                                             {/*assignment field*/}
-                                            <div className={assignmentFocus ? "field-container" : ""}>
-                                                <div className="field-title"> {assignmentFocus && <span> Homework</span>} </div>
+                                            <div className="field-container">
+                                                <div className="field-title"> <span> Homework</span> </div>
                                                 <div className="field-content">
                                                     <div className='input-field cap-input-field'>
                                                         <label> Name of assignment: </label>
@@ -142,7 +133,6 @@ const CreateAssignmentPage = () => {
                                                                     name='assignment_name'
                                                                     {...input}
                                                                     required
-                                                                    onFocus={toggleAssignmentFocus}
                                                                 />
                                                             )}
                                                         </Field>
@@ -150,14 +140,12 @@ const CreateAssignmentPage = () => {
 
                                                     <div className="input-field cap-instructions">
                                                         <label> Instructions: </label>
-
                                                         <Field name='instructions'>
                                                             {({input}) => (
                                                                 <textarea
                                                                     name='instructions'
                                                                     {...input}
                                                                     required
-                                                                    onFocus={toggleAssignmentFocus}
                                                                 />
                                                             )}
                                                         </Field>
@@ -171,7 +159,6 @@ const CreateAssignmentPage = () => {
                                                             accept='.pdf,.zip,.docx'
                                                             required
                                                             onChange={(e) => fileChangeHandler(e, "assignment")}
-                                                            onFocus={toggleAssignmentFocus}
                                                         />
                                                     </div>
 
@@ -185,7 +172,6 @@ const CreateAssignmentPage = () => {
                                                                     {...input}
                                                                     required
                                                                     min={new Date().toISOString().split('T')[0]}
-                                                                    onFocus={toggleAssignmentFocus}
                                                                 />
                                                             )}
                                                         </Field>
@@ -199,7 +185,6 @@ const CreateAssignmentPage = () => {
                                                                     {...input}
                                                                     required
                                                                     onWheel={(e) => e.target.blur()}
-                                                                    onFocus={toggleAssignmentFocus}
                                                                 />
                                                             )}
                                                         </Field>
@@ -208,8 +193,8 @@ const CreateAssignmentPage = () => {
                                             </div>
 
                                             {/*peer review fields*/}
-                                            <div className={peerReviewFocus ? "field-container" : ""}>
-                                                <div className="field-title"> { peerReviewFocus && <span> Peer Review </span>} </div>
+                                            <div className="field-container">
+                                                <div className="field-title"> <span> Peer Review </span> </div>
                                                 <div className="field-content">
                                                     <div className='input-field cap-instructions'>
                                                         <label className="outfit-25"> Peer Review Instructions: </label>
@@ -219,7 +204,6 @@ const CreateAssignmentPage = () => {
                                                                     name='peer_review_instructions'
                                                                     {...input}
                                                                     required
-                                                                    onFocus={togglePeerReviewFocus}
                                                                 />
                                                             )}
                                                         </Field>
@@ -233,7 +217,6 @@ const CreateAssignmentPage = () => {
                                                             accept='.pdf,.zip,.docx'
                                                             required
                                                             onChange={(e) => fileChangeHandler(e, "rubric")}
-                                                            onFocus={togglePeerReviewFocus}
                                                         />
 
                                                         <label className="outfit-25"> Template: </label>
@@ -243,7 +226,6 @@ const CreateAssignmentPage = () => {
                                                             accept='.pdf,.zip,.docx'
                                                             required
                                                             onChange={(e) => fileChangeHandler(e, "template")}
-                                                            onFocus={togglePeerReviewFocus}
                                                         />
                                                     </div>
 
@@ -257,7 +239,6 @@ const CreateAssignmentPage = () => {
                                                                     {...input}
                                                                     required
                                                                     min={new Date().toISOString().split('T')[0]}
-                                                                    onFocus={togglePeerReviewFocus}
                                                                 />
                                                             )}
                                                         </Field>
@@ -272,7 +253,6 @@ const CreateAssignmentPage = () => {
                                                                     {...input}
                                                                     required
                                                                     onWheel={(e) => e.target.blur()}
-                                                                    onFocus={togglePeerReviewFocus}
                                                                 />
                                                             )}
                                                         </Field>
