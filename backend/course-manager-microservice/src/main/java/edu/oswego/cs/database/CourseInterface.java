@@ -92,7 +92,8 @@ public class CourseInterface {
 
         String originalCourseID = dao.courseID;
         String newCourseID = dao.abbreviation + "-" + dao.courseSection + "-" + dao.crn + "-" + dao.semester + "-" + dao.year;
-        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
+        int originalTeamSize = courseDocument.getInteger("team_size");
+        int newTeamSize = dao.teamSize;
         dao.courseID = newCourseID;
         List<String> students = courseDocument.getList("students", String.class);
         dao.students = students;
@@ -103,9 +104,8 @@ public class CourseInterface {
             if (duplicatedCourseDocument != null) throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("This course_id already exist.").build());
         }
 
-        if (!originalCourseID.equals(newCourseID)) {
-            Document duplicatedCourseDocument = courseCollection.find(and(eq("course_id", newCourseID), eq("professor_id", professorID))).first();
-            if (duplicatedCourseDocument != null) throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("This course_id already exist.").build());
+        if (originalTeamSize != newTeamSize) {
+            new CourseUtil().updateTeamSize(teamCollection, originalCourseID, originalTeamSize, newTeamSize);
         }
 
         new CourseUtil().updateCoursesArrayInProfessorDb(securityContext, professorCollection, originalCourseID, newCourseID, "UPDATE");

@@ -1,5 +1,6 @@
 package edu.oswego.cs.util;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -64,6 +65,25 @@ public class CourseUtil {
         while (cursor.hasNext()) {
             collection.deleteOne(cursor.next());
         }
+        cursor.close();
+    }
+
+    public void updateTeamSize(MongoCollection<Document> collection, String courseID, int originalTeamSize, int newTeamSize) {
+        Bson teamFilter = Filters.eq("course_id", courseID);
+        MongoCursor<Document>  cursor = collection.find(teamFilter).iterator();
+
+        while(cursor.hasNext()) {
+            Document teamDocument = cursor.next();
+            List<String> teamMembers = teamDocument.getList("team_members", String.class);
+            if (newTeamSize < teamMembers.size()) {
+                cursor.close();
+                Response response = Response.status(Response.Status.CONFLICT).entity("Team size conflict with the current number of team members in team").build();
+                throw new WebApplicationException(response);
+            } 
+            if (newTeamSize == teamMembers.size()) collection.updateOne(teamDocument, Updates.set("team_full", true));
+            else collection.updateOne(teamDocument, Updates.set("team_full", false));
+        }
+        collection.updateMany(teamFilter, Updates.set("team_size", newTeamSize));
         cursor.close();
     }
 }
