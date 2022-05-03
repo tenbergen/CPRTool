@@ -16,17 +16,16 @@ docker container stop cpr-mongo3 && docker container rm cpr-mongo3
 docker container stop cpr-mongo4 && docker container rm cpr-mongo4
 docker container stop cpr-mongo5 && docker container rm cpr-mongo5
 
-# cd into the working directory.
-cd app/ || exit
-
 # Build the project using docker-compose and start the containers.
 docker-compose -f "docker-compose.yml" up -d --build
+
+# Set the permission of the mounted volume from "root" to "default" for write permission.
+docker exec -u 0:0 cpr-professor-assignment chown 1001 /opt/ol/wlp/output/defaultServer/assignments/
+docker exec -u 0:0 cpr-student-assignment chown 1001 /opt/ol/wlp/output/defaultServer/assignments/
+docker exec -u 0:0 cpr-student-peer-review-assignment chown 1001 /opt/ol/wlp/output/defaultServer/assignments/
 
 # Prune any dangling images.
 docker image prune
 
 # Prune any dangling volumes.
 docker volume prune
-
-# Set the permission of the mounted volume from "root" to "default" for write permission.
-docker exec -u 0:0 cpr-professor-assignment chown -R 1001 /opt/ol/wlp/output/defaultServer/assignments/

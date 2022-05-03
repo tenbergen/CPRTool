@@ -68,6 +68,7 @@ services:
     build:
       context: ./backend/peer-review-teams-microservice
     container_name: cpr-peer-review-teams
+    restart: unless-stopped
     environment:
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
@@ -86,7 +87,7 @@ services:
     container_name: cpr-professor-assignment
     restart: unless-stopped
     volumes:
-      - ./assignments:/opt/ol/wlp/output/defaultServer/assignments:r
+      - ./assignments:/opt/ol/wlp/output/defaultServer/assignments
     environment:
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
@@ -103,6 +104,9 @@ services:
     build:
       context: ./backend/student-assignment-microservice
     container_name: cpr-student-assignment
+    restart: unless-stopped
+    volumes:
+      - ./assignments:/opt/ol/wlp/output/defaultServer/assignments
     environment:
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
@@ -118,7 +122,10 @@ services:
   student-peer-review-assignment:
     build:
       context: ./backend/student-peer-review-assignment-microservice
-    container_name: student-peer-review-assignment
+    container_name: cpr-student-peer-review-assignment
+    restart: unless-stopped
+    volumes:
+      - ./assignments:/opt/ol/wlp/output/defaultServer/assignments
     environment:
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
@@ -133,11 +140,11 @@ services:
 
   mongo:
     image: mongo:5.0.6
+    command: mongod --port 27037
     container_name: cpr-mongo
     restart: unless-stopped
     volumes:
       - ./db:/data/db
-      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
@@ -145,15 +152,15 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     ports:
-      - "27037:27017"
+      - "27037:27037"
 
   mongo2:
     image: mongo:5.0.6
+    command: mongod --port 27038
     container_name: cpr-mongo2
     restart: unless-stopped
     volumes:
       - ./db2:/data/db
-      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
@@ -161,15 +168,15 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     ports:
-      - "27038:27017"
+      - "27038:27038"
   
   mongo3:
     image: mongo:5.0.6
+    command: mongod --port 27039
     container_name: cpr-mongo3
     restart: unless-stopped
     volumes:
       - ./db3:/data/db
-      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
@@ -177,15 +184,15 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     ports:
-      - "27039:27017"
+      - "27039:27039"
 
   mongo4:
     image: mongo:5.0.6
+    command: mongod --port 27040
     container_name: cpr-mongo4
     restart: unless-stopped
     volumes:
       - ./db4:/data/db
-      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
@@ -193,15 +200,15 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     ports:
-      - "27040:27017"
+      - "27040:27040"
 
   mongo5:
     image: mongo:5.0.6
+    command: mongod --port 27041
     container_name: cpr-mongo5
     restart: unless-stopped
     volumes:
       - ./db5:/data/db
-      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
@@ -209,7 +216,7 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     ports:
-      - "27041:27017"
+      - "27041:27041"
 
   nginx:
     image: nginx:1.21.6

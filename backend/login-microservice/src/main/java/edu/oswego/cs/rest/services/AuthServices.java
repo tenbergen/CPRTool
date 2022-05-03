@@ -8,6 +8,8 @@ import com.ibm.websphere.security.jwt.JwtException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.rest.database.DatabaseManager;
+import edu.oswego.cs.rest.database.ProfessorCheck;
+
 import org.bson.Document;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
@@ -31,6 +33,7 @@ public class AuthServices {
     public AuthServices() {
         DatabaseManager databaseManager = new DatabaseManager();
         try {
+            new ProfessorCheck();
             MongoDatabase professorDB = databaseManager.getProfessorDB();
             professorCollection = professorDB.getCollection("professors");
         } catch (Exception e) {

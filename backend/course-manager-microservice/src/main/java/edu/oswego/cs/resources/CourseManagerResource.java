@@ -9,8 +9,10 @@ import edu.oswego.cs.database.CourseInterface;
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 @Path("professor")
 @DenyAll
@@ -21,8 +23,8 @@ public class CourseManagerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/create")
     @RolesAllowed("professor")
-    public Response createCourse(CourseDAO course) {
-        new CourseInterface().addCourse(course);
+    public Response createCourse(@Context SecurityContext securityContext, CourseDAO course) {
+        new CourseInterface().addCourse(securityContext, course);
         return Response.status(Response.Status.OK).entity("Course successfully added.").build();
     }
 
@@ -32,8 +34,8 @@ public class CourseManagerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/{courseID}/delete")
     @RolesAllowed("professor")
-    public Response deleteCourse(@PathParam("courseID") String courseID) {
-        new CourseInterface().removeCourse(courseID);
+    public Response deleteCourse(@Context SecurityContext securityContext, @PathParam("courseID") String courseID) {
+        new CourseInterface().removeCourse(securityContext, courseID);
         return Response.status(Response.Status.OK).entity("Course successfully deleted.").build();
     }
 
@@ -42,8 +44,8 @@ public class CourseManagerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/update")
     @RolesAllowed("professor")
-    public Response updateCourse(CourseDAO course) {
-        String courseID = new CourseInterface().updateCourse(course);
+    public Response updateCourse(@Context SecurityContext securityContext, CourseDAO course) {
+        String courseID = new CourseInterface().updateCourse(securityContext, course);
         return Response.status(Response.Status.OK).entity(courseID).build();
     }
 
@@ -53,13 +55,14 @@ public class CourseManagerResource {
     @RolesAllowed("professor")
     @Path("courses/{courseID}/students/{studentInfo}/add")
     public Response addStudent(
+            @Context SecurityContext securityContext,
             @PathParam("courseID") String courseID,
             @PathParam("studentInfo") String studentInfo) {
         String[] parsedStudentInfo = studentInfo.split("-");
         if (parsedStudentInfo.length < 3)
             return Response.status(Response.Status.BAD_REQUEST).entity("Add student field was not filled out properly.").build();
         StudentDAO studentDAO = new StudentDAO(parsedStudentInfo[0], parsedStudentInfo[1], parsedStudentInfo[2]);
-        new CourseInterface().addStudent(studentDAO, courseID);
+        new CourseInterface().addStudent(securityContext, studentDAO, courseID);
         return Response.status(Response.Status.OK).entity("Student successfully added.").build();
     }
 
@@ -69,10 +72,11 @@ public class CourseManagerResource {
     @RolesAllowed("professor")
     @Path("courses/{courseID}/students/{studentID}/delete")
     public Response deleteStudent(
+            @Context SecurityContext securityContext,
             @PathParam("courseID") String courseID,
             @PathParam("studentID") String studentID) {
 
-        new CourseInterface().removeStudent(studentID, courseID);
+        new CourseInterface().removeStudent(securityContext, studentID, courseID);
         return Response.status(Response.Status.OK).entity("Student successfully removed.").build();
     }
 
@@ -81,7 +85,7 @@ public class CourseManagerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/student/mass-add")
     @RolesAllowed("professor")
-    public Response addStudentByCSVFile(IMultipartBody body) {
+    public Response addStudentByCSVFile(@Context SecurityContext securityContext, IMultipartBody body) {
         FileDAO fileDAO;
         try {
             fileDAO = FileDAO.FileFactory(body.getAllAttachments());
@@ -89,10 +93,18 @@ public class CourseManagerResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("File corrupted. Try again.").build();
         }
         try {
-            new CourseInterface().addStudentsFromCSV(fileDAO);
+            new CourseInterface().addStudentsFromCSV(securityContext, fileDAO);
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Failed to add students.").build();
         }
         return Response.status(Response.Status.OK).entity("Student(s) successfully added.").build();
+    }
+
+    @DELETE
+    @Path("collection/wipe-off")
+    @RolesAllowed("admin")
+    public Response collectionWipeOff() {
+        new CourseInterface().collectionWipeOff();
+        return Response.status(Response.Status.OK).entity("Collection successfully wiped off.").build();
     }
 }
