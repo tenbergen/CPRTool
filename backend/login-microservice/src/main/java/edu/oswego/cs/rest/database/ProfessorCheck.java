@@ -40,29 +40,29 @@ public class ProfessorCheck {
         for (String s : CurrentList) {
             // Check if there are any student objects by that id if so update the courses of that professor.
             if (students.find(Filters.eq("student_id", s)).iterator().hasNext()) {
-                Document newProfessor = new Document("professor_id", s);
-                MongoCursor<Document> studentResults = students.find(Filters.eq("student_id", s)).iterator();
-                ArrayList<Object> courses = new ArrayList<>();
-                while (studentResults.hasNext()) {
-                    Document oldStudent = studentResults.next();
-                    if (oldStudent.get("courses") != null) {
-                        courses.addAll(oldStudent.getList("courses", ArrayList.class));
-                    }
-                }
-                // If they currently have a professor object add to course if there are any.
-                if (professors.find(Filters.eq("professor_id", s)).iterator().hasNext()) {
-                    for (Document oldProfessor : professors.find(Filters.eq("professor_id", s))) {
-                        if (oldProfessor.get("courses") != null) {
-                            courses.addAll(oldProfessor.getList("courses", ArrayList.class));
-                        }
-                    }
-                }
-                if (!courses.isEmpty()) {
-                    newProfessor.append("courses", courses);
-                }
-                professors.deleteMany(Filters.eq("professor_id", s));
-                professors.insertOne(newProfessor);
-                students.deleteMany(Filters.eq("student_id", s));
+                // Document newProfessor = new Document("professor_id", s);
+                // MongoCursor<Document> studentResults = students.find(Filters.eq("student_id", s)).iterator();
+                // ArrayList<Object> courses = new ArrayList<>();
+                // while (studentResults.hasNext()) {
+                //     Document oldStudent = studentResults.next();
+                //     if (oldStudent.get("courses") != null) {
+                //         courses.addAll(oldStudent.getList("courses", ArrayList.class));
+                //     }
+                // }
+                // // If they currently have a professor object add to course if there are any.
+                // if (professors.find(Filters.eq("professor_id", s)).iterator().hasNext()) {
+                //     for (Document oldProfessor : professors.find(Filters.eq("professor_id", s))) {
+                //         if (oldProfessor.get("courses") != null) {
+                //             courses.addAll(oldProfessor.getList("courses", ArrayList.class));
+                //         }
+                //     }
+                // }
+                // if (!courses.isEmpty()) {
+                //     newProfessor.append("courses", courses);
+                // }
+                // professors.deleteMany(Filters.eq("professor_id", s));
+                // professors.insertOne(newProfessor);
+                // students.deleteMany(Filters.eq("student_id", s));
             } else {
                 // If they have no student object, and they are not already a professor make an object.
                 if (!professors.find(Filters.eq("professor_id", s)).iterator().hasNext()) {
