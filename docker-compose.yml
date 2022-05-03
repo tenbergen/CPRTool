@@ -145,7 +145,6 @@ services:
     restart: unless-stopped
     volumes:
       - ./db:/data/db
-      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
@@ -162,7 +161,6 @@ services:
     restart: unless-stopped
     volumes:
       - ./db2:/data/db
-      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
@@ -179,7 +177,6 @@ services:
     restart: unless-stopped
     volumes:
       - ./db3:/data/db
-      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
@@ -196,7 +193,6 @@ services:
     restart: unless-stopped
     volumes:
       - ./db4:/data/db
-      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
@@ -213,7 +209,6 @@ services:
     restart: unless-stopped
     volumes:
       - ./db5:/data/db
-      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
