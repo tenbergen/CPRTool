@@ -95,7 +95,7 @@ public class TeamInterface {
         new IdentifyingService().identifyingStudentService(securityContext, studentID);
         new IdentifyingService().identifyingProfessorService(securityContext, courseCollection, courseID);
 
-        if (new SecurityService().isStudentAlreadyInATeam(securityContext, studentID, courseID)) {
+        if (new SecurityService().isStudentAlreadyInATeam(teamCollection, securityContext, studentID, courseID)) {
             MongoCursor<Document> cursor = teamCollection.find(eq("course_id", courseID)).iterator();
             while (cursor.hasNext()) {
                 Document teamDocument = cursor.next();
@@ -127,9 +127,9 @@ public class TeamInterface {
 
     /* Deprecated */
     public void studentJoinTeam(SecurityContext securityContext, TeamParam request) {
-        if (!new SecurityService().isStudentAlreadyInATeam(securityContext, request.getStudentID(), request.getCourseID()))
+        if (!new SecurityService().isStudentAlreadyInATeam(teamCollection, securityContext, request.getStudentID(), request.getCourseID()))
             joinTeam(securityContext, request);
-        else if (new SecurityService().isStudentAlreadyInATeam(securityContext, request.getStudentID(), request.getCourseID())) {
+        else if (new SecurityService().isStudentAlreadyInATeam(teamCollection, securityContext, request.getStudentID(), request.getCourseID())) {
             String currentTeamID = new TeamService().retrieveTeamID(securityContext, request);
             SwitchTeamParam switchTeamParam = new SwitchTeamParam(request.getCourseID(), request.getStudentID(), currentTeamID, request.getTeamID());
             switchTeam(switchTeamParam);
