@@ -11,6 +11,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static com.mongodb.client.model.Filters.*;
@@ -169,6 +171,8 @@ public class AssignmentInterface {
     }
 
     public Document allAssignments(String couse_id,String student_id){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime now = LocalDateTime.now();
         MongoCursor<Document> submissions = submissionCollection.find(
                 and(
                         eq("course_id",couse_id),
@@ -180,6 +184,9 @@ public class AssignmentInterface {
         List<Document>AllSubmissions = new ArrayList<>();
         while(submissions.hasNext()){
             Document submission = submissions.next();
+            if (submission.get("peer_review_due_date").equals(dtf.format(now)) && (int) submission.get("grade") != -1){
+                makeFinalGrade(couse_id, (int)submission.get("assignment_id"), submission.get("team_name").toString());
+            }
             if(submission.getInteger("assignment_id")==null){
                 throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No ID in this submission").build());
             }
@@ -201,6 +208,42 @@ public class AssignmentInterface {
                     .append("grade", grade));
         }
         return new Document("submissions",AllSubmissions);
+    }
+
+    public void makeFinalGrade(String courseID, int assignmentID, String teamName) {
+        Document assignment = assignmentsCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        if (assignment == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment not found.").build());
+        int points = assignment.getInteger("points");
+        Document team_submission = submissionCollection.find(and(
+                eq("course_id", courseID),
+                eq("assignment_id", assignmentID),
+                eq("team_name", teamName),
+                eq("type", "team_submission"))).first();
+
+        List<String> teams_that_graded = team_submission.getList("reviews", String.class);
+        if (teams_that_graded == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assigned teams not found for: " + teamName + "for assignment: " + assignmentID).build());
+        int total_points = 0;
+        int count_of_reviews_submitted = teams_that_graded.size();
+        for (String review : teams_that_graded) {
+            Document team_review = submissionCollection.find(and(
+                    eq("course_id", courseID),
+                    eq("assignment_id", assignmentID),
+                    eq("reviewed_by", review),
+                    eq("type", "peer_review_submission"))).first();
+            if (team_review == null) {
+                count_of_reviews_submitted--;
+            } else {
+                if (team_review.get("grade", Integer.class) == null) {
+                    throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team: " + review + "'s review has no points.").build());
+                } else {
+                    total_points += team_review.get("grade", Integer.class);
+                }
+            }
+        }
+        double final_grade = (((double)total_points / count_of_reviews_submitted) / points) * 100;
+        final_grade = ((int)(final_grade * 100)/100.0); //round to the nearest 10th
+        submissionCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
     }
 
     public List<Document> getToDosByCourse(String courseID, String studentID) {
