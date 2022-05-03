@@ -171,8 +171,13 @@ public class AssignmentInterface {
     }
 
     public Document allAssignments(String couse_id,String student_id){
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDateTime now = LocalDateTime.now();
+
+        //Set up for checking due date
+        Calendar calendar = Calendar.getInstance();
+        String[] splitPeerReviewDueDate;
+        Date peerReviewDueDate;
+        Date currentDate = new Date();
+
         MongoCursor<Document> submissions = submissionCollection.find(
                 and(
                         eq("course_id",couse_id),
@@ -184,8 +189,18 @@ public class AssignmentInterface {
         List<Document>AllSubmissions = new ArrayList<>();
         while(submissions.hasNext()){
             Document submission = submissions.next();
-            if (submission.get("peer_review_due_date").equals(dtf.format(now)) && (int) submission.get("grade") != -1){
-                makeFinalGrades(couse_id, (int)submission.get("assignment_id"));
+
+            // check if peer review is pass due and not graded, finalize grades if so.     sideNote: date format -> yyyy-MM-dd
+            if ((int) submission.get("grade") != -1) {
+                splitPeerReviewDueDate = submission.get("peer_review_due_date").toString().split("-");
+                calendar.set(Calendar.YEAR, Integer.parseInt(splitPeerReviewDueDate[0]));
+                calendar.set(Calendar.MONTH, Integer.parseInt(splitPeerReviewDueDate[1]));
+                calendar.set(Calendar.DATE, Integer.parseInt(splitPeerReviewDueDate[2]));
+                peerReviewDueDate = calendar.getTime();
+
+                if (currentDate.after(peerReviewDueDate)) {
+                    makeFinalGrades(couse_id, (int) submission.get("assignment_id"));
+                }
             }
             if(submission.getInteger("assignment_id")==null){
                 throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No ID in this submission").build());
