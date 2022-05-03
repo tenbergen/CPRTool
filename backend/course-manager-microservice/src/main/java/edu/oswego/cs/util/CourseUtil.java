@@ -86,9 +86,11 @@ public class CourseUtil {
             ))
             .map(follower -> follower.getInteger("membersCount"))
             .into(new ArrayList<>());
-        
-        if (newTeamSize < Collections.max(teamMembersCount)) 
-            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Team size conflict with the current number of team members in team.").build());
+            
+        if (teamMembersCount.size() > 0) {
+            if (newTeamSize < Collections.max(teamMembersCount)) 
+                throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Team size conflict with the current number of team members in team.").build());
+        }
             
         while(cursor.hasNext()) {
             Document teamDocument = cursor.next();
