@@ -72,6 +72,7 @@ public class CourseUtil {
     }
 
     public void updateTeamSize(MongoCollection<Document> collection, String courseID, int originalTeamSize, int newTeamSize) {
+        if (newTeamSize == 0) throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Team size can not be zero.").build());
         Bson teamFilter = Filters.eq("course_id", courseID);
         MongoCursor<Document>  cursor = collection.find(teamFilter).iterator();
         
@@ -87,7 +88,7 @@ public class CourseUtil {
             .into(new ArrayList<>());
         
         if (newTeamSize < Collections.max(teamMembersCount)) 
-            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Team size conflict with the current number of team members in team").build());
+            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Team size conflict with the current number of team members in team.").build());
             
         while(cursor.hasNext()) {
             Document teamDocument = cursor.next();
