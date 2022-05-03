@@ -12,13 +12,13 @@ This web application is made to be built on bare metal Linux environment using D
 
 **Step 2:** At the root of the directory, create a `.env` file using `.env.example` as the template and fill out the variables.
 
-**Step 3:** Run `sh build-app.sh` to build and start the Docker containers.
+**Step 3:** Execute `sh build-app.sh` to build and start the Docker containers.
 
-**Step 4:** Run `mongo-init.sh` to initialize user database login credentials. This is only necessary on the very first build of the application.
+**Step 4:** In `scripts` directory, execute `mongo-init.sh` to initialize user database login credentials. This is only necessary on the very first build of the application.
 
 The web application should be running on the specified domain in your `.env` file.
 
-Optionally:
+Optionally, in `scripts` directory:
 - if you wish to change the user password, execute `mongo-changepwd.sh`. 
 - To delete everything from all databases as well as saved files, execute `delete-db.sh`.
 
