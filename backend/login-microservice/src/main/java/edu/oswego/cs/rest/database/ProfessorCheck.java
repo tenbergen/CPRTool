@@ -39,7 +39,7 @@ public class ProfessorCheck {
         // Promote any new professors.
         for (String s : CurrentList) {
             // Check if there are any student objects by that id if so update the courses of that professor.
-            if (students.find(Filters.eq("student_id", s)).iterator().hasNext()) {
+            // if (students.find(Filters.eq("student_id", s)).iterator().hasNext()) {
                 // Document newProfessor = new Document("professor_id", s);
                 // MongoCursor<Document> studentResults = students.find(Filters.eq("student_id", s)).iterator();
                 // ArrayList<Object> courses = new ArrayList<>();
@@ -63,25 +63,25 @@ public class ProfessorCheck {
                 // professors.deleteMany(Filters.eq("professor_id", s));
                 // professors.insertOne(newProfessor);
                 // students.deleteMany(Filters.eq("student_id", s));
-            } else {
+            // } else {
                 // If they have no student object, and they are not already a professor make an object.
                 if (!professors.find(Filters.eq("professor_id", s)).iterator().hasNext()) {
                     Document professorDocument = new Document("professor_id", s);
                     professorDocument.append("courses", new ArrayList<String>());
                     professors.insertOne(professorDocument);
                 }
-            }
+            // }
         }
         // Demote any present in Old but not in new.
         for (String s : OldList) {
             if (!CurrentList.contains(s)) {
-                Document oldProf = professors.find(Filters.eq("professor_id", s)).first();
-                Document newStudent = new Document("student_id", s);
-                if (oldProf.get("courses") != null) {
-                    List<String> courses = oldProf.getList("courses", String.class);
-                    newStudent.append("courses", courses);
-                }
-                students.insertOne(newStudent);
+                // Document oldProf = professors.find(Filters.eq("professor_id", s)).first();
+                // Document newStudent = new Document("student_id", s);
+                // if (oldProf.get("courses") != null) {
+                //     List<String> courses = oldProf.getList("courses", String.class);
+                //     newStudent.append("courses", courses);
+                // }
+                // students.insertOne(newStudent);
                 professors.deleteMany(Filters.eq("professor_id", s));
             }
         }
