@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Initialize mongodb user auth credentials.
+
 docker exec -it cpr-mongo bash -c 'mongosh --port 27037 -- "$MONGO_INITDB_DATABASE" <<EOF
     var rootUser = "$MONGO_INITDB_ROOT_USERNAME";
     var rootPassword = "$MONGO_INITDB_ROOT_PASSWORD";

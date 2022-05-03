@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Run this script to remove all content from all databases and subdirectories in assignment directory.
+
 docker exec -it cpr-mongo bash -c "mongosh --port 27037 -u root -p "'$MONGO_INITDB_ROOT_PASSWORD'" -- "$MONGO_INITDB_DATABASE" <<EOF
     use cpr;
     db.students.drop();
