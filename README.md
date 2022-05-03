@@ -14,11 +14,13 @@ This web application is made to be built on bare metal Linux environment using D
 
 **Step 3:** Run `sh build-app.sh` to build and start the Docker containers.
 
-If the database login credentials that you specified in `.env` were not being setup automatically on your first run, you may do so manually by executing:
-1. `docker exec -it <database container> bash`
-2. Execute the content from `mongo-init.sh`
+**Step 4:** Run `mongo-init.sh` to initialize user database login credentials. This is only necessary on the very first build of the application.
 
 The web application should be running on the specified domain in your `.env` file.
+
+Optionally:
+- if you wish to change the user password, execute `mongo-changepwd.sh`. 
+- To delete everything from all databases as well as saved files, execute `delete-db.sh`.
 
 ## Local Development Environment
 
