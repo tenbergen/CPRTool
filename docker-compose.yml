@@ -87,7 +87,7 @@ services:
     container_name: cpr-professor-assignment
     restart: unless-stopped
     volumes:
-      - ./assignments:/opt/ol/wlp/output/defaultServer/assignments:r
+      - ./assignments:/opt/ol/wlp/output/defaultServer/assignments
     environment:
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
@@ -106,7 +106,7 @@ services:
     container_name: cpr-student-assignment
     restart: unless-stopped
     volumes:
-      - ./assignments:/opt/ol/wlp/output/defaultServer/assignments:r
+      - ./assignments:/opt/ol/wlp/output/defaultServer/assignments
     environment:
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
@@ -125,7 +125,7 @@ services:
     container_name: cpr-student-peer-review-assignment
     restart: unless-stopped
     volumes:
-      - ./assignments:/opt/ol/wlp/output/defaultServer/assignments:r
+      - ./assignments:/opt/ol/wlp/output/defaultServer/assignments
     environment:
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
