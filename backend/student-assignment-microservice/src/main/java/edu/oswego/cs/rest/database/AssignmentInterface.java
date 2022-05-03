@@ -185,7 +185,7 @@ public class AssignmentInterface {
         while(submissions.hasNext()){
             Document submission = submissions.next();
             if (submission.get("peer_review_due_date").equals(dtf.format(now)) && (int) submission.get("grade") != -1){
-                makeFinalGrade(couse_id, (int)submission.get("assignment_id"), submission.get("team_name").toString());
+                makeFinalGrades(couse_id, (int)submission.get("assignment_id"));
             }
             if(submission.getInteger("assignment_id")==null){
                 throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No ID in this submission").build());
@@ -210,40 +210,54 @@ public class AssignmentInterface {
         return new Document("submissions",AllSubmissions);
     }
 
-    public void makeFinalGrade(String courseID, int assignmentID, String teamName) {
+    public void makeFinalGrades(String courseID, int assignmentID) {
         Document assignment = assignmentsCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
         if (assignment == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment not found.").build());
+        List<String> allTeams = assignment.getList("all_teams", String.class);
         int points = assignment.getInteger("points");
-        Document team_submission = submissionCollection.find(and(
-                eq("course_id", courseID),
-                eq("assignment_id", assignmentID),
-                eq("team_name", teamName),
-                eq("type", "team_submission"))).first();
-
-        List<String> teams_that_graded = team_submission.getList("reviews", String.class);
-        if (teams_that_graded == null)
-            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assigned teams not found for: " + teamName + "for assignment: " + assignmentID).build());
-        int total_points = 0;
-        int count_of_reviews_submitted = teams_that_graded.size();
-        for (String review : teams_that_graded) {
-            Document team_review = submissionCollection.find(and(
+        for (String team : allTeams) {
+            Document team_submission = submissionCollection.find(and(
                     eq("course_id", courseID),
                     eq("assignment_id", assignmentID),
-                    eq("reviewed_by", review),
-                    eq("type", "peer_review_submission"))).first();
-            if (team_review == null) {
-                count_of_reviews_submitted--;
+                    eq("team_name", team),
+                    eq("type", "team_submission"))).first();
+
+            if (team_submission == null) {
+                Document blankSubmission = new Document()
+                        .append("course_id", courseID)
+                        .append("assignment_id", assignmentID)
+                        .append("team_name", team)
+                        .append("type", "team_submission")
+                        .append("grade", 0);
+                submissionCollection.insertOne(blankSubmission);
             } else {
-                if (team_review.get("grade", Integer.class) == null) {
-                    throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team: " + review + "'s review has no points.").build());
-                } else {
-                    total_points += team_review.get("grade", Integer.class);
+                List<String> teams_that_graded = team_submission.getList("reviews", String.class);
+                if (teams_that_graded == null)
+                    throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assigned teams not found for: " + team + "for assignment: " + assignmentID).build());
+                int total_points = 0;
+                int count_of_reviews_submitted = teams_that_graded.size();
+                for (String review : teams_that_graded) {
+                    Document team_review = submissionCollection.find(and(
+                            eq("course_id", courseID),
+                            eq("assignment_id", assignmentID),
+                            eq("reviewed_by", review),
+                            eq("type", "peer_review_submission"))).first();
+                    if (team_review == null) {
+                        count_of_reviews_submitted--;
+                    } else {
+                        if (team_review.get("grade", Integer.class) == null) {
+                            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team: " + review + "'s review has no points.").build());
+                        } else {
+                            total_points += team_review.get("grade", Integer.class);
+                        }
+                    }
                 }
+                double final_grade = (((double)total_points / count_of_reviews_submitted) / points) * 100;
+                final_grade = ((int)(final_grade * 100)/100.0); //round to the nearest 10th
+                submissionCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
+                assignmentsCollection.findOneAndUpdate(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), set("grade_finalized", true));
             }
         }
-        double final_grade = (((double)total_points / count_of_reviews_submitted) / points) * 100;
-        final_grade = ((int)(final_grade * 100)/100.0); //round to the nearest 10th
-        submissionCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
     }
 
     public List<Document> getToDosByCourse(String courseID, String studentID) {
