@@ -55,13 +55,14 @@ public class CourseManagerResource {
     @RolesAllowed("professor")
     @Path("courses/{courseID}/students/{studentInfo}/add")
     public Response addStudent(
+            @Context SecurityContext securityContext,
             @PathParam("courseID") String courseID,
             @PathParam("studentInfo") String studentInfo) {
         String[] parsedStudentInfo = studentInfo.split("-");
         if (parsedStudentInfo.length < 3)
             return Response.status(Response.Status.BAD_REQUEST).entity("Add student field was not filled out properly.").build();
         StudentDAO studentDAO = new StudentDAO(parsedStudentInfo[0], parsedStudentInfo[1], parsedStudentInfo[2]);
-        new CourseInterface().addStudent(studentDAO, courseID);
+        new CourseInterface().addStudent(securityContext, studentDAO, courseID);
         return Response.status(Response.Status.OK).entity("Student successfully added.").build();
     }
 
@@ -71,10 +72,11 @@ public class CourseManagerResource {
     @RolesAllowed("professor")
     @Path("courses/{courseID}/students/{studentID}/delete")
     public Response deleteStudent(
+            @Context SecurityContext securityContext,
             @PathParam("courseID") String courseID,
             @PathParam("studentID") String studentID) {
 
-        new CourseInterface().removeStudent(studentID, courseID);
+        new CourseInterface().removeStudent(securityContext, studentID, courseID);
         return Response.status(Response.Status.OK).entity("Student successfully removed.").build();
     }
 
@@ -83,7 +85,7 @@ public class CourseManagerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/course/student/mass-add")
     @RolesAllowed("professor")
-    public Response addStudentByCSVFile(IMultipartBody body) {
+    public Response addStudentByCSVFile(@Context SecurityContext securityContext, IMultipartBody body) {
         FileDAO fileDAO;
         try {
             fileDAO = FileDAO.FileFactory(body.getAllAttachments());
@@ -91,7 +93,7 @@ public class CourseManagerResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("File corrupted. Try again.").build();
         }
         try {
-            new CourseInterface().addStudentsFromCSV(fileDAO);
+            new CourseInterface().addStudentsFromCSV(securityContext, fileDAO);
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Failed to add students.").build();
         }

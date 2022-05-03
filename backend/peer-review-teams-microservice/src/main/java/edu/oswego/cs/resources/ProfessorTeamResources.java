@@ -9,8 +9,10 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 import edu.oswego.cs.database.TeamInterface;
 import edu.oswego.cs.requests.TeamParam;
@@ -24,8 +26,8 @@ public class ProfessorTeamResources {
     @Path("get/all/{course_id}")
     @RolesAllowed("admin")
     /* Deprecated */
-    public Response getAllTeams(@PathParam("course_id") String courseID) {
-        return Response.status(Response.Status.OK).entity(new TeamInterface().getAllTeams(courseID)).build();
+    public Response getAllTeams(@Context SecurityContext securityContext, @PathParam("course_id") String courseID) {
+        return Response.status(Response.Status.OK).entity(new TeamInterface().getAllTeams(securityContext,courseID)).build();
     }
 
     @PUT
@@ -55,8 +57,8 @@ public class ProfessorTeamResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/add-student")
     @RolesAllowed("professor")
-    public Response addStudent(TeamParam request) {
-        new TeamInterface().joinTeam(request);
+    public Response addStudent(@Context SecurityContext securityContext, TeamParam request) {
+        new TeamInterface().joinTeam(securityContext, request);
         return Response.status(Response.Status.OK).entity("Student successfully added to team.").build(); 
     }
 
@@ -65,8 +67,8 @@ public class ProfessorTeamResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/remove-student")
     @RolesAllowed("professor")
-    public Response removeTeamMember(TeamParam request) {
-        new TeamInterface().removeTeamMember(request);
+    public Response removeTeamMember(@Context SecurityContext securityContext, TeamParam request) {
+        new TeamInterface().removeTeamMember(securityContext, request);
         return Response.status(Response.Status.OK).entity("Student successfully removed from team.").build(); 
     }
 
@@ -119,8 +121,8 @@ public class ProfessorTeamResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("delete")
     @RolesAllowed("professor")
-    public Response deleteTeam(TeamParam request) {
-        new TeamInterface().deleteTeam(request);
+    public Response deleteTeam(@Context SecurityContext securityContext, TeamParam request) {
+        new TeamInterface().deleteTeam(securityContext, request);
         return Response.status(Response.Status.OK).entity("Team successfully deleted.").build(); 
     }
 }

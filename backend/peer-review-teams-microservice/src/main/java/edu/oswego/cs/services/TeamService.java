@@ -5,15 +5,18 @@ import edu.oswego.cs.requests.TeamParam;
 import org.bson.Document;
 
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class TeamService {
 
-    public String generateTeamID(String courseID){
-        List<Document> teamDocuments = new TeamInterface().getAllTeams(courseID);
+    public String generateTeamID(@Context SecurityContext securityContext, String courseID){
+        List<Document> teamDocuments = new TeamInterface().getAllTeams(securityContext, courseID);
         
         Set<String> teamIDs = new HashSet<>();
         for (Document teamDocument : teamDocuments) 
@@ -30,8 +33,8 @@ public class TeamService {
         return teamSize;
     }
 
-    public String retrieveTeamID(TeamParam request) {
-        List<Document> teamDocuments = new TeamInterface().getAllTeams(request.getCourseID());
+    public String retrieveTeamID(@Context SecurityContext securityContext, TeamParam request) {
+        List<Document> teamDocuments = new TeamInterface().getAllTeams(securityContext, request.getCourseID());
         if (teamDocuments == null || teamDocuments.size() == 0) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("No teams found.").build());
 
         for (Document teamDocument : teamDocuments) {

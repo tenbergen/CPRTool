@@ -1,5 +1,7 @@
 package edu.oswego.cs.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -9,7 +11,9 @@ import javax.ws.rs.core.SecurityContext;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
+import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Updates;
 
 import org.bson.Document;
@@ -64,6 +68,35 @@ public class CourseUtil {
         while (cursor.hasNext()) {
             collection.deleteOne(cursor.next());
         }
+        cursor.close();
+    }
+
+    public void updateTeamSize(MongoCollection<Document> collection, String courseID, int originalTeamSize, int newTeamSize) {
+        if (newTeamSize == 0) throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Team size can not be zero.").build());
+        Bson teamFilter = Filters.eq("course_id", courseID);
+        MongoCursor<Document>  cursor = collection.find(teamFilter).iterator();
+        
+        List<Integer> teamMembersCount = collection.aggregate(
+            Arrays.asList(
+                Aggregates.match(Filters.eq("course_id", courseID)),
+                Aggregates.project(Projections.computed(
+                    "membersCount",
+                    Projections.computed("$size", "$team_members"))
+                    )
+            ))
+            .map(follower -> follower.getInteger("membersCount"))
+            .into(new ArrayList<>());
+        
+        if (newTeamSize < Collections.max(teamMembersCount)) 
+            throw new WebApplicationException(Response.status(Response.Status.CONFLICT).entity("Team size conflict with the current number of team members in team.").build());
+            
+        while(cursor.hasNext()) {
+            Document teamDocument = cursor.next();
+            List<String> teamMembers = teamDocument.getList("team_members", String.class);
+            if (newTeamSize == teamMembers.size()) collection.updateOne(teamDocument, Updates.set("team_full", true));
+            else collection.updateOne(teamDocument, Updates.set("team_full", false));
+        }
+        collection.updateMany(teamFilter, Updates.set("team_size", newTeamSize));
         cursor.close();
     }
 }

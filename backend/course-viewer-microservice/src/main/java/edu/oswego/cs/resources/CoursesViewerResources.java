@@ -10,8 +10,11 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+
 import java.util.List;
 
 @Path("professor")
@@ -21,8 +24,8 @@ public class CoursesViewerResources {
     @RolesAllowed("professor")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses")
-    public Response viewAllCourses() {
-        List<Document> courses = new CourseInterface().getAllCourses();
+    public Response viewAllCourses(@Context SecurityContext securityContext) {
+        List<Document> courses = new CourseInterface().getAllCourses(securityContext);
         return Response.status(Response.Status.OK).entity(courses).build();
     }
 
@@ -30,8 +33,8 @@ public class CoursesViewerResources {
     @RolesAllowed("professor")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/{courseID}")
-    public Response viewCourse(@PathParam("courseID") String courseID) {
-        Document document = new CourseInterface().getCourse(courseID);
+    public Response viewCourse(@Context SecurityContext securityContext, @PathParam("courseID") String courseID) {
+        Document document = new CourseInterface().getCourse(securityContext, courseID);
         return Response.status(Response.Status.OK).entity(document).build();
     }
 
@@ -54,11 +57,11 @@ public class CoursesViewerResources {
     }
 
     @GET
-    @RolesAllowed("professor")
+    @RolesAllowed({"professor", "student"})
     @Produces(MediaType.APPLICATION_JSON)
     @Path("students/{studentID}")
-    public Response viewStudent(@PathParam("studentID") String studentID) {
-        Document document = new CourseInterface().getStudent(studentID);
+    public Response viewStudent(@Context SecurityContext securityContext, @PathParam("studentID") String studentID) {
+        Document document = new CourseInterface().getStudent(securityContext, studentID);
         return Response.status(Response.Status.OK).entity(document).build();
     }
 
@@ -66,8 +69,8 @@ public class CoursesViewerResources {
     @RolesAllowed("professor")
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/{courseID}/students")
-    public Response viewStudentsInCourse(@PathParam("courseID") String courseID) {
-        List<Document> studentDocuments = new CourseInterface().getStudentsInCourse(courseID);
+    public Response viewStudentsInCourse(@Context SecurityContext securityContext, @PathParam("courseID") String courseID) {
+        List<Document> studentDocuments = new CourseInterface().getStudentsInCourse(securityContext, courseID);
         return Response.status(Response.Status.OK).entity(studentDocuments).build();
     }
 /*
