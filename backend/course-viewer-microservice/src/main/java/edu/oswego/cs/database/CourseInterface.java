@@ -76,10 +76,11 @@ public class CourseInterface {
         return students;
     }
 
-    public Document getStudent(String studentID) {
+    public Document getStudent(SecurityContext securityContext, String studentID) {
         Document document = studentCollection.find(eq("student_id", studentID)).first();
         if (document == null)
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This student does not exist.").build());
+        if (securityContext.isUserInRole("student")) document.remove("courses");
         return document;
     }
 

@@ -57,11 +57,11 @@ public class CoursesViewerResources {
     }
 
     @GET
-    @RolesAllowed("professor")
+    @RolesAllowed({"professor", "student"})
     @Produces(MediaType.APPLICATION_JSON)
     @Path("students/{studentID}")
-    public Response viewStudent(@PathParam("studentID") String studentID) {
-        Document document = new CourseInterface().getStudent(studentID);
+    public Response viewStudent(@Context SecurityContext securityContext, @PathParam("studentID") String studentID) {
+        Document document = new CourseInterface().getStudent(securityContext, studentID);
         return Response.status(Response.Status.OK).entity(document).build();
     }
 
