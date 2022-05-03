@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 @ApplicationScoped
 public class ProfessorCheck {
@@ -45,14 +46,14 @@ public class ProfessorCheck {
                 while (studentResults.hasNext()) {
                     Document oldStudent = studentResults.next();
                     if (oldStudent.get("courses") != null) {
-                        courses.addAll(oldStudent.get("courses", ArrayList.class));
+                        courses.addAll(oldStudent.getList("courses", ArrayList.class));
                     }
                 }
                 // If they currently have a professor object add to course if there are any.
                 if (professors.find(Filters.eq("professor_id", s)).iterator().hasNext()) {
                     for (Document oldProfessor : professors.find(Filters.eq("professor_id", s))) {
                         if (oldProfessor.get("courses") != null) {
-                            courses.addAll(oldProfessor.get("courses", ArrayList.class));
+                            courses.addAll(oldProfessor.getList("courses", ArrayList.class));
                         }
                     }
                 }
@@ -65,7 +66,9 @@ public class ProfessorCheck {
             } else {
                 // If they have no student object, and they are not already a professor make an object.
                 if (!professors.find(Filters.eq("professor_id", s)).iterator().hasNext()) {
-                    professors.insertOne(new Document("professor_id", s));
+                    Document professorDocument = new Document("professor_id", s);
+                    professorDocument.append("courses", new ArrayList<String>());
+                    professors.insertOne(professorDocument);
                 }
             }
         }
@@ -75,13 +78,14 @@ public class ProfessorCheck {
                 Document oldProf = professors.find(Filters.eq("professor_id", s)).first();
                 Document newStudent = new Document("student_id", s);
                 if (oldProf.get("courses") != null) {
-                    ArrayList courses = oldProf.get("courses", ArrayList.class);
+                    List<String> courses = oldProf.getList("courses", String.class);
                     newStudent.append("courses", courses);
                 }
                 students.insertOne(newStudent);
                 professors.deleteMany(Filters.eq("professor_id", s));
             }
         }
+        br.close();
     }
 
     public String getPath() {
