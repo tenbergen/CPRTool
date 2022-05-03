@@ -101,6 +101,9 @@ public class PeerReviewAssignmentInterface {
         if (currentNumOfReviews == (int) assignmentDocument.get("reviews_per_team")){
             makeFinalGrade(courseID, assignmentID, targetTeam);
         }
+        if (assignmentDocument.get("completed_teams") == assignmentDocument.get("assigned_teams")){
+            assignmentCollection.findOneAndUpdate(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), set("grade_finalized", true));
+        }
     }
 
     public List<String> getCourseStudentIDs(String courseID) {
@@ -374,6 +377,7 @@ public class PeerReviewAssignmentInterface {
                 double final_grade = (((double)total_points / count_of_reviews_submitted) / points) * 100;
                 final_grade = ((int)(final_grade * 100)/100.0); //round to the nearest 10th
                 submissionsCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
+                assignmentCollection.findOneAndUpdate(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), set("grade_finalized", true));
             }
         }
     }
