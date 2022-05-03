@@ -3,7 +3,6 @@ package edu.oswego.cs.rest.database;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import edu.oswego.cs.rest.daos.AssignmentDAO;
 import edu.oswego.cs.rest.daos.FileDAO;
 import org.bson.Document;
 
@@ -169,6 +168,13 @@ public class AssignmentInterface {
     }
 
     public Document allAssignments(String couse_id,String student_id){
+
+        //Set up for checking due date
+        Calendar calendar = Calendar.getInstance();
+        String[] splitPeerReviewDueDate;
+        Date peerReviewDueDate;
+        Date currentDate = new Date();
+
         MongoCursor<Document> submissions = submissionCollection.find(
                 and(
                         eq("course_id",couse_id),
@@ -180,6 +186,19 @@ public class AssignmentInterface {
         List<Document>AllSubmissions = new ArrayList<>();
         while(submissions.hasNext()){
             Document submission = submissions.next();
+
+            // check if peer review is pass due and not graded, finalize grades if so.     sideNote: date format -> yyyy-MM-dd
+            if ((int) submission.get("grade") != -1) {
+                splitPeerReviewDueDate = submission.get("peer_review_due_date").toString().split("-");
+                calendar.set(Calendar.YEAR, Integer.parseInt(splitPeerReviewDueDate[0]));
+                calendar.set(Calendar.MONTH, Integer.parseInt(splitPeerReviewDueDate[1]));
+                calendar.set(Calendar.DATE, Integer.parseInt(splitPeerReviewDueDate[2]));
+                peerReviewDueDate = calendar.getTime();
+
+                if (currentDate.after(peerReviewDueDate)) {
+                    makeFinalGrades(couse_id, (int) submission.get("assignment_id"));
+                }
+            }
             if(submission.getInteger("assignment_id")==null){
                 throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No ID in this submission").build());
             }
@@ -201,6 +220,56 @@ public class AssignmentInterface {
                     .append("grade", grade));
         }
         return new Document("submissions",AllSubmissions);
+    }
+
+    public void makeFinalGrades(String courseID, int assignmentID) {
+        Document assignment = assignmentsCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        if (assignment == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment not found.").build());
+        List<String> allTeams = assignment.getList("all_teams", String.class);
+        int points = assignment.getInteger("points");
+        for (String team : allTeams) {
+            Document team_submission = submissionCollection.find(and(
+                    eq("course_id", courseID),
+                    eq("assignment_id", assignmentID),
+                    eq("team_name", team),
+                    eq("type", "team_submission"))).first();
+
+            if (team_submission == null) {
+                Document blankSubmission = new Document()
+                        .append("course_id", courseID)
+                        .append("assignment_id", assignmentID)
+                        .append("team_name", team)
+                        .append("type", "team_submission")
+                        .append("grade", 0);
+                submissionCollection.insertOne(blankSubmission);
+            } else {
+                List<String> teams_that_graded = team_submission.getList("reviews", String.class);
+                if (teams_that_graded == null)
+                    throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assigned teams not found for: " + team + "for assignment: " + assignmentID).build());
+                int total_points = 0;
+                int count_of_reviews_submitted = teams_that_graded.size();
+                for (String review : teams_that_graded) {
+                    Document team_review = submissionCollection.find(and(
+                            eq("course_id", courseID),
+                            eq("assignment_id", assignmentID),
+                            eq("reviewed_by", review),
+                            eq("type", "peer_review_submission"))).first();
+                    if (team_review == null) {
+                        count_of_reviews_submitted--;
+                    } else {
+                        if (team_review.get("grade", Integer.class) == null) {
+                            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team: " + review + "'s review has no points.").build());
+                        } else {
+                            total_points += team_review.get("grade", Integer.class);
+                        }
+                    }
+                }
+                double final_grade = (((double)total_points / count_of_reviews_submitted) / points) * 100;
+                final_grade = ((int)(final_grade * 100)/100.0); //round to the nearest 10th
+                submissionCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
+                assignmentsCollection.findOneAndUpdate(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), set("grade_finalized", true));
+            }
+        }
     }
 
     public List<Document> getToDosByCourse(String courseID, String studentID) {
