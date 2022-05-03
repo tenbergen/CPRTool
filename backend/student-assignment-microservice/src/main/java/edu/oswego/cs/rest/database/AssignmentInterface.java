@@ -153,7 +153,8 @@ public class AssignmentInterface {
                 .append("members",team.getList("team_members",String.class))
                 .append("type","team_submission")
                 .append("grade", -1)
-                .append("path",path+reg+file_name);
+                .append("path",path+reg+file_name)
+                .append("peer_review_due_date",assignment.get("peer_review_due_date"));
         System.out.println(new_submission);
         boolean submissionCheck = submissionCollection.find(and(eq("course_id",course_id),eq("assignment_id",assignment_id),eq("team_name",team.getString("team_id")))).iterator().hasNext();
         if(submissionCheck){
