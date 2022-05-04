@@ -39,10 +39,11 @@ const SubmittedAssBarComponent = () => {
 
     const onSubAssClick = (assignment) => {
         const teamId =  assignment.team_name
+        const assignmentId = assignment.assignment_id
         const chosen = assignment.assignment_id + teamId
         setChosen(chosen);
         navigate(`/details/${role}/${courseId}/${assignment.assignment_id}/${assignment.team_name}/submitted`)
-        dispatch(getSubmittedAssignmentDetailsAsync({courseId, assignmentId, lakerId, teamId}))
+        dispatch(getSubmittedAssignmentDetailsAsync({courseId, assignmentId, teamId}))
     };
 
     const onCourseClick = () => {
