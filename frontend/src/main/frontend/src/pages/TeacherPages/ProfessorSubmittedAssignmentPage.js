@@ -38,7 +38,7 @@ function ProfessorSubmittedAssignmentPage() {
         const url = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${teamName}/${teamId}/download`;
 
         await axios.get(url, {responseType: 'blob'})
-            .then((res) => downloadFile(res.data, currentSubmittedAssignment.submission_name))
+            .then((res) => downloadFile(res.data, `${teamName}SubmissionFile`))
             .catch(e => {
                 alert(`Error : ${e.response.data}`)
             })
@@ -90,7 +90,7 @@ function ProfessorSubmittedAssignmentPage() {
                                                 <span
                                                     className="sac-filename"
                                                     onClick={() => onFeedBackClick(teamId)}>
-                                                    {currentSubmittedAssignment.submission_name}
+                                                    Team{teamId}-SubmissionFile
                                                 </span>
                                             </div>
                                         </div>
