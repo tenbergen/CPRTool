@@ -45,8 +45,13 @@ const TeamComponent = () => {
         const team_name = prompt("Enter team name: ")
         const createUrl = `${process.env.REACT_APP_URL}/teams/team/create`
         const createData = {"course_id": courseId, "student_id": lakerId, "team_name": team_name}
+
         if (team_name.split(" ").length > 1) {
             alert("Please enter a team name with no spaces!")
+            return
+        }
+        if (team_name === "") {
+            alert("Team name cannot be empty!")
             return
         }
 
