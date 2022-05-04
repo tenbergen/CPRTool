@@ -52,7 +52,7 @@ const RegularAssignmentComponent = () => {
             })
             .catch(e => {
                 console.log(e.response)
-                alert("Error uploading assignment")
+                alert(`Error: ${e.response.data}`)
             })
     }
 

@@ -83,7 +83,9 @@ const AssignmentTile = ({assignment, submitted}) => {
                             }
                         </span>
                         <span className="kumba-25">
-                            {submitted ? assignment.grade : assignment.due_date}
+                            {submitted
+                                ? assignment.grade === -1 ? "Pending" : assignment.grade
+                                : assignment.due_date}
                         </span>
                     </div>
                     { !submitted &&
