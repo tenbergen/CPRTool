@@ -32,13 +32,9 @@ public class CourseUtil {
         else if (mode.equals("DELETE")) professorDocumentCourses.remove(originalCourseID);
 
         collection.updateOne(professorDocumentFilter, Updates.set("courses", professorDocumentCourses));
-        
-        /* production conditions */
-        // if (professorDocument.size() > 0) collection.updateOne(professorDocumentFilter, Updates.set("courses", professorDocumentCourses));
-        // else collection.deleteOne(professorDocumentFilter);
     }
 
-    public void updateCoursesArrayInStudenDb(MongoCollection<Document> collection , String originalCourseID, String newCourseID, String mode ) {
+    public void updateCoursesArrayInStudentDb(MongoCollection<Document> collection , String originalCourseID, String newCourseID, String mode ) {
         MongoCursor<Document> cursor = collection.find().iterator();
         while (cursor.hasNext()) {
             Document studentDocument = cursor.next();
@@ -61,14 +57,6 @@ public class CourseUtil {
         } else if (mode.equals("DELETE")) {
             collection.deleteMany(documentFilter);
         }
-    }
-
-    public void collectionWipeOff(MongoCollection<Document> collection) {
-        MongoCursor<Document> cursor = collection.find().iterator();
-        while (cursor.hasNext()) {
-            collection.deleteOne(cursor.next());
-        }
-        cursor.close();
     }
 
     public void updateTeamSize(MongoCollection<Document> collection, String courseID, int originalTeamSize, int newTeamSize) {
