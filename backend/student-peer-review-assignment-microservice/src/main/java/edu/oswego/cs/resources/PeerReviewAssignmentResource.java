@@ -159,7 +159,6 @@ public class PeerReviewAssignmentResource {
     public Response downloadOtherTeamsAssignment(@PathParam("courseID") String courseID,
                                                  @PathParam("assignmentID") int assignmentID,
                                                  @PathParam("teamName") String teamName) {
-
         File file = new File(FileDAO.peer_review_path + courseID + "/" + assignmentID + "/for-" + teamName.concat(".pdf"));
 
         Response.ResponseBuilder response = Response.ok(file);
@@ -222,13 +221,12 @@ public class PeerReviewAssignmentResource {
                                                    @PathParam("srcTeamName") String srcTeamName,
                                                    @PathParam("destTeamName") String destTeamName) {
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
-
         // check if the peer review due date is past
         // if not then return a response saying peer review is not ready
         File file = peerReviewAssignmentInterface.downloadFinishedPeerReview(courseID, assignmentID, srcTeamName, destTeamName);
 
         Response.ResponseBuilder response = Response.ok(file);
-        response.header("Content-Disposition", "attachment; filename=" + "peer-review-" + file.getName());
+        response.header("Content-Disposition", "attachment; filename=" + "peer-review-for-" + destTeamName);
         return response.build();
     }
 
