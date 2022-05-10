@@ -2,6 +2,42 @@
     display: flex;
 }
 
+.welcome-banner {
+    display: flex;
+    justify-content: left;
+    flex-direction: column;
+    padding-left: 2%;
+    padding-top: 2%;
+}
+
+h1 {
+    color: #2f4858;
+    font-size: 2.1em;
+    font-family: 'Kumbh Sans', sans-serif;
+}
+
+.views {
+    display: flex;
+    /*justify-content: space-between;*/
+}
+
+.student-view {
+    margin-right: 5px;
+    border: 1px solid #a8bbbf;
+    transition: all 0.2s ease-out;
+    border-radius: 8px;
+}
+
+.student-view:hover {
+    cursor: pointer;
+    color: #000;
+    filter: brightness(110%);
+}
+
+.pdp-coursename {
+    margin-bottom: 1%;
+}
+
 #teacher {
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 50px;
@@ -10,36 +46,62 @@
     padding-right: 3%;
     padding-left: 3%;
     margin-right: 5%;
-    margin-left: 5%;
     flex-grow: 1;
+    height: 90vh;
+    width: 100vw;
+}
+
+#proCourseList {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 55vh;
+    margin-top: 5px;
+}
+
+#proCourseList::-webkit-scrollbar {
+    width: 20px;
+}
+
+#proCourseList::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+#proCourseList::-webkit-scrollbar-thumb {
+    background-color: #d6dee1;
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
+}
+
+#proCourseList::-webkit-scrollbar-thumb:hover {
+    background-color: #a8bbbf;
 }
 
 #addClass {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top:15px;
-    margin-bottom: 15px;
+    margin: 10px 0;
 }
 
 #addButton {
-    color: black;
-    margin: 10px 0;
-    border: white;
     cursor: pointer;
     justify-self: center;
-    background: #91D8DF;
-    border-radius: 50px;
-    padding: 10px 45px 10px 45px;
-    border: none;
-    font-size: medium;
-    font-weight: bold;
+
 }
 
 .courseListItem {
+    display: flex;
+    flex-direction: column;
     height: 10vh;
     text-align: left;
-    background: linear-gradient(to right, #7398FF 0%, #7398FF 2%, #eeeeee 2%, #eeeeee 100%);
+    background: linear-gradient(
+            to right,
+            #7398ff 0%,
+            #7398ff 2%,
+            #eeeeee 2%,
+            #eeeeee 100%
+    );
     list-style-type: none;
     font-size: 15px;
     padding: 10px;
@@ -48,9 +110,15 @@
     white-space: pre-line;
     font-weight: bold;
     padding-left: 50px;
+    transition: all 0.17s ease-out;
+    border-radius: 5px;
 }
 
-a{
+.courseListItem:hover {
+    transform: scale(1.02);
+}
+
+a {
     text-decoration-line: none;
-    color:black;
+    color: black;
 }

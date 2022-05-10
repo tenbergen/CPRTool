@@ -1,0 +1,73 @@
+.kumba-40 {
+    font-family: 'Kumbh Sans', sans-serif;
+    font-style: normal;
+    font-weight: 900;
+    font-size: 40px;
+    color: #393939;
+}
+
+.kumba-35 {
+    font-family: 'Kumbh Sans', sans-serif;
+    font-style: normal;
+    font-weight: 900;
+    font-size: 30px;
+    color: #393939;
+}
+
+.kumba-30 {
+    font-family: 'Kumbh Sans', sans-serif;
+    font-style: normal;
+    font-weight: 900;
+    font-size: 25px;
+    color: #393939;
+}
+
+.kumba-27 {
+    font-family: 'Kumbh Sans', sans-serif;
+    font-style: normal;
+    font-weight: 900;
+    font-size: 20px;
+    color: #393939;
+}
+
+.kumba-25 {
+    font-family: 'Kumbh Sans', sans-serif;
+    font-style: normal;
+    font-weight: 900;
+    font-size: 18px;
+    color: #393939;
+}
+
+.outfit-18 {
+    font-family: 'Outfit', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.outfit-16 {
+    font-family: 'Outfit', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+}
+
+.outfit-25 {
+    font-family: 'Outfit', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.outfit-20 {
+    font-family: 'Outfit', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+}
+
+.link {
+    color: #5267A3;
+    text-decoration: underline;
+    cursor: pointer;
+}

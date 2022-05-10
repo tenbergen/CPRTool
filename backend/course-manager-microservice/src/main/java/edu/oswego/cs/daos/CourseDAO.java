@@ -20,9 +20,11 @@ public class CourseDAO {
     @JsonbProperty("course_name") public String courseName;
     @JsonbProperty("course_section") public String courseSection;
     @JsonbProperty("crn") public String crn;
+    @JsonbProperty("professor_id") public String professorID;
     @JsonbProperty("semester") public String semester;
     @JsonbProperty("students") @ElementCollection public List<String> students;
     @JsonbProperty("year") public String year;
+    @JsonbProperty("team_size") public int teamSize;
 
     @JsonbCreator
     public CourseDAO(
@@ -31,14 +33,17 @@ public class CourseDAO {
             @NonNull @JsonbProperty("course_section") String courseSection,
             @NonNull @JsonbProperty("crn") String crn,
             @NonNull @JsonbProperty("semester") String semester,
-            @NonNull @JsonbProperty("year") String year) {
+            @NonNull @JsonbProperty("year") String year)
+    {
         this.abbreviation = abbreviation;
         this.courseName = courseName;
         this.courseSection = courseSection;
         this.crn = crn;
+        this.professorID = "";
         this.semester = semester;
         this.students = new ArrayList<>();
         this.year = year;
+        this.teamSize = 1;
         this.courseID = this.abbreviation + "-" + this.courseSection + "-" + this.crn + "-" + this.semester + "-" + this.year;
     }
 }

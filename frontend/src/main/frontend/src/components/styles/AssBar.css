@@ -1,10 +1,13 @@
 .abc-parent {
-    /*background-color: rgba(255, 255, 255, 0.5);*/
-    /*border-radius: 50px;*/
     width: 22%;
+    padding-bottom: 4%;
 }
 
 .abc-parent h2 {
+    margin-top: 0;
+}
+
+.abc-title {
     margin: 15% 10% 12% 10%;
 }
 
@@ -13,13 +16,36 @@
     flex-direction: column;
     font-weight: bold;
     padding-bottom: 7%;
+    overflow-y: scroll;
+    height: 75vh;
 }
 
-.TheTable{
+.abc-assignments::-webkit-scrollbar {
+    width: 20px;
+}
+
+.abc-assignments::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.abc-assignments::-webkit-scrollbar-thumb {
+    background-color: #d6dee1;
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
+}
+
+.abc-assignments::-webkit-scrollbar-thumb:hover {
+    background-color: #a8bbbf;
+}
+
+.TheTable {
     background-color: rgba(255, 255, 255, 0.25);
 }
 
-tr:hover {background-color: white;}
+tr:hover {
+    background-color: white;
+}
 
 td {
     table-layout: auto;
@@ -27,14 +53,15 @@ td {
     height: fit-content;
 }
 
-.courseText{
+.courseText {
     padding-left: 6%;
     text-align: center;
+    cursor: pointer;
 }
 
-.colorForTable{
+.colorForTable {
     float: left;
     height: 100px;
     width: 4%;
-    background-color: #7398FF;
+    background-color: #7398ff;
 }

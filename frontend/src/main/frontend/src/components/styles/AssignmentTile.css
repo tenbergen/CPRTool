@@ -1,0 +1,65 @@
+.ass-tile {
+    border: 3px solid #9CF0D3;
+    box-sizing: border-box;
+    border-radius: 25px;
+    background-color: #9CF0D3;
+    margin-bottom: 2%;
+    margin-left: 3%;
+    margin-right: 3%;
+}
+
+.ass-tile-yellow {
+    border: 3px solid #F8D377;
+    background-color: #F8D377;
+}
+
+.ass-tile-title {
+    display: flex;
+    justify-content: right;
+    margin-right: 4%;
+    padding-top: 1%;
+    padding-bottom: 2%;
+}
+
+.ass-tile-content {
+    cursor: pointer;
+    padding: 2% 4%;
+    background-color: white;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+}
+
+.ass-tile-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 3%;
+}
+
+.ass-tile-files {
+    width: fit-content;
+    text-decoration-line: underline;
+}
+
+.ass-tile-links {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.ass-tile-delete {
+    margin-top: 2%;
+    color: #F07371;
+    padding: 5px 3px;
+    border-radius: 5px;
+    text-decoration: underline;
+    transition: all 0.2s ease-out;
+}
+
+.ass-tile-delete:hover {
+    cursor: pointer;
+    background-color: #ff0000;
+    color: #fff;
+    opacity: 0.8;
+    text-decoration: none;
+}

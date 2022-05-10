@@ -3,7 +3,6 @@
 
     <featureManager>
         <feature>microProfile-4.1</feature>
-        <feature>jaxrs-2.1</feature>
     </featureManager>
 
     <variable name="default.http.port" defaultValue="13129"/>
@@ -23,10 +22,5 @@
 
     <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
 
-    <cors domain="/"
-    allowedOrigins="*"
-    allowedMethods="POST"
-    allowCredentials="true"
-    allowedHeaders="Content-Type"
-    exposeHeaders="Content-Type"/>
+    <mpJwt id="cpr22s_access" signatureAlgorithm="RS512" tokenHeader="Authorization" issuer="edu.oswego.cs_CPR.22S.480" audiences="CPR.22S.480" jwksUri="${JWKS_URI}"/>
 </server>

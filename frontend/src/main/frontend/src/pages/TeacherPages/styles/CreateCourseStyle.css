@@ -1,20 +1,28 @@
-.cpp-parent {
+.ccp-parent {
     display: flex;
     flex-direction: row;
-    overflow: auto;
-    background: conic-gradient(from 180deg at 50% 50%,
-    #7398FF -128.84deg,
-    #57E1B2 25.81deg,
-    #7398FF 231.16deg,
-    #57E1B2 385.81deg);
+    background: conic-gradient(
+            from 180deg at 50% 50%,
+            #7398ff -128.84deg,
+            #57e1b2 25.81deg,
+            #7398ff 231.16deg,
+            #57e1b2 385.81deg
+    );
 }
 
-.cpp-container {
-    padding: 2% 4% 0 4%;
-    flex-grow: 1;
+.cpp-title {
+    margin-left: 2%;
+}
+
+.ccp-container {
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 50px;
-    margin: 3% 5%;
+    margin: 3% 2% 0 1%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    height: 90vh;
+    width: 100vw;
 }
 
 .ccp-form {
@@ -26,8 +34,10 @@
 
 .ccp-input-field {
     width: 100%;
-    margin-bottom: 5%;
+    margin-bottom: 7%;
     display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .ccp-input-field label {
@@ -37,9 +47,7 @@
 .ccp-input-field input {
     flex-grow: 1;
     padding: 5px 5px 5px 5px;
-    border: 2px solid #949494;
-    box-sizing: border-box;
-    border-radius: 50px;
+    margin-left: 1%;
 }
 
 .cpp-row-multiple {
@@ -51,15 +59,5 @@
 .ccp-button {
     display: flex;
     justify-content: center;
-    margin-top: 5%;
+    margin-top: 1%;
 }
-
-.ccp-button button {
-    background: #9CF0D3;
-    border-radius: 50px;
-    padding: 10px 45px 10px 45px;
-    border: none;
-    font-size: medium;
-    font-weight: bold;
-}
-
