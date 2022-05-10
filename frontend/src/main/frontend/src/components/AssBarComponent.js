@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './styles/AssBar.css';
 import {useDispatch, useSelector} from 'react-redux';
-import {Link, useParams} from 'react-router-dom';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import {getAssignmentDetailsAsync, getCombinedAssignmentPeerReviews} from '../redux/features/assignmentSlice';
 
 const AssBarLink = ({active, assignment, onClick}) => {
@@ -34,6 +34,7 @@ const AssBarComponent = () => {
     const {courseId, assignmentId, assignmentType, teamId} = useParams();
     const {currentTeamId} = useSelector((state) => state.teams)
     const {lakerId} = useSelector((state) => state.auth)
+    const navigate = useNavigate();
 
     const curr = assignmentType === 'peer-review' ? `${assignmentId}-peer-review-${teamId}` : parseInt(assignmentId);
     const [chosen, setChosen] = useState(curr);
@@ -49,12 +50,19 @@ const AssBarComponent = () => {
         setChosen(curr);
         const courseId = assignment.course_id
         const assignmentId = assignment.assignment_id
-        dispatch(getAssignmentDetailsAsync({ courseId, assignmentId}))
+        dispatch(getAssignmentDetailsAsync({courseId, assignmentId}))
     };
+
+    const onCourseClick = () => {
+        navigate(`/details/student/${courseId}`)
+    }
 
     return (
         <div className='abc-parent'>
-            <h2 className="kumba-30"> Assignments </h2>
+            <div className="abc-title">
+                <span className="outfit-16 link" style={{fontSize: "11px"}} onClick={onCourseClick}>{courseId}</span>
+                <h2 className="kumba-30"> Assignments </h2>
+            </div>
             <div className='abc-assignments'>
                 {combinedAssignmentPeerReviews.map((assignment) => (
                     <AssBarLink

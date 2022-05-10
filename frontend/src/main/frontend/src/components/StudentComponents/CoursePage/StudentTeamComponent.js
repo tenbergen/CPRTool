@@ -45,8 +45,13 @@ const TeamComponent = () => {
         const team_name = prompt("Enter team name: ")
         const createUrl = `${process.env.REACT_APP_URL}/teams/team/create`
         const createData = {"course_id": courseId, "student_id": lakerId, "team_name": team_name}
+
         if (team_name.split(" ").length > 1) {
             alert("Please enter a team name with no spaces!")
+            return
+        }
+        if (team_name === "") {
+            alert("Team name cannot be empty!")
             return
         }
 
@@ -61,12 +66,19 @@ const TeamComponent = () => {
             })
     }
 
+    const confirmJoin = async (teamId) => {
+        let confirmAction = window.confirm('Are you sure you want to join this team?');
+        if (confirmAction) {
+            await joinTeam(teamId);
+        }
+    };
+
     return (
         <h3>
             <h2 className="kumba-30" id="teamTitle"> Join a team </h2>
             <div id="teamList">
                 {teams.map(team =>
-                    <li id="teamListItem" onClick={() => joinTeam(team.team_id)}>Team {team.team_id}</li>
+                    <li id="teamListItem" onClick={() => confirmJoin(team.team_id)}>Team {team.team_id}</li>
                 )}
             </div>
             <div id="createTeamButton">

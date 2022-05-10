@@ -65,3 +65,9 @@
     font-weight: 400;
     font-size: 18px;
 }
+
+.link {
+    color: #5267A3;
+    text-decoration: underline;
+    cursor: pointer;
+}

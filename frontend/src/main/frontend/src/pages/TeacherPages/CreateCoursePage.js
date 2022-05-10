@@ -58,17 +58,12 @@ const CreateCoursePage = () => {
                 crn: crn.toString(),
             };
             console.log(data);
-            await axios
-                .post(submitCourseUrl, data)
-                .then((res) => {
-                    if (res.data === 'Course already existed.') {
-                        alert(res.data);
-                    } else {
-                        navigate('/');
-                    }
+            await axios.post(submitCourseUrl, data)
+                .then((_) => {
+                    navigate('/');
                 })
                 .catch((e) => {
-                    console.log(e);
+                    alert(`Error: ${e.response.data}`);
                 });
         }
     };
@@ -142,6 +137,7 @@ const CreateCoursePage = () => {
                                             value={year}
                                             required
                                             onChange={(e) => OnChange(e)}
+                                            onWheel={(e) => e.target.blur()}
                                         />
                                     </div>
                                 </div>
@@ -155,6 +151,7 @@ const CreateCoursePage = () => {
                                             value={crn}
                                             required
                                             onChange={(e) => OnChange(e)}
+                                            onWheel={(e) => e.target.blur()}
                                         />
                                     </div>
                                     <div className='input-field ccp-input-field'/>

@@ -28,14 +28,30 @@ function ProfessorSubmittedAssignmentPage() {
         const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/peer-review/download/${fileName}`
 
         await axios.get(url, {responseType: 'blob'})
-            .then((res) => downloadFile(res.data, fileName));
+            .then((res) => downloadFile(res.data, fileName))
+            .catch(e => {
+                alert(`Error : ${e.response.data}`)
+            })
     };
 
-    const onFeedBackClick = async (teamName, fileName) => {
+    const onTeamFileClick = async () => {
+        const url = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${teamId}/download`
+
+        await axios.get(url, {responseType: 'blob'})
+            .then(res => downloadFile(res.data, currentSubmittedAssignment.submission_name))
+            .catch(e => {
+                alert(`Error : ${e.response.data}`)
+            })
+    }
+
+    const onFeedBackClick = async (teamName) => {
         const url = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${teamName}/${teamId}/download`;
 
         await axios.get(url, {responseType: 'blob'})
-            .then((res) => downloadFile(res.data, fileName));
+            .then((res) => downloadFile(res.data, `${teamName}SubmissionFile`))
+            .catch(e => {
+                alert(`Error : ${e.response.data}`)
+            })
     };
 
     return (
@@ -83,7 +99,7 @@ function ProfessorSubmittedAssignmentPage() {
                                                 <span className="sac-title"> Team Files: </span>
                                                 <span
                                                     className="sac-filename"
-                                                    onClick={() => onFeedBackClick(teamId)}>
+                                                    onClick={() => onTeamFileClick()}>
                                                     {currentSubmittedAssignment.submission_name}
                                                 </span>
                                             </div>

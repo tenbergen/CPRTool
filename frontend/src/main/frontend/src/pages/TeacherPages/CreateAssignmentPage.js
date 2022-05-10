@@ -77,6 +77,10 @@ const CreateAssignmentPage = () => {
 
         const sentData = {...data, points, course_id};
 
+        console.log(assignmentFileFormData.get('file'));
+        // console.log(rubricFileFormData.get('file'));
+        // console.log(templateFileFormData.get('file'));
+
         await axios.post(submitCourseUrl, sentData)
             .then((res) => {
                 console.log(res);
@@ -116,7 +120,6 @@ const CreateAssignmentPage = () => {
                                     <h2 className="kumba-30"> Add new assignment </h2>
                                     <div className='cap-form'>
                                         <form onSubmit={handleSubmit}>
-
                                             {/*assignment field*/}
                                             <div className="field-container">
                                                 <div className="field-title"> <span> Homework</span> </div>
@@ -137,7 +140,6 @@ const CreateAssignmentPage = () => {
 
                                                     <div className="input-field cap-instructions">
                                                         <label> Instructions: </label>
-
                                                         <Field name='instructions'>
                                                             {({input}) => (
                                                                 <textarea
@@ -154,7 +156,8 @@ const CreateAssignmentPage = () => {
                                                         <input
                                                             type='file'
                                                             name='assignment_files'
-                                                            accept='.pdf,.zip'
+                                                            accept='.pdf,.zip,.docx'
+                                                            required
                                                             onChange={(e) => fileChangeHandler(e, "assignment")}
                                                         />
                                                     </div>
@@ -168,6 +171,7 @@ const CreateAssignmentPage = () => {
                                                                     name='due_date'
                                                                     {...input}
                                                                     required
+                                                                    min={new Date().toISOString().split('T')[0]}
                                                                 />
                                                             )}
                                                         </Field>
@@ -180,6 +184,7 @@ const CreateAssignmentPage = () => {
                                                                     name='points'
                                                                     {...input}
                                                                     required
+                                                                    onWheel={(e) => e.target.blur()}
                                                                 />
                                                             )}
                                                         </Field>
@@ -189,7 +194,7 @@ const CreateAssignmentPage = () => {
 
                                             {/*peer review fields*/}
                                             <div className="field-container">
-                                                <div className="field-title"> <span> Peer Review </span></div>
+                                                <div className="field-title"> <span> Peer Review </span> </div>
                                                 <div className="field-content">
                                                     <div className='input-field cap-instructions'>
                                                         <label className="outfit-25"> Peer Review Instructions: </label>
@@ -209,7 +214,7 @@ const CreateAssignmentPage = () => {
                                                         <input
                                                             type='file'
                                                             name='peer_review_rubric'
-                                                            accept='.pdf,.zip'
+                                                            accept='.pdf,.zip,.docx'
                                                             required
                                                             onChange={(e) => fileChangeHandler(e, "rubric")}
                                                         />
@@ -218,7 +223,7 @@ const CreateAssignmentPage = () => {
                                                         <input
                                                             type='file'
                                                             name='peer_review_template'
-                                                            accept='.pdf,.zip'
+                                                            accept='.pdf,.zip,.docx'
                                                             required
                                                             onChange={(e) => fileChangeHandler(e, "template")}
                                                         />
@@ -233,6 +238,7 @@ const CreateAssignmentPage = () => {
                                                                     name='peer_review_due_date'
                                                                     {...input}
                                                                     required
+                                                                    min={new Date().toISOString().split('T')[0]}
                                                                 />
                                                             )}
                                                         </Field>
@@ -246,6 +252,7 @@ const CreateAssignmentPage = () => {
                                                                     name='peer_review_points'
                                                                     {...input}
                                                                     required
+                                                                    onWheel={(e) => e.target.blur()}
                                                                 />
                                                             )}
                                                         </Field>

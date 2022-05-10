@@ -10,15 +10,14 @@ const StudentSubmittedComponent = () => {
     const { courseSubmittedAssignments, assignmentsLoaded } = useSelector((state) => state.submittedAssignments)
     const { lakerId } = useSelector((state) => state.auth)
     const { courseId } = useParams()
-    const { currentTeamId, teamLoaded } = useSelector((state) => state.teams)
 
     useEffect(() => {
-        dispatch(getStudentSubmittedAssignmentsAsync({courseId, currentTeamId, lakerId}))
+        dispatch(getStudentSubmittedAssignmentsAsync({courseId, lakerId}))
     }, [])
 
     return (
         <h3>
-            {teamLoaded && assignmentsLoaded ? (
+            {assignmentsLoaded ? (
                 <div id='assList'>
                     {courseSubmittedAssignments.map(assignment => (
                         <AssignmentTile

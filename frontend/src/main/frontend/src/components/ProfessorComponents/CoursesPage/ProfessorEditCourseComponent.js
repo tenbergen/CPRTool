@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigate, useParams} from 'react-router-dom';
 import axios from 'axios';
 import {Field, Form} from 'react-final-form';
-import {getCourseDetailsAsync} from '../../../redux/features/courseSlice';
+import {getCourseDetailsAsync, getCoursesAsync} from '../../../redux/features/courseSlice';
 
 const deleteCourseUrl = `${process.env.REACT_APP_URL}/manage/professor/courses`;
 const updateUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/update`;
@@ -125,6 +125,7 @@ const ProfessorEditCourseComponent = () => {
         } else {
             await updateCourse(formObj);
         }
+        dispatch(getCoursesAsync())
     };
 
     return (
