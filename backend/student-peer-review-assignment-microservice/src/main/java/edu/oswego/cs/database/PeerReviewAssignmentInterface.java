@@ -20,7 +20,6 @@ import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.set;
 
 public class PeerReviewAssignmentInterface {
-    private final MongoCollection<Document> courseCollection;
     private final MongoCollection<Document> teamCollection;
     private final MongoCollection<Document> assignmentCollection;
     private final MongoCollection<Document> submissionsCollection;
@@ -29,10 +28,8 @@ public class PeerReviewAssignmentInterface {
     public PeerReviewAssignmentInterface() {
         DatabaseManager databaseManager = new DatabaseManager();
         try {
-            MongoDatabase courseDB = databaseManager.getCourseDB();
             MongoDatabase teamDB = databaseManager.getTeamDB();
             assignmentDB = databaseManager.getAssignmentDB();
-            courseCollection = courseDB.getCollection("courses");
             teamCollection = teamDB.getCollection("teams");
             assignmentCollection = assignmentDB.getCollection("assignments");
             submissionsCollection = assignmentDB.getCollection("submissions");
@@ -45,13 +42,20 @@ public class PeerReviewAssignmentInterface {
         Document reviewedByTeam = teamCollection.find(eq("team_id", srcTeamName)).first();
         Document reviewedTeam = teamCollection.find(eq("team_id", destinationTeam)).first();
         Document assignment = assignmentCollection.find(and(eq("course_id", course_id), eq("assignment_id", assignment_id))).first();
-        if(assignment == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("this assignment was not found in this course").build());
-        if (reviewedByTeam == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("no team for this student").build());
-        if (reviewedTeam == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("no team for this student").build());
-        if (reviewedByTeam.getList("team_members", String.class) == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Members not defined in team").build());
-        if (reviewedTeam.getList("team_members", String.class) == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Members not defined in team").build());
-        if (reviewedByTeam.get("team_id", String.class) == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team_id not defined").build());
-        if (reviewedTeam.get("team_id", String.class) == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team_id not defined").build());
+        if (assignment == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("this assignment was not found in this course").build());
+        if (reviewedByTeam == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("no team for this student").build());
+        if (reviewedTeam == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("no team for this student").build());
+        if (reviewedByTeam.getList("team_members", String.class) == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Members not defined in team").build());
+        if (reviewedTeam.getList("team_members", String.class) == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Members not defined in team").build());
+        if (reviewedByTeam.get("team_id", String.class) == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team_id not defined").build());
+        if (reviewedTeam.get("team_id", String.class) == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team_id not defined").build());
 
         String reg = "/";
         String path = "assignments" + reg + course_id + reg + assignment_id + reg + "peer-review-submissions";
@@ -78,37 +82,32 @@ public class PeerReviewAssignmentInterface {
     public void addCompletedTeam(String courseID, int assignmentID, String sourceTeam, String targetTeam) {
 
         Document assignmentDocument = assignmentCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
-        if(assignmentDocument == null)
+        if (assignmentDocument == null)
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to find assignment. As a result the assignment could not update the completed_teams").build());
 
-        Map<String, List<String>> completedTeams =  (Map<String, List<String>>) assignmentDocument.get("completed_teams");
+        Map<String, List<String>> completedTeams = (Map<String, List<String>>) assignmentDocument.get("completed_teams");
         Map<String, List<String>> finalTeams = completedTeams;
         List<String> temp = completedTeams.get(sourceTeam);
         temp.add(targetTeam);
         finalTeams.put(sourceTeam, temp);
-        assignmentDocument.replace("completed_teams",completedTeams, finalTeams);
+        assignmentDocument.replace("completed_teams", completedTeams, finalTeams);
         assignmentCollection.replaceOne(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), assignmentDocument);
         assignmentDocument = assignmentCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
-        completedTeams =  (Map<String, List<String>>) assignmentDocument.get("completed_teams");
+        completedTeams = (Map<String, List<String>>) assignmentDocument.get("completed_teams");
         int currentNumOfReviews = 0;
-        for (Map.Entry<String, List<String>> entry: completedTeams.entrySet()){
+        for (Map.Entry<String, List<String>> entry : completedTeams.entrySet()) {
             List<String> list = entry.getValue();
             for (String s : list) {
                 if (s.equals(targetTeam))
                     currentNumOfReviews++;
             }
         }
-        if (currentNumOfReviews == (int) assignmentDocument.get("reviews_per_team")){
+        if (currentNumOfReviews == (int) assignmentDocument.get("reviews_per_team")) {
             makeFinalGrade(courseID, assignmentID, targetTeam);
         }
-        if (assignmentDocument.get("completed_teams") == assignmentDocument.get("assigned_teams")){
+        if (assignmentDocument.get("completed_teams") == assignmentDocument.get("assigned_teams")) {
             assignmentCollection.findOneAndUpdate(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), set("grade_finalized", true));
         }
-    }
-
-    public List<String> getCourseStudentIDs(String courseID) {
-        Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
-        return courseDocument.getList("students", String.class);
     }
 
     public void uploadPeerReview(String courseID, int assignmentID, String srcTeamName, String destTeamName, IAttachment attachment) throws IOException {
@@ -131,7 +130,8 @@ public class PeerReviewAssignmentInterface {
                 .filter(f -> f.getName().contains(srcTeamName) && f.getName().contains(destTeamName))
                 .findFirst();
 
-        if (file.isEmpty()) throw new WebApplicationException("No peer review from team " + srcTeamName + " for " + destTeamName);
+        if (file.isEmpty())
+            throw new WebApplicationException("No peer review from team " + srcTeamName + " for " + destTeamName);
         return file.get();
 
     }
@@ -146,7 +146,8 @@ public class PeerReviewAssignmentInterface {
             Document document = query.next();
             assignments.add(document);
         }
-        if (assignments.isEmpty()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist").build());
+        if (assignments.isEmpty())
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist").build());
         return assignments;
     }
 
@@ -159,7 +160,8 @@ public class PeerReviewAssignmentInterface {
             Document document = query.next();
             assignments.add(document);
         }
-        if (assignments.isEmpty()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist").build());
+        if (assignments.isEmpty())
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist").build());
         return assignments;
     }
 
@@ -173,7 +175,8 @@ public class PeerReviewAssignmentInterface {
             Document document = query.next();
             assignments.add(document);
         }
-        if (assignments.isEmpty()) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist").build());
+        if (assignments.isEmpty())
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist").build());
         return assignments;
     }
 
@@ -211,34 +214,28 @@ public class PeerReviewAssignmentInterface {
     public Document addAssignedTeams(Map<String, List<String>> peerReviewAssignments, String courseID, int assignmentID) {
 
         Document assignmentDocument = assignmentCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
-        if(assignmentDocument == null)
+        if (assignmentDocument == null)
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to add assigned teams").build());
 
-                Document doc = new Document();
-                Document completedTeamsDoc = new Document();
-                for (String team : peerReviewAssignments.keySet()) {
-                    doc.put(team, peerReviewAssignments.get(team));
-                    completedTeamsDoc.put(team, new ArrayList<>());
-                }
-                assignmentCollection.updateOne(assignmentDocument, set("assigned_teams", doc));
-                assignmentCollection.updateOne(assignmentDocument, set("completed_teams", completedTeamsDoc));
-
-                return doc;
-    }
-
-    public Document getAssignmentDocument(String courseID, int assignmentID) {
-        for (Document assignmentDocument : assignmentCollection.find(eq("course_id", courseID))) {
-            if ((int) assignmentDocument.get("assignment_id") == assignmentID) return assignmentDocument;
+        Document doc = new Document();
+        Document completedTeamsDoc = new Document();
+        for (String team : peerReviewAssignments.keySet()) {
+            doc.put(team, peerReviewAssignments.get(team));
+            completedTeamsDoc.put(team, new ArrayList<>());
         }
-        throw new WebApplicationException("No course/assignmentID found.");
-    }
+        assignmentCollection.updateOne(assignmentDocument, set("assigned_teams", doc));
+        assignmentCollection.updateOne(assignmentDocument, set("completed_teams", completedTeamsDoc));
 
+        return doc;
+    }
 
     public void addAllTeams(List<String> allTeams, String courseID, int assignmentID, int reviewsPerTeam) {
         Document result = assignmentCollection.findOneAndUpdate(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), set("all_teams", allTeams));
-        if (result == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to set all teams to assignment").build());
+        if (result == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to set all teams to assignment").build());
         result = assignmentCollection.findOneAndUpdate(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), set("reviews_per_team", reviewsPerTeam));
-        if (result == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to add number of reviews per team to database document").build());
+        if (result == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to add number of reviews per team to database document").build());
     }
 
     public void addDistroToSubmissions(Map<String, List<String>> distro, String course_id, int assignment_id) {
@@ -248,15 +245,18 @@ public class PeerReviewAssignmentInterface {
                             eq("assignment_id", assignment_id),
                             eq("team_name", team), eq("type", "team_submission")),
                     set("reviews", distro.get(team)));
-            if (result == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to add teams to submission: " + team).build());
+            if (result == null)
+                throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to add teams to submission: " + team).build());
         }
     }
 
     public List<String> getTeams(String courseID, int assignmentID) {
         Document assignment = assignmentCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
-        if (assignment == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment found.").build());
+        if (assignment == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No assignment found.").build());
         List<String> teams = assignment.getList("all_teams", String.class);
-        if (teams == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("All teams not found for: " + courseID).build());
+        if (teams == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("All teams not found for: " + courseID).build());
         return teams;
     }
 
@@ -266,7 +266,8 @@ public class PeerReviewAssignmentInterface {
                 eq("assignment_id", assignmentID),
                 eq("team_name", teamName),
                 eq("type", "team_submission"))).first();
-        if (team == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Team not found.").build());
+        if (team == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Team not found.").build());
         List<String> reviews = team.getList("reviews", String.class);
         List<Document> teams = new ArrayList<>();
         for (String reviewTeam : reviews) {
@@ -292,13 +293,15 @@ public class PeerReviewAssignmentInterface {
                         eq("team_name", teamName),
                         eq("type", "team_submission")),
                 set("grade", grade));
-        if (team == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Team not found.").build());
+        if (team == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Team not found.").build());
         return team;
     }
 
     public void makeFinalGrade(String courseID, int assignmentID, String teamName) {
         Document assignment = assignmentCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
-        if (assignment == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment not found.").build());
+        if (assignment == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment not found.").build());
         int points = assignment.getInteger("points");
         Document team_submission = submissionsCollection.find(and(
                 eq("course_id", courseID),
@@ -327,14 +330,15 @@ public class PeerReviewAssignmentInterface {
                 }
             }
         }
-        double final_grade = (((double)total_points / count_of_reviews_submitted) / points) * 100;
-        final_grade = ((int)(final_grade * 100)/100.0); //round to the nearest 10th
+        double final_grade = (((double) total_points / count_of_reviews_submitted) / points) * 100;
+        final_grade = ((int) (final_grade * 100) / 100.0); //round to the nearest 10th
         submissionsCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
     }
 
     public void makeFinalGrades(String courseID, int assignmentID) {
         Document assignment = assignmentCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
-        if (assignment == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment not found.").build());
+        if (assignment == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment not found.").build());
         List<String> allTeams = assignment.getList("all_teams", String.class);
         int points = assignment.getInteger("points");
         for (String team : allTeams) {
@@ -374,8 +378,8 @@ public class PeerReviewAssignmentInterface {
                         }
                     }
                 }
-                double final_grade = (((double)total_points / count_of_reviews_submitted) / points) * 100;
-                final_grade = ((int)(final_grade * 100)/100.0); //round to the nearest 10th
+                double final_grade = (((double) total_points / count_of_reviews_submitted) / points) * 100;
+                final_grade = ((int) (final_grade * 100) / 100.0); //round to the nearest 10th
                 submissionsCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
                 assignmentCollection.findOneAndUpdate(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), set("grade_finalized", true));
             }
@@ -388,7 +392,8 @@ public class PeerReviewAssignmentInterface {
                 eq("assignment_id", assignmentID),
                 eq("team_name", teamName),
                 eq("type", "team_submission"))).first();
-        if (result == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Team: " + teamName + " was not found for assignment").build());
+        if (result == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Team: " + teamName + " was not found for assignment").build());
         if (result.getInteger("grade") == null) return new Document("grade", -1);
         else return new Document("grade", result.getInteger("grade"));
     }

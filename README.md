@@ -19,7 +19,7 @@ This web application is made to be built on bare metal Linux environment using D
 The web application should be running on the specified domain in your `.env` file.
 
 Optionally, in `scripts` directory:
-- if you wish to change the user password, execute `mongo-changepwd.sh`. 
+- If you wish to change the user password, execute `mongo-changepwd.sh`. 
 - To delete everything from all databases as well as saved files, execute `delete-db.sh`.
 
 ## Local Development Environment
