@@ -4,10 +4,8 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.util.HashMap;
 
 @Entity
 @NoArgsConstructor
