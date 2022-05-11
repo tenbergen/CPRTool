@@ -22,6 +22,8 @@ Optionally, in `scripts` directory:
 - If you wish to change the user password, execute `mongo-changepwd.sh`. 
 - To delete everything from all databases as well as saved files, execute `delete-db.sh`.
 
+**Step 5:** To add users with elevated privileges (a.k.a professors), include the user's email on separate lines in `professor-list.txt`.
+
 ## Local Development Environment
 
 For local development environment, a Docker setup is not necessary. Make sure that the following softwares and dependencies are installed:

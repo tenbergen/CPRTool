@@ -1,0 +1,16 @@
+.input-field input {
+    border: 2px solid #949494;
+    box-sizing: border-box;
+    border-radius: 50px;
+}
+
+.input-field label {
+    font-family: 'Outfit', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+}
+
+textarea, input {
+    font-family: 'Outfit', sans-serif;
+}
