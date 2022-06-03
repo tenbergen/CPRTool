@@ -25,7 +25,7 @@ docker exec -u 0:0 cpr-student-assignment chown 1001 /opt/ol/wlp/output/defaultS
 docker exec -u 0:0 cpr-student-peer-review-assignment chown 1001 /opt/ol/wlp/output/defaultServer/assignments/
 
 # Prune any dangling images.
-docker image prune
+docker image prune -f
 
 # Prune any dangling volumes.
-docker volume prune
+docker volume prune -f
