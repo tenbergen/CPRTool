@@ -4,7 +4,7 @@ A highly scalable web application that assists the process of coordinating and e
 
 ## Running the Project
 
-This web application is made to be built on bare metal Linux environment using Docker. Make sure that the following softwares are installed:
+This web application is made to be built on bare metal Linux environment using Docker. Make sure that the following software are installed:
 - [Docker](https://docs.docker.com/engine/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
@@ -46,14 +46,16 @@ On Linux-based operating systems, you may achieve the similar result by executin
 - `db.createUser({user: "<your username>", pwd: "<your password>", roles: [{role: "readWrite", db: "cpr"}]});`
 
 **Step 3:** Run `mvn liberty:dev` to start the project in developer mode. The web app should be running on http://localhost:xxxxx - the port depends on which microservice you are running as following:
-- Frontend: 13125
-- Login: 13126
-- Course manager: 13127
-- Course viewer: 13128
-- Peer review teams: 13129
-- Professor assignment: 13130
-- Student assignment: 13131
-- Student peer review assignment: 13132
+| Microservice                     | Port    |
+|----------------------------------|---------|
+| `frontend`                       | `13125` |
+| `login`                          | `13126` |
+| `course-manager`                 | `13127` |
+| `course-viewer`                  | `13128` |
+| `peer-review-teams`              | `13129` |
+| `professor-assignment`           | `13130` |
+| `student-assignment`             | `13131` |
+| `student-peer-review-assignment` | `13132` |
 
 ## Contributing
 
