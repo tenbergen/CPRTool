@@ -17,6 +17,7 @@ services:
     volumes:
       - ./professor-list.txt:/opt/ol/wlp/output/defaultServer/professor-list.txt:rw
     environment:
+      URL: ${URL}
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
       MONGO2_PORT: ${MONGO2_PORT}
@@ -28,7 +29,6 @@ services:
       MONGO_PASSWORD: ${MONGO_PASSWORD}
       CLIENT_ID: ${CLIENT_ID}
       CLIENT_SECRET: ${CLIENT_SECRET}
-      URL: ${URL}
 
   course-manager:
     build:
@@ -36,6 +36,7 @@ services:
     container_name: cpr-course-manager
     restart: unless-stopped
     environment:
+      URL: ${URL}
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
       MONGO2_PORT: ${MONGO2_PORT}
@@ -45,7 +46,6 @@ services:
       MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
-      URL: ${URL}
 
   course-viewer:
     build:
@@ -53,6 +53,7 @@ services:
     container_name: cpr-course-viewer
     restart: unless-stopped
     environment:
+      URL: ${URL}
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
       MONGO2_PORT: ${MONGO2_PORT}
@@ -62,7 +63,6 @@ services:
       MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
-      URL: ${URL}
 
   peer-review-teams:
     build:
@@ -70,6 +70,7 @@ services:
     container_name: cpr-peer-review-teams
     restart: unless-stopped
     environment:
+      URL: ${URL}
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
       MONGO2_PORT: ${MONGO2_PORT}
@@ -79,7 +80,6 @@ services:
       MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
-      URL: ${URL}
 
   professor-assignment:
     build:
@@ -89,6 +89,7 @@ services:
     volumes:
       - ./assignments:/opt/ol/wlp/output/defaultServer/assignments
     environment:
+      URL: ${URL}
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
       MONGO2_PORT: ${MONGO2_PORT}
@@ -98,7 +99,6 @@ services:
       MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
-      URL: ${URL}
 
   student-assignment:
     build:
@@ -108,6 +108,7 @@ services:
     volumes:
       - ./assignments:/opt/ol/wlp/output/defaultServer/assignments
     environment:
+      URL: ${URL}
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
       MONGO2_PORT: ${MONGO2_PORT}
@@ -117,7 +118,6 @@ services:
       MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
-      URL: ${URL}
 
   student-peer-review-assignment:
     build:
@@ -127,6 +127,7 @@ services:
     volumes:
       - ./assignments:/opt/ol/wlp/output/defaultServer/assignments
     environment:
+      URL: ${URL}
       MONGO_HOSTNAME: ${MONGO_HOSTNAME}
       MONGO_PORT: ${MONGO_PORT}
       MONGO2_PORT: ${MONGO2_PORT}
@@ -136,7 +137,6 @@ services:
       MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
-      URL: ${URL}
 
   mongo:
     image: mongo:5.0.6
