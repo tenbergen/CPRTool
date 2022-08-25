@@ -33,11 +33,13 @@ For local development environment, a Docker setup is not necessary. Make sure th
 - [MongoDB Compass](https://www.mongodb.com/products/compass) is optional but recommended for a MongoDB GUI that also comes with a terminal for shell commands
 
 **Step 1:** On Windows, hit `Windows + R`, enter `sysdm.cpl` and navigate to `Advanced -> Environment Variables...` and add the following variables:
-- `MONGO_HOSTNAME` - `localhost`
-- `MONGO_PORT` - `27017`
-- `MONGO_DATABASE` - `cpr`
-- `MONGO_USERNAME` - Your choice
-- `MONGO_PASSWORD` - Your choice
+| Variable         | Value       |
+|------------------|-------------|
+| `MONGO_HOSTNAME` | `localhost` |
+| `MONGO_PORT`     | `27017`     |
+| `MONGO_DATABASE` | `cpr`       |
+| `MONGO_USERNAME` | Your choice |
+| `MONGO_PASSWORD` | Your choice |
 
 On Linux-based operating systems, you may achieve the similar result by executing `EXPORT <NAME>=<VALUE>`. 
 
