@@ -23,5 +23,5 @@
 
     <ssl id="defaultSSLConfig" trustDefaultCerts="true" />
 
-    <mpJwt id="cpr22s_access" signatureAlgorithm="RS512" tokenHeader="Authorization" issuer="edu.oswego.cs_CPR.22S.480" audiences="CPR.22S.480" jwksUri="${JWKS_URI}"/>
+    <mpJwt id="cpr_access" signatureAlgorithm="RS512" tokenHeader="Authorization" issuer="cpr" audiences="cpr" jwksUri="${URL}/jwt/ibm/api/cpr_access/jwk"/>
 </server>
