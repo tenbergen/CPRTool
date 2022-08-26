@@ -171,9 +171,9 @@ const ProfessorTeamComponent = () => {
                   className='emailInput'
                   type='text'
                 />
-                <a onClick={handleAddStudent} className='teamA'>
+                <button onClick={handleAddStudent} className='teamA'>
                   Add
-                </a>
+                </button>
               </div>
             ) : (
               <input
