@@ -1,6 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios from 'axios';
-import React from 'react';
 import {refreshTokenAsync} from './authSlice';
 
 const viewCourseUrl = `${process.env.REACT_APP_URL}/view/professor`;

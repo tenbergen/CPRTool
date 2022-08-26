@@ -1,7 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
 
-const peerReviewUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`;
-
 const peerReviewSlice = createSlice({
     name: 'peerReviewSlice',
     initialState: {

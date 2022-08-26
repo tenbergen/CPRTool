@@ -1,7 +1,6 @@
 import './styles/UnauthedStyle.css';
 import {useNavigate} from 'react-router-dom';
 
-const logoutURL = `${window.location.protocol}//${window.location.host}/logout`;
 const UnauthedErrorPage = () => {
     let navigate = useNavigate();
     const handleLogout = () => {

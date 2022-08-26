@@ -1,5 +1,4 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import React from 'react';
 import jwtDecode from 'jwt-decode';
 import axios from 'axios';
 import {reduxInterceptor} from '../interceptors/reduxInterceptor';
