@@ -50,6 +50,7 @@ function ProfessorDashboardPage() {
             <div id='proCourseList'>
               {courses.map((course) => (
                 <Link
+                  key={course.id + 1}
                   to={'/details/professor/' + course.course_id}
                   onClick={() => onCourseClick(course)}
                 >

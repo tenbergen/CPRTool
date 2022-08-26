@@ -57,7 +57,6 @@ const CreateCoursePage = () => {
         year: year.toString(),
         crn: crn.toString(),
       };
-      console.log(data);
       await axios
         .post(submitCourseUrl, data)
         .then((_) => {
