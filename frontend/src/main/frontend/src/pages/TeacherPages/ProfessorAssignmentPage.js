@@ -1,4 +1,3 @@
-import React from 'react-dom';
 import {useEffect, useState} from 'react';
 import './styles/ProfessorCourseStyle.css';
 import SidebarComponent from '../../components/SidebarComponent';

@@ -2,7 +2,7 @@ import {useDispatch, useSelector} from "react-redux";
 import axios from "axios";
 import "../../../pages/StudentPages/styles/AssignmentPageStyle.css";
 import {useNavigate, useParams} from "react-router-dom";
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {getAssignmentDetailsAsync} from "../../../redux/features/assignmentSlice";
 
 const StudentPeerReviewComponent = () => {

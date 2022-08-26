@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import './styles/LoginPage.css';
 import {useDispatch} from 'react-redux';
 import {getTokenAsync} from '../../redux/features/authSlice';

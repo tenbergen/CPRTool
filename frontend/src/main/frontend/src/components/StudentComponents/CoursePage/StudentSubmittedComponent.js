@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from "react-redux";
 import "../../styles/StudentAss.css"
 import {useParams} from "react-router-dom";
-import React, {useEffect} from "react";
+import {useEffect} from "react";
 import {getStudentSubmittedAssignmentsAsync} from "../../../redux/features/submittedAssignmentSlice";
 import AssignmentTile from "../../AssignmentTile";
 

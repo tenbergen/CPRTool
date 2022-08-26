@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import SidebarComponent from '../../components/SidebarComponent';
 import AssBarComponent from '../../components/AssBarComponent';
 import './styles/AssignmentPageStyle.css';

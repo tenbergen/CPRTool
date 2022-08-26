@@ -1,5 +1,5 @@
 import {Field, Form} from 'react-final-form';
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {getAssignmentDetailsAsync, getCourseAssignmentsAsync} from '../../../redux/features/assignmentSlice';
 import {useParams} from 'react-router-dom';

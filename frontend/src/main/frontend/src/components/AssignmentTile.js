@@ -1,7 +1,6 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import axios from "axios";
-import React from "react";
 import "./styles/AssignmentTile.css"
 import {getCourseAssignmentsAsync} from "../redux/features/assignmentSlice";
 

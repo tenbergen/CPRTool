@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 import SidebarComponent from "../../components/SidebarComponent";
 import "./styles/AssignmentPageStyle.css"
 import {useDispatch, useSelector} from "react-redux";

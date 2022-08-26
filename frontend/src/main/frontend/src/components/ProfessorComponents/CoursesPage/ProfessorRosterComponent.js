@@ -4,7 +4,7 @@ import '../../styles/Roster.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {getCourseDetailsAsync, getCurrentCourseStudentsAsync} from '../../../redux/features/courseSlice';
 import {useParams} from 'react-router-dom';
-import React from "react-dom";
+
 
 const ProfessorRosterComponent = () => {
     const dispatch = useDispatch();

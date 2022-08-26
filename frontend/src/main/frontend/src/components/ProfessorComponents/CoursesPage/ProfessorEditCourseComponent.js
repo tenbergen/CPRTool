@@ -1,4 +1,3 @@
-import React from 'react-dom';
 import {useState} from 'react';
 import '../../styles/EditCourse.css';
 import '../../styles/DeleteModal.css';

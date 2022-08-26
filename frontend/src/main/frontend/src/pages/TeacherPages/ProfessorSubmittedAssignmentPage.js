@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import {useEffect} from 'react';
 import '../../components/styles/FinalGrade.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
