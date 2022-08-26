@@ -33,7 +33,7 @@ const getToDos = async (courseId, lakerId) => {
       return [];
     });
 
-  toDos.map((todo) => {
+  toDos.forEach((todo) => {
     assignmentsArr.push({
       ...todo,
       final_due_date: todo.due_date,
@@ -49,10 +49,10 @@ const getPeerReviews = async (courseId, teamId) => {
   const peerReviewAssignments = [];
   const assignments = await getAssignments(courseId);
   console.log(assignments);
-  assignments.map((assignment) => {
+  assignments.forEach((assignment) => {
     if (assignment.assigned_teams) {
       const teams = assignment.assigned_teams[teamId];
-      teams.map((team) => {
+      teams.forEach((team) => {
         if (!assignment.completed_teams[teamId].includes(team)) {
           const final_id = `${assignment.assignment_id}-peer-review-${team}`;
           peerReviewAssignments.push({

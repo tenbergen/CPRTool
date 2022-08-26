@@ -93,7 +93,7 @@ export const getCurrentCourseStudentsAsync = createAsyncThunk(
     }
 
     // if there are teams
-    students.map((student) => {
+    students.forEach((student) => {
       let inTeam = false;
       for (let i = 0; i < teams.length; i++) {
         let currentTeam = teams[i];
