@@ -1,17 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import '../../styles/MyTeam.css';
 import axios from 'axios';
 
 const MyTeamComponent = () => {
-  const dispatch = useDispatch();
   const { courseId } = useParams();
-  const { lakerId } = useSelector((state) => state.auth);
   const { currentTeamId, teamLoaded } = useSelector((state) => state.teams);
   const membersUrl = `${process.env.REACT_APP_URL}/teams/team/${courseId}/get/${currentTeamId}`;
-  const studentUrl = `${process.env.REACT_APP_URL}/view/professor/students/{studentID}`;
-  const [members, setMembers] = useState(Array());
+  const [members, setMembers] = useState([]);
 
   useEffect(() => {
     axios.get(membersUrl).then((r) => {

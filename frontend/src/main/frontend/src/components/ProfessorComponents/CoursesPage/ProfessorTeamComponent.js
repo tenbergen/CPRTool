@@ -7,8 +7,8 @@ const ProfessorTeamComponent = () => {
   const { currentCourse } = useSelector((state) => state.courses);
   const getTeamsUrl = `${process.env.REACT_APP_URL}/teams/team/get/all/${currentCourse.course_id}`;
   const [teams, setTeams] = useState([]);
-  const [isActive, setActive] = useState(Array());
-  const [isAdd, setAdd] = useState(Array());
+  const [isActive, setActive] = useState([]);
+  const [isAdd, setAdd] = useState([]);
   const [studentId, setStudentId] = useState({ id: '' });
   const { id } = studentId;
 
@@ -30,7 +30,7 @@ const ProfessorTeamComponent = () => {
   }, [getTeamsUrl]);
 
   const ProfessorTeamAccordion = (team) => {
-    const members = Array();
+    const members = [];
     const handleSetActive = () => {
       if (isActive.includes(team)) {
         setActive(isActive.filter((t) => t !== team));
