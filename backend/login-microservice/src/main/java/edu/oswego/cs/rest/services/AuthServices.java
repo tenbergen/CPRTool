@@ -52,23 +52,23 @@ public class AuthServices {
         Set<String> roles = getRoles(lakerID);
         
         try {
-            String access_token = JwtBuilder.create("cpr22s_access")
+            String access_token = JwtBuilder.create("cpr_access")
                     .claim("sub", payload.getSubject())
                     .claim("upn", payload.getEmail())
                     .claim("full_name", payload.get("name"))
                     .claim("laker_id", lakerID)
                     .claim("groups", roles)
-                    .claim("aud", "CPR.22S.480")
-                    .claim("iss", "edu.oswego.cs_CPR.22S.480")
+                    .claim("aud", "cpr")
+                    .claim("iss", "cpr")
                     .buildJwt().compact();
 
-            String refresh_token = JwtBuilder.create("cpr22s_refresh")
+            String refresh_token = JwtBuilder.create("cpr_refresh")
                     .claim("sub", payload.getSubject())
                     .claim("upn", payload.getEmail())
                     .claim("full_name", payload.get("name"))
-                    .claim("aud", "CPR.22S.480_refresher")
                     .claim("groups", Collections.singleton("lakers"))
-                    .claim("iss", "edu.oswego.cs_CPR.22S.480_refresher")
+                    .claim("aud", "cpr")
+                    .claim("iss", "cpr")
                     .buildJwt().compact();
 
             tokens.put("access_token", access_token);
@@ -94,14 +94,14 @@ public class AuthServices {
         Set<String> roles = getRoles(lakerID);
         
         try {
-            String access_token = JwtBuilder.create("cpr22s_access")
+            String access_token = JwtBuilder.create("cpr_access")
                     .claim("sub", payload.getSubject())
                     .claim("upn", payload.getName())
                     .claim("full_name", payload.getClaim("full_name"))
                     .claim("laker_id", lakerID)
                     .claim("groups", roles)
-                    .claim("aud", "CPR.22S.480")
-                    .claim("iss", "edu.oswego.cs_CPR.22S.480")
+                    .claim("aud", "cpr")
+                    .claim("iss", "cpr")
                     .buildJwt().compact();
             tokens.put("access_token", access_token);
         } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
