@@ -15,6 +15,9 @@ function LoginPage() {
   useEffect(() => {
     setIsLoading(true);
     setTimeout(() => setIsLoading(false), 775);
+    return () => {
+      setIsLoading(false);
+    };
   }, []);
 
   const handleFailure = (result) => {
