@@ -12,19 +12,22 @@ const ProfessorTeamComponent = () => {
   const [studentId, setStudentId] = useState({ id: '' });
   const { id } = studentId;
 
-  useEffect(async () => {
-    const allTeams = await axios
-      .get(getTeamsUrl)
-      .then((res) => {
-        if (res.data.length > 0) return res.data;
-        return [];
-      })
-      .catch((e) => {
-        alert(e.response.data);
-        return [];
-      });
-    setTeams(allTeams);
-  }, []);
+  useEffect(() => {
+    async function fetchData() {
+      const allTeams = await axios
+        .get(getTeamsUrl)
+        .then((res) => {
+          if (res.data.length > 0) return res.data;
+          return [];
+        })
+        .catch((e) => {
+          alert(e.response.data);
+          return [];
+        });
+      setTeams(allTeams);
+    }
+    fetchData();
+  }, [getTeamsUrl]);
 
   const ProfessorTeamAccordion = (team) => {
     const members = Array();
