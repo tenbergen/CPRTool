@@ -15,7 +15,7 @@ const RoleRouteHandler = ({allowedRoles}) => {
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         }
         dispatch(setUserInformation());
-    }, []);
+    }, [dispatch]);
 
     return (
         <div>

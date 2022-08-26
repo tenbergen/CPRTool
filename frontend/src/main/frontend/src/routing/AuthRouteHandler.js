@@ -16,7 +16,7 @@ const AuthRouteHandler = () => {
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         }
         dispatch(setUserInformation());
-    }, []);
+    }, [dispatch]);
 
     return <div>{isAuthenticated ? <Outlet/> : <LoginPage/>}</div>;
 };

@@ -34,7 +34,7 @@ function StudentCoursePage() {
     useEffect(() => {
         dispatch(getCourseDetailsAsync(courseId))
         dispatch(getCurrentCourseTeamAsync({courseId, lakerId}))
-    }, [])
+    }, [courseId, lakerId, dispatch])
 
     return (
         <div>

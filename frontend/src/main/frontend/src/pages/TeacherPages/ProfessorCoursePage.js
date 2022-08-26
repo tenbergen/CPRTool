@@ -31,7 +31,7 @@ function ProfessorCoursePage() {
         setIsLoading(true);
         dispatch(getCourseDetailsAsync(courseId));
         setTimeout(() => setIsLoading(false), 200);
-    }, []);
+    }, [dispatch, courseId]);
 
     return (
         <div>

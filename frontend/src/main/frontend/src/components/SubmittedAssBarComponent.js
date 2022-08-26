@@ -35,7 +35,7 @@ const SubmittedAssBarComponent = () => {
         role === "professor"
             ? dispatch(getSubmittedAssignmentsAsync({courseId, assignmentId}))
             : dispatch(getStudentSubmittedAssignmentsAsync({courseId, teamId, lakerId}))
-    }, []);
+    }, [courseId, assignmentId, teamId, lakerId, dispatch, role]);
 
     const onSubAssClick = (assignment) => {
         const teamId =  assignment.team_name

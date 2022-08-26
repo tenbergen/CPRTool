@@ -15,7 +15,7 @@ const StudentToDoComponent = () => {
 
     useEffect(() => {
         dispatch(getCombinedAssignmentPeerReviews({courseId, currentTeamId, lakerId}));
-    }, []);
+    }, [courseId, currentTeamId, lakerId, dispatch]);
 
     return (
         <h3>

@@ -14,7 +14,7 @@ function ProfessorDashboardPage() {
 
     useEffect(() => {
         dispatch(getCoursesAsync());
-    }, []);
+    }, [dispatch]);
 
     const studentView = () => {
         localStorage.setItem('alt_role', 'student');

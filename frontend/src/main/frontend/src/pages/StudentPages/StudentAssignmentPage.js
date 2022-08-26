@@ -14,7 +14,7 @@ function StudentAssignmentPage() {
 
     useEffect(() => {
         dispatch(getAssignmentDetailsAsync({ courseId, assignmentId }));
-    }, []);
+    }, [courseId, assignmentId, dispatch]);
 
     return (
         <div>

@@ -14,7 +14,7 @@ function StudentDashboardPage() {
 
     useEffect(() => {
         dispatch(getStudentCoursesAsync(lakerId));
-    }, []);
+    }, [dispatch, lakerId]);
 
     const courseClickHandler = (course) => {
         dispatch(getCourseDetailsAsync(course.course_id));

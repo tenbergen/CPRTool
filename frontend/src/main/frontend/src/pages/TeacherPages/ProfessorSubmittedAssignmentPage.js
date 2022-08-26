@@ -14,7 +14,7 @@ function ProfessorSubmittedAssignmentPage() {
 
     useEffect( () => {
         dispatch(getSubmittedAssignmentDetailsAsync({courseId, assignmentId, teamId}))
-    }, []);
+    }, [assignmentId, courseId, dispatch, teamId]);
 
     const downloadFile = (blob, fileName) => {
         const fileURL = URL.createObjectURL(blob);

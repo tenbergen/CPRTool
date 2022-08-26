@@ -28,7 +28,7 @@ function ProfessorAssignmentPage() {
 
     useEffect(() => {
         dispatch(getCourseDetailsAsync(courseId));
-    }, []);
+    }, [courseId, dispatch]);
 
     const onComponentClick = (component) => {
         dispatch(getAssignmentDetailsAsync({courseId, assignmentId}));
