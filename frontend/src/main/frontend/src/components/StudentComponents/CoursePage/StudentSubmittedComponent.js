@@ -15,7 +15,7 @@ const StudentSubmittedComponent = () => {
 
   useEffect(() => {
     dispatch(getStudentSubmittedAssignmentsAsync({ courseId, lakerId }));
-  }, []);
+  }, [courseId, lakerId, dispatch]);
 
   return (
     <h3>

@@ -12,7 +12,7 @@ const ProfessorAssignmentComponent = () => {
 
   useEffect(() => {
     dispatch(getCourseAssignmentsAsync(courseId));
-  }, []);
+  }, [dispatch, courseId]);
 
   return (
     <div>

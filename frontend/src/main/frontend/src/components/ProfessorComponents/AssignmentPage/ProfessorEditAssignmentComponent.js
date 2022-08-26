@@ -26,7 +26,7 @@ const ProfessorEditAssignmentComponent = () => {
 
   useEffect(() => {
     dispatch(getAssignmentDetailsAsync({ courseId, assignmentId }));
-  }, []);
+  }, [courseId, assignmentId, dispatch]);
 
   const fileChangeHandler = (event, fileType) => {
     let file = event.target.files[0];

@@ -25,7 +25,7 @@ const StudentPeerReviewComponent = () => {
 
   useEffect(() => {
     dispatch(getAssignmentDetailsAsync({ courseId, assignmentId }));
-  }, []);
+  }, [courseId, assignmentId, dispatch]);
 
   const downloadFile = (blob, fileName) => {
     const fileURL = URL.createObjectURL(blob);

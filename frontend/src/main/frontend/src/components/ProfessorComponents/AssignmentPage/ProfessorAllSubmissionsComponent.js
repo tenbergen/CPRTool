@@ -14,9 +14,12 @@ const ProfessorAllSubmissionsComponent = () => {
   );
   const [assignedTeamCount, setAssignedTeamCount] = useState();
 
-  useEffect(async () => {
-    dispatch(getSubmittedAssignmentsAsync({ courseId, assignmentId }));
-  }, []);
+  useEffect(() => {
+    async function fetchData() {
+      dispatch(getSubmittedAssignmentsAsync({ courseId, assignmentId }));
+    }
+    fetchData();
+  }, [dispatch, courseId, assignmentId]);
 
   const distribute = async () => {
     const url = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/assign/${assignedTeamCount}`;

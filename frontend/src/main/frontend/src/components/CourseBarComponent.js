@@ -51,7 +51,7 @@ const CourseBarComponent = ({ title }) => {
     dataLoaded && role === 'professor'
       ? dispatch(getCoursesAsync())
       : dispatch(getStudentCoursesAsync(lakerId));
-  }, []);
+  }, [lakerId, dataLoaded, role, dispatch]);
 
   const onCourseClick = (course) => {
     const courseId = course.course_id;

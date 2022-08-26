@@ -15,7 +15,7 @@ function App() {
   useEffect(() => {
     dispatch(refreshTokenAsync());
     dispatch(setUserInformation());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div>

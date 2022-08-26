@@ -29,7 +29,7 @@ const TeamComponent = () => {
       setTeams(openTeams);
     }
     fetchData();
-  }, []);
+  }, [getTeamsUrl]);
 
   const joinTeam = async (teamId) => {
     const joinUrl = `${process.env.REACT_APP_URL}/teams/team/join`;

@@ -18,7 +18,7 @@ const ProfessorRosterComponent = () => {
 
   useEffect(() => {
     dispatch(getCurrentCourseStudentsAsync(courseId));
-  }, []);
+  }, [dispatch, courseId]);
 
   const [formData, setFormData] = useState({
     Name: '',

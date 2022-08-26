@@ -27,7 +27,7 @@ const MyTeamComponent = () => {
         });
       }
     });
-  }, []);
+  }, [membersUrl]);
 
   return (
     <div>

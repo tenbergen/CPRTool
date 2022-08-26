@@ -20,7 +20,7 @@ const RegularAssignmentComponent = () => {
   useEffect(() => {
     dispatch(getCurrentCourseTeamAsync({ courseId, lakerId }));
     dispatch(getAssignmentDetailsAsync({ courseId, assignmentId }));
-  }, []);
+  }, [courseId, lakerId, assignmentId, dispatch]);
 
   const assignmentFileHandler = (event) => {
     let file = event.target.files[0];

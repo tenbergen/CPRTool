@@ -53,7 +53,7 @@ const AssBarComponent = () => {
     dispatch(
       getCombinedAssignmentPeerReviews({ courseId, currentTeamId, lakerId })
     );
-  }, []);
+  }, [courseId, currentTeamId, lakerId, dispatch]);
 
   const onAssClick = (assignment) => {
     const curr =

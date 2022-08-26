@@ -39,7 +39,7 @@ const GradeAssBarComponent = () => {
 
   useEffect(() => {
     dispatch(getCourseAssignmentsAsync(courseId));
-  }, []);
+  }, [courseId, dispatch]);
 
   const onAssClick = (assignment) => {
     setChosen(assignment.assignment_id);
