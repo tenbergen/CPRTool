@@ -12,21 +12,24 @@ const TeamComponent = () => {
   const [teams, setTeams] = useState([]);
   const { lakerId } = useSelector((state) => state.auth);
 
-  useEffect(async () => {
-    const allTeams = await axios
-      .get(getTeamsUrl)
-      .then((res) => {
-        console.log(res);
-        if (res.data.length > 0) return res.data;
-        return [];
-      })
-      .catch((e) => {
-        console.log(e.response.data);
-        return [];
-      });
-    const openTeams = allTeams.filter((team) => !team.team_full);
-    setTeams(openTeams);
-  }, [getTeamsUrl]);
+  useEffect(() => {
+    async function fetchData() {
+      const allTeams = await axios
+        .get(getTeamsUrl)
+        .then((res) => {
+          console.log(res);
+          if (res.data.length > 0) return res.data;
+          return [];
+        })
+        .catch((e) => {
+          console.log(e.response.data);
+          return [];
+        });
+      const openTeams = allTeams.filter((team) => !team.team_full);
+      setTeams(openTeams);
+    }
+    fetchData();
+  }, []);
 
   const joinTeam = async (teamId) => {
     const joinUrl = `${process.env.REACT_APP_URL}/teams/team/join`;
