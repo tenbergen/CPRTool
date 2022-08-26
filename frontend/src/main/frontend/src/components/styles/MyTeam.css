@@ -1,46 +1,46 @@
 .my-team-container {
-    background-color: white;
-    border-radius: 50px;
-    padding-left: 5%;
-    padding-top: 2%;
-    height: 70vh;
+  background-color: white;
+  border-radius: 50px;
+  padding-left: 5%;
+  padding-top: 2%;
+  height: 70vh;
 }
 
-.team-header{
-    padding-top: 2%;
-    font-size: x-large;
+.team-header {
+  padding-top: 2%;
+  font-size: x-large;
 }
 
 .team-name-container {
-    border-radius: 50px;
-    height: 10vh;
-    background-image: linear-gradient(to right, #82DFE8, rgba(130, 223, 232, 0));
+  border-radius: 50px;
+  height: 10vh;
+  background-image: linear-gradient(to right, #82dfe8, rgba(130, 223, 232, 0));
 }
 
 .team-name {
-    position: relative;
-    top: 50%;
-    padding-left: 5%;
-    font-size: x-large;
-    font-weight: bold;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
+  position: relative;
+  top: 50%;
+  padding-left: 5%;
+  font-size: x-large;
+  font-weight: bold;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
 .members-name-container {
-    border-radius: 50px;
-    height: 7vh;
-    background-image: linear-gradient(to right, #57E1B2, rgba(130, 223, 232, 0));
+  border-radius: 50px;
+  height: 7vh;
+  background-image: linear-gradient(to right, #57e1b2, rgba(130, 223, 232, 0));
 }
 
 .my-team-members {
-    position: relative;
-    top: 50%;
-    padding-left: 5%;
-    font-size: large;
-    font-weight: normal;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
+  position: relative;
+  top: 50%;
+  padding-left: 5%;
+  font-size: large;
+  font-weight: normal;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }

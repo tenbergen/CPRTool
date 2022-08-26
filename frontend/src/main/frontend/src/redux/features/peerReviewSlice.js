@@ -1,17 +1,17 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 const peerReviewSlice = createSlice({
-    name: 'peerReviewSlice',
-    initialState: {
-        peerReviewTeamFiles: [],
-        peerReviewFeedback: null,
-        peerReviewFeedbackFiles: [],
+  name: 'peerReviewSlice',
+  initialState: {
+    peerReviewTeamFiles: [],
+    peerReviewFeedback: null,
+    peerReviewFeedbackFiles: [],
+  },
+  reducers: {
+    peerReviewFeedback: (state, action) => {
+      state.peerReviewFeedback = action.payload;
     },
-    reducers: {
-        peerReviewFeedback: (state, action) => {
-            state.peerReviewFeedback = action.payload;
-        },
-    },
+  },
 });
 
 export default peerReviewSlice.reducer;
