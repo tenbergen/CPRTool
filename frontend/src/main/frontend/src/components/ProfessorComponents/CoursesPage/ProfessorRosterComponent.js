@@ -7,6 +7,9 @@ import {
   getCurrentCourseStudentsAsync,
 } from '../../../redux/features/courseSlice';
 import { useParams } from 'react-router-dom';
+import noStudent from '../../../assets/no_student.png';
+import { CgAdd } from 'react-icons/cg';
+import LoaderComponent from '../../LoaderComponenets/LoaderComponent';
 
 const ProfessorRosterComponent = () => {
   const dispatch = useDispatch();
@@ -80,92 +83,126 @@ const ProfessorRosterComponent = () => {
     dispatch(getCourseDetailsAsync(courseId));
   };
 
-  const addsStudent = () => {
+  const addStudent = () => {
     return (
-      <div id='addStudentDiv'>
-        <label>Name:</label>
-        <input
-          type='text'
-          className='rosterInput'
-          name='Name'
-          value={Name}
-          required
-          onChange={(e) => OnChange(e)}
-        />
-        <label>Email:</label>
-        <input
-          type='text'
-          className='rosterInput'
-          name='Email'
-          value={Email}
-          required
-          onChange={(e) => OnChange(e)}
-        />
-        <button id='addStudentButton' onClick={handleSubmit}>
-          Add Student
-        </button>
+      <div className='add-student-container'>
+        <div className='add-student-wrapper'>
+          <label>Name:</label>
+          <input
+            type='text'
+            className='rosterInput'
+            name='Name'
+            value={Name}
+            required
+            onChange={(e) => OnChange(e)}
+          />
+          <label>Email:</label>
+          <input
+            type='text'
+            className='rosterInput'
+            name='Email'
+            value={Email}
+            required
+            onChange={(e) => OnChange(e)}
+          />
+          <button id='addStudentButton' onClick={handleSubmit}>
+            Add Student
+          </button>
+        </div>
       </div>
     );
   };
 
   const [show, setShow] = useState(false);
-  const setTrue = () => setShow(true);
+  const setTrue = () => {
+    setShow(true);
+  };
   const setFalse = () => setShow(false);
 
   return (
-    <div className='RosterPage'>
-      <div id='roster'>
-        {!currentCourseStudentsLoaded ? (
-          <h1> Loading </h1>
-        ) : (
-          <table className='rosterTable'>
-            <thead>
-              <tr>
-                <th className='rosterHeader'>Name</th>
-                <th className='rosterHeader'>Email</th>
-                <th className='rosterHeader'>Team</th>
-                <th className='rosterHeader'></th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentCourseStudents.map((student) => (
-                <tr>
-                  <th className='rosterComp'>
-                    {student.first_name
-                      ? student.first_name + ' ' + student.last_name
-                      : ''}
-                  </th>
-                  <th className='rosterComp'>{student.student_id}</th>
-                  <th className='rosterComp'>
-                    {student.team !== null ? student.team : ''}
-                  </th>
-                  <th className='rosterComp'>
-                    <div className='crossMark-wrapper'>
-                      <div
-                        onClick={() => deleteStudent(student)}
-                        className='crossMark'
-                      >
-                        X
-                      </div>
+    <div>
+      <div className='RosterPage'>
+        <div id='roster'>
+          {!currentCourseStudentsLoaded ? (
+            <LoaderComponent />
+          ) : (
+            <div className='roster-wrapper'>
+              {currentCourseStudents.length > 0 ? (
+                <div>
+                  <table className='rosterTable'>
+                    <thead>
+                      <tr>
+                        <th className='rosterHeader'>Name</th>
+                        <th className='rosterHeader'>Email</th>
+                        <th className='rosterHeader'>Team</th>
+                        <th className='rosterHeader'></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentCourseStudents.map((student) => (
+                        <tr>
+                          <th className='rosterComp'>
+                            {student.first_name
+                              ? student.first_name + ' ' + student.last_name
+                              : ''}
+                          </th>
+                          <th className='rosterComp'>{student.student_id}</th>
+                          <th className='rosterComp'>
+                            {student.team !== null ? student.team : ''}
+                          </th>
+                          <th className='rosterComp'>
+                            <div className='crossMark-wrapper'>
+                              <div
+                                onClick={() => deleteStudent(student)}
+                                className='crossMark'
+                              >
+                                X
+                              </div>
+                            </div>
+                          </th>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className='no-student-container'>
+                  <div className='no-student-wrapper'>
+                    <div className='no-student-img-wrapper'>
+                      <img
+                        className='no-student-img'
+                        src={noStudent}
+                        alt='no_students'
+                        onClick={() => {
+                          setTrue();
+                        }}
+                      />
                     </div>
-                  </th>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+                    <div className='no-student-header'>No Students Added</div>
+                    <div className='no-student-description'>
+                      Hit the plus button to add student
+                    </div>
+                  </div>
+                </div>
+              )}
+              {show ? (
+                addStudent()
+              ) : (
+                <div className='plus-button-container'>
+                  <div className='plus-button-wrapper'>
+                    <CgAdd
+                      onClick={() => setTrue()}
+                      className='plus-button'
+                      size='50px'
+                      color='#6c63ff'
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
-      {show ? (
-        addsStudent()
-      ) : (
-        <button className='button_plus' onClick={setTrue}>
-          <img
-            className='button_plus'
-            src={require('../../styles/plus-purple.png')}
-            alt='plus_button'
-          />
-        </button>
-      )}
     </div>
   );
 };

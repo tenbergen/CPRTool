@@ -80,19 +80,14 @@
 }
 
 #addStudentButton {
-  border-radius: 50px;
-  transition: all 0.2s ease-out;
+  border-radius: 30px;
+  transition: ease-in-out 0.3s;
 }
 
 #addStudentButton:hover {
   cursor: pointer;
-  opacity: 0.8;
-}
-
-#addStudentDiv {
-  position: absolute;
-  top: 87%;
-  left: 40%;
+  background-color: #6c63ff;
+  color: #fff;
 }
 
 .button_plus {
@@ -102,4 +97,75 @@
   cursor: pointer;
   top: 85.5%;
   left: 55%;
+}
+
+.no-student-container {
+  height: 100%;
+  width: 100%;
+}
+
+.no-student-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.no-student-img-wrapper {
+  width: 220px;
+  height: 220px;
+}
+
+.no-student-img-wrapper:hover {
+  cursor: pointer;
+}
+.no-student-img {
+  width: 200px;
+  height: 200px;
+  transition: ease-in-out 0.3s;
+}
+.no-student-img:hover {
+  transform: scale(1.1);
+}
+
+.no-student-header {
+  font-weight: bold;
+  font-size: 1.5em;
+  color: #6c63ff;
+}
+.no-student-description {
+  font-weight: thin;
+  font-size: 1.2em;
+  opacity: 0.6;
+}
+
+.add-student-container {
+  width: 56.5%;
+  position: absolute;
+  top: 85%;
+}
+
+.add-student-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.plus-button-container {
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 56.5%;
+  position: absolute;
+  top: 85%;
+}
+
+.plus-button {
+  transition: ease-in-out 0.3s;
+}
+
+.plus-button:hover {
+  cursor: pointer;
+  transform: scale(1.1);
 }
