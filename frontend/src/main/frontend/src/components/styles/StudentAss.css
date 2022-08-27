@@ -90,3 +90,23 @@
 .add-tile-files {
   width: fit-content;
 }
+
+.no-todo-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 25px;
+}
+
+.no-todo-img {
+  height: 250px;
+  width: 250px;
+}
+
+.no-todo-head {
+  color: #6c63ff;
+  font-size: 1.2em;
+  opacity: 0.9;
+  margin-top: 15px;
+}
