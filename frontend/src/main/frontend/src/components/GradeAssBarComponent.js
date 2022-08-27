@@ -66,14 +66,17 @@ const GradeAssBarComponent = () => {
         <h2 className='kumba-30'> Assignments </h2>
       </div>
       <div className='abc-assignments'>
-        {courseAssignments.map((assignment) => (
-          <GradeAssBarLink
-            key={uuid()}
-            onClick={() => onAssClick(assignment)}
-            active={assignment.assignment_id === chosen}
-            assignment={assignment}
-          />
-        ))}
+        {courseAssignments.map(
+          (assignment) =>
+            assignment && (
+              <GradeAssBarLink
+                key={uuid()}
+                onClick={() => onAssClick(assignment)}
+                active={assignment.assignment_id === chosen}
+                assignment={assignment}
+              />
+            )
+        )}
       </div>
     </div>
   );

@@ -137,34 +137,35 @@ function ProfessorSubmittedAssignmentPage() {
                         <div className='peerReviewList'>
                           {currentSubmittedAssignment.peer_reviews !== null
                             ? currentSubmittedAssignment.peer_reviews.map(
-                                (peerReview) => (
-                                  <li
-                                    key={uuid()}
-                                    className='psa-peerReviewListItem'
-                                  >
-                                    <b> {peerReview.reviewed_by} </b>
-                                    <div>
-                                      <span>
-                                        {' '}
-                                        {peerReview.grade === -1
-                                          ? 'Pending'
-                                          : peerReview.grade}{' '}
-                                      </span>
-                                      &nbsp;
-                                      <span
-                                        className='psa-sac-filename'
-                                        onClick={() =>
-                                          onFeedBackClick(
-                                            peerReview.reviewed_by,
-                                            peerReview.submission_name
-                                          )
-                                        }
-                                      >
-                                        View feedback
-                                      </span>
-                                    </div>
-                                  </li>
-                                )
+                                (peerReview) =>
+                                  peerReview && (
+                                    <li
+                                      key={uuid()}
+                                      className='psa-peerReviewListItem'
+                                    >
+                                      <b> {peerReview.reviewed_by} </b>
+                                      <div>
+                                        <span>
+                                          {' '}
+                                          {peerReview.grade === -1
+                                            ? 'Pending'
+                                            : peerReview.grade}{' '}
+                                        </span>
+                                        &nbsp;
+                                        <span
+                                          className='psa-sac-filename'
+                                          onClick={() =>
+                                            onFeedBackClick(
+                                              peerReview.reviewed_by,
+                                              peerReview.submission_name
+                                            )
+                                          }
+                                        >
+                                          View feedback
+                                        </span>
+                                      </div>
+                                    </li>
+                                  )
                               )
                             : null}
                         </div>

@@ -49,20 +49,23 @@ function ProfessorDashboardPage() {
             </div>
 
             <div id='proCourseList'>
-              {courses.map((course) => (
-                <Link
-                  key={uuid()}
-                  to={'/details/professor/' + course.course_id}
-                  onClick={() => onCourseClick(course)}
-                >
-                  <li className='courseListItem'>
-                    <span className='outfit-16 pdp-coursename'>
-                      {course.course_id}
-                    </span>
-                    <span className='kumba-25'>{course.course_name}</span>
-                  </li>
-                </Link>
-              ))}
+              {courses.map(
+                (course) =>
+                  course && (
+                    <Link
+                      key={uuid()}
+                      to={'/details/professor/' + course.course_id}
+                      onClick={() => onCourseClick(course)}
+                    >
+                      <li className='courseListItem'>
+                        <span className='outfit-16 pdp-coursename'>
+                          {course.course_id}
+                        </span>
+                        <span className='kumba-25'>{course.course_name}</span>
+                      </li>
+                    </Link>
+                  )
+              )}
             </div>
             <div id='addClass'>
               <Link to='/create/course'>

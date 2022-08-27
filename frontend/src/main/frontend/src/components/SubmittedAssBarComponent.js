@@ -73,16 +73,19 @@ const SubmittedAssBarComponent = () => {
       </div>
       <div className='abc-assignments'>
         {assignmentsLoaded
-          ? courseSubmittedAssignments.map((assignment) => (
-              <SubAssBarLink
-                key={uuid()}
-                active={
-                  assignment.assignment_id + assignment.team_name === chosen
-                }
-                assignment={assignment}
-                onClick={() => onSubAssClick(assignment)}
-              />
-            ))
+          ? courseSubmittedAssignments.map(
+              (assignment) =>
+                assignment && (
+                  <SubAssBarLink
+                    key={uuid()}
+                    active={
+                      assignment.assignment_id + assignment.team_name === chosen
+                    }
+                    assignment={assignment}
+                    onClick={() => onSubAssClick(assignment)}
+                  />
+                )
+            )
           : null}
       </div>
     </div>

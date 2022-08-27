@@ -52,14 +52,17 @@ function ProfessorAssignmentPage() {
             <GradeAssBarComponent />
             <div className='scp-component'>
               <div className='scp-component-links'>
-                {components.map((t) => (
-                  <AssComponent
-                    key={uuid()}
-                    component={t}
-                    active={t === chosen}
-                    onClick={() => onComponentClick(t)}
-                  />
-                ))}
+                {components.map(
+                  (t) =>
+                    t && (
+                      <AssComponent
+                        key={uuid()}
+                        component={t}
+                        active={t === chosen}
+                        onClick={() => onComponentClick(t)}
+                      />
+                    )
+                )}
               </div>
               <div>
                 {chosen === 'All Submissions' && (

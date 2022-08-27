@@ -52,14 +52,17 @@ function ProfessorCoursePage() {
             <CourseBarComponent title={'Courses'} />
             <div className='pcp-components'>
               <div className='pcp-component-links'>
-                {components.map((t) => (
-                  <CourseComponent
-                    key={uuid()}
-                    component={t}
-                    active={t === chosen}
-                    onClick={() => setChosen(t)}
-                  />
-                ))}
+                {components.map(
+                  (t) =>
+                    t && (
+                      <CourseComponent
+                        key={uuid()}
+                        component={t}
+                        active={t === chosen}
+                        onClick={() => setChosen(t)}
+                      />
+                    )
+                )}
               </div>
               <div>
                 {chosen === 'Assignments' && <ProfessorAssignmentComponent />}

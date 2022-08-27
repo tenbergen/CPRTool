@@ -33,15 +33,18 @@ const ProfessorTeamComponent = () => {
       {teams.length > 0 ? (
         <div className='acordion-wrapper'>
           <div className='accordion'>
-            {teams.map((team) => (
-              <div key={uuid()}>
-                <ProfessorTeamAccordion
-                  team={team}
-                  teams={teams}
-                  setTeams={setTeams}
-                />
-              </div>
-            ))}
+            {teams.map(
+              (team) =>
+                team && (
+                  <div key={uuid()}>
+                    <ProfessorTeamAccordion
+                      team={team}
+                      teams={teams}
+                      setTeams={setTeams}
+                    />
+                  </div>
+                )
+            )}
           </div>
         </div>
       ) : (

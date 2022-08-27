@@ -46,13 +46,16 @@ const ProfessorAllSubmissionsComponent = () => {
       {assignmentsLoaded ? (
         <div className='psc-container'>
           <div id='assList'>
-            {courseSubmittedAssignments.map((assignment) => (
-              <AssignmentTile
-                key={uuid()}
-                assignment={assignment}
-                submitted={true}
-              />
-            ))}
+            {courseSubmittedAssignments.map(
+              (assignment) =>
+                assignment && (
+                  <AssignmentTile
+                    key={uuid()}
+                    assignment={assignment}
+                    submitted={true}
+                  />
+                )
+            )}
           </div>
           <div
             className='input-field'

@@ -20,9 +20,12 @@ const ProfessorAssignmentComponent = () => {
     <div>
       <div className='TeacherAss'>
         <div id='teacherAssList'>
-          {courseAssignments.map((assignment) => (
-            <AssignmentTile key={uuid()} assignment={assignment} />
-          ))}
+          {courseAssignments.map(
+            (assignment) =>
+              assignment && (
+                <AssignmentTile key={uuid()} assignment={assignment} />
+              )
+          )}
         </div>
         <div id='assAddClass'>
           <Link to='create/assignment'>

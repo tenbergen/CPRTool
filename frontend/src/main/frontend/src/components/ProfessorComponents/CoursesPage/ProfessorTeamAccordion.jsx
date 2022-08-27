@@ -123,19 +123,22 @@ const ProfessorTeamAccordion = ({ team, teams, setTeams }) => {
       </div>
       {isActive.includes(team) && (
         <div className='accordionContent'>
-          {members.map((name) => (
-            <div key={uuid()} className='memberItem'>
-              <div className='memberWrapper'>
-                <div className='teamMember'>{name}</div>
-                <span
-                  onClick={() => handleRemoveStudent(name)}
-                  className='crossMarkTeam'
-                >
-                  &#10060;
-                </span>
-              </div>
-            </div>
-          ))}
+          {members.map(
+            (name) =>
+              name && (
+                <div key={uuid()} className='memberItem'>
+                  <div className='memberWrapper'>
+                    <div className='teamMember'>{name}</div>
+                    <span
+                      onClick={() => handleRemoveStudent(name)}
+                      className='crossMarkTeam'
+                    >
+                      &#10060;
+                    </span>
+                  </div>
+                </div>
+              )
+          )}
           {isAdd.includes(team) ? (
             <div className='teamMember'>
               <label>Student ID:</label>

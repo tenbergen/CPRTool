@@ -84,14 +84,17 @@ const AssBarComponent = () => {
         <h2 className='kumba-30'> Assignments </h2>
       </div>
       <div className='abc-assignments'>
-        {combinedAssignmentPeerReviews.map((assignment) => (
-          <AssBarLink
-            key={uuid()}
-            onClick={() => onAssClick(assignment)}
-            active={assignment.final_id === chosen}
-            assignment={assignment}
-          />
-        ))}
+        {combinedAssignmentPeerReviews.map(
+          (assignment) =>
+            assignment && (
+              <AssBarLink
+                key={uuid()}
+                onClick={() => onAssClick(assignment)}
+                active={assignment.final_id === chosen}
+                assignment={assignment}
+              />
+            )
+        )}
       </div>
     </div>
   );

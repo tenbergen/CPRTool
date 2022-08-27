@@ -78,14 +78,17 @@ const CourseBarComponent = ({ title }) => {
       ) : null}
       <div className='cbc-courses'>
         <div>
-          {courses.map((course) => (
-            <CourseBarLink
-              key={uuid()}
-              onClick={() => onCourseClick(course)}
-              active={course.course_id === chosen}
-              course={course}
-            />
-          ))}
+          {courses.map(
+            (course) =>
+              course && (
+                <CourseBarLink
+                  key={uuid()}
+                  onClick={() => onCourseClick(course)}
+                  active={course.course_id === chosen}
+                  course={course}
+                />
+              )
+          )}
         </div>
       </div>
     </div>
