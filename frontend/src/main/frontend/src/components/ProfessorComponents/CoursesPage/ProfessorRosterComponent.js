@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom';
 import noStudent from '../../../assets/no_student.png';
 import { CgAdd } from 'react-icons/cg';
 import LoaderComponent from '../../LoaderComponenets/LoaderComponent';
+import uuid from 'react-uuid';
 
 const ProfessorRosterComponent = () => {
   const dispatch = useDispatch();
@@ -139,29 +140,34 @@ const ProfessorRosterComponent = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {currentCourseStudents.map((student) => (
-                        <tr>
-                          <th className='rosterComp'>
-                            {student.first_name
-                              ? student.first_name + ' ' + student.last_name
-                              : ''}
-                          </th>
-                          <th className='rosterComp'>{student.student_id}</th>
-                          <th className='rosterComp'>
-                            {student.team !== null ? student.team : ''}
-                          </th>
-                          <th className='rosterComp'>
-                            <div className='crossMark-wrapper'>
-                              <div
-                                onClick={() => deleteStudent(student)}
-                                className='crossMark'
-                              >
-                                X
-                              </div>
-                            </div>
-                          </th>
-                        </tr>
-                      ))}
+                      {currentCourseStudents.map(
+                        (student) =>
+                          student && (
+                            <tr key={uuid()}>
+                              <th className='rosterComp'>
+                                {student.first_name
+                                  ? student.first_name + ' ' + student.last_name
+                                  : ''}
+                              </th>
+                              <th className='rosterComp'>
+                                {student.student_id}
+                              </th>
+                              <th className='rosterComp'>
+                                {student.team !== null ? student.team : ''}
+                              </th>
+                              <th className='rosterComp'>
+                                <div className='crossMark-wrapper'>
+                                  <div
+                                    onClick={() => deleteStudent(student)}
+                                    className='crossMark'
+                                  >
+                                    X
+                                  </div>
+                                </div>
+                              </th>
+                            </tr>
+                          )
+                      )}
                     </tbody>
                   </table>
                 </div>
