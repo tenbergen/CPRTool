@@ -119,35 +119,39 @@ const ProfessorRosterComponent = () => {
           <h1> Loading </h1>
         ) : (
           <table className='rosterTable'>
-            <tr>
-              <th className='rosterHeader'>Name</th>
-              <th className='rosterHeader'>Email</th>
-              <th className='rosterHeader'>Team</th>
-              <th className='rosterHeader'></th>
-            </tr>
-            {currentCourseStudents.map((student) => (
+            <thead>
               <tr>
-                <th className='rosterComp'>
-                  {student.first_name
-                    ? student.first_name + ' ' + student.last_name
-                    : ''}
-                </th>
-                <th className='rosterComp'>{student.student_id}</th>
-                <th className='rosterComp'>
-                  {student.team !== null ? student.team : ''}
-                </th>
-                <th className='rosterComp'>
-                  <div className='crossMark-wrapper'>
-                    <div
-                      onClick={() => deleteStudent(student)}
-                      className='crossMark'
-                    >
-                      X
-                    </div>
-                  </div>
-                </th>
+                <th className='rosterHeader'>Name</th>
+                <th className='rosterHeader'>Email</th>
+                <th className='rosterHeader'>Team</th>
+                <th className='rosterHeader'></th>
               </tr>
-            ))}
+            </thead>
+            <tbody>
+              {currentCourseStudents.map((student) => (
+                <tr>
+                  <th className='rosterComp'>
+                    {student.first_name
+                      ? student.first_name + ' ' + student.last_name
+                      : ''}
+                  </th>
+                  <th className='rosterComp'>{student.student_id}</th>
+                  <th className='rosterComp'>
+                    {student.team !== null ? student.team : ''}
+                  </th>
+                  <th className='rosterComp'>
+                    <div className='crossMark-wrapper'>
+                      <div
+                        onClick={() => deleteStudent(student)}
+                        className='crossMark'
+                      >
+                        X
+                      </div>
+                    </div>
+                  </th>
+                </tr>
+              ))}
+            </tbody>
           </table>
         )}
       </div>
