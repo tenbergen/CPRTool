@@ -23,8 +23,8 @@ const CreateCoursePage = () => {
     course_section: '',
     semester: '',
     abbreviation: '',
-    year: undefined,
-    crn: undefined,
+    year: 0,
+    crn: 0,
   });
 
   const { course_name, course_section, semester, abbreviation, year, crn } =
