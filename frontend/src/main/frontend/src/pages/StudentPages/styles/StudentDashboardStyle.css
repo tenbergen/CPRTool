@@ -102,3 +102,27 @@ a {
   text-decoration-line: none;
   color: black;
 }
+
+.no-course-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.no-course-img {
+  height: 350px;
+  width: 350px;
+}
+
+.no-course-head {
+  color: #6c63ff;
+  font-weight: bold;
+  font-size: 1.4em;
+  margin-top: 2%;
+}
+
+.no-course-description {
+  font-size: 1.2em;
+  margin-top: 5px;
+}

@@ -9,6 +9,7 @@ import {
   getStudentCoursesAsync,
 } from '../../redux/features/courseSlice';
 import uuid from 'react-uuid';
+import noCourse from '.././../assets/no-course.png';
 
 function StudentDashboardPage() {
   const dispatch = useDispatch();
@@ -51,22 +52,36 @@ function StudentDashboardPage() {
               ) : null}
             </div>
 
-            <div id='courseList'>
-              {courses.map((course) => (
-                <Link
-                  key={uuid()}
-                  to={'/details/student/' + course.course_id}
-                  onClick={() => courseClickHandler(course)}
-                >
-                  <li className='courseListItem'>
-                    <span className='outfit-16 pdp-coursename'>
-                      {course.course_id}
-                    </span>
-                    <span className='kumba-25'>{course.course_name}</span>
-                  </li>
-                </Link>
-              ))}
-            </div>
+            {courses.length === 0 ? (
+              <div className='no-course-wrapper'>
+                <img
+                  className='no-course-img'
+                  src={noCourse}
+                  alt='No Courses'
+                />
+                <div className='no-course-head'>No courses to see here</div>
+                <div className='no-course-description'>
+                  Inform your instructor to add you to a course
+                </div>
+              </div>
+            ) : (
+              <div id='courseList'>
+                {courses.map((course) => (
+                  <Link
+                    key={uuid()}
+                    to={'/details/student/' + course.course_id}
+                    onClick={() => courseClickHandler(course)}
+                  >
+                    <li className='courseListItem'>
+                      <span className='outfit-16 pdp-coursename'>
+                        {course.course_id}
+                      </span>
+                      <span className='kumba-25'>{course.course_name}</span>
+                    </li>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}
