@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCourseDetailsAsync } from '../../redux/features/courseSlice';
 import { getCurrentCourseTeamAsync } from '../../redux/features/teamSlice';
 import MyTeamComponent from '../../components/StudentComponents/CoursePage/MyTeamComponent';
+import uuid from 'react-uuid';
 
 const CourseComponent = ({ active, component, onClick }) => {
   return (
@@ -60,7 +61,7 @@ function StudentCoursePage() {
                 <div className='scp-component-links'>
                   {components.map((t) => (
                     <CourseComponent
-                      key={t}
+                      key={uuid()}
                       component={t}
                       active={t === chosen}
                       onClick={() => setChosen(t)}

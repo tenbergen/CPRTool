@@ -14,6 +14,7 @@ import {
   getCourseAssignmentsAsync,
 } from '../redux/features/assignmentSlice';
 import { getCurrentCourseTeamAsync } from '../redux/features/teamSlice';
+import uuid from 'react-uuid';
 
 const CourseBarLink = ({ active, course, onClick }) => {
   const role = useSelector((state) => state.auth.role);
@@ -79,7 +80,7 @@ const CourseBarComponent = ({ title }) => {
         <div>
           {courses.map((course) => (
             <CourseBarLink
-              key={course.course_id}
+              key={uuid()}
               onClick={() => onCourseClick(course)}
               active={course.course_id === chosen}
               course={course}

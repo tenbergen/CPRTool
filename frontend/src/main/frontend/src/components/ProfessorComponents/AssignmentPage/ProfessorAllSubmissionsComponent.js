@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { getSubmittedAssignmentsAsync } from '../../../redux/features/submittedAssignmentSlice';
 import AssignmentTile from '../../AssignmentTile';
+import uuid from 'react-uuid';
 
 const ProfessorAllSubmissionsComponent = () => {
   const dispatch = useDispatch();
@@ -37,7 +38,7 @@ const ProfessorAllSubmissionsComponent = () => {
           } team(s).`
         );
       });
-    setAssignedTeamCount(undefined);
+    setAssignedTeamCount(0);
   };
 
   return (
@@ -46,7 +47,11 @@ const ProfessorAllSubmissionsComponent = () => {
         <div className='psc-container'>
           <div id='assList'>
             {courseSubmittedAssignments.map((assignment) => (
-              <AssignmentTile assignment={assignment} submitted={true} />
+              <AssignmentTile
+                key={uuid()}
+                assignment={assignment}
+                submitted={true}
+              />
             ))}
           </div>
           <div

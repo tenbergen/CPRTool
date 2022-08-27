@@ -5,6 +5,8 @@ import { Link, useParams } from 'react-router-dom';
 import { getCourseAssignmentsAsync } from '../../../redux/features/assignmentSlice';
 import AssignmentTile from '../../AssignmentTile';
 
+import uuid from 'react-uuid';
+
 const ProfessorAssignmentComponent = () => {
   const dispatch = useDispatch();
   const { courseId } = useParams();
@@ -19,7 +21,7 @@ const ProfessorAssignmentComponent = () => {
       <div className='TeacherAss'>
         <div id='teacherAssList'>
           {courseAssignments.map((assignment) => (
-            <AssignmentTile assignment={assignment} />
+            <AssignmentTile key={uuid()} assignment={assignment} />
           ))}
         </div>
         <div id='assAddClass'>

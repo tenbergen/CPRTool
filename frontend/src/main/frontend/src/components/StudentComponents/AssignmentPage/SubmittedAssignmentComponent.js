@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import '../../styles/SubmittedAssignmentComponent.css';
+import uuid from 'react-uuid';
 
 const SubmittedAssignmentComponent = ({ currentSubmittedAssignment }) => {
   const { courseId, assignmentId, teamId } = useParams();
@@ -115,7 +116,7 @@ const SubmittedAssignmentComponent = ({ currentSubmittedAssignment }) => {
                 {currentSubmittedAssignment.peer_reviews !== null
                   ? currentSubmittedAssignment.peer_reviews.map(
                       (peerReview) => (
-                        <li className='peerReviewListItem'>
+                        <li key={uuid()} className='peerReviewListItem'>
                           <b>
                             {' '}
                             {peerReview.grade === -1

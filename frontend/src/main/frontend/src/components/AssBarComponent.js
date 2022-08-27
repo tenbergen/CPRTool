@@ -6,6 +6,7 @@ import {
   getAssignmentDetailsAsync,
   getCombinedAssignmentPeerReviews,
 } from '../redux/features/assignmentSlice';
+import uuid from 'react-uuid';
 
 const AssBarLink = ({ active, assignment, onClick }) => {
   const { role } = useSelector((state) => state.auth);
@@ -85,6 +86,7 @@ const AssBarComponent = () => {
       <div className='abc-assignments'>
         {combinedAssignmentPeerReviews.map((assignment) => (
           <AssBarLink
+            key={uuid()}
             onClick={() => onAssClick(assignment)}
             active={assignment.final_id === chosen}
             assignment={assignment}

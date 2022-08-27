@@ -10,6 +10,7 @@ import { getCourseDetailsAsync } from '../../redux/features/courseSlice';
 import CourseBarComponent from '../../components/CourseBarComponent';
 import ProfessorTeamComponent from '../../components/ProfessorComponents/CoursesPage/ProfessorTeamComponent';
 import Loader from '../../components/LoaderComponenets/Loader';
+import uuid from 'react-uuid';
 
 const CourseComponent = ({ active, component, onClick }) => {
   return (
@@ -53,7 +54,7 @@ function ProfessorCoursePage() {
               <div className='pcp-component-links'>
                 {components.map((t) => (
                   <CourseComponent
-                    key={t}
+                    key={uuid()}
                     component={t}
                     active={t === chosen}
                     onClick={() => setChosen(t)}

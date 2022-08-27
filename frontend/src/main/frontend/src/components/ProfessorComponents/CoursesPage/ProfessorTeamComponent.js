@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import '../../styles/TeamManager.css';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import uuid from 'react-uuid';
 
 const ProfessorTeamComponent = () => {
   const { currentCourse } = useSelector((state) => state.courses);
@@ -150,7 +151,7 @@ const ProfessorTeamComponent = () => {
         {isActive.includes(team) && (
           <div className='accordionContent'>
             {members.map((name) => (
-              <div className='memberItem'>
+              <div key={uuid()} className='memberItem'>
                 <text className='teamMember'>{name}</text>
                 <span
                   onClick={() => handleRemoveStudent(name)}
@@ -194,7 +195,7 @@ const ProfessorTeamComponent = () => {
     <div>
       <div className='accordion'>
         {teams.map((team) => (
-          <div>{ProfessorTeamAccordion(team)}</div>
+          <div key={uuid()}>{ProfessorTeamAccordion(team)}</div>
         ))}
       </div>
     </div>

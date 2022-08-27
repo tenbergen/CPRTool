@@ -9,6 +9,7 @@ import ProfessorAllSubmissionsComponent from '../../components/ProfessorComponen
 import ProfessorEditAssignmentComponent from '../../components/ProfessorComponents/AssignmentPage/ProfessorEditAssignmentComponent';
 import { getAssignmentDetailsAsync } from '../../redux/features/assignmentSlice';
 import Loader from '../../components/LoaderComponenets/Loader';
+import uuid from 'react-uuid';
 
 const AssComponent = ({ active, component, onClick }) => {
   return (
@@ -53,7 +54,7 @@ function ProfessorAssignmentPage() {
               <div className='scp-component-links'>
                 {components.map((t) => (
                   <AssComponent
-                    key={t}
+                    key={uuid()}
                     component={t}
                     active={t === chosen}
                     onClick={() => onComponentClick(t)}

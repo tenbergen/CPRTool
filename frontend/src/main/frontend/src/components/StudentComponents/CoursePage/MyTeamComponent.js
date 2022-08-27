@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import '../../styles/MyTeam.css';
 import axios from 'axios';
+import uuid from 'react-uuid';
 
 const MyTeamComponent = () => {
   const { courseId } = useParams();
@@ -39,7 +40,7 @@ const MyTeamComponent = () => {
           </div>
           <div className='team-header'>Members:</div>
           {members.map((member) => (
-            <div className='members-name-container'>
+            <div key={uuid()} className='members-name-container'>
               <div className='my-team-members'>
                 <p>{member}</p>
               </div>

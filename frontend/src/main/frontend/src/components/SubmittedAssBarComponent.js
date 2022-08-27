@@ -6,6 +6,7 @@ import {
   getStudentSubmittedAssignmentsAsync,
   getSubmittedAssignmentsAsync,
 } from '../redux/features/submittedAssignmentSlice';
+import uuid from 'react-uuid';
 
 const SubAssBarLink = ({ active, assignment, onClick }) => {
   const normalStyle = { backgroundColor: 'rgba(255, 255, 255, 0.25)' };
@@ -74,6 +75,7 @@ const SubmittedAssBarComponent = () => {
         {assignmentsLoaded
           ? courseSubmittedAssignments.map((assignment) => (
               <SubAssBarLink
+                key={uuid()}
                 active={
                   assignment.assignment_id + assignment.team_name === chosen
                 }

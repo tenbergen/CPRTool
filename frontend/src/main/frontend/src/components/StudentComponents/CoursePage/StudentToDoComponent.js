@@ -4,6 +4,7 @@ import '../../styles/StudentAss.css';
 import { useParams } from 'react-router-dom';
 import { getCombinedAssignmentPeerReviews } from '../../../redux/features/assignmentSlice';
 import AssignmentTile from '../../AssignmentTile';
+import uuid from 'react-uuid';
 
 const StudentToDoComponent = () => {
   const dispatch = useDispatch();
@@ -25,7 +26,7 @@ const StudentToDoComponent = () => {
       {assignmentsLoaded && teamLoaded ? (
         <div id='assList'>
           {combinedAssignmentPeerReviews.map((assignment) => (
-            <AssignmentTile assignment={assignment} />
+            <AssignmentTile key={uuid()} assignment={assignment} />
           ))}
         </div>
       ) : null}

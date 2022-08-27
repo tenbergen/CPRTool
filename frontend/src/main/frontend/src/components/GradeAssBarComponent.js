@@ -7,6 +7,7 @@ import {
   getAssignmentDetailsAsync,
   getCourseAssignmentsAsync,
 } from '../redux/features/assignmentSlice';
+import uuid from 'react-uuid';
 
 const GradeAssBarLink = ({ active, assignment, onClick }) => {
   const { role } = useSelector((state) => state.auth);
@@ -67,6 +68,7 @@ const GradeAssBarComponent = () => {
       <div className='abc-assignments'>
         {courseAssignments.map((assignment) => (
           <GradeAssBarLink
+            key={uuid()}
             onClick={() => onAssClick(assignment)}
             active={assignment.assignment_id === chosen}
             assignment={assignment}

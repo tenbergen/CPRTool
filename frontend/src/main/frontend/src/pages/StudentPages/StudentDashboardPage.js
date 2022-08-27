@@ -8,6 +8,7 @@ import {
   getCourseDetailsAsync,
   getStudentCoursesAsync,
 } from '../../redux/features/courseSlice';
+import uuid from 'react-uuid';
 
 function StudentDashboardPage() {
   const dispatch = useDispatch();
@@ -53,6 +54,7 @@ function StudentDashboardPage() {
             <div id='courseList'>
               {courses.map((course) => (
                 <Link
+                  key={uuid()}
                   to={'/details/student/' + course.course_id}
                   onClick={() => courseClickHandler(course)}
                 >

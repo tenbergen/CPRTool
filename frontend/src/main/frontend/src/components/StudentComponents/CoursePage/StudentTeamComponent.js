@@ -4,6 +4,7 @@ import '../../styles/StudentTeamStyle.css';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { getCurrentCourseTeamAsync } from '../../../redux/features/teamSlice';
+import uuid from 'react-uuid';
 
 const TeamComponent = () => {
   const dispatch = useDispatch();
@@ -95,7 +96,11 @@ const TeamComponent = () => {
       </h2>
       <div id='teamList'>
         {teams.map((team) => (
-          <li id='teamListItem' onClick={() => confirmJoin(team.team_id)}>
+          <li
+            key={uuid()}
+            id='teamListItem'
+            onClick={() => confirmJoin(team.team_id)}
+          >
             Team {team.team_id}
           </li>
         ))}

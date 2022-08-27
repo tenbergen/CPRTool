@@ -6,7 +6,7 @@ import axios from 'axios';
 import SidebarComponent from '../../components/SidebarComponent';
 import SubmittedAssBarComponent from '../../components/SubmittedAssBarComponent';
 import { getSubmittedAssignmentDetailsAsync } from '../../redux/features/submittedAssignmentSlice';
-
+import uuid from 'react-uuid';
 function ProfessorSubmittedAssignmentPage() {
   const dispatch = useDispatch();
   const { currentSubmittedAssignment, currentSubmittedAssignmentLoaded } =
@@ -138,7 +138,10 @@ function ProfessorSubmittedAssignmentPage() {
                           {currentSubmittedAssignment.peer_reviews !== null
                             ? currentSubmittedAssignment.peer_reviews.map(
                                 (peerReview) => (
-                                  <li className='psa-peerReviewListItem'>
+                                  <li
+                                    key={uuid()}
+                                    className='psa-peerReviewListItem'
+                                  >
                                     <b> {peerReview.reviewed_by} </b>
                                     <div>
                                       <span>
