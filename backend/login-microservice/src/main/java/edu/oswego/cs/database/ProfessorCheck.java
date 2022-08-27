@@ -1,4 +1,4 @@
-package edu.oswego.cs.rest.database;
+package edu.oswego.cs.database;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;

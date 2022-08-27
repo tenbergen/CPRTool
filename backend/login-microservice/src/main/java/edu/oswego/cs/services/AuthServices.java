@@ -1,4 +1,4 @@
-package edu.oswego.cs.rest.services;
+package edu.oswego.cs.services;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.ibm.websphere.security.jwt.InvalidBuilderException;
@@ -7,8 +7,8 @@ import com.ibm.websphere.security.jwt.JwtBuilder;
 import com.ibm.websphere.security.jwt.JwtException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import edu.oswego.cs.rest.database.DatabaseManager;
-import edu.oswego.cs.rest.database.ProfessorCheck;
+import edu.oswego.cs.database.DatabaseManager;
+import edu.oswego.cs.database.ProfessorCheck;
 
 import org.bson.Document;
 import org.eclipse.microprofile.jwt.JsonWebToken;

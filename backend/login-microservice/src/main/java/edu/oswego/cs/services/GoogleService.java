@@ -1,4 +1,4 @@
-package edu.oswego.cs.rest.services;
+package edu.oswego.cs.services;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;

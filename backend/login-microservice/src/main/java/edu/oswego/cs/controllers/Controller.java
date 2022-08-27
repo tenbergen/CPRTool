@@ -1,4 +1,4 @@
-package edu.oswego.cs.rest.controllers;
+package edu.oswego.cs.controllers;
 
 import javax.annotation.security.RolesAllowed;
 import javax.json.JsonException;
@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-import edu.oswego.cs.rest.services.AuthServices;
+import edu.oswego.cs.services.AuthServices;
 
 
 @Path("/auth")
