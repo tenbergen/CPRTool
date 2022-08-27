@@ -69,8 +69,17 @@ td {
 }
 
 .colorForTable {
-  float: left;
+  /* float: left; */
   height: 100px;
   width: 4%;
   background-color: #7398ff;
+}
+
+.normalStyle {
+  background-color: rgba(255, 255, 255, 0.25);
+  height: 100px;
+}
+.clickedStyle {
+  background-color: #fff;
+  height: 100px;
 }

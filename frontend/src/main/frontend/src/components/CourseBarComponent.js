@@ -17,23 +17,19 @@ import { getCurrentCourseTeamAsync } from '../redux/features/teamSlice';
 
 const CourseBarLink = ({ active, course, onClick }) => {
   const role = useSelector((state) => state.auth.role);
-  const normalStyle = { backgroundColor: 'rgba(255, 255, 255, 0.25)' };
-  const clickedStyle = { backgroundColor: 'white' };
 
   return (
     <Link to={`/details/${role}/${course.course_id}`} onClick={onClick}>
-      <tr>
-        <td style={active ? clickedStyle : normalStyle}>
-          <div className='colorForTable' />
-          <div className='course_info'>
-            <p className='outfit-16 course_id'>
-              {' '}
-              {course.abbreviation}-{course.course_section}{' '}
-            </p>
-            <p className='kumba-25 course_text'> {course.course_name} </p>
-          </div>
-        </td>
-      </tr>
+      <div className={active ? 'clickedStyle' : 'normalStyle'}>
+        <div className='colorForTable' />
+        <div className='course_info'>
+          <p className='outfit-16 course_id'>
+            {' '}
+            {course.abbreviation}-{course.course_section}{' '}
+          </p>
+          <p className='kumba-25 course_text'> {course.course_name} </p>
+        </div>
+      </div>
     </Link>
   );
 };
@@ -83,6 +79,7 @@ const CourseBarComponent = ({ title }) => {
         <div>
           {courses.map((course) => (
             <CourseBarLink
+              key={course.course_id}
               onClick={() => onCourseClick(course)}
               active={course.course_id === chosen}
               course={course}
