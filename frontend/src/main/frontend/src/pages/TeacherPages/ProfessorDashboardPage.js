@@ -8,6 +8,7 @@ import {
   getCourseDetailsAsync,
   getCoursesAsync,
 } from '../../redux/features/courseSlice';
+import uuid from 'react-uuid';
 
 function ProfessorDashboardPage() {
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ function ProfessorDashboardPage() {
             <div id='proCourseList'>
               {courses.map((course) => (
                 <Link
-                  key={course.id + 1}
+                  key={uuid()}
                   to={'/details/professor/' + course.course_id}
                   onClick={() => onCourseClick(course)}
                 >
