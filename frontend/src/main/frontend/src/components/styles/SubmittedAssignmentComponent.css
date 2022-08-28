@@ -1,79 +1,79 @@
 .sac-parent {
-    padding-left: 2%;
-    padding-right: 2%;
+  padding-left: 2%;
+  padding-right: 2%;
 }
 
 .sac-content {
-    padding: 4% 5% 5% 5%;
-    text-align: left;
-    background-color: #ffffff;
-    margin-top: 3%;
-    border-radius: 50px;
-    flex-grow: 1;
-    max-height: 60vh;
+  padding: 4% 5% 5% 5%;
+  text-align: left;
+  background-color: #ffffff;
+  margin-top: 3%;
+  border-radius: 50px;
+  flex-grow: 1;
+  max-height: 60vh;
 }
 
 .sac-date {
-    float: right;
-    padding-right: 11px;
+  float: right;
+  padding-right: 11px;
 }
 
 .assignment-name {
-    font-size: 30px;
-    color: #393939;
+  font-size: 30px;
+  color: #393939;
 }
 
 .sac-title {
-    font-family: 'Outfit', sans-serif;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 20px;
-    color: #000000;
+  font-family: 'Outfit', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  color: #000000;
 }
 
 .sac-text {
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
 }
 
 .peerReviewListItem {
-    text-align: left;
-    background: linear-gradient(
-            to right,
-            #7398ff 0%,
-            #7398ff 2%,
-            #eeeeee 2%,
-            #eeeeee 100%
-    );
-    list-style-type: none;
-    font-size: 15px;
-    padding: 10px 0 10px 30px;
-    margin: 10px;
-    white-space: pre-line;
+  text-align: left;
+  background: linear-gradient(
+    to right,
+    #7398ff 0%,
+    #7398ff 2%,
+    #eeeeee 2%,
+    #eeeeee 100%
+  );
+  list-style-type: none;
+  font-size: 15px;
+  padding: 10px 0 10px 30px;
+  margin: 10px;
+  white-space: pre-line;
 }
 
 .ap-assignmentArea {
-    text-align: left;
-    padding: 2%;
-    background-color: #ffffff;
-    margin-top: 3%;
-    border-radius: 50px;
-    flex-grow: 1;
-    height: 67vh;
+  text-align: left;
+  padding: 2%;
+  background-color: #ffffff;
+  margin-top: 3%;
+  border-radius: 50px;
+  flex-grow: 1;
+  height: 67vh;
 }
 
 a {
-    text-decoration-line: none;
-    color: black;
+  text-decoration-line: none;
+  color: black;
 }
 
 .sac-filename {
-    text-decoration: underline;
-    color: #5267A3;
-    margin-left: 2%;
+  text-decoration: underline;
+  color: #5267a3;
+  margin-left: 2%;
 }
 
 .sac-filename:hover {
-    cursor: pointer;
+  cursor: pointer;
 }

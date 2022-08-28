@@ -1,92 +1,112 @@
 .StudentAss {
-    display: flex;
-    font-family: 'Kumbh Sans', sans-serif;
+  display: flex;
+  font-family: 'Kumbh Sans', sans-serif;
 }
 
 #ass {
-    margin-top: 3%;
-    margin-bottom: 3%;
-    padding-right: 3%;
-    padding-left: 3%;
-    margin-right: 5%;
-    margin-left: 5%;
-    flex-grow: 1;
+  margin-top: 3%;
+  margin-bottom: 3%;
+  padding-right: 3%;
+  padding-left: 3%;
+  margin-right: 5%;
+  margin-left: 5%;
+  flex-grow: 1;
 }
 
 #assList {
-    width: 100%;
-    height: 70vh;
-    overflow-y: scroll;
+  width: 100%;
+  height: 70vh;
+  overflow-y: scroll;
 }
 
 #assList::-webkit-scrollbar {
-    width: 20px;
+  width: 20px;
 }
 
 #assList::-webkit-scrollbar-track {
-    background-color: transparent;
+  background-color: transparent;
 }
 
 #assList::-webkit-scrollbar-thumb {
-    background-color: #d6dee1;
-    border-radius: 20px;
-    border: 6px solid transparent;
-    background-clip: content-box;
+  background-color: #d6dee1;
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
 }
 
 #assList::-webkit-scrollbar-thumb:hover {
-    background-color: #a8bbbf;
+  background-color: #a8bbbf;
 }
 
 #assListItem {
-    height: 13vh;
-    border-radius: 25px;
-    border-style: solid;
-    border-color: #7398ff;
-    text-align: left;
-    background: linear-gradient(
-            to bottom,
-            #7398ff 0%,
-            #7398ff 20%,
-            #eeeeee 20%,
-            #eeeeee 100%
-    );
-    list-style-type: none;
-    font-size: 15px;
-    margin: 10px;
-    white-space: pre-line;
-    padding-left: 20px;
+  height: 13vh;
+  border-radius: 25px;
+  border-style: solid;
+  border-color: #7398ff;
+  text-align: left;
+  background: linear-gradient(
+    to bottom,
+    #7398ff 0%,
+    #7398ff 20%,
+    #eeeeee 20%,
+    #eeeeee 100%
+  );
+  list-style-type: none;
+  font-size: 15px;
+  margin: 10px;
+  white-space: pre-line;
+  padding-left: 20px;
 }
 
 .ass-title-st {
-    padding: 5px;
-    border-radius: 5px;
-    transition: all 0.1s ease-out;
+  padding: 5px;
+  border-radius: 5px;
+  transition: all 0.1s ease-out;
 }
 
 .ass-due-date-st {
-    padding: 10px 10px;
-    font-size: 0.9em;
+  padding: 10px 10px;
+  font-size: 0.9em;
 }
 
 .ass-title-st:hover {
-    background-color: #faf7ff;
+  background-color: #faf7ff;
 }
 
 .ass-span-student {
-    float: right;
-    padding-right: 22px;
+  float: right;
+  padding-right: 22px;
 }
 
 .ass-instructions {
-    padding: 10px;
-    width:fit-content;
-    text-decoration-line: underline;
-    color:#7398FF;
-    font-size: small;
-    cursor: pointer;
+  padding: 10px;
+  width: fit-content;
+  text-decoration-line: underline;
+  color: #7398ff;
+  font-size: small;
+  cursor: pointer;
 }
 
 .add-tile-files {
-    width: fit-content;
+  width: fit-content;
+}
+
+.no-todo-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 25px;
+}
+
+.no-todo-img {
+  height: 250px;
+  width: 250px;
+}
+
+.no-todo-head {
+  color: #6c63ff;
+  font-size: 1.2em;
+  opacity: 0.9;
+  margin-top: 15px;
 }

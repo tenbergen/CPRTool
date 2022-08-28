@@ -1,14 +1,13 @@
-import React from 'react';
 import './styles/Loader.css';
 
 const Loader = () => {
-    return (
-        <div className='wrapper'>
-            <span class='loader'>
-                <span class='loader-inner'></span>
-            </span>
-        </div>
-    );
+  return (
+    <div className='wrapper'>
+      <span className='loader'>
+        <span className='loader-inner'></span>
+      </span>
+    </div>
+  );
 };
 
 export default Loader;

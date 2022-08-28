@@ -1,64 +1,104 @@
 .accordion {
-    overflow: auto;
-    max-height: 70vh;
-}
-
-.accordionItem {
+  overflow: auto;
+  max-height: 70vh;
 }
 
 .accordionTitle {
-    background-color: #82dfe8;
-    font-size: 20px;
-    padding-left: 12px;
-    padding-bottom: 20px;
-    padding-top: 20px;
+  background-color: #82dfe8;
+  font-size: 20px;
+  padding-left: 12px;
+  padding-bottom: 20px;
+  padding-top: 20px;
 }
 
 .accordionTitle:hover {
-    cursor: pointer;
+  cursor: pointer;
+}
+
+.accordionWrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.memberWrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.accordionHead {
+  display: flex;
 }
 
 .accordionTeamTitle {
-    margin-left: 12px;
+  margin-left: 12px;
 }
 
 .accordionContent {
-    background-color: rgba(130, 223, 232, 0.5);
+  background-color: rgba(130, 223, 232, 0.5);
 }
 
 .crossMarkTeam {
-    float: right;
-    margin-right: 10px;
+  float: right;
+  margin-right: 10px;
 }
 
 .plusMinusTeam:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .memberItem {
-    padding-bottom: 12px;
+  padding-bottom: 12px;
 }
 
 .teamMember {
-    margin-left: 7.5%;
+  margin-left: 7.5%;
+  padding: 5px;
 }
 
 .buttonPlusTeam {
-    width: 3%;
-    height: 3%;
-    margin-left: 40%;
+  width: 3%;
+  height: 3%;
+  margin-left: 40%;
 }
 
 .emailInput {
-    border-radius: 50px;
-    margin-left: 8px;
+  border-radius: 30px;
+  margin-left: 8px;
 }
 
 .teamA {
-    margin-left: 8px;
-    text-decoration: underline;
+  margin-left: 8px;
+  text-decoration: underline;
+  transition: ease-in-out 0.5s;
+  border-radius: 10px;
 }
 
 .teamA:hover {
-    cursor: pointer;
+  cursor: pointer;
+  background-color: #6c63ff;
+  color: #fff;
+  border-radius: 10px;
+}
+
+.no-team-wrapper {
+  margin-top: 5%;
+}
+
+.no-team-img-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.no-team-img {
+  height: 300px;
+  width: 400px;
+}
+
+.no-team-description {
+  color: #6c63ff;
+  font-weight: bold;
+  font-size: 1.5em;
+  margin-top: 30px;
 }
