@@ -1,4 +1,4 @@
-package edu.oswego.cs.rest.services;
+package edu.oswego.cs.services;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
@@ -18,9 +18,9 @@ public class GoogleService {
 
     protected Payload validateToken(String token) {
         GoogleIdToken idToken = verifyToken(token);
-        if (idToken == null) 
+        if (idToken == null)
             throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token.").build());
-        
+
         return idToken.getPayload();
     }
 
