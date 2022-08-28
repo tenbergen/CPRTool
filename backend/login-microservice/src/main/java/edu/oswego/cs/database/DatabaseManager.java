@@ -1,4 +1,4 @@
-package edu.oswego.cs.rest.database;
+package edu.oswego.cs.database;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
@@ -19,6 +19,9 @@ public class DatabaseManager {
     String mongoDatabase = System.getenv("MONGO_DATABASE");
     String mongoUser = System.getenv("MONGO_USERNAME");
     String mongoPassword = System.getenv("MONGO_PASSWORD");
+
+    public DatabaseManager() {
+    }
 
     public MongoDatabase getStudentDB() {
         MongoCredential credentials = MongoCredential.createCredential(mongoUser, mongoDatabase, mongoPassword.toCharArray());
@@ -68,8 +71,5 @@ public class DatabaseManager {
                 new MongoClientOptions.Builder().build()
         );
         return client.getDatabase(mongoDatabase);
-    }
-
-    public DatabaseManager() {
     }
 }
