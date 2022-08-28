@@ -20,6 +20,9 @@ public class DatabaseManager {
     String mongoUser = System.getenv("MONGO_USERNAME");
     String mongoPassword = System.getenv("MONGO_PASSWORD");
 
+    public DatabaseManager() {
+    }
+
     public MongoDatabase getStudentDB() {
         MongoCredential credentials = MongoCredential.createCredential(mongoUser, mongoDatabase, mongoPassword.toCharArray());
         MongoClient client = new MongoClient(
@@ -68,8 +71,5 @@ public class DatabaseManager {
                 new MongoClientOptions.Builder().build()
         );
         return client.getDatabase(mongoDatabase);
-    }
-
-    public DatabaseManager() {
     }
 }

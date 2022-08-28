@@ -18,9 +18,9 @@ public class GoogleService {
 
     protected Payload validateToken(String token) {
         GoogleIdToken idToken = verifyToken(token);
-        if (idToken == null) 
+        if (idToken == null)
             throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token.").build());
-        
+
         return idToken.getPayload();
     }
 
