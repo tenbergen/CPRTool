@@ -21,7 +21,7 @@ public class ProfessorCheck {
     private final MongoCollection<Document> professorCollection;
     String reg;
 
-    public ProfessorCheck() throws IOException {
+    public ProfessorCheck() {
         DatabaseManager databaseManager = new DatabaseManager();
         try {
             MongoDatabase professorDB = databaseManager.getProfessorDB();
@@ -29,11 +29,9 @@ public class ProfessorCheck {
         } catch (WebApplicationException e) {
             throw new CPRException(Response.Status.BAD_REQUEST, "Failed to retrieve collections.");
         }
-
-        addProfessor();
     }
 
-    public void addProfessor() throws IOException {
+    public void addProfessors() throws IOException {
         String path = getPath();
         var reader = new BufferedReader(new FileReader(path + "professor-list.txt"));
         String line = reader.readLine();
