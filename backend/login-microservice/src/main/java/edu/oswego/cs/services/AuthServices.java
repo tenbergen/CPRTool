@@ -9,30 +9,32 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.database.DatabaseManager;
 import edu.oswego.cs.database.ProfessorCheck;
+import edu.oswego.cs.util.CPRException;
 import org.bson.Document;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
 
 import static com.mongodb.client.model.Filters.eq;
 
 public class AuthServices {
+    private final MongoCollection<Document> professorCollection;
     GoogleService googleService = new GoogleService();
-    private MongoCollection<Document> professorCollection;
 
-    public AuthServices() {
+    public AuthServices() throws IOException {
         DatabaseManager databaseManager = new DatabaseManager();
         try {
-            new ProfessorCheck();
             MongoDatabase professorDB = databaseManager.getProfessorDB();
             professorCollection = professorDB.getCollection("professors");
-        } catch (Exception e) {
-            e.printStackTrace(System.out);
+        } catch (WebApplicationException e) {
+            throw new CPRException(Response.Status.BAD_REQUEST, "Failed to retrieve collections.");
         }
+        new ProfessorCheck().addProfessors();
     }
 
     public Map<String, String> generateNewToken(String token) {
