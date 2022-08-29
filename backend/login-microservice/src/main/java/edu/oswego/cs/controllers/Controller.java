@@ -8,6 +8,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
+import java.io.IOException;
 
 
 @Path("/auth")
@@ -15,7 +16,7 @@ public class Controller {
     @POST
     @Path("token/generate")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response generateToken(@Context HttpHeaders request) throws JsonException {
+    public Response generateToken(@Context HttpHeaders request) throws JsonException, IOException {
         if (request.getRequestHeader(HttpHeaders.AUTHORIZATION) == null)
             return Response.status(Response.Status.FORBIDDEN).entity("No token found.").build();
 
@@ -27,7 +28,7 @@ public class Controller {
     @RolesAllowed("lakers")
     @Path("token/refresh")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response refreshToken(@Context SecurityContext securityContext) {
+    public Response refreshToken(@Context SecurityContext securityContext) throws IOException {
         return Response.status(Response.Status.OK).entity(new AuthServices().refreshToken(securityContext)).build();
     }
 
