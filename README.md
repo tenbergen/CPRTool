@@ -12,6 +12,11 @@ This web application is made to be built on bare metal Linux environment using D
 
 **Step 2:** At the root of the directory, create a `.env` file using `.env.example` as the template and fill out the variables.
 
+- Head to [Google Cloud Console Credentials](https://console.cloud.google.com/apis/credentials) to create an `OAuth client ID`.
+- Set the `Application type` as `Web application`. `Application name` can be anything.
+- Add the full domain URL used in `.env` (with protocol and port if used) to `Authorized JavaScript origins` and `Authorized redirect URIs`. Save the changes.
+- Copy and paste the `Client ID` and `Client secret` to your `.env` file as `CLIENT_ID` and `CLIENT_SECRET` respectively.
+
 **Step 3:** Execute `sh build-app.sh` to build and start the Docker containers.
 
 **Step 4:** In `scripts` directory, execute `mongo-init.sh` to initialize user database login credentials. This is only necessary on the very first build of the application.
@@ -26,7 +31,7 @@ Optionally, in `scripts` directory:
 
 ## Local Development Environment
 
-For local development environment, a Docker setup is not necessary. Make sure that the following softwares and dependencies are installed:
+For local development environment, a Docker setup is not necessary. Make sure that the following software and dependencies are installed:
 - [Maven](https://maven.apache.org/install.html) >= 3.8.4
 - [JDK](https://openjdk.java.net/projects/jdk/17/) >= 17
 - [MongoDB](https://www.mongodb.com/docs/manual/installation/) >= 5.0
