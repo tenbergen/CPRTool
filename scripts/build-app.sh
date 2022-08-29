@@ -16,6 +16,9 @@ docker container stop cpr-mongo3 && docker container rm cpr-mongo3
 docker container stop cpr-mongo4 && docker container rm cpr-mongo4
 docker container stop cpr-mongo5 && docker container rm cpr-mongo5
 
+# Back out one level to access docker-compose.yml.
+cd ..
+
 # Build the project using docker-compose and start the containers.
 docker-compose -f "docker-compose.yml" up -d --build
 
