@@ -16,10 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
@@ -208,7 +205,7 @@ public class AssignmentInterface {
 
     public List<Document> getAssignmentsByCourse(String courseID) {
         MongoCursor<Document> query = assignmentsCollection.find(eq("course_id", courseID)).iterator();
-        if (!query.hasNext()) throw new CPRException(Response.Status.BAD_REQUEST,"This course does not exist.");
+        if (!query.hasNext()) return Collections.emptyList();
 
         List<Document> assignments = new ArrayList<>();
         while (query.hasNext()) {
