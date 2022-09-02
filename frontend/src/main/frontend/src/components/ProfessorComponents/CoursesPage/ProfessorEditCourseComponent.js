@@ -38,13 +38,13 @@ const ProfessorEditCourseComponent = () => {
     await axios
       .put(updateUrl, finalData)
       .then((res) => {
-        courseId = res.data;
+        const newCourseId = res.data;
         window.alert('Course successfully updated!');
         if (csvFormData.get('csv_file') != null) {
           uploadCsv();
         } else {
-          dispatch(getCourseDetailsAsync(res.data));
-          navigate('/details/professor/' + res.data);
+          dispatch(getCourseDetailsAsync(newCourseId));
+          navigate('/details/professor/' + newCourseId);
         }
       })
       .catch((e) => {
