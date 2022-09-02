@@ -48,9 +48,7 @@ const AssignmentTile = ({ assignment, submitted }) => {
 
   const deleteAssignment = async () => {
     const url = `${assignmentUrl}/${courseId}/assignments/${assignment.assignment_id}/remove`;
-    await axios.delete(url).then((res) => {
-      console.log(res);
-    });
+    await axios.delete(url);
     dispatch(getCourseAssignmentsAsync(courseId));
     alert('Assignment successfully deleted.');
   };

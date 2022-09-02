@@ -52,12 +52,11 @@ const ProfessorRosterComponent = () => {
     await axios
       .post(addStudentUrl)
       .then((res) => {
-        console.log(res.data);
         alert('Successfully added student.');
         dispatch(getCourseDetailsAsync(courseId));
       })
       .catch((e) => {
-        console.log(e);
+        console.error(e);
         alert('Error adding student.');
       });
     setFalse();
@@ -70,12 +69,11 @@ const ProfessorRosterComponent = () => {
     await axios
       .delete(deleteStudentUrl)
       .then((res) => {
-        console.log(res);
         alert('Successfully deleted student.');
         dispatch(getCurrentCourseStudentsAsync(courseId));
       })
       .catch((e) => {
-        console.log(e);
+        console.error(e);
         alert('Error deleting student.');
       });
     dispatch(getCourseDetailsAsync(courseId));

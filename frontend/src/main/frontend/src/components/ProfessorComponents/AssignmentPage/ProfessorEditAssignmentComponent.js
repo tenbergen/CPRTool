@@ -41,22 +41,15 @@ const ProfessorEditAssignmentComponent = () => {
 
   const handleSubmit = async (formObj) => {
     const editUrl = `${getAssUrl}/${assignmentId}/edit`;
-    console.log(editUrl);
-    console.log({ ...formObj, course_id: courseId });
 
     if (JSON.stringify(() => initialValue()) === JSON.stringify(formObj)) {
       alert('Nothing to save!');
       return;
     }
 
-    await axios
-      .put(editUrl, { ...formObj, course_id: courseId })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((e) => {
-        console.log(e.response);
-      });
+    await axios.put(editUrl, { ...formObj, course_id: courseId }).catch((e) => {
+      console.error(e.response);
+    });
 
     await submitNewFiles();
     dispatch(getCourseAssignmentsAsync(courseId));
@@ -70,39 +63,24 @@ const ProfessorEditAssignmentComponent = () => {
     const templateUrl = `${getAssUrl}/${assignmentId}/peer-review/template/upload`;
 
     if (assignmentFileFormData.get('file')) {
-      await axios
-        .post(assignmentFileUrl, assignmentFileFormData)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((e) => {
-          console.log(e);
-          alert('Error uploading assignment file.');
-        });
+      await axios.post(assignmentFileUrl, assignmentFileFormData).catch((e) => {
+        console.error(e);
+        alert('Error uploading assignment file.');
+      });
     }
 
     if (assignmentFileFormData.get('file')) {
-      await axios
-        .post(rubricUrl, rubricFileFormData)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((e) => {
-          console.log(e);
-          alert('Error uploading peer review rubric.');
-        });
+      await axios.post(rubricUrl, rubricFileFormData).catch((e) => {
+        console.error(e);
+        alert('Error uploading peer review rubric.');
+      });
     }
 
     if (templateFileFormData.get('file')) {
-      await axios
-        .post(templateUrl, templateFileFormData)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((e) => {
-          console.log(e);
-          alert('Error uploading peer review template.');
-        });
+      await axios.post(templateUrl, templateFileFormData).catch((e) => {
+        console.error(e);
+        alert('Error uploading peer review template.');
+      });
     }
   };
 
@@ -113,14 +91,9 @@ const ProfessorEditAssignmentComponent = () => {
       ? `${url}/peer-review/remove-file/${fileName}`
       : `${url}/remove-file/${fileName}`;
 
-    await axios
-      .delete(deleteUrl)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+    await axios.delete(deleteUrl).catch((e) => {
+      console.error(e);
+    });
 
     dispatch(getAssignmentDetailsAsync({ courseId, assignmentId }));
   };

@@ -30,7 +30,6 @@ const ProfessorEditCourseComponent = () => {
       type: file.type,
     });
     csvFormData.set('csv_file', renamedFile);
-    console.log(csvFormData.get('csv_file'));
   };
 
   const updateCourse = async (data) => {
@@ -39,7 +38,6 @@ const ProfessorEditCourseComponent = () => {
     await axios
       .put(updateUrl, finalData)
       .then((res) => {
-        console.log(res);
         courseId = res.data;
         window.alert('Course successfully updated!');
         if (csvFormData.get('csv_file') != null) {
@@ -50,7 +48,7 @@ const ProfessorEditCourseComponent = () => {
         }
       })
       .catch((e) => {
-        console.log(e);
+        console.error(e);
         window.alert('Error updating course. Please try again.');
       });
   };
@@ -61,11 +59,10 @@ const ProfessorEditCourseComponent = () => {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then((res) => {
-        console.log(res);
         window.alert('CSV successfully uploaded!');
       })
       .catch((e) => {
-        console.log(e.response.data);
+        console.error(e.response.data);
         window.alert('Error uploading CSV. Please try again.');
       });
     dispatch(getCourseDetailsAsync(courseId));
@@ -74,24 +71,14 @@ const ProfessorEditCourseComponent = () => {
 
   const deleteCourse = async () => {
     const url = `${deleteCourseUrl}/${courseId}/delete`;
-    await axios
-      .delete(url)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((e) => console.log(e.response.data));
+    await axios.delete(url).catch((e) => console.error(e.response.data));
     if (courseAssignments.length > 0) await deleteAssignments();
     navigate('/');
   };
 
   const deleteAssignments = async () => {
     const url = `${assignmentUrl}/${courseId}/remove`;
-    await axios
-      .delete(url)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((e) => e.response.data);
+    await axios.delete(url).catch((e) => e.response.data);
   };
 
   const Modal = () => {

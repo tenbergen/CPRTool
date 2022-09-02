@@ -10,11 +10,10 @@ export const getCurrentCourseTeamAsync = createAsyncThunk(
     const teamId = await axios
       .get(`${process.env.REACT_APP_URL}/teams/team/get/${courseId}/${lakerId}`)
       .then((res) => {
-        console.log(res.data.team_id);
         return res.data.team_id;
       })
       .catch((e) => {
-        console.log(e);
+        console.error(e);
         return null;
       });
     return { teamId };
@@ -34,7 +33,6 @@ const teamSlice = createSlice({
     },
     [getCurrentCourseTeamAsync.fulfilled]: (state, action) => {
       state.currentTeamId = action.payload.teamId;
-      console.log(action.payload.teamId);
       state.teamLoaded = true;
     },
   },

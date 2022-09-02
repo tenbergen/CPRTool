@@ -39,12 +39,11 @@ const ProfessorTeamAccordion = ({ team, teams, setTeams }) => {
         data
       )
       .then((r) => {
-        console.log(r);
         alert('Successfully added student.');
         window.location.reload();
       })
       .catch((e) => {
-        console.log(e.response.data);
+        console.error(e.response.data);
         alert(`Error adding student: ${e.response.data}`);
       });
     setStudentId('');
@@ -68,12 +67,11 @@ const ProfessorTeamAccordion = ({ team, teams, setTeams }) => {
         data
       )
       .then((r) => {
-        console.log(r);
         alert('Successfully removed student.');
         window.location.reload();
       })
       .catch((e) => {
-        console.log(e);
+        console.error(e);
         alert('Error removing student.');
       });
   };
@@ -88,19 +86,17 @@ const ProfessorTeamAccordion = ({ team, teams, setTeams }) => {
       team_id: team.team_id,
       course_id: currentCourse.course_id,
     };
-    console.log(data);
 
     await axios
       .delete(`${process.env.REACT_APP_URL}/teams/professor/team/delete`, {
         data,
       })
       .then((r) => {
-        console.log(r);
         alert('Successfully removed team.');
         setTeams(teams.filter((t) => t !== team));
       })
       .catch((e) => {
-        console.log(e);
+        console.error(e);
         alert('Error removing team.');
       });
   };

@@ -33,40 +33,31 @@ const CreateAssignmentPage = () => {
   };
 
   const uploadFiles = async (assignmentId) => {
-    console.log(assignmentFileFormData);
-    console.log(assignmentFileFormData.get('file'));
-
     const assignmentFileUrl = `${getAssUrl}/${assignmentId}/upload`;
     const rubricUrl = `${getAssUrl}/${assignmentId}/peer-review/rubric/upload`;
     const templateUrl = `${getAssUrl}/${assignmentId}/peer-review/template/upload`;
 
     await axios
       .post(assignmentFileUrl, assignmentFileFormData)
-      .then((res) => {
-        console.log(res);
-      })
+      .then((res) => {})
       .catch((e) => {
-        console.log(e);
+        console.error(e);
         alert('Error uploading assignment file.');
       });
 
     await axios
       .post(rubricUrl, rubricFileFormData)
-      .then((res) => {
-        console.log(res);
-      })
+      .then((res) => {})
       .catch((e) => {
-        console.log(e);
+        console.error(e);
         alert('Error uploading peer review rubric.');
       });
 
     await axios
       .post(templateUrl, templateFileFormData)
-      .then((res) => {
-        console.log(res);
-      })
+      .then((res) => {})
       .catch((e) => {
-        console.log(e);
+        console.error(e);
         alert('Error uploading peer review template.');
       });
   };
@@ -80,27 +71,20 @@ const CreateAssignmentPage = () => {
 
     const sentData = { ...data, points, course_id };
 
-    console.log(assignmentFileFormData.get('file'));
-    // console.log(rubricFileFormData.get('file'));
-    // console.log(templateFileFormData.get('file'));
-
     await axios
       .post(submitCourseUrl, sentData)
-      .then((res) => {
-        console.log(res);
-      })
+      .then((res) => {})
       .catch((e) => {
-        console.log(e.response.data);
+        console.error(e.response.data);
       });
 
     const assignment_id = await axios
       .get(getAssUrl)
       .then((res) => {
-        console.log(res);
         return res.data.pop().assignment_id;
       })
       .catch((e) => {
-        console.log(e.response.data);
+        console.error(e.response.data);
       });
 
     await uploadFiles(assignment_id);

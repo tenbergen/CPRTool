@@ -18,7 +18,7 @@ export const getStudentCoursesAsync = createAsyncThunk(
             .reverse();
       })
       .catch((e) => {
-        console.log(e.response);
+        console.error(e.response);
         return [];
       });
     return { courses };
@@ -40,7 +40,7 @@ export const getCoursesAsync = createAsyncThunk(
         return [];
       })
       .catch((e) => {
-        console.log(e.response);
+        console.error(e.response);
         return [];
       });
     return { courses };
@@ -72,7 +72,7 @@ export const getCurrentCourseStudentsAsync = createAsyncThunk(
         return res.data;
       })
       .catch((e) => {
-        console.log(e.response);
+        console.error(e.response);
         return [];
       });
 
@@ -83,7 +83,7 @@ export const getCurrentCourseStudentsAsync = createAsyncThunk(
         return res.data;
       })
       .catch((e) => {
-        console.log(e.response);
+        console.error(e.response);
         return [];
       });
 

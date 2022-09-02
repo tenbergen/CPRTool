@@ -25,7 +25,6 @@ const TeamNameComponent = () => {
       yearA: yearA,
       yearB: yearB,
     };
-    console.log(data);
     await axios.post(url, data);
     await getTeamName();
   };

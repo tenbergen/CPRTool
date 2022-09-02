@@ -13,7 +13,7 @@ const getAssignments = async (courseId) => {
       return [];
     })
     .catch((e) => {
-      console.log(e.response);
+      console.error(e.response);
       return [];
     });
 };
@@ -29,7 +29,7 @@ const getToDos = async (courseId, lakerId) => {
       return [];
     })
     .catch((e) => {
-      console.log(e.response);
+      console.error(e.response);
       return [];
     });
 
@@ -48,7 +48,6 @@ const getToDos = async (courseId, lakerId) => {
 const getPeerReviews = async (courseId, teamId) => {
   const peerReviewAssignments = [];
   const assignments = await getAssignments(courseId);
-  console.log(assignments);
   assignments.forEach((assignment) => {
     if (assignment.assigned_teams) {
       const teams = assignment.assigned_teams[teamId];
@@ -79,7 +78,6 @@ const sortByDueDate = (arr) => {
     }
     return 0;
   });
-  console.log(arr);
 };
 
 export const getCourseAssignmentsAsync = createAsyncThunk(
@@ -116,7 +114,7 @@ export const getAssignmentDetailsAsync = createAsyncThunk(
         return res.data;
       })
       .catch((e) => {
-        console.log(e.response);
+        console.error(e.response);
       });
     return { currentAssignment };
   }

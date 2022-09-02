@@ -18,12 +18,11 @@ const TeamComponent = () => {
       const allTeams = await axios
         .get(getTeamsUrl)
         .then((res) => {
-          console.log(res);
           if (res.data.length > 0) return res.data;
           return [];
         })
         .catch((e) => {
-          console.log(e.response.data);
+          console.error(e.response.data);
           return [];
         });
       const openTeams = allTeams.filter((team) => !team.team_full);
@@ -38,12 +37,11 @@ const TeamComponent = () => {
     await axios
       .put(joinUrl, data)
       .then((res) => {
-        console.log(res);
         alert(`Successfully joined team ${teamId}`);
         dispatch(getCurrentCourseTeamAsync({ courseId, lakerId }));
       })
       .catch((e) => {
-        console.log(e);
+        console.error(e);
         alert('Error joining team');
       });
   };
@@ -69,12 +67,11 @@ const TeamComponent = () => {
     await axios
       .post(createUrl, createData)
       .then((res) => {
-        console.log(res);
         alert('Successfully created team');
         dispatch(getCurrentCourseTeamAsync({ courseId, lakerId }));
       })
       .catch((e) => {
-        console.log(e);
+        console.error(e);
         alert('Error creating team');
       });
   };

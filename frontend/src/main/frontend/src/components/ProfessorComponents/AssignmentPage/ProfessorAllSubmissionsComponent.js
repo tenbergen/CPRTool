@@ -27,11 +27,10 @@ const ProfessorAllSubmissionsComponent = () => {
     await axios
       .get(url)
       .then((res) => {
-        console.log(res);
         alert('Assignments successfully distributed for peer review!');
       })
       .catch((e) => {
-        console.log(e.response.data);
+        console.error(e.response.data);
         alert(
           `Error: Teams for this assignment cannot review more than ${
             courseSubmittedAssignments.length - 1

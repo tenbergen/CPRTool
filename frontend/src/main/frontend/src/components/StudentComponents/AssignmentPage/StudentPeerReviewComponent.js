@@ -52,23 +52,18 @@ const StudentPeerReviewComponent = () => {
   };
 
   const handleSubmit = async () => {
-    console.log(feedbackFileFormData);
-    console.log(grade);
-
     const submitAssUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${currentTeamId}/${teamId}/${grade}/upload`;
 
-    console.log(submitAssUrl);
     await axios
       .post(submitAssUrl, feedbackFileFormData)
       .then((res) => {
-        console.log(res);
         alert('Successfully uploaded peer review');
         navigate(`/details/student/${courseId}`, {
           state: { initialComponent: 'Submitted' },
         });
       })
       .catch((e) => {
-        console.log(e.response);
+        console.error(e.response);
         alert('Error uploading peer review');
       });
     setGrade(undefined);
