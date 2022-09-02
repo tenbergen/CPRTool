@@ -10,12 +10,11 @@ const getPeerReviews = async (courseId, assignmentId, lakerId) => {
   const peerReviews = await axios
     .get(peerReviewUrl)
     .then((res) => {
-      console.log(res.data);
       if (res.data.length > 0) return res.data;
       return [];
     })
     .catch((e) => {
-      console.log(e.response.data);
+      console.error(e.response.data);
       return [];
     });
   return peerReviews;
@@ -27,12 +26,11 @@ const getSubmittedAssignments = async (courseId, assignmentId) => {
   const submittedAssignments = await axios
     .get(url)
     .then((res) => {
-      console.log(res);
       if (res.data.length > 0) return res.data;
       return [];
     })
     .catch((e) => {
-      console.log(e.response.data);
+      console.error(e.response.data);
       return [];
     });
   return submittedAssignments;
@@ -57,12 +55,11 @@ const getStudentSubmittedAssignments = async (courseId, lakerId) => {
   const submittedAssignments = await axios
     .get(url)
     .then((res) => {
-      console.log(res.data);
       if (res.data.length > 0) return res.data;
       return [];
     })
     .catch((e) => {
-      console.log(e.response);
+      console.error(e.response);
       return [];
     });
   return submittedAssignments;
@@ -104,18 +101,16 @@ const getSubmittedAssignmentDetails = async (
   // get assignment details
   const assUrl = `${getAssignmentUrl}/${courseId}/assignments/${assignmentId}`;
   const details = await axios.get(assUrl).then((res) => {
-    console.log(res.data);
     return res.data;
   });
 
   const lakerId = await axios
     .get(`${process.env.REACT_APP_URL}/teams/team/${courseId}/get/${teamId}`)
     .then((res) => {
-      console.log(res.data);
       return res.data.team_lead;
     })
     .catch((e) => {
-      console.log(e.response.data);
+      console.error(e.response.data);
     });
 
   // team file name
@@ -123,11 +118,10 @@ const getSubmittedAssignmentDetails = async (
   const submissionDetail = await axios
     .get(submissionDetailUrl)
     .then((res) => {
-      console.log('Submission data: ' + { ...res.data[0] });
       return res.data[0];
     })
     .catch((e) => {
-      console.log(e.response.data);
+      console.error(e.response.data);
     });
 
   // get reviews for that student
@@ -135,12 +129,6 @@ const getSubmittedAssignmentDetails = async (
   const grade =
     submissionDetail.grade === -1 ? 'Pending' : submissionDetail.grade;
 
-  console.log({
-    ...details,
-    ...submissionDetail,
-    peer_reviews: peerReviews,
-    grade: grade,
-  });
   return {
     ...details,
     ...submissionDetail,

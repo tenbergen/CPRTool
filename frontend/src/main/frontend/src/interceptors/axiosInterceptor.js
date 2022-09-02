@@ -38,7 +38,6 @@ axios.interceptors.response.use(
       await axiosAuthInstance
         .post(url)
         .then((res) => {
-          console.log(res.data);
           if (res.status === 200) {
             axios.defaults.headers.common[
               'Authorization'
@@ -46,7 +45,7 @@ axios.interceptors.response.use(
           }
         })
         .catch((e) => {
-          console.log(e);
+          console.error(e);
         });
 
       return axios(error.config); // When the token is expired, this will get the new refreshed token and resend the failed request

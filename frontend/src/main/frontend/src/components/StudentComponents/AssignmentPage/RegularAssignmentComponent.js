@@ -25,7 +25,6 @@ const RegularAssignmentComponent = () => {
   const assignmentFileHandler = (event) => {
     let file = event.target.files[0];
     assignmentFileFormData.set('file', file);
-    console.log(assignmentFileFormData.get('file'));
   };
 
   const onAssignmentClick = async () => {
@@ -50,14 +49,13 @@ const RegularAssignmentComponent = () => {
     await axios
       .post(submitAssUrl, assignmentFileFormData)
       .then((res) => {
-        console.log(res);
         alert('Successfully uploaded assignment');
         navigate(`/details/student/${courseId}`, {
           state: { initialComponent: 'Submitted' },
         });
       })
       .catch((e) => {
-        console.log(e.response);
+        console.error(e.response);
         alert(`Error: ${e.response.data}`);
       });
   };

@@ -23,7 +23,7 @@ export const getTokenAsync = createAsyncThunk(
         return true;
       })
       .catch((e) => {
-        console.log(e);
+        console.error(e);
         return false;
       });
     return { jwt_token };
