@@ -46,8 +46,7 @@ public class CourseManagerResource {
     @Path("courses/course/update")
     @RolesAllowed("professor")
     public Response updateCourse(@Context SecurityContext securityContext, CourseDAO course) {
-        new CourseInterface().updateCourse(securityContext, course);
-        return Response.status(Response.Status.OK).entity("Course successfully updated.").build();
+        return Response.status(Response.Status.OK).entity(new CourseInterface().updateCourse(securityContext, course)).build();
     }
 
     @POST
