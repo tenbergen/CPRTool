@@ -85,7 +85,7 @@ public class CourseInterface {
         }
     }
 
-    public void updateCourse(SecurityContext securityContext, CourseDAO dao) {
+    public String updateCourse(SecurityContext securityContext, CourseDAO dao) {
         String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
 
         Document courseDocument = courseCollection.find(and(eq("course_id", dao.getCourseID()), eq("professor_id", professorID))).first();
@@ -121,6 +121,7 @@ public class CourseInterface {
         Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(dao), MediaType.APPLICATION_JSON_TYPE);
         Document course = Document.parse(courseDAOEntity.getEntity());
         courseCollection.replaceOne(eq("course_id", originalCourseID), course);
+        return newCourseID;
     }
 
     public void addStudent(SecurityContext securityContext, StudentDAO student, String courseID) {
