@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { getCourseAssignmentsAsync } from '../../../redux/features/assignmentSlice';
 import AssignmentTile from '../../AssignmentTile';
+import noAssignment from '../../../assets/no-course.png';
 
 import uuid from 'react-uuid';
 
@@ -17,23 +18,34 @@ const ProfessorAssignmentComponent = () => {
   }, [dispatch, courseId]);
 
   return (
-    <div>
-      <div className='TeacherAss'>
-        <div id='teacherAssList'>
-          {courseAssignments.map(
-            (assignment) =>
-              assignment && (
-                <AssignmentTile key={uuid()} assignment={assignment} />
-              )
-          )}
-        </div>
-        <div id='assAddClass'>
-          <Link to='create/assignment'>
-            <button className='blue-button-filled outfit-20' id='assAddButton'>
-              Create new assignment
-            </button>
-          </Link>
-        </div>
+    <div className='assignment-container'>
+      <div className='assignment-list-wrapper'>
+        {courseAssignments.length === 0 ? (
+          <div className='no-assigment-wrapper'>
+            <img
+              className='no-assignment-img'
+              src={noAssignment}
+              alt='No assignment'
+            />
+          </div>
+        ) : (
+          <div id='assignment-list'>
+            {courseAssignments.map(
+              (assignment) =>
+                assignment && (
+                  <AssignmentTile key={uuid()} assignment={assignment} />
+                )
+            )}
+          </div>
+        )}
+      </div>
+
+      <div className='create-class-container'>
+        <Link to='create/assignment'>
+          <button className='create-assignment-btn'>
+            Create new assignment
+          </button>
+        </Link>
       </div>
     </div>
   );
