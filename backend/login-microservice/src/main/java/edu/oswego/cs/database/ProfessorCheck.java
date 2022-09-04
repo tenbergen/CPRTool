@@ -55,6 +55,11 @@ public class ProfessorCheck {
             }
         }
 
+        for (Document professor : professorCollection.find()) {
+            String professorID = professor.getString("professor_id");
+            if (!professorList.contains(professorID)) professorCollection.deleteOne(eq("professor_id", professorID));
+        }
+
         reader.close();
     }
 
