@@ -73,19 +73,6 @@ public class CoursesViewerResources {
         List<Document> studentDocuments = new CourseInterface().getStudentsInCourse(securityContext, courseID);
         return Response.status(Response.Status.OK).entity(studentDocuments).build();
     }
-/*
-    @GET
-    @RolesAllowed("professor")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("courses/{courseID}/students/{studentID}/grades")
-    public Response viewAllGrades(
-            @PathParam("courseID") String courseID,
-            @PathParam("studentID") String studentID) {
-        List<Document> courseGrades = new GradeInterface().getAllGrades(courseID, studentID);
-        return Response.status(Response.Status.OK).entity(courseGrades).build();
-    }
-
- */
 
     @GET
     @RolesAllowed({"professor","student"})
