@@ -68,6 +68,9 @@ On Linux-based operating systems, you may achieve the similar result by executin
 
 Contributors are more than welcome to improve the project by creating a new issue to report bugs, suggest new features, or make changes to the source code by making a pull request. To have your work merged in, please make sure the following is done:
 
-1. Fork the repository and create your branch from master.
-2. If you’ve fixed a bug or added something new, add a comprehensive list of changes.
-3. Ensure that your code is tested, functional, and is linted.
+1. If you are not a contributor, fork the repository and create your branch from master. Otherwise, create a new development branch with a desired name.
+2. Push your commits to the aforementioned fork/branch. 
+3. Make sure to keep the changes within the scope of the pull request you are about to make, as it is highly disencouraged to commit irrelevant changes that does not have anything to do with the pull request.
+4. Create a pull request.
+5. If you’ve fixed a bug or added something new, add a comprehensive list of changes. Ensure that your code is tested, functional, and is linted.
+6. When merging into master, it is highly recommended that you choose "squash and merge" instead of the default option "create a merge commit" to prevent flooding the master branch's commit history.
