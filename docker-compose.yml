@@ -257,5 +257,7 @@ services:
     container_name: cpr-nginx
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:rw
+      - ./key.pem:/etc/letsencrypt/live/moxie.cs.oswego.edu/fullchain.pem
+      - ./cert.pem:/etc/letsencrypt/live/moxie.cs.oswego.edu/privkey.pem
     ports:
-      - "13125:80"
+      - "13125:443"

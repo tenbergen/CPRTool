@@ -26,6 +26,7 @@ function LoginPage() {
   };
 
   const handleLogin = async (googleData) => {
+    console.log(googleData.tokenId)
     localStorage.setItem('google_token', googleData.tokenId);
     dispatch(getTokenAsync());
   };
