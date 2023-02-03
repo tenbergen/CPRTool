@@ -17,7 +17,10 @@ import java.util.Collections;
 public class GoogleService {
 
     protected Payload validateToken(String token) {
+        System.out.println("Here's the token");
+        System.out.println(token);
         GoogleIdToken idToken = verifyToken(token);
+        System.out.println(idToken==null);
         if (idToken == null)
             throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token.").build());
 
@@ -28,8 +31,9 @@ public class GoogleService {
         try {
             GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier
                     .Builder(new NetHttpTransport(), new GsonFactory())
-                    .setAudience(Collections.singletonList(System.getenv("CLIENT_ID")))
+                    .setAudience(Collections.singletonList("306958406151-2pm7mb1ucvg5p2l866p7cn27uf94bd8l.apps.googleusercontent.com"))
                     .build();
+            System.out.println(verifier.verify(token));
             return verifier.verify(token);
         } catch (GeneralSecurityException | IOException e) {
             e.printStackTrace();

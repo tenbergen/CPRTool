@@ -17,6 +17,7 @@ public class Controller {
     @Path("token/generate")
     @Produces(MediaType.APPLICATION_JSON)
     public Response generateToken(@Context HttpHeaders request) throws JsonException, IOException {
+        System.out.println("Generating token!");
         if (request.getRequestHeader(HttpHeaders.AUTHORIZATION) == null)
             return Response.status(Response.Status.FORBIDDEN).entity("No token found.").build();
 

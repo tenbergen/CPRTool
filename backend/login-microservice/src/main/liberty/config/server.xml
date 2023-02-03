@@ -20,10 +20,11 @@
     <basicRegistry />
     <applicationManager autoExpand="true"/>
 
+
     <jwtBuilder id="cpr_access" expiresInSeconds="3600" jwkEnabled="true" signatureAlgorithm="RS512"/>
     <jwtBuilder id="cpr_refresh" expiry="72h" jwkEnabled="true" signatureAlgorithm="RS512"/>
 
-    <mpJwt id="cpr_refresh" signatureAlgorithm="RS512" tokenHeader="Authorization" issuer="cpr" audiences="cpr" jwksUri="${URL}/jwt/ibm/api/cpr_refresh/jwk"/>
+    <mpJwt id="cpr_refresh" signatureAlgorithm="RS512" tokenHeader="Authorization" issuer="cpr" audiences="cpr" jwksUri="${JWK_REFRESH_URL}"/>
 
     <webApplication contextRoot="${app.context.root}" location="login-microservice.war" />
         

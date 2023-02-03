@@ -1406,6 +1406,11 @@
   "resolved" "https://registry.npmjs.org/@popperjs/core/-/core-2.11.2.tgz"
   "version" "2.11.2"
 
+"@react-oauth/google@^0.6.1":
+  "integrity" "sha512-Nq4OK/NTgnvl2dTgQW5H8O1bhLg4JRQhwkEzpfZNKA1ijByQk6X4XG1FGS49FIHjjKInb263Me/yVQ2F3LJeuw=="
+  "resolved" "https://registry.npmjs.org/@react-oauth/google/-/google-0.6.1.tgz"
+  "version" "0.6.1"
+
 "@reduxjs/toolkit@^1.8.0":
   "integrity" "sha512-cdfHWfcvLyhBUDicoFwG1u32JqvwKDxLxDd7zSmSoFw/RhYLOygIRtmaMjPRUUHmVmmAGAvquLLsKKU/677kSQ=="
   "resolved" "https://registry.npmjs.org/@reduxjs/toolkit/-/toolkit-1.8.0.tgz"
