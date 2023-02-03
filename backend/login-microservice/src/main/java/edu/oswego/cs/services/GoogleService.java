@@ -31,7 +31,8 @@ public class GoogleService {
         try {
             GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier
                     .Builder(new NetHttpTransport(), new GsonFactory())
-                    .setAudience(Collections.singletonList("306958406151-2pm7mb1ucvg5p2l866p7cn27uf94bd8l.apps.googleusercontent.com"))
+                    .setAudience(Collections.singletonList(System.getenv("CLIENT_ID")))
+                    .setIssuer("https://accounts.google.com")
                     .build();
             System.out.println(verifier.verify(token));
             return verifier.verify(token);

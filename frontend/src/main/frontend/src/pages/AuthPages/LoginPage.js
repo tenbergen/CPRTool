@@ -39,7 +39,7 @@ function LoginPage() {
               <div id='box'>
                 <div className='kumba-40 welcome'>Welcome!</div>
                 <div className='googleButton'>
-                  <GoogleOAuthProvider clientId="306958406151-2pm7mb1ucvg5p2l866p7cn27uf94bd8l.apps.googleusercontent.com">
+                  <GoogleOAuthProvider clientId={REACT_APP_CLIENT_ID}>
                   <GoogleLogin
                       text={'signin_with'}
                       onSuccess={handleLogin}
