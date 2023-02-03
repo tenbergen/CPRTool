@@ -32,35 +32,35 @@ public class ProfessorCheck {
     }
 
     public void addProfessors() throws IOException {
-//        String path = getPath();
-//        var reader = new BufferedReader(new FileReader(path + "professor-list.txt"));
-//        String line = reader.readLine();
-//        ArrayList<String> professorList = new ArrayList<>();
-//        while (line != null) {
-//            if (line.contains("@")) {
-//                String[] token = line.split("@");
-//                professorList.add(token[0]);
-//            }
-//            line = reader.readLine();
-//        }
-//
-//        for (String professorID : professorList) {
-//            Document professorDocument = professorCollection.find(eq("professor_id", professorID)).first();
-//            if (professorDocument == null) {
-//                List<String> courseList = new ArrayList<>();
-//                Document newProfessor = new Document()
-//                        .append("professor_id", professorID)
-//                        .append("courses", courseList);
-//                professorCollection.insertOne(newProfessor);
-//            }
-//        }
-//
-//        for (Document professor : professorCollection.find()) {
-//            String professorID = professor.getString("professor_id");
-//            if (!professorList.contains(professorID)) professorCollection.deleteOne(eq("professor_id", professorID));
-//        }
-//
-//        reader.close();
+        String path = getPath();
+        var reader = new BufferedReader(new FileReader(path + "professor-list.txt"));
+        String line = reader.readLine();
+        ArrayList<String> professorList = new ArrayList<>();
+        while (line != null) {
+            if (line.contains("@")) {
+                String[] token = line.split("@");
+                professorList.add(token[0]);
+            }
+            line = reader.readLine();
+        }
+
+        for (String professorID : professorList) {
+            Document professorDocument = professorCollection.find(eq("professor_id", professorID)).first();
+            if (professorDocument == null) {
+                List<String> courseList = new ArrayList<>();
+                Document newProfessor = new Document()
+                        .append("professor_id", professorID)
+                        .append("courses", courseList);
+                professorCollection.insertOne(newProfessor);
+            }
+        }
+
+        for (Document professor : professorCollection.find()) {
+            String professorID = professor.getString("professor_id");
+            if (!professorList.contains(professorID)) professorCollection.deleteOne(eq("professor_id", professorID));
+        }
+
+        reader.close();
     }
 
     public String getPath() {
