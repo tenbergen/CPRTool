@@ -1,0 +1,8 @@
+nginx:
+  image: nginx:1.21.6
+  restart: unless-stopped
+  container_name: cpr-nginx
+  volumes:
+    - ./nginxfrontend.conf:/etc/nginx/nginx.conf:rw
+  ports:
+    - "3000:80"
