@@ -5,7 +5,14 @@ A highly scalable web application that assists the process of coordinating and e
 ## Running the Project
 
 There are multiple conifigurations for running the application in different environments to make the application
-machine and OS agnostic. The minimum required software need to run the application is:
+machine and OS agnostic. The possible configurations are:
+- Production (For when you want the app out for full use)
+- Local Development (The production app but running only on a localhost network for testing)
+- Individual Service Local Development (Run each service independently of eachother for testing on specific microservices)
+
+
+
+The minimum required software need to run the application is:
 - [Docker](https://docs.docker.com/engine/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
@@ -59,7 +66,7 @@ The web application should be running on the specified domain in your `.env` fil
 
 
 
-### Local Development Environment
+### Running In a Local Development Environment
 **Step 1:** Clone the repository.
 
 **Step 2:** Go the the `docker-compose-local.yml` file found in root. At the bottom of the file under the **nginx** container, make the docker host port equal to whatever port you have listed in the URL environment variable. So if I was running the app with the URL **http://localhost.com:443**, the configuration at the bottom of the file would look like this:
