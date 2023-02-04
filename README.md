@@ -10,7 +10,7 @@ There are multiple conifigurations for running the application in different envi
 machine and OS agnostic. The possible configurations are:
 - [Production](#Running-In-a-Production-Environment): For when you want the app out for full use
 - [Local Development](#Running-In-a-Local-Development-Environment): The production app but running only on a localhost network for testing
-- Individual Service Local Development: Run each service independently of eachother for testing on specific microservices
+- [Run Each Microservice Individually](#Running-Microservices-Individually): Run each service independently of eachother for testing on specific microservices
 
 
 
@@ -26,7 +26,7 @@ After downloading these to your computer, run the application and any of the fol
 
 All environments will make use of a .env file for automation of deployment. At the root of the directory, create a `.env` file using `.env.example` as the template. **Do not change the `MONGO_DATABASE`, `MONGO_INITDB_DATABASE`, `MONGO_PORT`, `MONGO2_PORT`, `MONGO3_PORT`, `MONGO4_PORT`, or `MONGO5_PORT` values. Make `MONGO_INITDB_ROOT_USERNAME`, `MONGO_INITDB_ROOT_PASSWORD`, `MONGO_USERNAME`, and `MONGO_PASSWORD` whatever you would like, but keep them consistent across running environments.**
 
-All environments will be using MongoDB deployed with Docker and Docker compose so that database infrastructure is not different . You will not need to install MongoDB, but it may be a good idea to install [MongoDB Compass](https://www.mongodb.com/products/compass) so you can more easily monitor the databases. 
+All environments will be using MongoDB deployed with Docker and Docker compose so that database infrastructure is not different . You will not need to install MongoDB, but it may be a good idea to install [MongoDB Compass](https://www.mongodb.com/products/compass) so you can more easily monitor the databases. [Mongosh](https://www.mongodb.com/docs/mongodb-shell/install/) is another alternative program to monitor the database if you're more comfortable on the command line
 
 All environments will need Google Cloud Console Credentials.
 - Head to [Google Cloud Console Credentials](https://console.cloud.google.com/apis/credentials) to create an `OAuth client ID`.
@@ -88,6 +88,8 @@ The web application should be running on the specified domain in your `.env` fil
 The web application should be running on the specified domain in your `.env` file.
 
 **Step 7:** To add users with elevated privileges (a.k.a professors), include the user's email on separate lines in `professor-list.txt`.
+
+### Running Microservices Individually 
 
 
 
