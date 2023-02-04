@@ -13,7 +13,7 @@ To run the application on a Windows operating system, you will need:
 - [WSL2 on Windows](https://learn.microsoft.com/en-us/windows/wsl/install)
 - [Ubuntu on Windows](https://ubuntu.com/tutorials/install-ubuntu-on-wsl2-on-windows-10#3-download-ubuntu)
 
-After downloading these to your computer, run the application and any of the following commands through the Ubuntu app. **Ensure you are using WSL2, Docker and Docker Compose will not run properly using the originial WSL**
+After downloading these to your computer, run the application and any of the following commands through the Ubuntu app. **Ensure you are using WSL2! Docker and Docker Compose will not run properly using the originial WSL.**
 
 All environments will make use of a .env file for automation of deployment. At the root of the directory, create a `.env` file using `.env.example` as the template.
 
@@ -59,7 +59,7 @@ The web application should be running on the specified domain in your `.env` fil
 
 
 
-## Local Development Environment
+### Local Development Environment
 **Step 1:** Clone the repository.
 
 **Step 2:** Go the the `docker-compose-local.yml` file found in root. At the bottom of the file under the **nginx** container, make the docker host port equal to whatever port you have listed in the URL environment variable. So if I was running the app with the URL **http://localhost.com:443**, the configuration at the bottom of the file would look like this:
