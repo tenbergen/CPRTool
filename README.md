@@ -92,7 +92,7 @@ The web application should be running on the specified domain in your `.env` fil
 
 
 
-#OLD
+# OLD, DISREGARD THESE FOR NOW
 For local development environment, a Docker setup is not necessary. Make sure that the following software and dependencies are installed:
 - [Maven](https://maven.apache.org/install.html) >= 3.8.4
 - [JDK](https://openjdk.java.net/projects/jdk/17/) >= 17
