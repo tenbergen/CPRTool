@@ -2,7 +2,7 @@
 
 A highly scalable web application that assists the process of coordinating and evaluating peer reviews of student work.
 
-**Before contributing, see our [Contribution Guidelines](#Contributing).
+**Before contributing, see our [Contribution Guidelines](#Contributing).**
 
 ## Running the Project
 
