@@ -6,8 +6,8 @@ A highly scalable web application that assists the process of coordinating and e
 
 There are multiple conifigurations for running the application in different environments to make the application
 machine and OS agnostic. The possible configurations are:
-- [Production (For when you want the app out for full use)](# Running In a Production Environment)
-- [Local Development (The production app but running only on a localhost network for testing)](# Running In a Local Development Environment)
+- [Production (For when you want the app out for full use)](###Running In a Production Environment)
+- [Local Development (The production app but running only on a localhost network for testing)](###Running In a Local Development Environment)
 - Individual Service Local Development (Run each service independently of eachother for testing on specific microservices)
 
 
