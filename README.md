@@ -2,13 +2,15 @@
 
 A highly scalable web application that assists the process of coordinating and evaluating peer reviews of student work.
 
+**Before contributing, see our [Contribution Guidelines](#Contributing).
+
 ## Running the Project
 
 There are multiple conifigurations for running the application in different environments to make the application
 machine and OS agnostic. The possible configurations are:
-- [Production (For when you want the app out for full use)](###Running In a Production Environment)
-- [Local Development (The production app but running only on a localhost network for testing)](###Running In a Local Development Environment)
-- Individual Service Local Development (Run each service independently of eachother for testing on specific microservices)
+- [Production](###Running-In-a-Production-Environment): For when you want the app out for full use
+- [Local Development](###Running-In-a-Local-Development-Environment): The production app but running only on a localhost network for testing
+- Individual Service Local Development: Run each service independently of eachother for testing on specific microservices
 
 
 
@@ -41,7 +43,6 @@ All environments will need Google Cloud Console Credentials.
 - Copy and paste the `Client ID` and `Client secret` that pop up after saving the application to your `.env` file as `CLIENT_ID` and `CLIENT_SECRET` respectively.
 
 ![image](https://user-images.githubusercontent.com/60359581/216735126-2a3f38bc-9701-4d02-bd95-3829d0d81f10.png)
-
 
 
 
