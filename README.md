@@ -53,9 +53,9 @@ All environments will need Google Cloud Console Credentials.
 **Step 2:** Go the the `docker-compose.yml` file found in root. At the bottom of the file under the **nginx** container, make the docker host port equal to whatever port you have listed in the URL environment variable. So if I was running the app with the URL **https://example.com:443**, the configuration at the bottom of the file would look like this:
 ![image](https://user-images.githubusercontent.com/60359581/216736629-d31a2768-4b55-41c3-9997-08f983ea7dcc.png)
 
-**Step 3:** In the `.env` file, make the **JWK_ACCESS_URL** equal to whatever your URL variable is followed by **/jwt/ibm/api/cpr_access/jwk**. So if the URL is **https://example.com:443**, **JWK_ACCESS_URL** should be **https://example.com:443/jwt/ibm/api/cpr_access/jwk**
+**Step 3:** In the `.env` file, make the **JWK_ACCESS_URL** equal to whatever your URL variable is followed by **/jwt/ibm/api/cpr_access/jwk**. So if the URL is **https://example.com:443**, **JWK_ACCESS_URL** should be `https://example.com:443/jwt/ibm/api/cpr_access/jwk`
 
-**Step 4:** In the `.env` file, make the **JWK_REFRESH_URL** equal to whatever your URL variable is followed by **/jwt/ibm/api/cpr_refresh/jwk**. So if the URL is **https://example.com:443**, **JWK_ACCESS_URL** should be **https://example.com:443/jwt/ibm/api/cpr_refresh/jwk**
+**Step 4:** In the `.env` file, make the **JWK_REFRESH_URL** equal to whatever your URL variable is followed by **/jwt/ibm/api/cpr_refresh/jwk**. So if the URL is **https://example.com:443**, **JWK_ACCESS_URL** should be `https://example.com:443/jwt/ibm/api/cpr_refresh/jwk`
 
 **Step 5:** In `scripts` directory, execute `build-app.sh` to start the application.
 
@@ -73,9 +73,9 @@ The web application should be running on the specified domain in your `.env` fil
 **Step 2:** Go the the `docker-compose-local.yml` file found in root. At the bottom of the file under the **nginx** container, make the docker host port equal to whatever port you have listed in the URL environment variable. So if I was running the app with the URL **http://localhost.com:443**, the configuration at the bottom of the file would look like this:
 ![image](https://user-images.githubusercontent.com/60359581/216736629-d31a2768-4b55-41c3-9997-08f983ea7dcc.png)
 
-**Step 3:** In the `.env` file, make the **JWK_ACCESS_URL** equal to http://172.17.0.1:<whatever port you're running on>/jwt/ibm/api/cpr_access/jwk . This URL is specifically needed so that the docker container running the microservices knows to access the docker host's localhost IP address.
+**Step 3:** In the `.env` file, make the **JWK_ACCESS_URL** equal to `http://172.17.0.1:<whatever port you're running on>/jwt/ibm/api/cpr_access/jwk` . This URL is specifically needed so that the docker container running the microservices knows to access the docker host's localhost IP address.
 
-**Step 4:** In the `.env` file, make the **JWK_REFRESH_URL** equal to http://172.17.0.1:<whatever port you're running on>/jwt/ibm/api/cpr_refresh/jwk . This URL is specifically needed so that the docker container running the microservices knows to access the docker host's localhost IP address.
+**Step 4:** In the `.env` file, make the **JWK_REFRESH_URL** equal to `http://172.17.0.1:<whatever port you're running on>/jwt/ibm/api/cpr_refresh/jwk` . This URL is specifically needed so that the docker container running the microservices knows to access the docker host's localhost IP address.
 
 **Step 5:** In order to properly run on localhost using Google's new login service, one line needs to be added in the frontend's `index.html` file. Simply uncomment the `referrer` meta link found at `frontend/src/main/frontend/public/index.html`. **MAKE SURE TO COMMENT IT OUT AGAIN BEFORE DOING ANY PULL REQUESTS**
 ![image](https://user-images.githubusercontent.com/60359581/216741360-346c6c24-f180-4387-a94b-4a3456bcd3f1.png)
