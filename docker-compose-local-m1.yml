@@ -162,7 +162,7 @@ services:
       MONGO_PASSWORD: ${MONGO_PASSWORD}
 
   mongo:
-    image: mongo:5.0.6
+    image: arm64v8/mongo:4.0
     platform: linux/arm64/v8
     command: mongod --port ${MONGO_PORT}
     container_name: cpr-mongo
@@ -184,7 +184,7 @@ services:
       - "127.0.0.1:${MONGO_PORT}:${MONGO_PORT}"
 
   mongo2:
-    image: mongo:5.0.6
+    image: arm64v8/mongo:4.0
     platform: linux/arm64/v8
     command: mongod --port ${MONGO2_PORT}
     container_name: cpr-mongo2
@@ -206,7 +206,7 @@ services:
       - "127.0.0.1:${MONGO2_PORT}:${MONGO2_PORT}"
 
   mongo3:
-    image: mongo:5.0.6
+    image: arm64v8/mongo:4.0
     platform: linux/arm64/v8
     command: mongod --port ${MONGO3_PORT}
     container_name: cpr-mongo3
@@ -228,7 +228,7 @@ services:
       - "127.0.0.1:${MONGO3_PORT}:${MONGO3_PORT}"
 
   mongo4:
-    image: mongo:5.0.6
+    image: arm64v8/mongo:4.0
     platform: linux/arm64/v8
     command: mongod --port ${MONGO4_PORT}
     container_name: cpr-mongo4
@@ -250,7 +250,7 @@ services:
       - "127.0.0.1:${MONGO4_PORT}:${MONGO4_PORT}"
 
   mongo5:
-    image: mongo:5.0.6
+    image: arm64v8/mongo:4.0
     platform: linux/arm64/v8
     command: mongod --port ${MONGO5_PORT}
     container_name: cpr-mongo5
