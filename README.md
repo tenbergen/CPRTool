@@ -6,11 +6,14 @@ A highly scalable web application that assists the process of coordinating and e
 
 ## Running the Project
 
+First things, first, **clone this repository**.
+
 There are multiple conifigurations for running the application in different environments to make the application
 machine and OS agnostic. The possible configurations are:
 - [Production](#Running-In-a-Production-Environment): For when you want the app out for full use
 - [Local Development](#Running-In-a-Local-Development-Environment): The production app but running only on a localhost network for testing
-- [Run Each Microservice Individually](#Running-Microservices-Individually): Run each service independently of eachother for testing on specific microservices
+- [Run Each Backend Microservice Individually](#Running-Backend-Microservices-Individually): Run each backend service independently of eachother for testing on specific microservices
+- [Run The Frontend Microservice Individually](# Running-Frontend-Microservice-Individually): Test the frontend service with a subset of the backend microservices
 
 
 
@@ -89,45 +92,79 @@ The web application should be running on the specified domain in your `.env` fil
 
 **Step 7:** To add users with elevated privileges (a.k.a professors), include the user's email on separate lines in `professor-list.txt`.
 
-### Running Microservices Individually 
-
-
-
-
-
-
-
-
-
-
-
-
-# OLD, DISREGARD THESE FOR NOW
-For local development environment, a Docker setup is not necessary. Make sure that the following software and dependencies are installed:
+### Running Backend Microservices Individually 
+**Before running anything individually, you will need:**
 - [Maven](https://maven.apache.org/install.html) >= 3.8.4
 - [JDK](https://openjdk.java.net/projects/jdk/17/) >= 17
-- [MongoDB](https://www.mongodb.com/docs/manual/installation/) >= 5.0
-- [MongoDB Compass](https://www.mongodb.com/products/compass) is optional but recommended for a MongoDB GUI that also comes with a terminal for shell commands
 
-**Step 1:** On Windows, hit `Windows + R`, enter `sysdm.cpl` and navigate to `Advanced -> Environment Variables...` and add the following variables:
-| Variable         | Value       |
-|------------------|-------------|
-| `MONGO_HOSTNAME` | `localhost` |
-| `MONGO_PORT`     | `27017`     |
-| `MONGO_DATABASE` | `cpr`       |
-| `MONGO_USERNAME` | Your choice |
-| `MONGO_PASSWORD` | Your choice |
+**Step 1:** If working on the backend microservices and do not need the frontend, only the database needs to run on Docker. This decision was made so that one does not need MongoDB downloaded on their computer and makes the different configurations less different from one another. Before doing so, set the following values as environment variables on your machine:
 
-On Linux-based operating systems, you may achieve the similar result by executing `EXPORT <NAME>=<VALUE>`. 
+| Variable          | Value                                                |
+|------------------ |------------------------------------------------------|
+| `LOCALHOST`       |  `true`                                              |
+|  `MONGO_PORT`     |  `27037`                                             |
+|  `MONGO2_PORT`    |  `27038`                                             |
+|  `MONGO3_PORT`    |  `27039`                                             |
+|  `MONGO4_PORT`    |  `27040`                                             |
+|  `MONGO5_PORT`    |  `27041`                                             |
+|  `MONGO5_DATABASE`|  `cpr`                                               |
+|  `MONGO_USERNAME` |  <whatever you set it to in the .env file>           |
+|  `MONGO_PASSWORD` |  <whatever you set it to in the .env file>           |
+|`JWK_ACCESS_URL`   |  `http://localhost:13126/jwt/ibm/api/cpr_access/jwk` |
+|`JWK_REFRESH_URL`  |  `http://localhost:13126/jwt/ibm/api/cpr_refresh/jwk`|
 
-**Step 2:** Using the MongoDB shell (either using MongoDB shell from terminal or the built-in one in MongoDB Compass) to create authentication for the database by running the following command:
+**Step 2:** Go to the `scripts` folder in the root directory and run the `independently-run-db.sh` shell script. If you haven't already, also run the `mongo-init.sh` shell script afterwards. 
 
-- `db.createUser({user: "<your username>", pwd: "<your password>", roles: [{role: "readWrite", db: "cpr"}]});`
-
-**Step 3:** Run `mvn liberty:dev` to start the project in developer mode. The web app should be running on http://localhost:xxxxx - the port depends on which microservice you are running as following:
+**Step 3:** You can now run the backend microservices separately. Simply go to the root of each microservice where the `pom.xml` file is located and run `mvn liberty:dev` to start the microservice. The web app should be running on http://localhost:xxxxx - the port depends on which microservice you are running as following:
 | Microservice                     | Port    |
 |----------------------------------|---------|
-| `frontend`                       | `13125` |
+| `login`                          | `13126` |
+| `course-manager`                 | `13127` |
+| `course-viewer`                  | `13128` |
+| `peer-review-teams`              | `13129` |
+| `professor-assignment`           | `13130` |
+| `student-assignment`             | `13131` |
+| `student-peer-review-assignment` | `13132` |
+
+### Running Frontend Microservice Individually
+
+To run the frontend outside of the docker-compose network, we will only run the databases and nginx webserver with docker such that the webserver reroutes any traffic to the microservices that will be running outside of the docker-compose network.
+
+**Before running anything individually, you will need:**
+- [Maven](https://maven.apache.org/install.html) >= 3.8.4
+- [JDK](https://openjdk.java.net/projects/jdk/17/) >= 17
+
+**Step 1:** If working on the backend microservices and do not need the frontend, only the database needs to run on Docker. This decision was made so that one does not need MongoDB downloaded on their computer and makes the different configurations less different from one another. Before doing so, set the following values as environment variables on your machine:
+
+| Variable          | Value                                                |
+|-------------------|------------------------------------------------------|
+| `LOCALHOST`       |  `true`                                              |
+|  `MONGO_PORT`     |  `27037`                                             |
+|  `MONGO2_PORT`    |  `27038`                                             |
+|  `MONGO3_PORT`    |  `27039`                                             |
+|  `MONGO4_PORT`    |  `27040`                                             |
+|  `MONGO5_PORT`    |  `27041`                                             |
+|  `MONGO5_DATABASE`|  `cpr`                                               |
+|  `MONGO_USERNAME` |  <whatever you set it to in the .env file>           |
+|  `MONGO_PASSWORD` |  <whatever you set it to in the .env file>           |
+|`JWK_ACCESS_URL`   |  `http://localhost:13126/jwt/ibm/api/cpr_access/jwk` |
+|`JWK_REFRESH_URL`  |  `http://localhost:13126/jwt/ibm/api/cpr_refresh/jwk`|
+
+**Step 2:** Go inside the folder `CSC480-22S/frontend/src/main/frontend` and create a .env file. Add the following lines to the file:
+`export REACT_APP_URL=http://localhost:3000/`
+`export REACT_APP_CLIENT_ID=<whatever your google client ID is>`
+
+**Step 3:** In order to properly run on localhost using Google's new login service, one line needs to be added in the frontend's `index.html` file. Simply uncomment the `referrer` meta link found at `frontend/src/main/frontend/public/index.html`. **MAKE SURE TO COMMENT IT OUT AGAIN BEFORE DOING ANY PULL REQUESTS**
+![image](https://user-images.githubusercontent.com/60359581/216741360-346c6c24-f180-4387-a94b-4a3456bcd3f1.png)
+![image](https://user-images.githubusercontent.com/60359581/216741371-23390934-6375-405e-9436-2bd9fe7baee8.png)
+
+**Step 4:** Go to the `scripts` folder in the root directory and run the `run-frontend-proxy.sh` shell script. If you haven't already, also run the `mongo-init.sh` shell script afterwards. 
+
+**Step 5:** You can now run microservices independently. Simply go to the root of each backend microservice where the `pom.xml` file is located and run `mvn liberty:dev` to start the microservice. To run the frontend service, go to the folder located at `CSC480-22S/frontend` and run `mvn process-resources liberty:dev` to start the frontend service. You will be able to reach the front end at `http://localhost:3000`.
+
+The backend microservices should be running on http://localhost:xxxxx - the port depends on which microservice you are running as following:
+| Microservice                     | Port    |
+|----------------------------------|---------|
 | `login`                          | `13126` |
 | `course-manager`                 | `13127` |
 | `course-viewer`                  | `13128` |
