@@ -13,7 +13,7 @@ machine and OS agnostic. The possible configurations are:
 - [Production](#Running-In-a-Production-Environment): For when you want the app out for full use
 - [Local Development](#Running-In-a-Local-Development-Environment): The production app but running only on a localhost network for testing
 - [Run Each Backend Microservice Individually](#Running-Backend-Microservices-Individually): Run each backend service independently of eachother for testing on specific microservices
-- [Run The Frontend Microservice Individually](# Running-Frontend-Microservice-Individually): Test the frontend service with a subset of the backend microservices
+- [Run The Frontend Microservice Individually](#Running-Frontend-Microservice-Individually): Test the frontend service with a subset of the backend microservices
 
 
 
