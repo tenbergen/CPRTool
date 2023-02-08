@@ -73,7 +73,7 @@ The web application should be running on the specified domain in your `.env` fil
 ### Running In a Local Development Environment
 **Step 1:** Clone the repository.
 
-**Step 2:** Go the the `docker-compose-local.yml` file found in root. At the bottom of the file under the **nginx** container, make the docker host port equal to whatever port you have listed in the URL environment variable. So if I was running the app with the URL **http://localhost.com:443**, the configuration at the bottom of the file would look like this:
+**Step 2:** Go the the `docker-compose-local.yml` file found in root. If running on an Apple Silicon Mac (M1 or M2) go to the docker-compose-local-m1.yml file instead. At the bottom of the file under the **nginx** container, make the docker host port equal to whatever port you have listed in the URL environment variable. So if I was running the app with the URL **http://localhost.com:443**, the configuration at the bottom of the file would look like this:
 ![image](https://user-images.githubusercontent.com/60359581/216736629-d31a2768-4b55-41c3-9997-08f983ea7dcc.png)
 
 **Step 3:** In the `.env` file, make the **JWK_ACCESS_URL** equal to `http://172.17.0.1:<whatever port you're running on>/jwt/ibm/api/cpr_access/jwk` . This URL is specifically needed so that the docker container running the microservices knows to access the docker host's localhost IP address.
@@ -113,7 +113,7 @@ The web application should be running on the specified domain in your `.env` fil
 |`JWK_ACCESS_URL`   |  `http://localhost:13126/jwt/ibm/api/cpr_access/jwk` |
 |`JWK_REFRESH_URL`  |  `http://localhost:13126/jwt/ibm/api/cpr_refresh/jwk`|
 
-**Step 2:** Go to the `scripts` folder in the root directory and run the `independently-run-db.sh` shell script. If you haven't already, also run the `mongo-init.sh` shell script afterwards. 
+**Step 2:** Go to the `scripts` folder in the root directory and run the `independently-run-db.sh` shell script. If running on an Apple Silicon Mac (M1 or M2) run the `independently-run-db-m1.sh` shell script. If you haven't already, also run the `mongo-init.sh` shell script afterwards. 
 
 **Step 3:** You can now run the backend microservices separately. Simply go to the root of each microservice where the `pom.xml` file is located and run `mvn liberty:dev` to start the microservice. The web app should be running on http://localhost:xxxxx - the port depends on which microservice you are running as following:
 | Microservice                     | Port    |
@@ -158,7 +158,7 @@ To run the frontend outside of the docker-compose network, we will only run the 
 ![image](https://user-images.githubusercontent.com/60359581/216741360-346c6c24-f180-4387-a94b-4a3456bcd3f1.png)
 ![image](https://user-images.githubusercontent.com/60359581/216741371-23390934-6375-405e-9436-2bd9fe7baee8.png)
 
-**Step 4:** Go to the `scripts` folder in the root directory and run the `run-frontend-proxy.sh` shell script. If you haven't already, also run the `mongo-init.sh` shell script afterwards. 
+**Step 4:** Go to the `scripts` folder in the root directory and run the `run-frontend-proxy.sh` shell script. If running on an Apple Silicon Mac, run the `run-frontend-proxy-m1.sh` script instead. If you haven't already, also run the `mongo-init.sh` shell script afterwards. 
 
 **Step 5:** You can now run microservices independently. Simply go to the root of each backend microservice where the `pom.xml` file is located and run `mvn liberty:dev` to start the microservice. To run the frontend service, go to the folder located at `CSC480-22S/frontend` and run `mvn process-resources liberty:dev` to start the frontend service. You will be able to reach the front end at `http://localhost:3000`.
 
