@@ -7,6 +7,7 @@ services:
         URL: ${URL}
         CLIENT_ID: ${CLIENT_ID}
     image: cpr-frontend
+    platform: linux/amd64
     container_name: cpr-frontend
     restart: unless-stopped
 
@@ -14,6 +15,7 @@ services:
     build:
       context: ./backend/login-microservice
     image: cpr-login
+    platform: linux/amd64
     container_name: cpr-login
     restart: unless-stopped
     volumes:
@@ -37,6 +39,7 @@ services:
     build:
       context: ./backend/course-manager-microservice
     image: cpr-course-manager
+    platform: linux/amd64
     container_name: cpr-course-manager
     restart: unless-stopped
     environment:
@@ -56,6 +59,7 @@ services:
     build:
       context: ./backend/course-viewer-microservice
     image: cpr-course-viewer
+    platform: linux/amd64
     container_name: cpr-course-viewer
     restart: unless-stopped
     environment:
@@ -75,6 +79,7 @@ services:
     build:
       context: ./backend/peer-review-teams-microservice
     image: cpr-peer-review-teams
+    platform: linux/amd64
     container_name: cpr-peer-review-teams
     restart: unless-stopped
     environment:
@@ -94,6 +99,7 @@ services:
     build:
       context: ./backend/professor-assignment-microservice
     image: cpr-professor-assignment
+    platform: linux/amd64
     container_name: cpr-professor-assignment
     restart: unless-stopped
     volumes:
@@ -115,6 +121,7 @@ services:
     build:
       context: ./backend/student-assignment-microservice
     image: cpr-student-assignment
+    platform: linux/amd64
     container_name: cpr-student-assignment
     restart: unless-stopped
     volumes:
@@ -136,6 +143,7 @@ services:
     build:
       context: ./backend/student-peer-review-assignment-microservice
     image: cpr-student-peer-review-assignment
+    platform: linux/amd64
     container_name: cpr-student-peer-review-assignment
     restart: unless-stopped
     volumes:
@@ -154,7 +162,8 @@ services:
       MONGO_PASSWORD: ${MONGO_PASSWORD}
 
   mongo:
-    image: mongo:5.0.6
+    image: arm64v8/mongo:4.0
+    platform: linux/arm64/v8
     command: mongod --port ${MONGO_PORT}
     container_name: cpr-mongo
     restart: unless-stopped
@@ -175,7 +184,8 @@ services:
       - "127.0.0.1:${MONGO_PORT}:${MONGO_PORT}"
 
   mongo2:
-    image: mongo:5.0.6
+    image: arm64v8/mongo:4.0
+    platform: linux/arm64/v8
     command: mongod --port ${MONGO2_PORT}
     container_name: cpr-mongo2
     restart: unless-stopped
@@ -194,9 +204,10 @@ services:
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     ports:
       - "127.0.0.1:${MONGO2_PORT}:${MONGO2_PORT}"
-  
+
   mongo3:
-    image: mongo:5.0.6
+    image: arm64v8/mongo:4.0
+    platform: linux/arm64/v8
     command: mongod --port ${MONGO3_PORT}
     container_name: cpr-mongo3
     restart: unless-stopped
@@ -217,7 +228,8 @@ services:
       - "127.0.0.1:${MONGO3_PORT}:${MONGO3_PORT}"
 
   mongo4:
-    image: mongo:5.0.6
+    image: arm64v8/mongo:4.0
+    platform: linux/arm64/v8
     command: mongod --port ${MONGO4_PORT}
     container_name: cpr-mongo4
     restart: unless-stopped
@@ -238,7 +250,8 @@ services:
       - "127.0.0.1:${MONGO4_PORT}:${MONGO4_PORT}"
 
   mongo5:
-    image: mongo:5.0.6
+    image: arm64v8/mongo:4.0
+    platform: linux/arm64/v8
     command: mongod --port ${MONGO5_PORT}
     container_name: cpr-mongo5
     restart: unless-stopped
@@ -260,11 +273,10 @@ services:
 
   nginx:
     image: nginx:1.21.6
+    platform: linux/arm64/v8
     restart: unless-stopped
     container_name: cpr-nginx
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:rw
-      - /tmp/privkey1.pem:/tmp/privkey1.pem
-      - /tmp/pems/fullchain1.pem:/tmp/pems/fullchain1.pem
+      - ./nginxlocal.conf:/etc/nginx/nginx.conf:rw
     ports:
-      - "13125:80"
+      - "3000:80"

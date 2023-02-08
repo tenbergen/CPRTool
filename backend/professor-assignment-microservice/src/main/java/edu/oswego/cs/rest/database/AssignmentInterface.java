@@ -28,8 +28,6 @@ public class AssignmentInterface {
     private final MongoCollection<Document> submissionCollection;
     private static String reg;
 
-    // Set this to true if running on Windows.
-    private static final boolean isWindows = false;
 
     public AssignmentInterface() {
         try {
@@ -58,7 +56,7 @@ public class AssignmentInterface {
             relativePathPrefix.append("../");
         }
         reg = "\\";
-        if (!isWindows) {
+        if (System.getProperty("os.name").toLowerCase().contains("win")||(System.getProperty("os.name").toLowerCase().contains("nux") && System.getProperty("os.version").contains("WSL"))) {
             reg = "/";
             relativePathPrefix = new StringBuilder(relativePathPrefix.toString().replace("\\", "/"));
         }
