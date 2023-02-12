@@ -24,6 +24,7 @@ function LoginPage() {
 
   useEffect(() => {
     setIsLoading(true);
+    console.log(REACT_APP_CLIENT_ID)
     setTimeout(() => setIsLoading(false), 775);
     return () => {
       setIsLoading(false);
