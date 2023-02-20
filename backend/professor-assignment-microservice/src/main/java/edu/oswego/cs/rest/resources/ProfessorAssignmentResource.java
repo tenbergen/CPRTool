@@ -198,7 +198,7 @@ public class ProfessorAssignmentResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist.").build();
 
         Response.ResponseBuilder response = Response.ok(file);
-        response.header("Content-Disposition", "attachment; filename=" + file.getName());
+        response.header("Content-Disposition", "attachment; filename=" + file.getName() + ".pdf");
         return response.build();
     }
 
@@ -217,7 +217,7 @@ public class ProfessorAssignmentResource {
     public Response downloadPeerReview(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("fileName") String fileName) {
         File file = new File(AssignmentInterface.findPeerReviewFile(courseID, assignmentID, fileName));
 
-        return Response.ok(file).header("Content-Disposition", "attachment; filename=" + file.getName()).build();
+        return Response.ok(file).header("Content-Disposition", "attachment; filename=" + file.getName() + ".pdf").build();
     }
 
     @DELETE
