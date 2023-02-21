@@ -65,6 +65,11 @@ const ProfessorRosterComponent = () => {
   };
 
   const deleteStudent = async (Email) => {
+    let confirmAction = window.confirm(
+      `Are you sure you want to delete this student from the roster?`
+    );
+    if (!confirmAction) return;
+
     const deleteStudentUrl = `${url}/${courseId}/students/${Email.student_id}/delete`;
     await axios
       .delete(deleteStudentUrl)
