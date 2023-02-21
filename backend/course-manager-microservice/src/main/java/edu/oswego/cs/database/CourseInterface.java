@@ -170,20 +170,36 @@ public class CourseInterface {
 
     public void removeStudent(SecurityContext securityContext, String studentID, String courseID) {
         String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
-
         Document studentDocument = studentCollection.find(and(eq("student_id", studentID), eq("courses", courseID))).first();
         if (studentDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "This student does not exist.");
 
         Document courseDocument = courseCollection.find(and(eq("course_id", courseID), eq("professor_id", professorID))).first();
         if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "This course does not exist.");
-
         List<String> courses = studentDocument.getList("courses", String.class);
         courses.remove(courseID);
         studentCollection.updateOne(eq("student_id", studentID), set("courses", courses));
-
         List<String> students = courseDocument.getList("students", String.class);
         students.remove(studentID);
         courseCollection.updateOne(eq("course_id", courseID), set("students", students));
+
+        Document teamDocument = teamCollection.find(and(eq("course_id", courseID), eq("team_members", studentID))).first();
+        int teamSize = teamDocument.getInteger("team_size");
+        boolean isOnlyMember = teamDocument.getInteger("team_size", -1) == 1;
+        boolean isTeamLeader = teamDocument.getString("team_leader").equals(studentID);
+        if (teamDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "This team does not exist.");
+        List<String> teamMembers = teamDocument.getList("team_members", String.class);
+        if (isOnlyMember) {
+            teamCollection.deleteOne(eq("course_id", courseID));
+            return;
+        }
+        teamMembers.remove(studentID);
+        teamCollection.updateOne(eq("course_id", courseID), set("team_size", teamSize - 1));
+        teamCollection.updateOne(eq("course_id", courseID), set("team_members", teamMembers));
+        if (isTeamLeader) {
+            /* "Randomly" select a new team leader (for now) */
+            String newTeamLeader = teamMembers.get(0);
+            teamCollection.updateOne(eq("course_id", courseID), set("team_leader", newTeamLeader));
+        }
     }
 
     public void addStudentsFromCSV(SecurityContext securityContext, FileDAO fileDAO) {
