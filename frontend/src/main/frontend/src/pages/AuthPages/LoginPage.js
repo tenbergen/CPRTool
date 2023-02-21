@@ -23,6 +23,7 @@ function LoginPage() {
 
   useEffect(() => {
     setIsLoading(true);
+    console.log(REACT_APP_CLIENT_ID)
     setTimeout(() => setIsLoading(false), 775);
     return () => {
       setIsLoading(false);
@@ -43,7 +44,7 @@ function LoginPage() {
                       text={'signin_with'}
                       onSuccess={handleLogin}
                       onError={handleFailure}
-                      // hosted_domain={'oswego.edu'}
+                      hosted_domain={'oswego.edu'}
                       size={'large'}
                       cookiePolicy={'single_host_origin'}
                       prompt='select_account'

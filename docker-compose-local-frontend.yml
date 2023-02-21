@@ -142,8 +142,6 @@ services:
       MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
-
-
   mongo:
     image: mongo:5.0.6
     command: mongod --port ${MONGO_PORT}
