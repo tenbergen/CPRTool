@@ -1,5 +1,5 @@
 //import useState hook to create menu collapse state
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 //import react pro sidebar components
 import {
@@ -19,7 +19,9 @@ import 'react-pro-sidebar/dist/css/styles.css';
 import './styles/Sidebar.css';
 
 const SidebarComponent = () => {
+  console.log(window.history.length);
   let navigate = useNavigate();
+  let location = useLocation();
 
   const handleLogout = () => {
     localStorage.clear();
@@ -38,6 +40,9 @@ const SidebarComponent = () => {
                 <MenuItem icon={<FaList />}>Courses</MenuItem>
               </Menu>
             </Link>
+            <button onClick={() => navigate(-1)} disabled={location.pathname==='/'}>
+              Back
+            </button>
           </SidebarContent>
           <SidebarFooter>
             <Menu iconShape='circle'>
