@@ -10,7 +10,7 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
       # specify the version you desire here
-      - image: circleci/openjdk:18-jdk
+      - image: cimg/base:stable
         auth:
           username: 526823976718-1h3pfth8oalehuab1e2r3qom4bkcsqrq.apps.googleusercontent.com
           password: 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  # contex
@@ -28,6 +28,8 @@ jobs:
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
+      - setup_remote_docker:
+          version: 18.09.0
       - checkout
       - bash docker_compose_local.exe
 
