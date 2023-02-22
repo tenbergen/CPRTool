@@ -183,9 +183,11 @@ public class CourseInterface {
         courseCollection.updateOne(eq("course_id", courseID), set("students", students));
 
         Document teamDocument = teamCollection.find(and(eq("course_id", courseID), eq("team_members", studentID))).first();
-        int teamSize = teamDocument.getInteger("team_size");
+        if (teamDocument == null) return;
+        int teamSize = teamDocument.getInteger("team_size", -1);
         boolean isOnlyMember = teamDocument.getInteger("team_size", -1) == 1;
-        boolean isTeamLeader = teamDocument.getString("team_leader").equals(studentID);
+        boolean isTeamLeader = teamDocument.getString("team_lead").equals(studentID);
+        String teamID = teamDocument.getString("team_id");
         if (teamDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "This team does not exist.");
         List<String> teamMembers = teamDocument.getList("team_members", String.class);
         if (isOnlyMember) {
@@ -193,12 +195,12 @@ public class CourseInterface {
             return;
         }
         teamMembers.remove(studentID);
-        teamCollection.updateOne(eq("course_id", courseID), set("team_size", teamSize - 1));
-        teamCollection.updateOne(eq("course_id", courseID), set("team_members", teamMembers));
+        teamCollection.updateOne(eq("team_id", teamID), set("team_size", teamSize - 1));
+        teamCollection.updateOne(eq("team_id", teamID), set("team_members", teamMembers));
         if (isTeamLeader) {
             /* "Randomly" select a new team leader (for now) */
             String newTeamLeader = teamMembers.get(0);
-            teamCollection.updateOne(eq("course_id", courseID), set("team_leader", newTeamLeader));
+            teamCollection.updateOne(eq("team_id", teamID), set("team_leader", newTeamLeader));
         }
     }
 
