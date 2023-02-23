@@ -59,11 +59,12 @@
 }
 
 .cap-form::-webkit-scrollbar-track {
-  background-color: transparent;
+  background-color: #9baba7;
+  border-radius: 20px;
 }
 
 .cap-form::-webkit-scrollbar-thumb {
-  background-color: #d6dee1;
+  background-color: #def7f5;
   border-radius: 20px;
   border: 6px solid transparent;
   background-clip: content-box;
@@ -121,10 +122,10 @@
   flex-grow: 1;
 }
 
-.cap-assignment-files input[type='file']::file-selector-button {
+.cap-assignment-files input[type="file"]::file-selector-button {
   background: #82dfe8;
   color: #393939;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 15px;
   margin-left: 10px;
   border-radius: 50px;
@@ -144,7 +145,7 @@
   margin-right: 1%;
 }
 
-.cap-assignment-info input[type='date'] {
+.cap-assignment-info input[type="date"] {
   padding: 5px 5px 5px 5px;
   flex-grow: 0.75;
   border: 2px solid #949494;
@@ -152,7 +153,7 @@
   border-radius: 50px;
 }
 
-.cap-assignment-info input[type='number'] {
+.cap-assignment-info input[type="number"] {
   padding: 5px 5px 5px 5px;
   flex-grow: 0.75;
   border: 2px solid #949494;
