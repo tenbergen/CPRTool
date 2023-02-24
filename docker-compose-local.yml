@@ -9,6 +9,8 @@ services:
     image: cpr-frontend
     container_name: cpr-frontend
     restart: unless-stopped
+    ports:
+      - "3000:13125"
 
   login:
     build:
@@ -257,12 +259,3 @@ services:
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     ports:
       - "127.0.0.1:${MONGO5_PORT}:${MONGO5_PORT}"
-
-  nginx:
-    image: nginx:1.21.6
-    restart: unless-stopped
-    container_name: cpr-nginx
-    volumes:
-      - ./nginxlocal.conf:/etc/nginx/nginx.conf:rw
-    ports:
-      - "3000:80"
