@@ -51,4 +51,4 @@ hs_err_pid*
 *.csv
 
 # Professor List
-professor-list.txt
+/professor-list.txt
