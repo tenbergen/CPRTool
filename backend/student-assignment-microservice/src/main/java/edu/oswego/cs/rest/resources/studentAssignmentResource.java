@@ -44,7 +44,7 @@ public class studentAssignmentResource {
             return Response.status(Response.Status.BAD_REQUEST).entity("Assignment Does Not Exist").build();
 
         Response.ResponseBuilder response = Response.ok(file.get());
-        response.header("Content-Disposition", "attachment; filename=" + file.get().getName());
+        response.header("Content-Disposition", "attachment; filename=" + file.get().getName() + ".pdf");
         return response.build();
     }
 

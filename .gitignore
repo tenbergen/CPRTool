@@ -50,5 +50,5 @@ hs_err_pid*
 # CSV files
 *.csv
 
-# Professor List
-/professor-list.txt
+# Database folders
+db*
