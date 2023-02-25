@@ -20,9 +20,8 @@ jobs:
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - setup_remote_docker:
-          version: 18.09.0
+          version: 19.03.13
       - checkout
-      - bash docker_compose_local.exe
 
       # Download and cache dependencies
       - restore_cache:
