@@ -9,8 +9,9 @@ jobs:
     docker:
       - image: cimg/base:stable
         auth:
-          username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+          username: Kayyali78
+          password: Ee6dST3MidnTB4f
+          # context / project UI env-var reference
 
     environment:
       # Customize the JVM maximum heap limit
