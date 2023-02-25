@@ -9,8 +9,8 @@ jobs:
     docker:
       - image: cimg/base:stable
         auth:
-          username: Kayyali78
-          password: Ee6dST3MidnTB4f
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD
           # context / project UI env-var reference
 
     environment:
