@@ -1,42 +1,36 @@
 version: 2.1
 
 orbs:
-  maven: circleci/maven@1.4.0
+  maven: circleci/maven@1.3
 
-
-jobs:
-  build:
+executors:
+  openjdk:
     docker:
-      - image: cimg/base:stable
-        auth:
-          username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD
-          # context / project UI env-var reference
+      - image: circleci/openjdk:11.0.9-jdk-buster
+      - image: cpr-frontend
+      - image: cpr-login
+      - image: cpr-course-manager
+      - image: cpr-course-viewer
+      - image: cpr-peer-review-teams
+      - image: cpr-professor-assignment
+      - image: cpr-student-assignment
+      - image: cpr-student-peer-review-assignment
+      - image: mongo:5.0.6
+        command: mongod --port ${MONGO_PORT}
+      - image: mongo:5.0.6
+        command: mongod --port ${MONGO2_PORT}
+      - image: mongo:5.0.6
+        command: mongod --port ${MONGO3_PORT}
+      - image: mongo:5.0.6
+        command: mongod --port ${MONGO4_PORT}
+      - image: mongo:5.0.6
+        command: mongod --port ${MONGO5_PORT}
 
-    environment:
-      # Customize the JVM maximum heap limit
-      JVM_OPTS: -Xmx3200m
-      TERM: dumb
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
-    steps:
-      - setup_remote_docker:
-          version: 19.03.13
-      - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "build.maven" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
-      - run: maven dependencies
-
-      - save_cache:
-          paths:
-            - ~/.maven
-          key: v1-dependencies-{{ checksum "build.maven" }}
-
-      # run tests!
-      - run: maven test
+workflows:
+  verify: # workflow name
+    jobs:
+      - maven/test:
+          executor: openjdk
+          steps:
+            - checkout
+            - run: mvn test
