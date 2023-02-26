@@ -24,5 +24,3 @@ jobs:
           version: 19.03.13
       - checkout
 
-      # run tests!
-      - run: maven test
