@@ -24,12 +24,5 @@ jobs:
           version: 19.03.13
       - checkout
 
-      - run: maven dependencies
-
-      - save_cache:
-          paths:
-            - ~/.maven
-          key: v1-dependencies-{{ checksum "build.maven" }}
-
       # run tests!
       - run: maven test
