@@ -7,7 +7,7 @@ const SubmittedAssignmentComponent = ({ currentSubmittedAssignment }) => {
   const { courseId, assignmentId, teamId } = useParams();
 
   const onAssignmentFileClick = async (filename) => {
-    const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/peer-review/download/${filename}`;
+    const url = `${process.env.REACT_APP_PROFESSOR_ASSIGNMENT_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/peer-review/download/${filename}`;
 
     await axios
       .get(url, { responseType: 'blob' })
@@ -18,7 +18,7 @@ const SubmittedAssignmentComponent = ({ currentSubmittedAssignment }) => {
   };
 
   const onTeamFileClick = async () => {
-    const url = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${teamId}/download`;
+    const url = `${process.env.REACT_APP_STUDENT_ASSIGNMENT_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${teamId}/download`;
 
     await axios
       .get(url, { responseType: 'blob' })
@@ -32,7 +32,7 @@ const SubmittedAssignmentComponent = ({ currentSubmittedAssignment }) => {
 
   const onFeedbackClick = async (peerReview) => {
     const srcTeamName = peerReview.reviewed_by;
-    const url = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${srcTeamName}/${teamId}/download`;
+    const url = `${process.env.REACT_APP_STUDENT_PEER_REVIEW_ASSIGNMENT_URL}/peer-review/assignments/${courseId}/${assignmentId}/${srcTeamName}/${teamId}/download`;
 
     await axios
       .get(url, { responseType: 'blob' })

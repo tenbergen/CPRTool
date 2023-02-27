@@ -35,7 +35,7 @@ const ProfessorTeamAccordion = ({ team, teams, setTeams }) => {
 
     await axios
       .put(
-        `${process.env.REACT_APP_URL}/teams/professor/team/add-student`,
+        `${process.env.REACT_APP_PEER_REVIEW_URL}/teams/professor/team/add-student`,
         data
       )
       .then((r) => {
@@ -63,7 +63,7 @@ const ProfessorTeamAccordion = ({ team, teams, setTeams }) => {
 
     await axios
       .put(
-        `${process.env.REACT_APP_URL}/teams/professor/team/remove-student`,
+        `${process.env.REACT_APP_PEER_REVIEW_URL}/teams/professor/team/remove-student`,
         data
       )
       .then((r) => {
@@ -88,7 +88,7 @@ const ProfessorTeamAccordion = ({ team, teams, setTeams }) => {
     };
 
     await axios
-      .delete(`${process.env.REACT_APP_URL}/teams/professor/team/delete`, {
+      .delete(`${process.env.REACT_APP_PEER_REVIEW_URL}/teams/professor/team/delete`, {
         data,
       })
       .then((r) => {

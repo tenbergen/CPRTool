@@ -29,7 +29,7 @@ const RegularAssignmentComponent = () => {
 
   const onAssignmentClick = async () => {
     const fileName = currentAssignment.assignment_instructions;
-    const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/download/${fileName}`;
+    const url = `${process.env.REACT_APP_PROFESSOR_ASSIGNMENT_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/download/${fileName}`;
     await axios
       .get(url, { responseType: 'blob' })
       .then((res) => downloadFile(res.data, fileName));
@@ -44,7 +44,7 @@ const RegularAssignmentComponent = () => {
   };
 
   const handleSubmit = async () => {
-    const submitAssUrl = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${currentTeamId}/upload`;
+    const submitAssUrl = `${process.env.REACT_APP_STUDENT_ASSIGNMENT_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${currentTeamId}/upload`;
 
     await axios
       .post(submitAssUrl, assignmentFileFormData)

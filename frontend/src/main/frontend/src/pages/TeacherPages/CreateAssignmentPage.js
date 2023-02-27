@@ -7,7 +7,7 @@ import { Field, Form } from 'react-final-form';
 import CourseBarComponent from '../../components/CourseBarComponent';
 import Loader from '../../components/LoaderComponenets/Loader';
 
-const profAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`;
+const profAssignmentUrl = `${process.env.REACT_APP_PROFESSOR_ASSIGNMENT_URL}/assignments/professor/courses`;
 
 const CreateAssignmentPage = () => {
   let navigate = useNavigate();
