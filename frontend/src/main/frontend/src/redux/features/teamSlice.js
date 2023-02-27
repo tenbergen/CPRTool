@@ -8,7 +8,7 @@ export const getCurrentCourseTeamAsync = createAsyncThunk(
     thunkAPI.dispatch(refreshTokenAsync());
     const { courseId, lakerId } = values;
     const teamId = await axios
-      .get(`${process.env.REACT_APP_URL}/teams/team/get/${courseId}/${lakerId}`)
+      .get(`${process.env.REACT_APP_PEER_REVIEW_URL}/teams/team/get/${courseId}/${lakerId}`)
       .then((res) => {
         return res.data.team_id;
       })

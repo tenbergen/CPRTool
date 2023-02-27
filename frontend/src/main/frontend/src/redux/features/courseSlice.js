@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { refreshTokenAsync } from './authSlice';
 
-const viewCourseUrl = `${process.env.REACT_APP_URL}/view/professor`;
+const viewCourseUrl = `${process.env.REACT_APP_COURSE_VIEWER_URL}/view/professor`;
 
 export const getStudentCoursesAsync = createAsyncThunk(
   'courses/getStudentCoursesAsync',
@@ -63,7 +63,7 @@ export const getCurrentCourseStudentsAsync = createAsyncThunk(
   'courses/getCurrentCourseStudentsAsync',
   async (courseId, thunkAPI) => {
     thunkAPI.dispatch(refreshTokenAsync());
-    const url = `${process.env.REACT_APP_URL}/view/professor/courses/${courseId}/students`;
+    const url = `${process.env.REACT_APP_COURSE_VIEWER_URL}/view/professor/courses/${courseId}/students`;
     let finalStudentArray = [];
 
     const students = await axios
@@ -76,7 +76,7 @@ export const getCurrentCourseStudentsAsync = createAsyncThunk(
         return [];
       });
 
-    const teamUrl = `${process.env.REACT_APP_URL}/teams/team/get/all/${courseId}`;
+    const teamUrl = `${process.env.REACT_APP_PEER_REVIEW_URL}/teams/team/get/all/${courseId}`;
     const teams = await axios
       .get(teamUrl)
       .then((res) => {

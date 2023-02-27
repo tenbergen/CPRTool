@@ -10,10 +10,10 @@ import {
   getCoursesAsync,
 } from '../../../redux/features/courseSlice';
 
-const deleteCourseUrl = `${process.env.REACT_APP_URL}/manage/professor/courses`;
-const updateUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/update`;
-const uploadCsvUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/student/mass-add`;
-const assignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`;
+const deleteCourseUrl = `${process.env.REACT_APP_COURSE_MANAGER_URL}/manage/professor/courses`;
+const updateUrl = `${process.env.REACT_APP_COURSE_MANAGER_URL}/manage/professor/courses/course/update`;
+const uploadCsvUrl = `${process.env.REACT_APP_COURSE_MANAGER_URL}/manage/professor/courses/course/student/mass-add`;
+const assignmentUrl = `${process.env.REACT_APP_PROFESSOR_ASSIGNMENT_URL}/assignments/professor/courses`;
 
 const ProfessorEditCourseComponent = () => {
   let navigate = useNavigate();

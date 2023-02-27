@@ -8,7 +8,7 @@ import ProfessorTeamAccordion from './ProfessorTeamAccordion.jsx';
 
 const ProfessorTeamComponent = () => {
   const { currentCourse } = useSelector((state) => state.courses);
-  const getTeamsUrl = `${process.env.REACT_APP_URL}/teams/team/get/all/${currentCourse.course_id}`;
+  const getTeamsUrl = `${process.env.REACT_APP_PEER_REVIEW_URL}/teams/team/get/all/${currentCourse.course_id}`;
   const [teams, setTeams] = useState([]);
 
   useEffect(() => {

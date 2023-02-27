@@ -36,7 +36,7 @@ const StudentPeerReviewComponent = () => {
   };
 
   const onFileClick = async (fileName) => {
-    const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/peer-review/download/${fileName}`;
+    const url = `${process.env.REACT_APP_PROFESSOR_ASSIGNMENT_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/peer-review/download/${fileName}`;
 
     await axios
       .get(url, { responseType: 'blob' })
@@ -44,7 +44,7 @@ const StudentPeerReviewComponent = () => {
   };
 
   const onTeamFileClick = async () => {
-    const url = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${currentTeamId}/download`;
+    const url = `${process.env.REACT_APP_STUDENT_ASSIGNMENT_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${currentTeamId}/download`;
 
     await axios
       .get(url, { responseType: 'blob' })
@@ -52,7 +52,7 @@ const StudentPeerReviewComponent = () => {
   };
 
   const handleSubmit = async () => {
-    const submitAssUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${currentTeamId}/${teamId}/${grade}/upload`;
+    const submitAssUrl = `${process.env.REACT_APP_STUDENT_PEER_REVIEW_ASSIGNMENT_URL}/peer-review/assignments/${courseId}/${assignmentId}/${currentTeamId}/${teamId}/${grade}/upload`;
 
     await axios
       .post(submitAssUrl, feedbackFileFormData)

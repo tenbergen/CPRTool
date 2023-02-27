@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom';
 import '../../styles/EditAssignmentStyle.css';
 import axios from 'axios';
 
-const profAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`;
+const profAssignmentUrl = `${process.env.REACT_APP_PROFESSOR_ASSIGNMENT_URL}/assignments/professor/courses`;
 
 const ProfessorEditAssignmentComponent = () => {
   const dispatch = useDispatch();
@@ -85,7 +85,7 @@ const ProfessorEditAssignmentComponent = () => {
   };
 
   const deleteFile = async (fileName, isPeerReview) => {
-    const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}`;
+    const url = `${process.env.REACT_APP_PROFESSOR_ASSIGNMENT_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}`;
 
     const deleteUrl = isPeerReview
       ? `${url}/peer-review/remove-file/${fileName}`
@@ -107,7 +107,7 @@ const ProfessorEditAssignmentComponent = () => {
   };
 
   const onFileClick = async (fileName, isPeerReview) => {
-    const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}`;
+    const url = `${process.env.REACT_APP_PROFESSOR_ASSIGNMENT_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}`;
     const downloadUrl = isPeerReview
       ? `${url}/peer-review/download/${fileName}`
       : `${url}/download/${fileName}`;

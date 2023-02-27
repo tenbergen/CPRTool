@@ -2,11 +2,11 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { refreshTokenAsync } from './authSlice';
 import axios from 'axios';
 
-const getAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`;
-const submittedAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/student`;
+const getAssignmentUrl = `${process.env.REACT_APP_PROFESSOR_ASSIGNMENT_URL}/assignments/professor/courses`;
+const submittedAssignmentUrl = `${process.env.REACT_APP_STUDENT_ASSIGNMENT_URL}/assignments/student`;
 
 const getPeerReviews = async (courseId, assignmentId, lakerId) => {
-  const peerReviewUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/reviews-of/${lakerId}`;
+  const peerReviewUrl = `${process.env.REACT_APP_STUDENT_PEER_REVIEW_ASSIGNMENT_URL}/peer-review/assignments/${courseId}/${assignmentId}/reviews-of/${lakerId}`;
   const peerReviews = await axios
     .get(peerReviewUrl)
     .then((res) => {
@@ -105,7 +105,7 @@ const getSubmittedAssignmentDetails = async (
   });
 
   const lakerId = await axios
-    .get(`${process.env.REACT_APP_URL}/teams/team/${courseId}/get/${teamId}`)
+    .get(`${process.env.REACT_APP_PEER_REVIEW_URL}/teams/team/${courseId}/get/${teamId}`)
     .then((res) => {
       return res.data.team_lead;
     })
@@ -114,7 +114,7 @@ const getSubmittedAssignmentDetails = async (
     });
 
   // team file name
-  const submissionDetailUrl = `${process.env.REACT_APP_URL}/assignments/student/${courseId}/${assignmentId}/${lakerId}/submission`;
+  const submissionDetailUrl = `${process.env.REACT_APP_STUDENT_ASSIGNMENT_URL}/assignments/student/${courseId}/${assignmentId}/${lakerId}/submission`;
   const submissionDetail = await axios
     .get(submissionDetailUrl)
     .then((res) => {

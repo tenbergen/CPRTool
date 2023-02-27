@@ -9,7 +9,7 @@ import uuid from 'react-uuid';
 const TeamComponent = () => {
   const dispatch = useDispatch();
   const { courseId } = useParams();
-  const getTeamsUrl = `${process.env.REACT_APP_URL}/teams/team/get/all/${courseId}`;
+  const getTeamsUrl = `${process.env.REACT_APP_PEER_REVIEW_URL}/teams/team/get/all/${courseId}`;
   const [teams, setTeams] = useState([]);
   const { lakerId } = useSelector((state) => state.auth);
 
@@ -32,7 +32,7 @@ const TeamComponent = () => {
   }, [getTeamsUrl]);
 
   const joinTeam = async (teamId) => {
-    const joinUrl = `${process.env.REACT_APP_URL}/teams/team/join`;
+    const joinUrl = `${process.env.REACT_APP_PEER_REVIEW_URL}/teams/team/join`;
     const data = { team_id: teamId, course_id: courseId, student_id: lakerId };
     await axios
       .put(joinUrl, data)
@@ -48,7 +48,7 @@ const TeamComponent = () => {
 
   const createTeam = async () => {
     const team_name = prompt('Enter team name: ');
-    const createUrl = `${process.env.REACT_APP_URL}/teams/team/create`;
+    const createUrl = `${process.env.REACT_APP_PEER_REVIEW_URL}/teams/team/create`;
     const createData = {
       course_id: courseId,
       student_id: lakerId,
