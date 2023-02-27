@@ -38,7 +38,7 @@ function LoginPage() {
         ) : (
             <div className='bigBox'>
               <div id='box'>
-                <div className='kumba-40 welcome'>Welcome!</div>
+                <div className='hel44-700 welcome'>Welcome!</div>
                 <div className='googleButton'>
                   <GoogleOAuthProvider clientId={REACT_APP_CLIENT_ID}>
                   <GoogleLogin

@@ -1,18 +1,11 @@
 .pcp-parent {
   display: flex;
   flex-direction: row;
-  background: conic-gradient(
-    from 180deg at 50% 50%,
-    #7398ff -128.84deg,
-    #57e1b2 25.81deg,
-    #7398ff 231.16deg,
-    #57e1b2 385.81deg
-  );
 }
 
 .pcp-container {
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 50px;
+  background-color: #d4eefc;
+  border-radius: 10px;
   margin: 3% 5% 3% 2%;
   flex-grow: 1;
   display: flex;
@@ -22,10 +15,10 @@
 }
 
 .pcp-components {
-  border-radius: 50px;
+  border-radius: 0 10px 10px 0;
   flex-grow: 1;
   padding: 2%;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: white;
 }
 
 .pcp-components::-webkit-scrollbar {
@@ -50,7 +43,6 @@
 .pcp-component-links {
   display: flex;
   flex-direction: row;
-  font-weight: bold;
   text-align: center;
   justify-content: space-between;
   padding: 0 5% 0 5%;
@@ -61,12 +53,10 @@
 }
 
 .pcp-component-link {
-  font-size: 24px;
   padding-left: 24px;
 }
 
 .pcp-component-link-clicked {
-  font-size: 24px;
   padding-left: 24px;
   text-decoration: underline;
   color: #5267a3;
