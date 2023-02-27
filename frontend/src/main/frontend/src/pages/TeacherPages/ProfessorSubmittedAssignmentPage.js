@@ -28,7 +28,7 @@ function ProfessorSubmittedAssignmentPage() {
   };
 
   const onFileClick = async (fileName) => {
-    const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/peer-review/download/${fileName}`;
+    const url = `${process.env.REACT_APP_PROFESSOR_ASSIGNMENT_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/peer-review/download/${fileName}`;
 
     await axios
       .get(url, { responseType: 'blob' })
@@ -39,7 +39,7 @@ function ProfessorSubmittedAssignmentPage() {
   };
 
   const onTeamFileClick = async () => {
-    const url = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${teamId}/download`;
+    const url = `${process.env.REACT_APP_STUDENT_ASSIGNMENT_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${teamId}/download`;
 
     await axios
       .get(url, { responseType: 'blob' })
@@ -52,7 +52,7 @@ function ProfessorSubmittedAssignmentPage() {
   };
 
   const onFeedBackClick = async (teamName) => {
-    const url = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${teamName}/${teamId}/download`;
+    const url = `${process.env.REACT_APP_STUDENT_PEER_REVIEW_ASSIGNMENT_URL}/peer-review/assignments/${courseId}/${assignmentId}/${teamName}/${teamId}/download`;
 
     await axios
       .get(url, { responseType: 'blob' })

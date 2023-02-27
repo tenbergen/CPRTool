@@ -3,7 +3,7 @@ import jwtDecode from 'jwt-decode';
 import axios from 'axios';
 import { reduxInterceptor } from '../interceptors/reduxInterceptor';
 
-const authURL = `${process.env.REACT_APP_URL}/auth`;
+const authURL = `${process.env.REACT_APP_LOGIN_URL}/auth`;
 
 export const getTokenAsync = createAsyncThunk(
   'auth/getTokenAsync',

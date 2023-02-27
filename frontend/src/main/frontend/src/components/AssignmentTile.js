@@ -4,7 +4,7 @@ import axios from 'axios';
 import './styles/AssignmentTile.css';
 import { getCourseAssignmentsAsync } from '../redux/features/assignmentSlice';
 
-const assignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`;
+const assignmentUrl = `${process.env.REACT_APP_PROFESSOR_ASSIGNMENT_URL}/assignments/professor/courses`;
 
 const AssignmentTile = ({ assignment, submitted }) => {
   const dispatch = useDispatch();
@@ -23,7 +23,7 @@ const AssignmentTile = ({ assignment, submitted }) => {
         ? assignment.peer_review_rubric
         : assignment.assignment_instructions;
     const assignmentId = assignment.assignment_id;
-    const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/download/${fileName}`;
+    const url = `${process.env.REACT_APP_PROFESSOR_ASSIGNMENT_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/download/${fileName}`;
     await axios
       .get(url, { responseType: 'blob' })
       .then((res) => downloadFile(res.data, fileName));

@@ -23,7 +23,7 @@ const ProfessorAllSubmissionsComponent = () => {
   }, [dispatch, courseId, assignmentId]);
 
   const distribute = async () => {
-    const url = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/assign/${assignedTeamCount}`;
+    const url = `${process.env.REACT_APP_STUDENT_PEER_REVIEW_ASSIGNMENT_URL}/peer-review/assignments/${courseId}/${assignmentId}/assign/${assignedTeamCount}`;
     await axios
       .get(url)
       .then((res) => {

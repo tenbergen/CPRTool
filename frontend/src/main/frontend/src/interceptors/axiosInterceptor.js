@@ -1,7 +1,7 @@
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 
-const authURL = `${process.env.REACT_APP_URL}/auth`;
+const authURL = `${process.env.REACT_APP_LOGIN_URL}/auth`;
 const url = `${authURL}/token/refresh`;
 
 const refresh_token = localStorage.getItem('refresh_token');

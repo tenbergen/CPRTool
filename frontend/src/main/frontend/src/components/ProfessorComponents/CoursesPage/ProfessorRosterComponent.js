@@ -14,7 +14,7 @@ import uuid from 'react-uuid';
 const ProfessorRosterComponent = () => {
   const dispatch = useDispatch();
   const { courseId } = useParams();
-  const url = `${process.env.REACT_APP_URL}/manage/professor/courses`;
+  const url = `${process.env.REACT_APP_COURSE_MANAGER_URL}/manage/professor/courses`;
   const { currentCourseStudents } = useSelector((state) => state.courses);
 
   useEffect(() => {

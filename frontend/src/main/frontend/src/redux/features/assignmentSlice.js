@@ -2,8 +2,8 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { refreshTokenAsync } from './authSlice';
 
-const getAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`;
-const getStudentAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/student/courses`;
+const getAssignmentUrl = `${process.env.REACT_APP_PROFESSOR_ASSIGNMENT_URL}/assignments/professor/courses`;
+const getStudentAssignmentUrl = `${process.env.REACT_APP_STUDENT_ASSIGNMENT_URL}/assignments/student/courses`;
 
 const getAssignments = async (courseId) => {
   return await axios

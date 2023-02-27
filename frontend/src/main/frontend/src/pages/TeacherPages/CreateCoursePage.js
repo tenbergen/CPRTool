@@ -8,7 +8,7 @@ import CourseBarComponent from '../../components/CourseBarComponent';
 import { useSelector } from 'react-redux';
 
 const CreateCoursePage = () => {
-  const submitCourseUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/create`;
+  const submitCourseUrl = `${process.env.REACT_APP_COURSE_MANAGER_URL}/manage/professor/courses/course/create`;
   const { user_given_name } = useSelector((state) => state.auth);
   let navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);

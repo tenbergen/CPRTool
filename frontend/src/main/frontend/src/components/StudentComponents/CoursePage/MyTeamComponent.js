@@ -8,7 +8,7 @@ import uuid from 'react-uuid';
 const MyTeamComponent = () => {
   const { courseId } = useParams();
   const { currentTeamId, teamLoaded } = useSelector((state) => state.teams);
-  const membersUrl = `${process.env.REACT_APP_URL}/teams/team/${courseId}/get/${currentTeamId}`;
+  const membersUrl = `${process.env.REACT_APP_PEER_REVIEW_URL}/teams/team/${courseId}/get/${currentTeamId}`;
   const [members, setMembers] = useState([]);
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const MyTeamComponent = () => {
       for (let i = 0; i < r.data.team_members.length; i++) {
         // setMembers((arr) => [...arr, r.data.team_members[i]]);
 
-        const studentUrl = `${process.env.REACT_APP_URL}/view/professor/students/${r.data.team_members[i]}`;
+        const studentUrl = `${process.env.REACT_APP_COURSE_VIEWER_URL}/view/professor/students/${r.data.team_members[i]}`;
         axios.get(studentUrl).then((r) => {
           setMembers((arr) => [
             ...arr,
