@@ -20,7 +20,7 @@ docker container stop cpr-mongo5 && docker container rm cpr-mongo5
 cd ..
 
 # Build the project using docker-compose and start the containers.
-docker-compose -f "docker-compose-local.yml" up -d --build
+docker-compose -f "docker-compose-local.yml" up -d --force-recreate --renew-anon-volumes --build
 
 # Set the permission of the mounted volume from "root" to "default" for write permission.
 docker exec -u 0:0 cpr-professor-assignment chown 1001 /opt/ol/wlp/output/defaultServer/assignments/
