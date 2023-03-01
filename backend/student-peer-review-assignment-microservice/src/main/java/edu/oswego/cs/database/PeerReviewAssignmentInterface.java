@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
+import java.text.DecimalFormat;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
@@ -344,8 +345,9 @@ public class PeerReviewAssignmentInterface {
             }
             currentTeam++;
         }
-        double final_grade = (((double) total_points / count_of_reviews_submitted) / points) * 100;
-        final_grade = ((int) (final_grade * 100) / 100.0); //round to the nearest 10th
+        DecimalFormat tenth = new DecimalFormat("0.##");
+        double final_grade = Double.parseDouble(tenth.format((((double) total_points / count_of_reviews_submitted) / points) * 100));//round 
+
 
 
         submissionsCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
@@ -396,10 +398,9 @@ public class PeerReviewAssignmentInterface {
                         }
                     }
                 }
-                double final_grade = (((double) total_points / count_of_reviews_submitted) / points) * 100;
-                final_grade = ((int) (final_grade * 100) / 100.0); //round to the nearest 10th
-
-
+                DecimalFormat tenth = new DecimalFormat("0.##");
+                double final_grade = Double.parseDouble(tenth.format((((double) total_points / count_of_reviews_submitted) / points) * 100));//round 
+                
                 submissionsCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
                 assignmentCollection.findOneAndUpdate(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), set("grade_finalized", true));
             }
