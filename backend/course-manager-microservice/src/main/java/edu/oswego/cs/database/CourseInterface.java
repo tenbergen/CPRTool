@@ -20,6 +20,7 @@ import javax.ws.rs.core.SecurityContext;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
@@ -34,6 +35,11 @@ public class CourseInterface {
     private final MongoCollection<Document> assignmentCollection;
     private final MongoCollection<Document> submissionCollection;
     private final MongoCollection<Document> teamCollection;
+
+    /** A hashmap of course IDs to a boolean value indicating whether the there is a request
+     * trying to add a student to the specified course in addStudent().
+     */
+    private static final ConcurrentHashMap<String, Boolean> courseLocks = new ConcurrentHashMap<>();
 
     public CourseInterface() {
         DatabaseManager databaseManager = new DatabaseManager();
@@ -124,7 +130,22 @@ public class CourseInterface {
         return newCourseID;
     }
 
+    /**
+     * Adds a student to the given course, also adds the course to the
+     * student's list of enrolled courses.
+     *
+     * The spin block is to ensure that there is only one request currently working
+     * to add the student to the course. If the spin block is not present, it is possible
+     * that two requests will try to add the student to the course (nearly) at the same time,
+     * which will cause the student to be added twice.
+     *
+     * @param securityContext the content of the application (for professor information)
+     * @param student the student to be added to the course
+     * @param courseID the course to add the student to
+     */
     public void addStudent(SecurityContext securityContext, StudentDAO student, String courseID) {
+        while (courseLocks.containsKey(courseID)); /* spin block (see explanation above) */
+        courseLocks.put(courseID, true);
         String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
         String studentId = student.email.split("@")[0];
         String studentLastName = student.fullName.split(", ")[0];
@@ -138,14 +159,15 @@ public class CourseInterface {
         courseCollection.updateOne(eq("course_id", courseID), push("students", studentId));
 
         Document studentDocument = studentCollection.find(eq("student_id", studentId)).first();
-        if (studentDocument != null) {
-            List<String> courseList = studentDocument.getList("courses", String.class);
-            for (String course : courseList) {
-                if (course.equals(courseID)) throw new CPRException(Response.Status.CONFLICT, "This student is already in the course.");
-            }
+        List<String> courseList = studentDocument.getList("courses", String.class);
+        boolean isAlreadyEnrolled = courseList.contains(courseID);
+        if (studentDocument != null && isAlreadyEnrolled) {
+            throw new CPRException(Response.Status.CONFLICT, "This student is already in the course.");
+        }
+        else if (studentDocument != null && !isAlreadyEnrolled) {
             studentCollection.updateOne(eq("student_id", studentId), push("courses", courseID));
         } else {
-            List<String> courseList = new ArrayList<>();
+            courseList = new ArrayList<>();
             courseList.add(courseID);
             Document newStudent = new Document()
                     .append("first_name", studentFirstName)
@@ -154,6 +176,7 @@ public class CourseInterface {
                     .append("courses", courseList);
             studentCollection.insertOne(newStudent);
         }
+        courseLocks.remove(courseID);
     }
 
     public void removeCourse(SecurityContext securityContext, String courseID) {
@@ -168,6 +191,17 @@ public class CourseInterface {
         courseCollection.deleteOne(eq("course_id", courseID));
     }
 
+    /**
+     * Removes a student from the roster of a given course, removes the course from the
+     * student's list of courses, removes the student from the team they are on
+     * within the course (if applicable), "randomly" assigns a new team leader if
+     * the student removed was the leader of a team, and removes the team if the team
+     * is empty after the removal of the student.
+     *
+     * @param securityContext the context of the application (for professor information)
+     * @param studentID the net ID of the student to be removed
+     * @param courseID the ID of the course from which the student is to be removed
+     */
     public void removeStudent(SecurityContext securityContext, String studentID, String courseID) {
         String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
         Document studentDocument = studentCollection.find(and(eq("student_id", studentID), eq("courses", courseID))).first();
