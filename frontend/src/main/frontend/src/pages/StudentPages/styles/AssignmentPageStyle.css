@@ -2,13 +2,6 @@
   display: flex;
   flex-direction: row;
   overflow: auto;
-  background: conic-gradient(
-    from 180deg at 50% 50%,
-    #7398ff -128.84deg,
-    #57e1b2 25.81deg,
-    #7398ff 231.16deg,
-    #57e1b2 385.81deg
-  );
 }
 
 .ap-container {
@@ -104,7 +97,7 @@
   flex-grow: 1;
 }
 
-.ap-assignment-files input[type='file']::file-selector-button {
+.ap-assignment-files input[type="file"]::file-selector-button {
   background: #91d8df;
   color: #393939;
   margin-left: 10px;

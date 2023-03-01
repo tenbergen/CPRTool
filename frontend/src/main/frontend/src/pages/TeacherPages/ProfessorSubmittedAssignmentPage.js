@@ -73,7 +73,7 @@ function ProfessorSubmittedAssignmentPage() {
               {currentSubmittedAssignmentLoaded ? (
                 <div className='sac-parent'>
                   <h2 className='assignment-name'>
-                    {teamId}
+                    {currentSubmittedAssignment.assignment_name}
                   </h2>
                   <div className='sac-content'>
                     <div>

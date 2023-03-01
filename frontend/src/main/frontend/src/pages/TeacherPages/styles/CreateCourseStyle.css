@@ -1,13 +1,6 @@
 .ccp-parent {
   display: flex;
   flex-direction: row;
-  background: conic-gradient(
-    from 180deg at 50% 50%,
-    #7398ff -128.84deg,
-    #57e1b2 25.81deg,
-    #7398ff 231.16deg,
-    #57e1b2 385.81deg
-  );
 }
 
 .cpp-title {
@@ -16,7 +9,7 @@
 
 .ccp-container {
   background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 50px;
+  border-radius: 10px;
   margin: 3% 2% 0 1%;
   flex-grow: 1;
   display: flex;
