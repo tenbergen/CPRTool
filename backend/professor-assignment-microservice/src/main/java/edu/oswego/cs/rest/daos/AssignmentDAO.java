@@ -2,6 +2,10 @@ package edu.oswego.cs.rest.daos;
 
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.bson.BsonBinary;
+import org.bson.codecs.pojo.annotations.BsonId;
+import org.bson.conversions.Bson;
+
 import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.persistence.Entity;

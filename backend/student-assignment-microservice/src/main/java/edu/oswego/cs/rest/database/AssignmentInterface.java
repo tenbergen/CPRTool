@@ -120,6 +120,7 @@ public class AssignmentInterface {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team_id not defined").build());
         }
         String path = "assignments" + reg + course_id + reg + assignment_id + reg + "team_submissions";
+        //Instead of path, that portion of the data will hold the base64
         Document new_submission = new Document()
                 .append("course_id", course_id)
                 .append("assignment_id", assignment_id)

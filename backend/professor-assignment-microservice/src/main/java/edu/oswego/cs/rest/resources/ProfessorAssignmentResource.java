@@ -4,6 +4,7 @@ import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.rest.daos.AssignmentDAO;
 import edu.oswego.cs.rest.daos.FileDAO;
 import edu.oswego.cs.rest.database.AssignmentInterface;
+import edu.oswego.cs.rest.database.DatabaseManager;
 import org.bson.Document;
 
 import javax.annotation.security.DenyAll;
@@ -12,7 +13,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 @Path("professor")
@@ -41,6 +45,27 @@ public class ProfessorAssignmentResource {
     @Path("/courses/{courseID}/assignments/{assignmentID}")
     public Response viewSpecifiedAssignment(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
         return Response.status(Response.Status.OK).entity(new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID)).build();
+    }
+
+    @POST
+    @RolesAllowed("student")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/courses/{courseID}/assignments/{assignmentID}/{fileName}/upload")
+    public Response addFileToAssignmentBase64
+            (List<IAttachment> attachments,
+             @PathParam("fileName") String fileName,
+             @PathParam("courseID") String courseID,
+             @PathParam("assignmentID") int assignmentID)
+            throws Exception {
+        for (IAttachment attachment : attachments) {
+            if (attachment == null) continue;
+
+            byte[] decoder = Base64.getDecoder().decode(new String(attachment.getDataHandler().getInputStream().readAllBytes()));
+            System.out.println(new String(Base64.getEncoder().encode(decoder)));
+            System.out.println(new String(attachment.getDataHandler().getInputStream().readAllBytes()).equals(new String(Base64.getEncoder().encode(decoder))));
+        }
+        return Response.status(Response.Status.OK).entity("Successfully added file to assignment.").build();
     }
 
     /**
