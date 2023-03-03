@@ -1,8 +1,7 @@
 .ass-tile {
-  border: 3px solid #9cf0d3;
   box-sizing: border-box;
-  border-radius: 25px;
-  background-color: #9cf0d3;
+  border-radius: 5px;
+  background-color: #4a7dfc;
   margin-bottom: 2%;
   margin-left: 3%;
   margin-right: 3%;
@@ -25,8 +24,10 @@
   cursor: pointer;
   padding: 2% 4%;
   background-color: white;
-  border-bottom-left-radius: 25px;
-  border-bottom-right-radius: 25px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border: 0.5px solid #212529;
+  border-top: none;
 }
 
 .ass-tile-info {
