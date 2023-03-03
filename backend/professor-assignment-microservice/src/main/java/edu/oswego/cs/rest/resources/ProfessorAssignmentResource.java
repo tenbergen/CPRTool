@@ -51,20 +51,19 @@ public class ProfessorAssignmentResource {
     @RolesAllowed("student")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/courses/{courseID}/assignments/{assignmentID}/{fileName}/upload")
+    @Path("/courses/{courseID}/assignments/{assignmentID}/upload")
     public Response addFileToAssignmentBase64
             (List<IAttachment> attachments,
-             @PathParam("fileName") String fileName,
              @PathParam("courseID") String courseID,
              @PathParam("assignmentID") int assignmentID)
             throws Exception {
-        for (IAttachment attachment : attachments) {
-            if (attachment == null) continue;
-
-            byte[] decoder = Base64.getDecoder().decode(new String(attachment.getDataHandler().getInputStream().readAllBytes()));
-            System.out.println(new String(Base64.getEncoder().encode(decoder)));
-            System.out.println(new String(attachment.getDataHandler().getInputStream().readAllBytes()).equals(new String(Base64.getEncoder().encode(decoder))));
-        }
+            for (IAttachment attachment : attachments) {
+                if (attachment == null) continue;
+                String fileName = attachment.getDataHandler().getName();
+                if (!fileName.endsWith("pdf") && !fileName.endsWith("zip") && !fileName.endsWith("docx"))
+                    return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
+                new AssignmentInterface().writeToAssignment(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
+            }
         return Response.status(Response.Status.OK).entity("Successfully added file to assignment.").build();
     }
 
@@ -78,6 +77,8 @@ public class ProfessorAssignmentResource {
      * @param assignmentID type int
      * @return Response
      */
+
+    @Deprecated
     @POST
     @RolesAllowed("professor")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -204,6 +205,18 @@ public class ProfessorAssignmentResource {
         return Response.status(Response.Status.OK).entity(response).build();
     }
 
+    @GET
+    @RolesAllowed({"professor", "student"})
+    @Produces(MediaType.MULTIPART_FORM_DATA)
+    @Path("/courses/{courseID}/assignments/{assignmentID}/download")
+    public Response downloadAssignment(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
+        byte[] fileData = new AssignmentInterface().getFileData(courseID, assignmentID);
+
+        Response.ResponseBuilder response = Response.ok(Base64.getEncoder().encode(fileData));
+        response.header("Content-Disposition", "attachment; filename=" + "I'mTheMan.docx");
+        return response.build();
+    }
+
     /**
      * Retrieves the assignment from its location on the server and passes it to the front end via the request header
      * as a stream. The request entity passes an InputStream[] with the assignment files in each array.
@@ -212,6 +225,7 @@ public class ProfessorAssignmentResource {
      * @param assignmentID int
      * @return response
      **/
+    @Deprecated
     @GET
     @RolesAllowed({"professor", "student"})
     @Produces(MediaType.MULTIPART_FORM_DATA)

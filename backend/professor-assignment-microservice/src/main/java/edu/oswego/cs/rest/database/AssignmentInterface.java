@@ -8,6 +8,7 @@ import edu.oswego.cs.rest.daos.FileDAO;
 import edu.oswego.cs.rest.util.CPRException;
 import org.apache.commons.io.FileUtils;
 import org.bson.Document;
+import org.bson.types.Binary;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
@@ -75,12 +76,22 @@ public class AssignmentInterface {
     }
 
     public void writeToAssignment(FileDAO fileDAO) throws IOException {
-        String FileStructure = getRelPath() + "assignments" + reg + fileDAO.courseID + reg + fileDAO.assignmentID + reg + "assignments";
-        fileDAO.writeFile(FileStructure + reg + fileDAO.fileName);
-        assignmentsCollection.updateOne(and(
-                        eq("course_id", fileDAO.courseID),
-                        eq("assignment_id", fileDAO.assignmentID)),
-                set("assignment_instructions", fileDAO.fileName));
+//        String FileStructure = getRelPath() + "assignments" + reg + fileDAO.courseID + reg + fileDAO.assignmentID + reg + "assignments";
+//        fileDAO.writeFile(FileStructure + reg + fileDAO.fileName);
+        //the line below will get the document we are searching for
+        Document result = assignmentsCollection.find(and(eq("course_id", fileDAO.courseID), eq("assignment_id", fileDAO.assignmentID))).first();
+        assert result != null;
+        result.append("assignment_instructions_data", Base64.getDecoder().decode(new String(fileDAO.file.readAllBytes())));
+        //result.put("assignment_instructions_data", Base64.getDecoder().decode(new String(fileDAO.file.readAllBytes())));
+        result.append("assignment_instructions_name", fileDAO.fileName);
+        assignmentsCollection.replaceOne(and(eq("course_id", fileDAO.courseID), eq("assignment_id", fileDAO.assignmentID)), result);
+    }
+
+    public byte[] getFileData(String courseID, Integer assignmentID){
+        Document result = assignmentsCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        assert result != null;
+        Binary data = (Binary) result.get("assignment_instructions_data");
+        return data.getData();
     }
 
     public void writeRubricToPeerReviews(FileDAO fileDAO) throws IOException {
@@ -136,37 +147,38 @@ public class AssignmentInterface {
     public Document createAssignment(AssignmentDAO assignmentDAO) throws IOException {
         Document courseDocument = courseCollection.find(eq("course_id", assignmentDAO.courseID)).first();
         if (courseDocument == null) throw new CPRException(Response.Status.BAD_REQUEST,"Course not found.");
-        String FileStructure = getRelPath() + "assignments" + reg + assignmentDAO.courseID;
-
-        File dir = new File(FileStructure);
-        if (!dir.mkdirs() && !dir.exists()) throw new CPRException(Response.Status.BAD_REQUEST,"Failed to create directory at" + dir.getAbsolutePath());
-
-        String[] dirList = dir.list();
-        if (dirList == null) throw new CPRException(Response.Status.BAD_REQUEST,"Directory must exist to make file structure.");
-
+        //the code commented out below will no longer be needed, as we will be storing all file data straight in the DB
+//        String FileStructure = getRelPath() + "assignments" + reg + assignmentDAO.courseID;
+//
+//        File dir = new File(FileStructure);
+//        if (!dir.mkdirs() && !dir.exists()) throw new CPRException(Response.Status.BAD_REQUEST,"Failed to create directory at" + dir.getAbsolutePath());
+//
+//        String[] dirList = dir.list();
+//        if (dirList == null) throw new CPRException(Response.Status.BAD_REQUEST,"Directory must exist to make file structure.");
+//
         int nextPos = generateAssignmentID();
         assignmentDAO.assignmentID = nextPos;
-
-        FileStructure += reg + nextPos;
-        if (!new File(FileStructure + reg + "team-submissions").mkdirs()) throw new CPRException(Response.Status.BAD_REQUEST,"Failed to create team-submission directory.");
-
-        if (!new File(FileStructure + reg + "peer-reviews").mkdirs()) {
-            deleteFile(FileStructure + reg + "team-submissions");
-            throw new CPRException(Response.Status.BAD_REQUEST,"Failed to create peer-review directory.");
-        }
-
-        if (!new File(FileStructure + reg + "assignments").mkdirs()) {
-            deleteFile(FileStructure + reg + "team-submissions");
-            deleteFile(FileStructure + reg + "peer-reviews");
-            throw new CPRException(Response.Status.BAD_REQUEST,"Failed to create assignments directory");
-        }
-
-        if (!new File(FileStructure + reg + "peer-review-submission").mkdirs()) {
-            deleteFile(FileStructure + reg + "team-submissions");
-            deleteFile(FileStructure + reg + "peer-reviews");
-            deleteFile(FileStructure + reg + "assignments");
-            throw new CPRException(Response.Status.BAD_REQUEST,"Failed to create peer-review-submission directory");
-        }
+//
+//        FileStructure += reg + nextPos;
+//        if (!new File(FileStructure + reg + "team-submissions").mkdirs()) throw new CPRException(Response.Status.BAD_REQUEST,"Failed to create team-submission directory.");
+//
+//        if (!new File(FileStructure + reg + "peer-reviews").mkdirs()) {
+//            deleteFile(FileStructure + reg + "team-submissions");
+//            throw new CPRException(Response.Status.BAD_REQUEST,"Failed to create peer-review directory.");
+//        }
+//
+//        if (!new File(FileStructure + reg + "assignments").mkdirs()) {
+//            deleteFile(FileStructure + reg + "team-submissions");
+//            deleteFile(FileStructure + reg + "peer-reviews");
+//            throw new CPRException(Response.Status.BAD_REQUEST,"Failed to create assignments directory");
+//        }
+//
+//        if (!new File(FileStructure + reg + "peer-review-submission").mkdirs()) {
+//            deleteFile(FileStructure + reg + "team-submissions");
+//            deleteFile(FileStructure + reg + "peer-reviews");
+//            deleteFile(FileStructure + reg + "assignments");
+//            throw new CPRException(Response.Status.BAD_REQUEST,"Failed to create peer-review-submission directory");
+//        }
 
         Jsonb jsonb = JsonbBuilder.create();
         Entity<String> assignmentDAOEntity = Entity.entity(jsonb.toJson(assignmentDAO), MediaType.APPLICATION_JSON_TYPE);
@@ -179,10 +191,10 @@ public class AssignmentInterface {
         MongoCursor<Document> query = assignmentsCollection.find(assignmentDocument).iterator();
         if (query.hasNext()) {
             query.close();
-            deleteFile(FileStructure + reg + "team-submissions");
-            deleteFile(FileStructure + reg + "peer-reviews");
-            deleteFile(FileStructure + reg + "assignments");
-            deleteFile(FileStructure + reg + "peer-review-submission");
+//            deleteFile(FileStructure + reg + "team-submissions");
+//            deleteFile(FileStructure + reg + "peer-reviews");
+//            deleteFile(FileStructure + reg + "assignments");
+//            deleteFile(FileStructure + reg + "peer-review-submission");
 
             throw new CPRException(Response.Status.BAD_REQUEST,"This assignment already exists.");
         }
