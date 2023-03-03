@@ -4,7 +4,6 @@ import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.rest.daos.AssignmentDAO;
 import edu.oswego.cs.rest.daos.FileDAO;
 import edu.oswego.cs.rest.database.AssignmentInterface;
-import edu.oswego.cs.rest.database.DatabaseManager;
 import org.bson.Document;
 
 import javax.annotation.security.DenyAll;
@@ -13,9 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
