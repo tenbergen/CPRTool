@@ -108,7 +108,6 @@ public class AssignmentInterface {
         if (assignment == null)
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("this assignment was not found in this course").build());
         String assignmentName = assignment.getString("assignment_name");
-        System.out.println(team);
 
         if (team == null) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("this team was not found in this course").build());
