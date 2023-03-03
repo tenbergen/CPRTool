@@ -101,14 +101,60 @@ public class AssignmentInterface {
         assignmentsCollection.replaceOne(and(eq("course_id", fileDAO.courseID), eq("assignment_id", fileDAO.assignmentID)), result);
     }
 
+    /**
+     * Grab the binary data of the assignment instructions for the respective assignment
+     *
+     * @param courseID  type String
+     * @param assignmentID  type Integer
+     */
+
     public byte[] getFileData(String courseID, Integer assignmentID){
         Document result = assignmentsCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
         //makes sure the result isn't null
         if (result == null) throw new CPRException(Response.Status.BAD_REQUEST,"No assignment found");
 
-        //grab the assignment instructions data and return it
+        //grab the assignment instructions data and return it, ensure the assignment instructions data exists first
         if(!result.containsKey("assignment_instructions_data")) throw new CPRException(Response.Status.NOT_FOUND, "No assignment instruction data uploaded");
+
         Binary data = (Binary) result.get("assignment_instructions_data");
+        return data.getData();
+    }
+
+    /**
+     * Grab the binary data of the assignment rubric for the respective assignment
+     *
+     * @param courseID  type String
+     * @param assignmentID  type Integer
+     */
+
+    public byte[] getRubricFileData(String courseID, Integer assignmentID){
+        Document result = assignmentsCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        //makes sure the result isn't null
+        if (result == null) throw new CPRException(Response.Status.BAD_REQUEST,"No assignment found");
+
+        //grab the assignment instructions data and return it, ensure the assignment instructions data exists first
+        if(!result.containsKey("rubric_data")) throw new CPRException(Response.Status.NOT_FOUND, "No rubric data uploaded");
+
+        Binary data = (Binary) result.get("rubric_data");
+        return data.getData();
+    }
+
+    /**
+     * Grab the binary data of the peer review template for the respective assignment
+     *
+     * @param courseID  type String
+     * @param assignmentID  type Integer
+     */
+
+    public byte[] getPeerReviewTemplateData(String courseID, Integer assignmentID){
+        Document result = assignmentsCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        //makes sure the result isn't null
+        if (result == null) throw new CPRException(Response.Status.BAD_REQUEST,"No assignment found");
+
+        //grab the assignment instructions data and return it, ensure the assignment instructions data exists first
+        if(!result.containsKey("peer_review_template_data")) throw new CPRException(Response.Status.NOT_FOUND, "No template data uploaded");
+
+        Binary data = (Binary) result.get("peer_review_template_data");
         return data.getData();
     }
 
