@@ -385,7 +385,7 @@ public class PeerReviewAssignmentInterface {
                             eq("course_id", courseID),
                             eq("assignment_id", assignmentID),
                             eq("reviewed_by", review),
-                            eq("reviewed_team", teamName),
+                            //eq("reviewed_team", teamName),
                             eq("type", "peer_review_submission"))).first();
                     if (team_review == null) {
                         count_of_reviews_submitted--;
