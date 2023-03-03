@@ -49,4 +49,3 @@ hs_err_pid*
 
 # CSV files
 *.csv
-/db*
