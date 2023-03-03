@@ -39,7 +39,7 @@
 *.jar
 *.war
 *.nar
-*.ear/attachments/1071147790182391910/1081352317854552154/gitignore
+*.ear
 *.zip
 *.tar.gz
 *.rar
@@ -54,5 +54,4 @@ hs_err_pid*
 db*
 
 /professor-list.txt
-
 /.gitignore
