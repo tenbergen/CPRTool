@@ -1,25 +1,17 @@
-# Java Maven CircleCI 2.0 configuration file
-# See: https://circleci.com/docs/2.0/language-java/
-version: 2
+version: 2.1
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+orbs:
+  maven: circleci/maven@1.4.0
+
+
 jobs:
   build:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
-      # specify the version you desire here
       - image: cimg/base:stable
         auth:
-          username: 526823976718-1h3pfth8oalehuab1e2r3qom4bkcsqrq.apps.googleusercontent.com
-          password: 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  # contex
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
-
-    working_directory: ~/repo
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD
+          # context / project UI env-var reference
 
     environment:
       # Customize the JVM maximum heap limit
@@ -32,19 +24,3 @@ jobs:
           version: 19.03.13
       - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "build.maven" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
-      - run: maven dependencies
-
-      - save_cache:
-          paths:
-            - ~/.maven
-          key: v1-dependencies-{{ checksum "build.maven" }}
-
-      # run tests!
-      - run: maven test
