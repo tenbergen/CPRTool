@@ -64,6 +64,13 @@ public class AssignmentInterface {
         return relativePathPrefix.toString();
     }
 
+    /**
+     * Finds the assignment document that a file is associated with
+     *
+     * @param courseID type FileDAO: Representation of File Data
+     * @param assignmentID  type FileDAO: Representation of File Data
+     */
+
     public static String findFile(String courseID, int assignmentID, String fileName) {
         return getRelPath() + "assignments" + reg + courseID + reg + assignmentID + reg + "assignments" + reg + fileName;
     }
@@ -75,12 +82,20 @@ public class AssignmentInterface {
         return filePath;
     }
 
+    /**
+     * Write file binary data and file name of the assignment instructions to its respective assignment document in the
+     * database.
+     *
+     * @param fileDAO  type FileDAO: Representation of File Data
+     */
+
     public void writeToAssignment(FileDAO fileDAO) throws IOException {
-//        String FileStructure = getRelPath() + "assignments" + reg + fileDAO.courseID + reg + fileDAO.assignmentID + reg + "assignments";
-//        fileDAO.writeFile(FileStructure + reg + fileDAO.fileName);
         //the line below will get the document we are searching for
         Document result = assignmentsCollection.find(and(eq("course_id", fileDAO.courseID), eq("assignment_id", fileDAO.assignmentID))).first();
-        assert result != null;
+        //makes sure the result isn't null
+        if (result == null) throw new CPRException(Response.Status.BAD_REQUEST,"No assignment found");
+
+        //add the assignment instructions binary data and file name to the database
         result.append("assignment_instructions_data", Base64.getDecoder().decode(new String(fileDAO.file.readAllBytes())));
         result.append("assignment_instructions_name", fileDAO.fileName);
         assignmentsCollection.replaceOne(and(eq("course_id", fileDAO.courseID), eq("assignment_id", fileDAO.assignmentID)), result);
@@ -88,7 +103,11 @@ public class AssignmentInterface {
 
     public byte[] getFileData(String courseID, Integer assignmentID){
         Document result = assignmentsCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
-        assert result != null;
+        //makes sure the result isn't null
+        if (result == null) throw new CPRException(Response.Status.BAD_REQUEST,"No assignment found");
+
+        //grab the assignment instructions data and return it
+        if(!result.containsKey("assignment_instructions_data")) throw new CPRException(Response.Status.NOT_FOUND, "No assignment instruction data uploaded");
         Binary data = (Binary) result.get("assignment_instructions_data");
         return data.getData();
     }
@@ -142,6 +161,15 @@ public class AssignmentInterface {
                         eq("assignment_id", assignmentID)),
                 set("peer_review_rubric", ""));
     }
+
+    /**
+     * Creates the assignment data based on the POST request's sent data. Previously, this function would make
+     * a file structure on the host machine to store the PDFs. Now it just stores the assignment data JSON
+     * and the writeToAssignment function handles writing the Assignment PDF data in the database.
+     *
+     * @param assignmentDAO  type AssignmentDAO: Representation of Assignment Data
+     * @return Document
+     */
 
     public Document createAssignment(AssignmentDAO assignmentDAO) throws IOException {
         Document courseDocument = courseCollection.find(eq("course_id", assignmentDAO.courseID)).first();

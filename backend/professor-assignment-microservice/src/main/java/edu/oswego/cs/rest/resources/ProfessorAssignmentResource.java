@@ -44,8 +44,21 @@ public class ProfessorAssignmentResource {
         return Response.status(Response.Status.OK).entity(new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID)).build();
     }
 
+
+    /**
+     * File's Base64 string is uploaded as form-data and passed back as a List<IAttachment>. The file's name and
+     * extension is saved in the form-data's name
+     * The attachment is processed and turned back into its binary representation. The binary data and file name is then
+     * saved with its respective assignment document in the DB.
+     *
+     * @param attachments  type List<IAttachment>: file(s) Base64 Strings passed back as form-data
+     * @param courseID     type String
+     * @param assignmentID type int
+     * @return Response
+     */
+
     @POST
-    @RolesAllowed("student")
+    @RolesAllowed("professor")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}/upload")
