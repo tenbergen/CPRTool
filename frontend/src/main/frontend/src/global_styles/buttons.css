@@ -1,9 +1,45 @@
 button {
-  padding: 10px 45px 10px 45px;
   border: none;
-  font-size: medium;
-  font-weight: bold;
+}
+button:hover {
   cursor: pointer;
+}
+
+.blue-button-small {
+  width: 118px;
+  height: 34px;
+  background-color: #4a7dfc;
+  border-radius: 5px;
+  color: white;
+  border: none;
+}
+
+.blue-button-large {
+  width: 233px;
+  height: 50px;
+  background-color: #4a7dfc;
+  border-radius: 5px;
+  color: white;
+
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+}
+
+.green-button-large {
+  width: 300px;
+  height: 60px;
+  background-color: #28a745;
+  border-radius: 5px;
+  color: white;
+
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
 }
 
 input::file-selector-button {
@@ -11,7 +47,7 @@ input::file-selector-button {
   background: #9cf0d3;
   border-radius: 50px;
   color: #393939;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 20px;
 }
 
@@ -34,7 +70,7 @@ input::file-selector-button {
   background: #9cf0d3;
   border-radius: 50px;
   color: #393939;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 20px;
   transition: all 0.2s ease-out;
 }
@@ -59,6 +95,6 @@ input::file-selector-button {
 .teal-button {
   background: #82dfe8;
   color: #393939;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 20px;
 }
