@@ -82,7 +82,6 @@ public class AssignmentInterface {
         Document result = assignmentsCollection.find(and(eq("course_id", fileDAO.courseID), eq("assignment_id", fileDAO.assignmentID))).first();
         assert result != null;
         result.append("assignment_instructions_data", Base64.getDecoder().decode(new String(fileDAO.file.readAllBytes())));
-        //result.put("assignment_instructions_data", Base64.getDecoder().decode(new String(fileDAO.file.readAllBytes())));
         result.append("assignment_instructions_name", fileDAO.fileName);
         assignmentsCollection.replaceOne(and(eq("course_id", fileDAO.courseID), eq("assignment_id", fileDAO.assignmentID)), result);
     }
