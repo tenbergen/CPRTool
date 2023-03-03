@@ -1,0 +1,83 @@
+{
+  "type": "Compass Connections",
+  "version": {
+    "$numberInt": "1"
+  },
+  "connections": [
+    {
+      "id": "05f95566-d853-4e5a-adc2-0d76ffe4a8d2",
+      "connectionOptions": {
+        "connectionString": "mongodb://root:password@localhost:27041/?authMechanism=DEFAULT"
+      },
+      "favorite": {
+        "name": "CPR Mongo DB5:27041",
+        "color": "color3"
+      },
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1676847176176"
+        }
+      }
+    },
+    {
+      "id": "38cd2b41-f1ce-42ea-a217-f53de03c789f",
+      "connectionOptions": {
+        "connectionString": "mongodb://root:password@localhost:27040/?authMechanism=DEFAULT"
+      },
+      "favorite": {
+        "name": "CPR Mongo DB4:27040",
+        "color": "color3"
+      },
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1676847184298"
+        }
+      }
+    },
+    {
+      "id": "51055064-2259-4187-81d1-3f9e8ebce04b",
+      "connectionOptions": {
+        "connectionString": "mongodb://root:password@localhost:27039/?authMechanism=DEFAULT"
+      },
+      "favorite": {
+        "name": "CPR Mongo DB3:27039",
+        "color": "color3"
+      },
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1676847199904"
+        }
+      }
+    },
+    {
+      "id": "ef887e9e-07ed-47dd-9d16-9e6e87fee9e1",
+      "connectionOptions": {
+        "connectionString": "mongodb://root:password@localhost:27037/?authMechanism=DEFAULT"
+      },
+      "favorite": {
+        "name": "CPR Mongo DB2:27037",
+        "color": "color3"
+      },
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1676848503242"
+        }
+      }
+    },
+    {
+      "id": "b46290fe-c229-45e6-a11a-7face539340b",
+      "connectionOptions": {
+        "connectionString": "mongodb://root:password@localhost:27038/?authMechanism=DEFAULT"
+      },
+      "favorite": {
+        "name": "CPR  Mongo DB1:27038",
+        "color": "color3"
+      },
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1676848518197"
+        }
+      }
+    }
+  ]
+}
