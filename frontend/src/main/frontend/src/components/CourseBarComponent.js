@@ -24,11 +24,11 @@ const CourseBarLink = ({ active, course, onClick }) => {
       <div className={active ? 'clickedStyle' : 'normalStyle'}>
         <div className='colorForTable' />
         <div className='course_info'>
-          <p className='outfit-16 course_id'>
+          <p className='inter-20-extralight course_id'>
             {' '}
             {course.abbreviation}-{course.course_section}{' '}
           </p>
-          <p className='kumba-25 course_text'> {course.course_name} </p>
+          <p className='inter-24-bold course_text'> {course.course_name} </p>
         </div>
       </div>
     </Link>
@@ -69,7 +69,7 @@ const CourseBarComponent = ({ title }) => {
 
   return (
     <div className='cbc-parent'>
-      <h2 className='kumba-30'> {title} </h2>
+      <h2 className='inter-44-bold'> {title} </h2>
       {courses.length < 1 ? (
         <p className='outfit-16' style={{ marginLeft: '10%' }}>
           {' '}

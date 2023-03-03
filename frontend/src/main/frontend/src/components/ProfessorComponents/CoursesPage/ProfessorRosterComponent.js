@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import '../../styles/Roster.css';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import "../../styles/Roster.css";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getCourseDetailsAsync,
   getCurrentCourseStudentsAsync,
-} from '../../../redux/features/courseSlice';
-import { useParams } from 'react-router-dom';
-import noStudent from '../../../assets/no-student.png';
-import { CgAdd } from 'react-icons/cg';
-import uuid from 'react-uuid';
+} from "../../../redux/features/courseSlice";
+import { useParams } from "react-router-dom";
+import noStudent from "../../../assets/no-student.png";
+import { CgAdd } from "react-icons/cg";
+import uuid from "react-uuid";
 
 const ProfessorRosterComponent = () => {
   const dispatch = useDispatch();
@@ -22,8 +22,8 @@ const ProfessorRosterComponent = () => {
   }, [dispatch, courseId]);
 
   const [formData, setFormData] = useState({
-    Name: '',
-    Email: '',
+    Name: "",
+    Email: "",
   });
 
   const { Name, Email } = formData;
@@ -31,36 +31,44 @@ const ProfessorRosterComponent = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async () => {
-    const nameArray = Name.split(' ');
+    const nameArray = Name.split(" ");
     const first = nameArray[0];
     const last = nameArray[1];
-    if (Name === '' || Email === '') {
-      alert('Please enter both name and email for the student!');
+    if (Name === "" || Email === "") {
+      alert("Please enter both name and email for the student!");
       return;
     }
     if (nameArray.length < 2) {
-      alert('Please enter first and last name!');
+      alert("Please enter first and last name!");
       return;
     }
-    if (!Email.includes('oswego.edu')) {
-      alert('Please enter a valid Oswego email!');
-      return;
-    }
+<<<<<<< HEAD
 
-    const firstLastEmail = first + '-' + last + '-' + Email;
+    // if (!Email.includes('oswego.edu')) {
+    //   alert('Please enter a valid Oswego email!');
+    //   return;
+    // }
+=======
+     if (!Email.includes('oswego.edu')) {
+       alert('Please enter a valid Oswego email!');
+       return;
+     }
+>>>>>>> origin/Testing
+
+    const firstLastEmail = first + "-" + last + "-" + Email;
     const addStudentUrl = `${url}/${courseId}/students/${firstLastEmail}/add`;
     await axios
       .post(addStudentUrl)
       .then((res) => {
-        alert('Successfully added student.');
+        alert("Successfully added student.");
         dispatch(getCourseDetailsAsync(courseId));
       })
       .catch((e) => {
         console.error(e);
-        alert('Error adding student.');
+        alert("Error adding student.");
       });
     setFalse();
-    setFormData({ ...formData, Name: '', Email: '' });
+    setFormData({ ...formData, Name: "", Email: "" });
     dispatch(getCurrentCourseStudentsAsync(courseId));
   };
 
@@ -69,39 +77,39 @@ const ProfessorRosterComponent = () => {
     await axios
       .delete(deleteStudentUrl)
       .then((res) => {
-        alert('Successfully deleted student.');
+        alert("Successfully deleted student.");
         dispatch(getCurrentCourseStudentsAsync(courseId));
       })
       .catch((e) => {
         console.error(e);
-        alert('Error deleting student.');
+        alert("Error deleting student.");
       });
     dispatch(getCourseDetailsAsync(courseId));
   };
 
   const addStudent = () => {
     return (
-      <div className='add-student-container'>
-        <div className='add-student-wrapper'>
+      <div className="add-student-container">
+        <div className="add-student-wrapper">
           <label>Name:</label>
           <input
-            type='text'
-            className='rosterInput'
-            name='Name'
+            type="text"
+            className="rosterInput"
+            name="Name"
             value={Name}
             required
             onChange={(e) => OnChange(e)}
           />
           <label>Email:</label>
           <input
-            type='text'
-            className='rosterInput'
-            name='Email'
+            type="text"
+            className="rosterInput"
+            name="Email"
             value={Email}
             required
             onChange={(e) => OnChange(e)}
           />
-          <button id='addStudentButton' onClick={handleSubmit}>
+          <button id="addStudentButton" onClick={handleSubmit}>
             Add Student
           </button>
         </div>
@@ -117,18 +125,18 @@ const ProfessorRosterComponent = () => {
 
   return (
     <div>
-      <div className='RosterPage'>
-        <div id='roster'>
-          <div className='roster-wrapper'>
+      <div className="RosterPage">
+        <div id="roster">
+          <div className="roster-wrapper">
             {currentCourseStudents.length > 0 ? (
               <div>
-                <table className='rosterTable'>
+                <table className="rosterTable">
                   <thead>
                     <tr>
-                      <th className='rosterHeader'>Name</th>
-                      <th className='rosterHeader'>Email</th>
-                      <th className='rosterHeader'>Team</th>
-                      <th className='rosterHeader'></th>
+                      <th className="rosterHeader">Name</th>
+                      <th className="rosterHeader">Email</th>
+                      <th className="rosterHeader">Team</th>
+                      <th className="rosterHeader"></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -136,20 +144,20 @@ const ProfessorRosterComponent = () => {
                       (student) =>
                         student && (
                           <tr key={uuid()}>
-                            <th className='rosterComp'>
+                            <th className="rosterComp">
                               {student.first_name
-                                ? student.first_name + ' ' + student.last_name
-                                : ''}
+                                ? student.first_name + " " + student.last_name
+                                : ""}
                             </th>
-                            <th className='rosterComp'>{student.student_id}</th>
-                            <th className='rosterComp'>
-                              {student.team !== null ? student.team : ''}
+                            <th className="rosterComp">{student.student_id}</th>
+                            <th className="rosterComp">
+                              {student.team !== null ? student.team : ""}
                             </th>
-                            <th className='rosterComp'>
-                              <div className='crossMark-wrapper'>
+                            <th className="rosterComp">
+                              <div className="crossMark-wrapper">
                                 <div
                                   onClick={() => deleteStudent(student)}
-                                  className='crossMark'
+                                  className="crossMark"
                                 >
                                   X
                                 </div>
@@ -162,20 +170,20 @@ const ProfessorRosterComponent = () => {
                 </table>
               </div>
             ) : (
-              <div className='no-student-container'>
-                <div className='no-student-wrapper'>
-                  <div className='no-student-img-wrapper'>
+              <div className="no-student-container">
+                <div className="no-student-wrapper">
+                  <div className="no-student-img-wrapper">
                     <img
-                      className='no-student-img'
+                      className="no-student-img"
                       src={noStudent}
-                      alt='no_students'
+                      alt="no_students"
                       onClick={() => {
                         setTrue();
                       }}
                     />
                   </div>
-                  <div className='no-student-header'>No Students Added</div>
-                  <div className='no-student-description'>
+                  <div className="no-student-header">No Students Added</div>
+                  <div className="no-student-description">
                     Click the plus button to add a student
                   </div>
                 </div>
@@ -184,13 +192,13 @@ const ProfessorRosterComponent = () => {
             {show ? (
               addStudent()
             ) : (
-              <div className='plus-button-container'>
-                <div className='plus-button-wrapper'>
+              <div className="plus-button-container">
+                <div className="plus-button-wrapper">
                   <CgAdd
                     onClick={() => setTrue()}
-                    className='plus-button'
-                    size='50px'
-                    color='#6c63ff'
+                    className="plus-button"
+                    size="50px"
+                    color="#4a7dfc"
                   />
                 </div>
               </div>
