@@ -3,14 +3,18 @@ package edu.oswego.cs.rest.daos;
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.pdf.PDFParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.SAXException;
 
 import java.io.*;
+import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,7 +41,7 @@ public class FileDAO {
      */
     public static FileDAO fileFactory(String fileName, String courseID, IAttachment attachment, int assignmentID, String teamName) throws IOException, TikaException, SAXException {
         InputStream inputStream = attachment.getDataHandler().getInputStream();
-        contentFilter(inputStream);
+        contentFilter(new ByteArrayInputStream(Base64.getDecoder().decode(new String(inputStream.readAllBytes()))), fileName);
         return new FileDAO(fileName, courseID, inputStream, assignmentID, teamName);
     }
 
@@ -49,26 +53,17 @@ public class FileDAO {
      * @throws TikaException File Corruption Exception
      * @throws SAXException File Corruption Exception
      */
-    public static void contentFilter(InputStream stream) throws TikaException, IOException, SAXException {
-        PDFParser pp = new PDFParser();
-        BodyContentHandler ch = new BodyContentHandler();
-        pp.parse(stream, ch, new Metadata(), new ParseContext());
+    public static void contentFilter(InputStream stream, String fileName) throws TikaException, IOException, SAXException {
+        Pattern pattern = Pattern.compile("(?<=\\b)(a+r*ss+(ho+l)?e*s*|ba+ll+(sa+ck)?s*|ba+sta+rds*|bi+tch(e+s+|i+ng+)?|bu+ll+shi+t|bu+tt+(fu+ck)?s*|co+ck(blo+ck|su+cke+r)?s*|who+re+s*|cu+nts*|(go+d)?da+m[mn]+(it)?|di+ck(he+a+d|fo+rbra+i+n)?s*|fa+g+(o+t)?s*|(mo+the+r)?fu+ck(e+(rs|d)?|ing|off+)?s*|ja+ck(a+ss+|off+)|ni+gg+(e+r|a+)s*|shi+ts*)(?=\\b)", Pattern.CASE_INSENSITIVE);
 
-        Pattern pattern = Pattern.compile("(?<=\\b)(a+r*ss+(ho+l)?e*s*|ba+ll+(sa+ck)?s*|ba+sta+rds*|bi+tch(e+s+|i+ng+)?|bu+ll+shi+t|bu+tt+(fu+ck)?s*|co+ck(blo+ck|su+cke+r)?s*|who+re+s*|cu+nts*|(go+d)?da+m[mn]+(it)?|di+ck(he+a+d|fo+rbra+i+n)?s*|fa+g+(o+t)?s*|(mo+the+r)?fu+ck(e+(rs|d)?|ing|off+)?s*|ja+ck(a+ss+|off+)|ni+gg+(e+r|a+)s*|shi+ts*|)(?=\\b)", Pattern.CASE_INSENSITIVE);
+        BodyContentHandler ch = new BodyContentHandler();
+        AutoDetectParser parser = new AutoDetectParser();
+        parser.parse(stream, ch, new Metadata());
         Matcher matcher = pattern.matcher(ch.toString());
         boolean found = matcher.find(); // Don't have to worry about catching all matches as just one is enough to reject the file
 
         if (found) {
             throw new IOException("File contains profanity");
         }
-    }
-
-    /**
-     * Writes the inputStream to a file.
-     */
-    public void writeFile(String filePath) throws IOException {
-        OutputStream outputStream = new FileOutputStream(filePath);
-        outputStream.write(file.readAllBytes());
-        outputStream.close();
     }
 }
