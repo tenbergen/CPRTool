@@ -194,7 +194,7 @@ services:
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     ports:
       - "127.0.0.1:${MONGO2_PORT}:${MONGO2_PORT}"
-  
+
   mongo3:
     image: mongo:5.0.6
     command: mongod --port ${MONGO3_PORT}
@@ -257,14 +257,3 @@ services:
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     ports:
       - "127.0.0.1:${MONGO5_PORT}:${MONGO5_PORT}"
-
-  nginx:
-    image: nginx:1.21.6
-    restart: unless-stopped
-    container_name: cpr-nginx
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:rw
-      - /tmp/privkey1.pem:/tmp/privkey1.pem
-      - /tmp/pems/fullchain1.pem:/tmp/pems/fullchain1.pem
-    ports:
-      - "3000:80"
