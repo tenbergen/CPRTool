@@ -3,23 +3,25 @@ package edu.oswego.cs.rest.resources;
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.rest.daos.FileDAO;
 import edu.oswego.cs.rest.database.AssignmentInterface;
+import org.apache.tika.exception.TikaException;
 import org.bson.Document;
+import org.bson.types.Binary;
+import org.xml.sax.SAXException;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 
 @Path("student")
 @DenyAll
 public class studentAssignmentResource {
 
+    //change
     /**
      * Retrieves the assignment from its location on the server and passes it to the front end via the request header
      * as a stream. The request entity passes an InputStream[] with the assignment files in each array.
@@ -37,17 +39,16 @@ public class studentAssignmentResource {
             @PathParam("courseID") String courseID,
             @PathParam("assignmentID") int assignmentID,
             @PathParam("teamName") String teamName) {
+        Document teamSubmission = new AssignmentInterface().getSpecifiedTeamSubmission(courseID, assignmentID, teamName);
+        if(teamSubmission == null) return Response.status(Response.Status.BAD_REQUEST).entity("Assignment Does Not Exist").build();
 
-        String path = "assignments" + "/" + courseID + "/" + assignmentID + "/" + "team-submissions" + "/";
-        Optional<File> file = Arrays.stream(new File(path).listFiles()).filter(f -> f.getName().contains(teamName)).findFirst();
-        if (file.isEmpty())
-            return Response.status(Response.Status.BAD_REQUEST).entity("Assignment Does Not Exist").build();
-
-        Response.ResponseBuilder response = Response.ok(file.get());
-        response.header("Content-Disposition", "attachment; filename=" + file.get().getName());
+        Binary fileData = (Binary) teamSubmission.get("submission_data");
+        Response.ResponseBuilder response = Response.ok(Base64.getEncoder().encode(fileData.getData()));
+        response.header("Content-Disposition", "attachment; filename=" + teamSubmission.get("submission_name"));
         return response.build();
     }
 
+    //change
     /**
      * File is uploaded as form-data and passed back as a List<IAttachment>
      * The attachment is processed in FileDao.FileFactory, which reads and
@@ -60,21 +61,26 @@ public class studentAssignmentResource {
      */
     @POST
     @RolesAllowed({"professor", "student"})
-    @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.MULTIPART_FORM_DATA)
     @Path("/courses/{courseID}/assignments/{assignmentID}/{teamName}/upload")
     public Response addFileToAssignment(
             List<IAttachment> attachments,
             @PathParam("courseID") String courseID,
             @PathParam("assignmentID") int assignmentID,
             @PathParam("teamName") String teamName
-    ) throws IOException {
+    ) throws TikaException, SAXException {
         for (IAttachment attachment : attachments) {
             if (attachment == null) continue;
             String fileName = attachment.getDataHandler().getName();
             String fileExt = fileName.substring(fileName.indexOf("."));
             if (!fileName.endsWith("pdf") && !fileName.endsWith("docx"))
                 return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
-            new AssignmentInterface().writeToAssignment(FileDAO.fileFactory(teamName.concat(fileExt), courseID, attachment, assignmentID, teamName));
+            try {
+                new AssignmentInterface().writeToAssignment(FileDAO.fileFactory(teamName.concat(fileExt), courseID, attachment, assignmentID, teamName));
+            } catch (IOException e) {
+                return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            }
         }
         return Response.status(Response.Status.OK).entity("Successfully uploaded assignment.").build();
     }

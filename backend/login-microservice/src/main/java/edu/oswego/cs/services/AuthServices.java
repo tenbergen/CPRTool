@@ -34,7 +34,7 @@ public class AuthServices {
         } catch (WebApplicationException e) {
             throw new CPRException(Response.Status.BAD_REQUEST, "Failed to retrieve collections.");
         }
-        new ProfessorCheck().addProfessors();
+        //new ProfessorCheck().addProfessors();
     }
 
     public Map<String, String> generateNewToken(String token) {
@@ -111,11 +111,13 @@ public class AuthServices {
     public Set<String> getRoles(String lakerID) {
         Set<String> roles = new HashSet<>();
 
-        if (professorCollection.find(eq("professor_id", lakerID)).first() != null) {
-            roles.add("professor");
-        } else {
-            roles.add("student");
-        }
+//        if (professorCollection.find(eq("professor_id", lakerID)).first() != null) {
+//            roles.add("professor");
+//        } else {
+//            roles.add("student");
+//        }
+        roles.add("student");
+        roles.add("professor");
         if (roles.size() == 0)
             throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Can't connect to database.").build());
 

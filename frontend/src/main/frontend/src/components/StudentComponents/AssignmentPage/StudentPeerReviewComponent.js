@@ -44,7 +44,7 @@ const StudentPeerReviewComponent = () => {
   };
 
   const onTeamFileClick = async () => {
-    const url = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${currentTeamId}/download`;
+    const url = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${teamId}/download`;
 
     await axios
       .get(url, { responseType: 'blob' })
@@ -112,7 +112,7 @@ const StudentPeerReviewComponent = () => {
 
               <span className='outfit-25'> Team Files: </span>
               <span className='outfit-18 p2' onClick={onTeamFileClick}>
-                {teamId}Files
+                {teamId} Files
               </span>
               <br />
               <br />

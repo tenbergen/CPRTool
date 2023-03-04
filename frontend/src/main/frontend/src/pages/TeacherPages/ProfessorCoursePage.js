@@ -1,16 +1,16 @@
-import { useEffect, useState } from 'react';
-import './styles/ProfessorCourseStyle.css';
-import SidebarComponent from '../../components/SidebarComponent';
-import ProfessorRosterComponent from '../../components/ProfessorComponents/CoursesPage/ProfessorRosterComponent';
-import { useParams } from 'react-router-dom';
-import ProfessorEditCourseComponent from '../../components/ProfessorComponents/CoursesPage/ProfessorEditCourseComponent';
-import ProfessorAssignmentComponent from '../../components/ProfessorComponents/CoursesPage/ProfessorAssignmentComponent';
-import { useDispatch } from 'react-redux';
-import { getCourseDetailsAsync } from '../../redux/features/courseSlice';
-import CourseBarComponent from '../../components/CourseBarComponent';
-import ProfessorTeamComponent from '../../components/ProfessorComponents/CoursesPage/ProfessorTeamComponent';
-import Loader from '../../components/LoaderComponenets/Loader';
-import uuid from 'react-uuid';
+import { useEffect, useState } from "react";
+import "./styles/ProfessorCourseStyle.css";
+import SidebarComponent from "../../components/SidebarComponent";
+import ProfessorRosterComponent from "../../components/ProfessorComponents/CoursesPage/ProfessorRosterComponent";
+import { useParams } from "react-router-dom";
+import ProfessorEditCourseComponent from "../../components/ProfessorComponents/CoursesPage/ProfessorEditCourseComponent";
+import ProfessorAssignmentComponent from "../../components/ProfessorComponents/CoursesPage/ProfessorAssignmentComponent";
+import { useDispatch } from "react-redux";
+import { getCourseDetailsAsync } from "../../redux/features/courseSlice";
+import CourseBarComponent from "../../components/CourseBarComponent";
+import ProfessorTeamComponent from "../../components/ProfessorComponents/CoursesPage/ProfessorTeamComponent";
+import Loader from "../../components/LoaderComponenets/Loader";
+import uuid from "react-uuid";
 
 const CourseComponent = ({ active, component, onClick }) => {
   return (
@@ -18,8 +18,8 @@ const CourseComponent = ({ active, component, onClick }) => {
       onClick={onClick}
       className={
         active
-          ? 'kumba-30 pcp-component-link-clicked'
-          : 'kumba-30 pcp-component-link'
+          ? "inter-28-bold pcp-component-link-clicked"
+          : "inter-28-light pcp-component-link"
       }
     >
       {component}
@@ -32,8 +32,8 @@ function ProfessorCoursePage() {
   let dispatch = useDispatch();
   let { courseId } = useParams();
 
-  const components = ['Assignments', 'Roster', 'Teams', 'Manage'];
-  const [chosen, setChosen] = useState('Assignments');
+  const components = ["Assignments", "Roster", "Teams", "Manage"];
+  const [chosen, setChosen] = useState("Assignments");
 
   useEffect(() => {
     setIsLoading(true);
@@ -46,12 +46,12 @@ function ProfessorCoursePage() {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className='pcp-parent'>
+        <div className="pcp-parent">
           <SidebarComponent />
-          <div className='pcp-container'>
-            <CourseBarComponent title={'Courses'} />
-            <div className='pcp-components'>
-              <div className='pcp-component-links'>
+          <div className="pcp-container">
+            <CourseBarComponent title={"Courses"} />
+            <div className="pcp-components">
+              <div className="pcp-component-links inter-28-light">
                 {components.map(
                   (t) =>
                     t && (
@@ -65,10 +65,10 @@ function ProfessorCoursePage() {
                 )}
               </div>
               <div>
-                {chosen === 'Assignments' && <ProfessorAssignmentComponent />}
-                {chosen === 'Roster' && <ProfessorRosterComponent />}
-                {chosen === 'Teams' && <ProfessorTeamComponent />}
-                {chosen === 'Manage' && <ProfessorEditCourseComponent />}
+                {chosen === "Assignments" && <ProfessorAssignmentComponent />}
+                {chosen === "Roster" && <ProfessorRosterComponent />}
+                {chosen === "Teams" && <ProfessorTeamComponent />}
+                {chosen === "Manage" && <ProfessorEditCourseComponent />}
               </div>
             </div>
           </div>
