@@ -25,6 +25,8 @@ function ProfessorDashboardPage() {
     window.location.reload(false);
   };
 
+  // arbitrary comment
+
   const onCourseClick = (course) => {
     dispatch(getCourseDetailsAsync(course.course_id));
   };
