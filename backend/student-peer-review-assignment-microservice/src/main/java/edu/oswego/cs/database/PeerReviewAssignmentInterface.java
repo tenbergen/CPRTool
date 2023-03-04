@@ -1,10 +1,8 @@
 package edu.oswego.cs.database;
 
-import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import edu.oswego.cs.daos.FileDAO;
 import org.bson.Document;
 import org.bson.types.Binary;
 
@@ -111,7 +109,7 @@ public class PeerReviewAssignmentInterface {
     }
 
     public String downloadFinishedPeerReviewName(String courseID, int assignmentID, String srcTeamName, String destTeamName) {
-        Document submittedPeerReview = submissionsCollection.find(and(eq("assignment_id", assignmentID), eq("course_id", courseID), eq("reviewed_by", srcTeamName), eq("reviewed_team", destTeamName))).first();
+        Document submittedPeerReview = submissionsCollection.find(and(eq("type", "peer_review_submission"), eq("assignment_id", assignmentID), eq("course_id", courseID), eq("reviewed_by", srcTeamName), eq("reviewed_team", destTeamName))).first();
         if (submittedPeerReview==null)
             throw new WebApplicationException("No peer review from team " + srcTeamName + " for " + destTeamName);
         return (String) submittedPeerReview.get("submission_name");
@@ -119,7 +117,7 @@ public class PeerReviewAssignmentInterface {
     }
 
     public Binary downloadFinishedPeerReview(String courseID, int assignmentID, String srcTeamName, String destTeamName) {
-        Document submittedPeerReview = submissionsCollection.find(and(eq("assignment_id", assignmentID), eq("course_id", courseID), eq("reviewed_by", srcTeamName), eq("reviewed_team", destTeamName))).first();
+        Document submittedPeerReview = submissionsCollection.find(and(eq("type", "peer_review_submission"), eq("assignment_id", assignmentID), eq("course_id", courseID), eq("reviewed_by", srcTeamName), eq("reviewed_team", destTeamName))).first();
         if (submittedPeerReview==null)
             throw new WebApplicationException("No peer review from team " + srcTeamName + " for " + destTeamName);
         return (Binary) submittedPeerReview.get("submission_data");
