@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
+import java.text.DecimalFormat;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
@@ -310,15 +311,27 @@ public class PeerReviewAssignmentInterface {
                 eq("type", "team_submission"))).first();
 
         List<String> teams_that_graded = team_submission.getList("reviews", String.class);
+
+
         if (teams_that_graded == null)
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assigned teams not found for: " + teamName + "for assignment: " + assignmentID).build());
         int total_points = 0;
         int count_of_reviews_submitted = teams_that_graded.size();
+
+        //my code
+        String[] temp = new String[count_of_reviews_submitted];
+        int counter = 0;
+        for(String teamsThatGraded : teams_that_graded){
+            temp[counter] = teamsThatGraded;
+            counter++;
+        }
+        int currentTeam = 0;
         for (String review : teams_that_graded) {
             Document team_review = submissionsCollection.find(and(
                     eq("course_id", courseID),
                     eq("assignment_id", assignmentID),
                     eq("reviewed_by", review),
+                    eq("reviewed_team", teamName),
                     eq("type", "peer_review_submission"))).first();
             if (team_review == null) {
                 count_of_reviews_submitted--;
@@ -327,11 +340,16 @@ public class PeerReviewAssignmentInterface {
                     throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team: " + review + "'s review has no points.").build());
                 } else {
                     total_points += team_review.get("grade", Integer.class);
+
                 }
             }
+            currentTeam++;
         }
-        double final_grade = (((double) total_points / count_of_reviews_submitted) / points) * 100;
-        final_grade = ((int) (final_grade * 100) / 100.0); //round to the nearest 10th
+        DecimalFormat tenth = new DecimalFormat("0.##");
+        double final_grade = Double.parseDouble(tenth.format((((double) total_points / count_of_reviews_submitted) / points) * 100));//round 
+
+
+
         submissionsCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
     }
 
@@ -367,6 +385,7 @@ public class PeerReviewAssignmentInterface {
                             eq("course_id", courseID),
                             eq("assignment_id", assignmentID),
                             eq("reviewed_by", review),
+                            //eq("reviewed_team", teamName),
                             eq("type", "peer_review_submission"))).first();
                     if (team_review == null) {
                         count_of_reviews_submitted--;
@@ -375,11 +394,13 @@ public class PeerReviewAssignmentInterface {
                             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team: " + review + "'s review has no points.").build());
                         } else {
                             total_points += team_review.get("grade", Integer.class);
+
                         }
                     }
                 }
-                double final_grade = (((double) total_points / count_of_reviews_submitted) / points) * 100;
-                final_grade = ((int) (final_grade * 100) / 100.0); //round to the nearest 10th
+                DecimalFormat tenth = new DecimalFormat("0.##");
+                double final_grade = Double.parseDouble(tenth.format((((double) total_points / count_of_reviews_submitted) / points) * 100));//round 
+                
                 submissionsCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
                 assignmentCollection.findOneAndUpdate(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), set("grade_finalized", true));
             }
