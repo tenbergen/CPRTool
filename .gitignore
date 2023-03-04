@@ -53,3 +53,5 @@ hs_err_pid*
 # Database folders
 db*
 
+/professor-list.txt
+
