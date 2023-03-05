@@ -165,7 +165,8 @@ public class CourseInterface {
             studentDocument = new Document()
                     .append("first_name", studentFirstName)
                     .append("last_name", studentLastName)
-                    .append("student_id", studentId);
+                    .append("student_id", studentId)
+                    .append("courses", new ArrayList<String>());
         }
         
         List<String> courseList = studentDocument.getList("courses", String.class);
