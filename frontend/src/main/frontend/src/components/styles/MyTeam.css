@@ -12,17 +12,20 @@
 }
 
 .team-name-container {
-  border-radius: 50px;
-  height: 10vh;
-  background-image: linear-gradient(to right, #82dfe8, rgba(130, 223, 232, 0));
+  border-radius: 5px;
+  color: #4a7dfc;
 }
 
 .team-name {
   position: relative;
   top: 50%;
-  padding-left: 5%;
-  font-size: x-large;
-  font-weight: bold;
+
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 24px;
+  letter-spacing: 1px;
+
   -webkit-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);

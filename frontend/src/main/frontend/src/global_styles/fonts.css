@@ -24,6 +24,14 @@
   color: #212529;
 }
 
+.inter-20-light{
+  font-family: "Inter", sans-serif;
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 24px;
+  color: #212529;
+}
+
 .inter-20-medium {
   font-family: "Inter", sans-serif;
   font-weight: 500;

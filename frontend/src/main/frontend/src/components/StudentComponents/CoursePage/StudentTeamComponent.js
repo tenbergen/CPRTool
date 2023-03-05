@@ -107,7 +107,7 @@ const TeamComponent = () => {
         ))}
       </div>
       <div id='createTeamButton'>
-        <button onClick={createTeam}> Create New Team</button>
+        <button class='green-button-large' onClick={createTeam}> Create New Team</button>
       </div>
     </h3>
   );
