@@ -1,26 +1,26 @@
 # Automatically generated files by Maven and IDEs.
-**/.DS_Store
-**/.idea/
-**/.vscode/
-**/.env
-**/target/
-**/pom.xml.tag
-**/pom.xml.releaseBackup
-**/pom.xml.versionsBackup
-**/pom.xml.next
-**/release.properties
-**/dependency-reduced-pom.xml
-**/buildNumber.properties
-**/.mvn/
-**/mvnw
-**/mvnw.cmd
-**/*.iml
+/.DS_Store
+/.idea/
+/.vscode/
+/.env
+/target/
+/pom.xml.tag
+/pom.xml.releaseBackup
+/pom.xml.versionsBackup
+/pom.xml.next
+/release.properties
+/dependency-reduced-pom.xml
+/buildNumber.properties
+/.mvn/
+/mvnw
+/mvnw.cmd
+/*.iml
 
 # Frontend React stuff.
-**/node_modules/
-**/build/
-**/node/
-**/static/
+/node_modules/
+/build/
+/node/
+/static/
 **/webapp/
 
 # Compiled class file
@@ -42,16 +42,16 @@
 *.ear
 *.zip
 *.tar.gz
-*.rar
+.rar
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+hs_err_pid
 
 # CSV files
-*.csv
+.csv
 
 # Database folders
-db*
+db
 
 /professor-list.txt
-/.gitignore
+/.gitignore 
