@@ -54,7 +54,7 @@ public class FileDAO {
         BodyContentHandler ch = new BodyContentHandler();
         pp.parse(stream, ch, new Metadata(), new ParseContext());
 
-        Pattern pattern = Pattern.compile("(?<=\\b)(a+r*ss+(ho+l)?e*s*|ba+ll+(sa+ck)?s*|ba+sta+rds*|bi+tch(e+s+|i+ng+)?|bu+ll+shi+t|bu+tt+(fu+ck)?s*|co+ck(blo+ck|su+cke+r)?s*|who+re+s*|cu+nts*|(go+d)?da+m[mn]+(it)?|di+ck(he+a+d|fo+rbra+i+n)?s*|fa+g+(o+t)?s*|(mo+the+r)?fu+ck(e+(rs|d)?|ing|off+)?s*|ja+ck(a+ss+|off+)|ni+gg+(e+r|a+)s*|shi+ts*|)(?=\\b)", Pattern.CASE_INSENSITIVE);
+        Pattern pattern = Pattern.compile("(?<=\\b)(a+r*ss+(ho+l)?e*s*|ba+ll+(sa+ck)?s*|ba+sta+rds*|bi+tch(e+s+|i+ng+)?|bu+ll+shi+t|bu+tt+(fu+ck)?s*|co+ck(blo+ck|su+cke+r)?s*|who+re+s*|cu+nts*|(go+d)?da+m[mn]+(it)?|di+ck(he+a+d|fo+rbra+i+n)?s*|fa+g+(o+t)?s*|(mo+the+r)?fu+ck(e+(rs|d)?|ing|off+)?s*|ja+ck(a+ss+|off+)|ni+gg+(e+r|a+)s*|shi+ts*)(?=\\b)", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(ch.toString());
         boolean found = matcher.find(); // Don't have to worry about catching all matches as just one is enough to reject the file
 
