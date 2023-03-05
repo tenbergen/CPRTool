@@ -52,7 +52,7 @@
 }
 
 .rosterInput {
-  border-radius: 50px;
+  border-radius: 5px;
   padding: 5px;
   margin: 10px;
 }
@@ -80,8 +80,19 @@
 }
 
 #addStudentButton {
-  border-radius: 30px;
-  transition: ease-in-out 0.3s;
+  width: 140px;
+  height: 30px;
+  background-color: #28a745;
+  border-radius: 5px;
+  color: white;
+
+  margin-left: 10px;
+
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 18px;
+  letter-spacing: 0.5px;
 }
 
 #addStudentButton:hover {

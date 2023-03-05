@@ -12,6 +12,7 @@ import { getCurrentCourseTeamAsync } from '../../redux/features/teamSlice';
 import MyTeamComponent from '../../components/StudentComponents/CoursePage/MyTeamComponent';
 import uuid from 'react-uuid';
 
+
 const CourseComponent = ({ active, component, onClick }) => {
   return (
     <p
