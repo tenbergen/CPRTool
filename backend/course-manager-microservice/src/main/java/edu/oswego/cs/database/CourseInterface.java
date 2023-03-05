@@ -175,7 +175,7 @@ public class CourseInterface {
             throw new CPRException(Response.Status.CONFLICT, "This student is already in the course.");
         } else{
             if(studentNotFound){
-                studentDocument.put("courses", new ArrayList<String>(List.of(courseID)));
+                studentDocument.put("courses", new ArrayList<>(List.of(courseID)));
                 studentCollection.insertOne(studentDocument);
             }else studentCollection.updateOne(eq("student_id", studentId), push("courses", courseID));
         }
