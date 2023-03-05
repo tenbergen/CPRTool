@@ -54,4 +54,4 @@ hs_err_pid*
 db*
 
 /professor-list.txt
-
+/.gitignore
