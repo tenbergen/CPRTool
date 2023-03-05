@@ -76,7 +76,7 @@ const AssignmentTile = ({ assignment, submitted }) => {
             : 'ass-tile'
         }
       >
-        <div className='outfit-16 ass-tile-title'>
+        <div className='inter-20-medium-white ass-tile-title'>
           {' '}
           <span> {title} </span>
         </div>
@@ -120,7 +120,7 @@ const AssignmentTile = ({ assignment, submitted }) => {
               </span>
               {role === 'professor' ? (
                 <span
-                  className='ass-tile-delete outfit-16'
+                  className='ass-tile-delete'
                   onClick={confirmDelete}
                 >
                   {' '}
