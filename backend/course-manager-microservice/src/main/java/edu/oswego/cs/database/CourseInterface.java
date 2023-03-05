@@ -165,8 +165,7 @@ public class CourseInterface {
             studentDocument = new Document()
                     .append("first_name", studentFirstName)
                     .append("last_name", studentLastName)
-                    .append("student_id", studentId)
-                    .append("courses", new ArrayList<String>());
+                    .append("student_id", studentId);
         }
         
         List<String> courseList = studentDocument.getList("courses", String.class);
@@ -174,7 +173,10 @@ public class CourseInterface {
         if (isAlreadyEnrolled) {
             throw new CPRException(Response.Status.CONFLICT, "This student is already in the course.");
         } else{
-            studentCollection.updateOne(eq("student_id", studentId), push("courses", courseID));
+            if(studentNotFound){
+                studentDocument.put("courses", new ArrayList<String>(List.of(courseID)));
+                studentCollection.insertOne(studentDocument);
+            }else studentCollection.updateOne(eq("student_id", studentId), push("courses", courseID));
         }
         courseLocks.remove(courseID);
     }
