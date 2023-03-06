@@ -159,22 +159,25 @@ public class CourseInterface {
         courseCollection.updateOne(eq("course_id", courseID), push("students", studentId));
 
         Document studentDocument = studentCollection.find(eq("student_id", studentId)).first();
-        List<String> courseList = studentDocument.getList("courses", String.class);
-        boolean isAlreadyEnrolled = courseList.contains(courseID);
-        if (studentDocument != null && isAlreadyEnrolled) {
-            throw new CPRException(Response.Status.CONFLICT, "This student is already in the course.");
-        }
-        else if (studentDocument != null && !isAlreadyEnrolled) {
-            studentCollection.updateOne(eq("student_id", studentId), push("courses", courseID));
-        } else {
-            courseList = new ArrayList<>();
-            courseList.add(courseID);
-            Document newStudent = new Document()
+        boolean studentNotFound = false;
+        if(studentDocument == null) {
+            studentNotFound = true;
+            studentDocument = new Document()
                     .append("first_name", studentFirstName)
                     .append("last_name", studentLastName)
                     .append("student_id", studentId)
-                    .append("courses", courseList);
-            studentCollection.insertOne(newStudent);
+                    .append("courses", new ArrayList<String>());
+        }
+        
+        List<String> courseList = studentDocument.getList("courses", String.class);
+        boolean isAlreadyEnrolled = courseList.contains(courseID);
+        if (isAlreadyEnrolled) {
+            throw new CPRException(Response.Status.CONFLICT, "This student is already in the course.");
+        } else{
+            if(studentNotFound){
+                studentDocument.put("courses", new ArrayList<>(List.of(courseID)));
+                studentCollection.insertOne(studentDocument);
+            }else studentCollection.updateOne(eq("student_id", studentId), push("courses", courseID));
         }
         courseLocks.remove(courseID);
     }
