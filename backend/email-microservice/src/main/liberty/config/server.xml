@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="new server">
+
+    <featureManager>
+        <feature>microProfile-4.1</feature>
+    </featureManager>
+
+    <variable name="default.http.port" defaultValue="13133"/>
+    <variable name="default.https.port" defaultValue="9450"/>
+    <variable name="app.context.root" defaultValue="/"/>
+
+    <httpEndpoint
+            host="*"
+            httpPort="${default.http.port}"
+            httpsPort="${default.https.port}"
+            id="defaultHttpEndpoint"
+    />
+
+    <applicationManager autoExpand="true"/>
+
+    <webApplication contextRoot="${app.context.root}" location="email-microservice.war"/>
+
+    <ssl id="defaultSSLConfig" trustDefaultCerts="true"/>
+
+    <mpJwt id="cpr_access" signatureAlgorithm="RS512" tokenHeader="Authorization" issuer="cpr" audiences="cpr" jwksUri="${JWK_ACCESS_URL}"/>
+</server>
