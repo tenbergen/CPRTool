@@ -5,5 +5,4 @@ import javax.ws.rs.core.Application;
 
 @ApplicationPath("email")
 public class EmailApplication extends Application {
-
 }

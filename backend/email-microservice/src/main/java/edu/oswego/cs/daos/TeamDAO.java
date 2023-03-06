@@ -8,6 +8,7 @@ import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class TeamDAO {
-    @JsonbProperty("team_id") private String teamID;
+    @Id @JsonbProperty("team_id") private String teamID;
     @JsonbProperty("course_id") private String courseID;
     @JsonbProperty("team_full") private Boolean teamFull;
     @JsonbProperty("team_lead") private String teamLead;
