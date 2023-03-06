@@ -284,4 +284,4 @@ services:
     volumes:
       - ./nginxlocal.conf:/etc/nginx/nginx.conf:rw
     ports:
-      - "443:80"
+      - "3000:80"
