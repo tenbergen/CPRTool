@@ -1,18 +1,14 @@
 package edu.oswego.cs.database;
 
-import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import edu.oswego.cs.daos.FileDAO;
 import org.bson.Document;
+import org.bson.types.Binary;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.*;
 import java.text.DecimalFormat;
 
@@ -39,7 +35,7 @@ public class PeerReviewAssignmentInterface {
         }
     }
 
-    public void addPeerReviewSubmission(String course_id, int assignment_id, String srcTeamName, String destinationTeam, String fileName, int grade) {
+    public void addPeerReviewSubmission(String course_id, int assignment_id, String srcTeamName, String destinationTeam, String fileName, int grade, InputStream fileData) throws IOException {
         Document reviewedByTeam = teamCollection.find(eq("team_id", srcTeamName)).first();
         Document reviewedTeam = teamCollection.find(eq("team_id", destinationTeam)).first();
         Document assignment = assignmentCollection.find(and(eq("course_id", course_id), eq("assignment_id", assignment_id))).first();
@@ -65,6 +61,7 @@ public class PeerReviewAssignmentInterface {
                 .append("assignment_id", assignment_id)
                 .append("assigment_name", assignment.getString("assignment_name"))
                 .append("submission_name", fileName)
+                .append("submission_data", Base64.getDecoder().decode(new String(fileData.readAllBytes())))
                 .append("reviewed_by", reviewedByTeam.getString("team_id"))
                 .append("reviewed_by_members", reviewedByTeam.getList("team_members", String.class))
                 .append("reviewed_team", reviewedTeam.getString("team_id"))
@@ -111,29 +108,19 @@ public class PeerReviewAssignmentInterface {
         }
     }
 
-    public void uploadPeerReview(String courseID, int assignmentID, String srcTeamName, String destTeamName, IAttachment attachment) throws IOException {
-        FileDAO fileDAO = FileDAO.fileFactory(courseID, srcTeamName, destTeamName, assignmentID, attachment);
-        String path = "assignments" + "/" + courseID + "/" + assignmentID + "/peer-review-submissions/";
-        if (!new File(path).exists()) {
-            new File(path).mkdirs();
-        }
-        OutputStream outputStream = new FileOutputStream(path + fileDAO.fileName + ".pdf");
-        outputStream.write(fileDAO.inputStream.readAllBytes());
-        outputStream.close();
+    public String downloadFinishedPeerReviewName(String courseID, int assignmentID, String srcTeamName, String destTeamName) {
+        Document submittedPeerReview = submissionsCollection.find(and(eq("type", "peer_review_submission"), eq("assignment_id", assignmentID), eq("course_id", courseID), eq("reviewed_by", srcTeamName), eq("reviewed_team", destTeamName))).first();
+        if (submittedPeerReview==null)
+            throw new WebApplicationException("No peer review from team " + srcTeamName + " for " + destTeamName);
+        return (String) submittedPeerReview.get("submission_name");
+
     }
 
-    public File downloadFinishedPeerReview(String courseID, int assignmentID, String srcTeamName, String destTeamName) {
-        String path = "assignments/" + courseID + "/" + assignmentID + "/peer-review-submissions/";
-        if (!new File(path).exists())
-            throw new WebApplicationException("Peer reviews do not exist for this course yet.");
-
-        Optional<File> file = Arrays.stream(new File(path).listFiles())
-                .filter(f -> f.getName().contains(srcTeamName) && f.getName().contains(destTeamName))
-                .findFirst();
-
-        if (file.isEmpty())
+    public Binary downloadFinishedPeerReview(String courseID, int assignmentID, String srcTeamName, String destTeamName) {
+        Document submittedPeerReview = submissionsCollection.find(and(eq("type", "peer_review_submission"), eq("assignment_id", assignmentID), eq("course_id", courseID), eq("reviewed_by", srcTeamName), eq("reviewed_team", destTeamName))).first();
+        if (submittedPeerReview==null)
             throw new WebApplicationException("No peer review from team " + srcTeamName + " for " + destTeamName);
-        return file.get();
+        return (Binary) submittedPeerReview.get("submission_data");
 
     }
 
@@ -346,7 +333,7 @@ public class PeerReviewAssignmentInterface {
             currentTeam++;
         }
         DecimalFormat tenth = new DecimalFormat("0.##");
-        double final_grade = Double.parseDouble(tenth.format((((double) total_points / count_of_reviews_submitted) / points) * 100));//round 
+        double final_grade = Double.parseDouble(tenth.format((((double) total_points / count_of_reviews_submitted) / points) * 100));//round
 
 
 
@@ -399,8 +386,8 @@ public class PeerReviewAssignmentInterface {
                     }
                 }
                 DecimalFormat tenth = new DecimalFormat("0.##");
-                double final_grade = Double.parseDouble(tenth.format((((double) total_points / count_of_reviews_submitted) / points) * 100));//round 
-                
+                double final_grade = Double.parseDouble(tenth.format((((double) total_points / count_of_reviews_submitted) / points) * 100));//round
+
                 submissionsCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
                 assignmentCollection.findOneAndUpdate(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), set("grade_finalized", true));
             }

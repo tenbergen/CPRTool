@@ -17,6 +17,7 @@ function LoginPage() {
   }
 
   const handleLogin = async (googleData) => {
+    console.log(googleData.credential)
     localStorage.setItem('google_token', googleData.credential);
     dispatch(getTokenAsync());
   };
