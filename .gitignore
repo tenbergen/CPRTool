@@ -50,6 +50,9 @@ hs_err_pid*
 # CSV files
 *.csv
 
+# Database folders
+db*
+
 #files that vary w/ local user
-professor-list.txt
+/professor-list.txt
 env.example

@@ -8,6 +8,7 @@ import edu.oswego.cs.rest.daos.FileDAO;
 import edu.oswego.cs.rest.util.CPRException;
 import org.apache.commons.io.FileUtils;
 import org.bson.Document;
+import org.bson.types.Binary;
 
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
@@ -63,9 +64,24 @@ public class AssignmentInterface {
         return relativePathPrefix.toString();
     }
 
+    /**
+     * Finds the assignment document that a file is associated with
+     *
+     * @param courseID type FileDAO: Representation of File Data
+     * @param assignmentID  type FileDAO: Representation of File Data
+     */
+
     public static String findFile(String courseID, int assignmentID, String fileName) {
         return getRelPath() + "assignments" + reg + courseID + reg + assignmentID + reg + "assignments" + reg + fileName;
     }
+
+    /**
+     *
+     * @param courseID
+     * @param assignmentID
+     * @param fileName
+     * @return
+     */
 
     public static String findPeerReviewFile(String courseID, int assignmentID, String fileName) {
         String filePath = getRelPath() + "assignments" + reg + courseID + reg + assignmentID + reg + "peer-reviews" + reg + fileName;
@@ -74,31 +90,172 @@ public class AssignmentInterface {
         return filePath;
     }
 
+    /**
+     * Write file binary data and file name of the assignment instructions to its respective assignment document in the
+     * database.
+     *
+     * @param fileDAO  type FileDAO: Representation of File Data
+     */
+
     public void writeToAssignment(FileDAO fileDAO) throws IOException {
-        String FileStructure = getRelPath() + "assignments" + reg + fileDAO.courseID + reg + fileDAO.assignmentID + reg + "assignments";
-        fileDAO.writeFile(FileStructure + reg + fileDAO.fileName);
-        assignmentsCollection.updateOne(and(
-                        eq("course_id", fileDAO.courseID),
-                        eq("assignment_id", fileDAO.assignmentID)),
-                set("assignment_instructions", fileDAO.fileName));
+        //the line below will get the document we are searching for
+        Document result = assignmentsCollection.find(and(eq("course_id", fileDAO.courseID), eq("assignment_id", fileDAO.assignmentID))).first();
+        //makes sure the result isn't null
+        if (result == null) throw new CPRException(Response.Status.BAD_REQUEST,"No assignment found");
+
+        //add the assignment instructions binary data and file name to the database
+        result.append("assignment_instructions_data", Base64.getDecoder().decode(new String(fileDAO.file.readAllBytes())));
+        result.append("assignment_instructions_name", fileDAO.fileName);
+        assignmentsCollection.replaceOne(and(eq("course_id", fileDAO.courseID), eq("assignment_id", fileDAO.assignmentID)), result);
     }
 
+    /**
+     *
+     * @param fileDAO
+     * @throws IOException
+     */
     public void writeRubricToPeerReviews(FileDAO fileDAO) throws IOException {
-        String FileStructure = getRelPath() + "assignments" + reg + fileDAO.courseID + reg + fileDAO.assignmentID + reg + "peer-reviews";
-        fileDAO.writeFile(FileStructure + reg + fileDAO.fileName);
-        assignmentsCollection.updateOne(and(
-                        eq("course_id", fileDAO.courseID),
-                        eq("assignment_id", fileDAO.assignmentID)),
-                set("peer_review_rubric", fileDAO.fileName));
+        //the line below will get the document we are searching for
+        Document result = assignmentsCollection.find(and(eq("course_id", fileDAO.courseID), eq("assignment_id", fileDAO.assignmentID))).first();
+        //makes sure the result isn't null
+        if (result == null) throw new CPRException(Response.Status.BAD_REQUEST,"No assignment found");
+
+        //add the assignment instructions binary data and file name to the database
+        result.append("rubric_data", Base64.getDecoder().decode(new String(fileDAO.file.readAllBytes())));
+        result.append("rubric_name", fileDAO.fileName);
+        assignmentsCollection.replaceOne(and(eq("course_id", fileDAO.courseID), eq("assignment_id", fileDAO.assignmentID)), result);
     }
 
+    /**
+     *
+     * @param fileDAO
+     * @throws IOException
+     */
     public void writeTemplateToPeerReviews(FileDAO fileDAO) throws IOException {
-        String FileStructure = getRelPath() + "assignments" + reg + fileDAO.courseID + reg + fileDAO.assignmentID + reg + "peer-reviews";
-        fileDAO.writeFile(FileStructure + reg + fileDAO.fileName);
-        assignmentsCollection.updateOne(and(
-                        eq("course_id", fileDAO.courseID),
-                        eq("assignment_id", fileDAO.assignmentID)),
-                set("peer_review_template", fileDAO.fileName));
+        //the line below will get the document we are searching for
+        Document result = assignmentsCollection.find(and(eq("course_id", fileDAO.courseID), eq("assignment_id", fileDAO.assignmentID))).first();
+        //makes sure the result isn't null
+        if (result == null) throw new CPRException(Response.Status.BAD_REQUEST,"No assignment found");
+
+        //add the assignment instructions binary data and file name to the database
+        result.append("peer_review_template", Base64.getDecoder().decode(new String(fileDAO.file.readAllBytes())));
+        result.append("peer_review_template_name", fileDAO.fileName);
+        assignmentsCollection.replaceOne(and(eq("course_id", fileDAO.courseID), eq("assignment_id", fileDAO.assignmentID)), result);
+    }
+
+
+    /**
+     * Grabs the binary data of the assignment instructions for the respective assignment
+     *
+     * @param courseID  type String
+     * @param assignmentID  type Integer
+     */
+
+    public byte[] getInstructionFileData(String courseID, Integer assignmentID){
+        Document result = assignmentsCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        //makes sure the result isn't null
+        if (result == null) throw new CPRException(Response.Status.BAD_REQUEST,"No assignment found");
+
+        //grab the assignment instructions data and return it, ensure the assignment instructions data exists first
+        if(!result.containsKey("assignment_instructions_data")) throw new CPRException(Response.Status.NOT_FOUND, "No assignment instruction data uploaded");
+
+        Binary data = (Binary) result.get("assignment_instructions_data");
+        return data.getData();
+    }
+
+    /**
+     * Grabs the name of the instructions file
+     *
+     * @param courseID  type String
+     * @param assignmentID  type Integer
+     */
+
+    public String getInstructionFileName(String courseID, Integer assignmentID){
+        Document result = assignmentsCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        //makes sure the result isn't null
+        if (result == null) throw new CPRException(Response.Status.BAD_REQUEST,"No assignment found");
+
+        //grab the assignment instructions data and return it, ensure the assignment instructions data exists first
+        if(!result.containsKey("assignment_instructions_name")) throw new CPRException(Response.Status.NOT_FOUND, "No assignment instruction data uploaded");
+
+        return (String) result.get("assignment_instructions_name");
+    }
+
+
+    /**
+     * Grabs the name of the rubric file
+     *
+     * @param courseID  type String
+     * @param assignmentID  type Integer
+     */
+
+    public String getRubricFileName(String courseID, Integer assignmentID){
+        Document result = assignmentsCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        //makes sure the result isn't null
+        if (result == null) throw new CPRException(Response.Status.BAD_REQUEST,"No assignment found");
+
+        //grab the assignment instructions data and return it, ensure the assignment instructions data exists first
+        if(!result.containsKey("rubric_name")) throw new CPRException(Response.Status.NOT_FOUND, "No assignment instruction data uploaded");
+
+        return (String) result.get("rubric_name");
+    }
+
+
+    /**
+     * Grab the binary data of the assignment rubric for the respective assignment
+     *
+     * @param courseID  type String
+     * @param assignmentID  type Integer
+     */
+
+    public byte[] getRubricFileData(String courseID, Integer assignmentID){
+        Document result = assignmentsCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        //makes sure the result isn't null
+        if (result == null) throw new CPRException(Response.Status.BAD_REQUEST,"No assignment found");
+
+        //grab the assignment instructions data and return it, ensure the assignment instructions data exists first
+        if(!result.containsKey("rubric_data")) throw new CPRException(Response.Status.NOT_FOUND, "No rubric data uploaded");
+
+        Binary data = (Binary) result.get("rubric_data");
+        return data.getData();
+    }
+
+
+    /**
+     * Grabs the name of the rubric file
+     *
+     * @param courseID  type String
+     * @param assignmentID  type Integer
+     */
+
+    public String getTemplateFileName(String courseID, Integer assignmentID){
+        Document result = assignmentsCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        //makes sure the result isn't null
+        if (result == null) throw new CPRException(Response.Status.BAD_REQUEST,"No assignment found");
+
+        //grab the assignment instructions data and return it, ensure the assignment instructions data exists first
+        if(!result.containsKey("peer_review_template_name")) throw new CPRException(Response.Status.NOT_FOUND, "No assignment instruction data uploaded");
+
+        return (String) result.get("peer_review_template_name");
+    }
+
+    /**
+     * Grabs the binary data of the peer review template for the respective assignment
+     *
+     * @param courseID  type String
+     * @param assignmentID  type Integer
+     */
+
+    public byte[] getPeerReviewTemplateData(String courseID, Integer assignmentID){
+        Document result = assignmentsCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        //makes sure the result isn't null
+        if (result == null) throw new CPRException(Response.Status.BAD_REQUEST,"No assignment found");
+
+        //grab the assignment instructions data and return it, ensure the assignment instructions data exists first
+        if(!result.containsKey("peer_review_template_data")) throw new CPRException(Response.Status.NOT_FOUND, "No template data uploaded");
+
+        Binary data = (Binary) result.get("peer_review_template_data");
+        return data.getData();
     }
 
     public void removeFile(String courseID, String fileName, int assignmentID) {
@@ -133,40 +290,20 @@ public class AssignmentInterface {
                 set("peer_review_rubric", ""));
     }
 
+    /**
+     * Creates the assignment data based on the POST request's sent data. Previously, this function would make
+     * a file structure on the host machine to store the PDFs. Now it just stores the assignment data JSON
+     * and the writeToAssignment function handles writing the Assignment PDF data in the database.
+     *
+     * @param assignmentDAO  type AssignmentDAO: Representation of Assignment Data
+     * @return Document
+     */
+
     public Document createAssignment(AssignmentDAO assignmentDAO) throws IOException {
         Document courseDocument = courseCollection.find(eq("course_id", assignmentDAO.courseID)).first();
         if (courseDocument == null) throw new CPRException(Response.Status.BAD_REQUEST,"Course not found.");
-        String FileStructure = getRelPath() + "assignments" + reg + assignmentDAO.courseID;
-
-        File dir = new File(FileStructure);
-        if (!dir.mkdirs() && !dir.exists()) throw new CPRException(Response.Status.BAD_REQUEST,"Failed to create directory at" + dir.getAbsolutePath());
-
-        String[] dirList = dir.list();
-        if (dirList == null) throw new CPRException(Response.Status.BAD_REQUEST,"Directory must exist to make file structure.");
-
         int nextPos = generateAssignmentID();
         assignmentDAO.assignmentID = nextPos;
-
-        FileStructure += reg + nextPos;
-        if (!new File(FileStructure + reg + "team-submissions").mkdirs()) throw new CPRException(Response.Status.BAD_REQUEST,"Failed to create team-submission directory.");
-
-        if (!new File(FileStructure + reg + "peer-reviews").mkdirs()) {
-            deleteFile(FileStructure + reg + "team-submissions");
-            throw new CPRException(Response.Status.BAD_REQUEST,"Failed to create peer-review directory.");
-        }
-
-        if (!new File(FileStructure + reg + "assignments").mkdirs()) {
-            deleteFile(FileStructure + reg + "team-submissions");
-            deleteFile(FileStructure + reg + "peer-reviews");
-            throw new CPRException(Response.Status.BAD_REQUEST,"Failed to create assignments directory");
-        }
-
-        if (!new File(FileStructure + reg + "peer-review-submission").mkdirs()) {
-            deleteFile(FileStructure + reg + "team-submissions");
-            deleteFile(FileStructure + reg + "peer-reviews");
-            deleteFile(FileStructure + reg + "assignments");
-            throw new CPRException(Response.Status.BAD_REQUEST,"Failed to create peer-review-submission directory");
-        }
 
         Jsonb jsonb = JsonbBuilder.create();
         Entity<String> assignmentDAOEntity = Entity.entity(jsonb.toJson(assignmentDAO), MediaType.APPLICATION_JSON_TYPE);
@@ -179,10 +316,6 @@ public class AssignmentInterface {
         MongoCursor<Document> query = assignmentsCollection.find(assignmentDocument).iterator();
         if (query.hasNext()) {
             query.close();
-            deleteFile(FileStructure + reg + "team-submissions");
-            deleteFile(FileStructure + reg + "peer-reviews");
-            deleteFile(FileStructure + reg + "assignments");
-            deleteFile(FileStructure + reg + "peer-review-submission");
 
             throw new CPRException(Response.Status.BAD_REQUEST,"This assignment already exists.");
         }
@@ -201,6 +334,12 @@ public class AssignmentInterface {
         return assignments;
     }
 
+    /**
+     *
+     * @param courseID
+     * @return
+     */
+
     public List<Document> getAssignmentsByCourse(String courseID) {
         MongoCursor<Document> query = assignmentsCollection.find(eq("course_id", courseID)).iterator();
         if (!query.hasNext()) return Collections.emptyList();
@@ -213,6 +352,13 @@ public class AssignmentInterface {
         return assignments;
     }
 
+    /**
+     *
+     * @param courseID
+     * @param AssignmentID
+     * @return
+     */
+
     public Document getSpecifiedAssignment(String courseID, int AssignmentID) {
         Document assignment = assignmentsCollection.find(and(
                 eq("course_id", courseID),
@@ -220,6 +366,13 @@ public class AssignmentInterface {
         if (assignment == null) throw new CPRException(Response.Status.BAD_REQUEST,"No assignment by this name found");
         return assignment;
     }
+
+    /**
+     *
+     * @param assignmentDAO
+     * @param courseID
+     * @param assignmentID
+     */
 
     public void updateAssignment(AssignmentDAO assignmentDAO, String courseID, int assignmentID) {
         Document assignmentDocument = assignmentsCollection.find(and(eq("assignment_id", assignmentID),eq("course_id", courseID))).first();
@@ -234,6 +387,13 @@ public class AssignmentInterface {
 
         assignmentsCollection.replaceOne(and(eq("assignment_id", assignmentID),eq("course_id", courseID)), assignmentDocument);
     }
+
+    /**
+     *
+     * @param AssignmentID
+     * @param courseID
+     * @throws IOException
+     */
 
     public void removeAssignment(int AssignmentID, String courseID) throws IOException {
         MongoCursor<Document> results = assignmentsCollection.find(and(
@@ -254,6 +414,12 @@ public class AssignmentInterface {
              submissionCollection.findOneAndDelete(submissionDoc);
     }
 
+    /**
+     *
+     * @param courseID
+     * @throws IOException
+     */
+
     public void removeCourse(String courseID) throws IOException {
         MongoCursor<Document> results = assignmentsCollection.find(eq("course_id", courseID)).iterator();
         if (!results.hasNext()) throw new CPRException(Response.Status.BAD_REQUEST,"No assignment by this name found.");
@@ -269,6 +435,13 @@ public class AssignmentInterface {
     private static void deleteFile(String destination) throws IOException {
         FileUtils.deleteDirectory(new File(destination));
     }
+
+
+    /**
+    *
+    * Iterates the assignment id by one based on how many assignments currently exist in the DB
+    *
+    **/
 
     public int generateAssignmentID() {
         List<Document> assignmentsDocuments = getAllAssignments();
