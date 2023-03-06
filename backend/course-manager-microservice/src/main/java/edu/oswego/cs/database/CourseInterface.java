@@ -174,7 +174,7 @@ public class CourseInterface {
                     .append("student_id", studentId)
                     .append("courses", new ArrayList<String>());
         }
-        
+
         List<String> courseList = studentDocument.getList("courses", String.class);
         boolean isAlreadyEnrolled = courseList.contains(courseID);
         if (isAlreadyEnrolled) {
