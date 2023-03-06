@@ -152,10 +152,16 @@ public class CourseInterface {
         String studentFirstName = student.fullName.split(", ")[1];
 
         Document courseDocument = courseCollection.find(and(eq("course_id", courseID), eq("professor_id", professorID))).first();
-        if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "This course does not exist.");
+        if (courseDocument == null){
+            courseLocks.remove(courseID);
+            throw new CPRException(Response.Status.NOT_FOUND, "This course does not exist.");
+        }
 
         List<String> students = courseDocument.getList("students", String.class);
-        if (students.contains(studentId)) throw new CPRException(Response.Status.CONFLICT, "This student is already in the course.");
+        if (students.contains(studentId)){
+            courseLocks.remove(courseID);
+            throw new CPRException(Response.Status.CONFLICT, "This student is already in the course.");
+        }
         courseCollection.updateOne(eq("course_id", courseID), push("students", studentId));
 
         Document studentDocument = studentCollection.find(eq("student_id", studentId)).first();
@@ -172,6 +178,7 @@ public class CourseInterface {
         List<String> courseList = studentDocument.getList("courses", String.class);
         boolean isAlreadyEnrolled = courseList.contains(courseID);
         if (isAlreadyEnrolled) {
+            courseLocks.remove(courseID);
             throw new CPRException(Response.Status.CONFLICT, "This student is already in the course.");
         } else{
             if(studentNotFound){
