@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 public class FileDAO {
     private String filename;
     private String courseID;
-    private InputStream file;
+    private byte[] file;
     private int assignmentID;
     private String teamName;
 
@@ -40,9 +40,11 @@ public class FileDAO {
      * @throws SAXException File Corruption Exception
      */
     public static FileDAO fileFactory(String fileName, String courseID, IAttachment attachment, int assignmentID, String teamName) throws IOException, TikaException, SAXException {
-        InputStream inputStream = attachment.getDataHandler().getInputStream();
-        contentFilter(new ByteArrayInputStream(Base64.getDecoder().decode(new String(inputStream.readAllBytes()))), fileName);
-        return new FileDAO(fileName, courseID, inputStream, assignmentID, teamName);
+        InputStream inputStream = new BufferedInputStream(attachment.getDataHandler().getInputStream());
+        byte[] fileData = inputStream.readAllBytes();
+        contentFilter(new ByteArrayInputStream(fileData), fileName);
+        inputStream.mark(inputStream.available());
+        return new FileDAO(fileName, courseID, fileData, assignmentID, teamName);
     }
 
     /**

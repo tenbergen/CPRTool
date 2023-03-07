@@ -16,7 +16,6 @@ const RegularAssignmentComponent = () => {
   const { courseId, assignmentId } = useParams();
   const { currentTeamId } = useSelector((state) => state.teams);
   const assignmentFileFormData = new FormData();
-  let assignmentFileName = ""
 
   useEffect(() => {
     dispatch(getCurrentCourseTeamAsync({ courseId, lakerId }));
@@ -31,14 +30,14 @@ const RegularAssignmentComponent = () => {
       const base64String = reader.result
           .replace('data:', '')
           .replace(/^.+,/, '');
-      assignmentFileName = file.name
+      console.log(base64String)
       assignmentFileFormData.set(file.name, base64String);
     };
     reader.readAsDataURL(file);
   };
 
   const onAssignmentClick = async () => {
-    const fileName = currentAssignment.assignment_instructions;
+    const fileName = currentAssignment.assignment_instructions_name;
     const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/download/${fileName}`;
     await axios
       .get(url, { responseType: 'blob' })

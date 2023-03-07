@@ -100,10 +100,10 @@ const StudentPeerReviewComponent = () => {
               <span
                 className='outfit-18 p2'
                 onClick={() =>
-                  onFileClick(currentAssignment.peer_review_rubric)
+                  onFileClick(currentAssignment.peer_review_rubric_name)
                 }
               >
-                {currentAssignment.peer_review_rubric}
+                {currentAssignment.peer_review_rubric_name}
               </span>
               <br />
               <br />
@@ -112,10 +112,10 @@ const StudentPeerReviewComponent = () => {
               <span
                 className='outfit-18 p2'
                 onClick={() =>
-                  onFileClick(currentAssignment.peer_review_template)
+                  onFileClick(currentAssignment.peer_review_template_name)
                 }
               >
-                {currentAssignment.peer_review_template}
+                {currentAssignment.peer_review_template_name}
               </span>
               <br />
               <br />
