@@ -25,8 +25,6 @@ public class AssignmentDAO {
     @JsonbProperty("peer_review_instructions") public String peerReviewInstructions;
     @JsonbProperty("peer_review_due_date") public String peerReviewDueDate;
     @JsonbProperty("peer_review_points") public int peerReviewPoints;
-    @JsonbProperty("peer_review_template") public byte[] peerReviewTemplate = new byte[0];
-    @JsonbProperty("peer_review_rubric") public byte[] peerReviewRubric = new byte[0];
 
     @JsonbCreator
     public AssignmentDAO(
