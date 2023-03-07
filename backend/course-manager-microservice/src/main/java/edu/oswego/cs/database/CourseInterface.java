@@ -216,7 +216,6 @@ public class CourseInterface {
         String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
         Document studentDocument = studentCollection.find(and(eq("student_id", studentID), eq("courses", courseID))).first();
         if (studentDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "This student does not exist.");
-
         Document courseDocument = courseCollection.find(and(eq("course_id", courseID), eq("professor_id", professorID))).first();
         if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "This course does not exist.");
         List<String> courses = studentDocument.getList("courses", String.class);
