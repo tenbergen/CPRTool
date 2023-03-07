@@ -16,6 +16,7 @@ const RegularAssignmentComponent = () => {
   const { courseId, assignmentId } = useParams();
   const { currentTeamId } = useSelector((state) => state.teams);
   const assignmentFileFormData = new FormData();
+  let assignmentFileName = ""
 
   useEffect(() => {
     dispatch(getCurrentCourseTeamAsync({ courseId, lakerId }));
@@ -24,7 +25,16 @@ const RegularAssignmentComponent = () => {
 
   const assignmentFileHandler = (event) => {
     let file = event.target.files[0];
-    assignmentFileFormData.set('file', file);
+    var reader = new FileReader()
+    reader.onloadend = () => {
+      // Use a regex to remove data url part
+      const base64String = reader.result
+          .replace('data:', '')
+          .replace(/^.+,/, '');
+      assignmentFileName = file.name
+      assignmentFileFormData.set(file.name, base64String);
+    };
+    reader.readAsDataURL(file);
   };
 
   const onAssignmentClick = async () => {
