@@ -28,7 +28,7 @@ const StudentPeerReviewComponent = () => {
           .replace('data:', '')
           .replace(/^.+,/, '');
       feedBackFileName = file.name
-      assignmentFileFormData.set(file.name, base64String);
+      feedbackFileFormData.set(file.name, base64String);
     };
     reader.readAsDataURL(file);
   };
