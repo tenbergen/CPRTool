@@ -16,11 +16,21 @@ const StudentPeerReviewComponent = () => {
   const { currentTeamId, teamLoaded } = useSelector((state) => state.teams);
 
   const [grade, setGrade] = useState(undefined);
+  let feedBackFileName = ""
   const feedbackFileFormData = new FormData();
 
   const onFeedbackFileHandler = (e) => {
     let file = e.target.files[0];
-    feedbackFileFormData.set('file', file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      // Use a regex to remove data url part
+      const base64String = reader.result
+          .replace('data:', '')
+          .replace(/^.+,/, '');
+      feedBackFileName = file.name
+      assignmentFileFormData.set(file.name, base64String);
+    };
+    reader.readAsDataURL(file);
   };
 
   useEffect(() => {

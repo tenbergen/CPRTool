@@ -25,7 +25,7 @@ const RegularAssignmentComponent = () => {
 
   const assignmentFileHandler = (event) => {
     let file = event.target.files[0];
-    var reader = new FileReader()
+    const reader = new FileReader();
     reader.onloadend = () => {
       // Use a regex to remove data url part
       const base64String = reader.result
