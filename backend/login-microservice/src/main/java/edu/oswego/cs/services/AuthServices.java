@@ -69,7 +69,6 @@ public class AuthServices {
 
             tokens.put("access_token", access_token);
             tokens.put("refresh_token", refresh_token);
-
             return tokens;
 
         } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
