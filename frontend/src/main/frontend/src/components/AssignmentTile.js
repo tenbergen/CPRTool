@@ -82,7 +82,7 @@ const AssignmentTile = ({ assignment, submitted }) => {
         </div>
         <div className='ass-tile-content'>
           <div className='ass-tile-info' onClick={onTileClick}>
-            <span className='kumba-27'>
+            <span className='inter-20-medium'>
               {submitted ? (
                 role === 'professor' ? (
                   <span>
@@ -103,7 +103,7 @@ const AssignmentTile = ({ assignment, submitted }) => {
                 <span> {assignment.assignment_name} </span>
               )}
             </span>
-            <span className='kumba-25'>
+            <span className='inter-20-medium'>
               {submitted
                 ? assignment.grade === -1
                   ? 'Pending'
@@ -113,7 +113,7 @@ const AssignmentTile = ({ assignment, submitted }) => {
           </div>
           {!submitted && (
             <div className='ass-tile-links'>
-              <span className='outfit-16 ass-tile-files' onClick={onFileClick}>
+              <span className='inter-16-bold-blue ass-tile-files' onClick={onFileClick}>
                 {assignment.assignment_type === 'peer-review'
                   ? assignment.peer_review_rubric
                   : assignment.assignment_instructions}

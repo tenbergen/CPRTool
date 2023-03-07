@@ -18,6 +18,11 @@
   padding-bottom: 7%;
   overflow-y: scroll;
   height: 75vh;
+  margin-right: -19px;
+}
+
+.abc-assignments > td{
+  background-color: black;
 }
 
 .abc-assignments::-webkit-scrollbar {
@@ -40,7 +45,6 @@
 }
 
 .TheTable {
-  background-color: rgba(255, 255, 255, 0.25);
 }
 
 tr:hover {
@@ -55,7 +59,6 @@ td {
 
 .courseText {
   padding-left: 6%;
-  text-align: center;
   cursor: pointer;
 }
 

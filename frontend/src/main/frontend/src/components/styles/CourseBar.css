@@ -67,6 +67,8 @@ td {
 
 .courseText {
   padding-left: 6%;
+  padding-top: 12px;
+  padding-bottom: 12px;
   text-align: center;
 }
 
@@ -90,4 +92,12 @@ td {
   height: 100px;
   border: 1px solid gray;
   margin-bottom: -1px;
+}
+
+#ass-bar{
+  margin-top: -1px;
+}
+
+#ass-bar td{
+  border: 1px lightgrey solid;
 }
