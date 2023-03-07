@@ -44,7 +44,9 @@
 #sidebar .pro-sidebar-inner .pro-sidebar-layout ul .pro-inner-item {
   margin: 10px 0px;
   font-family: "Inter", sans-serif;
-  color: black;
+  color: black
+
+;
   font-size: 24px;
   font-weight: 700;
 }
