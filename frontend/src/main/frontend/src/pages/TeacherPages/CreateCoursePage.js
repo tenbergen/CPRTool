@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import Loader from '../../components/LoaderComponenets/Loader';
 import CourseBarComponent from '../../components/CourseBarComponent';
 import { useSelector } from 'react-redux';
+import Breadcrumbs from "../../components/Breadcrumbs";
 
 const CreateCoursePage = () => {
   const submitCourseUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/create`;
@@ -79,6 +80,7 @@ const CreateCoursePage = () => {
           <div className='ccp-container'>
             <CourseBarComponent title={`Hello, ${user_given_name}!`} />
             <div className='pcp-components'>
+              <Breadcrumbs />
               <h2 className='inter-28-bold cpp-title'> Add new course </h2>
               <form className='ccp-form'>
                 <div className='input-field ccp-input-field'>
