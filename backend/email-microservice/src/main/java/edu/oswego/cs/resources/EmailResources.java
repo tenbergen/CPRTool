@@ -16,10 +16,8 @@ public class EmailResources {
     EmailService emailService;
     @POST
     @RolesAllowed({"professor","student"})
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("testemail")
-    public Response viewStudentCourses() {
+    public Response testEmail() {
         emailService.assignmentCreatedEmail(new CourseDAO(), new AssignmentDAO());
         return Response.status(Response.Status.OK).build();
     }
