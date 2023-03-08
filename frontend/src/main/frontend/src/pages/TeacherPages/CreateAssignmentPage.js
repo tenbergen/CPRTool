@@ -15,6 +15,7 @@ const CreateAssignmentPage = () => {
 
   const submitCourseUrl = `${profAssignmentUrl}/create-assignment`;
   const getAssUrl = `${profAssignmentUrl}/${courseId}/assignments`;
+  const testEmailUrl = `email/`
   const [loading, setLoading] = useState(false);
 
   const assignmentFileFormData = new FormData();
@@ -77,6 +78,13 @@ const CreateAssignmentPage = () => {
       .catch((e) => {
         console.error(e.response.data);
       });
+
+    await axios
+        .post(testEmailUrl)
+        .then((res) => {})
+        .catch((e) => {
+          console.error(e.response.data);
+        });
 
     const assignment_id = await axios
       .get(getAssUrl)

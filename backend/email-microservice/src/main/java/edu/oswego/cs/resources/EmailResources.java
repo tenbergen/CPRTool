@@ -6,10 +6,7 @@ import edu.oswego.cs.services.EmailService;
 import org.bson.Document;
 
 import javax.annotation.security.RolesAllowed;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -17,8 +14,9 @@ import java.util.List;
 public class EmailResources {
 
     EmailService emailService;
-    @GET
+    @POST
     @RolesAllowed({"professor","student"})
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("testemail")
     public Response viewStudentCourses() {

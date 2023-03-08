@@ -79,7 +79,7 @@ services:
     build:
       context: ./backend/email-microservice
     image: cpr-email
-    platform: linus/amd64
+    platform: linux/amd64
     container_name: cpr-email
     restart: unless-stopped
     environment:

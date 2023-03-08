@@ -63,7 +63,8 @@ public class EmailService {
      * @param assignment the assignment that has been created
      */
     public void assignmentCreatedEmail(CourseDAO course, AssignmentDAO assignment) {
-        String msgBody = "Test Email Please Ignore";
+        String msgSubject = "A New Assignment Has Been Created";
+        String msgBody = "";
         try {
             Message msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress(from, "NoReply"));
@@ -179,7 +180,7 @@ public class EmailService {
      * @param team team that submitted the assignment
      * @param assignment assignment for which the submission contained profanity
      */
-    public void profaneAssignmentEmail(CourseDAO course, TeamDAO team, AssignmentDAO assignment){
+    public void profanityEmail(CourseDAO course, TeamDAO team, AssignmentDAO assignment){
 
     }
 
@@ -190,7 +191,4 @@ public class EmailService {
      * @param team team that submitted the peer review
      * @param assignment assignment for which the peer review contained profanity
      */
-    public void profaneReviewEmail(CourseDAO course, TeamDAO team, AssignmentDAO assignment){
-
-    }
 }
