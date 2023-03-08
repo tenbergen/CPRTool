@@ -1,6 +1,8 @@
 .abc-parent {
   width: 22%;
   padding-bottom: 4%;
+  background-color: #d4eefc;
+  border-radius: 10px 0 0 10px;
 }
 
 .abc-parent h2 {
@@ -14,7 +16,6 @@
 .abc-assignments {
   display: flex;
   flex-direction: column;
-  font-weight: bold;
   padding-bottom: 7%;
   overflow-y: scroll;
   height: 75vh;
@@ -68,3 +69,5 @@ td {
   width: 4%;
   background-color: #4a7dfc;
 }
+
+

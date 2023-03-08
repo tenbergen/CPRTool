@@ -6,6 +6,7 @@ import axios from 'axios';
 import { getSubmittedAssignmentsAsync } from '../../../redux/features/submittedAssignmentSlice';
 import AssignmentTile from '../../AssignmentTile';
 import uuid from 'react-uuid';
+import '../../ProfessorComponents/AssignmentPage/styles/ProfessorAllSubmissionsStyle.css'
 
 const ProfessorAllSubmissionsComponent = () => {
   const dispatch = useDispatch();
@@ -60,7 +61,7 @@ const ProfessorAllSubmissionsComponent = () => {
             className='input-field'
             style={{ marginLeft: '5%', marginBottom: '5%' }}
           >
-            <span className='outfit-16'> Number of teams to review: </span>
+            <span className='inter-16-medium-black'> Number of teams to review: </span>
             <input
               type='number'
               value={assignedTeamCount}
@@ -68,7 +69,7 @@ const ProfessorAllSubmissionsComponent = () => {
               style={{ marginRight: '2%' }}
             />
             <button
-              className='green-button outfit-16'
+              id='distribute-button'
               style={{ padding: '2%', fontSize: '14px' }}
               onClick={distribute}
             >
