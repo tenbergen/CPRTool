@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');
+
+
 .input-field input {
   border: 2px solid #949494;
   box-sizing: border-box;
@@ -6,5 +9,5 @@
 
 textarea,
 input {
-  font-family: 'Outfit', sans-serif;
+  font-family: "Inter", sans-serif;
 }

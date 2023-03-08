@@ -39,7 +39,7 @@ function StudentDashboardPage() {
           <SidebarComponent />
           <div id='student'>
             <div className='welcome-banner-st'>
-              <div className='inter-44-bold student-welcome'>
+              <div className='inter-36-bold student-welcome'>
                 {' '}
                 Hello, {user_given_name}!
               </div>

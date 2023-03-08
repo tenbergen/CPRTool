@@ -104,14 +104,14 @@
 
 @media screen and (min-width: 800px) {
   .assignment-list-wrapper {
-    height: 530px;
+    height: 500px;
     overflow-y: scroll;
   }
 }
 
 @media screen and (min-width: 1450px) {
   .assignment-list-wrapper {
-    height: 680px;
+    height: 580px;
     overflow-y: scroll;
   }
 }
