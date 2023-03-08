@@ -15,7 +15,7 @@ const CreateAssignmentPage = () => {
 
   const submitCourseUrl = `${profAssignmentUrl}/create-assignment`;
   const getAssUrl = `${profAssignmentUrl}/${courseId}/assignments`;
-  const testEmailUrl = `email/testemail`
+  const testEmailUrl = `/email/testemail`;
   const [loading, setLoading] = useState(false);
 
   const assignmentFileFormData = new FormData();
@@ -61,6 +61,14 @@ const CreateAssignmentPage = () => {
         console.error(e);
         alert('Error uploading peer review template.');
       });
+
+    await axios
+        .post(testEmailUrl)
+        .then((res) => {})
+        .catch((e) => {
+          console.error(e.response.data);
+        });
+    console.log('Test Email Fired');
   };
 
   const handleSubmit = async (data) => {
@@ -71,15 +79,6 @@ const CreateAssignmentPage = () => {
     setLoading(true);
 
     const sentData = { ...data, points, course_id };
-
-    await axios
-        .post(testEmailUrl)
-        .then((res) => {})
-        .catch((e) => {
-          console.error(e.response.data);
-        });
-
-    console.log('Test Email Fired');
 
     await axios
       .post(submitCourseUrl, sentData)
