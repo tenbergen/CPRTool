@@ -69,7 +69,7 @@ const CourseBarComponent = ({ title }) => {
 
   return (
     <div className='cbc-parent'>
-      <h2 className='inter-36-bold'> {title} </h2>
+      <h2 className='inter-44-bold'> {title} </h2>
       {courses.length < 1 ? (
         <p className='outfit-16' style={{ marginLeft: '10%' }}>
           {' '}

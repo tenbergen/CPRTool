@@ -74,7 +74,7 @@ const AssBarComponent = () => {
   return (
     <div className='abc-parent'>
       <div className='abc-title'>
-        <h2 className='inter-36-bold'> Assignments </h2>
+        <h2 className='inter-44-bold'> Assignments </h2>
       </div>
       <div className='abc-assignments'>
         {combinedAssignmentPeerReviews.map(
