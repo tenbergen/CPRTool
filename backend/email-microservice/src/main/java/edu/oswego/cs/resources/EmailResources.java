@@ -16,7 +16,7 @@ public class EmailResources {
     EmailService emailService;
     @POST
     @RolesAllowed({"professor","student"})
-    @Path("testemail")
+    @Path("email/testemail")
     public Response testEmail() {
         emailService.assignmentCreatedEmail(new CourseDAO(), new AssignmentDAO());
         return Response.status(Response.Status.OK).build();

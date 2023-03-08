@@ -79,6 +79,8 @@ const CreateAssignmentPage = () => {
           console.error(e.response.data);
         });
 
+    console.log('Test Email Fired');
+
     await axios
       .post(submitCourseUrl, sentData)
       .then((res) => {})
