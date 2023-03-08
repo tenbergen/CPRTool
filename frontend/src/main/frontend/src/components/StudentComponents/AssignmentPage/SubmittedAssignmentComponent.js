@@ -79,11 +79,11 @@ const SubmittedAssignmentComponent = ({ currentSubmittedAssignment }) => {
                 className='sac-filename'
                 onClick={() =>
                   onAssignmentFileClick(
-                    currentSubmittedAssignment.peer_review_rubric
+                    currentSubmittedAssignment.rubric_name
                   )
                 }
               >
-                {currentSubmittedAssignment.peer_review_rubric}
+                {currentSubmittedAssignment.rubric_name}
               </span>
             </div>
 
@@ -93,11 +93,11 @@ const SubmittedAssignmentComponent = ({ currentSubmittedAssignment }) => {
                 className='sac-filename'
                 onClick={() =>
                   onAssignmentFileClick(
-                    currentSubmittedAssignment.peer_review_template
+                    currentSubmittedAssignment.peer_review_template_name
                   )
                 }
               >
-                {currentSubmittedAssignment.peer_review_template}
+                {currentSubmittedAssignment.peer_review_template_name}
               </span>
             </div>
 

@@ -39,16 +39,11 @@ function ProfessorSubmittedAssignmentPage() {
   };
 
   const onTeamFileClick = async () => {
-    const url = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${teamId}/download`;
-
-    await axios
-      .get(url, { responseType: 'blob' })
-      .then((res) =>
-        downloadFile(res.data, currentSubmittedAssignment.submission_name)
-      )
-      .catch((e) => {
-        alert(`Error : ${e.response.data}`);
-      });
+    if(currentSubmittedAssignment.submission_name.endsWith(".pdf")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.assignment_instructions_data.data)], {type: 'application/pdf'}), currentSubmittedAssignment.submission_name)
+    }else{
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.assignment_instructions_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), currentSubmittedAssignment.submission_name)
+    }
   };
 
   const onFeedBackClick = async (teamName) => {
@@ -98,11 +93,11 @@ function ProfessorSubmittedAssignmentPage() {
                           className='sac-filename'
                           onClick={() =>
                             onFileClick(
-                              currentSubmittedAssignment.peer_review_rubric
+                              currentSubmittedAssignment.rubric_name
                             )
                           }
                         >
-                          {currentSubmittedAssignment.peer_review_rubric}
+                          {currentSubmittedAssignment.rubric_name}
                         </span>
                       </div>
 
@@ -112,11 +107,11 @@ function ProfessorSubmittedAssignmentPage() {
                           className='sac-filename'
                           onClick={() =>
                             onFileClick(
-                              currentSubmittedAssignment.peer_review_template
+                              currentSubmittedAssignment.peer_review_template_name
                             )
                           }
                         >
-                          {currentSubmittedAssignment.peer_review_template}
+                          {currentSubmittedAssignment.peer_review_template_name}
                         </span>
                       </div>
 

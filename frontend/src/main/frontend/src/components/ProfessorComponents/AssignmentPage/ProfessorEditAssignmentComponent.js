@@ -99,12 +99,16 @@ const ProfessorEditAssignmentComponent = () => {
     }
   };
 
-  const deleteFile = async (fileName, isPeerReview) => {
+  const deleteFile = async (fileName, isPeerReviewRubric, isPeerReviewTemplate) => {
     const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}`;
-
-    const deleteUrl = isPeerReview
-      ? `${url}/peer-review/remove-file/${fileName}`
-      : `${url}/remove-file/${fileName}`;
+    let deleteUrl = url
+    if(isPeerReviewRubric){
+      deleteUrl = `${url}/peer-review/rubric/remove-file`
+    }else if(isPeerReviewTemplate){
+      deleteUrl = `${url}/peer-review/template/remove-file`
+    }else{
+      deleteUrl = `${url}/remove-file`
+    }
 
     await axios.delete(deleteUrl).catch((e) => {
       console.error(e);
@@ -121,15 +125,32 @@ const ProfessorEditAssignmentComponent = () => {
     href.click();
   };
 
-  const onFileClick = async (fileName, isPeerReview) => {
-    const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}`;
-    const downloadUrl = isPeerReview
-      ? `${url}/peer-review/download/${fileName}`
-      : `${url}/download/${fileName}`;
-
-    await axios
-      .get(downloadUrl, { responseType: 'blob' })
-      .then((res) => downloadFile(res.data, fileName));
+  const onFileClick = async (fileName, isPeerReviewTemplate, isPeerReviewRubric) => {
+    if(isPeerReviewTemplate){
+      if(fileName.endsWith(".pdf")){
+        downloadFile(new Blob([Uint8Array.from(currentAssignment.peer_review_template_data.data)], {type: 'application/pdf'}), fileName)
+      }else if(fileName.endsWith(".docx")){
+        downloadFile(new Blob([Uint8Array.from(currentAssignment.peer_review_template_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
+      }else{
+        downloadFile(new Blob([Uint8Array.from(currentAssignment.peer_review_template_data.data)], {type: 'application/zip'}), fileName)
+      }
+    }else if(isPeerReviewRubric){
+      if(fileName.endsWith(".pdf")){
+        downloadFile(new Blob([Uint8Array.from(currentAssignment.rubric_data.data)], {type: 'application/pdf'}), fileName)
+      }else if(fileName.endsWith(".docx")){
+        downloadFile(new Blob([Uint8Array.from(currentAssignment.rubric_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
+      }else{
+        downloadFile(new Blob([Uint8Array.from(currentAssignment.rubric_data.data)], {type: 'application/zip'}), fileName)
+      }
+    }else{
+      if(fileName.endsWith(".pdf")){
+        downloadFile(new Blob([Uint8Array.from(currentAssignment.assignment_instructions_data.data)], {type: 'application/pdf'}), fileName)
+      }else if(fileName.endsWith(".docx")){
+        downloadFile(new Blob([Uint8Array.from(currentAssignment.assignment_instructions_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
+      }else{
+        downloadFile(new Blob([Uint8Array.from(currentAssignment.assignment_instructions_data.data)], {type: 'application/zip'}), fileName)
+      }
+    }
   };
 
   const initialValue = () => {
@@ -184,16 +205,16 @@ const ProfessorEditAssignmentComponent = () => {
               <span
                 className='eac-file-name'
                 onClick={() =>
-                  onFileClick(currentAssignment.assignment_instructions, false)
+                  onFileClick(currentAssignment.assignment_instructions_name, false,false)
                 }
               >
                 {currentAssignmentLoaded
-                  ? currentAssignment.assignment_instructions
+                  ? currentAssignment.assignment_instructions_name
                   : null}
               </span>
               <span
                 onClick={() =>
-                  deleteFile(currentAssignment.assignment_instructions, false)
+                  deleteFile(currentAssignment.assignment_instructions, false, false)
                 }
                 className={
                   currentAssignmentLoaded &&
@@ -267,16 +288,16 @@ const ProfessorEditAssignmentComponent = () => {
                   <span
                     className='eac-file-name'
                     onClick={() =>
-                      onFileClick(currentAssignment.peer_review_rubric, true)
+                      onFileClick(currentAssignment.rubric_name, false,true)
                     }
                   >
                     {currentAssignmentLoaded
-                      ? currentAssignment.peer_review_rubric
+                      ? currentAssignment.rubric_name
                       : null}
                   </span>
                   <span
                     onClick={() =>
-                      deleteFile(currentAssignment.peer_review_rubric, true)
+                      deleteFile(currentAssignment.peer_review_rubric, true, false)
                     }
                     className={
                       currentAssignmentLoaded &&
@@ -311,16 +332,16 @@ const ProfessorEditAssignmentComponent = () => {
                   Current files:
                   <span
                     onClick={() =>
-                      onFileClick(currentAssignment.peer_review_template, true)
+                      onFileClick(currentAssignment.peer_review_template_name, true,false)
                     }
                   >
                     {currentAssignmentLoaded
-                      ? currentAssignment.peer_review_template
+                      ? currentAssignment.peer_review_template_name
                       : null}
                   </span>
                   <span
                     onClick={() =>
-                      deleteFile(currentAssignment.peer_review_template, true)
+                      deleteFile(currentAssignment.peer_review_template, false, true)
                     }
                     className={
                       currentAssignmentLoaded &&
