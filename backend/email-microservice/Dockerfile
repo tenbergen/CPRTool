@@ -7,7 +7,7 @@ COPY . .
 RUN mvn package -DskipTests
 
 # Stage 2: Copy the .jar file and server.xml into the required location.
-FROM icr.io/appcafe/open-liberty:full-java11-openj9-ubi
+FROM icr.io/appcafe/open-liberty:full-java17-openj9-ubi
 
 # Copy from the intermediate build container.
 COPY --from=maven src/main/liberty/config/server.xml /config/
