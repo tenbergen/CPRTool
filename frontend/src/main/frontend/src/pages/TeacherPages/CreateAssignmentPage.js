@@ -79,21 +79,21 @@ const CreateAssignmentPage = () => {
         console.error(e.response.data);
       });
 
-    await axios
-        .post(testEmailUrl)
-        .then((res) => {})
-        .catch((e) => {
-          console.error(e.response.data);
-        });
+    //await axios
+    //    .post(testEmailUrl)
+    //    .then((res) => {})
+    //    .catch((e) => {
+    //      console.error(e.response.data);
+    //    });
 
-    //const assignment_id = await axios
-    //  .get(getAssUrl)
-    //  .then((res) => {
-    //    return res.data.pop().assignment_id;
-    //  })
-    //  .catch((e) => {
-    //    console.error(e.response.data);
-    //  });
+    const assignment_id = await axios
+      .get(getAssUrl)
+      .then((res) => {
+        return res.data.pop().assignment_id;
+      })
+      .catch((e) => {
+        console.error(e.response.data);
+      });
 
     await uploadFiles(assignment_id);
 
