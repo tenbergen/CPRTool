@@ -26,37 +26,35 @@ function ProfessorSubmittedAssignmentPage() {
     href.download = fileName;
     href.click();
   };
-  //UPDATE DOWNLOAD
 
-  const onFileClick = async (fileName) => {
-    const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/peer-review/download/${fileName}`;
-
-    await axios
-      .get(url, { responseType: 'blob' })
-      .then((res) => downloadFile(res.data, fileName))
-      .catch((e) => {
-        alert(`Error : ${e.response.data}`);
-      });
-  };
-
-  const onTeamFileClick = async () => {
-    if(currentSubmittedAssignment.submission_name.endsWith(".pdf")){
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.assignment_instructions_data.data)], {type: 'application/pdf'}), currentSubmittedAssignment.submission_name)
+  const onTemplateClick = async (fileName) => {
+    if(fileName.endsWith(".pdf")){
+      downloadFile(new Blob([Uint8Array.from(currentAssignment.peer_review_template_data.data)], {type: 'application/pdf'}), fileName)
+    }else if(fileName.endsWith(".docx")){
+      downloadFile(new Blob([Uint8Array.from(currentAssignment.peer_review_template_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
     }else{
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.assignment_instructions_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), currentSubmittedAssignment.submission_name)
+      downloadFile(new Blob([Uint8Array.from(currentAssignment.peer_review_template_data.data)], {type: 'application/zip'}), fileName)
     }
   };
 
-  const onFeedBackClick = async (teamName) => {
-    const url = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${teamName}/${teamId}/download`;
+  const onRubricFileClick = async (fileName) => {
+    if(fileName.endsWith(".pdf")){
+      downloadFile(new Blob([Uint8Array.from(currentAssignment.rubric_data.data)], {type: 'application/pdf'}), fileName)
+    }else if(fileName.endsWith(".docx")){
+      downloadFile(new Blob([Uint8Array.from(currentAssignment.rubric_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
+    }else{
+      downloadFile(new Blob([Uint8Array.from(currentAssignment.rubric_data.data)], {type: 'application/zip'}), fileName)
+    }
+  };
+
+  const onTeamFileClick = async () => {
+    const url = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${teamId}/download`;
 
     await axios
-      .get(url, { responseType: 'blob' })
-      .then((res) => downloadFile(res.data, `${teamName}SubmissionFile`))
-      .catch((e) => {
-        alert(`Error : ${e.response.data}`);
-      });
-  };
+        .get(url, { responseType: 'blob' })
+        .then((res) => prepareTeamFile(res["headers"]["content-disposition"], res.data.text()));
+  }
+
 
   return (
     <div>
@@ -93,12 +91,10 @@ function ProfessorSubmittedAssignmentPage() {
                         <span
                           className='sac-filename'
                           onClick={() =>
-                            onFileClick(
-                              currentSubmittedAssignment.rubric_name
-                            )
+                            onRubricFileClick(currentSubmittedAssignment.rubric_name)
                           }
                         >
-                          {currentSubmittedAssignment.rubric_name}
+                          onRubricFileClick(currentSubmittedAssignment.rubric_name)
                         </span>
                       </div>
 
@@ -107,9 +103,7 @@ function ProfessorSubmittedAssignmentPage() {
                         <span
                           className='sac-filename'
                           onClick={() =>
-                            onFileClick(
-                              currentSubmittedAssignment.peer_review_template_name
-                            )
+                            onTemplateClick(currentSubmittedAssignment.peer_review_template_name)
                           }
                         >
                           {currentSubmittedAssignment.peer_review_template_name}
