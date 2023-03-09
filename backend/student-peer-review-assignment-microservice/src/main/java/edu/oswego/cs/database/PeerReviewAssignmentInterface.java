@@ -67,8 +67,7 @@ public class PeerReviewAssignmentInterface {
                 .append("reviewed_team", reviewedTeam.getString("team_id"))
                 .append("reviewed_team_members", reviewedTeam.getList("team_members", String.class))
                 .append("type", "peer_review_submission")
-                .append("grade", grade)
-                .append("path", path + reg + fileName);
+                .append("grade", grade);
         if (submissionsCollection.find(new_submission).iterator().hasNext()) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("submission already exists").build());
         } else submissionsCollection.insertOne(new_submission);

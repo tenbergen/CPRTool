@@ -17,11 +17,10 @@ const StudentPeerReviewComponent = () => {
   const { currentTeamId, teamLoaded } = useSelector((state) => state.teams);
 
   const [grade, setGrade] = useState(undefined);
-  let feedBackFileName = ""
   const feedbackFileFormData = new FormData();
 
-  const onFeedbackFileHandler = (e) => {
-    let file = e.target.files[0];
+  const onFeedbackFileHandler = (event) => {
+    let file = event.target.files[0];
     const reader = new FileReader();
     reader.onloadend = () => {
       // Use a regex to remove data url part
@@ -91,7 +90,6 @@ const StudentPeerReviewComponent = () => {
 
   const handleSubmit = async () => {
     const submitAssUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${currentTeamId}/${teamId}/${grade}/upload`;
-    //console.log(feedbackFileFormData)
 
     await axios
       .post(submitAssUrl, feedbackFileFormData)
