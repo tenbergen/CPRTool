@@ -17,6 +17,14 @@ const SubmittedAssignmentComponent = ({ currentSubmittedAssignment }) => {
       });
   };
 
+  const onRubricFileClick = async (filename) => {
+
+  };
+
+  const onInstructionFileClick = async (filename) => {
+
+  };
+
   const onTeamFileClick = async () => {
     const url = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${teamId}/download`;
 

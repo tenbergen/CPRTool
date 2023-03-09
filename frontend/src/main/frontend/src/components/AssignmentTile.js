@@ -17,6 +17,7 @@ const AssignmentTile = ({ assignment, submitted }) => {
   const { courseId } = useParams();
   const link = `/details/${role}/${courseId}/${assignment.assignment_id}`;
 
+  //UPDATE DOWNLOAD
   const onFileClick = async () => {
     const fileName =
       assignment.assignment_type === 'peer-review'
@@ -45,6 +46,7 @@ const AssignmentTile = ({ assignment, submitted }) => {
       await deleteAssignment();
     }
   };
+
 
   const deleteAssignment = async () => {
     const url = `${assignmentUrl}/${courseId}/assignments/${assignment.assignment_id}/remove`;

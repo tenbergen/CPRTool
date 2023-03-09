@@ -26,6 +26,7 @@ function ProfessorSubmittedAssignmentPage() {
     href.download = fileName;
     href.click();
   };
+  //UPDATE DOWNLOAD
 
   const onFileClick = async (fileName) => {
     const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/peer-review/download/${fileName}`;
