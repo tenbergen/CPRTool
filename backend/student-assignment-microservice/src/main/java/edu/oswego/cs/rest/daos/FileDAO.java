@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 public class FileDAO {
     private String filename;
     private String courseID;
-    private InputStream file;
+    private byte[] file;
     private int assignmentID;
     private String teamName;
 
@@ -40,9 +40,11 @@ public class FileDAO {
      * @throws SAXException File Corruption Exception
      */
     public static FileDAO fileFactory(String fileName, String courseID, IAttachment attachment, int assignmentID, String teamName) throws IOException, TikaException, SAXException {
-        InputStream inputStream = attachment.getDataHandler().getInputStream();
-        contentFilter(new ByteArrayInputStream(Base64.getDecoder().decode(new String(inputStream.readAllBytes()))), fileName);
-        return new FileDAO(fileName, courseID, inputStream, assignmentID, teamName);
+        InputStream inputStream = new BufferedInputStream(attachment.getDataHandler().getInputStream());
+        byte[] fileData = inputStream.readAllBytes();
+        contentFilter(new ByteArrayInputStream(fileData), fileName);
+        inputStream.mark(inputStream.available());
+        return new FileDAO(fileName, courseID, fileData, assignmentID, teamName);
     }
 
     /**
@@ -55,8 +57,7 @@ public class FileDAO {
      */
     public static void contentFilter(InputStream stream, String fileName) throws TikaException, IOException, SAXException {
         Pattern pattern = Pattern.compile("(?<=\\b)(a+r*ss+(ho+l)?e*s*|ba+ll+(sa+ck)?s*|ba+sta+rds*|bi+tch(e+s+|i+ng+)?|bu+ll+shi+t|bu+tt+(fu+ck)?s*|co+ck(blo+ck|su+cke+r)?s*|who+re+s*|cu+nts*|(go+d)?da+m[mn]+(it)?|di+ck(he+a+d|fo+rbra+i+n)?s*|fa+g+(o+t)?s*|(mo+the+r)?fu+ck(e+(rs|d)?|ing|off+)?s*|ja+ck(a+ss+|off+)|ni+gg+(e+r|a+)s*|shi+ts*)(?=\\b)", Pattern.CASE_INSENSITIVE);
-
-        BodyContentHandler ch = new BodyContentHandler();
+        BodyContentHandler ch = new BodyContentHandler(-1);
         AutoDetectParser parser = new AutoDetectParser();
         parser.parse(stream, ch, new Metadata());
         Matcher matcher = pattern.matcher(ch.toString());

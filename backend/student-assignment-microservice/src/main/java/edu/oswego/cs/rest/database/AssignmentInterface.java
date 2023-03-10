@@ -99,7 +99,7 @@ public class AssignmentInterface {
         return assignments;
     }
 
-    public void makeSubmission(String course_id, int assignment_id, String file_name, String teamName, InputStream fileData) throws IOException {
+    public void makeSubmission(String course_id, int assignment_id, String file_name, String teamName, byte[] fileData) throws IOException {
         Document team = teamsCollection.find(and(eq("team_id", teamName), eq("course_id", course_id))).first();
         Document assignment = assignmentsCollection.find(and(
                 eq("course_id", course_id),
@@ -118,12 +118,13 @@ public class AssignmentInterface {
         if (team.get("team_id", String.class) == null) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team_id not defined").build());
         }
+
         Document new_submission = new Document()
                 .append("course_id", course_id)
                 .append("assignment_id", assignment_id)
                 .append("assigment_name", assignmentName)
                 .append("submission_name", file_name)
-                .append("submission_data", Base64.getDecoder().decode(new String(fileData.readAllBytes())))
+                .append("submission_data", Base64.getDecoder().decode(new String(fileData)))
                 .append("team_name", team.getString("team_id"))
                 .append("members", team.getList("team_members", String.class))
                 .append("type", "team_submission")
