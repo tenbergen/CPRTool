@@ -34,10 +34,6 @@ public class AuthServices {
         } catch (WebApplicationException e) {
             throw new CPRException(Response.Status.BAD_REQUEST, "Failed to retrieve collections.");
         }
-        // Normally this is how professors are added by going through a list and adding them
-        // but this is what should probably be added right here, is to check if the database is
-        // empty and if it is, and the new professors as an admin
-//        new ProfessorCheck().addProfessors();
     }
 
     public Map<String, String> generateNewToken(String token) {
@@ -48,12 +44,8 @@ public class AuthServices {
         Map<String, String> tokens = new HashMap<>();
 
         String lakerID = payload.getEmail().split("@")[0];
-        if (professorCollection.countDocuments() == 0 ) {
-            Document professor = new Document("professor_id", lakerID)
-                    .append("admin", true);
-            professorCollection.insertOne(professor);
-        }
-            Set<String> roles = getRoles(lakerID);
+        CheckForDefaultAdmin(lakerID);
+        Set<String> roles = getRoles(lakerID);
 
         try {
             String access_token = JwtBuilder.create("cpr_access")
@@ -95,11 +87,7 @@ public class AuthServices {
         Map<String, String> tokens = new HashMap<>();
 
         String lakerID = payload.getName().split("@")[0];
-        if (professorCollection.countDocuments() == 0 ) {
-            Document professor = new Document("professor_id", lakerID)
-                    .append("admin", true);
-            professorCollection.insertOne(professor);
-        }
+        CheckForDefaultAdmin(lakerID);
         Set<String> roles = getRoles(lakerID);
 
         try {
@@ -124,8 +112,6 @@ public class AuthServices {
     public Set<String> getRoles(String lakerID) {
         Set<String> roles = new HashSet<>();
 
-        // TODO 1) Add Additional check to see if professors is admin
-        // and if so add roles.add("admin") roles
 //        if (professorCollection.find(eq("professor_id", lakerID)).first() != null) {
 //            roles.add("professor");
 //            if(Objects.requireNonNull(professorCollection.find(eq("professor_id", lakerID)).first()).get("admin").equals(true))
@@ -140,6 +126,16 @@ public class AuthServices {
             throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Can't connect to database.").build());
 
         return roles;
+    }
+
+        // Checks if professor database is empty
+    // if so assign admin status to first professor
+    protected void CheckForDefaultAdmin(String userid) {
+        if (professorCollection.countDocuments() == 0) {
+            Document professor = new Document("professor_id", userid)
+                    .append("admin", true);
+            professorCollection.insertOne(professor);
+        }
     }
 
 }
