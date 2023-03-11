@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
 
-import static com.mongodb.client.model.Filters.eq;
-
 public class AuthServices {
     private final MongoCollection<Document> professorCollection;
     GoogleService googleService = new GoogleService();
