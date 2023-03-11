@@ -10,7 +10,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
 import java.io.IOException;
 
-
 @Path("/auth")
 public class Controller {
     @POST
