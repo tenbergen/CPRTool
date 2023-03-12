@@ -111,7 +111,7 @@
 
 @media screen and (min-width: 1450px) {
   .assignment-list-wrapper {
-    height: 680px;
+    height: 540px;
     overflow-y: scroll;
   }
 }

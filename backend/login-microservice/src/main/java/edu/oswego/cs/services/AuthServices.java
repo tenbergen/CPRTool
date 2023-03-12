@@ -115,6 +115,7 @@ public class AuthServices {
         } else {
             roles.add("student");
         }
+
         if (roles.size() == 0)
             throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Can't connect to database.").build());
 
