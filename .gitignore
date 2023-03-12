@@ -52,4 +52,7 @@ hs_err_pid*
 
 # Database folders
 db*
+
+#files that vary w/ local user
 /professor-list.txt
+env.example
