@@ -39,13 +39,13 @@ function StudentDashboardPage() {
           <SidebarComponent />
           <div id='student'>
             <div className='welcome-banner-st'>
-              <div className='kumba-35 student-welcome'>
+              <div className='inter-36-bold student-welcome'>
                 {' '}
                 Hello, {user_given_name}!
               </div>
               {alt_role && alt_role === 'student' ? (
                 <div className='btn-wrapper'>
-                  <button className='prof-view-btn' onClick={changeView}>
+                  <button className='blue-button-large' id='back-to-prof-btn' onClick={changeView}>
                     Back to Professor View
                   </button>
                 </div>
@@ -73,10 +73,10 @@ function StudentDashboardPage() {
                     onClick={() => courseClickHandler(course)}
                   >
                     <li className='courseListItem'>
-                      <span className='outfit-16 pdp-coursename'>
+                      <span className='inter-20-light pdp-coursename'>
                         {course.course_id}
                       </span>
-                      <span className='kumba-25'>{course.course_name}</span>
+                      <span className='inter-24-bold'>{course.course_name}</span>
                     </li>
                   </Link>
                 ))}

@@ -31,18 +31,18 @@ const MyTeamComponent = () => {
     <div>
       {' '}
       {teamLoaded ? (
-        <div className='my-team-container'>
+        <div className='my-team-container  inter-24-bold'>
           <div className='team-header'>Team:</div>
           <div className='team-name-container'>
             <div className='team-name'>
               <p>{currentTeamId}</p>
             </div>
           </div>
-          <div className='team-header'>Members:</div>
+          <div className='team-header  inter-24-bold'>Members:</div>
           {members.map((member) => (
             <div key={uuid()} className='members-name-container'>
               <div className='my-team-members'>
-                <p>{member}</p>
+                <span>{member}</span>
               </div>
             </div>
           ))}

@@ -74,19 +74,19 @@ const RegularAssignmentComponent = () => {
     <div>
       {currentAssignmentLoaded && (
         <div>
-          <h2 className='kumba-30'>{currentAssignment.assignment_name}</h2>
+          <h2 className='inter-28-bold'>{currentAssignment.assignment_name}</h2>
           <div className='ap-assignmentArea'>
             <h3>
-              <span className='outfit-25'> Instructions: </span>
-              <span className='outfit-25 span1-ap'>
+              <span className='inter-20-bold'> Instructions: </span>
+              <span className='inter-20-bold span1-ap'>
                 Due: {currentAssignment.due_date}
               </span>
               <br />
-              <p className='outfit-18'>{currentAssignment.instructions}</p>
+              <p className='inter-16-medium-black'>{currentAssignment.instructions}</p>
               <br />
               <br />
-              <span className='outfit-25'> Files: </span>
-              <span className='outfit-18 p2' onClick={onAssignmentClick}>
+              <span className='inter-20-bold'> Files: </span>
+              <span className='inter-16-bold-blue p2' onClick={onAssignmentClick}>
                 {currentAssignment.assignment_instructions_name}
               </span>
               <br />
@@ -101,7 +101,7 @@ const RegularAssignmentComponent = () => {
                 />
               </div>
               <div className='ap-button'>
-                <button className='green-button' onClick={handleSubmit}>
+                <button className='green-button-medium' onClick={handleSubmit}>
                   {' '}
                   Submit{' '}
                 </button>

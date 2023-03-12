@@ -177,7 +177,7 @@ const ProfessorEditAssignmentComponent = () => {
       >
         {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
-            <div className='eac-input-field'>
+            <div className='inter-16-medium-black eac-input-field'>
               <label> Name of assignment: </label>
               <Field name='assignment_name'>
                 {({ input }) => (
@@ -191,7 +191,7 @@ const ProfessorEditAssignmentComponent = () => {
               </Field>
             </div>
 
-            <div className='eac-instructions'>
+            <div className='inter-16-medium-black eac-instructions'>
               <label> Instructions: </label>
               <Field name='instructions'>
                 {({ input }) => (
@@ -200,7 +200,7 @@ const ProfessorEditAssignmentComponent = () => {
               </Field>
             </div>
 
-            <div className='eac-assignment-files'>
+            <div className='inter-16-medium-black eac-assignment-files'>
               Current files:
               <span
                 className='eac-file-name'
@@ -227,7 +227,7 @@ const ProfessorEditAssignmentComponent = () => {
               </span>
             </div>
 
-            <div className='eac-assignment-files'>
+            <div className='inter-16-medium-black eac-assignment-files'>
               <label> New files: </label>
               <input
                 type='file'
@@ -237,7 +237,7 @@ const ProfessorEditAssignmentComponent = () => {
               />
             </div>
 
-            <div className='eac-assignment-info'>
+            <div className='inter-16-medium-black eac-assignment-info'>
               <label> Due Date: </label>
               <Field name='due_date'>
                 {({ input }) => (
@@ -265,7 +265,7 @@ const ProfessorEditAssignmentComponent = () => {
               </Field>
             </div>
 
-            <div className='eac-instructions'>
+            <div className='inter-16-medium-black eac-instructions'>
               <label> Peer Review Instructions: </label>
               <Field name='peer_review_instructions'>
                 {({ input }) => (
@@ -278,7 +278,7 @@ const ProfessorEditAssignmentComponent = () => {
               </Field>
             </div>
 
-            <div className='eac-assignment-files-multiple'>
+            <div className='inter-16-medium-black eac-assignment-files-multiple'>
               <div>
                 <div
                   className='eac-assignment-files'
@@ -369,7 +369,7 @@ const ProfessorEditAssignmentComponent = () => {
               </div>
             </div>
 
-            <div className='eac-assignment-info'>
+            <div className='inter-16-medium-black eac-assignment-info'>
               <label> Due Date: </label>
               <Field name='peer_review_due_date'>
                 {({ input }) => (
@@ -398,7 +398,7 @@ const ProfessorEditAssignmentComponent = () => {
               </Field>
             </div>
             <div className='cap-button'>
-              <button type='submit'> Save</button>
+              <button className='green-button-medium' type='submit'> Save</button>
             </div>
           </form>
         )}
