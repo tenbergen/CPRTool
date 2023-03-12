@@ -51,7 +51,9 @@ hs_err_pid
 .csv
 
 # Database folders
-db
+db*
 
+#files that vary w/ local user
+env.example
 /professor-list.txt
 /.gitignore

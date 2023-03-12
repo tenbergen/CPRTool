@@ -24,15 +24,25 @@ const RegularAssignmentComponent = () => {
 
   const assignmentFileHandler = (event) => {
     let file = event.target.files[0];
-    assignmentFileFormData.set('file', file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      // Use a regex to remove data url part
+      const base64String = reader.result
+          .replace('data:', '')
+          .replace(/^.+,/, '');
+      assignmentFileFormData.set(file.name, base64String);
+    };
+    reader.readAsDataURL(file);
   };
 
   const onAssignmentClick = async () => {
-    const fileName = currentAssignment.assignment_instructions;
-    const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/download/${fileName}`;
-    await axios
-      .get(url, { responseType: 'blob' })
-      .then((res) => downloadFile(res.data, fileName));
+    if(currentAssignment.assignment_instructions_name.endsWith(".pdf")){
+      downloadFile(new Blob([Uint8Array.from(currentAssignment.assignment_instructions_data.data)], {type: 'application/pdf'}), currentAssignment.assignment_instructions_name)
+    }else if(currentAssignment.assignment_instructions_name.endsWith(".docx")){
+      downloadFile(new Blob([Uint8Array.from(currentAssignment.assignment_instructions_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), currentAssignment.assignment_instructions_name)
+    }else{
+      downloadFile(new Blob([Uint8Array.from(currentAssignment.assignment_instructions_data.data)], {type: 'application/zip'}), currentAssignment.assignment_instructions_name)
+    }
   };
 
   const downloadFile = (blob, fileName) => {
@@ -77,7 +87,11 @@ const RegularAssignmentComponent = () => {
               <br />
               <span className='inter-20-bold'> Files: </span>
               <span className='inter-16-bold-blue p2' onClick={onAssignmentClick}>
+<<<<<<< HEAD
                 {currentAssignment.assignment_instructions}
+=======
+                {currentAssignment.assignment_instructions_name}
+>>>>>>> origin/Testing
               </span>
               <br />
               <br />
