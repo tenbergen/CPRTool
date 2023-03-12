@@ -87,11 +87,7 @@ const RegularAssignmentComponent = () => {
               <br />
               <span className='inter-20-bold'> Files: </span>
               <span className='inter-16-bold-blue p2' onClick={onAssignmentClick}>
-<<<<<<< HEAD
-                {currentAssignment.assignment_instructions}
-=======
                 {currentAssignment.assignment_instructions_name}
->>>>>>> origin/Testing
               </span>
               <br />
               <br />
