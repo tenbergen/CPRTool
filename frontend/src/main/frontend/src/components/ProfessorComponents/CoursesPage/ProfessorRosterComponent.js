@@ -43,10 +43,11 @@ const ProfessorRosterComponent = () => {
       return;
     }
 
-     // if (!Email.includes('oswego.edu')) {
-     //   alert('Please enter a valid Oswego email!');
-     //   return;
-     // }
+
+    // if (!Email.includes('oswego.edu')) {
+    //   alert('Please enter a valid Oswego email!');
+    //   return;
+    // }
 
     const firstLastEmail = first + "-" + last + "-" + Email;
     const addStudentUrl = `${url}/${courseId}/students/${firstLastEmail}/add`;

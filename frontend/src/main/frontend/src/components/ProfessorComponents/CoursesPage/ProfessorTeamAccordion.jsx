@@ -105,15 +105,15 @@ const ProfessorTeamAccordion = ({ team, teams, setTeams }) => {
     <div className="accordionItem">
       <div className="accordionTitle" onClick={handleSetActive}>
         <div className="accordionWrapper">
-          <div className="accordionHead">
+          <div className="accordionHead inter-20-medium-white">
             {isActive.includes(team) ? "-" : "+"}
-            <div className="accordionTeamTitle">{team.team_id}</div>
+            <div className="accordionTeamTitle inter-24-medium-white">{team.team_id}</div>
           </div>
           <span
             onClick={() => handleDeleteTeam(team.team_id)}
-            className="crossMarkTeam"
+            className="crossMarkTeam inter-36-bold-white"
           >
-            &#10060;
+            X
           </span>
         </div>
       </div>
@@ -124,7 +124,7 @@ const ProfessorTeamAccordion = ({ team, teams, setTeams }) => {
               name && (
                 <div key={uuid()} className="memberItem">
                   <div className="memberWrapper">
-                    <div className="teamMember">{name}</div>
+                    <div className="teamMember inter-20-medium">{name}</div>
                     <span
                       onClick={() => handleRemoveStudent(name)}
                       className="crossMarkTeam"
@@ -137,7 +137,7 @@ const ProfessorTeamAccordion = ({ team, teams, setTeams }) => {
           )}
           {isAdd.includes(team) ? (
             <div className="teamMember">
-              <label>Student Laker ID:</label>
+              <label className='inter-20-medium'>Student Laker ID:</label>
               <input
                 type="text"
                 value={studentId}

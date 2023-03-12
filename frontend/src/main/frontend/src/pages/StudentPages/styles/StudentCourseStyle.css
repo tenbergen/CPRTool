@@ -6,8 +6,7 @@
 }
 
 .scp-container {
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 50px;
+  border-radius: 10px;
   margin: 3% 5% 3% 2%;
   flex-grow: 1;
   display: flex;
@@ -17,10 +16,10 @@
 }
 
 .scp-component {
-  border-radius: 50px;
+  border-radius: 0 10px 10px 0;
   flex-grow: 1;
   padding: 2%;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: white;
   overflow-y: hidden;
 }
 
@@ -46,11 +45,16 @@
 .scp-component-links {
   display: flex;
   flex-direction: row;
-  font-weight: bold;
   text-align: center;
   justify-content: left;
   padding: 0 5% 0 2%;
   gap: 15%;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 24px;
+  letter-spacing: 1px;
+  color: #212529;
 }
 
 .scp-component-links p:hover {
@@ -66,6 +70,7 @@
   font-size: 24px;
   padding-left: 24px;
   text-decoration: underline;
+  font-weight: 900;
   color: #5267a3;
 }
 
