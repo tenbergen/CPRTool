@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 @Path("professor")
@@ -43,26 +44,32 @@ public class ProfessorAssignmentResource {
         return Response.status(Response.Status.OK).entity(new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID)).build();
     }
 
+
     /**
-     * File is uploaded as form-data and passed back as a List<IAttachment>
-     * The attachment is processed in FileDao.FileFactory, which reads and
-     * reconstructs the file through inputStream and outputStream respectively
+     * File's Base64 string is uploaded as form-data and passed back as a List<IAttachment>. The file's name and
+     * extension is saved in the form-data's name
+     * The attachment is processed and turned back into its binary representation. The binary data and file name is then
+     * saved with its respective assignment document in the DB.
      *
-     * @param attachments  type List<IAttachment>: file(s) passed back as form-data
+     * @param attachments  type List<IAttachment>: file(s) Base64 Strings passed back as form-data
      * @param courseID     type String
      * @param assignmentID type int
      * @return Response
      */
+
     @POST
     @RolesAllowed("professor")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}/upload")
-    public Response addFileToAssignment(List<IAttachment> attachments, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) throws Exception {
+    public Response addFileToAssignment
+            (List<IAttachment> attachments,
+             @PathParam("courseID") String courseID,
+             @PathParam("assignmentID") int assignmentID)
+            throws Exception {
         for (IAttachment attachment : attachments) {
             if (attachment == null) continue;
             String fileName = attachment.getDataHandler().getName();
-
             if (!fileName.endsWith("pdf") && !fileName.endsWith("zip") && !fileName.endsWith("docx"))
                 return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
             new AssignmentInterface().writeToAssignment(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
@@ -83,19 +90,19 @@ public class ProfessorAssignmentResource {
     @POST
     @RolesAllowed("professor")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}/peer-review/rubric/upload")
     public Response addRubricToPeerReview(List<IAttachment> attachments, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) throws Exception {
         for (IAttachment attachment : attachments) {
             if (attachment == null) continue;
             String fileName = attachment.getDataHandler().getName();
-
             if (!fileName.endsWith("pdf") && !fileName.endsWith("zip") && !fileName.endsWith("docx"))
                 return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
             new AssignmentInterface().writeRubricToPeerReviews(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
         }
-        return Response.status(Response.Status.OK).entity("Successfully added file to peer reviews.").build();
+        return Response.status(Response.Status.OK).entity("Successfully added file to assignment.").build();
     }
+
 
     /**
      * File is uploaded as form-data and passed back as a List<IAttachment>
@@ -110,20 +117,21 @@ public class ProfessorAssignmentResource {
     @POST
     @RolesAllowed("professor")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces({MediaType.MULTIPART_FORM_DATA, "application/pdf"})
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}/peer-review/template/upload")
     public Response addTemplateToPeerReview(List<IAttachment> attachments, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) throws Exception {
         for (IAttachment attachment : attachments) {
             if (attachment == null) continue;
             String fileName = attachment.getDataHandler().getName();
-
             if (!fileName.endsWith("pdf") && !fileName.endsWith("zip") && !fileName.endsWith("docx"))
                 return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).build();
             new AssignmentInterface().writeTemplateToPeerReviews(FileDAO.fileFactory(fileName, courseID, attachment, assignmentID));
         }
-        return Response.status(Response.Status.OK).entity("Successfully added file to peer reviews.").build();
+        return Response.status(Response.Status.OK).entity("Successfully added file to assignment.").build();
     }
 
+
+    //Change
     @DELETE
     @RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -133,6 +141,8 @@ public class ProfessorAssignmentResource {
         return Response.status(Response.Status.OK).entity("File successfully deleted.").build();
     }
 
+
+    //Change
     @DELETE
     @RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -142,6 +152,7 @@ public class ProfessorAssignmentResource {
         return Response.status(Response.Status.OK).entity("File successfully deleted.").build();
     }
 
+    //Change
     @DELETE
     @RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -151,13 +162,13 @@ public class ProfessorAssignmentResource {
         return Response.status(Response.Status.OK).entity("File successfully deleted.").build();
     }
 
+
     @POST
     @RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/create-assignment")
     public Response createAssignment(AssignmentDAO assignmentDAO) throws IOException {
         Document assignmentDocument = new AssignmentInterface().createAssignment(assignmentDAO);
-//        DueDateChecker.assignmentDocuments.add(assignmentDocument);
         return Response.status(Response.Status.OK).entity(assignmentDocument).build();
     }
 
@@ -179,6 +190,29 @@ public class ProfessorAssignmentResource {
         return Response.status(Response.Status.OK).entity(response).build();
     }
 
+
+    /**
+     * Retrieves the assignment instructions file from the DB and passes its Base64 representation to the front end via
+     * the request header.
+     *
+     * @param courseID     String
+     * @param assignmentID int
+     * @return response
+     **/
+    @GET
+    @RolesAllowed({"professor", "student"})
+    @Produces(MediaType.MULTIPART_FORM_DATA)
+    @Path("/courses/{courseID}/assignments/{assignmentID}/download")
+    public Response downloadAssignment(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
+        byte[] fileData = new AssignmentInterface().getInstructionFileData(courseID, assignmentID);
+        String fileName = new AssignmentInterface().getInstructionFileName(courseID, assignmentID);
+
+        Response.ResponseBuilder response = Response.ok(Base64.getEncoder().encode(fileData));
+        response.header("Content-Disposition", "attachment; filename=" + fileName);
+        return response.build();
+    }
+
+    //change
     /**
      * Retrieves the assignment from its location on the server and passes it to the front end via the request header
      * as a stream. The request entity passes an InputStream[] with the assignment files in each array.
@@ -190,16 +224,10 @@ public class ProfessorAssignmentResource {
     @GET
     @RolesAllowed({"professor", "student"})
     @Produces(MediaType.MULTIPART_FORM_DATA)
-    @Path("/courses/{courseID}/assignments/{assignmentID}/download/{fileName}")
-    public Response downloadAssignment(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("fileName") String fileName) {
-        new AssignmentInterface();
-        File file = new File(AssignmentInterface.findFile(courseID, assignmentID, fileName));
-        if (!file.exists())
-            return Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist.").build();
-
-        Response.ResponseBuilder response = Response.ok(file);
-        response.header("Content-Disposition", "attachment; filename=" + file.getName() + ".pdf");
-        return response.build();
+    @Path("/courses/{courseID}/assignments/{assignmentID}/peer-review/template/download/{fileName}")
+    public Response downloadPeerReviewTemplate(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("fileName") String fileName) {
+        File file = new File(AssignmentInterface.findPeerReviewFile(courseID, assignmentID, fileName));
+        return Response.ok(file).header("Content-Disposition", "attachment; filename=" + file.getName() + ".pdf").build();
     }
 
     /**
@@ -216,7 +244,6 @@ public class ProfessorAssignmentResource {
     @Path("/courses/{courseID}/assignments/{assignmentID}/peer-review/download/{fileName}")
     public Response downloadPeerReview(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("fileName") String fileName) {
         File file = new File(AssignmentInterface.findPeerReviewFile(courseID, assignmentID, fileName));
-
         return Response.ok(file).header("Content-Disposition", "attachment; filename=" + file.getName() + ".pdf").build();
     }
 

@@ -51,8 +51,12 @@ public class TeamInterface {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Course not found");
         new IdentifyingService().identifyingStudentService(securityContext, request.getStudentID());
-        new IdentifyingService().identifyingProfessorService(securityContext, courseCollection, request.getCourseID());
+        new IdentifyingService().identifyingProfessorAsStudentService(securityContext, courseCollection, request.getCourseID());
         new SecurityService().generateTeamNameSecurity(securityContext, teamCollection, courseDocument, request);
+
+        if (request.getTeamName().length() > 25 || request.getTeamName().length() <= 0) {
+            throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Team name must be within 1 and 25 characters long.");
+        }
 
         int teamSize = new TeamService().getTeamSize(courseDocument);
         TeamDAO newTeam = new TeamDAO(request.getTeamName(), request.getCourseID(), teamSize, request.getStudentID());
@@ -92,7 +96,7 @@ public class TeamInterface {
         if (!new SecurityService().isStudentValid(courseDocument, studentID))
             throw new CPRException(Response.Status.NOT_FOUND, "Student not found in this course.");
         new IdentifyingService().identifyingStudentService(securityContext, studentID);
-        new IdentifyingService().identifyingProfessorService(securityContext, courseCollection, courseID);
+        new IdentifyingService().identifyingProfessorAsStudentService(securityContext, courseCollection, courseID);
 
         if (new SecurityService().isStudentAlreadyInATeam(teamCollection, securityContext, studentID, courseID)) {
             MongoCursor<Document> cursor = teamCollection.find(eq("course_id", courseID)).iterator();
@@ -139,7 +143,7 @@ public class TeamInterface {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Course not found.");
         new IdentifyingService().identifyingStudentService(securityContext, request.getStudentID());
-        new IdentifyingService().identifyingProfessorService(securityContext, courseCollection, request.getCourseID());
+        new IdentifyingService().identifyingProfessorAsStudentService(securityContext, courseCollection, request.getCourseID());
         new SecurityService().joinTeamSecurity(securityContext, teamCollection, courseDocument, request);
 
         Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
