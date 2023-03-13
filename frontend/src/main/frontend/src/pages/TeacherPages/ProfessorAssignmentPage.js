@@ -17,8 +17,8 @@ const AssComponent = ({ active, component, onClick }) => {
       onClick={onClick}
       className={
         active
-          ? 'kumba-25 scp-component-link-clicked'
-          : 'kumba-25 scp-component-link'
+          ? 'inter-24-medium scp-component-link-clicked'
+          : 'inter-24-medium scp-component-link'
       }
     >
       {component}

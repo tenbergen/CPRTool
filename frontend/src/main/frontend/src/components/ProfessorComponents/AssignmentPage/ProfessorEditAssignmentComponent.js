@@ -19,8 +19,11 @@ const ProfessorEditAssignmentComponent = () => {
   );
 
   const assignmentFileFormData = new FormData();
+  let assignmentFileName = ""
   const rubricFileFormData = new FormData();
+  let rubricFileName = ""
   const templateFileFormData = new FormData();
+  let templateFileName = ""
 
   const getAssUrl = `${profAssignmentUrl}/${courseId}/assignments`;
 
@@ -30,13 +33,24 @@ const ProfessorEditAssignmentComponent = () => {
 
   const fileChangeHandler = (event, fileType) => {
     let file = event.target.files[0];
-    if (fileType === 'assignment') {
-      assignmentFileFormData.set('file', file);
-    } else if (fileType === 'rubric') {
-      rubricFileFormData.set('file', file);
-    } else {
-      templateFileFormData.set('file', file);
-    }
+    var reader = new FileReader()
+    reader.onloadend = () => {
+      // Use a regex to remove data url part
+      const base64String = reader.result
+          .replace('data:', '')
+          .replace(/^.+,/, '');
+      if (fileType === 'assignment') {
+        assignmentFileName = file.name
+        assignmentFileFormData.set(file.name, base64String);
+      } else if (fileType === 'rubric') {
+        rubricFileName = file.name
+        rubricFileFormData.set(file.name, base64String);
+      } else {
+        templateFileName = file.name
+        templateFileFormData.set(file.name, base64String);
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (formObj) => {
@@ -62,21 +76,22 @@ const ProfessorEditAssignmentComponent = () => {
     const rubricUrl = `${getAssUrl}/${assignmentId}/peer-review/rubric/upload`;
     const templateUrl = `${getAssUrl}/${assignmentId}/peer-review/template/upload`;
 
-    if (assignmentFileFormData.get('file')) {
+    if (assignmentFileFormData.get(assignmentFileName)) {
+      console.log(assignmentFileFormData.get('file'))
       await axios.post(assignmentFileUrl, assignmentFileFormData).catch((e) => {
         console.error(e);
         alert('Error uploading assignment file.');
       });
     }
 
-    if (assignmentFileFormData.get('file')) {
+    if (rubricFileFormData.get(rubricFileName)) {
       await axios.post(rubricUrl, rubricFileFormData).catch((e) => {
         console.error(e);
         alert('Error uploading peer review rubric.');
       });
     }
 
-    if (templateFileFormData.get('file')) {
+    if (templateFileFormData.get(templateFileName)) {
       await axios.post(templateUrl, templateFileFormData).catch((e) => {
         console.error(e);
         alert('Error uploading peer review template.');
@@ -84,12 +99,16 @@ const ProfessorEditAssignmentComponent = () => {
     }
   };
 
-  const deleteFile = async (fileName, isPeerReview) => {
+  const deleteFile = async (fileName, isPeerReviewRubric, isPeerReviewTemplate) => {
     const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}`;
-
-    const deleteUrl = isPeerReview
-      ? `${url}/peer-review/remove-file/${fileName}`
-      : `${url}/remove-file/${fileName}`;
+    let deleteUrl = url
+    if(isPeerReviewRubric){
+      deleteUrl = `${url}/peer-review/rubric/remove-file`
+    }else if(isPeerReviewTemplate){
+      deleteUrl = `${url}/peer-review/template/remove-file`
+    }else{
+      deleteUrl = `${url}/remove-file`
+    }
 
     await axios.delete(deleteUrl).catch((e) => {
       console.error(e);
@@ -106,15 +125,32 @@ const ProfessorEditAssignmentComponent = () => {
     href.click();
   };
 
-  const onFileClick = async (fileName, isPeerReview) => {
-    const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}`;
-    const downloadUrl = isPeerReview
-      ? `${url}/peer-review/download/${fileName}`
-      : `${url}/download/${fileName}`;
-
-    await axios
-      .get(downloadUrl, { responseType: 'blob' })
-      .then((res) => downloadFile(res.data, fileName));
+  const onFileClick = async (fileName, isPeerReviewTemplate, isPeerReviewRubric) => {
+    if(isPeerReviewTemplate){
+      if(fileName.endsWith(".pdf")){
+        downloadFile(new Blob([Uint8Array.from(currentAssignment.peer_review_template_data.data)], {type: 'application/pdf'}), fileName)
+      }else if(fileName.endsWith(".docx")){
+        downloadFile(new Blob([Uint8Array.from(currentAssignment.peer_review_template_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
+      }else{
+        downloadFile(new Blob([Uint8Array.from(currentAssignment.peer_review_template_data.data)], {type: 'application/zip'}), fileName)
+      }
+    }else if(isPeerReviewRubric){
+      if(fileName.endsWith(".pdf")){
+        downloadFile(new Blob([Uint8Array.from(currentAssignment.rubric_data.data)], {type: 'application/pdf'}), fileName)
+      }else if(fileName.endsWith(".docx")){
+        downloadFile(new Blob([Uint8Array.from(currentAssignment.rubric_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
+      }else{
+        downloadFile(new Blob([Uint8Array.from(currentAssignment.rubric_data.data)], {type: 'application/zip'}), fileName)
+      }
+    }else{
+      if(fileName.endsWith(".pdf")){
+        downloadFile(new Blob([Uint8Array.from(currentAssignment.assignment_instructions_data.data)], {type: 'application/pdf'}), fileName)
+      }else if(fileName.endsWith(".docx")){
+        downloadFile(new Blob([Uint8Array.from(currentAssignment.assignment_instructions_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
+      }else{
+        downloadFile(new Blob([Uint8Array.from(currentAssignment.assignment_instructions_data.data)], {type: 'application/zip'}), fileName)
+      }
+    }
   };
 
   const initialValue = () => {
@@ -141,7 +177,7 @@ const ProfessorEditAssignmentComponent = () => {
       >
         {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
-            <div className='eac-input-field'>
+            <div className='inter-16-medium-black eac-input-field'>
               <label> Name of assignment: </label>
               <Field name='assignment_name'>
                 {({ input }) => (
@@ -155,7 +191,7 @@ const ProfessorEditAssignmentComponent = () => {
               </Field>
             </div>
 
-            <div className='eac-instructions'>
+            <div className='inter-16-medium-black eac-instructions'>
               <label> Instructions: </label>
               <Field name='instructions'>
                 {({ input }) => (
@@ -164,21 +200,21 @@ const ProfessorEditAssignmentComponent = () => {
               </Field>
             </div>
 
-            <div className='eac-assignment-files'>
+            <div className='inter-16-medium-black eac-assignment-files'>
               Current files:
               <span
                 className='eac-file-name'
                 onClick={() =>
-                  onFileClick(currentAssignment.assignment_instructions, false)
+                  onFileClick(currentAssignment.assignment_instructions_name, false,false)
                 }
               >
                 {currentAssignmentLoaded
-                  ? currentAssignment.assignment_instructions
+                  ? currentAssignment.assignment_instructions_name
                   : null}
               </span>
               <span
                 onClick={() =>
-                  deleteFile(currentAssignment.assignment_instructions, false)
+                  deleteFile(currentAssignment.assignment_instructions, false, false)
                 }
                 className={
                   currentAssignmentLoaded &&
@@ -191,7 +227,7 @@ const ProfessorEditAssignmentComponent = () => {
               </span>
             </div>
 
-            <div className='eac-assignment-files'>
+            <div className='inter-16-medium-black eac-assignment-files'>
               <label> New files: </label>
               <input
                 type='file'
@@ -201,7 +237,7 @@ const ProfessorEditAssignmentComponent = () => {
               />
             </div>
 
-            <div className='eac-assignment-info'>
+            <div className='inter-16-medium-black eac-assignment-info'>
               <label> Due Date: </label>
               <Field name='due_date'>
                 {({ input }) => (
@@ -229,7 +265,7 @@ const ProfessorEditAssignmentComponent = () => {
               </Field>
             </div>
 
-            <div className='eac-instructions'>
+            <div className='inter-16-medium-black eac-instructions'>
               <label> Peer Review Instructions: </label>
               <Field name='peer_review_instructions'>
                 {({ input }) => (
@@ -242,7 +278,7 @@ const ProfessorEditAssignmentComponent = () => {
               </Field>
             </div>
 
-            <div className='eac-assignment-files-multiple'>
+            <div className='inter-16-medium-black eac-assignment-files-multiple'>
               <div>
                 <div
                   className='eac-assignment-files'
@@ -252,16 +288,16 @@ const ProfessorEditAssignmentComponent = () => {
                   <span
                     className='eac-file-name'
                     onClick={() =>
-                      onFileClick(currentAssignment.peer_review_rubric, true)
+                      onFileClick(currentAssignment.rubric_name, false,true)
                     }
                   >
                     {currentAssignmentLoaded
-                      ? currentAssignment.peer_review_rubric
+                      ? currentAssignment.rubric_name
                       : null}
                   </span>
                   <span
                     onClick={() =>
-                      deleteFile(currentAssignment.peer_review_rubric, true)
+                      deleteFile(currentAssignment.peer_review_rubric, true, false)
                     }
                     className={
                       currentAssignmentLoaded &&
@@ -296,16 +332,16 @@ const ProfessorEditAssignmentComponent = () => {
                   Current files:
                   <span
                     onClick={() =>
-                      onFileClick(currentAssignment.peer_review_template, true)
+                      onFileClick(currentAssignment.peer_review_template_name, true,false)
                     }
                   >
                     {currentAssignmentLoaded
-                      ? currentAssignment.peer_review_template
+                      ? currentAssignment.peer_review_template_name
                       : null}
                   </span>
                   <span
                     onClick={() =>
-                      deleteFile(currentAssignment.peer_review_template, true)
+                      deleteFile(currentAssignment.peer_review_template, false, true)
                     }
                     className={
                       currentAssignmentLoaded &&
@@ -333,7 +369,7 @@ const ProfessorEditAssignmentComponent = () => {
               </div>
             </div>
 
-            <div className='eac-assignment-info'>
+            <div className='inter-16-medium-black eac-assignment-info'>
               <label> Due Date: </label>
               <Field name='peer_review_due_date'>
                 {({ input }) => (
@@ -362,7 +398,7 @@ const ProfessorEditAssignmentComponent = () => {
               </Field>
             </div>
             <div className='cap-button'>
-              <button type='submit'> Save</button>
+              <button className='green-button-medium' type='submit'> Save</button>
             </div>
           </form>
         )}

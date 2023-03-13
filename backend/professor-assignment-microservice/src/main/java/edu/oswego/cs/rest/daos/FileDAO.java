@@ -55,13 +55,4 @@ public class FileDAO {
         InputStream inputStream = attachment.getDataHandler().getInputStream();
         return new FileDAO(fileName, assignmentID, courseID, inputStream);
     }
-
-    /**
-     * Writes the inputStream to a file.
-     */
-    public void writeFile(String filePath) throws IOException {
-        OutputStream outputStream = new FileOutputStream(filePath);
-        outputStream.write(file.readAllBytes());
-        outputStream.close();
-    }
 }
