@@ -61,3 +61,28 @@
   text-decoration: underline;
   color: #5267a3;
 }
+
+.admin-container{
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 80%;
+}
+
+.sidebar{
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  flex: 1;
+  height: 75%;
+  background-color: #d4eefc;
+}
+
+.user-roles{
+  flex: 3;
+  height: 75%;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background-color: #fafdff;
+}

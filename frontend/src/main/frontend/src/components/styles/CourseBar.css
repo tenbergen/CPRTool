@@ -91,3 +91,22 @@ td {
   border: 1px solid gray;
   margin-bottom: -1px;
 }
+
+.admin-button{
+  width: fit-content;
+  height: fit-content;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  border: 1px solid gray;
+}
+
+.admin-button-style{
+  width: 100%;
+  border-bottom-left-radius: 10px;
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 28px;
+  color: #212529;
+}
