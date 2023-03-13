@@ -36,7 +36,7 @@
   padding: 5px 5px 5px 5px;
   border: 2px solid #949494;
   box-sizing: border-box;
-  border-radius: 50px;
+  border-radius: 5px;
 }
 
 .eac-instructions {
@@ -54,7 +54,7 @@
   flex-grow: 1;
   border: 2px solid #949494;
   box-sizing: border-box;
-  border-radius: 30px;
+  border-radius: 5px;
   padding: 10px 15px 80px 15px;
   width: 100%;
 }
@@ -75,7 +75,7 @@
   flex-grow: 0.75;
   border: 2px solid #949494;
   box-sizing: border-box;
-  border-radius: 50px;
+  border-radius: 5px;
 }
 
 .eac-assignment-info input[type='number'] {
@@ -83,7 +83,7 @@
   flex-grow: 0.75;
   border: 2px solid #949494;
   box-sizing: border-box;
-  border-radius: 50px;
+  border-radius: 5px;
 }
 
 .eac-assignment-files {
@@ -105,14 +105,17 @@
 }
 
 .eac-assignment-files input[type='file']::file-selector-button {
-  background: #91d8df;
-  color: #393939;
-  margin-left: 10px;
-  border-radius: 50px;
-  padding: 10px 45px 10px 45px;
+  margin: 0 10px;
+  width: 118px;
+  height: 34px;
+  background-color: #4a7dfc;
+  border-radius: 5px;
+  color: white;
   border: none;
-  font-size: medium;
-  font-weight: bold;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
 }
 
 .eac-assignment-files-multiple {

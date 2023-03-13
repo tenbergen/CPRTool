@@ -20,6 +20,33 @@ import java.util.List;
 @DenyAll
 public class ProfessorAssignmentResource {
 
+    @POST
+    @RolesAllowed("professor")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/courses/create-assignment")
+    public Response createAssignment(AssignmentDAO assignmentDAO) throws IOException {
+        Document assignmentDocument = new AssignmentInterface().createAssignment(assignmentDAO);
+        return Response.status(Response.Status.OK).entity(assignmentDocument).build();
+    }
+
+    @DELETE
+    @RolesAllowed("professor")
+    @Path("/courses/{courseID}/assignments/{assignmentID}/remove")
+    public Response removeAssignment(@PathParam("assignmentID") int assignmentID, @PathParam("courseID") String courseID) throws IOException {
+        new AssignmentInterface().removeAssignment(assignmentID, courseID);
+        return Response.status(Response.Status.OK).entity("Assignment successfully deleted.").build();
+    }
+
+    @PUT
+    @RolesAllowed("professor")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/courses/{courseID}/assignments/{assignmentID}/edit")
+    public Response updateAssignment(AssignmentDAO assignmentDAO, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
+        new AssignmentInterface().updateAssignment(assignmentDAO, courseID, assignmentID);
+        String response = assignmentDAO.courseID + ": " + assignmentDAO.assignmentName + " successfully updated.";
+        return Response.status(Response.Status.OK).entity(response).build();
+    }
+
     @GET
     @RolesAllowed("professor")
     @Produces(MediaType.APPLICATION_JSON)
@@ -130,67 +157,6 @@ public class ProfessorAssignmentResource {
         return Response.status(Response.Status.OK).entity("Successfully added file to assignment.").build();
     }
 
-
-    //Change
-    @DELETE
-    @RolesAllowed("professor")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/courses/{course-id}/assignments/{assignment-id}/remove-file/{file-name}")
-    public Response removeFileFromAssignment(@PathParam("course-id") String courseID, @PathParam("assignment-id") int assignmentID, @PathParam("file-name") String fileName) {
-        new AssignmentInterface().removeFile(courseID, fileName, assignmentID);
-        return Response.status(Response.Status.OK).entity("File successfully deleted.").build();
-    }
-
-
-    //Change
-    @DELETE
-    @RolesAllowed("professor")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/courses/{course-id}/assignments/{assignment-id}/peer-review-template/remove-file/{file-name}")
-    public Response removeFileFromPeerReviewTemplate(@PathParam("course-id") String courseID, @PathParam("assignment-id") int assignmentID, @PathParam("file-name") String fileName) {
-        new AssignmentInterface().removePeerReviewTemplate(courseID, fileName, assignmentID);
-        return Response.status(Response.Status.OK).entity("File successfully deleted.").build();
-    }
-
-    //Change
-    @DELETE
-    @RolesAllowed("professor")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/courses/{course-id}/assignments/{assignment-id}/peer-review-rubric/remove-file/{file-name}")
-    public Response removeFileFromPeerReviewRubric(@PathParam("course-id") String courseID, @PathParam("assignment-id") int assignmentID, @PathParam("file-name") String fileName) {
-        new AssignmentInterface().removePeerReviewRubric(courseID, fileName, assignmentID);
-        return Response.status(Response.Status.OK).entity("File successfully deleted.").build();
-    }
-
-
-    @POST
-    @RolesAllowed("professor")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/courses/create-assignment")
-    public Response createAssignment(AssignmentDAO assignmentDAO) throws IOException {
-        Document assignmentDocument = new AssignmentInterface().createAssignment(assignmentDAO);
-        return Response.status(Response.Status.OK).entity(assignmentDocument).build();
-    }
-
-    @DELETE
-    @RolesAllowed("professor")
-    @Path("/courses/{courseID}/assignments/{assignmentID}/remove")
-    public Response removeAssignment(@PathParam("assignmentID") int assignmentID, @PathParam("courseID") String courseID) throws IOException {
-        new AssignmentInterface().removeAssignment(assignmentID, courseID);
-        return Response.status(Response.Status.OK).entity("Assignment successfully deleted.").build();
-    }
-
-    @PUT
-    @RolesAllowed("professor")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/courses/{courseID}/assignments/{assignmentID}/edit")
-    public Response updateAssignment(AssignmentDAO assignmentDAO, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
-        new AssignmentInterface().updateAssignment(assignmentDAO, courseID, assignmentID);
-        String response = assignmentDAO.courseID + ": " + assignmentDAO.assignmentName + " successfully updated.";
-        return Response.status(Response.Status.OK).entity(response).build();
-    }
-
-
     /**
      * Retrieves the assignment instructions file from the DB and passes its Base64 representation to the front end via
      * the request header.
@@ -224,10 +190,14 @@ public class ProfessorAssignmentResource {
     @GET
     @RolesAllowed({"professor", "student"})
     @Produces(MediaType.MULTIPART_FORM_DATA)
-    @Path("/courses/{courseID}/assignments/{assignmentID}/peer-review/template/download/{fileName}")
-    public Response downloadPeerReviewTemplate(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("fileName") String fileName) {
-        File file = new File(AssignmentInterface.findPeerReviewFile(courseID, assignmentID, fileName));
-        return Response.ok(file).header("Content-Disposition", "attachment; filename=" + file.getName() + ".pdf").build();
+    @Path("/courses/{courseID}/assignments/{assignmentID}/peer-review/template/download")
+    public Response downloadPeerReviewTemplate(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
+        byte[] fileData = new AssignmentInterface().getPeerReviewTemplateData(courseID, assignmentID);
+        String fileName = new AssignmentInterface().getTemplateFileName(courseID, assignmentID);
+
+        Response.ResponseBuilder response = Response.ok(Base64.getEncoder().encode(fileData));
+        response.header("Content-Disposition", "attachment; filename=" + fileName);
+        return response.build();
     }
 
     /**
@@ -241,10 +211,46 @@ public class ProfessorAssignmentResource {
     @GET
     @RolesAllowed({"professor", "student"})
     @Produces(MediaType.MULTIPART_FORM_DATA)
-    @Path("/courses/{courseID}/assignments/{assignmentID}/peer-review/download/{fileName}")
-    public Response downloadPeerReview(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID, @PathParam("fileName") String fileName) {
-        File file = new File(AssignmentInterface.findPeerReviewFile(courseID, assignmentID, fileName));
-        return Response.ok(file).header("Content-Disposition", "attachment; filename=" + file.getName() + ".pdf").build();
+    @Path("/courses/{courseID}/assignments/{assignmentID}/peer-review/rubric/download")
+    public Response downloadPeerReview(@PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
+        byte[] fileData = new AssignmentInterface().getRubricFileData(courseID, assignmentID);
+        String fileName = new AssignmentInterface().getRubricFileName(courseID, assignmentID);
+
+        Response.ResponseBuilder response = Response.ok(Base64.getEncoder().encode(fileData));
+        response.header("Content-Disposition", "attachment; filename=" + fileName);
+        return response.build();
+    }
+
+
+
+    //Change
+    @DELETE
+    @RolesAllowed("professor")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/courses/{course-id}/assignments/{assignment-id}/remove-file")
+    public Response removeFileFromAssignment(@PathParam("course-id") String courseID, @PathParam("assignment-id") int assignmentID) {
+        new AssignmentInterface().removeFile(courseID, assignmentID);
+        return Response.status(Response.Status.OK).entity("File successfully deleted.").build();
+    }
+
+
+    @DELETE
+    @RolesAllowed("professor")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/courses/{course-id}/assignments/{assignment-id}/peer-review/template/remove-file")
+    public Response removeFileFromPeerReviewTemplate(@PathParam("course-id") String courseID, @PathParam("assignment-id") int assignmentID) {
+        new AssignmentInterface().removePeerReviewTemplate(courseID, assignmentID);
+        return Response.status(Response.Status.OK).entity("File successfully deleted.").build();
+    }
+
+    //Change
+    @DELETE
+    @RolesAllowed("professor")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/courses/{course-id}/assignments/{assignment-id}/peer-review/rubric/remove-file")
+    public Response removeFileFromPeerReviewRubric(@PathParam("course-id") String courseID, @PathParam("assignment-id") int assignmentID) {
+        new AssignmentInterface().removePeerReviewRubric(courseID, assignmentID);
+        return Response.status(Response.Status.OK).entity("File successfully deleted.").build();
     }
 
     @DELETE

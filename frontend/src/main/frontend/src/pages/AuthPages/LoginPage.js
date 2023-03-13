@@ -17,6 +17,7 @@ function LoginPage() {
   }
 
   const handleLogin = async (googleData) => {
+    console.log(googleData.credential)
     localStorage.setItem('google_token', googleData.credential);
     dispatch(getTokenAsync());
   };
@@ -44,7 +45,7 @@ function LoginPage() {
                       text={'signin_with'}
                       onSuccess={handleLogin}
                       onError={handleFailure}
-                      hosted_domain={'oswego.edu'}
+                      // hosted_domain={'oswego.edu'}
                       size={'large'}
                       cookiePolicy={'single_host_origin'}
                       prompt='select_account'
