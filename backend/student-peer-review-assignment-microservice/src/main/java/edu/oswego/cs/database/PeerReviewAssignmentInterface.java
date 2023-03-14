@@ -404,4 +404,333 @@ public class PeerReviewAssignmentInterface {
         if (result.getInteger("grade") == null) return new Document("grade", -1);
         else return new Document("grade", result.getInteger("grade"));
     }
+
+
+    /**
+     * This method returns a JSON object(Document), that contains all relevant information regarding
+     * the grades a team ahs received and the average of the grades received, as well as the average grade
+     * each team has given to other teams. The JSON document it returns also has a boolean value associated
+     * with the grade stating false if the value is not an outlier, and true if the value is an outlier
+     *
+     * Notes:
+     * This method has the assumed functionality that every team in the course has been assigned/performed
+     * a peer review, as determining if a team was excluded from the assignment/peer-review process was far
+     * too much work given the data available from querying from the respectove databases.
+     * */
+    public Document getMatrixOfGrades(String courseID, int assignmentID){
+
+        //get all teams that were assigned this assignment in the course(will be the 'iterable')
+        Document assignment = assignmentCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        if (assignment == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment not found.").build());
+        //grab all teams assigned this
+        List<String> allTeams = assignment.getList("all_teams", String.class);
+
+
+        //we must sort them based on alphabetical order
+        Collections.sort(allTeams);
+
+        //then find every team that graded them(should be a base function call already made inside this file)
+        Document matrixOfGrades = new Document();
+
+        for(String teamForThisAssignment : allTeams) {
+
+            //get document for each team for this assignment
+            Document team_submission = submissionsCollection.find(and(
+                    eq("course_id", courseID),
+                    eq("assignment_id", assignmentID),
+                    eq("team_name", teamForThisAssignment),
+                    eq("type", "team_submission"))).first();
+
+            //grade the teams that 'reviewed'/graded this team
+            List<String> teams_that_graded = team_submission.getList("reviews", String.class);
+            int sizeOfTeamsThatGraded = teams_that_graded.size();
+
+            //sort teams_that_graded
+            Collections.sort(teams_that_graded);
+
+            //create doc for holding each team that graded and if its an outlier or not
+            Document gradesToOutliers = new Document();
+
+            //integer values to keep track of average of scores and number of reviews each team made
+            int totalSum = 0, counter=0;
+
+            for (String teamThatGraded : teams_that_graded) {
+                //for each team in the reviews, we need to find the team that reviewed the current team
+                Document team_review = submissionsCollection.find(and(
+                        eq("course_id", courseID),
+                        eq("assignment_id", assignmentID),
+                        eq("reviewed_by", teamThatGraded),
+                        eq("reviewed_team", teamForThisAssignment),
+                        eq("type", "peer_review_submission"))).first();
+
+                //if the grade is an outlier(boolean = true, else boolean = false)
+                int respectiveGrade = team_review.get("grade", Integer.class);
+                //sum the total and increase counter
+                totalSum += respectiveGrade;
+                counter++;
+                System.out.println("counter: " + counter);
+                double average = (double)totalSum / (double)counter;
+
+
+
+                if (isOutlier(courseID, assignmentID, respectiveGrade)) {
+                    //fill in the values if they're an outlier
+                    gradesToOutliers.append(teamThatGraded, new Document(String.valueOf(respectiveGrade), true));
+                    if(counter == sizeOfTeamsThatGraded) {
+                        gradesToOutliers.append("Average Grade Received", new Document(String.valueOf(average), isOutlier(courseID, assignmentID, average)));
+                        System.out.println("value is an: " + isOutlier(courseID, assignmentID, average));
+                    }
+
+
+                }
+                else {
+                    gradesToOutliers.append(teamThatGraded, new Document(String.valueOf(respectiveGrade), false));
+                    if(counter == sizeOfTeamsThatGraded) {
+                        gradesToOutliers.append("Average Grade Received", new Document(String.valueOf(average), isOutlier(courseID, assignmentID, average)));
+                        System.out.println("value is an: " + isOutlier(courseID, assignmentID, average));
+                    }
+
+                }
+
+
+            }
+            matrixOfGrades.append(teamForThisAssignment, gradesToOutliers);
+
+        }
+
+        //hashmaps to keep track of grades each team has given/they're review count
+        HashMap<String, Integer> teamsToGradesGiven = new HashMap<>();
+        HashMap<String, Integer> teamsToCountOfReviews = new HashMap<>();
+
+        //create values for each team in a hashmap for their grades
+        for(String teams : matrixOfGrades.keySet()){
+            teamsToGradesGiven.put(teams, 0);
+            teamsToCountOfReviews.put(teams, 0);
+        }
+
+        //I know three loops is disgusting, but the way the document we created above is formatted,
+        //the grade is three levels deep, so we need to go to that depth to get the grade
+
+        //grab the keys of the doc(all the grades in document we just created)
+        for(String keysInMatrixDoc : matrixOfGrades.keySet()){
+
+            //this will retrieve the list of teams who have given grades
+            Object valuesOfKeys = matrixOfGrades.get(keysInMatrixDoc);
+
+            //try casting the object to a document
+            Document valuesOfEachKey = (Document) valuesOfKeys;
+
+            for(String subKeySet : valuesOfEachKey.keySet()){
+
+                //to get the grade document we need to go one step further
+                Document gradesAndBoolean = (Document) valuesOfEachKey.get(subKeySet);
+
+                for(String grade : gradesAndBoolean.keySet()){
+                    //if current subKeyString equals the a hashmap key, sum current value and counter)
+                    if(teamsToGradesGiven.containsKey(subKeySet)){
+                        teamsToGradesGiven.put(subKeySet, teamsToGradesGiven.get(subKeySet) + Integer.parseInt(grade));
+                        teamsToCountOfReviews.put(subKeySet, teamsToCountOfReviews.get(subKeySet) + 1);
+                    }
+
+                }
+
+            }
+
+        }
+
+
+        //document to find/grad the grades, will append this to each section of the documentToAppendGrades
+        Document gradesHolder = new Document();
+
+        //create document to then append to the matric doc(for grades given averages)
+        for(String key : teamsToGradesGiven.keySet()){
+            //first calculate average
+            double average = (double)teamsToGradesGiven.get(key) / (double)teamsToCountOfReviews.get(key);
+
+            if(isOutlier(courseID, assignmentID, average)){
+                gradesHolder.append(key, new Document(String.valueOf(average), true));
+            }
+            else{
+                gradesHolder.append(key, new Document(String.valueOf(average), false));
+            }
+        }
+
+        matrixOfGrades.append("Average Grade Given", gradesHolder);
+
+        return matrixOfGrades;
+    }
+
+
+    /**
+     * abstraction method that calls calculate IQR, and uses the values calculated from there
+     * to return a boolean value of whether a number is an outlier or not, based on the current
+     * grades received for this assignment(this function takes a double to compare)
+     * */
+    private boolean isOutlier(String courseID, int assignmentID, double numberToCompare){
+        HashMap<String, Integer> calculatedQuantities = new HashMap<String, Integer>();
+        calculatedQuantities = calculateIQR(courseID, assignmentID);
+        int Q1 = calculatedQuantities.get("Q1");
+        int Q3 = calculatedQuantities.get("Q3");
+        int IQR = calculatedQuantities.get("IQR");
+
+        //if value is an outlier
+        if( (numberToCompare < (Q1 - (1.5 * IQR)))  || (numberToCompare > (Q3 + (1.5 * IQR)) )){
+            return true;
+        }
+        //if its not an outlier
+        else{
+            return false;
+        }
+    }
+
+    /**
+     * abstraction method that calls calculate IQR, and uses the values calculated from there
+     * to return a boolean value of whether a number is an outlier or not, based on the current
+     * grades received for this assignment(this function takes an int to compare)
+     * */
+    private boolean isOutlier(String courseID, int assignmentID, int numberToCompare){
+        HashMap<String, Integer> calculatedQuantities = new HashMap<String, Integer>();
+        calculatedQuantities = calculateIQR(courseID, assignmentID);
+        int Q1 = calculatedQuantities.get("Q1");
+        int Q3 = calculatedQuantities.get("Q3");
+        int IQR = calculatedQuantities.get("IQR");
+
+        //if value is an outlier
+        if( (numberToCompare < (Q1 - (1.5 * IQR)))  || (numberToCompare > (Q3 + (1.5 * IQR)) )){
+            return true;
+        }
+        //if its not an outlier
+        else{
+            return false;
+        }
+    }
+
+    /**
+     * This function is used to calculate the IQR, returning a hashmap of values
+     * that consist of the q1, q3, and IQR values to allow for computation and
+     * outlier detection.
+     * */
+    private HashMap<String, Integer> calculateIQR(String courseID, int assignmentID){
+        //must make a query to the DB to grab all of the grades
+        Document assignment = assignmentCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        if (assignment == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment not found.").build());
+        List<String> allTeams = assignment.getList("all_teams", String.class);
+        //for every team in the course, grab the points, and add them to an integer array
+        List<Integer> gradesForAssignment= new ArrayList<Integer>();
+
+        for(String everyTeamAssigned : allTeams){
+
+            //get document for each team for this assignment
+            Document team_submission = submissionsCollection.find(and(
+                    eq("course_id", courseID),
+                    eq("assignment_id", assignmentID),
+                    eq("team_name", everyTeamAssigned),
+                    eq("type", "team_submission"))).first();
+
+            //grade the teams that 'reviewed'/graded this team
+            List<String> teams_that_graded = team_submission.getList("reviews", String.class);
+
+            //sort teams_that_graded
+            Collections.sort(teams_that_graded);
+
+            for(String teamsThatReviewedThisTeam : teams_that_graded) {
+
+                //for each team in the reviews, we need to find the team that reviewed the current team
+                Document team_review = submissionsCollection.find(and(
+                        eq("course_id", courseID),
+                        eq("assignment_id", assignmentID),
+                        eq("reviewed_by", teamsThatReviewedThisTeam),
+                        eq("reviewed_team", everyTeamAssigned),
+                        eq("type", "peer_review_submission"))).first();
+
+                if (team_review == null) {
+                    throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Error retrieving Team review.").build());
+                }
+                if (team_review.get("grade", Integer.class) == null) {
+                    throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Error retreiving grade for team").build());
+                }
+                else {
+
+                    int respectiveGrade = team_review.get("grade", Integer.class);
+                    gradesForAssignment.add(respectiveGrade);
+                }
+
+            }
+
+
+        }
+
+        int IQR = 0;
+        //after all of the team grades are obtained,
+
+        //we must sort them
+        Collections.sort(gradesForAssignment);
+
+        HashMap<Integer, List<Integer>> subsets = getSubsetOfArray(gradesForAssignment);
+
+        //get subsets from hashmap
+        List<Integer> q1Subset = subsets.get(1);
+        List<Integer> q3Subset = subsets.get(2);
+
+        //get medians from subsets
+        int q1Median = findMedian(q1Subset);
+        int q3Median = findMedian(q3Subset);
+
+        //get IQR from subtracting both values
+        IQR = q3Median - q1Median;
+        HashMap<String, Integer> returnValues = new HashMap<String, Integer>();
+        returnValues.put("Q1", q1Median);
+        returnValues.put("Q3", q3Median);
+        returnValues.put("IQR", IQR);
+
+        return returnValues;
+    }
+
+    /**
+     * This fucntion returns a subset of the array to then be able to calculate the
+     * median for each 'Q'
+     * */
+    private HashMap<Integer, List<Integer>> getSubsetOfArray(List<Integer> input){
+        List<Integer> firstSubSet = new ArrayList<Integer>();
+        List<Integer> secondSubSet = new ArrayList<Integer>();
+
+        HashMap< Integer, List<Integer> > subsetOfArrays = new HashMap<>();
+        //if true this is odd
+        if((input.size() & 1) == 1){
+            firstSubSet = input.subList(0, input.size() / 2);
+            secondSubSet = input.subList(input.size() / 2 + 1, input.size());
+        }
+        else {
+            firstSubSet = input.subList(0, input.size() / 2);
+            secondSubSet = input.subList(input.size() / 2, input.size());
+        }
+        subsetOfArrays.put(1, firstSubSet);
+        subsetOfArrays.put(2, secondSubSet);
+
+        return subsetOfArrays;
+
+    }
+
+    /**
+     * This function returns the median of any dataset that is larger than 2, also
+     * it assumes that the data is already sorted when passed in
+     * */
+    private int findMedian(List<Integer> dataSet){
+        //this fucntion won't accept an array of length less than 2,
+        if(dataSet.size() < 2 || dataSet == null )
+            return -1;
+        //& 1 is a bitwise operator that is much faster than modulo and determines whether a number is odd or even
+        if((dataSet.size() & 1) == 1)
+            //use int division return median
+            return dataSet.get(dataSet.size() / 2);
+        else
+            //must use formula (((dataSet.length/2) + (dataSet.length/2 -1)) / 2) to obtain the proper index of even length dataset )
+            return (dataSet.get(dataSet.size() / 2) + dataSet.get(dataSet.size() / 2 - 1)) / 2;
+
+    }
+
+
+
 }
