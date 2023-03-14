@@ -42,7 +42,7 @@ function ProfessorDashboardPage() {
           <SidebarComponent />
           <div id="teacher">
             <div className="welcome-banner">
-              <h1 className="inter-44-bold" id="welcome-message">
+              <h1 className="inter-36-bold" id="welcome-message">
                 Hello, {user}!
               </h1>
               <div className="views">

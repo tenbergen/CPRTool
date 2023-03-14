@@ -69,7 +69,6 @@ public class AuthServices {
 
             tokens.put("access_token", access_token);
             tokens.put("refresh_token", refresh_token);
-
             return tokens;
 
         } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
@@ -116,6 +115,7 @@ public class AuthServices {
         } else {
             roles.add("student");
         }
+
         if (roles.size() == 0)
             throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Can't connect to database.").build());
 

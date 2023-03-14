@@ -17,7 +17,7 @@ const SubAssBarLink = ({ active, assignment, onClick }) => {
       <tr>
         <td style={active ? clickedStyle : normalStyle}>
           <div className='colorForTable' />
-          <p className='kumba-25 courseText'> {assignment.assigment_name} </p>
+          <p className='inter-28-medium courseText'> {assignment.assigment_name} </p>
         </td>
       </tr>
     </div>

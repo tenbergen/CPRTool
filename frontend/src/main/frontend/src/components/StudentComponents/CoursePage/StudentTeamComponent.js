@@ -63,6 +63,10 @@ const TeamComponent = () => {
       alert('Team name cannot be empty!');
       return;
     }
+    if (team_name.length > 20){
+      alert('Team name is too long!');
+      return;
+    }
 
     await axios
       .post(createUrl, createData)
@@ -103,7 +107,7 @@ const TeamComponent = () => {
         ))}
       </div>
       <div id='createTeamButton'>
-        <button onClick={createTeam}> Create New Team</button>
+        <button class='green-button-large' onClick={createTeam}> Create New Team</button>
       </div>
     </h3>
   );
