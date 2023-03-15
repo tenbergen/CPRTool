@@ -43,52 +43,13 @@ public class AssignmentInterface {
         }
     }
 
-    /**
-     * Retrieves the relative location of the root Directory
-     *
-     * @return String directory location the hw files should be saved to
-     */
-    public static String getRelPath() {
-        String path = (System.getProperty("user.dir").contains("\\")) ? System.getProperty("user.dir").replace("\\", "/") : System.getProperty("user.dir");
-        String[] slicedPath = path.split("/");
-        String targetDir = "defaultServer";
-        StringBuilder relativePathPrefix = new StringBuilder();
-        for (int i = slicedPath.length - 1; !slicedPath[i].equals(targetDir); i--) {
-            relativePathPrefix.append("../");
-        }
-        reg = "\\";
-        if (System.getProperty("os.name").toLowerCase().contains("win")||(System.getProperty("os.name").toLowerCase().contains("nux") && System.getProperty("os.version").contains("WSL"))) {
-            reg = "/";
-            relativePathPrefix = new StringBuilder(relativePathPrefix.toString().replace("\\", "/"));
-        }
-        return relativePathPrefix.toString();
-    }
 
     /**
-     * Finds the assignment document that a file is associated with
+     * Write file binary data and file name of the assignment instructions to its respective assignment document in the
+     * database.
      *
-     * @param courseID type FileDAO: Representation of File Data
-     * @param assignmentID  type FileDAO: Representation of File Data
+     * @param fileDAO  type FileDAO: Representation of File Data
      */
-
-    public static String findFile(String courseID, int assignmentID, String fileName) {
-        return getRelPath() + "assignments" + reg + courseID + reg + assignmentID + reg + "assignments" + reg + fileName;
-    }
-
-    /**
-     *
-     * @param courseID
-     * @param assignmentID
-     * @param fileName
-     * @return
-     */
-
-    public static String findPeerReviewFile(String courseID, int assignmentID, String fileName) {
-        String filePath = getRelPath() + "assignments" + reg + courseID + reg + assignmentID + reg + "peer-reviews" + reg + fileName;
-        if (!new File(filePath).exists())
-            throw new CPRException(Response.Status.BAD_REQUEST,filePath + "does not exist");
-        return filePath;
-    }
 
     /**
      * Write file binary data and file name of the assignment instructions to its respective assignment document in the
@@ -138,7 +99,7 @@ public class AssignmentInterface {
         if (result == null) throw new CPRException(Response.Status.BAD_REQUEST,"No assignment found");
 
         //add the assignment instructions binary data and file name to the database
-        result.append("peer_review_template", Base64.getDecoder().decode(new String(fileDAO.file.readAllBytes())));
+        result.append("peer_review_template_data", Base64.getDecoder().decode(new String(fileDAO.file.readAllBytes())));
         result.append("peer_review_template_name", fileDAO.fileName);
         assignmentsCollection.replaceOne(and(eq("course_id", fileDAO.courseID), eq("assignment_id", fileDAO.assignmentID)), result);
     }
@@ -258,36 +219,43 @@ public class AssignmentInterface {
         return data.getData();
     }
 
-    public void removeFile(String courseID, String fileName, int assignmentID) {
-        String fileLocation = findFile(courseID, assignmentID, fileName);
-        File file = new File(fileLocation);
-        if (!file.delete())
-            throw new CPRException(Response.Status.BAD_REQUEST,"Assignment does not exist or could not be deleted.");
-        assignmentsCollection.updateOne(and(eq("course_id", courseID),
-                        eq("assignment_id", assignmentID)),
-                set("assignment_instructions", ""));
+    public void removeFile(String courseID, int assignmentID) {
+        Document result = assignmentsCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        //makes sure the result isn't null
+        if (result == null) throw new CPRException(Response.Status.BAD_REQUEST,"No assignment found");
+
+        //grab the assignment instructions data and return it, ensure the assignment instructions data exists first
+        if(!result.containsKey("assignment_instructions_data")) throw new CPRException(Response.Status.NOT_FOUND, "No template data uploaded");
+        //add the assignment instructions binary data and file name to the database
+        result.remove("assignment_instructions_data");
+        result.remove("assignment_instructions_name");
+        assignmentsCollection.replaceOne(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), result);
     }
 
-    public void removePeerReviewTemplate(String courseID, String fileName, int assignmentID) {
-        String fileLocation = findPeerReviewFile(courseID, assignmentID, fileName);
-        File file = new File(fileLocation);
-        if (!file.delete())
-            throw new CPRException(Response.Status.BAD_REQUEST,"Assignment does not exist or could not be deleted.");
-        assignmentsCollection.updateOne(and(
-                        eq("course_id", courseID),
-                        eq("assignment_id", assignmentID)),
-                set("peer_review_template", ""));
+    public void removePeerReviewTemplate(String courseID, int assignmentID) {
+        Document result = assignmentsCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        //makes sure the result isn't null
+        if (result == null) throw new CPRException(Response.Status.BAD_REQUEST,"No assignment found");
+
+        //grab the assignment instructions data and return it, ensure the assignment instructions data exists first
+        if(!result.containsKey("peer_review_template_data")) throw new CPRException(Response.Status.NOT_FOUND, "No template data uploaded");
+        //add the assignment instructions binary data and file name to the database
+        result.remove("peer_review_template_data");
+        result.remove("peer_review_template_name");
+        assignmentsCollection.replaceOne(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), result);
     }
 
-    public void removePeerReviewRubric(String courseID, String fileName, int assignmentID) {
-        String fileLocation = findPeerReviewFile(courseID, assignmentID, fileName);
-        File file = new File(fileLocation);
-        if (!file.delete())
-            throw new CPRException(Response.Status.BAD_REQUEST,"Assignment does not exist or could not be deleted.");
-        assignmentsCollection.updateOne(and(
-                        eq("course_id", courseID),
-                        eq("assignment_id", assignmentID)),
-                set("peer_review_rubric", ""));
+    public void removePeerReviewRubric(String courseID, int assignmentID) {
+        Document result = assignmentsCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
+        //makes sure the result isn't null
+        if (result == null) throw new CPRException(Response.Status.BAD_REQUEST,"No assignment found");
+
+        //grab the assignment instructions data and return it, ensure the assignment instructions data exists first
+        if(!result.containsKey("rubric_data")) throw new CPRException(Response.Status.NOT_FOUND, "No template data uploaded");
+        //add the assignment instructions binary data and file name to the database
+        result.remove("rubric_data");
+        result.remove("rubric_name");
+        assignmentsCollection.replaceOne(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), result);
     }
 
     /**
@@ -403,7 +371,6 @@ public class AssignmentInterface {
 
         while (results.hasNext()) {
             Document assignment = results.next();
-            deleteFile(getRelPath() + "assignments" + reg + courseID + reg + assignment.get("assignment_id"));
             assignmentsCollection.findOneAndDelete(assignment);
         }
         removeSubmissions(AssignmentID, courseID);
@@ -428,13 +395,14 @@ public class AssignmentInterface {
             Document assignmentDocument = results.next();
             assignmentsCollection.findOneAndDelete(assignmentDocument);
         }
-
-        deleteFile(getRelPath() + "assignments" + reg + courseID);
     }
 
-    private static void deleteFile(String destination) throws IOException {
-        FileUtils.deleteDirectory(new File(destination));
-    }
+
+    /**
+    *
+    * Iterates the assignment id by one based on how many assignments currently exist in the DB
+    *
+    **/
 
 
     /**

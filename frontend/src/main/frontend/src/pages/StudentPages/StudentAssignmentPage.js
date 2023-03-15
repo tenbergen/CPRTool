@@ -12,6 +12,7 @@ function StudentAssignmentPage() {
   const dispatch = useDispatch();
   const { courseId, assignmentId, assignmentType } = useParams();
 
+  
   useEffect(() => {
     dispatch(getAssignmentDetailsAsync({ courseId, assignmentId }));
   }, [courseId, assignmentId, dispatch]);

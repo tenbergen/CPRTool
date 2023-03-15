@@ -54,6 +54,10 @@ public class TeamInterface {
         new IdentifyingService().identifyingProfessorAsStudentService(securityContext, courseCollection, request.getCourseID());
         new SecurityService().generateTeamNameSecurity(securityContext, teamCollection, courseDocument, request);
 
+        if (request.getTeamName().length() > 25 || request.getTeamName().length() <= 0) {
+            throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Team name must be within 1 and 25 characters long.");
+        }
+
         int teamSize = new TeamService().getTeamSize(courseDocument);
         TeamDAO newTeam = new TeamDAO(request.getTeamName(), request.getCourseID(), teamSize, request.getStudentID());
         newTeam.getTeamMembers().add(request.getStudentID());
