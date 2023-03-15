@@ -28,7 +28,7 @@ import java.util.Properties;
  *
  */
 public class EmailService {
-    static String from = "schmittsLaptop@patrick.com";
+    /*static String from = "schmittsLaptop@patrick.com";
     static Properties props = new Properties();
     static Session session = Session.getDefaultInstance(props, null);
 
@@ -48,6 +48,8 @@ public class EmailService {
      * @param course the course in which the assignment is assigned
      * @param assignment the assignment which has been submitted
      */
+
+    /*
     public void allAssignmentsSubmittedEmail(CourseDAO course, AssignmentDAO assignment) throws IOException {
         //get teams
         MongoCursor<Document> query = teamCollection.find().iterator();
@@ -135,6 +137,7 @@ public class EmailService {
      * @param course the course in which the peer review is assigned
      * @param assignment the peer review which has been submitted
      */
+    /*
     public void allPeerReviewsSubmittedEmail(CourseDAO course, AssignmentDAO assignment){
         //How to tell if peer review is submitted? Where is that stored?
     }
@@ -146,7 +149,9 @@ public class EmailService {
      * @param course the course in which the peer review is assigned
      * @param assignment the assignment that has been created
      */
+
     public void assignmentCreatedEmail(CourseDAO course, AssignmentDAO assignment) throws IOException {
+        /*
         //load email body from template
         BufferedReader reader = new BufferedReader(new FileReader(new File("templates/assignmentCreatedEmail.html")));
         String line;
@@ -198,7 +203,10 @@ public class EmailService {
                 throw new RuntimeException(e);
             }
         }
-    }
+
+         */
+    }}
+    /*
 
         /**
      * Sends an email to the professor when the deadline for an assignment has passed and not all teams have made a
@@ -208,6 +216,8 @@ public class EmailService {
      * @param course the course in which the assignment is assigned
      * @param assignment the assignment whose deadline has passed
      */
+
+    /*
     public static void assignmentDeadlinePassed(CourseDAO course, AssignmentDAO assignment) throws IOException {
         //load email body from template
         BufferedReader reader = new BufferedReader(new FileReader(new File("templates/assignmentDeadlinePassed.html")));
@@ -293,6 +303,7 @@ public class EmailService {
      * @param assignment assignment that was submitted
      * @param timestamp time at which the assignment was submitted
      */
+    /*
     public void assignmentSubmittedEmail(CourseDAO course, TeamDAO team, AssignmentDAO assignment, Date timestamp) throws IOException {
         //load email body from template
         BufferedReader reader = new BufferedReader(new FileReader(new File("templates/assignmentSubmittedEmail.html")));
@@ -359,6 +370,8 @@ public class EmailService {
      * @param assignment The assignment whose deadline is being checked for.
      * @param isPeerReview a true value will call peerReviewDeadlinePassed instead of assignmentDeadlinePassed.
      */
+
+    /*
     public void createDeadlineTimer(AssignmentDAO assignment, boolean isPeerReview){
         new DeadlineTimer(assignment.courseID, isPeerReview).start();
     }
@@ -370,6 +383,8 @@ public class EmailService {
      * @param assignment assignment for which the grade is given
      * @param team team receiving the email
      */
+
+    /*
     public void gradeReceivedEmail(CourseDAO course, AssignmentDAO assignment, TeamDAO team) throws IOException {
         //load email body from template
         BufferedReader reader = new BufferedReader(new FileReader(new File("templates/gradeReceivedEmail.html")));
@@ -408,6 +423,8 @@ public class EmailService {
     /**
      * Sends the professor an email when an outlier is detected.
      */
+
+    /*
     public void outlierDetectedEmail(){
 
     }
@@ -419,6 +436,8 @@ public class EmailService {
      * @param team team reviewing the submission
      * @param assignment submission being peer reviewed
      */
+
+    /*
     public void peerReviewAssignedEmail(CourseDAO course, TeamDAO team, AssignmentDAO assignment){
 
     }
@@ -431,6 +450,8 @@ public class EmailService {
      * @param course the course in which the assignment is assigned
      * @param assignment the assignment whose deadline has passed
      */
+
+    /*
     public void peerReviewDeadlinePassed(CourseDAO course, AssignmentDAO assignment){
 
     }
@@ -443,6 +464,8 @@ public class EmailService {
      * @param assignment peer review that was submitted
      * @param timestamp time at which the peer review was submitted
      */
+
+    /*
     public void peerReviewSubmittedEmail(CourseDAO course, TeamDAO team, AssignmentDAO assignment, Date timestamp){
 
     }
@@ -454,15 +477,12 @@ public class EmailService {
      * @param team team that submitted the assignment
      * @param assignment assignment for which the submission contained profanity
      */
+
+    /*
     public void profanityEmail(CourseDAO course, TeamDAO team, AssignmentDAO assignment){
 
     }
-
-    /**
-     * Sends the professor an email when someone submits a peer review containing profanity.
-     *
-     * @param course course for which the peer review is submitted
-     * @param team team that submitted the peer review
-     * @param assignment assignment for which the peer review contained profanity
-     */
 }
+
+
+     */
