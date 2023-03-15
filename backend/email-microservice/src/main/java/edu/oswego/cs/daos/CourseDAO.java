@@ -44,4 +44,14 @@ public class CourseDAO {
         this.year = year;
         this.courseID = this.abbreviation + "-" + this.courseSection + "-" + this.crn + "-" + this.semester + "-" + this.year;
     }
+
+    public CourseDAO(String abbr, String name, String section, String crn_, String sem, String yr, boolean extra){
+        abbreviation = abbr;
+        courseName = name;
+        courseSection = section;
+        crn = crn_;
+        semester = sem;
+        year = yr;
+        courseID = this.abbreviation + "-" + this.courseSection + "-" + this.crn + "-" + this.semester + "-" + this.year;
+    }
 }

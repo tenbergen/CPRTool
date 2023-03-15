@@ -8,6 +8,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 
 public class EmailResources {
 
@@ -17,7 +18,7 @@ public class EmailResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/testemail")
     @RolesAllowed({"professor","student"})
-    public Response testEmail() {
+    public Response testEmail() throws IOException {
         emailService.assignmentCreatedEmail(new CourseDAO(), new AssignmentDAO());
         return Response.status(Response.Status.CREATED).entity("Email Successfully Sent.").build();
     }
