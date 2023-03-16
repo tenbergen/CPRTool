@@ -19,7 +19,7 @@ public class EmailResources {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/testemail")
+    @Path("email/testemail")
     @RolesAllowed({"professor","student"})
     public Response testEmail() throws IOException {
         emailService.assignmentCreatedEmail(new CourseDAO(), new AssignmentDAO());
