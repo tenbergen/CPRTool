@@ -4,7 +4,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import edu.oswego.cs.daos.AssignmentDAO;
 import edu.oswego.cs.daos.CourseDAO;
-import edu.oswego.cs.daos.StudentDAO;
 import edu.oswego.cs.daos.TeamDAO;
 import edu.oswego.cs.database.DatabaseManager;
 import edu.oswego.cs.util.DeadlineTimer;
