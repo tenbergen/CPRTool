@@ -155,10 +155,7 @@ public class EmailService {
      */
     public void assignmentCreatedEmail(CourseDAO course, AssignmentDAO assignment) throws IOException {
         //load email body from template
-        BufferedReader reader = new BufferedReader(new FileReader(new File(".." + File.separator +
-                ".." + File.separator +
-                ".." + File.separator +
-                "templates"+ File.separator +
+        BufferedReader reader = new BufferedReader(new FileReader(new File(System.getProperty("user.dir") +
                 "assignmentCreatedEmail.html")));
         String line;
         StringBuilder stringBuilder = new StringBuilder();
