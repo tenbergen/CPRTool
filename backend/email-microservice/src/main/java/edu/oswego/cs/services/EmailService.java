@@ -157,6 +157,7 @@ public class EmailService {
         //load email body from template
         BufferedReader reader = new BufferedReader(new FileReader(new File(".." + File.separator +
                 ".." + File.separator +
+                ".." + File.separator +
                 "templates"+ File.separator +
                 "assignmentCreatedEmail.html")));
         String line;
