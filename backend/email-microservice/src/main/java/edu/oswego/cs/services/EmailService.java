@@ -39,6 +39,13 @@ public class EmailService {
     static MongoCollection<Document> submissionCollection = databaseManager.getAssignmentDB().getCollection("submissions");
 
     /**
+     * Constructor for the EmailResource Class
+     */
+    public void EmailService(){
+
+    }
+
+    /**
      * Sends an email to the professor informing them that all teams in the course have submitted an assignment.
      * This method will not be called if the assignment deadline has passed.
      * This method is otherwise called every time a team submits an assignment, at which point
@@ -48,6 +55,7 @@ public class EmailService {
      * @param course the course in which the assignment is assigned
      * @param assignment the assignment which has been submitted
      */
+
     public void allAssignmentsSubmittedEmail(CourseDAO course, AssignmentDAO assignment) throws IOException {
         //get teams
         MongoCursor<Document> query = teamCollection.find().iterator();
