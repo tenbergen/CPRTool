@@ -41,7 +41,7 @@ public class EmailService {
     /**
      * Constructor for the EmailResource Class
      */
-    public void EmailService(){
+    public EmailService(){
 
     }
 
