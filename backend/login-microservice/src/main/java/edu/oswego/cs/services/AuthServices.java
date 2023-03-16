@@ -8,7 +8,6 @@ import com.ibm.websphere.security.jwt.JwtException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.database.DatabaseManager;
-import edu.oswego.cs.database.ProfessorCheck;
 import edu.oswego.cs.util.CPRException;
 import org.bson.Document;
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -38,7 +37,8 @@ public class AuthServices {
     public Map<String, String> generateNewToken(String token) {
         Payload payload = googleService.validateToken(token);
         if (payload == null)
-            throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token.").build());
+            throw new WebApplicationException(
+                    Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token.").build());
 
         Map<String, String> tokens = new HashMap<>();
 
@@ -75,7 +75,8 @@ public class AuthServices {
 
         } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
             e.printStackTrace();
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Unable to find token.").build());
+            throw new WebApplicationException(
+                    Response.status(Response.Status.NOT_FOUND).entity("Unable to find token.").build());
         }
     }
 
@@ -84,7 +85,8 @@ public class AuthServices {
         Principal user = securityContext.getUserPrincipal();
         JsonWebToken payload = (JsonWebToken) user;
         if (payload == null)
-            throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("JWT is not available.").build());
+            throw new WebApplicationException(
+                    Response.status(Response.Status.UNAUTHORIZED).entity("JWT is not available.").build());
 
         Map<String, String> tokens = new HashMap<>();
 
@@ -105,7 +107,8 @@ public class AuthServices {
             tokens.put("access_token", access_token);
         } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
             e.printStackTrace();
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Unable to find token.").build());
+            throw new WebApplicationException(
+                    Response.status(Response.Status.NOT_FOUND).entity("Unable to find token.").build());
         }
 
         return tokens;
@@ -117,19 +120,21 @@ public class AuthServices {
 
         if (professorCollection.find(eq("professor_id", lakerID)).first() != null) {
             roles.add("professor");
-            if(Objects.requireNonNull(professorCollection.find(eq("professor_id", lakerID)).first()).get("admin").equals(true))
+            if (Objects.requireNonNull(professorCollection.find(eq("professor_id", lakerID)).first()).get("admin")
+                    .equals(true)) {
                 roles.add("admin");
+            }
+
         } else {
             roles.add("student");
         }
-        roles.add("student");
         if (roles.size() == 0)
-            throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Can't connect to database.").build());
+            throw new CPRException(Response.Status.UNAUTHORIZED, "User is not authorized to access this resource.");
 
         return roles;
     }
 
-        // Checks if professor database is empty
+    // Checks if professor database is empty
     // if so assign admin status to first professor
     protected void CheckForDefaultAdmin(String userid) {
         if (professorCollection.countDocuments() == 0) {

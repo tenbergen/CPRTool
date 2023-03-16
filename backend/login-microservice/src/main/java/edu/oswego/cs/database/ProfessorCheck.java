@@ -31,6 +31,7 @@ public class ProfessorCheck {
         }
     }
 
+    @Deprecated(since = "03/2023", forRemoval = false)
     public void addProfessors() throws IOException {
         String path = getPath();
         var reader = new BufferedReader(new FileReader(path + "professor-list.txt"));
@@ -63,6 +64,7 @@ public class ProfessorCheck {
         reader.close();
     }
 
+    @Deprecated(since = "03/2023", forRemoval = false)
     public String getPath() {
         String path = (System.getProperty("user.dir").contains("\\")) ? System.getProperty("user.dir").replace("\\", "/") : System.getProperty("user.dir");
         String[] slicedPath = path.split("/");

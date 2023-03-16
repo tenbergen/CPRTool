@@ -9,7 +9,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
 import java.io.IOException;
-import java.util.Map;
 
 @Path("/auth")
 public class Controller {
@@ -33,7 +32,6 @@ public class Controller {
     public Response refreshToken(@Context SecurityContext securityContext) throws IOException {
         return Response.status(Response.Status.OK).entity(new AuthServices().refreshToken(securityContext)).build();
     }
-
 
     public void getEnv() {
         System.out.println("URL = " + System.getenv("URL"));

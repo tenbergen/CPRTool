@@ -8,10 +8,20 @@ public class DebugUtils {
         }
 
         int index = 0;
+        StringBuilder sb = new StringBuilder();
         for (T element : elements) {
-            System.out.println("Element " + (index++) + ":");
-            System.out.println("  Class: " + (element != null ? element.getClass().getSimpleName() : "null"));
-            System.out.println("  Value: " + element);
+            sb.append("Element ")
+                    .append(index++)
+                    .append(" {Class: ")
+                    .append(element != null ? element.getClass().getSimpleName() : "null")
+                    .append(", Value: ")
+                    .append(element)
+                    .append("}; ");
         }
+        System.out.println(sb.toString());
+    }
+
+    public static void SOUT(String s) {
+        System.out.println(s);
     }
 }
