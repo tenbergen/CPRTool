@@ -15,7 +15,7 @@ import java.io.IOException;
 @DenyAll
 public class EmailResources {
 
-    EmailService emailService;
+    EmailService emailService = new EmailService();
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
