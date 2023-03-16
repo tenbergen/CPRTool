@@ -31,7 +31,7 @@ public class ProfessorCheck {
         }
     }
 
-    @Deprecated(since = "03/2023", forRemoval = false)
+    @Deprecated(since = "1.0.2", forRemoval = false)
     public void addProfessors() throws IOException {
         String path = getPath();
         var reader = new BufferedReader(new FileReader(path + "professor-list.txt"));
@@ -58,15 +58,18 @@ public class ProfessorCheck {
 
         for (Document professor : professorCollection.find()) {
             String professorID = professor.getString("professor_id");
-            if (!professorList.contains(professorID)) professorCollection.deleteOne(eq("professor_id", professorID));
+            if (!professorList.contains(professorID))
+                professorCollection.deleteOne(eq("professor_id", professorID));
         }
 
         reader.close();
     }
 
-    @Deprecated(since = "03/2023", forRemoval = false)
+    @Deprecated(since = "1.0.2", forRemoval = false)
     public String getPath() {
-        String path = (System.getProperty("user.dir").contains("\\")) ? System.getProperty("user.dir").replace("\\", "/") : System.getProperty("user.dir");
+        String path = (System.getProperty("user.dir").contains("\\"))
+                ? System.getProperty("user.dir").replace("\\", "/")
+                : System.getProperty("user.dir");
         String[] slicedPath = path.split("/");
         String targetDir = "defaultServer";
         StringBuilder relativePathPrefix = new StringBuilder();
@@ -82,6 +85,5 @@ public class ProfessorCheck {
 
         return relativePathPrefix.toString();
     }
-
 
 }
