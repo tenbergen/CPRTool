@@ -11,7 +11,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
-@Path("email")
+@Path("send")
 @DenyAll
 public class EmailResources {
 
@@ -19,7 +19,7 @@ public class EmailResources {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("email/testemail")
+    @Path("testemail")
     @RolesAllowed({"professor","student"})
     public Response testEmail() throws IOException {
         emailService.assignmentCreatedEmail(new CourseDAO(), new AssignmentDAO());

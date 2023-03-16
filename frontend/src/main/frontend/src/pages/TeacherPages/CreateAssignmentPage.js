@@ -15,7 +15,7 @@ const CreateAssignmentPage = () => {
 
   const submitCourseUrl = `${profAssignmentUrl}/create-assignment`;
   const getAssUrl = `${profAssignmentUrl}/${courseId}/assignments`;
-  const testEmailUrl = `/email/testemail`;
+  const testEmailUrl = `${process.env.REACT_APP_URL}/email/send/testemail`;
   const [loading, setLoading] = useState(false);
 
   const assignmentFileFormData = new FormData();
