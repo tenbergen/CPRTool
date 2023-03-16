@@ -19,6 +19,7 @@ import javax.ws.rs.core.SecurityContext;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
+import static com.mongodb.client.model.Filters.eq;
 
 public class AuthServices {
     private final MongoCollection<Document> professorCollection;
@@ -43,6 +44,7 @@ public class AuthServices {
 
         String lakerID = payload.getEmail().split("@")[0];
         CheckForDefaultAdmin(lakerID);
+        System.out.println("lakerID: " + lakerID);
         Set<String> roles = getRoles(lakerID);
 
         try {
@@ -64,6 +66,7 @@ public class AuthServices {
                     .claim("aud", "cpr")
                     .claim("iss", "cpr")
                     .buildJwt().compact();
+            System.out.println("access token: " + access_token);
 
             tokens.put("access_token", access_token);
             tokens.put("refresh_token", refresh_token);
@@ -77,6 +80,7 @@ public class AuthServices {
     }
 
     public Map<String, String> refreshToken(SecurityContext securityContext) {
+        System.out.println("refreshing token");
         Principal user = securityContext.getUserPrincipal();
         JsonWebToken payload = (JsonWebToken) user;
         if (payload == null)
@@ -108,18 +112,17 @@ public class AuthServices {
     }
 
     public Set<String> getRoles(String lakerID) {
+
         Set<String> roles = new HashSet<>();
 
-//        if (professorCollection.find(eq("professor_id", lakerID)).first() != null) {
-//            roles.add("professor");
-//            if(Objects.requireNonNull(professorCollection.find(eq("professor_id", lakerID)).first()).get("admin").equals(true))
-//                roles.add("admin");
-//        } else {
-//            roles.add("student");
-//        }
-//        roles.add("student");
-        roles.add("professor");
-        roles.add("admin");
+        if (professorCollection.find(eq("professor_id", lakerID)).first() != null) {
+            roles.add("professor");
+            if(Objects.requireNonNull(professorCollection.find(eq("professor_id", lakerID)).first()).get("admin").equals(true))
+                roles.add("admin");
+        } else {
+            roles.add("student");
+        }
+        roles.add("student");
         if (roles.size() == 0)
             throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Can't connect to database.").build());
 
