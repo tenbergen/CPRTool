@@ -15,8 +15,6 @@ jobs:
       - setup_remote_docker:
           version: 19.03.13
       - checkout
-      - maven/install:
-          version: 1.4.0
 
 
 
