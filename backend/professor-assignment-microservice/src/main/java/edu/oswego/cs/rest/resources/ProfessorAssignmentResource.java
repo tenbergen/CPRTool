@@ -59,6 +59,16 @@ public class ProfessorAssignmentResource {
         return Response.status(Response.Status.OK).entity(response).build();
     }
 
+    @PUT
+    @RolesAllowed("professor")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/courses/{courseID}/assignments/{assignmentID}/editNoPeerReview")
+    public Response updateAssignmentNoPeerReview(AssignmentNoPeerReviewDAO assignmentNoPeerReviewDAO, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
+        new AssignmentInterface().updateAssignmentWithNoPeerReview(assignmentNoPeerReviewDAO, courseID, assignmentID);
+        String response = assignmentNoPeerReviewDAO.courseID + ": " + assignmentNoPeerReviewDAO.assignmentName + " successfully updated.";
+        return Response.status(Response.Status.OK).entity(response).build();
+    }
+
     @PUT@RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}/addPeerReviewData")

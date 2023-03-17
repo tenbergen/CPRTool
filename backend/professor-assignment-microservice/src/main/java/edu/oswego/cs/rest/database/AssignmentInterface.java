@@ -281,7 +281,8 @@ public class AssignmentInterface {
         assignmentDocument
                 .append("submission_is_past_due", false)
                 .append("peer_review_is_past_due", false)
-                .append("grade_finalized", false);
+                .append("grade_finalized", false)
+                .append("has_peer_review", true);
 
         MongoCursor<Document> query = assignmentsCollection.find(assignmentDocument).iterator();
         if (query.hasNext()) {
@@ -312,7 +313,8 @@ public class AssignmentInterface {
         Document assignmentDocument = Document.parse(assignmentDAOEntity.getEntity());
         assignmentDocument
                 .append("submission_is_past_due", false)
-                .append("grade_finalized", false);
+                .append("grade_finalized", false)
+                .append("has_peer_review", false);
 
         MongoCursor<Document> query = assignmentsCollection.find(assignmentDocument).iterator();
         if (query.hasNext()) {
@@ -339,6 +341,7 @@ public class AssignmentInterface {
                 .append("peer_review_instructions", peerReviewAddOnDAO.peerReviewInstructions)
                 .append("peer_review_points", peerReviewAddOnDAO.peerReviewPoints)
                 .append("peer_review_is_past_due", false);
+        assignmentDocument.replace("has_peer_review", true);
 
         assignmentsCollection.replaceOne(and(eq("assignment_id", AssignmentID),eq("course_id", courseID)), assignmentDocument);
         return (String) assignmentDocument.get("assignment_name");
@@ -404,6 +407,24 @@ public class AssignmentInterface {
         assignmentDocument.replace("peer_review_instructions", assignmentDAO.peerReviewInstructions);
         assignmentDocument.replace("peer_review_due_date", assignmentDAO.peerReviewDueDate);
         assignmentDocument.replace("peer_review_points", assignmentDAO.peerReviewPoints);
+
+        assignmentsCollection.replaceOne(and(eq("assignment_id", assignmentID),eq("course_id", courseID)), assignmentDocument);
+    }
+
+    /**
+     * Update an assignment's data that has no peer review
+     *
+     * @param assignmentNoPeerReviewDAO
+     * @param courseID
+     * @param assignmentID
+     */
+    public void updateAssignmentWithNoPeerReview(AssignmentNoPeerReviewDAO assignmentNoPeerReviewDAO, String courseID, int assignmentID) {
+        Document assignmentDocument = assignmentsCollection.find(and(eq("assignment_id", assignmentID),eq("course_id", courseID))).first();
+        if (assignmentDocument == null) throw new CPRException(Response.Status.BAD_REQUEST,"This assignment does not exist.");
+        assignmentDocument.replace("assignment_name", assignmentNoPeerReviewDAO.assignmentName);
+        assignmentDocument.replace("due_date", assignmentNoPeerReviewDAO.dueDate);
+        assignmentDocument.replace("instructions", assignmentNoPeerReviewDAO.instructions);
+        assignmentDocument.replace("points", assignmentNoPeerReviewDAO.points);
 
         assignmentsCollection.replaceOne(and(eq("assignment_id", assignmentID),eq("course_id", courseID)), assignmentDocument);
     }
