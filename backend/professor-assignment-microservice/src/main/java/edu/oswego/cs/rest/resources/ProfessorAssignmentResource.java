@@ -2,7 +2,9 @@ package edu.oswego.cs.rest.resources;
 
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.rest.daos.AssignmentDAO;
+import edu.oswego.cs.rest.daos.AssignmentNoPeerReviewDAO;
 import edu.oswego.cs.rest.daos.FileDAO;
+import edu.oswego.cs.rest.daos.PeerReviewAddOnDAO;
 import edu.oswego.cs.rest.database.AssignmentInterface;
 import org.bson.Document;
 
@@ -29,6 +31,16 @@ public class ProfessorAssignmentResource {
         return Response.status(Response.Status.OK).entity(assignmentDocument).build();
     }
 
+    @POST
+    @RolesAllowed("professor")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/courses/create-assignment-no-peer-review")
+    public Response createAssignmentNoPeerReview(AssignmentNoPeerReviewDAO assignmentNoPeerReviewDAO) throws IOException{
+        Document assignmentDocument = new AssignmentInterface().createAssignmentNoPeerReview(assignmentNoPeerReviewDAO);
+        return Response.status(Response.Status.OK).entity(assignmentDocument).build();
+    }
+
+
     @DELETE
     @RolesAllowed("professor")
     @Path("/courses/{courseID}/assignments/{assignmentID}/remove")
@@ -45,6 +57,14 @@ public class ProfessorAssignmentResource {
         new AssignmentInterface().updateAssignment(assignmentDAO, courseID, assignmentID);
         String response = assignmentDAO.courseID + ": " + assignmentDAO.assignmentName + " successfully updated.";
         return Response.status(Response.Status.OK).entity(response).build();
+    }
+
+    @PUT@RolesAllowed("professor")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/courses/{courseID}/assignments/{assignmentID}/addPeerReviewData")
+    public Response addPeerReviewData(PeerReviewAddOnDAO peerReviewAddOnDAO, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID){
+        String assignmentName = new AssignmentInterface().addPeerReviewDataToAssignment(courseID, assignmentID, peerReviewAddOnDAO);
+        return Response.status(Response.Status.OK).entity("Successfully added peer review data to " + courseID + ":" + assignmentName).build();
     }
 
     @GET
