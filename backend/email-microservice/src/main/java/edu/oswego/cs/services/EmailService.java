@@ -155,7 +155,10 @@ public class EmailService {
      */
     public void assignmentCreatedEmail(CourseDAO course, AssignmentDAO assignment) throws IOException {
         //load email body from template
-        System.out.println(System.getProperty("user.dir"));
+        File[] files = new File(System.getProperty("user.dir")).listFiles();
+        for(int i = 0; i < files.length; i++){
+            System.out.println(files[i].getName());
+        }
         BufferedReader reader = new BufferedReader(new FileReader(new File(
                 "templates" + File.separator +
                 "assignmentCreatedEmail.html")));
