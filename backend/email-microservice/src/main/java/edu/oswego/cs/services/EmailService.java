@@ -155,7 +155,7 @@ public class EmailService {
      */
     public void assignmentCreatedEmail(CourseDAO course, AssignmentDAO assignment) throws IOException {
         //load email body from template
-        File[] files = new File(System.getProperty("user.dir")).listFiles();
+        File[] files = new File(System.getProperty("user.dir")+"/workarea").listFiles();
         for(int i = 0; i < files.length; i++){
             System.out.println(files[i].getName());
         }
