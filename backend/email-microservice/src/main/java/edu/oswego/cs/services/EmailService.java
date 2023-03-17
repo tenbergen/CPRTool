@@ -92,7 +92,7 @@ public class EmailService {
         //if control gets to this point, that means all teams have submitted.
 
         //load email body from template
-        BufferedReader reader = new BufferedReader(new FileReader(new File("templates/allAssignmentsSubmitted.html")));
+        BufferedReader reader = new BufferedReader(new FileReader(new File("./templates/allAssignmentsSubmitted.html")));
         String line;
         StringBuilder stringBuilder = new StringBuilder();
         String ls = System.getProperty("line.separator");
@@ -155,7 +155,7 @@ public class EmailService {
      */
     public void assignmentCreatedEmail(CourseDAO course, AssignmentDAO assignment) throws IOException {
         //load email body from template
-        File[] files = new File(System.getProperty("user.dir")+"/workarea").listFiles();
+        File[] files = new File(".").listFiles();
         for(int i = 0; i < files.length; i++){
             System.out.println(files[i].getName());
         }
