@@ -90,8 +90,8 @@ const ProfessorEditCourseComponent = () => {
           </span>
 
           <div id='deleteButtons'>
-            <button onClick={deleteCourse}>Yes</button>
-            <button onClick={() => setShow(false)}>No</button>
+            <button id='ecc-delete-button-delete' class='inter-16-medium-red' onClick={deleteCourse}>Delete</button>
+            <button id='ecc-delete-button-cancel' class='inter-16-medium-white' onClick={() => setShow(false)}>Cancel</button>
           </div>
         </div>
       </div>
@@ -134,7 +134,7 @@ const ProfessorEditCourseComponent = () => {
             <div className='ecc-input-field'>
               <label>
                 {' '}
-                <b> Name of course: </b>{' '}
+                <span className='inter-20-bold'> Name of course: </span>{' '}
               </label>
               <Field name='course_name'>
                 {({ input }) => (
@@ -147,7 +147,7 @@ const ProfessorEditCourseComponent = () => {
               <div className='ecc-input-field'>
                 <label>
                   {' '}
-                  <b> Course abbreviation: </b>{' '}
+                  <span className='inter-20-bold'> Course abbreviation: </span>{' '}
                 </label>
                 <Field name='abbreviation'>
                   {({ input }) => (
@@ -164,7 +164,7 @@ const ProfessorEditCourseComponent = () => {
               <div className='ecc-input-field'>
                 <label>
                   {' '}
-                  <b> Course section: </b>{' '}
+                  <span className='inter-20-bold'> Course section: </span>{' '}
                 </label>
                 <Field name='course_section'>
                   {({ input }) => (
@@ -183,7 +183,7 @@ const ProfessorEditCourseComponent = () => {
               <div className='ecc-input-field'>
                 <label>
                   {' '}
-                  <b> Semester: </b>{' '}
+                  <span className='inter-20-bold'> Semester: </span>{' '}
                 </label>
                 <Field name='semester'>
                   {({ input }) => (
@@ -194,7 +194,7 @@ const ProfessorEditCourseComponent = () => {
               <div className='ecc-input-field'>
                 <label>
                   {' '}
-                  <b> Year: </b>{' '}
+                  <span className='inter-20-bold'> Year: </span>{' '}
                 </label>
                 <Field name='year'>
                   {({ input }) => (
@@ -208,7 +208,7 @@ const ProfessorEditCourseComponent = () => {
               <div className='ecc-input-field'>
                 <label>
                   {' '}
-                  <b> CRN: </b>{' '}
+                  <span className='inter-20-bold'> CRN: </span>{' '}
                 </label>
                 <Field name='crn'>
                   {({ input }) => <input type='text' name='crn' {...input} />}
@@ -218,7 +218,7 @@ const ProfessorEditCourseComponent = () => {
               <div className='ecc-input-field'>
                 <label>
                   {' '}
-                  <b> Team size: </b>{' '}
+                  <span className='inter-20-bold'> Team size: </span>{' '}
                 </label>
                 <Field name='team_size'>
                   {({ input }) => (
@@ -231,7 +231,7 @@ const ProfessorEditCourseComponent = () => {
             <div className='ecc-file-upload'>
               <label>
                 {' '}
-                <b> Course CSV: </b>{' '}
+                <span className='inter-20-bold'> Course CSV: </span>{' '}
               </label>
               <input
                 onChange={fileChangeHandler}
@@ -240,18 +240,26 @@ const ProfessorEditCourseComponent = () => {
                 accept='.csv'
               />
             </div>
-            <div className='ecc-button'>
-              <button type='submit'>Save</button>
+            <div id='ecc-button-container'>
+              <button class = 'ecc-button' type='submit'>Save</button>
+              <div className='ecc-delete'>
+                <div className='ecc-anchor' onClick={() => setShow(true)}>
+                  Delete course
+                </div>
+                <div>{showModal ? Modal() : null}</div>
+              </div>
             </div>
+
+
           </form>
         )}
       </Form>
-      <div className='ecc-delete'>
-        <div className='ecc-anchor' onClick={() => setShow(true)}>
-          Delete course
-        </div>
-        <div>{showModal ? Modal() : null}</div>
-      </div>
+      {/*<div className='ecc-delete'>*/}
+      {/*  <div className='ecc-anchor' onClick={() => setShow(true)}>*/}
+      {/*    Delete course*/}
+      {/*  </div>*/}
+      {/*  <div>{showModal ? Modal() : null}</div>*/}
+      {/*</div>*/}
     </div>
   );
 };

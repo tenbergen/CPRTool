@@ -7,6 +7,7 @@ import SidebarComponent from '../../components/SidebarComponent';
 import SubmittedAssBarComponent from '../../components/SubmittedAssBarComponent';
 import { getSubmittedAssignmentDetailsAsync } from '../../redux/features/submittedAssignmentSlice';
 import uuid from 'react-uuid';
+import {base64StringToBlob} from "blob-util";
 function ProfessorSubmittedAssignmentPage() {
   const dispatch = useDispatch();
   const { currentSubmittedAssignment, currentSubmittedAssignmentLoaded } =
@@ -27,40 +28,64 @@ function ProfessorSubmittedAssignmentPage() {
     href.click();
   };
 
-  const onFileClick = async (fileName) => {
-    const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/peer-review/download/${fileName}`;
-
-    await axios
-      .get(url, { responseType: 'blob' })
-      .then((res) => downloadFile(res.data, fileName))
-      .catch((e) => {
-        alert(`Error : ${e.response.data}`);
-      });
+  const onTemplateClick = async (fileName) => {
+    if(fileName.endsWith(".pdf")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/pdf'}), fileName)
+    }else if(fileName.endsWith(".docx")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
+    }else{
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/zip'}), fileName)
+    }
   };
 
-  const onTeamFileClick = async () => {
-    const url = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${teamId}/download`;
-
-    await axios
-      .get(url, { responseType: 'blob' })
-      .then((res) =>
-        downloadFile(res.data, currentSubmittedAssignment.submission_name)
-      )
-      .catch((e) => {
-        alert(`Error : ${e.response.data}`);
-      });
+  const onRubricFileClick = async (fileName) => {
+    if(fileName.endsWith(".pdf")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.rubric_data.data)], {type: 'application/pdf'}), fileName)
+    }else if(fileName.endsWith(".docx")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.rubric_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
+    }else{
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.rubric_data.data)], {type: 'application/zip'}), fileName)
+    }
   };
+
+  const onTeamFileClick = async (fileName) => {
+    if(fileName.endsWith(".pdf")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.submission_data.data)], {type: 'application/pdf'}), fileName)
+    }else if(fileName.endsWith(".docx")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.submission_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
+    }else{
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.submission_data.data)], {type: 'application/zip'}), fileName)
+    }
+  }
+
+  const prepareFeedbackFile = (feedbackDataName, feedbackData) => {
+    var filename = ""
+    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+    var matches = filenameRegex.exec(feedbackDataName);
+    if (matches != null && matches[1]) {
+      filename = matches[1].replace(/['"]/g, '');
+    }
+    feedbackData.then((res) => {
+      if(filename.endsWith(".pdf")){
+        downloadFile(base64StringToBlob(res, 'application/pdf'), filename)
+      }else{
+        downloadFile(base64StringToBlob(res, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'), filename)
+      }
+    })
+  };
+
 
   const onFeedBackClick = async (teamName) => {
     const url = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${teamName}/${teamId}/download`;
 
     await axios
-      .get(url, { responseType: 'blob' })
-      .then((res) => downloadFile(res.data, `${teamName}SubmissionFile`))
-      .catch((e) => {
-        alert(`Error : ${e.response.data}`);
-      });
+        .get(url, { responseType: 'blob' })
+        .then((res) => prepareFeedbackFile(res["headers"]["content-disposition"], res.data.text()))
+        .catch((e) => {
+          alert(`Error : ${e.response.data}`);
+        });
   };
+
 
   return (
     <div>
@@ -97,12 +122,10 @@ function ProfessorSubmittedAssignmentPage() {
                         <span
                           className='sac-filename'
                           onClick={() =>
-                            onFileClick(
-                              currentSubmittedAssignment.peer_review_rubric
-                            )
+                            onRubricFileClick(currentSubmittedAssignment.rubric_name)
                           }
                         >
-                          {currentSubmittedAssignment.peer_review_rubric}
+                          {currentSubmittedAssignment.rubric_name}
                         </span>
                       </div>
 
@@ -111,12 +134,10 @@ function ProfessorSubmittedAssignmentPage() {
                         <span
                           className='sac-filename'
                           onClick={() =>
-                            onFileClick(
-                              currentSubmittedAssignment.peer_review_template
-                            )
+                            onTemplateClick(currentSubmittedAssignment.peer_review_template_name)
                           }
                         >
-                          {currentSubmittedAssignment.peer_review_template}
+                          {currentSubmittedAssignment.peer_review_template_name}
                         </span>
                       </div>
 
@@ -124,7 +145,7 @@ function ProfessorSubmittedAssignmentPage() {
                         <span className='sac-title'> Team Files: </span>
                         <span
                           className='sac-filename'
-                          onClick={() => onTeamFileClick()}
+                          onClick={() => onTeamFileClick(currentSubmittedAssignment.submission_name)}
                         >
                           {currentSubmittedAssignment.submission_name}
                         </span>

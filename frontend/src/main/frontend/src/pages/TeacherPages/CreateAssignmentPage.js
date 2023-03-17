@@ -18,18 +18,32 @@ const CreateAssignmentPage = () => {
   const [loading, setLoading] = useState(false);
 
   const assignmentFileFormData = new FormData();
+  let assignmentFileName = ""
   const rubricFileFormData = new FormData();
+  let rubricFileName = ""
   const templateFileFormData = new FormData();
+  let templateFileName = ""
 
   const fileChangeHandler = (event, fileType) => {
     let file = event.target.files[0];
-    if (fileType === 'assignment') {
-      assignmentFileFormData.set('file', file);
-    } else if (fileType === 'rubric') {
-      rubricFileFormData.set('file', file);
-    } else {
-      templateFileFormData.set('file', file);
-    }
+    var reader = new FileReader()
+    reader.onloadend = () => {
+      // Use a regex to remove data url part
+      const base64String = reader.result
+          .replace('data:', '')
+          .replace(/^.+,/, '');
+      if (fileType === 'assignment') {
+        assignmentFileName = file.name
+        assignmentFileFormData.set(file.name, base64String);
+      } else if (fileType === 'rubric') {
+        rubricFileName = file.name
+        rubricFileFormData.set(file.name, base64String);
+      } else {
+        templateFileName = file.name
+        templateFileFormData.set(file.name, base64String);
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   const uploadFiles = async (assignmentId) => {
@@ -109,18 +123,18 @@ const CreateAssignmentPage = () => {
               <div className='ccp-container'>
                 <CourseBarComponent title={'Courses'} />
                 <div className='pcp-components'>
-                  <h2 className='kumba-30'> Add new assignment </h2>
+                  <h2 className='inter-28-bold'> New Assignment </h2>
                   <div className='cap-form'>
                     <form onSubmit={handleSubmit}>
                       {/*assignment field*/}
                       <div className='field-container'>
                         <div className='field-title'>
                           {' '}
-                          <span> Homework</span>{' '}
+                          <span className='inter-20-medium-white'> Assignment </span>{' '}
                         </div>
                         <div className='field-content'>
                           <div className='input-field cap-input-field'>
-                            <label> Name of assignment: </label>
+                            <label className='inter-20-medium'> Name of assignment: </label>
                             <Field name='assignment_name'>
                               {({ input }) => (
                                 <input
@@ -134,7 +148,7 @@ const CreateAssignmentPage = () => {
                           </div>
 
                           <div className='input-field cap-instructions'>
-                            <label> Instructions: </label>
+                            <label className='inter-20-medium'> Instructions: </label>
                             <Field name='instructions'>
                               {({ input }) => (
                                 <textarea
@@ -147,7 +161,7 @@ const CreateAssignmentPage = () => {
                           </div>
 
                           <div className='cap-assignment-files'>
-                            <label className='outfit-25'>Files:</label>
+                            <label className='inter-20-medium'>Files:</label>
                             <input
                               type='file'
                               name='assignment_files'
@@ -160,7 +174,7 @@ const CreateAssignmentPage = () => {
                           </div>
 
                           <div className='input-field cap-assignment-info'>
-                            <label> Due Date: </label>
+                            <label className='inter-20-medium'> Due Date: </label>
                             <Field name='due_date'>
                               {({ input }) => (
                                 <input
@@ -173,7 +187,7 @@ const CreateAssignmentPage = () => {
                               )}
                             </Field>
 
-                            <label> Points: </label>
+                            <label className='inter-20-medium'> Points: </label>
                             <Field name='points'>
                               {({ input }) => (
                                 <input
@@ -193,11 +207,11 @@ const CreateAssignmentPage = () => {
                       <div className='field-container'>
                         <div className='field-title'>
                           {' '}
-                          <span> Peer Review </span>{' '}
+                          <span className='inter-20-medium-white'> Peer Review </span>{' '}
                         </div>
                         <div className='field-content'>
                           <div className='input-field cap-instructions'>
-                            <label className='outfit-25'>
+                            <label className='inter-20-medium'>
                               {' '}
                               Peer Review Instructions:{' '}
                             </label>
@@ -213,7 +227,7 @@ const CreateAssignmentPage = () => {
                           </div>
 
                           <div className='cap-assignment-files'>
-                            <label className='outfit-25'> Rubric: </label>
+                            <label className='inter-20-medium'> Rubric: </label>
                             <input
                               type='file'
                               name='peer_review_rubric'
@@ -222,7 +236,7 @@ const CreateAssignmentPage = () => {
                               onChange={(e) => fileChangeHandler(e, 'rubric')}
                             />
 
-                            <label className='outfit-25'> Template: </label>
+                            <label className='inter-20-medium'> Template: </label>
                             <input
                               type='file'
                               name='peer_review_template'
@@ -233,7 +247,7 @@ const CreateAssignmentPage = () => {
                           </div>
 
                           <div className='input-field cap-assignment-info'>
-                            <label> Due Date: </label>
+                            <label className='inter-20-medium'> Due Date: </label>
                             <Field name='peer_review_due_date'>
                               {({ input }) => (
                                 <input
@@ -246,7 +260,7 @@ const CreateAssignmentPage = () => {
                               )}
                             </Field>
 
-                            <label> Points: </label>
+                            <label className='inter-20-medium'> Points: </label>
                             <Field name='peer_review_points'>
                               {({ input }) => (
                                 <input
@@ -264,7 +278,7 @@ const CreateAssignmentPage = () => {
                       </div>
 
                       <div className='cap-button'>
-                        <button className='green-button' type='submit'>
+                        <button className='green-button-large' type='submit'>
                           {' '}
                           Create{' '}
                         </button>

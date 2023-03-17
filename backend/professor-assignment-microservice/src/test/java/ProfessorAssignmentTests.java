@@ -1,22 +1,22 @@
-//import edu.oswego.cs.rest.daos.AssignmentDAO;
-//import org.junit.jupiter.api.*;
-//
-//import javax.json.bind.Jsonb;
-//import javax.json.bind.JsonbBuilder;
-//import javax.ws.rs.client.Client;
-//import javax.ws.rs.client.ClientBuilder;
-//import javax.ws.rs.client.Entity;
-//import javax.ws.rs.client.WebTarget;
-//import javax.ws.rs.core.MediaType;
-//import javax.ws.rs.core.Response;
-//import java.util.ArrayList;
-//import java.util.HashMap;
-//import java.util.List;
+import edu.oswego.cs.rest.daos.AssignmentDAO;
+import org.junit.jupiter.api.*;
+
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 //
 //// DISCLAIMER: Don't run all the tests at the same time. You'll likely screw up the database and fail the tests in some way.
 //// Read through the tests to see what they create, update and delete before you run them please.
 //
-//public class ProfessorAssignmentTests {
+public class ProfessorAssignmentTests {
 //
 //    private static final Jsonb jsonb = JsonbBuilder.create();
 //    private static final ArrayList<AssignmentDAO> expectedAssignments = new ArrayList<>();
@@ -324,5 +324,5 @@
 //      targetUrl = "/courses/"+assignment1.getCourseID()+"/assignments/"+assignmentIdCount+"/view-files";
 //        // (NOT INCLUDED HERE)
 //    }
-//}
-//
+}
+

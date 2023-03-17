@@ -24,15 +24,25 @@ const RegularAssignmentComponent = () => {
 
   const assignmentFileHandler = (event) => {
     let file = event.target.files[0];
-    assignmentFileFormData.set('file', file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      // Use a regex to remove data url part
+      const base64String = reader.result
+          .replace('data:', '')
+          .replace(/^.+,/, '');
+      assignmentFileFormData.set(file.name, base64String);
+    };
+    reader.readAsDataURL(file);
   };
 
   const onAssignmentClick = async () => {
-    const fileName = currentAssignment.assignment_instructions;
-    const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/download/${fileName}`;
-    await axios
-      .get(url, { responseType: 'blob' })
-      .then((res) => downloadFile(res.data, fileName));
+    if(currentAssignment.assignment_instructions_name.endsWith(".pdf")){
+      downloadFile(new Blob([Uint8Array.from(currentAssignment.assignment_instructions_data.data)], {type: 'application/pdf'}), currentAssignment.assignment_instructions_name)
+    }else if(currentAssignment.assignment_instructions_name.endsWith(".docx")){
+      downloadFile(new Blob([Uint8Array.from(currentAssignment.assignment_instructions_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), currentAssignment.assignment_instructions_name)
+    }else{
+      downloadFile(new Blob([Uint8Array.from(currentAssignment.assignment_instructions_data.data)], {type: 'application/zip'}), currentAssignment.assignment_instructions_name)
+    }
   };
 
   const downloadFile = (blob, fileName) => {
@@ -64,20 +74,20 @@ const RegularAssignmentComponent = () => {
     <div>
       {currentAssignmentLoaded && (
         <div>
-          <h2 className='kumba-30'>{currentAssignment.assignment_name}</h2>
+          <h2 className='inter-28-bold'>{currentAssignment.assignment_name}</h2>
           <div className='ap-assignmentArea'>
             <h3>
-              <span className='outfit-25'> Instructions: </span>
-              <span className='outfit-25 span1-ap'>
+              <span className='inter-20-bold'> Instructions: </span>
+              <span className='inter-20-bold span1-ap'>
                 Due: {currentAssignment.due_date}
               </span>
               <br />
-              <p className='outfit-18'>{currentAssignment.instructions}</p>
+              <p className='inter-16-medium-black'>{currentAssignment.instructions}</p>
               <br />
               <br />
-              <span className='outfit-25'> Files: </span>
-              <span className='outfit-18 p2' onClick={onAssignmentClick}>
-                {currentAssignment.assignment_instructions}
+              <span className='inter-20-bold'> Files: </span>
+              <span className='inter-16-bold-blue p2' onClick={onAssignmentClick}>
+                {currentAssignment.assignment_instructions_name}
               </span>
               <br />
               <br />
@@ -91,7 +101,7 @@ const RegularAssignmentComponent = () => {
                 />
               </div>
               <div className='ap-button'>
-                <button className='green-button' onClick={handleSubmit}>
+                <button className='green-button-medium' onClick={handleSubmit}>
                   {' '}
                   Submit{' '}
                 </button>

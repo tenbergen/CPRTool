@@ -7,7 +7,7 @@
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   background: #ffffff;
-  border-radius: 50px;
+  border-radius: 10px;
 }
 
 #bigBox {
@@ -17,13 +17,6 @@
   overflow: auto;
   width: 100%;
   height: 100%;
-  background-image: conic-gradient(
-    from 180deg at 50% 50%,
-    #7398ff -128.84deg,
-    #57e1b2 25.81deg,
-    #7398ff 231.16deg,
-    #57e1b2 385.81deg
-  );
 }
 
 .google {

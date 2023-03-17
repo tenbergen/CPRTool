@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');
+
 #sidebar .pro-sidebar {
   height: 100vh;
 }
@@ -40,9 +42,13 @@
 }
 
 #sidebar .pro-sidebar-inner .pro-sidebar-layout ul .pro-inner-item {
-  color: #000;
   margin: 10px 0px;
-  font-weight: bold;
+  font-family: "Inter", sans-serif;
+  color: black
+
+;
+  font-size: 24px;
+  font-weight: 700;
 }
 
 #sidebar
@@ -64,6 +70,7 @@
   .pro-icon-wrapper
   .pro-item-content {
   color: #000;
+  font-family: "Inter", sans-serif;
 }
 
 #sidebar .pro-sidebar-inner .pro-sidebar-layout .active {

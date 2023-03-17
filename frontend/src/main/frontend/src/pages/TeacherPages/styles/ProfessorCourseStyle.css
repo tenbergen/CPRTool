@@ -1,18 +1,11 @@
 .pcp-parent {
   display: flex;
   flex-direction: row;
-  background: conic-gradient(
-    from 180deg at 50% 50%,
-    #7398ff -128.84deg,
-    #57e1b2 25.81deg,
-    #7398ff 231.16deg,
-    #57e1b2 385.81deg
-  );
 }
 
 .pcp-container {
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 50px;
+  background-color: #d4eefc;
+  border-radius: 10px;
   margin: 3% 5% 3% 2%;
   flex-grow: 1;
   display: flex;
@@ -22,10 +15,10 @@
 }
 
 .pcp-components {
-  border-radius: 50px;
+  border-radius: 0 10px 10px 0;
   flex-grow: 1;
   padding: 2%;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: white;
 }
 
 .pcp-components::-webkit-scrollbar {
@@ -50,7 +43,6 @@
 .pcp-component-links {
   display: flex;
   flex-direction: row;
-  font-weight: bold;
   text-align: center;
   justify-content: space-between;
   padding: 0 5% 0 5%;
@@ -61,13 +53,118 @@
 }
 
 .pcp-component-link {
-  font-size: 24px;
   padding-left: 24px;
 }
 
 .pcp-component-link-clicked {
-  font-size: 24px;
   padding-left: 24px;
   text-decoration: underline;
   color: #5267a3;
+}
+
+.admin-container{
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 80%;
+}
+
+.sidebar{
+  position: relative;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  flex: 1;
+  height: 75%;
+  background-color: #d4eefc;
+}
+
+.user-roles{
+  position: relative;
+  flex: 3;
+  height: 75%;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background-color: #fafdff;
+}
+
+.user-roles h2 {
+  position: absolute;
+  top: 40px; 
+  left: 40px; 
+  margin: 0;
+}
+
+.sidebar h1 {
+  position: absolute;
+  top: 40px; 
+  left: 40px; 
+  margin: 0;
+}
+
+.add-user-button {
+  position: absolute;
+  top: 40px; 
+  right: 40px; 
+  background-color: #28A745;
+  color: #fff;
+  border-radius: 5px;
+  padding: 10px 40px;
+  font-size: 1.2em;
+}
+
+.user-list {
+  position: absolute;
+  top: 150px; /* Adjust the top value to match your design */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: scroll;
+  height: calc(100% - 80px);
+  padding: 0 40px 80px;
+  margin: 0 auto;
+  max-width: 1200px; /* or any desired value */
+  max-height: 450px;
+}
+
+.header {
+  background-color: #4a7dfc;
+  color: white;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.user-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.user-item > div {
+  width: 25%; /* Set the width of each column */
+}
+
+.user-item > div:last-child {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.edit-button {
+  margin-right: 10px;
+}
+
+.delete-button {
+  color: rgb(0, 0, 0);
+  border: none;
+  width: 30px;
+  height: 30px;
+  font-size: 1.2em;
+  cursor: pointer;
+  margin-right: 100px;
 }

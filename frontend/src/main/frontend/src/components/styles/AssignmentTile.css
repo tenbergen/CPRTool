@@ -1,8 +1,7 @@
 .ass-tile {
-  border: 3px solid #9cf0d3;
   box-sizing: border-box;
-  border-radius: 25px;
-  background-color: #9cf0d3;
+  border-radius: 5px;
+  background-color: #4a7dfc;
   margin-bottom: 2%;
   margin-left: 3%;
   margin-right: 3%;
@@ -15,18 +14,19 @@
 
 .ass-tile-title {
   display: flex;
-  justify-content: right;
-  margin-right: 4%;
-  padding-top: 1%;
-  padding-bottom: 2%;
+  justify-content: left;
+  margin-left: 3%;
+  padding: 15px 0;
 }
 
 .ass-tile-content {
   cursor: pointer;
   padding: 2% 4%;
   background-color: white;
-  border-bottom-left-radius: 25px;
-  border-bottom-right-radius: 25px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border: 0.5px solid #212529;
+  border-top: none;
 }
 
 .ass-tile-info {
@@ -48,17 +48,19 @@
 }
 
 .ass-tile-delete {
-  margin-top: 2%;
-  color: #f07371;
-  padding: 5px 3px;
+  font-family: "Inter", sans-serif;
+  border: solid .5px #F04438;
   border-radius: 5px;
-  text-decoration: underline;
-  transition: all 0.2s ease-out;
+  font-size: 16px;
+  color: #F04438;
+  padding: 12px;
+  width: 150px;
+  padding-left: 26px;
 }
 
 .ass-tile-delete:hover {
   cursor: pointer;
-  background-color: #ff0000;
+  background-color: #F04438;
   color: #fff;
   opacity: 0.8;
   text-decoration: none;

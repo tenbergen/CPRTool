@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');
+
 .ecc-form {
   background-color: white;
   border-radius: 50px;
@@ -15,12 +17,7 @@
 }
 
 .ecc-input-field label {
-  margin-right: 2%;
-}
-
-.ecc-input-field label b,
-.ecc-file-upload label b {
-  font-weight: 500;
+  margin-right: 10px;
 }
 
 .ecc-input-field input {
@@ -28,7 +25,9 @@
   padding: 5px 5px 5px 5px;
   border: 2px solid #949494;
   box-sizing: border-box;
-  border-radius: 50px;
+  border-radius: 5px;
+  font-size: 18px;
+  font-family: "Inter", sans-serif;
 }
 
 .ecc-row-multiple {
@@ -42,18 +41,24 @@
 }
 
 .ecc-file-upload input::file-selector-button {
-  background: #82dfe8;
-  border-radius: 50px;
-  padding: 10px 45px 10px 45px;
+  width: 140px;
+  height: 40px;
+  background-color: #4a7dfc;
+  border-radius: 5px;
+  color: white;
   border: none;
-  font-size: medium;
-  font-weight: bold;
-  transition: all 0.2s ease-out;
-}
 
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+}
 .ecc-file-upload input::file-selector-button:hover {
-  cursor: pointer;
-  background-color: #58d5e1;
+  background-color: #1d2f99;
+}
+.ecc-file-upload input::file-selector-button:active {
+  background-color: #102080;
 }
 
 .ecc-button {
@@ -66,19 +71,25 @@
   font-weight: bold;
 }
 
-.ecc-button button {
-  background: #9cf0d3;
-  border-radius: 50px;
-  padding: 10px 45px 10px 45px;
-  border: none;
-  font-size: medium;
-  font-weight: bold;
-  transition: all 0.2s ease-out;
-}
+.ecc-button {
+  width: 210px;
+  height: 50px;
+  background-color: #28a745;
+  border-radius: 5px;
+  color: white;
 
-.ecc-button button:hover {
-  cursor: pointer;
-  background-color: #58eeba;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+.ecc-button:hover {
+  background-color: #027A48;
+}
+.ecc-button:active {
+  background-color: #05603a;
 }
 
 .ecc-delete {
@@ -88,28 +99,47 @@
 }
 
 .ecc-anchor {
-  color: #f07371;
-  font-weight: bold;
-  text-decoration: underline;
-  transition: all 0.2s ease-out;
+  font-family: "Inter", sans-serif;
+  border: solid .5px #F04438;
   border-radius: 5px;
-  padding: 3px 5px;
+  font-size: 20px;
+  color: #F04438;
+  padding: 12px;
+  width: 150px;
+  padding-left: 26px;
 }
-
-.ecc-delete button {
-  background: #9cf0d3;
-  border-radius: 50px;
-  padding: 10px 45px 10px 45px;
-  border: none;
-  font-size: medium;
-  font-weight: bold;
-  margin-right: 2%;
-}
-
 .ecc-anchor:hover {
-  cursor: pointer;
-  background-color: #ff0000;
+  background-color: #F04438;
   color: #fff;
   opacity: 0.8;
   text-decoration: none;
+}
+
+#ecc-delete-button-delete {
+  border: solid .5px #F04438;
+
+  width: 118px;
+  height: 34px;
+  background-color: white;
+  border-radius: 5px;
+  color: #F04438;
+
+  margin-right: 30px;
+}
+
+#ecc-delete-button-cancel {
+  font-family: "Inter", sans-serif;
+  width: 118px;
+  height: 34px;
+  background-color: #4a7dfc;
+  border-radius: 5px;
+  color: white;
+  border: none;
+}
+
+#ecc-button-container{
+  display: flex;
+  padding-left: 40%;
+  align-items: baseline;
+  justify-content: space-between;
 }
