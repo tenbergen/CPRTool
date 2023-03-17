@@ -31,6 +31,14 @@ public class ProfessorAssignmentResource {
         return Response.status(Response.Status.OK).entity(assignmentDocument).build();
     }
 
+    /**
+     * Create an assignment with no initial peer review data
+     *
+     * @param assignmentNoPeerReviewDAO
+     * @return
+     * @throws IOException
+     */
+
     @POST
     @RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -59,6 +67,15 @@ public class ProfessorAssignmentResource {
         return Response.status(Response.Status.OK).entity(response).build();
     }
 
+    /**
+     * Edit an assignment with no peer review data
+     *
+     * @param assignmentNoPeerReviewDAO
+     * @param courseID
+     * @param assignmentID
+     * @return
+     */
+
     @PUT
     @RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -69,6 +86,15 @@ public class ProfessorAssignmentResource {
         return Response.status(Response.Status.OK).entity(response).build();
     }
 
+
+    /**
+     * Add peer review data to an assignment that has none
+     *
+     * @param peerReviewAddOnDAO
+     * @param courseID
+     * @param assignmentID
+     * @return
+     */
     @PUT@RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}/addPeerReviewData")
