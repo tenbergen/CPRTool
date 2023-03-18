@@ -186,8 +186,11 @@ public class EmailService {
         Document professor = null; //I don't know how to get that
 
         for(Document student : students) {
+            System.out.println(student.getList("courses", String.class));
+            System.out.println(course.courseName);
             String to = student.getString("student_id" + "@oswego.edu"); //to be changed when db starts storing email domains.
             //fill in specifics
+            /*
             msgBody = msgBody.replace("[Today's Date]", LocalDate.now().toString());
             msgBody = msgBody.replace("[Name of Student]", student.getString("first_name") + " " + student.getString("last_name"));
             msgBody = msgBody.replace("[Name of Course]",course.courseName);
@@ -195,7 +198,7 @@ public class EmailService {
             msgBody = msgBody.replace("[Assignment Name]", assignment.assignmentName);
             msgBody = msgBody.replace("[Due Date]", assignment.dueDate);
             msgBody = msgBody.replace("[Instructor Name]", professor.getString("professor_id"));
-
+            */
             //send email
             String msgSubject = "A New Assignment Has Been Created";
             try {
