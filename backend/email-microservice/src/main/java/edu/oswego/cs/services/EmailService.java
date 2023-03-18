@@ -155,10 +155,7 @@ public class EmailService {
      */
     public void assignmentCreatedEmail(CourseDAO course, AssignmentDAO assignment) throws IOException {
         //load email body from template
-        File[] files = new File(System.getProperty("user.dir") + "/resources").listFiles();
-        for(int i = 0; i < files.length; i++){
-            System.out.println(files[i].getName());
-        }
+        /*
         BufferedReader reader = new BufferedReader(new FileReader(new File("resources" + File.separator +
                 "assignmentCreatedEmail.html")));
         String line;
@@ -169,6 +166,10 @@ public class EmailService {
             stringBuilder.append(ls);
         }
         String msgBody = stringBuilder.toString();
+
+         */
+
+        String msgBody = "Test Email Please Ignore";
 
         //get list of recipients
         MongoCursor<Document> query = studentCollection.find().iterator();
@@ -187,13 +188,13 @@ public class EmailService {
         for(Document student : students) {
             String to = student.getString("student_id" + "@oswego.edu"); //to be changed when db starts storing email domains.
             //fill in specifics
-            msgBody.replace("[Today's Date]", LocalDate.now().toString());
-            msgBody.replace("[Name of Student]", student.getString("first_name") + " " + student.getString("last_name"));
-            msgBody.replace("[Name of Course]",course.courseName);
-            msgBody.replace("[Course Name]", course.courseName);
-            msgBody.replace("[Assignment Name]", assignment.assignmentName);
-            msgBody.replace("[Due Date]", assignment.dueDate);
-            msgBody.replace("[Instructor Name]", professor.getString("professor_id"));
+            msgBody = msgBody.replace("[Today's Date]", LocalDate.now().toString());
+            msgBody = msgBody.replace("[Name of Student]", student.getString("first_name") + " " + student.getString("last_name"));
+            msgBody = msgBody.replace("[Name of Course]",course.courseName);
+            msgBody = msgBody.replace("[Course Name]", course.courseName);
+            msgBody = msgBody.replace("[Assignment Name]", assignment.assignmentName);
+            msgBody = msgBody.replace("[Due Date]", assignment.dueDate);
+            msgBody = msgBody.replace("[Instructor Name]", professor.getString("professor_id"));
 
             //send email
             String msgSubject = "A New Assignment Has Been Created";
