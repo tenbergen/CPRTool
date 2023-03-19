@@ -89,7 +89,7 @@ public class EmailService {
 
         String path = getPath();
         System.out.println("Path: " + path);
-        BufferedReader in = new BufferedReader(new FileReader(path + "resources"
+        BufferedReader in = new BufferedReader(new FileReader(path + "templates"
                                                                 + File.separator +
                                                                 "assignmentCreatedEmail.html"));
         StringBuilder stringBuilder = new StringBuilder();
