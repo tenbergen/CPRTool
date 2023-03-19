@@ -86,8 +86,9 @@ public class EmailService {
 
         System.out.println(System.getProperty("user.dir"));
 
-        /*
+
         String path = getPath();
+        System.out.println("Path: " + path);
         BufferedReader in = new BufferedReader(new FileReader(path + "resources"
                                                                 + File.separator +
                                                                 "assignmentCreatedEmail.html"));
@@ -101,7 +102,6 @@ public class EmailService {
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         in.close();
         System.out.println(stringBuilder.toString());
-        */
 
         //send email
 
