@@ -33,6 +33,7 @@ public class ProfessorCheck {
 
     public void addProfessors() throws IOException {
         String path = getPath();
+        System.out.println("PC Path: " + path);
         var reader = new BufferedReader(new FileReader(path + "professor-list.txt"));
         String line = reader.readLine();
         ArrayList<String> professorList = new ArrayList<>();
