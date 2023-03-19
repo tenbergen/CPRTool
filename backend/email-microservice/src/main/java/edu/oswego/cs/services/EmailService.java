@@ -83,6 +83,7 @@ public class EmailService {
      */
     public void assignmentCreatedEmail(CourseDAO course, AssignmentDAO assignment) throws IOException {
         //read contents of template
+        /*
         BufferedReader in = new BufferedReader(new FileReader(
                 "/home/schmitt/CSC480-22S-fork/backend/email-microservice/src/main/resources/assignmentCreatedEmail.html"));
         StringBuilder stringBuilder = new StringBuilder();
@@ -95,6 +96,7 @@ public class EmailService {
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         in.close();
         System.out.println(stringBuilder.toString());
+        */
         System.out.println(System.getProperty("user.dir"));
 
         //send email
