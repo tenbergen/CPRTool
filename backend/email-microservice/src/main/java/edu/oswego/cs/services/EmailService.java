@@ -83,7 +83,7 @@ public class EmailService {
      */
     public void assignmentCreatedEmail(CourseDAO course, AssignmentDAO assignment) throws IOException {
         String to="pschmitt@oswego.edu";
-        String from="patsLaptop@pschmitt.com";
+        String from="patslaptop@cprtool.org";
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
 
