@@ -148,6 +148,113 @@ public class AdminInterface {
         studentCollection.insertOne(newStudent);
     }
 
+    public void promoteProfessorToAdmin(String user_id) {
+        if (user_id == null || user_id.isEmpty()) {
+            throw new CPRException(Response.Status.NO_CONTENT, "user_id not specified.");
+        }
+
+        if (!checkProfessor(user_id)) {
+            throw new CPRException(Response.Status.NOT_FOUND, "Professor user not found.");
+        }
+
+        professorCollection.updateOne(eq("professor_id", user_id), set("admin", true));
+    }
+
+    public void promoteStudentToProfessor(String user_id) {
+        if (user_id == null || user_id.isEmpty()) {
+            throw new CPRException(Response.Status.NO_CONTENT, "user_id not specified.");
+        }
+
+        if (!checkStudent(user_id)) {
+            throw new CPRException(Response.Status.NOT_FOUND, "Student user not found.");
+        }
+
+        Document studentDocument = studentCollection.find(eq("student_id", user_id)).first();
+        String firstName = studentDocument.getString("first_name");
+        String lastName = studentDocument.getString("last_name");
+
+        Document newProfessor = new Document("professor_id", user_id)
+                .append("first_name", firstName)
+                .append("last_name", lastName)
+                .append("admin", false);
+        professorCollection.insertOne(newProfessor);
+        studentCollection.deleteOne(eq("student_id", user_id));
+    }
+
+    public void promoteStudentToAdmin(String user_id) {
+        if (user_id == null || user_id.isEmpty()) {
+            throw new CPRException(Response.Status.NO_CONTENT, "user_id not specified.");
+        }
+
+        if (!checkStudent(user_id)) {
+            throw new CPRException(Response.Status.NOT_FOUND, "Student user not found.");
+        }
+
+        Document studentDocument = studentCollection.find(eq("student_id", user_id)).first();
+        String firstName = studentDocument.getString("first_name");
+        String lastName = studentDocument.getString("last_name");
+
+        Document newProfessor = new Document("professor_id", user_id)
+                .append("first_name", firstName)
+                .append("last_name", lastName)
+                .append("admin", true);
+        professorCollection.insertOne(newProfessor);
+        studentCollection.deleteOne(eq("student_id", user_id));
+    }
+
+    public void demoteProfessorToStudent(String user_id) {
+        if (user_id == null || user_id.isEmpty()) {
+            throw new CPRException(Response.Status.NO_CONTENT, "user_id not specified.");
+        }
+
+        if (!checkProfessor(user_id)) {
+            throw new CPRException(Response.Status.NOT_FOUND, "Professor user not found.");
+        }
+
+        Document professorDocument = professorCollection.find(eq("professor_id", user_id)).first();
+        String firstName = professorDocument.getString("first_name");
+        String lastName = professorDocument.getString("last_name");
+
+        Document newStudent = new Document("student_id", user_id)
+                .append("first_name", firstName)
+                .append("last_name", lastName);
+        studentCollection.insertOne(newStudent);
+        professorCollection.deleteOne(eq("professor_id", user_id));
+    }
+
+    public void demoteAdminToProfessor(String user_id) {
+        if (user_id == null || user_id.isEmpty()) {
+            throw new CPRException(Response.Status.NO_CONTENT, "user_id not specified.");
+        }
+
+        if (!checkAdmin(user_id)) {
+            throw new CPRException(Response.Status.NOT_FOUND, "Admin user not found.");
+        }
+
+        professorCollection.updateOne(eq("professor_id", user_id), set("admin", false));
+
+    }
+
+    public void demoteAdminToStudent(String user_id) {
+        if (user_id == null || user_id.isEmpty()) {
+            throw new CPRException(Response.Status.NO_CONTENT, "user_id not specified.");
+        }
+
+        if (!checkAdmin(user_id)) {
+            throw new CPRException(Response.Status.NOT_FOUND, "Admin user not found.");
+        }
+
+        Document professorDocument = professorCollection.find(eq("professor_id", user_id)).first();
+        String firstName = professorDocument.getString("first_name");
+        String lastName = professorDocument.getString("last_name");
+
+        Document newStudent = new Document("student_id", user_id)
+                .append("first_name", firstName)
+                .append("last_name", lastName);
+        studentCollection.insertOne(newStudent);
+        professorCollection.deleteOne(eq("professor_id", user_id));
+    }
+
     public Boolean checkAdmin(String user_id) {
         Document adminDocument = professorCollection.find(
                 Filters.and(

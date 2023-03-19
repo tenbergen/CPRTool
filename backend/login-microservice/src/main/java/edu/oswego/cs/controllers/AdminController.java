@@ -80,6 +80,7 @@ public class AdminController {
     @Path("/roles/promote/professorToAdmin/{user_id}")
     public Response promoteProfessorToAdmin(@Context SecurityContext securityContext,
             @PathParam("user_id") String userId) {
+        new AdminInterface().promoteProfessorToAdmin(userId);
         return Response.status(Response.Status.OK).entity("Admin role added to professor user.").build();
     }
 
@@ -89,6 +90,7 @@ public class AdminController {
     @Path("/roles/promote/studentToProfessor/{user_id}")
     public Response promoteStudentToProfessor(@Context SecurityContext securityContext,
             @PathParam("user_id") String userId) {
+        new AdminInterface().promoteStudentToProfessor(userId);
         return Response.status(Response.Status.OK).entity("Student promoted to professor role.").build();
     }
 
@@ -98,6 +100,7 @@ public class AdminController {
     @Path("/roles/promote/studentToAdmin/{user_id}")
     public Response promoteStudentToAdmin(@Context SecurityContext securityContext,
             @PathParam("user_id") String userId) {
+        new AdminInterface().promoteStudentToAdmin(userId);
         return Response.status(Response.Status.OK).entity("Student promoted to admin role.").build();
     }
 
@@ -107,6 +110,7 @@ public class AdminController {
     @Path("/roles/demote/professorToStudent/{user_id}")
     public Response demoteProfessorToStudent(@Context SecurityContext securityContext,
             @PathParam("user_id") String userId) {
+        new AdminInterface().demoteProfessorToStudent(userId);
         return Response.status(Response.Status.OK).entity("Admin role removed from professor user.").build();
     }
 
@@ -116,6 +120,7 @@ public class AdminController {
     @Path("/roles/demote/adminToProfessor/{user_id}")
     public Response demoteAdminToProfessor(@Context SecurityContext securityContext,
             @PathParam("user_id") String userId) {
+        new AdminInterface().demoteAdminToProfessor(userId);
         return Response.status(Response.Status.OK).entity("Admin role removed from professor user.").build();
     }
 
@@ -125,6 +130,7 @@ public class AdminController {
     @Path("/roles/demote/adminToStudent/{user_id}")
     public Response demoteAdminToStudent(@Context SecurityContext securityContext,
             @PathParam("user_id") String userId) {
+        new AdminInterface().demoteAdminToStudent(userId);
         return Response.status(Response.Status.OK).entity("Admin role removed from student user.").build();
     }
 }
