@@ -4,7 +4,6 @@ FROM maven:3.8.4 as maven
 WORKDIR .
 COPY . .
 
-EXPOSE 587/tcp
 RUN mvn package -DskipTests
 
 # Stage 2: Copy the .jar file and server.xml into the required location.
