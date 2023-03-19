@@ -82,8 +82,25 @@ public class EmailService {
      * @param assignment the assignment that has been created
      */
     public void assignmentCreatedEmail(CourseDAO course, AssignmentDAO assignment) throws IOException {
+        //read contents of template
+        BufferedReader in = new BufferedReader(new FileReader(
+                "/home/schmitt/CSC480-22S-fork/backend/email-microservice/src/main/resources/assignmentCreatedEmail.html"));
+        StringBuilder stringBuilder = new StringBuilder();
+        String line;
+        String ls = System.getProperty("line.separator");
+        while((line = in.readLine()) != null){
+            stringBuilder.append(line);
+            stringBuilder.append(ls);
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        in.close();
+        System.out.println(stringBuilder.toString());
+        System.out.println(System.getProperty("user.dir"));
+
+        //send email
+
         String to="pschmitt@oswego.edu";
-        String from="patslaptop@cprtool.org";
+        String from="cprtoolemail@gmail.com";
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
 
