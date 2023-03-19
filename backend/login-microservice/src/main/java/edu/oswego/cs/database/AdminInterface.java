@@ -25,7 +25,7 @@ public class AdminInterface {
     private final MongoCollection<Document> professorCollection;
     private final MongoCollection<Document> studentCollection;
 
-    // Make a generic method to reecive a mongo collection and check connection
+    // Make a generic method to receive a mongo collection and check connection
     public AdminInterface() {
         DatabaseManager databaseManager = new DatabaseManager();
         try {
@@ -54,8 +54,6 @@ public class AdminInterface {
     }
 
     public void deleteAdminUser(String user_id) {
-        System.out.println("Delete Admin User (interface)" + user_id);
-
         if (professorCollection.countDocuments() == 1) {
             throw new CPRException(Response.Status.BAD_REQUEST, "Cannot delete last admin user.");
         }
@@ -236,7 +234,7 @@ public class AdminInterface {
         professorCollection.deleteOne(eq("professor_id", user_id));
     }
 
-    public Boolean checkAdmin(String user_id) {
+    private Boolean checkAdmin(String user_id) {
         Document adminDocument = professorCollection.find(
                 Filters.and(
                         eq("professor_id", user_id),
@@ -248,7 +246,7 @@ public class AdminInterface {
         return true;
     }
 
-    public Boolean checkStudent(String user_id) {
+    private Boolean checkStudent(String user_id) {
         Document studentDocument = studentCollection.find(eq("student_id", user_id)).first();
         if (studentDocument == null) {
             return false;
@@ -256,7 +254,7 @@ public class AdminInterface {
         return true;
     }
 
-    public Boolean checkProfessor(String user_id) {
+    private Boolean checkProfessor(String user_id) {
         Document professorDocument = professorCollection.find(eq("professor_id", user_id)).first();
         if (professorDocument == null) {
             return false;
@@ -264,7 +262,7 @@ public class AdminInterface {
         return true;
     }
 
-    public void checkIfUserIdExists(String user_id) {
+    private void checkIfUserIdExists(String user_id) {
         if (user_id == null || user_id.isEmpty()) {
             throw new CPRException(Response.Status.BAD_REQUEST, "User ID cannot be null.");
         }

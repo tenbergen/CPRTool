@@ -21,7 +21,6 @@ public class AdminController {
     @Path("/delete/admin/{user_id}")
     public Response deleteAdminUser(@Context SecurityContext securityContext, @PathParam("user_id") String userId)
             throws IOException {
-        System.out.println("Delete Admin User " + userId);
         new AdminInterface(userId).deleteAdminUser(userId);
         return Response.status(Response.Status.OK).entity("Admin user deleted.").build();
     }
@@ -31,7 +30,7 @@ public class AdminController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/delete/student/{user_id}")
     public Response deleteStudentUser(@Context SecurityContext securityContext, @PathParam("user_id") String userId) {
-        new AdminInterface(userId).deleteStudentUser(userId);(userId);
+        new AdminInterface(userId).deleteStudentUser(userId);
         return Response.status(Response.Status.OK).entity("Student user deleted.").build();
     }
 
