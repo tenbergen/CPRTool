@@ -83,9 +83,13 @@ public class EmailService {
      */
     public void assignmentCreatedEmail(CourseDAO course, AssignmentDAO assignment) throws IOException {
         //read contents of template
-        /*
-        BufferedReader in = new BufferedReader(new FileReader(
-                "/home/schmitt/CSC480-22S-fork/backend/email-microservice/src/main/resources/assignmentCreatedEmail.html"));
+
+        System.out.println(System.getProperty("user.dir"));
+
+
+        BufferedReader in = new BufferedReader(new FileReader(getPath() + "resources"
+                                                                + File.separator +
+                                                                "assignmentCreatedEmail.html"));
         StringBuilder stringBuilder = new StringBuilder();
         String line;
         String ls = System.getProperty("line.separator");
@@ -96,8 +100,7 @@ public class EmailService {
         stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         in.close();
         System.out.println(stringBuilder.toString());
-        */
-        System.out.println(System.getProperty("user.dir"));
+
 
         //send email
 
@@ -223,5 +226,23 @@ public class EmailService {
      */
     public void profanityEmail(CourseDAO course, TeamDAO team, AssignmentDAO assignment){
 
+    }
+
+    public String getPath() {
+        String path = (System.getProperty("user.dir").contains("\\")) ? System.getProperty("user.dir").replace("\\", "/") : System.getProperty("user.dir");
+        String[] slicedPath = path.split("/");
+        String targetDir = "defaultServer";
+        StringBuilder relativePathPrefix = new StringBuilder();
+
+        for (int i = slicedPath.length - 1; !slicedPath[i].equals(targetDir); i--) {
+            relativePathPrefix.append("../");
+        }
+
+        if (System.getProperty("user.dir").contains("\\")) {
+            String reg = "//";
+            relativePathPrefix = new StringBuilder(relativePathPrefix.toString().replace("/", "\\"));
+        }
+
+        return relativePathPrefix.toString();
     }
 }
