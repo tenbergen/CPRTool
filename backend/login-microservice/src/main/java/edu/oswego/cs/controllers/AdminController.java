@@ -74,21 +74,57 @@ public class AdminController {
         return Response.status(Response.Status.OK).entity("Professor user added.").build();
     }
 
-    // add Admin Role to Professor User by User Id
+    // Promote Professor User to Admin User by User Id
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/add_role/admin/professor/{user_id}")
-    public Response addAdminRoleToProfessorUser(SecurityContext securityContext, @PathParam("user_id") String userId) {
+    @Path("/roles/promote/professorToAdmin/{user_id}")
+    public Response promoteProfessorToAdmin(@Context SecurityContext securityContext,
+            @PathParam("user_id") String userId) {
         return Response.status(Response.Status.OK).entity("Admin role added to professor user.").build();
     }
 
-    // Remove Admin Role from Professor User by User Id
+    // Promote Student User to Professor User by User Id
     @POST
-
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/remove_role/admin/professor/{user_id}")
-    public Response removeAdminRoleProfessor(SecurityContext securityContext, @PathParam("user_id") String userId) {
+    @Path("/roles/promote/studentToProfessor/{user_id}")
+    public Response promoteStudentToProfessor(@Context SecurityContext securityContext,
+            @PathParam("user_id") String userId) {
+        return Response.status(Response.Status.OK).entity("Student promoted to professor role.").build();
+    }
+
+    // Promote Student User to Admin User by User Id
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/roles/promote/studentToAdmin/{user_id}")
+    public Response promoteStudentToAdmin(@Context SecurityContext securityContext,
+            @PathParam("user_id") String userId) {
+        return Response.status(Response.Status.OK).entity("Student promoted to admin role.").build();
+    }
+
+    // Demote Professor User to Student User by User Id
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/roles/demote/professorToStudent/{user_id}")
+    public Response demoteProfessorToStudent(@Context SecurityContext securityContext,
+            @PathParam("user_id") String userId) {
         return Response.status(Response.Status.OK).entity("Admin role removed from professor user.").build();
     }
 
+    // Demote Admin User to Professor User by User Id
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/roles/demote/adminToProfessor/{user_id}")
+    public Response demoteAdminToProfessor(@Context SecurityContext securityContext,
+            @PathParam("user_id") String userId) {
+        return Response.status(Response.Status.OK).entity("Admin role removed from professor user.").build();
+    }
+
+    // Demote Admin User to Student User by User Id
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/roles/demote/adminToStudent/{user_id}")
+    public Response demoteAdminToStudent(@Context SecurityContext securityContext,
+            @PathParam("user_id") String userId) {
+        return Response.status(Response.Status.OK).entity("Admin role removed from student user.").build();
+    }
 }
