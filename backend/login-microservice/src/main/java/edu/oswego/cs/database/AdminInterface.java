@@ -39,12 +39,22 @@ public class AdminInterface {
         }
     }
 
+    public AdminInterface(String user_id) {
+        checkIfUserIdExists(user_id);
+        DatabaseManager databaseManager = new DatabaseManager();
+        try {
+            MongoDatabase studentDB = databaseManager.getStudentDB();
+            // Professors and Admins are in the same database, Admins are elevated
+            MongoDatabase profAdminDb = databaseManager.getProfessorDB();
+            studentCollection = studentDB.getCollection("students");
+            professorCollection = profAdminDb.getCollection("professors");
+        } catch (CPRException e) {
+            throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to retrieve collections.");
+        }
+    }
+
     public void deleteAdminUser(String user_id) {
         System.out.println("Delete Admin User (interface)" + user_id);
-
-        if (user_id == null || user_id.isEmpty()) {
-            throw new CPRException(Response.Status.NO_CONTENT, "user_id not specified.");
-        }
 
         if (professorCollection.countDocuments() == 1) {
             throw new CPRException(Response.Status.BAD_REQUEST, "Cannot delete last admin user.");
@@ -58,9 +68,7 @@ public class AdminInterface {
     }
 
     public void deleteProfessorUser(String user_id) {
-        if (user_id == null || user_id.isEmpty()) {
-            throw new CPRException(Response.Status.NO_CONTENT, "user_id not specified.");
-        }
+
         if (!checkProfessor(user_id)) {
             throw new CPRException(Response.Status.NOT_FOUND, "Professor user not found.");
         }
@@ -68,9 +76,7 @@ public class AdminInterface {
     }
 
     public void deleteStudentUser(String user_id) {
-        if (user_id == null || user_id.isEmpty()) {
-            throw new CPRException(Response.Status.NO_CONTENT, "user_id not specified.");
-        }
+
         if (!checkStudent(user_id)) {
             throw new CPRException(Response.Status.NOT_FOUND, "Student user not found.");
         }
@@ -102,7 +108,6 @@ public class AdminInterface {
     }
 
     public void addProfessorUser(String firstName, String lastName, String user_id) {
-
         if (checkAdmin(user_id)) {
             System.out.println("User already exists as Admin.");
             throw new CPRException(Response.Status.BAD_REQUEST,
@@ -149,10 +154,6 @@ public class AdminInterface {
     }
 
     public void promoteProfessorToAdmin(String user_id) {
-        if (user_id == null || user_id.isEmpty()) {
-            throw new CPRException(Response.Status.NO_CONTENT, "user_id not specified.");
-        }
-
         if (!checkProfessor(user_id)) {
             throw new CPRException(Response.Status.NOT_FOUND, "Professor user not found.");
         }
@@ -161,10 +162,6 @@ public class AdminInterface {
     }
 
     public void promoteStudentToProfessor(String user_id) {
-        if (user_id == null || user_id.isEmpty()) {
-            throw new CPRException(Response.Status.NO_CONTENT, "user_id not specified.");
-        }
-
         if (!checkStudent(user_id)) {
             throw new CPRException(Response.Status.NOT_FOUND, "Student user not found.");
         }
@@ -182,10 +179,6 @@ public class AdminInterface {
     }
 
     public void promoteStudentToAdmin(String user_id) {
-        if (user_id == null || user_id.isEmpty()) {
-            throw new CPRException(Response.Status.NO_CONTENT, "user_id not specified.");
-        }
-
         if (!checkStudent(user_id)) {
             throw new CPRException(Response.Status.NOT_FOUND, "Student user not found.");
         }
@@ -203,10 +196,6 @@ public class AdminInterface {
     }
 
     public void demoteProfessorToStudent(String user_id) {
-        if (user_id == null || user_id.isEmpty()) {
-            throw new CPRException(Response.Status.NO_CONTENT, "user_id not specified.");
-        }
-
         if (!checkProfessor(user_id)) {
             throw new CPRException(Response.Status.NOT_FOUND, "Professor user not found.");
         }
@@ -223,10 +212,6 @@ public class AdminInterface {
     }
 
     public void demoteAdminToProfessor(String user_id) {
-        if (user_id == null || user_id.isEmpty()) {
-            throw new CPRException(Response.Status.NO_CONTENT, "user_id not specified.");
-        }
-
         if (!checkAdmin(user_id)) {
             throw new CPRException(Response.Status.NOT_FOUND, "Admin user not found.");
         }
@@ -236,10 +221,6 @@ public class AdminInterface {
     }
 
     public void demoteAdminToStudent(String user_id) {
-        if (user_id == null || user_id.isEmpty()) {
-            throw new CPRException(Response.Status.NO_CONTENT, "user_id not specified.");
-        }
-
         if (!checkAdmin(user_id)) {
             throw new CPRException(Response.Status.NOT_FOUND, "Admin user not found.");
         }
@@ -281,6 +262,12 @@ public class AdminInterface {
             return false;
         }
         return true;
+    }
+
+    public void checkIfUserIdExists(String user_id) {
+        if (user_id == null || user_id.isEmpty()) {
+            throw new CPRException(Response.Status.BAD_REQUEST, "User ID cannot be null.");
+        }
     }
 
 }
