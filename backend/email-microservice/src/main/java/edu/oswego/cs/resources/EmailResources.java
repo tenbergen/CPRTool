@@ -26,6 +26,17 @@ public class EmailResources {
                                            @PathParam("courseID") String courseID,
                                            @PathParam("assignmentID") int assignmentID) throws IOException{
         new EmailService().assignmentCreatedEmail(securityContext, courseID, assignmentID);
-        return Response.status(Response.Status.CREATED).entity("Email Successfully Sent.").build();
+        return Response.status(Response.Status.OK).build();
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{courseID}/{assignmentID}/assignment-submitted")
+    @RolesAllowed({"professor", "student"})
+    public Response allAssignmentsSubmittedEmail(@PathParam("courseID") String courseID,
+                                                 @PathParam("assignmentID") int assignmentID) throws IOException {
+        new EmailService().allAssignmentsSubmittedEmail(courseID, assignmentID);
+        return Response.status(Response.Status.OK).build();
     }
 }

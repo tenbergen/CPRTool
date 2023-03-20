@@ -20,6 +20,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.ws.rs.core.SecurityContext;
 import java.io.*;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,25 +38,44 @@ public class EmailService {
     static Session session = Session.getDefaultInstance(props, null);
 
     /**
-     * Constructor for the EmailResource Class
-     */
-    public EmailService(){
-
-    }
-
-    /**
      * Sends an email to the professor informing them that all teams in the course have submitted an assignment.
-     * This method will not be called if the assignment deadline has passed.
+     * The email will not be sent if the assignment deadline has passed.
      * This method is otherwise called every time a team submits an assignment, at which point
      * it checks every team in the course to see if all of them have submitted it. Sends the email if and only if
      * all teams have submitted.
      *
-     * @param course the course in which the assignment is assigned
-     * @param assignment the assignment which has been submitted
+     * @param courseID ID of the course in which the assignment is assigned
+     * @param assignmentID ID the assignment which has been submitted
      */
 
-    public void allAssignmentsSubmittedEmail(CourseDAO course, AssignmentDAO assignment) throws IOException {
+    public void allAssignmentsSubmittedEmail(String courseID, int assignmentID) throws IOException {
+        Document assignment = new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID);
+        //turns string date into unix timestamp and compares it to current time to tell if due date has passed.
+        if(new SimpleDateFormat("yyyy-MM-dd").parse((assignment.getString("due_date")), new ParsePosition(0)).getTime() < new Date().getTime()){
+            //overdue, don't send email.
+            return;
+        }
+        if(!allSubmitted(assignment)){
+            //not everyone has submitted
+            return;
+        }
+        //prerequisites are met
 
+        //load template
+        String body = getTemplate("allAssignmentsSubmitted.html");
+
+        String subject = "An assignment has been submitted by all students and is ready for grading.";
+        Document course = new CourseInterface().getCourse(courseID);
+
+        //fill in specifics
+        body = body.replace("[Course Name]", course.getString("course_id"));
+        body = body.replace("[Today's Date]", new Date().toString());
+        body = body.replace("[Name of Instructor]", course.getString("professor_id"));
+        body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
+
+        System.out.println(body);
+        //will throw error if professor doesn't have @oswego.edu email
+        sendEmail(course.getString("professor_id") + "@oswego.edu", subject, body);
     }
 
     /**
@@ -91,6 +112,7 @@ public class EmailService {
         for(Document student : students){
             String body = "" + template; //copy template
             //Fill in specifics
+            body = body.replace("[Name of Student]", student.getString("first_name") + " " + student.getString("last_name"));
             body = body.replace("[Today's Date]", new Date().toString());
             body = body.replace("[Course Name]", new CourseInterface().getCourse(securityContext, courseID).getString("course_name"));
             body = body.replace("[Assignment Name]", new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID).getString("assignment_name"));
@@ -271,5 +293,24 @@ public class EmailService {
         }
 
         return relativePathPrefix.toString();
+    }
+
+    /**
+     * checks to see if every team has submitted a given assignment.
+     *
+     * @param assignment assignment being checked
+     * @return true if every team in the course has submitted the assignment, false otherwise
+     */
+    public boolean allSubmitted(Document assignment) {
+        String courseID = assignment.getString("course_id");
+        List<Document> teams = new CourseInterface().getTeamsInCourse(courseID);
+        for(Document team : teams){
+            if(!new AssignmentInterface().hasTeamSubmitted(assignment.getInteger("assignment_id"), team.getString("team_id"))){
+                //has not submitted
+                return false;
+            }
+        }
+        //everyone has submitted
+        return true;
     }
 }

@@ -421,4 +421,19 @@ public class AssignmentInterface {
         }
         return ++max;
     }
+
+    /**
+     * Returns true if there is a submission with the matching assignment id and team id. false otherwise.
+     *
+     * @param assignmentID id of assignment in question
+     * @param teamID id of team in question
+     * @return true if there is a submission with the matching assignment id and team id. false otherwise.
+     */
+    public boolean hasTeamSubmitted(int assignmentID, String teamID){
+        Document submission = submissionCollection.find(and(eq("team_name", teamID), eq("assignment_id", assignmentID))).first();
+        if(submission == null){
+            return false;
+        }
+        return true;
+    }
 }
