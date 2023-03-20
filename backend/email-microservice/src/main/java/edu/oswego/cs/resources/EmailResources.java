@@ -25,6 +25,7 @@ public class EmailResources {
     public Response assignmentCreatedEmail(@Context SecurityContext securityContext,
                                            @PathParam("courseID") String courseID,
                                            @PathParam("assignmentID") int assignmentID) throws IOException{
+        new EmailService().assignmentCreatedEmail(securityContext, courseID, assignmentID);
         return Response.status(Response.Status.CREATED).entity("Email Successfully Sent.").build();
     }
 }
