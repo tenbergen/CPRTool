@@ -422,6 +422,10 @@ public class AssignmentInterface {
         return ++max;
     }
 
+    public Document getSubmission(int assignmentID, String teamID){
+        return submissionCollection.find(and(eq("assignment_id", assignmentID),eq("team_name", teamID))).first();
+    }
+
     /**
      * Returns true if there is a submission with the matching assignment id and team id. false otherwise.
      *

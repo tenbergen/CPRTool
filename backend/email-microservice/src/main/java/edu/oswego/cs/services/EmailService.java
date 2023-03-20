@@ -188,13 +188,49 @@ public class EmailService {
     /**
      * Sends the student an email when the professor submits a grade for their assignment.
      *
-     * @param course course for which the grade is given
-     * @param assignment assignment for which the grade is given
-     * @param team team receiving the email
+     * @param courseID course for which the grade is given
+     * @param assignmentID assignment for which the grade is given
+     * @param teamID team receiving the email
      */
-    public void gradeReceivedEmail(CourseDAO course, AssignmentDAO assignment, TeamDAO team) throws IOException {
+    public void gradeReceivedEmail(String courseID, int assignmentID, String teamID) throws IOException {
+        //read contents of template
+        String template = getTemplate("gradeReceivedEmail.html");
 
+        String subject = "An assignment has been graded";
+        Document course = new CourseInterface().getCourse(courseID);
+        Document assignment = new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID);
+        Document submission = new AssignmentInterface().getSubmission(assignmentID, teamID);
 
+        if(submission.getInteger("grade") != -1){ //may need to be changed as the grade system is updated.
+            return;
+        }
+
+        //get all students in team
+        List<Document> teams = new CourseInterface().getTeamsInCourse(courseID);
+        Document team = null;
+        for(Document t : teams){
+            if(t.getString("team_id").equals(teamID)){
+                team = t;
+            }
+        }
+        List<String> students = team.getList("team_members", String.class);
+
+        for(String student : students){
+            String to = student + "@gmail.com"; //will throw an error if the student had a different email domain
+            Document studentDoc = new CourseInterface().getStudent(student);
+
+            String body = "" + template; //copy template
+            body = body.replace("[Team Name]", team.getString("team_id"));
+            body = body.replace("[Today's Date]", new Date().toString());
+            body = body.replace("[Name of Student]", studentDoc.getString("first_name") + " " + studentDoc.getString("last_name"));
+            body = body.replace("[Course Name]", course.getString("course_name"));
+            body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
+            body = body.replace("[Grade]", submission.getInteger("grade").toString());
+            body = body.replace("[Instructor Name]", course.getString("professor_id"));
+
+            System.out.println(body);
+            sendEmail(to, subject, body);
+        }
     }
 
     /**

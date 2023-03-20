@@ -43,4 +43,16 @@ public class EmailResources {
         new EmailService().assignmentSubmittedEmail(courseID, teamID, assignmentID);
         return Response.status(Response.Status.OK).build();
     }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{courseID}/{teamID}/{assignmentID}/graded")
+    @RolesAllowed("professor")
+    public Response gradeReceivedEmail(@PathParam("courseID") String courseID,
+                                       @PathParam("teamID") String teamID,
+                                       @PathParam("assignmentID") int assignmentID) throws IOException {
+        new EmailService().gradeReceivedEmail(courseID, assignmentID, teamID);
+        return Response.status(Response.Status.OK).build();
+    }
 }
