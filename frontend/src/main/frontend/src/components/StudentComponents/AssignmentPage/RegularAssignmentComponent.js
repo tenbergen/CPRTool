@@ -55,6 +55,7 @@ const RegularAssignmentComponent = () => {
 
   const handleSubmit = async () => {
     const submitAssUrl = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${currentTeamId}/upload`;
+    const submitAssEmailUrl = `${process.env.REACT_APP_URL}/email/send/${courseID}/${assignmentID}/assignment-submitted`
 
     await axios
       .post(submitAssUrl, assignmentFileFormData)
@@ -68,6 +69,14 @@ const RegularAssignmentComponent = () => {
         console.error(e.response);
         alert(`Error: ${e.response.data}`);
       });
+    await axios
+        .post(submitAssEmailUrl)
+        .then((res) => {
+        })
+        .catch((e) => {
+          console.error(e.response);
+          alert(`Error: ${e.response.data}`);
+        });
   };
 
   return (
