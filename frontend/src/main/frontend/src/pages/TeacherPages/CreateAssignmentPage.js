@@ -50,7 +50,7 @@ const CreateAssignmentPage = () => {
     const assignmentFileUrl = `${getAssUrl}/${assignmentId}/upload`;
     const rubricUrl = `${getAssUrl}/${assignmentId}/peer-review/rubric/upload`;
     const templateUrl = `${getAssUrl}/${assignmentId}/peer-review/template/upload`;
-    const emailUrl = `${process.env.REACT_APP_URL}/email/send/${courseId}/${assignmentId}`;
+    const emailUrl = `${process.env.REACT_APP_URL}/email/send/${courseId}/${assignmentId}/assignment-created`;
 
     await axios
       .post(assignmentFileUrl, assignmentFileFormData)
