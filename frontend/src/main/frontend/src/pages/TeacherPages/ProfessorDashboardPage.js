@@ -16,7 +16,6 @@ function ProfessorDashboardPage() {
   const dispatch = useDispatch();
   const { courses, coursesLoaded } = useSelector((state) => state.courses);
   const user = useSelector((state) => state.auth.user_given_name);
-  const testEmailUrl = `${process.env.REACT_APP_URL}/email/send/testemail`;
 
   useEffect(() => {
     dispatch(getCoursesAsync());
@@ -30,14 +29,6 @@ function ProfessorDashboardPage() {
   // arbitrary comment
 
   const onCourseClick = async (course) => {
-    await axios
-        .post(testEmailUrl)
-        .then((res) => {
-        })
-        .catch((e) => {
-          console.error(e.response.data);
-        });
-    console.log('Test Email Fired');
     dispatch(getCourseDetailsAsync(course.course_id));
   };
 

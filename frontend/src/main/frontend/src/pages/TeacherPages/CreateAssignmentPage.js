@@ -15,7 +15,6 @@ const CreateAssignmentPage = () => {
 
   const submitCourseUrl = `${profAssignmentUrl}/create-assignment`;
   const getAssUrl = `${profAssignmentUrl}/${courseId}/assignments`;
-  const testEmailUrl = `${process.env.REACT_APP_URL}/email/send/testemail`;
   const [loading, setLoading] = useState(false);
 
   const assignmentFileFormData = new FormData();
@@ -51,6 +50,7 @@ const CreateAssignmentPage = () => {
     const assignmentFileUrl = `${getAssUrl}/${assignmentId}/upload`;
     const rubricUrl = `${getAssUrl}/${assignmentId}/peer-review/rubric/upload`;
     const templateUrl = `${getAssUrl}/${assignmentId}/peer-review/template/upload`;
+    const emailUrl = `${process.env.REACT_APP_URL}/email/send/${courseId}/${assignmentId}`;
 
     await axios
       .post(assignmentFileUrl, assignmentFileFormData)
@@ -77,12 +77,12 @@ const CreateAssignmentPage = () => {
       });
 
     await axios
-        .post(testEmailUrl)
+        .post(emailUrl)
         .then((res) => {})
         .catch((e) => {
           console.error(e.response.data);
         });
-    console.log('Test Email Fired');
+    console.log('');
   };
 
   const handleSubmit = async (data) => {

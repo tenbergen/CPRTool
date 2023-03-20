@@ -41,6 +41,12 @@
             <version>1.18.24</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.ibm.websphere.appserver.api</groupId>
+            <artifactId>com.ibm.websphere.appserver.api.jaxrs20</artifactId>
+            <version>1.1.54</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

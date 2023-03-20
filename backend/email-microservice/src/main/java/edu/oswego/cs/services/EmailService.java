@@ -5,6 +5,8 @@ import com.mongodb.client.MongoCursor;
 import edu.oswego.cs.daos.AssignmentDAO;
 import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.daos.TeamDAO;
+import edu.oswego.cs.database.AssignmentInterface;
+import edu.oswego.cs.database.CourseInterface;
 import edu.oswego.cs.database.DatabaseManager;
 import edu.oswego.cs.util.DeadlineTimer;
 import org.bson.Document;
@@ -16,6 +18,7 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.ws.rs.core.SecurityContext;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -31,12 +34,6 @@ public class EmailService {
     static String from = "schmittsLaptop@patrick.com";
     static Properties props = new Properties();
     static Session session = Session.getDefaultInstance(props, null);
-
-    static DatabaseManager databaseManager = new DatabaseManager();
-    MongoCollection<Document> studentCollection = databaseManager.getStudentDB().getCollection("students");
-    static MongoCollection<Document> teamCollection = databaseManager.getTeamDB().getCollection("teams");
-    MongoCollection<Document> courseCollection = databaseManager.getCourseDB().getCollection("courses");
-    static MongoCollection<Document> submissionCollection = databaseManager.getAssignmentDB().getCollection("submissions");
 
     /**
      * Constructor for the EmailResource Class
@@ -78,53 +75,31 @@ public class EmailService {
      * Sends an email to all the students in the course when an assignment is created by the professor.
      * Called when the professor finished posting the assignment.
      *
-     * @param course the course in which the peer review is assigned
-     * @param assignment the assignment that has been created
+     * @param securityContext context from which professor ID can be obtained
+     * @param courseID the course in which the peer review is assigned
+     * @param assignmentID the assignment that has been created
      */
-    public void assignmentCreatedEmail(CourseDAO course, AssignmentDAO assignment) throws IOException {
+    public void assignmentCreatedEmail(SecurityContext securityContext, String courseID, int assignmentID) throws IOException {
         //read contents of template
+        String template = getTemplate("assignmentCreatedEmail.html");
 
-        System.out.println(System.getProperty("user.dir"));
+        //get a list of all the students in the course
+        List<Document> students = new CourseInterface().getStudentsInCourse(securityContext, courseID);
 
+        String subject = "A new assignment has been created in one of your classes.";
 
-        String path = getPath();
-        System.out.println("Path: " + path);
-        BufferedReader in = new BufferedReader(new FileReader(path + "templates"
-                                                                + File.separator +
-                                                                "assignmentCreatedEmail.html"));
-        StringBuilder stringBuilder = new StringBuilder();
-        String line;
-        String ls = System.getProperty("line.separator");
-        while((line = in.readLine()) != null){
-            stringBuilder.append(line);
-            stringBuilder.append(ls);
-        }
-        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-        in.close();
-        System.out.println(stringBuilder.toString());
-
-        //send email
-
-        String to="pschmitt@oswego.edu";
-        String from="cprtoolemail@gmail.com";
-        Properties props = new Properties();
-        Session session = Session.getDefaultInstance(props, null);
-
-        String msgBody = "This is how you send mail using your laptop as an SMTP server";
-
-        try {
-            Message msg = new MimeMessage(session);
-            msg.setFrom(new InternetAddress(from, "NoReply"));
-            msg.addRecipient(Message.RecipientType.TO,
-                    new InternetAddress(to, "Patrick Schmitt"));
-            msg.setSubject("Here's an example");
-            msg.setText(msgBody);
-            Transport.send(msg);
-            System.out.println("Email sent successfully...");
-        } catch (AddressException e) {
-            throw new RuntimeException(e);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
+        for(Document student : students){
+            String body = "" + template; //copy template
+            //Fill in specifics
+            body = body.replace("[Today's Date]", new Date().toString());
+            body = body.replace("[Course Name]", new CourseInterface().getCourse(securityContext, courseID).getString("course_name"));
+            body = body.replace("[Assignment Name]", new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID).getString("assignment_name"));
+            body = body.replace("[Due Date]", new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID).getString("due_date"));
+            body = body.replace("[Instructor Name]", new CourseInterface().getProfessor(securityContext).getString("professor_id"));
+            //print because I currently can't send mail
+            System.out.println(body);
+            //send email
+            sendEmail(student.getString("student_id") + "@gmail.com", subject, body); //will throw an error for any student with a non-gmail email. This is a DB issue.
         }
     }
 
@@ -229,6 +204,57 @@ public class EmailService {
 
     }
 
+    /**
+     * Reads a file in the templates folder and returns its contents as a string. Used for getting html templates of
+     * email bodies.
+     *
+     * @param fileName the name of the file to be read. Do not pass the entire path, only the file's name.
+     * @return the contents of the file as a string
+     */
+    public String getTemplate(String fileName) throws IOException {
+        String path = getPath();
+        BufferedReader in = new BufferedReader(new FileReader(path + "templates"
+                + File.separator + fileName));
+        StringBuilder stringBuilder = new StringBuilder();
+        String line;
+        String ls = System.getProperty("line.separator");
+        while((line = in.readLine()) != null){
+            stringBuilder.append(line);
+            stringBuilder.append(ls);
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        in.close();
+        return stringBuilder.toString();
+    }
+
+    /**
+     * Sends an email with the specified recipients, subject, and body. Called by all the email methods in this class.
+     *
+     * @param to recipient's email address
+     * @param subject subject of the email to be sent
+     * @param body body of the email to be sent
+     */
+    public void sendEmail(String to, String subject, String body){
+        try {
+            Message msg = new MimeMessage(session);
+            msg.setFrom(new InternetAddress(from, "NoReply"));
+            msg.addRecipient(Message.RecipientType.TO,
+                    new InternetAddress(to));
+            msg.setSubject(subject);
+            msg.setText(body);
+            Transport.send(msg);
+            System.out.println("Email sent successfully...");
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            System.out.println(e.getMessage());
+            System.out.println("Could not send an email to " + to);
+        }
+    }
+
+    /**
+     * gets the path from the working directory to "defaultserver"
+     *
+     * @return the path from the working directory to "defaultserver"
+     */
     public String getPath() {
         String path = (System.getProperty("user.dir").contains("\\")) ? System.getProperty("user.dir").replace("\\", "/") : System.getProperty("user.dir");
         String[] slicedPath = path.split("/");
