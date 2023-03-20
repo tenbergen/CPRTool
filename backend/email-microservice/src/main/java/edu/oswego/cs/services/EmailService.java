@@ -1,13 +1,10 @@
 package edu.oswego.cs.services;
 
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
 import edu.oswego.cs.daos.AssignmentDAO;
 import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.daos.TeamDAO;
 import edu.oswego.cs.database.AssignmentInterface;
 import edu.oswego.cs.database.CourseInterface;
-import edu.oswego.cs.database.DatabaseManager;
 import edu.oswego.cs.util.DeadlineTimer;
 import org.bson.Document;
 
@@ -15,15 +12,12 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.ws.rs.core.SecurityContext;
 import java.io.*;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -68,7 +62,7 @@ public class EmailService {
         Document course = new CourseInterface().getCourse(courseID);
 
         //fill in specifics
-        body = body.replace("[Course Name]", course.getString("course_id"));
+        body = body.replace("[Course Name]", course.getString("course_name"));
         body = body.replace("[Today's Date]", new Date().toString());
         body = body.replace("[Name of Instructor]", course.getString("professor_id"));
         body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
@@ -140,13 +134,43 @@ public class EmailService {
     /**
      * Sends an email to all the members of a team after they submit an assignment to act as a digital receipt.
      *
-     * @param course course for which the assignment was submitted
-     * @param team team that submitted the assignment
-     * @param assignment assignment that was submitted
-     * @param timestamp time at which the assignment was submitted
+     * @param courseID course for which the assignment was submitted
+     * @param teamID team that submitted the assignment
+     * @param assignmentID assignment that was submitted
      */
-    public void assignmentSubmittedEmail(CourseDAO course, TeamDAO team, AssignmentDAO assignment, Date timestamp) throws IOException {
+    public void assignmentSubmittedEmail(String courseID, String teamID, int assignmentID) throws IOException {
+        //read contents of template
+        String template = getTemplate("assignmentSubmittedEmail.html");
 
+        String subject = "Assignment Submission Receipt";
+        Document course = new CourseInterface().getCourse(courseID);
+        Document assignment = new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID);
+
+        //get all students in team
+        List<Document> teams = new CourseInterface().getTeamsInCourse(courseID);
+        Document team = null;
+        for(Document t : teams){
+            if(t.getString("team_id").equals(teamID)){
+                team = t;
+            }
+        }
+        List<String> students = team.getList("team_members", String.class);
+        for(String student : students){
+            String to = student + "@gmail.com"; //will throw an error if the student had a different email domain
+            Document studentDoc = new CourseInterface().getStudent(student);
+
+            String body = "" + template; //copy template
+            body = body.replace("[Team Name]", team.getString("team_id"));
+            body = body.replace("[Today's Date]", new Date().toString());
+            body = body.replace("[Name of Student]", studentDoc.getString("first_name") + " " + studentDoc.getString("last_name"));
+            body = body.replace("[Name of Course]", course.getString("course_name"));
+            body = body.replace("[Time of Submission]", new Date().toString());
+            body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
+            body = body.replace("[Instructor Name]", course.getString("professor_id"));
+
+            System.out.println(body);
+            sendEmail(to, subject, body);
+        }
     }
 
     /**

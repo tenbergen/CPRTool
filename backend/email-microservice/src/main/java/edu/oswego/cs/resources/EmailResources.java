@@ -32,11 +32,15 @@ public class EmailResources {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("{courseID}/{assignmentID}/assignment-submitted")
+    @Path("{courseID}/{teamID}/{assignmentID}/assignment-submitted")
     @RolesAllowed({"professor", "student"})
-    public Response allAssignmentsSubmittedEmail(@PathParam("courseID") String courseID,
+    public Response assignmentSubmittedEmail(@PathParam("courseID") String courseID,
+                                                 @PathParam("teamID") String teamID,
                                                  @PathParam("assignmentID") int assignmentID) throws IOException {
+        //both allAssignmentsSubmitted and assignmentSubmitted can fire from the same submission so there's no reason
+        //not to bundle them in the same HTTP method
         new EmailService().allAssignmentsSubmittedEmail(courseID, assignmentID);
+        new EmailService().assignmentSubmittedEmail(courseID, teamID, assignmentID);
         return Response.status(Response.Status.OK).build();
     }
 }

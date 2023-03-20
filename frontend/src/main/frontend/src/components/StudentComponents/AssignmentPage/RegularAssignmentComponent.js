@@ -55,7 +55,7 @@ const RegularAssignmentComponent = () => {
 
   const handleSubmit = async () => {
     const submitAssUrl = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${currentTeamId}/upload`;
-    const submitAssEmailUrl = `${process.env.REACT_APP_URL}/email/send/${courseId}/${assignmentId}/assignment-submitted`
+    const submitAssEmailUrl = `${process.env.REACT_APP_URL}/email/send/${courseId}/${currentTeamId}/${assignmentId}/assignment-submitted`
 
     await axios
       .post(submitAssUrl, assignmentFileFormData)
