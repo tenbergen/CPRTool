@@ -115,7 +115,7 @@ const getSubmittedAssignmentDetails = async (
 
   // team file name
   const submissionDetailUrl = `${process.env.REACT_APP_URL}/assignments/student/${courseId}/${assignmentId}/${lakerId}/submission`;
-  const submissionEmailUrl = `${process.env.REACT_APP_URL}/email/send/${courseID}/${teamID}/${assignmentID}/graded`
+  const submissionEmailUrl = `${process.env.REACT_APP_URL}/email/send/${courseId}/${teamId}/${assignmentId}/graded`
   const submissionDetail = await axios
     .get(submissionDetailUrl)
     .then((res) => {
