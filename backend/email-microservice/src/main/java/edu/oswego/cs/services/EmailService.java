@@ -295,6 +295,7 @@ public class EmailService {
      *
      * @param securityContext context from which the submitting team can be obtained
      * @param courseID course for which the peer review was submitted
+     * @param revTeamID ID of team that was reviewed
      * @param assignmentID peer review that was submitted
      */
     public void peerReviewSubmittedEmail(SecurityContext securityContext, String courseID, String revTeamID, int assignmentID) throws IOException {

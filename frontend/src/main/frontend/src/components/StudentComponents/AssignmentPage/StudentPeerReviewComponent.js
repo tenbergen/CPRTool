@@ -90,7 +90,7 @@ const StudentPeerReviewComponent = () => {
 
   const handleSubmit = async () => {
     const submitAssUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${currentTeamId}/${teamId}/${grade}/upload`;
-    const submitPREmailUrl = `${process.env.REACT_APP_URL}/email/send/${courseId}/${teamID}/${assignmentId}/peer-review-submitted/`
+    const submitPREmailUrl = `${process.env.REACT_APP_URL}/email/send/${courseId}/${teamId}/${assignmentId}/peer-review-submitted/`
 
     await axios
       .post(submitAssUrl, feedbackFileFormData)
