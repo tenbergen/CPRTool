@@ -440,4 +440,12 @@ public class AssignmentInterface {
         }
         return true;
     }
+
+    public boolean hasTeamBeenReviewed(int assignmentID, String teamID){
+        Document submission = submissionCollection.find(and(eq("team_name", teamID), eq("assignment_id", assignmentID))).first();
+        if(submission == null){
+            return false;
+        }
+        return true;
+    }
 }

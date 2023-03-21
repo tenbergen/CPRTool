@@ -79,11 +79,37 @@ public class EmailService {
      * it checks every team in the course to see if all of them have submitted it. Sends the email if and only if
      * all teams have submitted.
      *
-     * @param course the course in which the peer review is assigned
-     * @param assignment the peer review which has been submitted
+     * @param courseID the course in which the peer review is assigned
+     * @param assignmentID the peer review which has been submitted
      */
-    public void allPeerReviewsSubmittedEmail(CourseDAO course, AssignmentDAO assignment){
-        //How to tell if peer review is submitted? Where is that stored?
+    public void allPeerReviewsSubmittedEmail(String courseID, int assignmentID) throws IOException {
+        Document assignment = new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID);
+        //turns string date into unix timestamp and compares it to current time to tell if due date has passed.
+        if(new SimpleDateFormat("yyyy-MM-dd").parse((assignment.getString("peer_review_due_date")), new ParsePosition(0)).getTime() < new Date().getTime()){
+            //overdue, don't send email.
+            return;
+        }
+        if(!allPRSubmitted(assignment)){
+            //not everyone has submitted
+            return;
+        }
+        //prerequisites are met
+
+        //load template
+        String body = getTemplate("allAssignmentsSubmitted.html");
+
+        String subject = "An assignment has been submitted by all students and is ready for grading.";
+        Document course = new CourseInterface().getCourse(courseID);
+
+        //fill in specifics
+        body = body.replace("[Course Name]", course.getString("course_name"));
+        body = body.replace("[Today's Date]", new Date().toString());
+        body = body.replace("[Name of Instructor]", course.getString("professor_id"));
+        body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
+
+        System.out.println(body);
+        //will throw error if professor doesn't have @oswego.edu email
+        sendEmail(course.getString("professor_id") + "@oswego.edu", subject, body);
     }
 
     /**
@@ -187,6 +213,7 @@ public class EmailService {
 
     /**
      * Sends the student an email when the professor submits a grade for their assignment.
+     * Does not work right now due to DB troubles.
      *
      * @param courseID course for which the grade is given
      * @param assignmentID assignment for which the grade is given
@@ -266,13 +293,43 @@ public class EmailService {
     /**
      * Sends an email to all the members of a team after they submit a peer review to act as a digital receipt.
      *
-     * @param course course for which the peer review was submitted
-     * @param team team that submitted the peer review
-     * @param assignment peer review that was submitted
-     * @param timestamp time at which the peer review was submitted
+     * @param courseID course for which the peer review was submitted
+     * @param teamID team that submitted the peer review
+     * @param assignmentID peer review that was submitted
      */
-    public void peerReviewSubmittedEmail(CourseDAO course, TeamDAO team, AssignmentDAO assignment, Date timestamp){
+    public void peerReviewSubmittedEmail(String courseID, String teamID, int assignmentID) throws IOException {
+        //read contents of template
+        String template = getTemplate("assignmentSubmittedEmail.html");
 
+        String subject = "Assignment Submission Receipt";
+        Document course = new CourseInterface().getCourse(courseID);
+        Document assignment = new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID);
+
+        //get all students in team
+        List<Document> teams = new CourseInterface().getTeamsInCourse(courseID);
+        Document team = null;
+        for(Document t : teams){
+            if(t.getString("team_id").equals(teamID)){
+                team = t;
+            }
+        }
+        List<String> students = team.getList("team_members", String.class);
+        for(String student : students){
+            String to = student + "@gmail.com"; //will throw an error if the student had a different email domain
+            Document studentDoc = new CourseInterface().getStudent(student);
+
+            String body = "" + template; //copy template
+            body = body.replace("[Reviewed Team Name]", team.getString("team_id"));
+            body = body.replace("[Today's Date]", new Date().toString());
+            body = body.replace("[Name of Student]", studentDoc.getString("first_name") + " " + studentDoc.getString("last_name"));
+            body = body.replace("[Name of Course]", course.getString("course_name"));
+            body = body.replace("[Time of Submission]", new Date().toString());
+            body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
+            body = body.replace("[Instructor Name]", course.getString("professor_id"));
+
+            System.out.println(body);
+            sendEmail(to, subject, body);
+        }
     }
 
     /**
@@ -372,5 +429,23 @@ public class EmailService {
         }
         //everyone has submitted
         return true;
+    }
+
+    public boolean allPRSubmitted(Document assignment) {
+
+        return false;
+        //Doesn't work right now because I don't know how to tell if a PR is given
+        /*
+        String courseID = assignment.getString("course_id");
+        List<Document> teams = new CourseInterface().getTeamsInCourse(courseID);
+        for(Document team : teams){
+            if(!new AssignmentInterface().hasTeamBeenReviewed(assignment.getInteger("assignment_id"), team.getString("team_id"))){
+                //has not submitted
+                return false;
+            }
+        }
+        //everyone has submitted
+        return true;
+         */
     }
 }

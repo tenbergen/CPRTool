@@ -115,7 +115,6 @@ const getSubmittedAssignmentDetails = async (
 
   // team file name
   const submissionDetailUrl = `${process.env.REACT_APP_URL}/assignments/student/${courseId}/${assignmentId}/${lakerId}/submission`;
-  const submissionEmailUrl = `${process.env.REACT_APP_URL}/email/send/${courseId}/${teamId}/${assignmentId}/graded`
   const submissionDetail = await axios
     .get(submissionDetailUrl)
     .then((res) => {
@@ -125,15 +124,6 @@ const getSubmittedAssignmentDetails = async (
       console.error(e.response.data);
     });
 
-  const submissionEmail = await axios
-      .post(submissionEmailUrl)
-      .then((res) => {
-          return res.data[0];
-      })
-      .catch((e) => {
-          console.error(e.response.data);
-      });
-
   // get reviews for that student
   const peerReviews = await getPeerReviews(courseId, assignmentId, lakerId);
   const grade =
@@ -142,7 +132,6 @@ const getSubmittedAssignmentDetails = async (
   return {
     ...details,
     ...submissionDetail,
-    ...submissionEmail,
     peer_reviews: peerReviews,
     grade: grade,
   };
