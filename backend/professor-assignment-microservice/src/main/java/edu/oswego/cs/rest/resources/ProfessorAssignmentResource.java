@@ -316,4 +316,5 @@ public class ProfessorAssignmentResource {
         new AssignmentInterface().removeCourse(courseID);
         return Response.status(Response.Status.OK).entity("Course successfully deleted from assignments database and assignments folder.").build();
     }
+
 }
