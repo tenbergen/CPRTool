@@ -775,7 +775,7 @@ public class PeerReviewAssignmentInterface {
      * to return a boolean value of whether a number is an outlier or not, based on the current
      * grades received for this assignment(this function takes an int to compare)
      * */
-    private boolean isOutlier(String courseID, double numberToCompare){
+    public boolean isOutlier(String courseID, double numberToCompare){
         HashMap<String, Integer> calculatedQuantities = new HashMap<String, Integer>();
         calculatedQuantities = calculateIQR(courseID);
         int Q1 = calculatedQuantities.get("Q1");
@@ -797,7 +797,7 @@ public class PeerReviewAssignmentInterface {
      * to return a boolean value of whether a number is an outlier or not, based on the current
      * grades received for this assignment(this function takes an int to compare)
      * */
-    private boolean isOutlier(String courseID, int numberToCompare){
+    public boolean isOutlier(String courseID, int numberToCompare){
         HashMap<String, Integer> calculatedQuantities = new HashMap<String, Integer>();
         calculatedQuantities = calculateIQR(courseID);
         int Q1 = calculatedQuantities.get("Q1");
@@ -821,7 +821,7 @@ public class PeerReviewAssignmentInterface {
      * to return a boolean value of whether a number is an outlier or not, based on the current
      * grades received for this assignment(this function takes a double to compare)
      * */
-    private boolean isOutlier(String courseID, int assignmentID, double numberToCompare){
+    public boolean isOutlier(String courseID, int assignmentID, double numberToCompare){
         HashMap<String, Integer> calculatedQuantities = new HashMap<String, Integer>();
         calculatedQuantities = calculateIQR(courseID, assignmentID);
         int Q1 = calculatedQuantities.get("Q1");
@@ -843,7 +843,7 @@ public class PeerReviewAssignmentInterface {
      * to return a boolean value of whether a number is an outlier or not, based on the current
      * grades received for this assignment(this function takes an int to compare)
      * */
-    private boolean isOutlier(String courseID, int assignmentID, int numberToCompare){
+    public boolean isOutlier(String courseID, int assignmentID, int numberToCompare){
         HashMap<String, Integer> calculatedQuantities = new HashMap<String, Integer>();
         calculatedQuantities = calculateIQR(courseID, assignmentID);
         int Q1 = calculatedQuantities.get("Q1");
@@ -865,7 +865,7 @@ public class PeerReviewAssignmentInterface {
      * that consist of the q1, q3, and IQR values to allow for computation and
      * outlier detection.
      * */
-    private HashMap<String, Integer> calculateIQR(String courseID, int assignmentID){
+    public HashMap<String, Integer> calculateIQR(String courseID, int assignmentID){
         //must make a query to the DB to grab all of the grades
         Document assignment = assignmentCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID))).first();
         if (assignment == null)
@@ -946,7 +946,7 @@ public class PeerReviewAssignmentInterface {
      * This fucntion returns a subset of the array to then be able to calculate the
      * median for each 'Q'
      * */
-    private HashMap<Integer, List<Integer>> getSubsetOfArray(List<Integer> input){
+    public HashMap<Integer, List<Integer>> getSubsetOfArray(List<Integer> input){
         List<Integer> firstSubSet = new ArrayList<Integer>();
         List<Integer> secondSubSet = new ArrayList<Integer>();
 
@@ -971,7 +971,7 @@ public class PeerReviewAssignmentInterface {
      * This function returns the median of any dataset that is larger than 2, also
      * it assumes that the data is already sorted when passed in
      * */
-    private int findMedian(List<Integer> dataSet){
+    public int findMedian(List<Integer> dataSet){
         //this fucntion won't accept an array of length less than 2,
         if(dataSet.size() < 2 || dataSet == null )
             return -1;
@@ -989,7 +989,7 @@ public class PeerReviewAssignmentInterface {
     /**
      * This method will be used to grab all of the averages/assignments given over for a given course
      * */
-    private HashMap<String, Integer> calculateIQR(String courseID){
+    public HashMap<String, Integer> calculateIQR(String courseID){
 
         //must increment at end of each loop
         List<Document> results = new ArrayList<>();
