@@ -293,23 +293,26 @@ public class EmailService {
     /**
      * Sends an email to all the members of a team after they submit a peer review to act as a digital receipt.
      *
+     * @param securityContext context from which the submitting team can be obtained
      * @param courseID course for which the peer review was submitted
-     * @param teamID team that submitted the peer review
      * @param assignmentID peer review that was submitted
      */
-    public void peerReviewSubmittedEmail(String courseID, String teamID, int assignmentID) throws IOException {
+    public void peerReviewSubmittedEmail(SecurityContext securityContext, String courseID, String revTeamID, int assignmentID) throws IOException {
         //read contents of template
-        String template = getTemplate("assignmentSubmittedEmail.html");
+        String template = getTemplate("peerReviewSubmittedEmail.html");
 
-        String subject = "Assignment Submission Receipt";
+        String subject = "Peer Review Submission Receipt";
         Document course = new CourseInterface().getCourse(courseID);
         Document assignment = new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID);
+
+        //get student who submitted
+        Document s = new CourseInterface().getStudent(securityContext);
 
         //get all students in team
         List<Document> teams = new CourseInterface().getTeamsInCourse(courseID);
         Document team = null;
         for(Document t : teams){
-            if(t.getString("team_id").equals(teamID)){
+            if(t.getList("team_members", String.class).contains(s.getString("student_id"))){
                 team = t;
             }
         }
@@ -319,7 +322,7 @@ public class EmailService {
             Document studentDoc = new CourseInterface().getStudent(student);
 
             String body = "" + template; //copy template
-            body = body.replace("[Reviewed Team Name]", team.getString("team_id"));
+            body = body.replace("[Reviewed Team Name]", revTeamID);
             body = body.replace("[Today's Date]", new Date().toString());
             body = body.replace("[Name of Student]", studentDoc.getString("first_name") + " " + studentDoc.getString("last_name"));
             body = body.replace("[Name of Course]", course.getString("course_name"));

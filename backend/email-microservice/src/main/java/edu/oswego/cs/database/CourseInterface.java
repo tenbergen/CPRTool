@@ -97,6 +97,11 @@ public class CourseInterface {
         return document;
     }
 
+    public Document getStudent(SecurityContext securityContext){
+        String studentID = securityContext.getUserPrincipal().getName().split("@")[0];
+        return studentCollection.find(eq("student_id", studentID)).first();
+    }
+
     public Document getProfessor(SecurityContext securityContext) {
         String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
         return professorCollection.find(eq("professor_id", professorID)).first();
