@@ -21,7 +21,7 @@ button:hover {
   background-color: #1d2ff9;
 }
 .blue-button-small:active{
-  background-color: 102080;
+  background-color: #102080;
 }
 
 .blue-button-large {
@@ -82,4 +82,23 @@ button:hover {
 }
 .green-button-medium:active{
   background-color: #05603a;
+}
+
+.ass-tile-delete {
+  font-family: "Inter", sans-serif;
+  border: solid .5px #F04438;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #F04438;
+  padding: 12px;
+  width: 150px;
+  padding-left: 26px;
+}
+
+.ass-tile-delete:hover {
+  cursor: pointer;
+  background-color: #F04438;
+  color: #fff;
+  opacity: 0.8;
+  text-decoration: none;
 }

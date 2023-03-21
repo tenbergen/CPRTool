@@ -1,10 +1,19 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import '../../../pages/StudentPages/styles/AssignmentPageStyle.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { getAssignmentDetailsAsync } from '../../../redux/features/assignmentSlice';
 import { getCurrentCourseTeamAsync } from '../../../redux/features/teamSlice';
+import '../../styles/StudentAss.css';
+import SidebarComponent from '../../../components/SidebarComponent';
+import StudentTeamComponent from '../../../components/StudentComponents/CoursePage/StudentTeamComponent';
+import StudentToDoComponent from '../../../components/StudentComponents/CoursePage/StudentToDoComponent';
+import CourseBarComponent from '../../../components/CourseBarComponent';
+import StudentSubmittedComponent from '../../../components/StudentComponents/CoursePage/StudentSubmittedComponent';
+import { getCourseDetailsAsync } from '../../../redux/features/courseSlice';
+import MyTeamComponent from '../../../components/StudentComponents/CoursePage/MyTeamComponent';
+import uuid from 'react-uuid';
 
 const RegularAssignmentComponent = () => {
   const dispatch = useDispatch();
@@ -90,7 +99,7 @@ const RegularAssignmentComponent = () => {
                 {currentAssignment.assignment_instructions_name}
               </span>
               <br />
-              <br />
+RegularAssignmentComponent              <br />
               <div className='ap-assignment-files'>
                 <input
                   type='file'
