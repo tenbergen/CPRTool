@@ -90,6 +90,7 @@ const StudentPeerReviewComponent = () => {
 
   const handleSubmit = async () => {
     const submitAssUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${currentTeamId}/${teamId}/${grade}/upload`;
+    const submitPREmailUrl = `${process.env.REACT_APP_URL}/email/send/${courseId}/${teamId}/${assignmentId}/peer-review-submitted/`
 
     await axios
       .post(submitAssUrl, feedbackFileFormData)
@@ -103,7 +104,15 @@ const StudentPeerReviewComponent = () => {
         console.error(e.response);
         alert('Error uploading peer review');
       });
+    await axios
+        .post(submitPREmailUrl)
+        .then((res) => {})
+        .catch((e) => {
+          console.error(e.response);
+          alert('Error sending Peer Review Receipt Email');
+        });
     setGrade(undefined);
+
   };
 
   return (
