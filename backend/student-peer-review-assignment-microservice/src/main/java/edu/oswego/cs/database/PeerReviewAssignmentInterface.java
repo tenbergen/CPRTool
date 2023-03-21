@@ -1079,4 +1079,22 @@ public class PeerReviewAssignmentInterface {
         return returnValues;
     }
 
+
+    /**
+     * This is a method to be used for testing purposes, it will simplify writiing the test cases
+     * while keeping the same functionality as all other isOutlier methods
+     * */
+    public boolean isOutlier(int numberToCompare, int Q1, int Q3, int IQR){
+
+
+        //if value is an outlier
+        if( (numberToCompare < (Q1 - (1.5 * IQR)))  || (numberToCompare > (Q3 + (1.5 * IQR)) )){
+            return true;
+        }
+        //if its not an outlier
+        else{
+            return false;
+        }
+    }
+
 }
