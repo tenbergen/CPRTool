@@ -324,6 +324,8 @@ public class EmailService {
 
             String body = "" + template; //copy template
             body = body.replace("[Reviewed Team Name]", revTeamID);
+            body = body.replace("[Team Name]", team.getString("teamID"));
+            body = body.replace("[Course Name]", course.getString("course_name"));
             body = body.replace("[Today's Date]", new Date().toString());
             body = body.replace("[Name of Student]", studentDoc.getString("first_name") + " " + studentDoc.getString("last_name"));
             body = body.replace("[Name of Course]", course.getString("course_name"));
