@@ -126,6 +126,30 @@ public class PeerReviewAssignmentResource {
      * Endpoint to get matrix of grades and outliers
      *
      * @param courseID     The course for the assignment
+     * @return the matrix of grades with outliers as boolean value
+     */
+    @GET
+    @RolesAllowed("professor")
+    @Path("{courseID}/outlierDetectionOverTime")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMatrixOfGrades(@PathParam("courseID") String courseID){
+        //grab instance of peer review interface
+        PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
+        //the function to grab all of the
+        Document matrixOfGrades = peerReviewAssignmentInterface.allPotentialOutliers(courseID);
+
+        if(peerReviewAssignmentInterface == null || matrixOfGrades == null)
+            return Response.status(Response.Status.BAD_REQUEST).entity("Error getting all the potential outliers").build();
+        return Response.status(Response.Status.OK).entity(matrixOfGrades).build();
+    }
+
+
+
+
+    /**
+     * Endpoint to get matrix of grades and outliers
+     *
+     * @param courseID     The course for the assignment
      * @param assignmentID The assignment that is being looked up
      * @return the matrix of grades with outliers as boolean value
      */
