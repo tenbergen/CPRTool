@@ -84,18 +84,18 @@ button:hover {
   background-color: #05603a;
 }
 
-.ass-tile-delete {
+.cancel-button {
   font-family: "Inter", sans-serif;
   border: solid .5px #F04438;
   border-radius: 5px;
-  font-size: 16px;
+  font-size: 24px;
   color: #F04438;
   padding: 12px;
-  width: 150px;
-  padding-left: 26px;
+  width: 300px;
+  padding-left: 12px;
 }
 
-.ass-tile-delete:hover {
+.cancel-button:hover {
   cursor: pointer;
   background-color: #F04438;
   color: #fff;
