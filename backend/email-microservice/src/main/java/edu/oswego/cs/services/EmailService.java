@@ -420,32 +420,6 @@ public class EmailService {
     }
 
     /**
-     * Sends the professor an email when someone submits an assignment containing profanity.
-     *
-     * @param courseID course for which the assignment is submitted
-     * @param teamID team that submitted the assignment
-     * @param assignmentID assignment for which the submission contained profanity
-     */
-    public void profanityEmail(String courseID, String teamID, int assignmentID) throws IOException {
-        //read contents of template
-        String body = getTemplate("profanityEmail.html");
-
-        String subject = "A team has submitted an assignment or peer review containing profanity";
-        Document course = new CourseInterface().getCourse(courseID);
-        Document assignment = new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID);
-
-        //fill in specifics
-        body = body.replace("[Course Name]", course.getString("course_name"));
-        body = body.replace("[Today's Date]", new Date().toString());
-        body = body.replace("[Name of Instructor]", course.getString("professor_id"));
-        body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
-        body = body.replace("[Team Name]", teamID);
-
-        System.out.println(body);
-        sendEmail(course.getString("professor_id") + professorEmailDomain, subject, body);
-    }
-
-    /**
      * Reads a file in the templates folder and returns its contents as a string. Used for getting html templates of
      * email bodies.
      *

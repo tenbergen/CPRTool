@@ -148,7 +148,7 @@ public class EmailResources {
     }
 
     /**
-     * FRONTEND ROUTE YET TO BE IMPLEMENTED ---------------------------------------------------------------
+     * FRONTEND CALL YET TO BE IMPLEMENTED; awaiting implementation of frontend matrix
      *
      * @param courseID id of course in which outlier grade was given
      * @param teamID id of team that submitted the outlier grade
@@ -164,26 +164,6 @@ public class EmailResources {
                                          @PathParam("teamID") String teamID,
                                          @PathParam("assignmentID") int assignmentID) throws IOException {
         new EmailService().outlierDetectedEmail(courseID, teamID, assignmentID);
-        return Response.status(Response.Status.OK).build();
-    }
-
-    /**
-     * FRONTEND ROUTE YET TO BE IMPLEMENTED --------------------------------------------------------------
-     *
-     * @param courseID id of course for which the profane submission was turned in
-     * @param teamID id of profane team
-     * @param assignmentID id of assignment for which the profane submission was turned in
-     * @return OK Response
-     */
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("{courseID}/{teamID}/{assignmentID}/profanity")
-    @RolesAllowed({"professor","student"})
-    public Response profanityEmail(@PathParam("courseID") String courseID,
-                                         @PathParam("teamID") String teamID,
-                                         @PathParam("assignmentID") int assignmentID) throws IOException {
-        new EmailService().profanityEmail(courseID, teamID, assignmentID);
         return Response.status(Response.Status.OK).build();
     }
 }
