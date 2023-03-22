@@ -1,8 +1,6 @@
 package edu.oswego.cs.database;
 
-import com.mongodb.Mongo;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 

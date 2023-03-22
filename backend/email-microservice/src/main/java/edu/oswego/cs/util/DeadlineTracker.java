@@ -1,7 +1,5 @@
 package edu.oswego.cs.util;
 
-import static com.mongodb.client.model.Filters.eq;
-
 import edu.oswego.cs.database.AssignmentInterface;
 import edu.oswego.cs.services.EmailService;
 import org.bson.Document;
