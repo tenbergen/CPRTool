@@ -8,6 +8,7 @@ import com.ibm.websphere.security.jwt.JwtException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.database.DatabaseManager;
+import edu.oswego.cs.database.ProfessorCheck;
 import edu.oswego.cs.util.CPRException;
 import org.bson.Document;
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -32,6 +33,7 @@ public class AuthServices {
         } catch (WebApplicationException e) {
             throw new CPRException(Response.Status.BAD_REQUEST, "Failed to retrieve collections.");
         }
+        new ProfessorCheck().addProfessors();
     }
 
     public Map<String, String> generateNewToken(String token) {
