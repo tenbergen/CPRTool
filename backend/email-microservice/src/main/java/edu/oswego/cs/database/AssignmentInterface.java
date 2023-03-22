@@ -332,6 +332,14 @@ public class AssignmentInterface {
         return assignment;
     }
 
+    public boolean doesAssignmentExist(String courseID, int AssignmentID){
+        Document assignment = assignmentsCollection.find(and(
+                eq("course_id", courseID),
+                eq("assignment_id", AssignmentID))).first();
+        if (assignment == null) return false;
+        return true;
+    }
+
     /**
      *
      * @param assignmentDAO
@@ -401,13 +409,6 @@ public class AssignmentInterface {
     *
     **/
 
-
-    /**
-    *
-    * Iterates the assignment id by one based on how many assignments currently exist in the DB
-    *
-    **/
-
     public int generateAssignmentID() {
         List<Document> assignmentsDocuments = getAllAssignments();
 
@@ -434,14 +435,6 @@ public class AssignmentInterface {
      * @return true if there is a submission with the matching assignment id and team id. false otherwise.
      */
     public boolean hasTeamSubmitted(int assignmentID, String teamID){
-        Document submission = submissionCollection.find(and(eq("team_name", teamID), eq("assignment_id", assignmentID))).first();
-        if(submission == null){
-            return false;
-        }
-        return true;
-    }
-
-    public boolean hasTeamBeenReviewed(int assignmentID, String teamID){
         Document submission = submissionCollection.find(and(eq("team_name", teamID), eq("assignment_id", assignmentID))).first();
         if(submission == null){
             return false;

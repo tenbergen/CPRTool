@@ -2,7 +2,9 @@ package edu.oswego.cs.resources;
 
 import edu.oswego.cs.daos.AssignmentDAO;
 import edu.oswego.cs.daos.CourseDAO;
+import edu.oswego.cs.database.AssignmentInterface;
 import edu.oswego.cs.services.EmailService;
+import edu.oswego.cs.util.DeadlineTracker;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
@@ -26,6 +28,7 @@ public class EmailResources {
                                            @PathParam("courseID") String courseID,
                                            @PathParam("assignmentID") int assignmentID) throws IOException{
         new EmailService().assignmentCreatedEmail(securityContext, courseID, assignmentID);
+        DeadlineTracker.addAssignment(new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID));
         return Response.status(Response.Status.OK).build();
     }
 
@@ -41,6 +44,18 @@ public class EmailResources {
         //not to bundle them in the same HTTP method
         new EmailService().allAssignmentsSubmittedEmail(courseID, assignmentID);
         new EmailService().assignmentSubmittedEmail(courseID, teamID, assignmentID);
+        return Response.status(Response.Status.OK).build();
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{courseID}/{teamID}/{assignmentID}/peer-review-assigned")
+    @RolesAllowed("professor")
+    public Response peerReviewAssignedEmail(@PathParam("courseID") String courseID,
+                                             @PathParam("teamID") String teamID,
+                                             @PathParam("assignmentID") int assignmentID) throws IOException {
+        new EmailService().peerReviewAssignedEmail(courseID, teamID, assignmentID);
         return Response.status(Response.Status.OK).build();
     }
 
@@ -69,6 +84,30 @@ public class EmailResources {
                                        @PathParam("teamID") String teamID,
                                        @PathParam("assignmentID") int assignmentID) throws IOException {
         new EmailService().gradeReceivedEmail(courseID, assignmentID, teamID);
+        return Response.status(Response.Status.OK).build();
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{courseID}/{teamID}/{assignmentID}/outlier")
+    @RolesAllowed({"professor","student"})
+    public Response outlierDetectedEmail(@PathParam("courseID") String courseID,
+                                         @PathParam("teamID") String teamID,
+                                         @PathParam("assignmentID") int assignmentID) throws IOException {
+        new EmailService().outlierDetectedEmail(courseID, teamID, assignmentID);
+        return Response.status(Response.Status.OK).build();
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{courseID}/{teamID}/{assignmentID}/profanity")
+    @RolesAllowed({"professor","student"})
+    public Response profanityEmail(@PathParam("courseID") String courseID,
+                                         @PathParam("teamID") String teamID,
+                                         @PathParam("assignmentID") int assignmentID) throws IOException {
+        new EmailService().profanityEmail(courseID, teamID, assignmentID);
         return Response.status(Response.Status.OK).build();
     }
 }

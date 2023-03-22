@@ -5,7 +5,7 @@ import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.daos.TeamDAO;
 import edu.oswego.cs.database.AssignmentInterface;
 import edu.oswego.cs.database.CourseInterface;
-import edu.oswego.cs.util.DeadlineTimer;
+import edu.oswego.cs.util.DeadlineTracker;
 import org.bson.Document;
 
 import javax.mail.Message;
@@ -20,6 +20,7 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -27,9 +28,11 @@ import java.util.Properties;
  *
  */
 public class EmailService {
-    static String from = "schmittsLaptop@patrick.com";
-    static Properties props = new Properties();
-    static Session session = Session.getDefaultInstance(props, null);
+    String from = "schmittsLaptop@patrick.com";
+    Properties props = new Properties();
+    Session session = Session.getDefaultInstance(props, null);
+    String professorEmailDomain = "@oswego.edu"; //change to your preferred domain for testing
+    String studentEmailDomain = "@gmail.com"; //change to your preferred domain for testing
 
     /**
      * Sends an email to the professor informing them that all teams in the course have submitted an assignment.
@@ -68,8 +71,7 @@ public class EmailService {
         body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
 
         System.out.println(body);
-        //will throw error if professor doesn't have @oswego.edu email
-        sendEmail(course.getString("professor_id") + "@oswego.edu", subject, body);
+        sendEmail(course.getString("professor_id") + professorEmailDomain, subject, body);
     }
 
     /**
@@ -108,8 +110,7 @@ public class EmailService {
         body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
 
         System.out.println(body);
-        //will throw error if professor doesn't have @oswego.edu email
-        sendEmail(course.getString("professor_id") + "@oswego.edu", subject, body);
+        sendEmail(course.getString("professor_id") + professorEmailDomain, subject, body);
     }
 
     /**
@@ -141,7 +142,7 @@ public class EmailService {
             //print because I currently can't send mail
             System.out.println(body);
             //send email
-            sendEmail(student.getString("student_id") + "@gmail.com", subject, body); //will throw an error for any student with a non-gmail email. This is a DB issue.
+            sendEmail(student.getString("student_id") + studentEmailDomain, subject, body);
         }
     }
 
@@ -150,11 +151,32 @@ public class EmailService {
      * submission for it. A timer is created when the assignment is created (See createDeadlineTimer). This method is
      * called when the timer reaches its end.
      *
-     * @param course the course in which the assignment is assigned
-     * @param assignment the assignment whose deadline has passed
+     * @param courseID the course in which the assignment is assigned
+     * @param assignmentID the assignment whose deadline has passed
      */
-    public static void assignmentDeadlinePassed(CourseDAO course, AssignmentDAO assignment) throws IOException {
+    public  void assignmentDeadlinePassed(String courseID, int assignmentID) throws IOException {
+        Document assignment = new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID);
 
+        if(allSubmitted(assignment)){
+            //everyone has submitted
+            return;
+        }
+
+        //load template
+        String body = getTemplate("assignmentDeadlinePassed.html");
+
+        String subject = "An assignment's deadline has passed and not all teams have submitted.";
+        Document course = new CourseInterface().getCourse(courseID);
+
+        //fill in specifics
+        body = body.replace("[Course Name]", course.getString("course_name"));
+        body = body.replace("[Today's Date]", new Date().toString());
+        body = body.replace("[Name of Instructor]", course.getString("professor_id"));
+        body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
+        body = body.replace("[Assignment Due Date]", assignment.getString("due_date"));
+
+        System.out.println(body);
+        sendEmail(course.getString("professor_id") + professorEmailDomain, subject, body);
     }
 
     /**
@@ -182,7 +204,7 @@ public class EmailService {
         }
         List<String> students = team.getList("team_members", String.class);
         for(String student : students){
-            String to = student + "@gmail.com"; //will throw an error if the student had a different email domain
+            String to = student + studentEmailDomain;
             Document studentDoc = new CourseInterface().getStudent(student);
 
             String body = "" + template; //copy template
@@ -197,18 +219,6 @@ public class EmailService {
             System.out.println(body);
             sendEmail(to, subject, body);
         }
-    }
-
-    /**
-     * Method to create a new thread that acts as a timer for a deadline. This timer checks avery hour to see if
-     * the deadline has passed, at which point it calls the appropriate method. The timer checks repeatedly instead of
-     * just waiting the full time to account for when the assignment deadline changes or if the assignment is deleted.
-     *
-     * @param assignment The assignment whose deadline is being checked for.
-     * @param isPeerReview a true value will call peerReviewDeadlinePassed instead of assignmentDeadlinePassed.
-     */
-    public void createDeadlineTimer(AssignmentDAO assignment, boolean isPeerReview){
-        new DeadlineTimer(assignment.courseID, isPeerReview).start();
     }
 
     /**
@@ -243,7 +253,7 @@ public class EmailService {
         List<String> students = team.getList("team_members", String.class);
 
         for(String student : students){
-            String to = student + "@gmail.com"; //will throw an error if the student had a different email domain
+            String to = student + studentEmailDomain;
             Document studentDoc = new CourseInterface().getStudent(student);
 
             String body = "" + template; //copy template
@@ -262,20 +272,73 @@ public class EmailService {
 
     /**
      * Sends the professor an email when an outlier is detected.
+     *
+     * @param courseID course in which the outlier review was submitted
+     * @param teamID team that submitted the outlier review
+     * @param assignmentID assignment for which the outlier view was submitted
      */
-    public void outlierDetectedEmail(){
+    public void outlierDetectedEmail(String courseID, String teamID, int assignmentID) throws IOException {
+        //outlier detection isn't implemented yet.
+        //read contents of template
+        String body = getTemplate("outlierDetectedEmail.html");
+
+        String subject = "An outlier peer review grade has been detected";
+        Document course = new CourseInterface().getCourse(courseID);
+        Document assignment = new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID);
+
+        //fill in specifics
+        body = body.replace("[Course Name]", course.getString("course_name"));
+        body = body.replace("[Today's Date]", new Date().toString());
+        body = body.replace("[Name of Instructor]", course.getString("professor_id"));
+        body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
+        body = body.replace("[Name of Team That Submitted the Outlier Peer Review]", teamID);
+
+        System.out.println(body);
+        sendEmail(course.getString("professor_id") + professorEmailDomain, subject, body);
 
     }
 
     /**
      * Sends all the students in a team an email when that team is assigned a peer review.
      *
-     * @param course course in which the peer review is assigned
-     * @param team team reviewing the submission
-     * @param assignment submission being peer reviewed
+     * @param courseID course in which the peer review is assigned
+     * @param teamID team reviewing the submission
+     * @param assignmentID submission being peer reviewed
      */
-    public void peerReviewAssignedEmail(CourseDAO course, TeamDAO team, AssignmentDAO assignment){
+    public void peerReviewAssignedEmail(String courseID, String teamID, int assignmentID) throws IOException {
+        //read contents of template
+        String template = getTemplate("peerReviewAssigned.html");
 
+        String subject = "Peer reviews have been assigned for your team";
+        Document course = new CourseInterface().getCourse(courseID);
+        Document assignment = new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID);
+        List<Document> teams = new CourseInterface().getTeamsInCourse(courseID);
+        Document team = null;
+        for(Document t : teams){
+            if(t.getString("team_id").equals(teamID)){
+                team = t;
+                break;
+            }
+        }
+
+        List<String> students = team.getList("team_members", String.class);
+        for(String student : students){
+            String to = student + studentEmailDomain;
+            Document studentDoc = new CourseInterface().getStudent(student);
+
+            String body = "" + template; //copy template
+            body = body.replace("[Team Name]", team.getString("teamID"));
+            body = body.replace("[Number of Peer Reviews]", assignment.getInteger("reviews_per_team").toString());
+            body = body.replace("[Course Name]", course.getString("course_name"));
+            body = body.replace("[Today's Date]", new Date().toString());
+            body = body.replace("[Name of Student]", studentDoc.getString("first_name") + " " + studentDoc.getString("last_name"));
+            body = body.replace("[Time of Submission]", assignment.getString("due_date"));
+            body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
+            body = body.replace("[Instructor Name]", course.getString("professor_id"));
+
+            System.out.println(body);
+            sendEmail(to, subject, body);
+        }
     }
 
     /**
@@ -283,11 +346,34 @@ public class EmailService {
      * submission for it. A timer is created when the peer review assignment is created (See createDeadlineTimer). This
      * method is called when the timer reaches its end.
      *
-     * @param course the course in which the assignment is assigned
-     * @param assignment the assignment whose deadline has passed
+     * @param courseID the course in which the assignment is assigned
+     * @param assignmentID the assignment whose deadline has passed
      */
-    public void peerReviewDeadlinePassed(CourseDAO course, AssignmentDAO assignment){
+    public void peerReviewDeadlinePassed(String courseID, int assignmentID) throws IOException {
+        Document assignment = new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID);
 
+        if(allPRSubmitted(assignment)){
+            //everyone has submitted
+            return;
+        }
+
+        //prerequisites met
+
+        //load template
+        String body = getTemplate("peerReviewDeadlinePassed.html");
+
+        String subject = "An peer review's deadline has passed and not all teams have submitted.";
+        Document course = new CourseInterface().getCourse(courseID);
+
+        //fill in specifics
+        body = body.replace("[Course Name]", course.getString("course_name"));
+        body = body.replace("[Today's Date]", new Date().toString());
+        body = body.replace("[Name of Instructor]", course.getString("professor_id"));
+        body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
+        body = body.replace("[Peer Review Due Date]", assignment.getString("peer_review_due_date"));
+
+        System.out.println(body);
+        sendEmail(course.getString("professor_id") + professorEmailDomain, subject, body);
     }
 
     /**
@@ -319,7 +405,7 @@ public class EmailService {
         }
         List<String> students = team.getList("team_members", String.class);
         for(String student : students){
-            String to = student + "@gmail.com"; //will throw an error if the student had a different email domain
+            String to = student + studentEmailDomain;
             Document studentDoc = new CourseInterface().getStudent(student);
 
             String body = "" + template; //copy template
@@ -341,12 +427,27 @@ public class EmailService {
     /**
      * Sends the professor an email when someone submits an assignment containing profanity.
      *
-     * @param course course for which the assignment is submitted
-     * @param team team that submitted the assignment
-     * @param assignment assignment for which the submission contained profanity
+     * @param courseID course for which the assignment is submitted
+     * @param teamID team that submitted the assignment
+     * @param assignmentID assignment for which the submission contained profanity
      */
-    public void profanityEmail(CourseDAO course, TeamDAO team, AssignmentDAO assignment){
+    public void profanityEmail(String courseID, String teamID, int assignmentID) throws IOException {
+        //read contents of template
+        String body = getTemplate("profanityEmail.html");
 
+        String subject = "A team has submitted an assignment or peer review containing profanity";
+        Document course = new CourseInterface().getCourse(courseID);
+        Document assignment = new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID);
+
+        //fill in specifics
+        body = body.replace("[Course Name]", course.getString("course_name"));
+        body = body.replace("[Today's Date]", new Date().toString());
+        body = body.replace("[Name of Instructor]", course.getString("professor_id"));
+        body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
+        body = body.replace("[Team Name]", teamID);
+
+        System.out.println(body);
+        sendEmail(course.getString("professor_id") + professorEmailDomain, subject, body);
     }
 
     /**
@@ -438,20 +539,15 @@ public class EmailService {
     }
 
     public boolean allPRSubmitted(Document assignment) {
-
-        return false;
-        //Doesn't work right now because I don't know how to tell if a PR is given
-        /*
-        String courseID = assignment.getString("course_id");
-        List<Document> teams = new CourseInterface().getTeamsInCourse(courseID);
-        for(Document team : teams){
-            if(!new AssignmentInterface().hasTeamBeenReviewed(assignment.getInteger("assignment_id"), team.getString("team_id"))){
-                //has not submitted
+        //get completed teams to see if all peer reviews have been submitted
+        Map<String, List<String>> completedTeams = (Map<String, List<String>>) assignment.get("completed_teams");
+        int reviewsPerTeam = assignment.getInteger("reviews_per_team");
+        for(Map.Entry<String, List<String>> entry : completedTeams.entrySet()){
+            if(entry.getValue().size() != reviewsPerTeam){
                 return false;
             }
         }
-        //everyone has submitted
         return true;
-         */
     }
+
 }
