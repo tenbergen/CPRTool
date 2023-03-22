@@ -1,18 +1,12 @@
 package edu.oswego.cs.util;
 
-import com.mongodb.client.MongoCollection;
 import static com.mongodb.client.model.Filters.eq;
 
-import edu.oswego.cs.daos.AssignmentDAO;
-import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.database.AssignmentInterface;
-import edu.oswego.cs.database.CourseInterface;
-import edu.oswego.cs.database.DatabaseManager;
 import edu.oswego.cs.services.EmailService;
 import org.bson.Document;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;

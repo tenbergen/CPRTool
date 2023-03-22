@@ -39,17 +39,6 @@ public class CourseInterface {
         }
     }
 
-    public List<Document> getAllCourses(SecurityContext securityContext) {
-        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
-        MongoCursor<Document> query = courseCollection.find(eq("professor_id", professorID)).iterator();
-        List<Document> courses = new ArrayList<>();
-        while (query.hasNext()) {
-            Document document = query.next();
-            courses.add(document);
-        }
-        return courses;
-    }
-
     public Document getCourse(SecurityContext securityContext, String courseID) {
         String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
         Document document = courseCollection.find(and(eq("course_id", courseID), eq("professor_id", professorID))).first();
@@ -65,30 +54,6 @@ public class CourseInterface {
         return document;
     }
 
-    public List<Document> getStudentCourses(String studentID) {
-        Document studentDocument = studentCollection.find(eq("student_id", studentID)).first();
-        if (studentDocument == null)
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This student does not exist.").build());
-
-        List<String> courses = studentDocument.getList("courses", String.class);
-        List<Document> courseDocuments = new ArrayList<>();
-        for (String course : courses) {
-            Document courseDocument = courseCollection.find(eq("course_id", course)).first();
-            courseDocuments.add(courseDocument);
-        }
-        return courseDocuments;
-    }
-
-    public List<Document> getAllStudents() {
-        MongoCursor<Document> query = studentCollection.find().iterator();
-        List<Document> students = new ArrayList<>();
-        while (query.hasNext()) {
-            Document document = query.next();
-            students.add(document);
-        }
-        query.close();
-        return students;
-    }
 
     public Document getStudent(String studentID) {
         Document document = studentCollection.find(eq("student_id", studentID)).first();

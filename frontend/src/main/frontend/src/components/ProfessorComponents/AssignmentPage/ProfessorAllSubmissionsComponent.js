@@ -25,6 +25,7 @@ const ProfessorAllSubmissionsComponent = () => {
 
   const distribute = async () => {
     const url = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/assign/${assignedTeamCount}`;
+    const distributeEmailUrl = `${process.env.REACT_APP_URL}/email/send/${courseId}/${assignmentId}/peer-review-assigned`
     await axios
       .get(url)
       .then((res) => {
@@ -38,6 +39,12 @@ const ProfessorAllSubmissionsComponent = () => {
           } team(s).`
         );
       });
+    await axios
+        .post(distributeEmailUrl)
+        .then((res) => {})
+        .catch((e) => {
+          console.error(e.response.data);
+        });
     setAssignedTeamCount(0);
   };
 

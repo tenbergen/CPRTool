@@ -1,11 +1,7 @@
 package edu.oswego.cs.services;
 
-import edu.oswego.cs.daos.AssignmentDAO;
-import edu.oswego.cs.daos.CourseDAO;
-import edu.oswego.cs.daos.TeamDAO;
 import edu.oswego.cs.database.AssignmentInterface;
 import edu.oswego.cs.database.CourseInterface;
-import edu.oswego.cs.util.DeadlineTracker;
 import org.bson.Document;
 
 import javax.mail.Message;
@@ -299,39 +295,38 @@ public class EmailService {
     }
 
     /**
-     * Sends all the students in a team an email when that team is assigned a peer review.
+     * Sends all the students in a course an email when peer reviews get assigned.
      *
+     * @param securityContext context for getting students in the course
      * @param courseID course in which the peer review is assigned
-     * @param teamID team reviewing the submission
      * @param assignmentID submission being peer reviewed
      */
-    public void peerReviewAssignedEmail(String courseID, String teamID, int assignmentID) throws IOException {
+    public void peerReviewAssignedEmail(SecurityContext securityContext, String courseID, int assignmentID) throws IOException {
         //read contents of template
         String template = getTemplate("peerReviewAssigned.html");
 
         String subject = "Peer reviews have been assigned for your team";
         Document course = new CourseInterface().getCourse(courseID);
         Document assignment = new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID);
-        List<Document> teams = new CourseInterface().getTeamsInCourse(courseID);
-        Document team = null;
-        for(Document t : teams){
-            if(t.getString("team_id").equals(teamID)){
-                team = t;
-                break;
-            }
-        }
 
-        List<String> students = team.getList("team_members", String.class);
-        for(String student : students){
-            String to = student + studentEmailDomain;
-            Document studentDoc = new CourseInterface().getStudent(student);
+        List<Document> students = new CourseInterface().getStudentsInCourse(securityContext, courseID);
+
+        for(Document student : students){
+            String to = student.getString("student_id") + studentEmailDomain;
+            List<Document> teams = new CourseInterface().getTeamsInCourse(courseID);
+            Document team = null;
+            for(Document t : teams){
+                if(t.getList("team_members", String.class).contains(student.getString("student_id"))){
+                    team = t;
+                }
+            }
 
             String body = "" + template; //copy template
             body = body.replace("[Team Name]", team.getString("teamID"));
             body = body.replace("[Number of Peer Reviews]", assignment.getInteger("reviews_per_team").toString());
             body = body.replace("[Course Name]", course.getString("course_name"));
             body = body.replace("[Today's Date]", new Date().toString());
-            body = body.replace("[Name of Student]", studentDoc.getString("first_name") + " " + studentDoc.getString("last_name"));
+            body = body.replace("[Name of Student]", student.getString("first_name") + " " + student.getString("last_name"));
             body = body.replace("[Time of Submission]", assignment.getString("due_date"));
             body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
             body = body.replace("[Instructor Name]", course.getString("professor_id"));
@@ -538,6 +533,13 @@ public class EmailService {
         return true;
     }
 
+
+    /**
+     * Returns true if all teams have submitted all their peer reviews for the given assignment
+     *
+     * @param assignment assignment in question
+     * @return true if all peer reviews have been submitted, false otherwise
+     */
     public boolean allPRSubmitted(Document assignment) {
         //get completed teams to see if all peer reviews have been submitted
         Map<String, List<String>> completedTeams = (Map<String, List<String>>) assignment.get("completed_teams");

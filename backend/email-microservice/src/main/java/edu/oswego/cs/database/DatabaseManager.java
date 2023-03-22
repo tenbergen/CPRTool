@@ -21,6 +21,9 @@ public class DatabaseManager {
     String mongoUser = System.getenv("MONGO_USERNAME");
     String mongoPassword = System.getenv("MONGO_PASSWORD");
 
+    /**
+     * Copied from other microservices. Just gets the MongoDatabases
+     */
     public DatabaseManager() {
     }
 
