@@ -40,13 +40,12 @@ function LoginPage() {
           <div id="box">
             <div className="hel44-700 welcome">Welcome!</div>
             <div className="googleButton">
-              {/* <GoogleOAuthProvider clientId={REACT_APP_CLIENT_ID}> */}
-              <GoogleOAuthProvider clientId="491662648913-p5huqfqg9gj5k9trfh0rd9oo1g8f074h.apps.googleusercontent.com">
+               <GoogleOAuthProvider clientId={REACT_APP_CLIENT_ID}>
                 <GoogleLogin
                   text={"signin_with"}
                   onSuccess={handleLogin}
                   onError={handleFailure}
-                  //hosted_domain={"oswego.edu"}
+                  hosted_domain={"oswego.edu"}
                   size={"large"}
                   cookiePolicy={"single_host_origin"}
                   prompt="select_account"
