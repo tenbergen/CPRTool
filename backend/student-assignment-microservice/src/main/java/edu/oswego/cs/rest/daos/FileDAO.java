@@ -42,7 +42,7 @@ public class FileDAO {
     public static FileDAO fileFactory(String fileName, String courseID, IAttachment attachment, int assignmentID, String teamName) throws IOException, TikaException, SAXException {
         InputStream inputStream = new BufferedInputStream(attachment.getDataHandler().getInputStream());
         byte[] fileData = inputStream.readAllBytes();
-        contentFilter(new ByteArrayInputStream(fileData), fileName);
+        contentFilter(new ByteArrayInputStream(Base64.getDecoder().decode(new String(fileData))), fileName);
         inputStream.mark(inputStream.available());
         return new FileDAO(fileName, courseID, fileData, assignmentID, teamName);
     }
