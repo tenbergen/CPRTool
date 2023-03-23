@@ -123,6 +123,25 @@ public class PeerReviewAssignmentResource {
     }
 
     /**
+     * Endpoint to get all student grades.
+     *
+     * @param courseID     The course for the assignment
+     * @param assignmentID The assignment that is being looked up
+     * @param studentID    The team name for the team looked up
+     * @return the student that was edited
+     */
+    @GET
+    @RolesAllowed("professor")
+    @Path("{courseID}/{assignmentID}/{teamID}/{studentID}/grade")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTeamGrade(@PathParam("courseID") String courseID,
+                                 @PathParam("assignmentID") int assignmentID,
+                                 @PathParam("teamID") String teamID,
+                                 @PathParam("studentID") String studentID) {
+        PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
+        return Response.status(Response.Status.OK).entity(peerReviewAssignmentInterface.getGradeForStudent(courseID, assignmentID, teamID, studentID)).build();
+    }
+    /**
      * Endpoint to get matrix of grades and outliers
      *
      * @param courseID     The course for the assignment
