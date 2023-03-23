@@ -130,17 +130,6 @@ public class PeerReviewAssignmentResource {
      * @param studentID    The team name for the team looked up
      * @return the student that was edited
      */
-//    @GET
-//    @RolesAllowed("professor")
-//    @Path("{courseID}/{assignmentID}/{teamID}/getStudentGrades")
-//    public Response getGradeForStudent(@PathParam("courseID") String courseID,
-//                                       @PathParam("assignmentID") int assignmentID,
-//                                       @PathParam("teamID") String teamID) {
-//        PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
-//        return Response.status(Response.Status.OK).entity(peerReviewAssignmentInterface.getStudentGrades(courseID,assignmentID,teamID)).build();
-//
-//    }
-
     @GET
     @RolesAllowed("professor")
     @Path("{courseID}/{assignmentID}/{teamID}/{studentID}/grade")
@@ -152,7 +141,6 @@ public class PeerReviewAssignmentResource {
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
         return Response.status(Response.Status.OK).entity(peerReviewAssignmentInterface.getGradeForStudent(courseID, assignmentID, teamID, studentID)).build();
     }
-
     /**
      * Endpoint to get matrix of grades and outliers
      *
