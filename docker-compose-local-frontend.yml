@@ -67,6 +67,9 @@ services:
     image: cpr-email
     container_name: cpr-email
     restart: unless-stopped
+    volumes:
+      - ./templates:/opt/ol/wlp/output/defaultServer/templates:rw
+      - ./backend/email-microservice/postfix-3.7.4:/opt/ol/wlp/output/defaultServer/postfix-3.7.4:r
     environment:
       JWK_ACCESS_URL: ${JWK_ACCESS_URL}
       JWK_REFRESH_URL: ${JWK_REFRESH_URL}
