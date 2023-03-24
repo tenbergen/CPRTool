@@ -1,0 +1,24 @@
+version: 2.1
+
+orbs:
+  maven: circleci/maven@1.4.0
+
+jobs:
+  build:
+    docker:
+      - image: cimg/base:stable
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD
+
+    steps:
+      - setup_remote_docker:
+          version: 19.03.13
+      - checkout
+
+
+
+workflows:
+  build:
+    jobs:
+      - build
