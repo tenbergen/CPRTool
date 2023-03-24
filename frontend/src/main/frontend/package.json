@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "axios": "^0.26.0",
+    "jest": "^27.5.1",
     "react-router-dom": "^6.2.1",
     "react-scripts": "^5.0.1"
   }
