@@ -1,8 +1,8 @@
+
 version: 2.1
 
 orbs:
   maven: circleci/maven@1.4.0
-
 
 jobs:
   build:
@@ -11,16 +11,16 @@ jobs:
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD
-          # context / project UI env-var reference
 
-    environment:
-      # Customize the JVM maximum heap limit
-      JVM_OPTS: -Xmx3200m
-      TERM: dumb
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - setup_remote_docker:
           version: 19.03.13
       - checkout
+
+
+
+workflows:
+  build:
+    jobs:
+      - build
 
