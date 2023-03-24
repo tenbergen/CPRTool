@@ -12,6 +12,7 @@ import AuthRouteHandler from './AuthRouteHandler';
 import ProfessorAssignmentPage from '../pages/TeacherPages/ProfessorAssignmentPage';
 import StudentSubmittedAssignmentPage from '../pages/StudentPages/StudentSubmittedAssignmentPage';
 import ProfessorSubmittedAssignmentPage from '../pages/TeacherPages/ProfessorSubmittedAssignmentPage';
+import AdminInterface from '../pages/AdminPages/AdminInterface'
 
 const RouterHandler = () => {
   return (
@@ -42,6 +43,10 @@ const RouterHandler = () => {
             <Route
               path='details/professor/:courseId/:assignmentId/:teamId/submitted'
               element={<ProfessorSubmittedAssignmentPage />}
+            />
+            <Route
+              path='details/professor/admin'
+              element={<AdminInterface />}
             />
           </Route>
 
