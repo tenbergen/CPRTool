@@ -2,7 +2,9 @@ package edu.oswego.cs.rest.resources;
 
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.rest.daos.AssignmentDAO;
+import edu.oswego.cs.rest.daos.AssignmentNoPeerReviewDAO;
 import edu.oswego.cs.rest.daos.FileDAO;
+import edu.oswego.cs.rest.daos.PeerReviewAddOnDAO;
 import edu.oswego.cs.rest.database.AssignmentInterface;
 import org.bson.Document;
 
@@ -29,6 +31,24 @@ public class ProfessorAssignmentResource {
         return Response.status(Response.Status.OK).entity(assignmentDocument).build();
     }
 
+    /**
+     * Create an assignment with no initial peer review data
+     *
+     * @param assignmentNoPeerReviewDAO
+     * @return
+     * @throws IOException
+     */
+
+    @POST
+    @RolesAllowed("professor")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/courses/create-assignment-no-peer-review")
+    public Response createAssignmentNoPeerReview(AssignmentNoPeerReviewDAO assignmentNoPeerReviewDAO) throws IOException{
+        Document assignmentDocument = new AssignmentInterface().createAssignmentNoPeerReview(assignmentNoPeerReviewDAO);
+        return Response.status(Response.Status.OK).entity(assignmentDocument).build();
+    }
+
+
     @DELETE
     @RolesAllowed("professor")
     @Path("/courses/{courseID}/assignments/{assignmentID}/remove")
@@ -45,6 +65,42 @@ public class ProfessorAssignmentResource {
         new AssignmentInterface().updateAssignment(assignmentDAO, courseID, assignmentID);
         String response = assignmentDAO.courseID + ": " + assignmentDAO.assignmentName + " successfully updated.";
         return Response.status(Response.Status.OK).entity(response).build();
+    }
+
+    /**
+     * Edit an assignment with no peer review data
+     *
+     * @param assignmentNoPeerReviewDAO
+     * @param courseID
+     * @param assignmentID
+     * @return
+     */
+
+    @PUT
+    @RolesAllowed("professor")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/courses/{courseID}/assignments/{assignmentID}/editNoPeerReview")
+    public Response updateAssignmentNoPeerReview(AssignmentNoPeerReviewDAO assignmentNoPeerReviewDAO, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
+        new AssignmentInterface().updateAssignmentWithNoPeerReview(assignmentNoPeerReviewDAO, courseID, assignmentID);
+        String response = assignmentNoPeerReviewDAO.courseID + ": " + assignmentNoPeerReviewDAO.assignmentName + " successfully updated.";
+        return Response.status(Response.Status.OK).entity(response).build();
+    }
+
+
+    /**
+     * Add peer review data to an assignment that has none
+     *
+     * @param peerReviewAddOnDAO
+     * @param courseID
+     * @param assignmentID
+     * @return
+     */
+    @PUT@RolesAllowed("professor")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/courses/{courseID}/assignments/{assignmentID}/addPeerReviewData")
+    public Response addPeerReviewData(PeerReviewAddOnDAO peerReviewAddOnDAO, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID){
+        String assignmentName = new AssignmentInterface().addPeerReviewDataToAssignment(courseID, assignmentID, peerReviewAddOnDAO);
+        return Response.status(Response.Status.OK).entity("Successfully added peer review data to " + courseID + ":" + assignmentName).build();
     }
 
     @GET
@@ -260,4 +316,5 @@ public class ProfessorAssignmentResource {
         new AssignmentInterface().removeCourse(courseID);
         return Response.status(Response.Status.OK).entity("Course successfully deleted from assignments database and assignments folder.").build();
     }
+
 }

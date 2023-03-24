@@ -40,6 +40,9 @@ const RegularAssignmentComponent = () => {
       const base64String = reader.result
           .replace('data:', '')
           .replace(/^.+,/, '');
+      for(var pair of assignmentFileFormData.entries()){
+        assignmentFileFormData.delete(pair[0])
+      }
       assignmentFileFormData.set(file.name, base64String);
     };
     reader.readAsDataURL(file);

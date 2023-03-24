@@ -118,7 +118,6 @@ public class AssignmentInterface {
         if (team.get("team_id", String.class) == null) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team_id not defined").build());
         }
-
         Document new_submission = new Document()
                 .append("course_id", course_id)
                 .append("assignment_id", assignment_id)
