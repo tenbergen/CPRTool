@@ -48,14 +48,14 @@
 hs_err_pid
 
 # CSV files
-.csv
+*.csv
+
+/.gitignore
+/professor-list.txt
+/.env
 
 # Database folders
 db*
 
 #files that vary w/ local user
-env.example
-
-/professor-list.txt
-
-/.gitignore
+/env.example
