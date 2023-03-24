@@ -19,16 +19,6 @@ public class FileDAO {
     @JsonbProperty public String courseID;
     @JsonbProperty public InputStream file;
 
-    @JsonbCreator
-    public FileDAO(
-            @NonNull @JsonbProperty("file_name") String fileName,
-            @NonNull @JsonbProperty("assignment_id") int assignmentID,
-            @NonNull @JsonbProperty("course_id") String courseID) {
-        this.fileName = fileName;
-        this.assignmentID = assignmentID;
-        this.courseID = courseID;
-    }
-
     public FileDAO(
             @NonNull @JsonbProperty("file_name") String fileName,
             @NonNull @JsonbProperty("assignment_id") int assignmentID,

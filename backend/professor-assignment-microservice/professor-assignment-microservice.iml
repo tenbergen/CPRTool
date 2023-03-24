@@ -14,7 +14,9 @@
     <facet type="jpa" name="JPA">
       <configuration>
         <setting name="validation-enabled" value="true" />
-        <datasource-mapping />
+        <datasource-mapping>
+          <factory-entry name="professor-assignment-microservice" />
+        </datasource-mapping>
         <naming-strategy-map />
       </configuration>
     </facet>
@@ -29,6 +31,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: com.aspose:aspose-pdf:20.7" level="project" />
     <orderEntry type="library" name="Maven: org.mongodb:mongo-java-driver:3.12.10" level="project" />
     <orderEntry type="library" name="Maven: javax.persistence:javax.persistence-api:2.2" level="project" />
     <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.18.22" level="project" />
@@ -48,7 +51,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.microprofile.rest.client:microprofile-rest-client-api:2.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.microprofile.opentracing:microprofile-opentracing-api:2.0" level="project" />
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.11.0" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.ibm.websphere.appserver.api:com.ibm.websphere.appserver.api.jaxrs20:1.1.54" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.ibm.websphere.appserver.api:com.ibm.websphere.appserver.api.jaxrs20:1.1.74" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter:5.8.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-api:5.8.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.opentest4j:opentest4j:1.2.0" level="project" />
@@ -86,6 +89,7 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: javax.el:javax.el-api:3.0.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: javax.interceptor:javax.interceptor-api:1.2" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: javax.inject:javax.inject:1" level="project" />
+    <orderEntry type="library" name="Maven: com.ibm.websphere.appserver.spi:com.ibm.websphere.appserver.spi.logging:1.1.74" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: jakarta.platform:jakarta.jakartaee-api:8.0.0" level="project" />
   </component>
 </module>
