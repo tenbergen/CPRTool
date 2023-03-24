@@ -35,6 +35,21 @@ const CourseBarLink = ({ active, course, onClick }) => {
   );
 };
 
+// const AdminButton = ({ active, course, onClick }) => {
+//   const role = useSelector((state) => state.auth.role);
+
+//   return (
+//     <Link to={`/details/${role}/${course.course_id}`} onClick={onClick}>
+//       <div className={active ? 'clickedStyle' : 'normalStyle'}>
+//         <div className='colorForTable' />
+//         <div className='course_info'>
+//           <p className='inter-24-bold course_text'> {"Admin Page"} </p>
+//         </div>
+//       </div>
+//     </Link>
+//   );
+// };
+
 const CourseBarComponent = ({ title }) => {
   const dispatch = useDispatch();
   const { role, lakerId, dataLoaded } = useSelector((state) => state.auth);
@@ -91,6 +106,11 @@ const CourseBarComponent = ({ title }) => {
           )}
         </div>
       </div>
+        <div className='admin-button'>
+          <Link to={`/details/${role}/admin`}>
+            <button className='admin-button-style'>ADMIN INTERFACE</button>
+          </Link>
+        </div>
     </div>
   );
 };
