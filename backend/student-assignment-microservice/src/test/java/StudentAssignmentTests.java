@@ -234,7 +234,6 @@ public class StudentAssignmentTests {
 
     @Test
     public void makeSubmissionTCIDFourPointA(){//null teamName
-
         //gives access to db
         //------------------------------------------------------------------------------------------------------------------------------
         //from env file
