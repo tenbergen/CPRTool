@@ -123,6 +123,49 @@ public class PeerReviewAssignmentResource {
     }
 
     /**
+     * Endpoint to get all student grades.
+     *
+     * @param courseID     The course for the assignment
+     * @param assignmentID The assignment that is being looked up
+     * @param studentID    The team name for the team looked up
+     * @return the student that was edited
+     */
+    @GET
+    @RolesAllowed("professor")
+    @Path("{courseID}/{assignmentID}/{teamID}/{studentID}/grade")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTeamGrade(@PathParam("courseID") String courseID,
+                                 @PathParam("assignmentID") int assignmentID,
+                                 @PathParam("teamID") String teamID,
+                                 @PathParam("studentID") String studentID) {
+        PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
+        return Response.status(Response.Status.OK).entity(peerReviewAssignmentInterface.getGradeForStudent(courseID, assignmentID, teamID, studentID)).build();
+    }
+    /**
+     * Endpoint to get matrix of grades and outliers
+     *
+     * @param courseID     The course for the assignment
+     * @return the matrix of grades with outliers as boolean value
+     */
+    @GET
+    @RolesAllowed("professor")
+    @Path("{courseID}/outlierDetectionOverTime")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMatrixOfGrades(@PathParam("courseID") String courseID){
+        //grab instance of peer review interface
+        PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
+        //the function to grab all of the
+        Document matrixOfGrades = peerReviewAssignmentInterface.allPotentialOutliers(courseID);
+
+        if(peerReviewAssignmentInterface == null || matrixOfGrades == null)
+            return Response.status(Response.Status.BAD_REQUEST).entity("Error getting all the potential outliers").build();
+        return Response.status(Response.Status.OK).entity(matrixOfGrades).build();
+    }
+
+
+
+
+    /**
      * Endpoint to get matrix of grades and outliers
      *
      * @param courseID     The course for the assignment
@@ -302,6 +345,5 @@ public class PeerReviewAssignmentResource {
         return Response.status(Response.Status.OK).entity("Peer reviews have been averaged to make final grades.").build();
     }
 
-
-
 }
+
