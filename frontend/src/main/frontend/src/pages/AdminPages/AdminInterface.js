@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import '../TeacherPages/styles/ProfessorCourseStyle.css';
+import './AdminStyle.css';
 import SidebarComponent from '../../components/SidebarComponent';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,8 +38,40 @@ function AdminInterface() {
     { netID: 'ern', name: 'Ernie Spinkleton', role: 'Student' },
   ]);
 
+  const [courseList, setCourseList] = useState([
+    { Course: 'deez101', Instructor: 'Perry', CRN: 'Admin', Year: '2022', Semester: 'Spring'},
+    { Course: 'ddimes', Instructor: 'Danny Dimes', CRN: 'Admin', Year: '2023', Semester: 'Fall'},
+    { Course: 'ddimes', Instructor: 'Danny Dimes', CRN: 'Admin', Year: '2024', Semester: 'Fall'},
+    { Course: 'ddimes', Instructor: 'Danny Dimes', CRN: 'Admin', Year: '2023', Semester: 'Winter'},
+    { Course: 'ddimes', Instructor: 'Danny Dimes', CRN: 'Admin', Year: '2023', Semester: 'Fall'},
+    { Course: 'ddimes', Instructor: 'Danny Dimes', CRN: 'Admin', Year: '2023', Semester: 'Fall'},
+    { Course: 'ddimes', Instructor: 'Danny Dimes', CRN: 'Admin', Year: '2023', Semester: 'Summer'},
+    { Course: 'ddimes', Instructor: 'Danny Dimes', CRN: 'Admin', Year: '2023', Semester: 'Fall'},
+    { Course: 'ddimes', Instructor: 'Danny Dimes', CRN: 'Admin', Year: '2023', Semester: 'Summer'},
+    { Course: 'ddimes', Instructor: 'Danny Dimes', CRN: 'Admin', Year: '2023', Semester: 'Fall'},
+    { Course: 'ddimes', Instructor: 'Danny Dimes', CRN: 'Admin', Year: '2023', Semester: 'Summer'},
+    { Course: 'ricky', Instructor: 'Danny Dimes', CRN: 'Instructor', Year: '2024', Semester: 'Winter'},
+  ]);
+
+  const [profanityList, setProfanityList] = useState([
+    { profanity: 'heck', excludedCourses: []},
+    { profanity: 'darn', excludedCourses: []},
+    { profanity: 'shoot', excludedCourses: []},
+    { profanity: 'flip', excludedCourses: ['234234']},
+    { profanity: 'frick', excludedCourses: ['53252352']},
+    { profanity: 'gee wizz', excludedCourses: []},
+    { profanity: 'kumquat', excludedCourses: []},
+    { profanity: 'meow', excludedCourses:[]},
+    { profanity: 'nuts', excludedCourses: ['235235235', '2352353']},
+    { profanity: 'profanity1', excludedCourses: []},
+    { profanity: 'profanity2', excludedCourses: []},
+    { profanity: 'profanity3', excludedCourses: []},
+  ]);
+
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRole, setSelectedRole] = useState("all");
+  const [selectedYear, setSelectedYear] = useState("all");
+  const [selectedSemester, setSelectedSemester] = useState("all");
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -50,17 +82,33 @@ function AdminInterface() {
     (selectedRole === "all" || user.role === selectedRole)
   );
 
+  const filteredCourses = courseList.filter((course) =>
+    (course.Course.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    course.Instructor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    course.CRN.toLowerCase().includes(searchTerm.toLowerCase())) &&
+    (selectedYear === "all" || course.Year === selectedYear) &&
+    (selectedSemester === "all" || course.Semester === selectedSemester)
+  );
+
+  const filteredProfanities = profanityList.filter((profanity) =>
+    (profanity.profanity.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
 
   const [filterType, setFilterType] = useState(null);
 
   const handleFilterClick = (type) => {
     setFilterType(type);
   }
-  
+
   const [page, setPage] = useState("roles")
 
   const changePage = (page) => {
     setPage(page)
+  }
+
+  function editExcluded(){
+    
   }
 
   return (
@@ -111,7 +159,7 @@ function AdminInterface() {
                       <div>{user.netID}</div>
                       <div>{user.role}</div>
                       <div>
-                        <button className='edit-button'><img className='edit-icon' src={editIcon}/></button>
+                        <button className='edit-button'><img className='edit-icon' src={editIcon} /></button>
                         <button className='delete-button'>X</button>
                       </div>
                     </div>
@@ -121,10 +169,96 @@ function AdminInterface() {
             </div></>
         )}
         {page === "courses" && (
-          <div>courses</div>
+          <><div className='search-year-semester'>
+            <div className='search-bar-courses'>
+              <label>Search</label>
+              <input
+                type='text'
+                value={searchTerm}
+                onChange={handleSearch} />
+            </div>
+            <div className="dropdown-year">
+              <label for="role-filter">Year</label>
+              <select name="role" id="role" onChange={(e) => setSelectedYear(e.target.value)}>
+                <option value="all">All</option>
+                <option value="2022">2022</option>
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+              </select>
+            </div>
+            <div className="dropdown-semester">
+              <label for="role-filter">Semester</label>
+              <select name="role" id="role" onChange={(e) => setSelectedSemester(e.target.value)}>
+                <option value="all">All</option>
+                <option value="Spring">Spring</option>
+                <option value="Summer">Summer</option>
+                <option value="Fall">Fall</option>
+                <option value="Winter">Winter</option>
+              </select>
+            </div>
+          </div><div>
+              <div className='user-list'>
+                <div className='user-item header'>
+                  <div>Courses</div>
+                  <div>Instructor</div>
+                  <div>CRN</div>
+                  <div>Year</div>
+                  <div>Semester</div>
+                  <div>Actions</div>
+                </div>
+                <div className='all-user-items'>
+                  {filteredCourses.map((course) => (
+                    <div key={course.id} className='user-item'>
+                      <div>{course.Course}</div>
+                      <div>{course.Instructor}</div>
+                      <div>{course.CRN}</div>
+                      <div>{course.Year}</div>
+                      <div>{course.Semester}</div>
+                      <div>
+                        <button className='edit-button'><img className='edit-icon' src={editIcon} /></button>
+                        <button className='delete-button'>X</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div></>
         )}
         {page === "profanity" && (
-          <div>profanity</div>
+          <><div className='search-year-semester'>
+          <div className='search-bar-courses'>
+            <label>Search</label>
+            <input
+              type='text'
+              value={searchTerm}
+              onChange={handleSearch} />
+          </div>
+          <div className="add-profanity">
+            <label>Add Profanity</label>
+            <input
+              type='text' />
+          </div>
+        </div><div>
+            <div className='user-list'>
+              <div className='user-item header'>
+                <div>Porfanity</div>
+                <div>Courses Excluded From</div>
+                <div>Actions</div>
+              </div>
+              <div className='all-user-items'>
+                {filteredProfanities.map((profanity) => (
+                  <div key={profanity.id} className='user-item'>
+                    <div>{profanity.profanity}</div>
+                    <div>{profanity.excludedCourses.length}</div>
+                    <div>
+                      <button className='edit-button'><img className='edit-icon' src={editIcon} /></button>
+                      <button className='delete-button'>X</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div></>
         )}
       </div>
     </div>
