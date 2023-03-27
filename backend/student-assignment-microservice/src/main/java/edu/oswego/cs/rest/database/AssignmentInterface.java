@@ -303,7 +303,7 @@ public class AssignmentInterface {
      * @param submissions
      * @param zipFolder
      */
-    public void insertAssignmentFiles(MongoCursor<Document> submissions, ZipOutputStream zipFolder) throws IOException {
+    public void insertAssignmentFiles(MongoCursor<Document> submissions, String courseID, ZipOutputStream zipFolder) throws IOException {
         while(submissions.hasNext()){
             //get the current submission
             Document currentSubmission = submissions.next();
@@ -312,7 +312,7 @@ public class AssignmentInterface {
             String assignmentNameNoSpaces = currentSubmission.getString("assigment_name").replace(" ", "_");
             Binary submission_data = (Binary) currentSubmission.get("submission_data");
             if(currentSubmission.getString("type").equals("team_submission")){
-                path = assignmentNameNoSpaces+"/"+currentSubmission.getString("team_name")+"/submission/"+currentSubmission.getString("submission_name");
+                path = courseID+"/"+assignmentNameNoSpaces+"/"+currentSubmission.getString("team_name")+"/submission/"+currentSubmission.getString("submission_name");
                 System.out.println(path);
                 ZipEntry curEntry = new ZipEntry(path);
                 zipFolder.putNextEntry(curEntry);
@@ -323,7 +323,7 @@ public class AssignmentInterface {
                 String fromTeam = currentSubmission.getString("reviewed_by");
                 String toTeam = currentSubmission.getString("reviewed_team");
                 //from team first
-                path = assignmentNameNoSpaces+"/"+fromTeam+"/peer-reviews/given/"+currentSubmission.getString("submission_name");
+                path = courseID+"/"+assignmentNameNoSpaces+"/"+fromTeam+"/peer-reviews/given/"+currentSubmission.getString("submission_name");
                 ZipEntry curEntryFromTeam = new ZipEntry(path);
                 zipFolder.putNextEntry(curEntryFromTeam);
                 zipFolder.write(submission_data.getData(), 0, submission_data.getData().length);
@@ -331,7 +331,7 @@ public class AssignmentInterface {
 
 
                 //to team last
-                path = assignmentNameNoSpaces+"/"+toTeam+"/peer-reviews/received/"+currentSubmission.getString("submission_name");
+                path = courseID+"/"+assignmentNameNoSpaces+"/"+toTeam+"/peer-reviews/received/"+currentSubmission.getString("submission_name");
                 ZipEntry curEntryToTeam = new ZipEntry(path);
                 zipFolder.putNextEntry(curEntryToTeam);
                 zipFolder.write(submission_data.getData(), 0, submission_data.getData().length);
@@ -358,7 +358,7 @@ public class AssignmentInterface {
             //get this to get the submissions quicker
             Integer assignment_ID = currentAssignment.getInteger("assignment_id");
             //now iterate through the submissions for the assignment and put them in the proper place in the zip folder
-            insertAssignmentFiles(submissionCollection.find(eq("assignment_id", assignment_ID)).iterator(), zipFolder);
+            insertAssignmentFiles(submissionCollection.find(eq("assignment_id", assignment_ID)).iterator(), courseID, zipFolder);
         }
         zipFolder.close();
 
@@ -377,7 +377,7 @@ public class AssignmentInterface {
         File tempFile = Files.createTempFile(courseID, ".zip").toFile();
         String tempPath = tempFile.getAbsolutePath();
         ZipOutputStream zipFolder = new ZipOutputStream(new FileOutputStream(tempPath));
-        insertAssignmentFiles(submissionCollection.find(eq("assignment_id", assignment_ID)).iterator(), zipFolder);
+        insertAssignmentFiles(submissionCollection.find(eq("assignment_id", assignment_ID)).iterator(), courseID, zipFolder);
         zipFolder.close();
 
         //return the file with all the assignment data
