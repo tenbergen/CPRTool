@@ -1,15 +1,18 @@
 package edu.oswego.cs.rest.database;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.rest.daos.FileDAO;
 import org.bson.Document;
 
+import javax.print.Doc;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 import static com.mongodb.client.model.Filters.*;
@@ -41,16 +44,7 @@ public class AssignmentInterface {
     }
 
     public void writeToAssignment(FileDAO fileDAO) throws IOException {
-        String path = "assignments" + reg
-                + fileDAO.getCourseID() + reg
-                + fileDAO.getAssignmentID() + reg
-                + "team-submissions";
-
-        if (!new File(path).exists()) {
-            new File(path).mkdirs();
-        }
-        fileDAO.writeFile(path + reg + fileDAO.getFilename());
-        makeSubmission(fileDAO.getCourseID(), fileDAO.getAssignmentID(), fileDAO.getFilename(), fileDAO.getTeamName());
+        makeSubmission(fileDAO.getCourseID(), fileDAO.getAssignmentID(), fileDAO.getFilename(), fileDAO.getTeamName(), fileDAO.getFile());
     }
 
     public List<Document> getAllUserAssignments(String courseID, String studentID) {
@@ -66,6 +60,12 @@ public class AssignmentInterface {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist").build());
         query.close();
         return assignments;
+    }
+
+    public Document getSpecifiedTeamSubmission(String courseID, int assignmentID, String teamID) {
+        Document teamSubmission = submissionCollection.find(and(eq("course_id", courseID), eq("assignment_id", assignmentID), eq("team_name", teamID), eq("type", "team_submission"))).first();
+        if (teamSubmission == null) throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Assignment does not exist").build());
+        return teamSubmission;
     }
 
     public List<Document> getSpecifiedUserAssignment(String courseID, int assignmentID, String studentID) {
@@ -99,7 +99,7 @@ public class AssignmentInterface {
         return assignments;
     }
 
-    public void makeSubmission(String course_id, int assignment_id, String file_name, String teamName) {
+    public void makeSubmission(String course_id, int assignment_id, String file_name, String teamName, byte[] fileData) throws IOException {
         Document team = teamsCollection.find(and(eq("team_id", teamName), eq("course_id", course_id))).first();
         Document assignment = assignmentsCollection.find(and(
                 eq("course_id", course_id),
@@ -108,7 +108,6 @@ public class AssignmentInterface {
         if (assignment == null)
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("this assignment was not found in this course").build());
         String assignmentName = assignment.getString("assignment_name");
-        System.out.println(team);
 
         if (team == null) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("this team was not found in this course").build());
@@ -119,19 +118,18 @@ public class AssignmentInterface {
         if (team.get("team_id", String.class) == null) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team_id not defined").build());
         }
-        String path = "assignments" + reg + course_id + reg + assignment_id + reg + "team_submissions";
         Document new_submission = new Document()
                 .append("course_id", course_id)
                 .append("assignment_id", assignment_id)
                 .append("assigment_name", assignmentName)
                 .append("submission_name", file_name)
+                .append("submission_data", Base64.getDecoder().decode(new String(fileData)))
                 .append("team_name", team.getString("team_id"))
                 .append("members", team.getList("team_members", String.class))
                 .append("type", "team_submission")
                 .append("grade", -1)
-                .append("path", path + reg + file_name)
                 .append("peer_review_due_date", assignment.get("peer_review_due_date"));
-        System.out.println(new_submission);
+
         boolean submissionCheck = submissionCollection.find(and(eq("course_id", course_id), eq("assignment_id", assignment_id), eq("team_name", team.getString("team_id")))).iterator().hasNext();
         if (submissionCheck) {
             Document extensionCheck = submissionCollection.find(and(eq("course_id", course_id), eq("assignment_id", assignment_id), eq("team_name", team.getString("team_id")))).first();

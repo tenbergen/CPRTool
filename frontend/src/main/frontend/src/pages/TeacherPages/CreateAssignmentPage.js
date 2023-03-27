@@ -18,18 +18,32 @@ const CreateAssignmentPage = () => {
   const [loading, setLoading] = useState(false);
 
   const assignmentFileFormData = new FormData();
+  let assignmentFileName = ""
   const rubricFileFormData = new FormData();
+  let rubricFileName = ""
   const templateFileFormData = new FormData();
+  let templateFileName = ""
 
   const fileChangeHandler = (event, fileType) => {
     let file = event.target.files[0];
-    if (fileType === 'assignment') {
-      assignmentFileFormData.set('file', file);
-    } else if (fileType === 'rubric') {
-      rubricFileFormData.set('file', file);
-    } else {
-      templateFileFormData.set('file', file);
-    }
+    var reader = new FileReader()
+    reader.onloadend = () => {
+      // Use a regex to remove data url part
+      const base64String = reader.result
+          .replace('data:', '')
+          .replace(/^.+,/, '');
+      if (fileType === 'assignment') {
+        assignmentFileName = file.name
+        assignmentFileFormData.set(file.name, base64String);
+      } else if (fileType === 'rubric') {
+        rubricFileName = file.name
+        rubricFileFormData.set(file.name, base64String);
+      } else {
+        templateFileName = file.name
+        templateFileFormData.set(file.name, base64String);
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   const uploadFiles = async (assignmentId) => {

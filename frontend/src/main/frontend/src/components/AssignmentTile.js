@@ -10,7 +10,7 @@ const AssignmentTile = ({ assignment, submitted }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const title =
-    assignment.assignment_type === 'peer-review' ? 'Peer Review' : 'Assignment';
+    assignment.assignment_type === 'peer-review' ? 'Peer Review' : 'Assignment Details';
 
   const { role } = useSelector((state) => state.auth);
   const { currentTeamId } = useSelector((state) => state.teams);
@@ -46,6 +46,7 @@ const AssignmentTile = ({ assignment, submitted }) => {
     }
   };
 
+
   const deleteAssignment = async () => {
     const url = `${assignmentUrl}/${courseId}/assignments/${assignment.assignment_id}/remove`;
     await axios.delete(url);
@@ -76,59 +77,59 @@ const AssignmentTile = ({ assignment, submitted }) => {
             : 'ass-tile'
         }
       >
-        <div className='outfit-16 ass-tile-title'>
+        <div className='inter-20-medium-white ass-tile-title'>
           {' '}
           <span> {title} </span>
         </div>
-        <div className='ass-tile-content'>
-          <div className='ass-tile-info' onClick={onTileClick}>
-            <span className='kumba-27'>
-              {submitted ? (
-                role === 'professor' ? (
-                  <span>
-                    {' '}
-                    {assignment.team_name} {assignment.assignment_name}{' '}
-                    Submission{' '}
-                  </span>
-                ) : (
-                  <span> {assignment.assigment_name} </span>
-                )
-              ) : assignment.assignment_type === 'peer-review' ? (
-                <span>
-                  {' '}
-                  {assignment.assignment_name} <br /> (Team{' '}
-                  {assignment.peer_review_team}){' '}
-                </span>
-              ) : (
-                <span> {assignment.assignment_name} </span>
-              )}
-            </span>
-            <span className='kumba-25'>
-              {submitted
-                ? assignment.grade === -1
-                  ? 'Pending'
-                  : assignment.grade
-                : assignment.due_date}
-            </span>
-          </div>
-          {!submitted && (
-            <div className='ass-tile-links'>
-              <span className='outfit-16 ass-tile-files' onClick={onFileClick}>
-                {assignment.assignment_type === 'peer-review'
-                  ? assignment.peer_review_rubric
-                  : assignment.assignment_instructions}
-              </span>
-              {role === 'professor' ? (
-                <span
-                  className='ass-tile-delete outfit-16'
-                  onClick={confirmDelete}
-                >
-                  {' '}
-                  Delete assignment{' '}
-                </span>
-              ) : null}
-            </div>
-          )}
+        <div className='ass-tile-content' onClick={onTileClick}>
+          {/*<div className='ass-tile-info' >*/}
+          {/*  /!*<span className='inter-24-bold'>*!/*/}
+          {/*  /!*  {submitted ? (*!/*/}
+          {/*  /!*    role === 'professor' ? (*!/*/}
+          {/*  /!*      <span>*!/*/}
+          {/*  /!*        {' '}*!/*/}
+          {/*  /!*        {assignment.team_name} {assignment.assignment_name}{' '}*!/*/}
+          {/*  /!*        Submission{' '}*!/*/}
+          {/*  /!*      </span>*!/*/}
+          {/*  /!*    ) : (*!/*/}
+          {/*  /!*      <span> {assignment.assigment_name} </span>*!/*/}
+          {/*  /!*    )*!/*/}
+          {/*  /!*  ) : assignment.assignment_type === 'peer-review' ? (*!/*/}
+          {/*  /!*    <span>*!/*/}
+          {/*  /!*      {' '}*!/*/}
+          {/*  /!*      {assignment.assignment_name} <br /> (Team{' '}*!/*/}
+          {/*  /!*      {assignment.peer_review_team}){' '}*!/*/}
+          {/*  /!*    </span>*!/*/}
+          {/*  /!*  ) : (*!/*/}
+          {/*  /!*    <span> {assignment.assignment_name} </span>*!/*/}
+          {/*  /!*  )}*!/*/}
+          {/*  /!*</span>*!/*/}
+          {/*  /!*<span className='inter-20-medium'>*!/*/}
+          {/*  /!*  {submitted*!/*/}
+          {/*  /!*    ? assignment.grade === -1*!/*/}
+          {/*  /!*      ? 'Pending'*!/*/}
+          {/*  /!*      : assignment.grade*!/*/}
+          {/*  /!*    : assignment.due_date}*!/*/}
+          {/*  /!*</span>*!/*/}
+          {/*</div>*/}
+          {/*{!submitted && (*/}
+          {/*  <div className='ass-tile-links'>*/}
+          {/*    <span className='inter-16-bold-blue ass-tile-files' onClick={onFileClick}>*/}
+          {/*      {assignment.assignment_type === 'peer-review'*/}
+          {/*        ? assignment.peer_review_rubric*/}
+          {/*        : assignment.assignment_instructions}*/}
+          {/*    </span>*/}
+          {/*    {role === 'professor' ? (*/}
+          {/*      <span*/}
+          {/*        className='ass-tile-delete'*/}
+          {/*        onClick={confirmDelete}*/}
+          {/*      >*/}
+          {/*        {' '}*/}
+          {/*        Delete assignment{' '}*/}
+          {/*      </span>*/}
+          {/*    ) : null}*/}
+          {/*  </div>*/}
+        {/*  )}*/}
         </div>
       </div>
     </div>

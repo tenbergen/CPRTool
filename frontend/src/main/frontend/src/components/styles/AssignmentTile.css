@@ -14,10 +14,9 @@
 
 .ass-tile-title {
   display: flex;
-  justify-content: right;
-  margin-right: 4%;
-  padding-top: 1%;
-  padding-bottom: 2%;
+  justify-content: left;
+  margin-left: 3%;
+  padding: 15px 0;
 }
 
 .ass-tile-content {
@@ -49,17 +48,19 @@
 }
 
 .ass-tile-delete {
-  margin-top: 2%;
-  color: #f07371;
-  padding: 5px 3px;
+  font-family: "Inter", sans-serif;
+  border: solid .5px #F04438;
   border-radius: 5px;
-  text-decoration: underline;
-  transition: all 0.2s ease-out;
+  font-size: 16px;
+  color: #F04438;
+  padding: 12px;
+  width: 150px;
+  padding-left: 26px;
 }
 
 .ass-tile-delete:hover {
   cursor: pointer;
-  background-color: #ff0000;
+  background-color: #F04438;
   color: #fff;
   opacity: 0.8;
   text-decoration: none;

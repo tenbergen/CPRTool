@@ -42,9 +42,13 @@
 }
 
 #sidebar .pro-sidebar-inner .pro-sidebar-layout ul .pro-inner-item {
-  color: #000;
   margin: 10px 0px;
-  font-weight: bold;
+  font-family: "Inter", sans-serif;
+  color: black
+
+;
+  font-size: 24px;
+  font-weight: 700;
 }
 
 #sidebar

@@ -19,16 +19,6 @@ public class FileDAO {
     @JsonbProperty public String courseID;
     @JsonbProperty public InputStream file;
 
-    @JsonbCreator
-    public FileDAO(
-            @NonNull @JsonbProperty("file_name") String fileName,
-            @NonNull @JsonbProperty("assignment_id") int assignmentID,
-            @NonNull @JsonbProperty("course_id") String courseID) {
-        this.fileName = fileName;
-        this.assignmentID = assignmentID;
-        this.courseID = courseID;
-    }
-
     public FileDAO(
             @NonNull @JsonbProperty("file_name") String fileName,
             @NonNull @JsonbProperty("assignment_id") int assignmentID,
@@ -54,14 +44,5 @@ public class FileDAO {
     public static FileDAO fileFactory(String fileName, String courseID, IAttachment attachment, int assignmentID) throws IOException {
         InputStream inputStream = attachment.getDataHandler().getInputStream();
         return new FileDAO(fileName, assignmentID, courseID, inputStream);
-    }
-
-    /**
-     * Writes the inputStream to a file.
-     */
-    public void writeFile(String filePath) throws IOException {
-        OutputStream outputStream = new FileOutputStream(filePath);
-        outputStream.write(file.readAllBytes());
-        outputStream.close();
     }
 }

@@ -12,6 +12,16 @@ button:hover {
   border-radius: 5px;
   color: white;
   border: none;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+}
+.blue-button-small:hover{
+  background-color: #1d2ff9;
+}
+.blue-button-small:active{
+  background-color: #102080;
 }
 
 .blue-button-large {
@@ -27,6 +37,12 @@ button:hover {
   line-height: 24px;
   letter-spacing: 0.5px;
 }
+.blue-button-large:hover{
+  background-color: #1d2ff9;
+}
+.blue-button-large:active{
+  background-color: #102080;
+}
 
 .green-button-large {
   width: 300px;
@@ -41,60 +57,48 @@ button:hover {
   line-height: 24px;
   letter-spacing: 0.5px;
 }
+.green-button-large:hover{
+  background-color: #027A48;
+}
+.green-button-large:active{
+  background-color: #05603a;
+}
 
-input::file-selector-button {
+.green-button-medium {
+  width: 140px;
+  height: 40px;
+  background-color: #28a745;
+  border-radius: 5px;
+  color: white;
+
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+}
+.green-button-medium:hover{
+  background-color: #027A48;
+}
+.green-button-medium:active{
+  background-color: #05603a;
+}
+
+.cancel-button {
+  font-family: "Inter", sans-serif;
+  border: solid .5px #F04438;
+  border-radius: 5px;
+  font-size: 24px;
+  color: #F04438;
+  padding: 12px;
+  width: 300px;
+  padding-left: 12px;
+}
+
+.cancel-button:hover {
   cursor: pointer;
-  background: #9cf0d3;
-  border-radius: 50px;
-  color: #393939;
-  font-family: "Outfit", sans-serif;
-  font-size: 20px;
-}
-
-.yellow-button {
-  padding: 15px 45px 15px 45px;
-  margin-top: 3%;
-  background: #f8d377;
-  border-radius: 50px;
-  transition: all 0.2s ease-out;
-}
-
-.yellow-button:hover {
-  background: #deb140;
-  border-radius: 50px;
-}
-
-.green-button {
-  padding: 15px 45px 15px 45px;
-  margin-top: 3%;
-  background: #9cf0d3;
-  border-radius: 50px;
-  color: #393939;
-  font-family: "Outfit", sans-serif;
-  font-size: 20px;
-  transition: all 0.2s ease-out;
-}
-
-.green-button:hover {
-  background: #66c9a3;
-  border-radius: 50px;
-}
-
-.blue-button-filled {
-  background: #7398ff;
-  color: white;
-  border-radius: 50px;
-}
-
-.blue-button-filled:hover {
-  background: #4976f3;
-  color: white;
-  border-radius: 50px;
-}
-
-.teal-button {
-  background: #82dfe8;
-  color: #393939;
-  font-family: "Outfit", sans-serif;
-  font-size: 20px;
+  background-color: #F04438;
+  color: #fff;
+  opacity: 0.8;
+  text-decoration: none;
 }

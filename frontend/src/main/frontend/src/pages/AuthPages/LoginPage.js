@@ -17,8 +17,13 @@ function LoginPage() {
   };
 
   const handleLogin = async (googleData) => {
+<<<<<<< HEAD
+    console.log(googleData.credential)
+    localStorage.setItem('google_token', googleData.credential);
+=======
     localStorage.setItem("google_token", googleData.credential);
     console.log(googleData); // bypasss for token grabbing issues
+>>>>>>> bc50ce1ce3a972b98bbe3c3152a1147705281d59
     dispatch(getTokenAsync());
   };
 
@@ -32,6 +37,29 @@ function LoginPage() {
   }, []);
 
   return (
+<<<<<<< HEAD
+      <div>
+        {isLoading ? (
+            <Loader />
+        ) : (
+            <div className='bigBox'>
+              <div id='box'>
+                <div className='hel44-700 welcome'>Welcome!</div>
+                <div className='googleButton'>
+                  <GoogleOAuthProvider clientId={REACT_APP_CLIENT_ID}>
+                  <GoogleLogin
+                      text={'signin_with'}
+                      onSuccess={handleLogin}
+                      onError={handleFailure}
+                      // hosted_domain={'oswego.edu'}
+                      size={'large'}
+                      cookiePolicy={'single_host_origin'}
+                      prompt='select_account'
+                  />
+                  </GoogleOAuthProvider>
+                </div>
+              </div>
+=======
     <div>
       {isLoading ? (
         <Loader />
@@ -51,6 +79,7 @@ function LoginPage() {
                   prompt="select_account"
                 />
               </GoogleOAuthProvider>
+>>>>>>> bc50ce1ce3a972b98bbe3c3152a1147705281d59
             </div>
           </div>
         </div>
