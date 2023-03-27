@@ -19,7 +19,6 @@ import javax.ws.rs.core.SecurityContext;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
-
 import static com.mongodb.client.model.Filters.eq;
 
 public class AuthServices {
@@ -40,11 +39,14 @@ public class AuthServices {
     public Map<String, String> generateNewToken(String token) {
         Payload payload = googleService.validateToken(token);
         if (payload == null)
-            throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token.").build());
+            throw new WebApplicationException(
+                    Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token.").build());
 
         Map<String, String> tokens = new HashMap<>();
 
         String lakerID = payload.getEmail().split("@")[0];
+        CheckForDefaultAdmin(lakerID);
+        System.out.println("lakerID: " + lakerID);
         Set<String> roles = getRoles(lakerID);
 
         try {
@@ -66,26 +68,32 @@ public class AuthServices {
                     .claim("aud", "cpr")
                     .claim("iss", "cpr")
                     .buildJwt().compact();
+            System.out.println("access token: " + access_token);
 
             tokens.put("access_token", access_token);
             tokens.put("refresh_token", refresh_token);
+
             return tokens;
 
         } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
             e.printStackTrace();
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Unable to find token.").build());
+            throw new WebApplicationException(
+                    Response.status(Response.Status.NOT_FOUND).entity("Unable to find token.").build());
         }
     }
 
     public Map<String, String> refreshToken(SecurityContext securityContext) {
+        System.out.println("refreshing token");
         Principal user = securityContext.getUserPrincipal();
         JsonWebToken payload = (JsonWebToken) user;
         if (payload == null)
-            throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("JWT is not available.").build());
+            throw new WebApplicationException(
+                    Response.status(Response.Status.UNAUTHORIZED).entity("JWT is not available.").build());
 
         Map<String, String> tokens = new HashMap<>();
 
         String lakerID = payload.getName().split("@")[0];
+        CheckForDefaultAdmin(lakerID);
         Set<String> roles = getRoles(lakerID);
 
         try {
@@ -101,25 +109,42 @@ public class AuthServices {
             tokens.put("access_token", access_token);
         } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
             e.printStackTrace();
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Unable to find token.").build());
+            throw new WebApplicationException(
+                    Response.status(Response.Status.NOT_FOUND).entity("Unable to find token.").build());
         }
 
         return tokens;
     }
 
     public Set<String> getRoles(String lakerID) {
+
         Set<String> roles = new HashSet<>();
 
         if (professorCollection.find(eq("professor_id", lakerID)).first() != null) {
             roles.add("professor");
+            if (Objects.requireNonNull(professorCollection.find(eq("professor_id", lakerID)).first()).get("admin")
+                    .equals(true)) {
+                roles.add("admin");
+            }
+
         } else {
             roles.add("student");
         }
 
         if (roles.size() == 0)
-            throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Can't connect to database.").build());
+            throw new CPRException(Response.Status.UNAUTHORIZED, "User is not authorized to access this resource.");
 
         return roles;
+    }
+
+    // Checks if professor database is empty
+    // if so assign admin status to first professor
+    protected void CheckForDefaultAdmin(String userid) {
+        if (professorCollection.countDocuments() == 0) {
+            Document professor = new Document("professor_id", userid)
+                    .append("admin", true);
+            professorCollection.insertOne(professor);
+        }
     }
 
 }

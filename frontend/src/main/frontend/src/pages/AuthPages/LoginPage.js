@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import './styles/LoginPage.css';
-import { useDispatch } from 'react-redux';
-import { getTokenAsync } from '../../redux/features/authSlice';
-import {GoogleLogin, GoogleOAuthProvider} from '@react-oauth/google';
-import { useNavigate } from 'react-router-dom';
-import Loader from '../../components/LoaderComponenets/Loader';
+import { useEffect, useState } from "react";
+import "./styles/LoginPage.css";
+import { useDispatch } from "react-redux";
+import { getTokenAsync } from "../../redux/features/authSlice";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import { useNavigate } from "react-router-dom";
+import Loader from "../../components/LoaderComponenets/Loader";
 
 function LoginPage() {
   const REACT_APP_CLIENT_ID = `${process.env.REACT_APP_CLIENT_ID}`;
@@ -13,18 +13,23 @@ function LoginPage() {
   const navigate = useNavigate();
 
   const handleFailure = () => {
-    navigate('/unauthenticated');
-  }
+    navigate("/unauthenticated");
+  };
 
   const handleLogin = async (googleData) => {
+<<<<<<< HEAD
     console.log(googleData.credential)
     localStorage.setItem('google_token', googleData.credential);
+=======
+    localStorage.setItem("google_token", googleData.credential);
+    console.log(googleData); // bypasss for token grabbing issues
+>>>>>>> bc50ce1ce3a972b98bbe3c3152a1147705281d59
     dispatch(getTokenAsync());
   };
 
   useEffect(() => {
     setIsLoading(true);
-    console.log(REACT_APP_CLIENT_ID)
+    console.log(REACT_APP_CLIENT_ID);
     setTimeout(() => setIsLoading(false), 775);
     return () => {
       setIsLoading(false);
@@ -32,6 +37,7 @@ function LoginPage() {
   }, []);
 
   return (
+<<<<<<< HEAD
       <div>
         {isLoading ? (
             <Loader />
@@ -53,10 +59,32 @@ function LoginPage() {
                   </GoogleOAuthProvider>
                 </div>
               </div>
+=======
+    <div>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div className="bigBox">
+          <div id="box">
+            <div className="hel44-700 welcome">Welcome!</div>
+            <div className="googleButton">
+               <GoogleOAuthProvider clientId={REACT_APP_CLIENT_ID}>
+                <GoogleLogin
+                  text={"signin_with"}
+                  onSuccess={handleLogin}
+                  onError={handleFailure}
+                  hosted_domain={"oswego.edu"}
+                  size={"large"}
+                  cookiePolicy={"single_host_origin"}
+                  prompt="select_account"
+                />
+              </GoogleOAuthProvider>
+>>>>>>> bc50ce1ce3a972b98bbe3c3152a1147705281d59
             </div>
-        )}
-      </div>
-
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
