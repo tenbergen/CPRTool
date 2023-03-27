@@ -1,0 +1,19 @@
+#distribute-button {
+    width: 240px;
+    height: 34px;
+    background-color: #28a745;
+    border-radius: 5px;
+    color: white;
+
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 4px;
+    letter-spacing: 0.5px;
+}
+#distribute-button:hover{
+    background-color: #027A48;
+}
+#distribute-button:active{
+    background-color: #05603a;
+}

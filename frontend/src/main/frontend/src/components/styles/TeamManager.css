@@ -4,11 +4,12 @@
 }
 
 .accordionTitle {
-  background-color: #82dfe8;
+  background-color: #4a7dfc;
   font-size: 20px;
   padding-left: 12px;
   padding-bottom: 20px;
   padding-top: 20px;
+  border-radius: 5px 5px 0 0;
 }
 
 .accordionTitle:hover {
@@ -34,7 +35,9 @@
 }
 
 .accordionContent {
-  background-color: rgba(130, 223, 232, 0.5);
+  background-color: white;
+  border: 2px solid lightgray;
+  border-radius: 0 0 5px 5px;
 }
 
 .crossMarkTeam {
@@ -62,15 +65,24 @@
 }
 
 .emailInput {
-  border-radius: 30px;
+  border-radius: 5px;
   margin-left: 8px;
 }
 
 .teamA {
-  margin-left: 8px;
-  text-decoration: underline;
-  transition: ease-in-out 0.5s;
-  border-radius: 10px;
+  margin-left: 15px;
+
+  width: 140px;
+  height: 30px;
+  background-color: #28a745;
+  border-radius: 5px;
+  color: white;
+
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
 }
 
 .teamA:hover {

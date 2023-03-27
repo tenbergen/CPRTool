@@ -10,7 +10,7 @@ import uuid from 'react-uuid';
 
 const AssBarLink = ({ active, assignment, onClick }) => {
   const { role } = useSelector((state) => state.auth);
-  const normalStyle = { backgroundColor: 'rgba(255, 255, 255, 0.25)' };
+  const normalStyle = { backgroundColor: '#f6f6f6' };
   const clickedStyle = { backgroundColor: 'white' };
   const { courseId } = useParams();
   const link = `/details/${role}/${courseId}`;
@@ -24,10 +24,10 @@ const AssBarLink = ({ active, assignment, onClick }) => {
       }
       onClick={onClick}
     >
-      <tr>
+      <tr id='ass-bar'>
         <td style={active ? clickedStyle : normalStyle}>
           <div className='colorForTable' />
-          <p className='kumba-25 courseText'> {assignment.assignment_name} </p>
+          <p className='inter-24-bold courseText'> {assignment.assignment_name} </p>
         </td>
       </tr>
     </Link>
@@ -67,21 +67,14 @@ const AssBarComponent = () => {
     dispatch(getAssignmentDetailsAsync({ courseId, assignmentId }));
   };
 
-  const onCourseClick = () => {
-    navigate(`/details/student/${courseId}`);
-  };
+  // const onCourseClick = () => {
+  //   navigate(`/details/student/${courseId}`);
+  // };
 
   return (
     <div className='abc-parent'>
       <div className='abc-title'>
-        <span
-          className='outfit-16 link'
-          style={{ fontSize: '11px' }}
-          onClick={onCourseClick}
-        >
-          {courseId}
-        </span>
-        <h2 className='kumba-30'> Assignments </h2>
+        <h2 className='inter-44-bold'> Assignments </h2>
       </div>
       <div className='abc-assignments'>
         {combinedAssignmentPeerReviews.map(

@@ -43,12 +43,4 @@
   margin-top: 3%;
 }
 
-#createTeamButton button {
-  background: #9cf0d3;
-  color: #393939;
-  border-radius: 50px;
-  padding: 10px 45px 10px 45px;
-  border: none;
-  font-size: medium;
-  font-weight: bold;
-}
+

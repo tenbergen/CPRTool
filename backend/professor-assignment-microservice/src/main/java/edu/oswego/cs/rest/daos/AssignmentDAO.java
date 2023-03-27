@@ -2,6 +2,10 @@ package edu.oswego.cs.rest.daos;
 
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.bson.BsonBinary;
+import org.bson.codecs.pojo.annotations.BsonId;
+import org.bson.conversions.Bson;
+
 import javax.json.bind.annotation.JsonbCreator;
 import javax.json.bind.annotation.JsonbProperty;
 import javax.persistence.Entity;
@@ -21,10 +25,6 @@ public class AssignmentDAO {
     @JsonbProperty("peer_review_instructions") public String peerReviewInstructions;
     @JsonbProperty("peer_review_due_date") public String peerReviewDueDate;
     @JsonbProperty("peer_review_points") public int peerReviewPoints;
-    @JsonbProperty("assignment_instructions") public String assignmentInstruction = "";
-    @JsonbProperty("peer_review_template") public String peerReviewTemplate = "";
-    @JsonbProperty("peer_review_rubric") public String peerReviewRubric = "";
-
     @JsonbCreator
     public AssignmentDAO(
             @NonNull @JsonbProperty("course_id") String courseID,

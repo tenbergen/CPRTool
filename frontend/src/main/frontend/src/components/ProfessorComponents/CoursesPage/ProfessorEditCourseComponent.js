@@ -90,8 +90,8 @@ const ProfessorEditCourseComponent = () => {
           </span>
 
           <div id='deleteButtons'>
-            <button onClick={deleteCourse}>Yes</button>
-            <button onClick={() => setShow(false)}>No</button>
+            <button id='ecc-delete-button-delete' class='inter-16-medium-red' onClick={deleteCourse}>Delete</button>
+            <button id='ecc-delete-button-cancel' class='inter-16-medium-white' onClick={() => setShow(false)}>Cancel</button>
           </div>
         </div>
       </div>
