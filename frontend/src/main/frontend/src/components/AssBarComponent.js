@@ -68,7 +68,7 @@ const AssBarComponent = () => {
   };
 
   // const onCourseClick = () => {
-  //   navigate(`/details/student/${courseId}`);
+  //   navigate(`/student/${courseId}`);
   // };
 
   return (

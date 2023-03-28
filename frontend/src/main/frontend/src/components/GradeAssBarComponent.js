@@ -17,7 +17,7 @@ const GradeAssBarLink = ({ active, assignment, onClick }) => {
 
   return (
     <Link
-      to={`/details/${role}/${courseId}/${assignment.assignment_id}`}
+      to={`/${role}/${courseId}/${assignment.assignment_id}`}
       onClick={onClick}
     >
       <tr>
@@ -50,7 +50,7 @@ const GradeAssBarComponent = () => {
   };
 
   const onCourseClick = () => {
-    navigate(`/details/professor/${courseId}`);
+    navigate(`/professor/${courseId}`);
   };
 
   return (

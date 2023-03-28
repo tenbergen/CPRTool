@@ -20,7 +20,7 @@ const CourseBarLink = ({ active, course, onClick }) => {
   const role = useSelector((state) => state.auth.role);
 
   return (
-    <Link to={`/details/${role}/${course.course_id}`} onClick={onClick}>
+    <Link to={`/${role}/${course.course_id}`} onClick={onClick}>
       <div className={active ? 'clickedStyle' : 'normalStyle'}>
         <div className='colorForTable' />
         <div className='course_info'>
@@ -107,7 +107,7 @@ const CourseBarComponent = ({ title }) => {
         </div>
       </div>
         <div className='admin-button'>
-          <Link to={`/details/${role}/admin`}>
+          <Link to={`/professor/admin`}>
             <button className='admin-button-style'>ADMIN INTERFACE</button>
           </Link>
         </div>
