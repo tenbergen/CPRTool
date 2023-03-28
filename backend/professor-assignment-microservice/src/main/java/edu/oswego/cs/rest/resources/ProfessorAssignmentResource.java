@@ -298,8 +298,6 @@ public class ProfessorAssignmentResource {
         new AssignmentInterface().removePeerReviewTemplate(courseID, assignmentID);
         return Response.status(Response.Status.OK).entity("File successfully deleted.").build();
     }
-
-    //Change
     @DELETE
     @RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
