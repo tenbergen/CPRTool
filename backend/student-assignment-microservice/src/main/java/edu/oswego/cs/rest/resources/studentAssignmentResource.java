@@ -148,24 +148,21 @@ public class studentAssignmentResource {
      * in a given course that the frontend can decode and get a zip file from. Note that if no peer reviews are added to the assignment
      * the Peer-Reviews folder won't be made.
      *     Structure of the unzipped file goes:
-     *      <Course-Name>
-     *      |
-     *      |
-     *      L-><Team-Name>
+     * <Course ID>
+     *     |
+     *     |
+     *     L-><Assignment-Name>
      *            |
      *            |
-     *            L-> <Assignments>
+     *            L-> <Team-Name>
      *                    |
      *                    |
-     *                    L-><Assignment-Name>
-     *                              |
-     *                              |
-     *                              L-><Submission> ---> <Submission File>
-     *                              L-><Peer-Reviews>
-     *                                      |
-     *                                      |
-     *                                      L-><Given> ---> <All Peer Reviews given for the current assignment>
-     *                                      L-><Received> ---> <All Peer Reviews received for the current assignment>
+     *                    L-><Submission> ---> <Submission File>
+     *                    L-><Peer-Reviews>
+     *                             |
+     *                             |
+     *                             L-><Given> ---> <All Peer Reviews given for the current assignment>
+     *                             L-><Received> ---> <All Peer Reviews received for the current assignment>
      */
     @GET
     @RolesAllowed("professor")
@@ -194,7 +191,11 @@ public class studentAssignmentResource {
      * that the frontend can decode and get a zip file from. Note that if no peer reviews are added to the assignment
      * the Peer-Reviews folder won't be made.
      *     Structure of unzipped file goes:
-     *     <Assignment-Name>
+     *
+     * <Course ID>
+     *     |
+     *     |
+     *     L-><Assignment-Name>
      *            |
      *            |
      *            L-> <Team-Name>
