@@ -3,6 +3,7 @@ package edu.oswego.cs.database;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCursor;
 import edu.oswego.cs.dao.ProfanitySettings;
+import edu.oswego.cs.dao.User;
 import edu.oswego.cs.util.*;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -340,12 +341,27 @@ public ProfanitySettings getProfanitySettings() {
     Document ps = profanitySettings.find().first();
     // Get list of blocked words from profanity settings
     assert ps != null;
-    return new ProfanitySettings((HashSet<String>) ps.get("blocked_words"), (HashSet<String>) ps.get("allowed_words"));
+    SortedSet<String> blockedWords = (SortedSet<String>) ps.get("blocked_words");
+    SortedSet<String> allowedWords = (SortedSet<String>) ps.get("allowed_words");
+    ProfanitySettings profanitySettings = new ProfanitySettings(blockedWords, allowedWords);
+    return new  ProfanitySettings((SortedSet<String>) ps.get("blocked_words"), (SortedSet<String>) ps.get("allowed_words"));
 }
 
-
     public Object getUsersView() {
-        List<Document> users = new ArrayList<Document>();
+        List<User> users = new ArrayList<User>();
+        // iterate though mongodb users and add to list
+        for (Document user : studentCollection.find()) {
+            User u = new User(user.getString("student_id"), "student",user.getString("first_name"), user.getString("last_name"));
+            users.add(u);
+        }
+
+        for (Document user : professorCollection.find()) {
+            User u = new User(user.getString("professor_id"), "professor",user.getString("first_name"), user.getString("last_name"));
+            if (user.getBoolean("admin")) {
+                u.setRole("admin");
+            }
+            users.add(u);
+        }
 
         return users;
     }
