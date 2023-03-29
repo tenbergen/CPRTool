@@ -2,6 +2,7 @@ package edu.oswego.cs.database;
 
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCursor;
+import edu.oswego.cs.dao.Course;
 import edu.oswego.cs.dao.ProfanitySettings;
 import edu.oswego.cs.dao.User;
 import edu.oswego.cs.util.*;
@@ -285,7 +286,7 @@ public class AdminInterface {
     try {
         // Get list of blocked words from profanity settings
         assert ps != null;
-        HashSet<String> blockedWords = (HashSet<String>) ps.get("blocked_words");
+        SortedSet<String> blockedWords = (SortedSet<String>) ps.get("blocked_words");
         // Add new blocked word to list
         blockedWords.add(word);
         // Update MongoDB with new list of blocked words
@@ -301,7 +302,7 @@ public class AdminInterface {
         try {
             // Get list of blocked words from profanity settings
             assert ps != null;
-            HashSet<String> blockedWords = (HashSet<String>) ps.get("blocked_words");
+            SortedSet<String> blockedWords = (SortedSet<String>) ps.get("blocked_words");
             // Remove blocked word from list
             blockedWords.remove(word);
             // Update MongoDB with new list of blocked words
@@ -315,7 +316,7 @@ public class AdminInterface {
         Document ps = profanitySettings.find().first();
         try {
             assert ps != null;
-            HashSet<String> allowedWords = (HashSet<String>) ps.get("allowed_words");
+            SortedSet<String> allowedWords = (SortedSet<String>) ps.get("allowed_words");
             allowedWords.add(word);
             profanitySettings.updateOne(eq("allowed_words", allowedWords), set("allowed_words", allowedWords));
         } catch (Exception e) {
@@ -327,7 +328,7 @@ public class AdminInterface {
         Document ps = profanitySettings.find().first();
         try {
             assert ps != null;
-            HashSet<String> allowedWords = (HashSet<String>) ps.get("allowed_words");
+            SortedSet<String> allowedWords = (SortedSet<String>) ps.get("allowed_words");
             allowedWords.remove(word);
             profanitySettings.updateOne(eq("allowed_words", allowedWords), set("allowed_words", allowedWords));
         } catch (Exception e) {
@@ -367,7 +368,20 @@ public ProfanitySettings getProfanitySettings() {
     }
 
     public Object getCoursesView() {
-        List<Document> courses = new ArrayList<Document>();
+        List<Course> courses = new ArrayList<Course>();
+        for (Document course : courseCollection.find()) {
+            String professor_id = course.getString("professor_id");
+            String professorFirstName = Objects.requireNonNull(professorCollection.find(eq("professor_id", professor_id)).first()).getString("first_name");
+            String professorLastName = Objects.requireNonNull(professorCollection.find(eq("professor_id", professor_id)).first()).getString("last_name");
+            Course c = new Course(
+                    course.getString("course_name"),
+                    course.getString("crn"),
+                    professorFirstName,
+                    professorLastName,
+                    course.getInteger("year"),
+                    course.getString("semester"));
+
+        }
 
         return courses;
     }
