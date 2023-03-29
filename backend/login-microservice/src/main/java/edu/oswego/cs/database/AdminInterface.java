@@ -5,6 +5,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.util.CPRException;
 
+import org.apache.http.protocol.HTTP;
 import org.bson.Document;
 
 import javax.ws.rs.core.Response;
@@ -24,6 +25,8 @@ public class AdminInterface {
 
     private final MongoCollection<Document> professorCollection;
     private final MongoCollection<Document> studentCollection;
+    private final MongoCollection<Document> courseCollection;
+    private final MongoCollection<Document> profanitySettings;
 
     // Make a generic method to receive a mongo collection and check connection
     public AdminInterface() {
@@ -32,8 +35,11 @@ public class AdminInterface {
             MongoDatabase studentDB = databaseManager.getStudentDB();
             // Professors and Admins are in the same database, Admins are elevated
             MongoDatabase profAdminDb = databaseManager.getProfessorDB();
+            MongoDatabase courseDB = databaseManager.getCourseDB();
             studentCollection = studentDB.getCollection("students");
             professorCollection = profAdminDb.getCollection("professors");
+            courseCollection = courseDB.getCollection("courses");
+            profanitySettings = courseDB.getCollection("profanitySettings");
         } catch (CPRException e) {
             throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to retrieve collections.");
         }
@@ -46,8 +52,11 @@ public class AdminInterface {
             MongoDatabase studentDB = databaseManager.getStudentDB();
             // Professors and Admins are in the same database, Admins are elevated
             MongoDatabase profAdminDb = databaseManager.getProfessorDB();
+            MongoDatabase courseDB = databaseManager.getCourseDB();
             studentCollection = studentDB.getCollection("students");
             professorCollection = profAdminDb.getCollection("professors");
+            courseCollection = courseDB.getCollection("courses");
+            profanitySettings = courseDB.getCollection("profanitySettings");
         } catch (CPRException e) {
             throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to retrieve collections.");
         }
@@ -265,6 +274,40 @@ public class AdminInterface {
     private void checkIfUserIdExists(String user_id) {
         if (user_id == null || user_id.isEmpty()) {
             throw new CPRException(Response.Status.BAD_REQUEST, "User ID cannot be null.");
+        }
+    }
+
+    public void addBlockedWord(String word) throws Exception {
+    try {
+        Document newBlockedWord = new Document("blocked_word", word);
+        profanitySettings.insertOne(newBlockedWord);
+    } catch (Exception e) {
+        throw new CPRException(Response.Status.BAD_REQUEST, "Failed to add blocked word to MongoDB");
+    }
+    }
+
+    public void deleteBlockedWord(String word) throws Exception {
+        try {
+            profanitySettings.deleteOne(eq("blocked_word", word));
+        } catch (Exception e) {
+            throw new CPRException(Response.Status.BAD_REQUEST, "Failed to delete blocked word from MongoDB");
+        }
+    }
+
+    public void addAllowedWord(String word) throws Exception {
+        try {
+            Document newAllowedWord = new Document("allowed_word", word);
+            profanitySettings.insertOne(newAllowedWord);
+        } catch (Exception e) {
+            throw new CPRException(Response.Status.BAD_REQUEST, "Failed to add allowed word to MongoDB");
+        }
+    }
+
+    public void deleteAllowedWord(String word) throws Exception {
+        try {
+            profanitySettings.deleteOne(eq("allowed_word", word));
+        } catch (Exception e) {
+            throw new CPRException(Response.Status.BAD_REQUEST, "Failed to delete allowed word from MongoDB");
         }
     }
 

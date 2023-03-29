@@ -132,4 +132,48 @@ public class AdminController {
         new AdminInterface(userId).demoteAdminToStudent(userId);
         return Response.status(Response.Status.OK).entity("Admin role removed from student user.").build();
     }
+
+    // Add Blocked Word
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/profanity/add/blocked/{word}")
+    public Response addBlockedWord(@Context SecurityContext securityContext, @PathParam("word") String word) {
+        new AdminInterface().addBlockedWord(word);
+        return Response.status(Response.Status.OK).entity("Blocked word added.").build();
+    }
+
+    // Delete Blocked Word
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/profanity/delete/blocked/{word}")
+    public Response deleteBlockedWord(@Context SecurityContext securityContext, @PathParam("word") String word) {
+        new AdminInterface().deleteBlockedWord(word);
+        return Response.status(Response.Status.OK).entity("Blocked word deleted.").build();
+    }
+
+    // Add Allowed Word
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/profanity/add/allowed/{word}")
+    public Response addAllowedWord(@Context SecurityContext securityContext, @PathParam("word") String word) {
+        new AdminInterface().addAllowedWord(word);
+        return Response.status(Response.Status.OK).entity("Allowed word added.").build();
+    }
+
+    // Remove Allowed Word
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/profanity/delete/allowed/{word}")
+    public Response deleteAllowedWord(@Context SecurityContext securityContext, @PathParam("word") String word) {
+        new AdminInterface().deleteAllowedWord(word);
+        return Response.status(Response.Status.OK).entity("Allowed word deleted.").build();
+    }
+
+    // Get Profanity Settings View
+
+
+    // Get Users View
+
+
+    // Get Courses view
 }
