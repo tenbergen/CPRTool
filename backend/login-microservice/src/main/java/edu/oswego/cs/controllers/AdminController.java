@@ -137,7 +137,7 @@ public class AdminController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/profanity/add/blocked/{word}")
-    public Response addBlockedWord(@Context SecurityContext securityContext, @PathParam("word") String word) {
+    public Response addBlockedWord(@Context SecurityContext securityContext, @PathParam("word") String word) throws Exception {
         new AdminInterface().addBlockedWord(word);
         return Response.status(Response.Status.OK).entity("Blocked word added.").build();
     }
@@ -146,7 +146,7 @@ public class AdminController {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/profanity/delete/blocked/{word}")
-    public Response deleteBlockedWord(@Context SecurityContext securityContext, @PathParam("word") String word) {
+    public Response deleteBlockedWord(@Context SecurityContext securityContext, @PathParam("word") String word) throws Exception {
         new AdminInterface().deleteBlockedWord(word);
         return Response.status(Response.Status.OK).entity("Blocked word deleted.").build();
     }
@@ -155,7 +155,7 @@ public class AdminController {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/profanity/add/allowed/{word}")
-    public Response addAllowedWord(@Context SecurityContext securityContext, @PathParam("word") String word) {
+    public Response addAllowedWord(@Context SecurityContext securityContext, @PathParam("word") String word) throws Exception {
         new AdminInterface().addAllowedWord(word);
         return Response.status(Response.Status.OK).entity("Allowed word added.").build();
     }
@@ -164,16 +164,32 @@ public class AdminController {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/profanity/delete/allowed/{word}")
-    public Response deleteAllowedWord(@Context SecurityContext securityContext, @PathParam("word") String word) {
+    public Response deleteAllowedWord(@Context SecurityContext securityContext, @PathParam("word") String word) throws Exception {
         new AdminInterface().deleteAllowedWord(word);
         return Response.status(Response.Status.OK).entity("Allowed word deleted.").build();
     }
 
     // Get Profanity Settings View
-
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/views/profanity")
+    public Response getProfanitySettingsView(@Context SecurityContext securityContext) {
+        return Response.status(Response.Status.OK).entity(new AdminInterface().getProfanitySettings()).build();
+    }
 
     // Get Users View
-
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/views/users")
+    public Response getUsersView(@Context SecurityContext securityContext) {
+        return Response.status(Response.Status.OK).entity(new AdminInterface().getUsersView()).build();
+    }
 
     // Get Courses view
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/views/courses")
+    public Response getCoursesView(@Context SecurityContext securityContext) {
+        return Response.status(Response.Status.OK).entity(new AdminInterface().getCoursesView()).build();
+    }
 }

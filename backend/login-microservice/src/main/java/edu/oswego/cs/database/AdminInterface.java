@@ -1,5 +1,8 @@
 package edu.oswego.cs.database;
 
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCursor;
+import edu.oswego.cs.dao.ProfanitySettings;
 import edu.oswego.cs.util.*;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -222,9 +225,7 @@ public class AdminInterface {
         if (!checkAdmin(user_id)) {
             throw new CPRException(Response.Status.NOT_FOUND, "Admin user not found.");
         }
-
         professorCollection.updateOne(eq("professor_id", user_id), set("admin", false));
-
     }
 
     public void demoteAdminToStudent(String user_id) {
@@ -278,37 +279,80 @@ public class AdminInterface {
     }
 
     public void addBlockedWord(String word) throws Exception {
+        // Get specific document from MongoDB for profanity settings
+        Document ps = profanitySettings.find().first();
     try {
-        Document newBlockedWord = new Document("blocked_word", word);
-        profanitySettings.insertOne(newBlockedWord);
+        // Get list of blocked words from profanity settings
+        assert ps != null;
+        HashSet<String> blockedWords = (HashSet<String>) ps.get("blocked_words");
+        // Add new blocked word to list
+        blockedWords.add(word);
+        // Update MongoDB with new list of blocked words
+        profanitySettings.updateOne(eq("blocked_words", blockedWords), set("blocked_words", blockedWords));
     } catch (Exception e) {
         throw new CPRException(Response.Status.BAD_REQUEST, "Failed to add blocked word to MongoDB");
     }
-    }
+        }
 
     public void deleteBlockedWord(String word) throws Exception {
+        // Get specific document from MongoDB for profanity settings
+        Document ps = profanitySettings.find().first();
         try {
-            profanitySettings.deleteOne(eq("blocked_word", word));
+            // Get list of blocked words from profanity settings
+            assert ps != null;
+            HashSet<String> blockedWords = (HashSet<String>) ps.get("blocked_words");
+            // Remove blocked word from list
+            blockedWords.remove(word);
+            // Update MongoDB with new list of blocked words
+            profanitySettings.updateOne(eq("blocked_words", blockedWords), set("blocked_words", blockedWords));
         } catch (Exception e) {
             throw new CPRException(Response.Status.BAD_REQUEST, "Failed to delete blocked word from MongoDB");
         }
     }
 
     public void addAllowedWord(String word) throws Exception {
+        Document ps = profanitySettings.find().first();
         try {
-            Document newAllowedWord = new Document("allowed_word", word);
-            profanitySettings.insertOne(newAllowedWord);
+            assert ps != null;
+            HashSet<String> allowedWords = (HashSet<String>) ps.get("allowed_words");
+            allowedWords.add(word);
+            profanitySettings.updateOne(eq("allowed_words", allowedWords), set("allowed_words", allowedWords));
         } catch (Exception e) {
             throw new CPRException(Response.Status.BAD_REQUEST, "Failed to add allowed word to MongoDB");
         }
     }
 
     public void deleteAllowedWord(String word) throws Exception {
+        Document ps = profanitySettings.find().first();
         try {
-            profanitySettings.deleteOne(eq("allowed_word", word));
+            assert ps != null;
+            HashSet<String> allowedWords = (HashSet<String>) ps.get("allowed_words");
+            allowedWords.remove(word);
+            profanitySettings.updateOne(eq("allowed_words", allowedWords), set("allowed_words", allowedWords));
         } catch (Exception e) {
             throw new CPRException(Response.Status.BAD_REQUEST, "Failed to delete allowed word from MongoDB");
         }
     }
 
+// TODO Not 100 on this implementation.  May be better offer working with a list of words
+public ProfanitySettings getProfanitySettings() {
+    // Get specific document from MongoDB for profanity settings
+    Document ps = profanitySettings.find().first();
+    // Get list of blocked words from profanity settings
+    assert ps != null;
+    return new ProfanitySettings((HashSet<String>) ps.get("blocked_words"), (HashSet<String>) ps.get("allowed_words"));
+}
+
+
+    public Object getUsersView() {
+        List<Document> users = new ArrayList<Document>();
+
+        return users;
+    }
+
+    public Object getCoursesView() {
+        List<Document> courses = new ArrayList<Document>();
+
+        return courses;
+    }
 }
