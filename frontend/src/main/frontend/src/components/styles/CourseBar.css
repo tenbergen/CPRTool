@@ -3,6 +3,7 @@
   padding-bottom: 4%;
   background-color: #d4eefc;
   border-radius: 10px 0 0 10px;
+  height: 95vh;
 }
 
 .cbc-parent h2 {
@@ -11,7 +12,7 @@
 
 .cbc-courses {
   overflow-y: scroll;
-  height: 70vh;
+  height: 70%;
   margin-right: -19px;
 }
 
@@ -54,6 +55,8 @@
   margin-left: 10%;
   margin-right: 10%;
 }
+
+
 
 tr:hover {
   background-color: white;

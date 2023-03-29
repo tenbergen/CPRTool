@@ -9,6 +9,8 @@ import {
   getCoursesAsync,
 } from "../../redux/features/courseSlice";
 import uuid from "react-uuid";
+import HeaderBar from "../../components/GlobalComponents/HeaderBar";
+import LogoutButton from "../../components/GlobalComponents/LogoutButton";
 
 function ProfessorDashboardPage() {
   const navigate = useNavigate();
@@ -39,7 +41,7 @@ function ProfessorDashboardPage() {
         navigate("/create/course")
       ) : (
         <div className={"TeacherDashboard"}>
-          <SidebarComponent />
+          <HeaderBar/>
           <div id="teacher">
             <div className="welcome-banner">
               <h1 className="inter-36-bold" id="welcome-message">
@@ -75,11 +77,13 @@ function ProfessorDashboardPage() {
               )}
             </div>
             <div id="addClass">
+              <LogoutButton/>
               <Link to="/create/course">
-                <button className="green-button-large">
+                <button className="green-button-large" id="create-button">
                   Create new course
                 </button>
               </Link>
+              <div/>
             </div>
           </div>
         </div>

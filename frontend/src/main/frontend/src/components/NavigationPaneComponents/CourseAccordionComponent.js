@@ -5,7 +5,6 @@ const CourseAccordionComponent = ({courseName}) => {
     return(
         <div id="course-accordion-title">
             <span className="inter-20-medium">{courseName}</span>
-
         </div>
     );
 };

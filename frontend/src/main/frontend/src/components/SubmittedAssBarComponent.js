@@ -69,7 +69,7 @@ const SubmittedAssBarComponent = () => {
         >
           {courseId}
         </span>
-        <h2 className='kumba-30'> Assignments </h2>
+        <h2 className='kumba-30'> Assignments</h2>
       </div>
       <div className='abc-assignments'>
         {assignmentsLoaded
