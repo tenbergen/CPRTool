@@ -55,7 +55,7 @@ public class CreateDeleteCourseTest {
 
     @Test
     public void CreateCourseTest() {
-        // driver.get("http://moxie.cs.oswego.edu:13125/create/course");
+        // driver.get("http://moxie.cs.oswego.edu:13125/create");
 
         // WebDriverWait wait = new WebDriverWait(driver, 5);
 
@@ -136,7 +136,7 @@ public class CreateDeleteCourseTest {
 
         driver.findElement(By.xpath("//*[@id=\"deleteButtons\"]/button[2]")).click();
 
-        Assertions.assertEquals("http://moxie.cs.oswego.edu:13125/details/professor/CSC378-800-54266-Spring-2023", driver.getCurrentUrl());
+        Assertions.assertEquals("http://moxie.cs.oswego.edu:13125/professor/CSC378-800-54266-Spring-2023", driver.getCurrentUrl());
 
 
     }

@@ -104,7 +104,7 @@ const CreateAssignmentPage = () => {
     await uploadFiles(assignment_id);
 
     setLoading(false);
-    navigate('/details/professor/' + courseId);
+    navigate('/professor/' + courseId);
   };
 
   return (

@@ -41,8 +41,8 @@ const CreateCoursePage = () => {
       course_name === '' ||
       course_section === '' ||
       semester === '' ||
-      year === undefined ||
-      crn === undefined
+      year === 0 ||
+      crn === 0
     ) {
       alert("Fields can't be empty!");
     } else {

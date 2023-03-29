@@ -36,7 +36,7 @@ function ProfessorDashboardPage() {
       {!coursesLoaded ? (
         <Loader />
       ) : courses.length < 1 ? (
-        navigate("/create/course")
+        navigate("/create")
       ) : (
         <div className={"TeacherDashboard"}>
           <SidebarComponent />
@@ -61,7 +61,7 @@ function ProfessorDashboardPage() {
                   course && (
                     <Link
                       key={uuid()}
-                      to={"/details/professor/" + course.course_id}
+                      to={"/professor/" + course.course_id}
                       onClick={() => onCourseClick(course)}
                     >
                       <li className="courseListItem">
@@ -75,7 +75,7 @@ function ProfessorDashboardPage() {
               )}
             </div>
             <div id="addClass">
-              <Link to="/create/course">
+              <Link to="/create">
                 <button className="green-button-large">
                   Create new course
                 </button>
