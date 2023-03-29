@@ -77,7 +77,7 @@ public class CourseInterface {
         if (professorDocumentCourses == null) throw new CPRException(Response.Status.CONFLICT, "Professor profile is not set up properly.");
 
         if (dao.courseName == null || dao.abbreviation == null || dao.courseName == null
-            dao.courseSection == null || dao.crn == null || dao.semester == null) {
+            || dao.courseSection == null || dao.crn == null || dao.semester == null) {
             throw new CPRException(Response.Status.NOT_FOUND, "At least one required field is null.");
         }
 
