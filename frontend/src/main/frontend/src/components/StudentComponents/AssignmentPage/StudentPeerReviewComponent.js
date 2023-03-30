@@ -98,7 +98,7 @@ const StudentPeerReviewComponent = () => {
       .post(submitAssUrl, feedbackFileFormData)
       .then((res) => {
         alert('Successfully uploaded peer review');
-        navigate(`/details/student/${courseId}`, {
+        navigate(`/student/${courseId}`, {
           state: { initialComponent: 'Submitted' },
         });
       })
