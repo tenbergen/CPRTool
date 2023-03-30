@@ -8,6 +8,7 @@ import {
   getCourseAssignmentsAsync,
 } from '../redux/features/assignmentSlice';
 import uuid from 'react-uuid';
+import LogoutButton from "./GlobalComponents/LogoutButton";
 
 const GradeAssBarLink = ({ active, assignment, onClick }) => {
   const { role } = useSelector((state) => state.auth);
@@ -56,7 +57,7 @@ const GradeAssBarComponent = () => {
   return (
     <div className='abc-parent'>
       <div className='abc-title'>
-        <h2 className='inter-28-bold'> Assignments </h2>
+        <h2 className='inter-28-bold'> Assignment </h2>
       </div>
       <div className='inter-18-bold abc-assignments'>
         {courseAssignments.map(
@@ -71,6 +72,7 @@ const GradeAssBarComponent = () => {
             )
         )}
       </div>
+      <LogoutButton/>
     </div>
   );
 };

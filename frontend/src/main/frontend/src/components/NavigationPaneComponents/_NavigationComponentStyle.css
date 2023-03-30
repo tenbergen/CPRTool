@@ -2,14 +2,14 @@
 #course-accordion-title{}
 
 .courses-icon-active{
-    background-image: url("../../assets/icons/active/Courses.svg");
+    background-image: url("../../assets/icons/navigation/active/Courses.svg");
     width: 21px;
     height: 20px;
     margin: 0 17px 0 35px;
 }
 
 .courses-icon-default{
-    background-image: url("../../assets/icons/default/Courses.svg");
+    background-image: url("../../assets/icons/navigation/default/Courses.svg");
     width: 21px;
     height: 20px;
     margin: 0 17px 0 35px;
@@ -51,28 +51,28 @@
 }
 
 .dropdown-icon-active{
-    background-image: url("../../assets/icons/active/Arrow_Active.svg");
+    background-image: url("../../assets/icons/navigation/active/Arrow_Active.svg");
     width: 17px;
     height: 9px;
     margin: 0 16px 0 35px;
 }
 
 .dropdown-icon-default{
-    background-image: url("../../assets/icons/default/Arrow_Default.svg");
+    background-image: url("../../assets/icons/navigation/default/Arrow_Default.svg");
     width: 12px;
     height: 17px;
     margin: 0 16px 0 35px;
 }
 
 .home-icon-active{
-    background-image: url("../../assets/icons/active/Home.svg");
+    background-image: url("../../assets/icons/navigation/active/Home.svg");
     width: 22px;
     height: 18px;
     margin: 0 16px 0 35px;
 }
 
 .home-icon-default{
-    background-image: url("../../assets/icons/default/Home.svg");
+    background-image: url("../../assets/icons/navigation/default/Home.svg");
     width: 22px;
     height: 18px;
     margin: 0 16px 0 35px;
@@ -96,10 +96,16 @@
     margin: 0 16px 0 35px;
 }
 
-.parent-container{
+.navigation-container{
     display: flex;
     flex-direction: column;
     width: 365px;
+}
+
+.parent-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .semester-selection-active{

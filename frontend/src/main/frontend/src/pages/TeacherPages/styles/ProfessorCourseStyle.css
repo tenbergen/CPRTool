@@ -1,3 +1,9 @@
+.page-container{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
 .pcp-parent {
   display: flex;
   flex-direction: row;
@@ -5,12 +11,10 @@
 
 .pcp-container {
   background-color: #d4eefc;
-  border-radius: 10px;
-  margin: 3% 5% 3% 2%;
   flex-grow: 1;
   display: flex;
   flex-direction: row;
-  height: 90vh;
+  /*height: 100vh;*/
   width: 100vw;
 }
 

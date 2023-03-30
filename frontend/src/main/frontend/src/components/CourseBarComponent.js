@@ -7,7 +7,7 @@ import {
   getCurrentCourseStudentsAsync,
   getStudentCoursesAsync,
 } from '../redux/features/courseSlice';
-import { Link, useParams } from 'react-router-dom';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import { setUserInformation } from '../redux/features/authSlice';
 import {
   getCombinedAssignmentPeerReviews,
@@ -15,6 +15,7 @@ import {
 } from '../redux/features/assignmentSlice';
 import { getCurrentCourseTeamAsync } from '../redux/features/teamSlice';
 import uuid from 'react-uuid';
+import LogoutButton from './GlobalComponents/LogoutButton'
 
 const CourseBarLink = ({ active, course, onClick }) => {
   const role = useSelector((state) => state.auth.role);
@@ -91,6 +92,7 @@ const CourseBarComponent = ({ title }) => {
           Create your first course
         </p>
       ) : null}
+
       <div className='cbc-courses'>
         <div>
           {courses.map(

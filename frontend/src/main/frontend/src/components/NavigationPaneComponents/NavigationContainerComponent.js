@@ -4,6 +4,7 @@ import useCollapse from "react-collapsed";
 import HomeTileComponent from "./HomeTileComponent";
 import CoursesTileComponent from "./CoursesTileComponent";
 import {useRef, useState} from "react";
+import LogoutButton from "../GlobalComponents/LogoutButton";
 
 const NavigationContainerComponent = () => {
 
@@ -15,8 +16,11 @@ const NavigationContainerComponent = () => {
 
     return (
         <div className="parent-container">
-            <HomeTileComponent trigger={trigger} deactivateTiles={deactivateTiles}/>
-            <CoursesTileComponent trigger={trigger} deactivateTiles={deactivateTiles}/>
+            <div className="navigation-container">
+                <HomeTileComponent trigger={trigger} deactivateTiles={deactivateTiles}/>
+                <CoursesTileComponent trigger={trigger} deactivateTiles={deactivateTiles}/>
+            </div>
+            <LogoutButton/>
         </div>
     );
 };
