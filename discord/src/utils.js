@@ -14,11 +14,7 @@ try {
             myFormat
         ),
         transports: [
-            new transports.Console(),
-            new transports.File({
-                filename: 'events/events.log',
-                level: 'debug'
-            })
+            new transports.Console()
         ]
     });
 
