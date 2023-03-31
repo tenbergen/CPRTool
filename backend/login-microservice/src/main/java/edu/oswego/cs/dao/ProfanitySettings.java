@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.SortedSet;
 
 @AllArgsConstructor
@@ -13,6 +13,6 @@ import java.util.SortedSet;
 @Getter
 @Setter
 public class ProfanitySettings {
-    SortedSet<String> blockedWords;
-    SortedSet<String> acceptedWords;
+    ArrayList<String> blockedWords;
+    ArrayList<String> acceptedWords;
 }

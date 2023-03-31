@@ -1,25 +1,16 @@
 package edu.oswego.cs.database;
 
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCursor;
 import edu.oswego.cs.dao.Course;
 import edu.oswego.cs.dao.ProfanitySettings;
 import edu.oswego.cs.dao.User;
-import edu.oswego.cs.util.*;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.util.CPRException;
 
-import org.apache.http.protocol.HTTP;
 import org.bson.Document;
 
 import javax.ws.rs.core.Response;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.*;
-import java.text.DecimalFormat;
 
 import com.mongodb.client.model.Filters;
 import static com.mongodb.client.model.Filters.and;
@@ -342,10 +333,9 @@ public ProfanitySettings getProfanitySettings() {
     Document ps = profanitySettings.find().first();
     // Get list of blocked words from profanity settings
     assert ps != null;
-    SortedSet<String> blockedWords = (SortedSet<String>) ps.get("blocked_words");
-    SortedSet<String> allowedWords = (SortedSet<String>) ps.get("allowed_words");
-    ProfanitySettings profanitySettings = new ProfanitySettings(blockedWords, allowedWords);
-    return new  ProfanitySettings((SortedSet<String>) ps.get("blocked_words"), (SortedSet<String>) ps.get("allowed_words"));
+    ArrayList<String> blockedWords = (ArrayList<String>) ps.get("blocked_words");
+    ArrayList<String> allowedWords = (ArrayList<String>) ps.get("allowed_words");
+    return new ProfanitySettings(blockedWords, allowedWords);
 }
 
     public Object getUsersView() {
