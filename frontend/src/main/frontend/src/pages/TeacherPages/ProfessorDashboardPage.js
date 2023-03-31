@@ -9,7 +9,7 @@ import {
   getCoursesAsync,
 } from "../../redux/features/courseSlice";
 import uuid from "react-uuid";
-import HeaderBar from "../../components/GlobalComponents/HeaderBar";
+import ProfessorHeaderBar from "../../components/ProfessorComponents/ProfessorHeaderBar";
 import LogoutButton from "../../components/GlobalComponents/LogoutButton";
 
 function ProfessorDashboardPage() {
@@ -41,7 +41,7 @@ function ProfessorDashboardPage() {
         navigate("/create")
       ) : (
         <div className={"TeacherDashboard"}>
-          <HeaderBar/>
+          <ProfessorHeaderBar/>
           <div id="teacher">
             <div className="welcome-banner">
               <h1 className="inter-36-bold" id="welcome-message">
@@ -76,14 +76,18 @@ function ProfessorDashboardPage() {
                   )
               )}
             </div>
-            <div id="addClass">
-              <Link to="/create">
-                <button className="green-button-large">
-                  Create new course
-                </button>
-              </Link>
+            <div className="logout-out-and-create-course">
+              <LogoutButton/>
+              <div id="addClass">
+                <Link to="/create">
+                  <button className="green-button-large">
+                    Create new course
+                  </button>
+                </Link>
+              </div>
               <div/>
             </div>
+
           </div>
         </div>
       )}

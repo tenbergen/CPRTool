@@ -4,6 +4,12 @@
   height: 100vh;
 }
 
+.logout-out-and-create-course{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 .welcome-banner {
   display: flex;
   justify-content: left;

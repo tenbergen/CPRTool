@@ -1,3 +1,8 @@
+.page-container{
+  display: flex;
+  flex-direction: column;
+}
+
 .scp-parent {
   display: flex;
   flex-direction: row;

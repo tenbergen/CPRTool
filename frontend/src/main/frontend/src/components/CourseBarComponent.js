@@ -7,7 +7,7 @@ import {
   getCurrentCourseStudentsAsync,
   getStudentCoursesAsync,
 } from '../redux/features/courseSlice';
-import {Link, useNavigate, useParams} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import { setUserInformation } from '../redux/features/authSlice';
 import {
   getCombinedAssignmentPeerReviews,
@@ -113,6 +113,7 @@ const CourseBarComponent = ({ title }) => {
             <button className='admin-button-style'>ADMIN INTERFACE</button>
           </Link>
         </div>
+      <LogoutButton/>
     </div>
   );
 };

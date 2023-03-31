@@ -3,7 +3,6 @@ import './styles/StudentCourseStyle.css';
 import SidebarComponent from '../../components/SidebarComponent';
 import StudentTeamComponent from '../../components/StudentComponents/CoursePage/StudentTeamComponent';
 import StudentToDoComponent from '../../components/StudentComponents/CoursePage/StudentToDoComponent';
-import CourseBarComponent from '../../components/CourseBarComponent';
 import StudentSubmittedComponent from '../../components/StudentComponents/CoursePage/StudentSubmittedComponent';
 import { useLocation, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,7 +11,7 @@ import { getCurrentCourseTeamAsync } from '../../redux/features/teamSlice';
 import MyTeamComponent from '../../components/StudentComponents/CoursePage/MyTeamComponent';
 import uuid from 'react-uuid';
 import AssBarComponent from "../../components/AssBarComponent";
-import AssignmentTile from "../../components/AssignmentTile";
+import StudentHeaderBar from "../../components/StudentComponents/StudentHeaderBar";
 
 const CourseComponent = ({ active, component, onClick }) => {
   return (
@@ -48,9 +47,9 @@ function StudentCoursePage() {
   }, [courseId, lakerId, dispatch]);
 
   return (
-    <div>
+    <div className="page-container">
+      <StudentHeaderBar/>
       <div className='scp-parent'>
-        <SidebarComponent />
         <div className='scp-container'>
           <AssBarComponent />
           <div className='scp-component'>
