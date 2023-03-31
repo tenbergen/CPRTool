@@ -82,54 +82,54 @@ const AssignmentTile = ({ assignment, submitted }) => {
           <span> {title} </span>
         </div>
         <div className='ass-tile-content' onClick={onTileClick}>
-          {/*<div className='ass-tile-info' >*/}
-          {/*  /!*<span className='inter-24-bold'>*!/*/}
-          {/*  /!*  {submitted ? (*!/*/}
-          {/*  /!*    role === 'professor' ? (*!/*/}
-          {/*  /!*      <span>*!/*/}
-          {/*  /!*        {' '}*!/*/}
-          {/*  /!*        {assignment.team_name} {assignment.assignment_name}{' '}*!/*/}
-          {/*  /!*        Submission{' '}*!/*/}
-          {/*  /!*      </span>*!/*/}
-          {/*  /!*    ) : (*!/*/}
-          {/*  /!*      <span> {assignment.assigment_name} </span>*!/*/}
-          {/*  /!*    )*!/*/}
-          {/*  /!*  ) : assignment.assignment_type === 'peer-review' ? (*!/*/}
-          {/*  /!*    <span>*!/*/}
-          {/*  /!*      {' '}*!/*/}
-          {/*  /!*      {assignment.assignment_name} <br /> (Team{' '}*!/*/}
-          {/*  /!*      {assignment.peer_review_team}){' '}*!/*/}
-          {/*  /!*    </span>*!/*/}
-          {/*  /!*  ) : (*!/*/}
-          {/*  /!*    <span> {assignment.assignment_name} </span>*!/*/}
-          {/*  /!*  )}*!/*/}
-          {/*  /!*</span>*!/*/}
-          {/*  /!*<span className='inter-20-medium'>*!/*/}
-          {/*  /!*  {submitted*!/*/}
-          {/*  /!*    ? assignment.grade === -1*!/*/}
-          {/*  /!*      ? 'Pending'*!/*/}
-          {/*  /!*      : assignment.grade*!/*/}
-          {/*  /!*    : assignment.due_date}*!/*/}
-          {/*  /!*</span>*!/*/}
-          {/*</div>*/}
-          {/*{!submitted && (*/}
-          {/*  <div className='ass-tile-links'>*/}
-          {/*    <span className='inter-16-bold-blue ass-tile-files' onClick={onFileClick}>*/}
-          {/*      {assignment.assignment_type === 'peer-review'*/}
-          {/*        ? assignment.peer_review_rubric*/}
-          {/*        : assignment.assignment_instructions}*/}
-          {/*    </span>*/}
-          {/*    {role === 'professor' ? (*/}
-          {/*      <span*/}
-          {/*        className='ass-tile-delete'*/}
-          {/*        onClick={confirmDelete}*/}
-          {/*      >*/}
-          {/*        {' '}*/}
-          {/*        Delete assignment{' '}*/}
-          {/*      </span>*/}
-          {/*    ) : null}*/}
-          {/*  </div>*/}
-        {/*  )}*/}
+          <div className='ass-tile-info' >
+            <span className='inter-24-bold'>
+              {submitted ? (
+                role === 'professor' ? (
+                  <span>
+                    {' '}
+                    {assignment.team_name} {assignment.assignment_name}{' '}
+                    Submission{' '}
+                  </span>
+                ) : (
+                  <span> {assignment.assigment_name} </span>
+                )
+              ) : assignment.assignment_type === 'peer-review' ? (
+                <span>
+                  {' '}
+                  {assignment.assignment_name} <br /> (Team{' '}
+                  {assignment.peer_review_team}){' '}
+                </span>
+              ) : (
+                <span> {assignment.assignment_name} </span>
+              )}
+            </span>
+            <span className='inter-20-medium'>
+              {submitted
+                ? assignment.grade === -1
+                  ? 'Pending'
+                  : assignment.grade
+                : assignment.due_date}
+            </span>
+          </div>
+          {!submitted && (
+            <div className='ass-tile-links'>
+              <span className='inter-16-bold-blue ass-tile-files' onClick={onFileClick}>
+                {assignment.assignment_type === 'peer-review'
+                  ? assignment.peer_review_rubric
+                  : assignment.assignment_instructions}
+              </span>
+              {role === 'professor' ? (
+                <span
+                  className='ass-tile-delete'
+                  onClick={confirmDelete}
+                >
+                  {' '}
+                  Delete assignment{' '}
+                </span>
+              ) : null}
+            </div>
+          )}
         </div>
       </div>
     </div>

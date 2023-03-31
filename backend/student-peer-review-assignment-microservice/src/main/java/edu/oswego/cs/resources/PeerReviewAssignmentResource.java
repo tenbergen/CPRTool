@@ -345,3 +345,4 @@ public class PeerReviewAssignmentResource {
         return Response.status(Response.Status.OK).entity("Peer reviews have been averaged to make final grades.").build();
     }
 }
+

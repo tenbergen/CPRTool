@@ -4,16 +4,23 @@ import com.fasterxml.jackson.databind.ser.Serializers;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import edu.oswego.cs.rest.daos.FileDAO;
 import org.bson.Document;
+import org.bson.types.Binary;
 
 import javax.print.Doc;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Updates.set;
@@ -24,8 +31,11 @@ public class AssignmentInterface {
     static MongoDatabase assignmentDatabase;
     static MongoDatabase teamsDatabase;
     static MongoCollection<Document> assignmentsCollection;
+
+    static MongoCollection<Document> courseCollection;
     static MongoCollection<Document> teamsCollection;
     static MongoCollection<Document> submissionCollection;
+    static MongoCollection<Document> professorCollection;
 
     static String reg = "/";
 
@@ -37,6 +47,8 @@ public class AssignmentInterface {
             assignmentsCollection = assignmentDatabase.getCollection("assignments");
             submissionCollection = assignmentDatabase.getCollection("submissions");
             teamsCollection = teamsDatabase.getCollection("teams");
+            professorCollection = manager.getProfessorDB().getCollection("professors");
+            courseCollection = manager.getCourseDB().getCollection("courses");
 
         } catch (WebApplicationException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
@@ -268,4 +280,109 @@ public class AssignmentInterface {
         }
         return assignments;
     }
+
+    /**
+     * Ensures that a request carried out by a client that needs to access assignment information is actually
+     * the professor of the course in context
+     * @param securityContext
+     * @param courseID
+     */
+    public void checkProfessor(SecurityContext securityContext, String courseID){
+        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
+        Document professorDocument = professorCollection.find(eq("professor_id", professorID)).first();
+        if (professorDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This professor does not exist.").build());
+        Document courseDocument = courseCollection.find(Filters.eq("course_id", courseID)).first();
+        if(courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This course does not exist.").build());
+        String professorIDActual = courseDocument.getString("professor_id");
+        if (!professorIDActual.equals(professorID))  throw new WebApplicationException(Response.status(Response.Status.FORBIDDEN).entity("User principal name doesn't match").build());
+    }
+
+
+    /**
+     * Inserts the file data related to a predefined assignment
+     * @param submissions
+     * @param zipFolder
+     */
+    public void insertAssignmentFiles(MongoCursor<Document> submissions, String courseID, ZipOutputStream zipFolder) throws IOException {
+        while(submissions.hasNext()){
+            //get the current submission
+            Document currentSubmission = submissions.next();
+            //make the file path to save the submission in
+            String path;
+            String assignmentNameNoSpaces = currentSubmission.getString("assigment_name").replace(" ", "_");
+            Binary submission_data = (Binary) currentSubmission.get("submission_data");
+            if(currentSubmission.getString("type").equals("team_submission")){
+                path = courseID+"/"+assignmentNameNoSpaces+"/"+currentSubmission.getString("team_name")+"/submission/"+currentSubmission.getString("submission_name");
+                System.out.println(path);
+                ZipEntry curEntry = new ZipEntry(path);
+                zipFolder.putNextEntry(curEntry);
+                zipFolder.write(submission_data.getData(), 0, submission_data.getData().length);
+                zipFolder.closeEntry();
+            }else{
+                //if it is a peer review, save the data in the folder in both the to/from teams
+                String fromTeam = currentSubmission.getString("reviewed_by");
+                String toTeam = currentSubmission.getString("reviewed_team");
+                //from team first
+                path = courseID+"/"+assignmentNameNoSpaces+"/"+fromTeam+"/peer-reviews/given/"+currentSubmission.getString("submission_name");
+                ZipEntry curEntryFromTeam = new ZipEntry(path);
+                zipFolder.putNextEntry(curEntryFromTeam);
+                zipFolder.write(submission_data.getData(), 0, submission_data.getData().length);
+                zipFolder.closeEntry();
+
+
+                //to team last
+                path = courseID+"/"+assignmentNameNoSpaces+"/"+toTeam+"/peer-reviews/received/"+currentSubmission.getString("submission_name");
+                ZipEntry curEntryToTeam = new ZipEntry(path);
+                zipFolder.putNextEntry(curEntryToTeam);
+                zipFolder.write(submission_data.getData(), 0, submission_data.getData().length);
+                zipFolder.closeEntry();
+            }
+        }
+
+    }
+
+
+    /**
+     * Returns a zip file containing all completed assignment submissions
+     * @param courseID
+     * @return File
+     */
+    public File aggregateSubmissions(String courseID) throws IOException {
+        //make the temporary zip folder
+        File tempFile = Files.createTempFile(courseID, ".zip").toFile();
+        String tempPath = tempFile.getAbsolutePath();
+        ZipOutputStream zipFolder = new ZipOutputStream(new FileOutputStream(tempPath));
+        //get a list of all the assignments
+        for (Document currentAssignment : assignmentsCollection.find(eq("course_id", courseID))) {
+            //get the next assignment related to the current course
+            //get this to get the submissions quicker
+            Integer assignment_ID = currentAssignment.getInteger("assignment_id");
+            //now iterate through the submissions for the assignment and put them in the proper place in the zip folder
+            insertAssignmentFiles(submissionCollection.find(eq("assignment_id", assignment_ID)).iterator(), courseID, zipFolder);
+        }
+        zipFolder.close();
+
+        //return the file with all the assignment data
+        return tempFile;
+    }
+
+    /**
+     * Returns a zip file containing all completed assignment submissions for a particular assignment
+     * @param courseID
+     * @param assignment_ID
+     * @return File
+     */
+    public File aggregateSubmissions(String courseID, Integer assignment_ID) throws IOException {
+        //make the temporary zip folder
+        File tempFile = Files.createTempFile(courseID, ".zip").toFile();
+        String tempPath = tempFile.getAbsolutePath();
+        ZipOutputStream zipFolder = new ZipOutputStream(new FileOutputStream(tempPath));
+        insertAssignmentFiles(submissionCollection.find(eq("assignment_id", assignment_ID)).iterator(), courseID, zipFolder);
+        zipFolder.close();
+
+        //return the file with all the assignment data
+        return tempFile;
+    }
+
+
 }

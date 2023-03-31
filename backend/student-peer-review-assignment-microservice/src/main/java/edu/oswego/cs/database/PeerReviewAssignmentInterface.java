@@ -9,6 +9,7 @@ import org.bson.types.Binary;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.io.*;
 import java.util.*;
 import java.text.DecimalFormat;
@@ -22,6 +23,8 @@ public class PeerReviewAssignmentInterface {
     private final MongoCollection<Document> teamCollection;
     private final MongoCollection<Document> assignmentCollection;
     private final MongoCollection<Document> submissionsCollection;
+
+    private final MongoCollection<Document> professorCollection;
     MongoDatabase assignmentDB;
 
     public PeerReviewAssignmentInterface() {
@@ -32,6 +35,7 @@ public class PeerReviewAssignmentInterface {
             teamCollection = teamDB.getCollection("teams");
             assignmentCollection = assignmentDB.getCollection("assignments");
             submissionsCollection = assignmentDB.getCollection("submissions");
+            professorCollection = databaseManager.getProfessorDB().getCollection("professors");
         } catch (WebApplicationException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
         }
