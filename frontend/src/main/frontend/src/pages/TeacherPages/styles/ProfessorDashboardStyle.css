@@ -1,12 +1,14 @@
 .TeacherDashboard {
   display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
 .welcome-banner {
   display: flex;
   justify-content: left;
   flex-direction: column;
-  margin-left: 16px;
+  margin-left: 46px;
   padding-top: 2%;
 }
 
@@ -41,14 +43,10 @@ h1 {
 
 #teacher {
   background-color: white;
-  border-radius: 10px;
-  margin-top: 3%;
-  margin-bottom: 3%;
-  padding-right: 3%;
-  padding-left: 3%;
-  margin-right: 5%;
+  /*padding-right: 3%;*/
+  /*padding-left: 3%;*/
   flex-grow: 1;
-  height: 90vh;
+  height: 100%;
   width: 100vw;
 }
 
@@ -56,7 +54,7 @@ h1 {
   overflow-y: scroll;
   overflow-x: hidden;
   height: 55vh;
-  margin-top: 5px;
+  margin: 5px 30px 0 30px;
 }
 
 #proCourseList::-webkit-scrollbar {
@@ -80,7 +78,7 @@ h1 {
 
 #addClass {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   margin: 10px 0;
 }
@@ -109,6 +107,10 @@ h1 {
 
 .courseListItem:hover {
   transform: scale(1.02);
+}
+
+#create-button{
+  margin-right: 100px;
 }
 
 a {

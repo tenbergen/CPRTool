@@ -44,7 +44,7 @@ const ProfessorEditCourseComponent = () => {
           uploadCsv();
         } else {
           dispatch(getCourseDetailsAsync(res.data));
-          navigate('/details/professor/' + res.data);
+          navigate('/professor/' + res.data);
         }
       })
       .catch((e) => {
@@ -66,7 +66,7 @@ const ProfessorEditCourseComponent = () => {
         window.alert('Error uploading CSV. Please try again.');
       });
     dispatch(getCourseDetailsAsync(courseId));
-    navigate('/details/professor/' + courseId);
+    navigate('/professor/' + courseId);
   };
 
   const deleteCourse = async () => {
