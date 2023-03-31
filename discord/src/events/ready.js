@@ -38,11 +38,11 @@ module.exports = {
                 await rest.put(Routes.applicationCommands('665318329040371725'), { body: commands });
 
             } else {
-                await rest.put(Routes.applicationGuildCommands(client.user.id, process.env.SERVER_ID), { body: commands });
+                await rest.put(Routes.applicationGuildCommands(client.user.id, process.env.TESTING_GUILD), { body: commands });
             }
 
             const userCount = client.guilds.cache.reduce((users, guild) => users + guild.memberCount, 0);
-            logger.info(`Ready to serve ${userCount} in ${client.guilds.cache.size} servers! Logged in as ${client.user.tag}`);
+            logger.info(`Ready to serve ${userCount} users in ${client.guilds.cache.size} servers! Logged in as ${client.user.tag}`);
 
         } catch (err) {
             logger.error(err.stack);

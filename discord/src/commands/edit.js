@@ -73,6 +73,15 @@ module.exports = {
                 .setDescription('The name of the student to add'))
             .addStringOption(option => option
                 .setName('remove-student')
+                .setDescription('The name of the student to remove')))
+        .addSubcommand(subcommand => subcommand
+            .setName('course')
+            .setDescription('Edits a course')
+            .addStringOption(option => option
+                .setName('add-student')
+                .setDescription('The name of the student to add'))
+            .addStringOption(option => option
+                .setName('remove-student')
                 .setDescription('The name of the student to remove'))),
 
     /** @param {ChatInputCommandInteraction} interaction */
