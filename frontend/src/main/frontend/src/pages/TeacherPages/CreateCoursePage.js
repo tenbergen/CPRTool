@@ -41,8 +41,12 @@ const CreateCoursePage = () => {
       course_name === '' ||
       course_section === '' ||
       semester === '' ||
-      year === 0 ||
-      crn === 0
+      year === "" ||
+      crn === "" ||
+      parseInt(crn) <= 0 ||
+      parseInt(year) < parseInt(new Date().getFullYear().toString()) ||
+      isNaN(parseInt(crn)) ||
+      isNaN(parseInt(year))
     ) {
       alert("Fields can't be empty!");
     } else {
@@ -150,6 +154,8 @@ const CreateCoursePage = () => {
                     <label className='inter-20-medium'> CRN: </label>
                     <input
                       type='number'
+                      min="1"
+                      step='1'
                       name='crn'
                       value={crn}
                       required
