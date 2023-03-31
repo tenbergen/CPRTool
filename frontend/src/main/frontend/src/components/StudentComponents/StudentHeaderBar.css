@@ -4,7 +4,7 @@
     width: 100vw;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: left;
 }
 
 #logo{
@@ -13,12 +13,4 @@
     width: 47px;
     height: 46px;
     margin: 3px 0 0 28px;
-}
-
-#admin-button{
-    background-color: rgb(0,0,0,0);
-    background-image: url("../../assets/icons/Admin_Header.svg");
-    width: 29px;
-    height: 25px;
-    margin: 12px 40px 0 0;
 }

@@ -1,6 +1,5 @@
-import './_NavigationComponentStyle.css'
+import './_ProfessorNavigationComponents.css'
 import React, {forwardRef, useEffect, useImperativeHandle} from 'react';
-import CoursesTileComponent from "./CoursesTileComponent";
 
 const HomeTileComponent = ({trigger, deactivateTiles}) => {
 

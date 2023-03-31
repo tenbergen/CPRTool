@@ -4,6 +4,12 @@
   height: 100vh;
 }
 
+.create-course{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 .welcome-banner {
   display: flex;
   justify-content: left;

@@ -9,7 +9,7 @@ import ProfessorEditAssignmentComponent from '../../components/ProfessorComponen
 import { getAssignmentDetailsAsync } from '../../redux/features/assignmentSlice';
 import Loader from '../../components/LoaderComponenets/Loader';
 import uuid from 'react-uuid';
-import HeaderBar from "../../components/GlobalComponents/HeaderBar";
+import ProfessorHeaderBar from "../../components/ProfessorComponents/ProfessorHeaderBar";
 
 const AssComponent = ({ active, component, onClick }) => {
   return (
@@ -47,7 +47,7 @@ function ProfessorAssignmentPage() {
     <div>
       {currentCourseLoaded ? (
           <div className="page-container">
-            <HeaderBar/>
+            <ProfessorHeaderBar/>
             <div className='scp-parent'>
               <div className='scp-container'>
                 <GradeAssBarComponent />
