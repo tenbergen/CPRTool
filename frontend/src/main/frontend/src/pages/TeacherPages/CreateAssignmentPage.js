@@ -6,7 +6,7 @@ import axios from 'axios';
 import { Field, Form } from 'react-final-form';
 import CourseBarComponent from '../../components/CourseBarComponent';
 import Loader from '../../components/LoaderComponenets/Loader';
-import HeaderBar from "../../components/GlobalComponents/HeaderBar";
+import ProfessorHeaderBar from "../../components/ProfessorComponents/ProfessorHeaderBar";
 
 const profAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`;
 
@@ -120,7 +120,7 @@ const CreateAssignmentPage = () => {
         >
           {({ handleSubmit }) => (
             <div className="page-container">
-              <HeaderBar/>
+              <ProfessorHeaderBar/>
               <div className='pcp-parent'>
                 <div className='ccp-container'>
                   <CourseBarComponent title={'Courses'} />
