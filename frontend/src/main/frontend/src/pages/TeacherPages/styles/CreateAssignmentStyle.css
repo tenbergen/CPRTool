@@ -31,10 +31,16 @@
   border: 0.5px solid #212529;
 }
 
+.page-container{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
 .cap-form {
   border-radius: 5px;
   overflow-y: scroll;
-  height: 65vh;
+  height: 78vh;
 }
 
 .cap-form form {
