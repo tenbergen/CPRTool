@@ -4,10 +4,8 @@ import edu.oswego.cs.database.AssignmentInterface;
 import edu.oswego.cs.database.CourseInterface;
 import org.bson.Document;
 
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.ws.rs.core.SecurityContext;
@@ -450,18 +448,30 @@ public class EmailService {
      * @param body body of the email to be sent
      */
     public void sendEmail(String to, String subject, String body){
+        String from="cprtoolemail@gmail.com";
+        Properties prop = new Properties();
+        prop.put("mail.smtp.host", "smtp.gmail.com");
+        prop.put("mail.smtp.port", "465");
+        prop.put("mail.smtp.auth", "true");
+        prop.put("mail.smtp.socketFactory.port", "465");
+        prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        Session session = Session.getInstance(prop, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("cprtoolemail@gmail.com", "nxscmpuonighvnfp");
+            }
+        });
+
         try {
             Message msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress(from, "NoReply"));
             msg.addRecipient(Message.RecipientType.TO,
-                    new InternetAddress(to));
+                    new InternetAddress(to, "Fella"));
             msg.setSubject(subject);
             msg.setText(body);
             Transport.send(msg);
             System.out.println("Email sent successfully...");
         } catch (MessagingException | UnsupportedEncodingException e) {
-            System.out.println(e.getMessage());
-            System.out.println("Could not send an email to " + to);
+            throw new RuntimeException(e);
         }
     }
 
