@@ -7,13 +7,14 @@ import {
   getCombinedAssignmentPeerReviews,
 } from '../redux/features/assignmentSlice';
 import uuid from 'react-uuid';
+import LogoutButton from "./GlobalComponents/LogoutButton";
 
 const AssBarLink = ({ active, assignment, onClick }) => {
   const { role } = useSelector((state) => state.auth);
   const normalStyle = { backgroundColor: '#f6f6f6' };
   const clickedStyle = { backgroundColor: 'white' };
   const { courseId } = useParams();
-  const link = `/details/${role}/${courseId}`;
+  const link = `/${role}/${courseId}`;
 
   return (
     <Link
@@ -68,7 +69,7 @@ const AssBarComponent = () => {
   };
 
   // const onCourseClick = () => {
-  //   navigate(`/details/student/${courseId}`);
+  //   navigate(`/student/${courseId}`);
   // };
 
   return (
@@ -89,6 +90,7 @@ const AssBarComponent = () => {
             )
         )}
       </div>
+      <LogoutButton/>
     </div>
   );
 };

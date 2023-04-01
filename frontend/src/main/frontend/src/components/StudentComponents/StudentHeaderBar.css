@@ -1,0 +1,16 @@
+.headerBar{
+    background-color: #4a7dfc;
+    height: 52px;
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+}
+
+#logo{
+    background-color: rgb(0,0,0,0);
+    background-image: url("../../assets/icons/logo/CPR logo final-02.svg");
+    width: 47px;
+    height: 46px;
+    margin: 3px 0 0 28px;
+}

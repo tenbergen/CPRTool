@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './styles/CreateCourseStyle.css';
-import SidebarComponent from '../../components/SidebarComponent';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../../components/LoaderComponenets/Loader';
 import CourseBarComponent from '../../components/CourseBarComponent';
 import { useSelector } from 'react-redux';
 import Breadcrumbs from "../../components/Breadcrumbs";
+import ProfessorHeaderBar from "../../components/ProfessorComponents/ProfessorHeaderBar";
 
 const CreateCoursePage = () => {
   const submitCourseUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/create`;
@@ -41,8 +41,12 @@ const CreateCoursePage = () => {
       course_name === '' ||
       course_section === '' ||
       semester === '' ||
-      year === undefined ||
-      crn === undefined
+      year === "" ||
+      crn === "" ||
+      parseInt(crn) <= 0 ||
+      parseInt(year) < parseInt(new Date().getFullYear().toString()) ||
+      isNaN(parseInt(crn)) ||
+      isNaN(parseInt(year))
     ) {
       alert("Fields can't be empty!");
     } else {
@@ -75,101 +79,102 @@ const CreateCoursePage = () => {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className='pcp-parent'>
-          <SidebarComponent />
-          <div className='ccp-container'>
-            <CourseBarComponent title={`Hello, ${user_given_name}!`} />
-            <div className='pcp-components'>
-              <Breadcrumbs />
-              <h2 className='inter-28-bold cpp-title'> Add new course </h2>
-              <form className='ccp-form'>
-                <div className='input-field ccp-input-field'>
-                  <label className='inter-20-medium'> Course name: </label>
-                  <input
-                    type='text'
-                    name='course_name'
-                    value={course_name}
-                    required
-                    onChange={(e) => OnChange(e)}
-                  />
-                </div>
-
-                <div className='cpp-row-multiple'>
+          <div className="course-page-container">
+            <ProfessorHeaderBar/>
+            <div className='ccp-container'>
+              <CourseBarComponent title={`Hello, ${user_given_name}!`} />
+              <div className='pcp-components'>
+                <Breadcrumbs />
+                <h2 className='inter-28-bold cpp-title'> Add new course </h2>
+                <form className='ccp-form'>
                   <div className='input-field ccp-input-field'>
-                    <label className='inter-20-medium'> Course abbreviation: </label>
+                    <label className='inter-20-medium'> Course name: </label>
                     <input
-                      type='text'
-                      name='abbreviation'
-                      value={abbreviation}
-                      required
-                      onChange={(e) => OnChange(e)}
+                        type='text'
+                        name='course_name'
+                        value={course_name}
+                        required
+                        onChange={(e) => OnChange(e)}
                     />
                   </div>
 
-                  <div className='input-field ccp-input-field'>
-                    <label className='inter-20-medium'> Course section: </label>
-                    <input
-                      type='text'
-                      name='course_section'
-                      value={course_section}
-                      required
-                      onChange={(e) => OnChange(e)}
+                  <div className='cpp-row-multiple'>
+                    <div className='input-field ccp-input-field'>
+                      <label className='inter-20-medium'> Course abbreviation: </label>
+                      <input
+                          type='text'
+                          name='abbreviation'
+                          value={abbreviation}
+                          required
+                          onChange={(e) => OnChange(e)}
+                      />
+                    </div>
+
+                    <div className='input-field ccp-input-field'>
+                      <label className='inter-20-medium'> Course section: </label>
+                      <input
+                          type='text'
+                          name='course_section'
+                          value={course_section}
+                          required
+                          onChange={(e) => OnChange(e)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className='cpp-row-multiple'>
+                    <div className='input-field ccp-input-field'>
+                      <label className='inter-20-medium'> Semester: </label>
+                      <input
+                          type='text'
+                          name='semester'
+                          value={semester}
+                          required
+                          onChange={(e) => OnChange(e)}
+                      />
+                    </div>
+
+                    <div className='input-field ccp-input-field'>
+                      <label className='inter-20-medium'> Year: </label>
+                      <input
+                          type='number'
+                          min={new Date().getFullYear().toString()}
+                          step='1'
+                          name='year'
+                          value={year}
+                          required
+                          onChange={(e) => OnChange(e)}
+                          onWheel={(e) => e.target.blur()}
+                      />
+                    </div>
+                  </div>
+
+                  <div className='cpp-row-multiple'>
+                    <div className='input-field ccp-input-field'>
+                      <label className='inter-20-medium'> CRN: </label>
+                      <input
+                          type='number'
+                          name='crn'
+                          value={crn}
+                          required
+                          onChange={(e) => OnChange(e)}
+                          onWheel={(e) => e.target.blur()}
+                      />
+                    </div>
+                    <div className='input-field ccp-input-field' 
                     />
                   </div>
-                </div>
 
-                <div className='cpp-row-multiple'>
-                  <div className='input-field ccp-input-field'>
-                    <label className='inter-20-medium'> Semester: </label>
-                    <input
-                      type='text'
-                      name='semester'
-                      value={semester}
-                      required
-                      onChange={(e) => OnChange(e)}
-                    />
+                  <div className='ccp-button'>
+                    <button className='green-button-medium' onClick={handleSubmit}>
+                      {' '}
+                      Create
+                    </button>
                   </div>
-
-                  <div className='input-field ccp-input-field'>
-                    <label className='inter-20-medium'> Year: </label>
-                    <input
-                      type='number'
-                      min={new Date().getFullYear().toString()}
-                      step='1'
-                      name='year'
-                      value={year}
-                      required
-                      onChange={(e) => OnChange(e)}
-                      onWheel={(e) => e.target.blur()}
-                    />
-                  </div>
-                </div>
-
-                <div className='cpp-row-multiple'>
-                  <div className='input-field ccp-input-field'>
-                    <label className='inter-20-medium'> CRN: </label>
-                    <input
-                      type='number'
-                      name='crn'
-                      value={crn}
-                      required
-                      onChange={(e) => OnChange(e)}
-                      onWheel={(e) => e.target.blur()}
-                    />
-                  </div>
-                  <div className='input-field ccp-input-field' />
-                </div>
-
-                <div className='ccp-button'>
-                  <button className='green-button-medium' onClick={handleSubmit}>
-                    {' '}
-                    Create
-                  </button>
-                </div>
-              </form>
+                </form>
+              </div>
             </div>
           </div>
-        </div>
       )}
     </div>
   );

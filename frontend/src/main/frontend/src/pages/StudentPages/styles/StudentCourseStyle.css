@@ -1,3 +1,8 @@
+.page-container{
+  display: flex;
+  flex-direction: column;
+}
+
 .scp-parent {
   display: flex;
   flex-direction: row;
@@ -6,17 +11,14 @@
 }
 
 .scp-container {
-  border-radius: 10px;
-  margin: 3% 5% 3% 2%;
   flex-grow: 1;
   display: flex;
   flex-direction: row;
-  height: 90vh;
   width: 100vw;
+  height: 100vh;
 }
 
 .scp-component {
-  border-radius: 0 10px 10px 0;
   flex-grow: 1;
   padding: 2%;
   background-color: white;
