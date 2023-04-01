@@ -33,7 +33,7 @@ public class AuthServices {
         } catch (WebApplicationException e) {
             throw new CPRException(Response.Status.BAD_REQUEST, "Failed to retrieve collections.");
         }
-        new ProfessorCheck().addProfessors();
+//        new ProfessorCheck().addProfessors();
     }
 
     public Map<String, String> generateNewToken(String token) {

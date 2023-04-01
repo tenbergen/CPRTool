@@ -335,7 +335,7 @@ public ProfanitySettings getProfanitySettings() {
     assert ps != null;
     ArrayList<String> blockedWords = (ArrayList<String>) ps.get("blocked_words");
     ArrayList<String> allowedWords = (ArrayList<String>) ps.get("allowed_words");
-    return new ProfanitySettings(blockedWords, allowedWords);
+    return new ProfanitySettings((ArrayList<String>) blockedWords, (ArrayList<String>) allowedWords);
 }
 
     public Object getUsersView() {
