@@ -88,7 +88,11 @@ const CreateCoursePage = () => {
                 <h2 className='inter-28-bold cpp-title'> Add new course </h2>
                 <form className='ccp-form'>
                   <div className='input-field ccp-input-field'>
-                    <label className='inter-20-medium'> Course name: </label>
+                    <label className='inter-20-medium'>
+                      <span className='required'>
+                        Course name:
+                      </span>
+                    </label>
                     <input
                         type='text'
                         name='course_name'
@@ -100,7 +104,11 @@ const CreateCoursePage = () => {
 
                   <div className='cpp-row-multiple'>
                     <div className='input-field ccp-input-field'>
-                      <label className='inter-20-medium'> Course abbreviation: </label>
+                      <label className='inter-20-medium'>
+                        <span className='required'>
+                          Course abbreviation:
+                        </span>
+                      </label>
                       <input
                           type='text'
                           name='abbreviation'
@@ -111,7 +119,11 @@ const CreateCoursePage = () => {
                     </div>
 
                     <div className='input-field ccp-input-field'>
-                      <label className='inter-20-medium'> Course section: </label>
+                      <label className='inter-20-medium'>
+                        <span className='required'>
+                          Course section:
+                        </span>
+                      </label>
                       <input
                           type='text'
                           name='course_section'
@@ -124,7 +136,11 @@ const CreateCoursePage = () => {
 
                   <div className='cpp-row-multiple'>
                     <div className='input-field ccp-input-field'>
-                      <label className='inter-20-medium'> Semester: </label>
+                      <label className='inter-20-medium'>
+                        <span className='required'>
+                          Semester:
+                        </span>
+                      </label>
                       <input
                           type='text'
                           name='semester'
@@ -135,7 +151,11 @@ const CreateCoursePage = () => {
                     </div>
 
                     <div className='input-field ccp-input-field'>
-                      <label className='inter-20-medium'> Year: </label>
+                      <label className='inter-20-medium'>
+                        <span className='required'>
+                          Year:
+                        </span>
+                      </label>
                       <input
                           type='number'
                           min={new Date().getFullYear().toString()}
@@ -151,7 +171,11 @@ const CreateCoursePage = () => {
 
                   <div className='cpp-row-multiple'>
                     <div className='input-field ccp-input-field'>
-                      <label className='inter-20-medium'> CRN: </label>
+                      <label className='inter-20-medium'>
+                        <span className='required'>
+                          CRN:
+                        </span>
+                      </label>
                       <input
                           type='number'
                           name='crn'

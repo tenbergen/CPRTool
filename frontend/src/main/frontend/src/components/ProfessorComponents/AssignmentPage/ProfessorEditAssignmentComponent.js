@@ -8,6 +8,7 @@ import {
 import { useParams } from 'react-router-dom';
 import '../../styles/EditAssignmentStyle.css';
 import axios from 'axios';
+import '../../styles/RequiredField.css';
 
 const profAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`;
 
@@ -178,7 +179,9 @@ const ProfessorEditAssignmentComponent = () => {
         {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
             <div className='inter-16-medium-black eac-input-field'>
-              <label> Name of assignment: </label>
+              <label className="required">
+                Name of assignment:
+              </label>
               <Field name='assignment_name'>
                 {({ input }) => (
                   <input
@@ -192,7 +195,7 @@ const ProfessorEditAssignmentComponent = () => {
             </div>
 
             <div className='inter-16-medium-black eac-instructions'>
-              <label> Instructions: </label>
+              <label className="required"> Instructions: </label>
               <Field name='instructions'>
                 {({ input }) => (
                   <textarea name='instructions' {...input} required />
@@ -238,7 +241,7 @@ const ProfessorEditAssignmentComponent = () => {
             </div>
 
             <div className='inter-16-medium-black eac-assignment-info'>
-              <label> Due Date: </label>
+              <label className="required"> Due Date: </label>
               <Field name='due_date'>
                 {({ input }) => (
                   <input
@@ -251,7 +254,7 @@ const ProfessorEditAssignmentComponent = () => {
                 )}
               </Field>
 
-              <label> Points: </label>
+              <label className="required"> Points: </label>
               <Field name='points'>
                 {({ input }) => (
                   <input
@@ -266,7 +269,7 @@ const ProfessorEditAssignmentComponent = () => {
             </div>
 
             <div className='inter-16-medium-black eac-instructions'>
-              <label> Peer Review Instructions: </label>
+              <label className="required"> Peer Review Instructions: </label>
               <Field name='peer_review_instructions'>
                 {({ input }) => (
                   <textarea
@@ -370,7 +373,7 @@ const ProfessorEditAssignmentComponent = () => {
             </div>
 
             <div className='inter-16-medium-black eac-assignment-info'>
-              <label> Due Date: </label>
+              <label className="required"> Due Date: </label>
               <Field name='peer_review_due_date'>
                 {({ input }) => (
                   <input
@@ -383,7 +386,7 @@ const ProfessorEditAssignmentComponent = () => {
                 )}
               </Field>
 
-              <label> Points: </label>
+              <label className="required"> Points: </label>
               <Field name='peer_review_points'>
                 {({ input }) => (
                   <input

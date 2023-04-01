@@ -136,7 +136,11 @@ const CreateAssignmentPage = () => {
                           </div>
                           <div className='field-content'>
                             <div className='input-field cap-input-field'>
-                              <label className='inter-20-medium'> Name of assignment: </label>
+                              <label className='inter-20-medium'>
+                                <span className='required'>
+                                  Name of assignment:
+                                </span>
+                              </label>
                               <Field name='assignment_name'>
                                 {({ input }) => (
                                     <input
@@ -150,7 +154,11 @@ const CreateAssignmentPage = () => {
                             </div>
 
                             <div className='input-field cap-instructions'>
-                              <label className='inter-20-medium'> Instructions: </label>
+                              <label className='inter-20-medium'>
+                                <span className='required'>
+                                  Instructions:
+                                </span>
+                              </label>
                               <Field name='instructions'>
                                 {({ input }) => (
                                     <textarea
@@ -163,7 +171,11 @@ const CreateAssignmentPage = () => {
                             </div>
 
                             <div className='cap-assignment-files'>
-                              <label className='inter-20-medium'>Files:</label>
+                              <label className='inter-20-medium'>
+                                <span className='required'>
+                                  Files:
+                                </span>
+                              </label>
                               <input
                                   type='file'
                                   name='assignment_files'
@@ -176,7 +188,11 @@ const CreateAssignmentPage = () => {
                             </div>
 
                             <div className='input-field cap-assignment-info'>
-                              <label className='inter-20-medium'> Due Date: </label>
+                              <label className='inter-20-medium'>
+                                <span className='required'>
+                                  Due Date:
+                                </span>
+                              </label>
                               <Field name='due_date'>
                                 {({ input }) => (
                                     <input
@@ -189,7 +205,11 @@ const CreateAssignmentPage = () => {
                                 )}
                               </Field>
 
-                              <label className='inter-20-medium'> Points: </label>
+                              <label className='inter-20-medium'>
+                                <span className='required'>
+                                  Points:
+                                </span>
+                              </label>
                               <Field name='points'>
                                 {({ input }) => (
                                     <input
@@ -215,7 +235,9 @@ const CreateAssignmentPage = () => {
                             <div className='input-field cap-instructions'>
                               <label className='inter-20-medium'>
                                 {' '}
-                                Peer Review Instructions:{' '}
+                                <span className='required'>
+                                Peer Review Instructions:
+                                </span>{' '}
                               </label>
                               <Field name='peer_review_instructions'>
                                 {({ input }) => (
@@ -229,7 +251,11 @@ const CreateAssignmentPage = () => {
                             </div>
 
                             <div className='cap-assignment-files'>
-                              <label className='inter-20-medium'> Rubric: </label>
+                              <label className='inter-20-medium'>
+                                <span className='required'>
+                                  Rubric:
+                                </span>
+                              </label>
                               <input
                                   type='file'
                                   name='peer_review_rubric'
@@ -238,7 +264,11 @@ const CreateAssignmentPage = () => {
                                   onChange={(e) => fileChangeHandler(e, 'rubric')}
                               />
 
-                              <label className='inter-20-medium'> Template: </label>
+                              <label className='inter-20-medium'>
+                                <span className='required'>
+                                  Template:
+                                </span>
+                              </label>
                               <input
                                   type='file'
                                   name='peer_review_template'
@@ -249,7 +279,11 @@ const CreateAssignmentPage = () => {
                             </div>
 
                             <div className='input-field cap-assignment-info'>
-                              <label className='inter-20-medium'> Due Date: </label>
+                              <label className='inter-20-medium'>
+                                <span className='required'>
+                                  Due Date:
+                                </span>
+                              </label>
                               <Field name='peer_review_due_date'>
                                 {({ input }) => (
                                     <input
@@ -262,7 +296,11 @@ const CreateAssignmentPage = () => {
                                 )}
                               </Field>
 
-                              <label className='inter-20-medium'> Points: </label>
+                              <label className='inter-20-medium'>
+                                <span className='required'>
+                                  Points:
+                                </span>
+                              </label>
                               <Field name='peer_review_points'>
                                 {({ input }) => (
                                     <input
