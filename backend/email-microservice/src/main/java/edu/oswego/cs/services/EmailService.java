@@ -467,7 +467,7 @@ public class EmailService {
             msg.addRecipient(Message.RecipientType.TO,
                     new InternetAddress(to, "Fella"));
             msg.setSubject(subject);
-            msg.setText(body);
+            msg.setContent(body, "text/html");
             Transport.send(msg);
             System.out.println("Email sent successfully...");
         } catch (MessagingException | UnsupportedEncodingException e) {
