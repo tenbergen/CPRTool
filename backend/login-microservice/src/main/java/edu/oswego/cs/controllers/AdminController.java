@@ -178,13 +178,13 @@ public class AdminController {
         return Response.status(Response.Status.OK).entity(new AdminInterface().getProfanitySettings()).build();
     }
 
-    // Get Users View
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/views/users")
-    public Response getUsersView(@Context SecurityContext securityContext) {
-        return Response.status(Response.Status.OK).entity(new AdminInterface().getUsersView()).build();
-    }
+    // // Get Users View
+    // @GET
+    // @Produces(MediaType.APPLICATION_JSON)
+    // @Path("/views/users")
+    // public Response getUsersView(@Context SecurityContext securityContext) {
+    //     return Response.status(Response.Status.OK).entity(new AdminInterface().getUsersView()).build();
+    // }
 
     // Get Courses view
     @GET
