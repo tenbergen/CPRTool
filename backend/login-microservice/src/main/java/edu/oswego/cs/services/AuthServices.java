@@ -8,7 +8,6 @@ import com.ibm.websphere.security.jwt.JwtException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.database.DatabaseManager;
-import edu.oswego.cs.database.ProfessorCheck;
 import edu.oswego.cs.util.CPRException;
 import org.bson.Document;
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -33,7 +32,6 @@ public class AuthServices {
         } catch (WebApplicationException e) {
             throw new CPRException(Response.Status.BAD_REQUEST, "Failed to retrieve collections.");
         }
-//        new ProfessorCheck().addProfessors();
     }
 
     public Map<String, String> generateNewToken(String token) {
@@ -142,11 +140,11 @@ public class AuthServices {
 
     // Checks if professor database is empty
     // if so assign admin status to first professor
-    protected void CheckForDefaultAdmin(String userid, String first_name, String last_name) {
+    protected void CheckForDefaultAdmin(String user_id, String first_name, String last_name) {
         System.out.println("Checking for default admin");
         if (professorCollection.countDocuments() == 0) {
-            System.out.println("Adding default admin" + userid);
-            Document professor = new Document("professor_id", userid)
+            System.out.println("Adding default admin" + user_id);
+            Document professor = new Document("professor_id", user_id)
                     .append("admin", true)
                     .append("first_name", first_name)
                     .append("last_name", last_name);

@@ -11,7 +11,7 @@ import javax.ws.rs.core.SecurityContext;
 import java.io.IOException;
 
 @Path("/admin")
-// @RolesAllowed("admin")
+@RolesAllowed("admin")
 @Produces(MediaType.APPLICATION_JSON)
 public class AdminController {
 

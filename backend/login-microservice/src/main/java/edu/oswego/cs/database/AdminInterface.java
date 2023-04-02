@@ -15,10 +15,8 @@ import javax.ws.rs.core.Response;
 import java.util.*;
 
 import com.mongodb.client.model.Filters;
-import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.set;
-import com.mongodb.client.model.Updates;
 
 public class AdminInterface {
 
@@ -365,7 +363,6 @@ public class AdminInterface {
         FindIterable<Document> blockedWordsDocs = profanitySettings.find();
         for (Document doc : blockedWordsDocs) {
             String blockedWord = doc.getString("blocked_word");
-            // bypass nuls
             if (blockedWord == null) {
                 continue;
             }
