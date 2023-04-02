@@ -41,8 +41,12 @@ const CreateCoursePage = () => {
       course_name === '' ||
       course_section === '' ||
       semester === '' ||
-      year === 0 ||
-      crn === 0
+      year === "" ||
+      crn === "" ||
+      parseInt(crn) <= 0 ||
+      parseInt(year) < parseInt(new Date().getFullYear().toString()) ||
+      isNaN(parseInt(crn)) ||
+      isNaN(parseInt(year))
     ) {
       alert("Fields can't be empty!");
     } else {
@@ -157,7 +161,8 @@ const CreateCoursePage = () => {
                           onWheel={(e) => e.target.blur()}
                       />
                     </div>
-                    <div className='input-field ccp-input-field' />
+                    <div className='input-field ccp-input-field' 
+                    />
                   </div>
 
                   <div className='ccp-button'>
