@@ -135,6 +135,7 @@ public class AdminInterface {
     }
 
     public void addStudentUser(String firstName, String lastName, String user_id) {
+        System.out.println(user_id + " " + firstName + " " + lastName);
         if (checkAdmin(user_id)) {
             throw new CPRException(Response.Status.BAD_REQUEST,
                     "User exists as Admin, use Demote to Student instead.");
@@ -357,22 +358,21 @@ public ProfanitySettings getProfanitySettings() {
         return users;
     }
 
-    public Object getCoursesView() {
-        List<Course> courses = new ArrayList<Course>();
+    public List<Course> getCoursesView() {
+        List<Course> courses = new ArrayList<>();
+        // iterate through MongoDB courses and add to list
         for (Document course : courseCollection.find()) {
-            String professor_id = course.getString("professor_id");
-            String professorFirstName = Objects.requireNonNull(professorCollection.find(eq("professor_id", professor_id)).first()).getString("first_name");
-            String professorLastName = Objects.requireNonNull(professorCollection.find(eq("professor_id", professor_id)).first()).getString("last_name");
             Course c = new Course(
-                    course.getString("course_name"),
-                    course.getString("crn"),
-                    professorFirstName,
-                    professorLastName,
-                    course.getInteger("year"),
-                    course.getString("semester"));
-
+                course.getString("course_name"),
+                course.getString("crn"),
+                course.getString("professor"),
+                course.getInteger("year"),
+                course.getString("semester")
+            );
+            courses.add(c);
         }
-
         return courses;
     }
+    
+    
 }

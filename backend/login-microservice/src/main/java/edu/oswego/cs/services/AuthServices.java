@@ -45,7 +45,9 @@ public class AuthServices {
         Map<String, String> tokens = new HashMap<>();
 
         String lakerID = payload.getEmail().split("@")[0];
-        CheckForDefaultAdmin(lakerID);
+        CheckForDefaultAdmin(lakerID, payload.get("given_name").toString(), payload.get("family_name").toString());
+
+
         System.out.println("lakerID: " + lakerID);
         Set<String> roles = getRoles(lakerID);
 
@@ -93,7 +95,8 @@ public class AuthServices {
         Map<String, String> tokens = new HashMap<>();
 
         String lakerID = payload.getName().split("@")[0];
-        CheckForDefaultAdmin(lakerID);
+
+        // CheckForDefaultAdmin(lakerID, payload.getClaim(), payload.getLastname());
         Set<String> roles = getRoles(lakerID);
 
         try {
@@ -139,12 +142,15 @@ public class AuthServices {
 
     // Checks if professor database is empty
     // if so assign admin status to first professor
-    protected void CheckForDefaultAdmin(String userid) {
+    protected void CheckForDefaultAdmin(String userid, String first_name, String last_name) {
+        System.out.println("Checking for default admin");
         if (professorCollection.countDocuments() == 0) {
+            System.out.println("Adding default admin" + userid);
             Document professor = new Document("professor_id", userid)
-                    .append("admin", true);
+                    .append("admin", true)
+                    .append("first_name", first_name)
+                    .append("last_name", last_name);
             professorCollection.insertOne(professor);
         }
     }
-
 }

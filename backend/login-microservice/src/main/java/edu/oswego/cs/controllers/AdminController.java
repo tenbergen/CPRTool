@@ -11,7 +11,7 @@ import javax.ws.rs.core.SecurityContext;
 import java.io.IOException;
 
 @Path("/admin")
-@RolesAllowed("admin")
+// @RolesAllowed("admin")
 @Produces(MediaType.APPLICATION_JSON)
 public class AdminController {
 
@@ -59,6 +59,7 @@ public class AdminController {
     @Path("/add/student/{user_id}/{first_name}/{last_name}")
     public Response addStudentUser(@Context SecurityContext securityContext, @PathParam("user_id") String userId,
             @PathParam("first_name") String firstName, @PathParam("last_name") String lastName) {
+        System.out.println("Adding student user");
         new AdminInterface(userId).addStudentUser(firstName, lastName, userId);
         return Response.status(Response.Status.OK).entity("Student user added.").build();
     }
