@@ -48,7 +48,6 @@ function ProfessorDashboardPage() {
             </button>
           </div>
         </div>
-
         <div id="proCourseList">
           {courses.map(
               (course) =>
