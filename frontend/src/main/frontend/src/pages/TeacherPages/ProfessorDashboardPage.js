@@ -34,64 +34,49 @@ function ProfessorDashboardPage() {
   };
 
   return (
-    <div>
-      {!coursesLoaded ? (
-        <Loader />
-      ) : courses.length < 1 ? (
-        navigate("/create")
-      ) : (
-        <div className={"TeacherDashboard"}>
-          <ProfessorHeaderBar/>
-          <div id="teacher">
-            <div className="welcome-banner">
-              <h1 className="inter-36-bold" id="welcome-message">
-                Hello, {user}!
-              </h1>
-              <div className="views">
-                <button
-                  className="blue-button-large student-view"
-                  onClick={studentView}
-                >
-                  Student View
-                </button>
-              </div>
-            </div>
-
-            <div id="proCourseList">
-              {courses.map(
-                (course) =>
+      <div id="teacher">
+        <div className="welcome-banner">
+          <h1 className="inter-36-bold" id="welcome-message">
+            Hello, {user}!
+          </h1>
+          <div className="views">
+            <button
+                className="blue-button-large student-view"
+                onClick={studentView}
+            >
+              Student View
+            </button>
+          </div>
+        </div>
+        <div id="proCourseList">
+          {courses.map(
+              (course) =>
                   course && (
-                    <Link
-                      key={uuid()}
-                      to={"/professor/" + course.course_id}
-                      onClick={() => onCourseClick(course)}
-                    >
-                      <li className="courseListItem">
+                      <Link
+                          key={uuid()}
+                          to={"/professor/" + course.course_id}
+                          onClick={() => onCourseClick(course)}
+                      >
+                        <li className="courseListItem">
                         <span className="inter-20-extralight pdp-coursename">
                           {course.course_id}
                         </span>
-                        <span className="inter-24-bold">{course.course_name}</span>
-                      </li>
-                    </Link>
+                          <span className="inter-24-bold">{course.course_name}</span>
+                        </li>
+                      </Link>
                   )
-              )}
-            </div>
-            <div className="logout-out-and-create-course">
-              <LogoutButton/>
-              <div id="addClass">
-                <Link to="/create">
-                  <button className="green-button-large">
-                    Create new course
-                  </button>
-                </Link>
-              </div>
-              <div/>
-            </div>
-
+          )}
+        </div>
+        <div className="create-course">
+          <div id="addClass">
+            <Link to="/create">
+              <button className="green-button-large">
+                Create new course
+              </button>
+            </Link>
           </div>
         </div>
-      )}
-    </div>
+      </div>
   );
 }
 
