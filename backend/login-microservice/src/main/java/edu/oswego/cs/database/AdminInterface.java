@@ -381,8 +381,6 @@ public class AdminInterface {
             allowedWordsList.add(allowedWord);
         }
 
-        // Collections.sort(blockedWordsList);
-        // Collections.sort(allowedWordsList);
         return new ProfanitySettings(blockedWordsList, allowedWordsList);
     }
 
@@ -401,6 +399,26 @@ public class AdminInterface {
             courses.add(c);
         }
         return courses;
+    }
+
+
+    public Object getUsersView() {
+        List<User> users = new ArrayList<User>();
+        // iterate though mongodb users and add to list
+        for (Document user : studentCollection.find()) {
+            User u = new User(user.getString("student_id"), "student",user.getString("first_name"), user.getString("last_name"));
+            users.add(u);
+        }
+
+        for (Document user : professorCollection.find()) {
+            User u = new User(user.getString("professor_id"), "professor",user.getString("first_name"), user.getString("last_name"));
+            if (user.getBoolean("admin")) {  // if is true override role to admin
+                u.setRole("admin");
+            }
+            users.add(u);
+        }
+
+        return users;
     }
     
     
