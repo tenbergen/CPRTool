@@ -10,7 +10,7 @@ const AssignmentTile = ({ assignment, submitted }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const title =
-    assignment.assignment_type === 'peer-review' ? 'Peer Review' : 'Assignment';
+    assignment.assignment_type === 'peer-review' ? 'Peer Review' : 'Assignment Details';
 
   const { role } = useSelector((state) => state.auth);
   const { currentTeamId } = useSelector((state) => state.teams);
@@ -81,9 +81,9 @@ const AssignmentTile = ({ assignment, submitted }) => {
           {' '}
           <span> {title} </span>
         </div>
-        <div className='ass-tile-content'>
-          <div className='ass-tile-info' onClick={onTileClick}>
-            <span className='inter-20-medium'>
+        <div className='ass-tile-content' onClick={onTileClick}>
+          <div className='ass-tile-info' >
+            <span className='inter-24-bold'>
               {submitted ? (
                 role === 'professor' ? (
                   <span>
