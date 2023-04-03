@@ -6,6 +6,7 @@ import org.bson.Document;
 
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
+import javax.ejb.Startup;
 import java.io.IOException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -22,6 +23,7 @@ import java.util.List;
  * time changes.
  */
 @Singleton
+@Startup
 public class DeadlineTracker{
     private static List<Document> assignments; //list of assignment IDs whose deadline is yet to pass
     private static List<Document> reviews; //list of assignment IDs whose peer review deadline is yet to pass
