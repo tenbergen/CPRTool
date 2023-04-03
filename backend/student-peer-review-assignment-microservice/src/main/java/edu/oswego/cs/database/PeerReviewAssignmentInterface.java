@@ -13,6 +13,7 @@ import javax.ws.rs.core.SecurityContext;
 import java.io.*;
 import java.util.*;
 import java.text.DecimalFormat;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
@@ -25,6 +26,8 @@ public class PeerReviewAssignmentInterface {
     private final MongoCollection<Document> submissionsCollection;
 
     private final MongoCollection<Document> professorCollection;
+
+    static ConcurrentHashMap<String, Boolean> peerReviewLock = new ConcurrentHashMap<String, Boolean>();
     MongoDatabase assignmentDB;
 
     public PeerReviewAssignmentInterface() {
@@ -74,9 +77,19 @@ public class PeerReviewAssignmentInterface {
                 .append("reviewed_team_members", reviewedTeam.getList("team_members", String.class))
                 .append("type", "peer_review_submission")
                 .append("grade", grade);
+
+        //wait for the lock to be dropped.
+        //key is assignment_id+reviewed_by_team_id+reviewed_team+"peer_review_submission"
+        while(peerReviewLock.containsKey(assignment_id+reviewedByTeam.getString("team_id")+reviewedTeam.getString("team_id")+"peer_review_submission"));
+        //lock the submission
+        peerReviewLock.put(assignment_id+reviewedByTeam.getString("team_id")+reviewedTeam.getString("team_id")+"peer_review_submission", true);
         if (submissionsCollection.find(new_submission).iterator().hasNext()) {
+            //let go of the lock
+            peerReviewLock.remove(assignment_id+reviewedByTeam.getString("team_id")+reviewedTeam.getString("team_id")+"peer_review_submission");
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("submission already exists").build());
         } else submissionsCollection.insertOne(new_submission);
+        //remove the lock
+        peerReviewLock.remove(assignment_id+reviewedByTeam.getString("team_id")+reviewedTeam.getString("team_id")+"peer_review_submission");
 
         // Store reviewed_team_members and teams in "teams" collection
         teamCollection.updateOne(

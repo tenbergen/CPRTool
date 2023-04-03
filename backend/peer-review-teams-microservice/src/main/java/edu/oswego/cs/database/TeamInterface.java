@@ -25,7 +25,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 
 public class TeamInterface {
@@ -33,15 +35,19 @@ public class TeamInterface {
     private final MongoCollection<Document> studentCollection;
     private final MongoCollection<Document> teamCollection;
 
+    private final MongoCollection<Document> submissionCollection;
+
     public TeamInterface() {
         DatabaseManager databaseManager = new DatabaseManager();
         try {
             MongoDatabase studentDB = databaseManager.getStudentDB();
             MongoDatabase courseDB = databaseManager.getCourseDB();
             MongoDatabase teamDB = databaseManager.getTeamDB();
+            MongoDatabase assignmentDB = databaseManager.getAssignmentDB();
             studentCollection = studentDB.getCollection("students");
             courseCollection = courseDB.getCollection("courses");
             teamCollection = teamDB.getCollection("teams");
+            submissionCollection = assignmentDB.getCollection("submissions");
         } catch (CPRException e) {
             throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to retrieve collections.");
         }
@@ -124,7 +130,7 @@ public class TeamInterface {
             if (!new SecurityService().isStudentInThisTeam(teamCollection, teamID, userID, courseID))
                 throw new CPRException(Response.Status.FORBIDDEN, "Principal User is not in this team.");
 
-        Bson teamDocumentFilter = Filters.and(eq("team_id", teamID), eq("course_id", courseID));
+        Bson teamDocumentFilter = and(eq("team_id", teamID), eq("course_id", courseID));
         return teamCollection.find(teamDocumentFilter).first();
     }
 
@@ -146,7 +152,7 @@ public class TeamInterface {
         new IdentifyingService().identifyingProfessorAsStudentService(securityContext, courseCollection, request.getCourseID());
         new SecurityService().joinTeamSecurity(securityContext, teamCollection, courseDocument, request);
 
-        Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
+        Bson teamDocumentFilter = and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         Document teamDocument = teamCollection.find(teamDocumentFilter).first();
 
         List<String> teamMembers = teamDocument.getList("team_members", String.class);
@@ -156,6 +162,31 @@ public class TeamInterface {
             teamUpdates = Updates.combine(teamUpdates, Updates.set("team_full", true));
         UpdateOptions teamOptions = new UpdateOptions().upsert(true);
         teamCollection.updateOne(teamDocumentFilter, teamUpdates, teamOptions);
+        //now add the student's user id to all submissions the new team has made for the current course
+
+        //first get the regular assignments and modify them
+        for (Document currentSubmission : submissionCollection.find(and(eq("type", "team_submission"), eq("course_id", request.getCourseID()), eq("team_name", request.getTeamID())))) {
+            //modify currentSubmission's members array to include the new member's ID
+            currentSubmission.replace("members", currentSubmission.get("members"), currentSubmission.getList("members", String.class).add(request.getStudentID()));
+            submissionCollection.updateOne(Objects.requireNonNull(submissionCollection.find(and(eq("assignment_id", currentSubmission.get("assignment_id")), eq("type", "team_submission"))).first()), currentSubmission);
+        }
+
+
+        //now get and modify peer reviews that the team submitted
+        for (Document currentSubmission : submissionCollection.find(and(eq("type", "peer_review_submission"), eq("course_id", request.getCourseID()), eq("reviewed_by", request.getTeamID())))) {
+            //modify currentSubmission's members array to include the new member's ID
+            currentSubmission.replace("reviewed_by_members", currentSubmission.get("reviewed_by_members"), currentSubmission.getList("reviewed_by_members", String.class).add(request.getStudentID()));
+            submissionCollection.updateOne(Objects.requireNonNull(submissionCollection.find(and(eq("assignment_id", currentSubmission.get("assignment_id")), eq("type", "peer_review_submission"), eq("reviewed_team", currentSubmission.get("reviewed_team")), eq("reviewed_by", currentSubmission.get("reviewed_by")))).first()), currentSubmission);
+        }
+
+
+        //now get and modify peer reviews that the team received
+        for (Document currentSubmission : submissionCollection.find(and(eq("type", "peer_review_submission"), eq("course_id", request.getCourseID()), eq("reviewed_team", request.getTeamID())))) {
+            //modify currentSubmission's members array to include the new member's ID
+            currentSubmission.replace("reviewed_team_members", currentSubmission.get("reviewed_team_members"), currentSubmission.getList("reviewed_team_members", String.class).add(request.getStudentID()));
+            submissionCollection.updateOne(Objects.requireNonNull(submissionCollection.find(and(eq("assignment_id", currentSubmission.get("assignment_id")), eq("type", "peer_review_submission"), eq("reviewed_team", currentSubmission.get("reviewed_team")), eq("reviewed_by", currentSubmission.get("reviewed_by")))).first()), currentSubmission);
+        }
+
     }
 
     /* Deprecated */
@@ -164,7 +195,7 @@ public class TeamInterface {
         if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Course not found.");
         new SecurityService().switchTeamSecurity(teamCollection, courseDocument, request);
 
-        Bson currentTeamDocumentFilter = Filters.and(eq("team_id", request.getCurrentTeamID()), eq("course_id", request.getCourseID()));
+        Bson currentTeamDocumentFilter = and(eq("team_id", request.getCurrentTeamID()), eq("course_id", request.getCourseID()));
         Document currentTeamDocument = teamCollection.find(currentTeamDocumentFilter).first();
         if (currentTeamDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Team not found.");
 
@@ -187,7 +218,7 @@ public class TeamInterface {
             teamCollection.updateOne(currentTeamDocumentFilter, currentTeamUpdates, currentTeamOptions);
         }
 
-        Bson targetTeamDocumentFilter = Filters.and(eq("team_id", request.getTargetTeamID()), eq("course_id", request.getCourseID()));
+        Bson targetTeamDocumentFilter = and(eq("team_id", request.getTargetTeamID()), eq("course_id", request.getCourseID()));
         Document targetTeamDocument = teamCollection.find(targetTeamDocumentFilter).first();
         if (targetTeamDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Team not found.");
 
@@ -207,7 +238,7 @@ public class TeamInterface {
         if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Course not found.");
         new SecurityService().giveUpTeamLeadSecurity(teamCollection, courseDocument, request);
 
-        Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
+        Bson teamDocumentFilter = and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         Document teamDocument = teamCollection.find(teamDocumentFilter).first();
         if (teamDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Team not found.");
 
@@ -234,7 +265,7 @@ public class TeamInterface {
         if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Course not found.");
         new SecurityService().nominateTeamLeadSecurity(teamCollection, courseDocument, request);
 
-        Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
+        Bson teamDocumentFilter = and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         Document teamDocument = teamCollection.find(teamDocumentFilter).first();
         if (teamDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Team not found.");
 
@@ -263,7 +294,7 @@ public class TeamInterface {
         if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Course not found.");
         new SecurityService().memberConfirmToggleSecurity(teamCollection, courseDocument, request);
 
-        Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
+        Bson teamDocumentFilter = and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         Document teamDocument = teamCollection.find(teamDocumentFilter).first();
         List<String> teamConfirmedMembers = teamDocument.getList("team_confirmed_members", String.class);
 
@@ -281,7 +312,7 @@ public class TeamInterface {
         if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Course not found.");
         new SecurityService().generateTeamNameSecurity(securityContext, teamCollection, courseDocument, request);
 
-        Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
+        Bson teamDocumentFilter = and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         Bson teamNameUpdates = Updates.combine(
                 Updates.set("team_id", request.getTeamName()),
                 Updates.set("team_lock", true));
@@ -295,7 +326,7 @@ public class TeamInterface {
         new IdentifyingService().identifyingProfessorService(securityContext, courseCollection, request.getCourseID());
         new SecurityService().removeTeamMemberSecurity(teamCollection, courseDocument, request);
 
-        Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
+        Bson teamDocumentFilter = and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         Document teamDocument = teamCollection.find(teamDocumentFilter).first();
         if (teamDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Team not found.");
 
@@ -320,7 +351,7 @@ public class TeamInterface {
         if (!new SecurityService().isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
             throw new CPRException(Response.Status.NOT_FOUND, "Team not found.");
 
-        Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
+        Bson teamDocumentFilter = and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         Document teamDocument = teamCollection.find(teamDocumentFilter).first();
         if (teamDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Team not found.");
 
@@ -342,7 +373,7 @@ public class TeamInterface {
         if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Course not found.");
         new SecurityService().editTeamNameSecurity(teamCollection, request);
 
-        Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
+        Bson teamDocumentFilter = and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         Bson editTeamNameUpdates = Updates.combine(
                 Updates.set("team_id", request.getTeamName()),
                 Updates.set("team_lock", true)
@@ -362,7 +393,7 @@ public class TeamInterface {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Course not found.");
         new SecurityService().editTeamSizeSecurity(teamCollection, request);
-        Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
+        Bson teamDocumentFilter = and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         Bson editTeamSizeUpdates = Updates.set("team_size", request.getTeamSize());
         teamCollection.updateOne(teamDocumentFilter, editTeamSizeUpdates);
     }
@@ -372,7 +403,7 @@ public class TeamInterface {
         if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Course not found.");
         new SecurityService().assignTeamLeadSecurity(teamCollection, courseDocument, request);
 
-        Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
+        Bson teamDocumentFilter = and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         Document teamDocument = teamCollection.find(teamDocumentFilter).first();
         if (teamDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Team not found.");
 
@@ -401,7 +432,7 @@ public class TeamInterface {
         new IdentifyingService().identifyingProfessorService(securityContext, courseCollection, request.getCourseID());
         if (!new SecurityService().isTeamCreated(teamCollection, request.getTeamID(), request.getCourseID()))
             throw new CPRException(Response.Status.NOT_FOUND, "Team not found.");
-        Bson teamDocumentFilter = Filters.and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
+        Bson teamDocumentFilter = and(eq("team_id", request.getTeamID()), eq("course_id", request.getCourseID()));
         teamCollection.deleteOne(teamDocumentFilter);
     }
 
