@@ -167,24 +167,34 @@ public class TeamInterface {
         //first get the regular assignments and modify them
         for (Document currentSubmission : submissionCollection.find(and(eq("type", "team_submission"), eq("course_id", request.getCourseID()), eq("team_name", request.getTeamID())))) {
             //modify currentSubmission's members array to include the new member's ID
-            currentSubmission.replace("members", currentSubmission.get("members"), currentSubmission.getList("members", String.class).add(request.getStudentID()));
-            submissionCollection.updateOne(Objects.requireNonNull(submissionCollection.find(and(eq("assignment_id", currentSubmission.get("assignment_id")), eq("type", "team_submission"))).first()), currentSubmission);
+            List<String> curMembers = currentSubmission.getList("members", String.class);
+            curMembers.add(request.getStudentID());
+            Bson submissionUpdate = Updates.set("members", curMembers);
+            UpdateOptions submissionOptions = new UpdateOptions().upsert(true);
+            submissionCollection.updateOne(submissionCollection.find(and(eq("assignment_id", currentSubmission.get("assignment_id")), eq("type", "team_submission"), eq("team_name", currentSubmission.get("team_name")))).first(), submissionUpdate, submissionOptions);
+
         }
 
 
         //now get and modify peer reviews that the team submitted
         for (Document currentSubmission : submissionCollection.find(and(eq("type", "peer_review_submission"), eq("course_id", request.getCourseID()), eq("reviewed_by", request.getTeamID())))) {
             //modify currentSubmission's members array to include the new member's ID
-            currentSubmission.replace("reviewed_by_members", currentSubmission.get("reviewed_by_members"), currentSubmission.getList("reviewed_by_members", String.class).add(request.getStudentID()));
-            submissionCollection.updateOne(Objects.requireNonNull(submissionCollection.find(and(eq("assignment_id", currentSubmission.get("assignment_id")), eq("type", "peer_review_submission"), eq("reviewed_team", currentSubmission.get("reviewed_team")), eq("reviewed_by", currentSubmission.get("reviewed_by")))).first()), currentSubmission);
+            List<String> curMembers = currentSubmission.getList("reviewed_by_members", String.class);
+            curMembers.add(request.getStudentID());
+            Bson submissionUpdate = Updates.set("reviewed_by_members", curMembers);
+            UpdateOptions submissionOptions = new UpdateOptions().upsert(true);
+            submissionCollection.updateOne(Objects.requireNonNull(submissionCollection.find(and(eq("assignment_id", currentSubmission.get("assignment_id")), eq("type", "peer_review_submission"), eq("reviewed_team", currentSubmission.get("reviewed_team")), eq("reviewed_by", currentSubmission.get("reviewed_by")))).first()), submissionUpdate, submissionOptions);
         }
 
 
         //now get and modify peer reviews that the team received
         for (Document currentSubmission : submissionCollection.find(and(eq("type", "peer_review_submission"), eq("course_id", request.getCourseID()), eq("reviewed_team", request.getTeamID())))) {
             //modify currentSubmission's members array to include the new member's ID
-            currentSubmission.replace("reviewed_team_members", currentSubmission.get("reviewed_team_members"), currentSubmission.getList("reviewed_team_members", String.class).add(request.getStudentID()));
-            submissionCollection.updateOne(Objects.requireNonNull(submissionCollection.find(and(eq("assignment_id", currentSubmission.get("assignment_id")), eq("type", "peer_review_submission"), eq("reviewed_team", currentSubmission.get("reviewed_team")), eq("reviewed_by", currentSubmission.get("reviewed_by")))).first()), currentSubmission);
+            List<String> curMembers = currentSubmission.getList("reviewed_team_members", String.class);
+            curMembers.add(request.getStudentID());
+            Bson submissionUpdate = Updates.set("reviewed_team_members", curMembers);
+            UpdateOptions submissionOptions = new UpdateOptions().upsert(true);
+            submissionCollection.updateOne(Objects.requireNonNull(submissionCollection.find(and(eq("assignment_id", currentSubmission.get("assignment_id")), eq("type", "peer_review_submission"), eq("reviewed_team", currentSubmission.get("reviewed_team")), eq("reviewed_by", currentSubmission.get("reviewed_by")))).first()), submissionUpdate, submissionOptions);
         }
 
     }
