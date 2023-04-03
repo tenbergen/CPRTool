@@ -5,10 +5,10 @@ import edu.oswego.cs.services.EmailService;
 import org.bson.Document;
 
 import javax.ejb.Schedule;
-import javax.ejb.Stateless;
 import java.io.IOException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +29,8 @@ public class DeadlineTracker{
      */
     public void init(){
         List<Document> allAssignments = new AssignmentInterface().getAllAssignments();
+        assignments = new ArrayList<>();
+        reviews = new ArrayList<>();
         for(Document a : allAssignments){
             if(new SimpleDateFormat("yyyy-MM-dd").parse(a.getString("due_date"), new ParsePosition(0)).getTime()
                     > new Date().getTime()){
