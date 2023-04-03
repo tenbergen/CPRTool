@@ -10,11 +10,13 @@ import java.util.ArrayList;
 @Getter
 @Setter
 public class ProfanitySettings {
-    ArrayList<String> blockedWords;
-    ArrayList<String> acceptedWords;
+    private ArrayList<String> words;
 
-    public ProfanitySettings(ArrayList<String> blockedWords, ArrayList<String> acceptedWords) {
-        this.blockedWords = new ArrayList<>(blockedWords);
-        this.acceptedWords = new ArrayList<>(acceptedWords);
+    public ArrayList<String> getWords() {
+        return words;
+    }
+
+    public void setWords(ArrayList<String> words) {
+        this.words = words;
     }
 }

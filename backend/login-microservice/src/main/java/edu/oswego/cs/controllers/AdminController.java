@@ -1,6 +1,7 @@
 package edu.oswego.cs.controllers;
 
 import edu.oswego.cs.database.AdminInterface;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
@@ -145,37 +146,11 @@ public class AdminController {
     // Add Blocked Word
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/profanity/add/blocked/{word}")
-    public Response addBlockedWord(@Context SecurityContext securityContext, @PathParam("word") String word) throws Exception {
-        new AdminInterface().addBlockedWord(word);
-        return Response.status(Response.Status.OK).entity("Blocked word added.").build();
-    }
-
-    // Delete Blocked Word
-    @DELETE
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/profanity/delete/blocked/{word}")
-    public Response deleteBlockedWord(@Context SecurityContext securityContext, @PathParam("word") String word) throws Exception {
-        new AdminInterface().deleteBlockedWord(word);
-        return Response.status(Response.Status.OK).entity("Blocked word deleted.").build();
-    }
-
-    // Add Allowed Word
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/profanity/add/allowed/{word}")
-    public Response addAllowedWord(@Context SecurityContext securityContext, @PathParam("word") String word) throws Exception {
-        new AdminInterface().addAllowedWord(word);
-        return Response.status(Response.Status.OK).entity("Allowed word added.").build();
-    }
-
-    // Remove Allowed Word
-    @DELETE
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/profanity/delete/allowed/{word}")
-    public Response deleteAllowedWord(@Context SecurityContext securityContext, @PathParam("word") String word) throws Exception {
-        new AdminInterface().deleteAllowedWord(word);
-        return Response.status(Response.Status.OK).entity("Allowed word deleted.").build();
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/profanity/update")
+    public Response updateBlockedWords(@Context SecurityContext securityContext, @RequestBody String payload) throws Exception {
+        new AdminInterface().updateBlockedWords(payload);
+        return Response.status(Response.Status.OK).entity("Profanity settings updated.").build();
     }
 
     // Get Profanity Settings View

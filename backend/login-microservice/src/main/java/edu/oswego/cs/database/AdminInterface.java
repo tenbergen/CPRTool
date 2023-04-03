@@ -4,15 +4,16 @@ import edu.oswego.cs.dao.Course;
 import edu.oswego.cs.dao.ProfanitySettings;
 import edu.oswego.cs.dao.User;
 
-import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.util.CPRException;
 
+   import java.util.List;
+import java.util.ArrayList;
+import com.google.gson.Gson;
 import org.bson.Document;
 
 import javax.ws.rs.core.Response;
-import java.util.*;
 
 import com.mongodb.client.model.Filters;
 import static com.mongodb.client.model.Filters.eq;
@@ -363,29 +364,12 @@ public class AdminInterface {
 
 
     public ProfanitySettings getProfanitySettings() {
-        // Initialize empty lists for blocked words and allowed words
-        ArrayList<String> blockedWordsList = new ArrayList<>();
-        ArrayList<String> allowedWordsList = new ArrayList<>();
-        // Find all documents in blocked_words collection and add words to blockedWordsList
-        FindIterable<Document> blockedWordsDocs = profanitySettings.find();
-        for (Document doc : blockedWordsDocs) {
-            String blockedWord = doc.getString("blocked_word");
-            if (blockedWord == null) {
-                continue;
-            }
-            blockedWordsList.add(blockedWord);
-        }
-        // Find all documents in allowed_words collection and add words to allowedWordsList
-        FindIterable<Document> allowedWordsDocs = profanitySettings.find();
-        for (Document doc : allowedWordsDocs) {
-            String allowedWord = doc.getString("allowed_word");
-            if (allowedWord == null) {
-                continue;
-            }
-            allowedWordsList.add(allowedWord);
-        }
-
-        return new ProfanitySettings(blockedWordsList, allowedWordsList);
+       Document profanitySettingsDocument = profanitySettings.find().first();
+        assert profanitySettingsDocument != null;
+        ArrayList<String> blockedWords = profanitySettingsDocument.get("words", ArrayList.class);
+        ProfanitySettings profanitySettings = new ProfanitySettings();
+        profanitySettings.setWords(blockedWords);
+        return profanitySettings;
     }
 
 
@@ -433,5 +417,28 @@ public class AdminInterface {
         }
         return true;
     }
-    
+
+public String getBlockedWords() {
+    // Find the first document in the collection
+    Document profanitySettingsDocument = profanitySettings.find().first();
+
+    // Extract the blocked words from the document
+    List<String> blockedWords = profanitySettingsDocument.getList("words", String.class);
+
+    // Convert the List<String> to a JSON string using Gson
+    Gson gson = new Gson();
+
+    return gson.toJson(blockedWords);
+}
+
+public void updateBlockedWords(String jsonBlockedWords) {
+    // Convert the JSON string to a List<String> using Gson
+    Gson gson = new Gson();
+    List<String> blockedWords = gson.fromJson(jsonBlockedWords, List.class);
+
+    // Replace the blocked words in the collection with the new list
+    Document updateDocument = new Document("$set", new Document("words", blockedWords));
+    profanitySettings.updateOne(new Document(), updateDocument);
+}
+
 }
