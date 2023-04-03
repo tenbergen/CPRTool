@@ -5,6 +5,7 @@ import edu.oswego.cs.services.EmailService;
 import org.bson.Document;
 
 import javax.ejb.Schedule;
+import javax.ejb.Stateless;
 import java.io.IOException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -19,6 +20,7 @@ import java.util.List;
  * To test methods called by DeadlineTracker on a local build, you can change your computer time to simulate
  * time changes.
  */
+@Stateless
 public class DeadlineTracker{
     private static List<Document> assignments; //list of assignment IDs whose deadline is yet to pass
     private static List<Document> reviews; //list of assignment IDs whose peer review deadline is yet to pass
