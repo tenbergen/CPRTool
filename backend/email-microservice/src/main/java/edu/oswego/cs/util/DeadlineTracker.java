@@ -4,6 +4,7 @@ import edu.oswego.cs.database.AssignmentInterface;
 import edu.oswego.cs.services.EmailService;
 import org.bson.Document;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -31,6 +32,7 @@ public class DeadlineTracker{
     /**
      * Goes through every assignment in the database and adds the ones with future deadlines to the lists
      */
+    @PostConstruct
     public void init(){
         List<Document> allAssignments = new AssignmentInterface().getAllAssignments();
         assignments = new ArrayList<>();
