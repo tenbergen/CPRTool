@@ -33,7 +33,7 @@ public class CourseInterface {
     }
 
     public List<Document> getAllCourses(SecurityContext securityContext) {
-        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
+        String professorID = securityContext.getUserPrincipal().getName();
         MongoCursor<Document> query = courseCollection.find(eq("professor_id", professorID)).iterator();
         List<Document> courses = new ArrayList<>();
         while (query.hasNext()) {
@@ -44,7 +44,7 @@ public class CourseInterface {
     }
 
     public Document getCourse(SecurityContext securityContext, String courseID) {
-        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
+        String professorID = securityContext.getUserPrincipal().getName();
         Document document = courseCollection.find(and(eq("course_id", courseID), eq("professor_id", professorID))).first();
         if (document == null)
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This course does not exist.").build());
@@ -87,7 +87,7 @@ public class CourseInterface {
     
 
     public List<Document> getStudentsInCourse(SecurityContext securityContext, String courseID) {
-        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
+        String professorID = securityContext.getUserPrincipal().getName();
         Document courseDocument = courseCollection.find(and(eq("course_id", courseID), eq("professor_id", professorID))).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).build());
         List<String> studentIDs = courseDocument.getList("students", String.class);

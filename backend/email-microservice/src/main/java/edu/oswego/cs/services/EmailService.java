@@ -22,12 +22,6 @@ import java.util.Properties;
  *
  */
 public class EmailService {
-    String from = "schmittsLaptop@patrick.com";
-    Properties props = new Properties();
-    Session session = Session.getDefaultInstance(props, null);
-    String professorEmailDomain = "@oswego.edu"; //change to your preferred domain for testing
-    String studentEmailDomain = "@gmail.com"; //change to your preferred domain for testing
-
     /**
      * Sends an email to the professor informing them that all teams in the course have submitted an assignment.
      * The email will not be sent if the assignment deadline has passed.
@@ -65,7 +59,7 @@ public class EmailService {
         body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
 
         System.out.println(body);
-        sendEmail(course.getString("professor_id") + professorEmailDomain, subject, body);
+        sendEmail(course.getString("professor_id"), subject, body);
     }
 
     /**
@@ -104,7 +98,7 @@ public class EmailService {
         body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
 
         System.out.println(body);
-        sendEmail(course.getString("professor_id") + professorEmailDomain, subject, body);
+        sendEmail(course.getString("professor_id"), subject, body);
     }
 
     /**
@@ -136,7 +130,7 @@ public class EmailService {
             //print because I currently can't send mail
             System.out.println(body);
             //send email
-            sendEmail(student.getString("student_id") + studentEmailDomain, subject, body);
+            sendEmail(student.getString("student_id"), subject, body);
         }
     }
 
@@ -170,7 +164,7 @@ public class EmailService {
         body = body.replace("[Assignment Due Date]", assignment.getString("due_date"));
 
         System.out.println(body);
-        sendEmail(course.getString("professor_id") + professorEmailDomain, subject, body);
+        sendEmail(course.getString("professor_id"), subject, body);
     }
 
     /**
@@ -198,7 +192,7 @@ public class EmailService {
         }
         List<String> students = team.getList("team_members", String.class);
         for(String student : students){
-            String to = student + studentEmailDomain;
+            String to = student;
             Document studentDoc = new CourseInterface().getStudent(student);
 
             String body = "" + template; //copy template
@@ -247,7 +241,7 @@ public class EmailService {
         List<String> students = team.getList("team_members", String.class);
 
         for(String student : students){
-            String to = student + studentEmailDomain;
+            String to = student;
             Document studentDoc = new CourseInterface().getStudent(student);
 
             String body = "" + template; //copy template
@@ -288,7 +282,7 @@ public class EmailService {
         body = body.replace("[Name of Team That Submitted the Outlier Peer Review]", teamID);
 
         System.out.println(body);
-        sendEmail(course.getString("professor_id") + professorEmailDomain, subject, body);
+        sendEmail(course.getString("professor_id"), subject, body);
 
     }
 
@@ -310,7 +304,7 @@ public class EmailService {
         List<Document> students = new CourseInterface().getStudentsInCourse(securityContext, courseID);
 
         for(Document student : students){
-            String to = student.getString("student_id") + studentEmailDomain;
+            String to = student.getString("student_id");
             List<Document> teams = new CourseInterface().getTeamsInCourse(courseID);
             Document team = null;
             for(Document t : teams){
@@ -366,7 +360,7 @@ public class EmailService {
         body = body.replace("[Peer Review Due Date]", assignment.getString("peer_review_due_date"));
 
         System.out.println(body);
-        sendEmail(course.getString("professor_id") + professorEmailDomain, subject, body);
+        sendEmail(course.getString("professor_id"), subject, body);
     }
 
     /**
@@ -398,7 +392,7 @@ public class EmailService {
         }
         List<String> students = team.getList("team_members", String.class);
         for(String student : students){
-            String to = student + studentEmailDomain;
+            String to = student;
             Document studentDoc = new CourseInterface().getStudent(student);
 
             String body = "" + template; //copy template

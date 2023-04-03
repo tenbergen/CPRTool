@@ -20,7 +20,7 @@ import static com.mongodb.client.model.Filters.eq;
 
 public class CourseUtil {
     public void updateCoursesArrayInProfessorDb(SecurityContext securityContext, MongoCollection<Document> collection, String originalCourseID, String newCourseID, String mode) {
-        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
+        String professorID = securityContext.getUserPrincipal().getName();
 
         Document professorDocument = collection.find(eq("professor_id", professorID)).first();
         if (professorDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "This professor does not exist.");

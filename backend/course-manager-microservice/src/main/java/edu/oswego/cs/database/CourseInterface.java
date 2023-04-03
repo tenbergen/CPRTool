@@ -61,7 +61,7 @@ public class CourseInterface {
     }
 
     public void addCourse(SecurityContext securityContext, CourseDAO dao) {
-        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
+        String professorID = securityContext.getUserPrincipal().getName();
         dao.professorID = professorID;
 
         Document courseDocument = courseCollection.find(and(
@@ -98,7 +98,7 @@ public class CourseInterface {
     }
 
     public String updateCourse(SecurityContext securityContext, CourseDAO dao) {
-        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
+        String professorID = securityContext.getUserPrincipal().getName();
 
         Document courseDocument = courseCollection.find(and(eq("course_id", dao.getCourseID()), eq("professor_id", professorID))).first();
         if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "This course does not exist.");
@@ -152,8 +152,8 @@ public class CourseInterface {
     public void addStudent(SecurityContext securityContext, StudentDAO student, String courseID) {
         while (courseLocks.containsKey(courseID)); /* spin block (see explanation above) */
         courseLocks.put(courseID, true);
-        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
-        String studentId = student.email.split("@")[0];
+        String professorID = securityContext.getUserPrincipal().getName();
+        String studentId = student.email;
         String studentLastName = student.fullName.split(", ")[0];
         String studentFirstName = student.fullName.split(", ")[1];
 
@@ -196,7 +196,7 @@ public class CourseInterface {
     }
 
     public void removeCourse(SecurityContext securityContext, String courseID) {
-        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
+        String professorID = securityContext.getUserPrincipal().getName();
         Document courseDocument = courseCollection.find(and(eq("course_id", courseID), eq("professor_id", professorID))).first();
         if (courseDocument == null) throw new CPRException(Response.Status.BAD_REQUEST, "This course does not exist.");
         new CourseUtil().updateCoursesArrayInProfessorDb(securityContext, professorCollection, courseID, null, "DELETE");
