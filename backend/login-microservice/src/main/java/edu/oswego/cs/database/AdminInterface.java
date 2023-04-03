@@ -79,6 +79,13 @@ public class AdminInterface {
         professorCollection.deleteOne(eq("professor_id", user_id));
     }
 
+    public void deleteCourse(String course_id) {
+        if (!checkCourse(course_id)) {
+            throw new CPRException(Response.Status.NOT_FOUND, "Course not found.");
+        }
+        courseCollection.deleteOne(eq("course_id", course_id));
+    }
+
     public void deleteStudentUser(String user_id) {
 
         if (!checkStudent(user_id)) {
@@ -417,6 +424,14 @@ public class AdminInterface {
 
         return users;
     }
-    
+
+
+    public Boolean checkCourse(String course_id){
+        Document courseDocument = courseCollection.find(eq("course_id", course_id)).first();
+        if (courseDocument == null) {
+            return false;
+        }
+        return true;
+    }
     
 }

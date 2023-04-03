@@ -43,6 +43,14 @@ public class AdminController {
         return Response.status(Response.Status.OK).entity("Professor user deleted.").build();
     }
 
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/delete/course/{course_id}")
+    public Response deleteCourse(@Context SecurityContext securityContext, @PathParam("course_id") String courseId) {
+        new AdminInterface(securityContext.getUserPrincipal().getName()).deleteCourse(courseId);
+        return Response.status(Response.Status.OK).entity("Course deleted.").build();
+    }
+
     // Add Admin User by User Id, First and Last Name
     @POST
     @Produces(MediaType.APPLICATION_JSON)
