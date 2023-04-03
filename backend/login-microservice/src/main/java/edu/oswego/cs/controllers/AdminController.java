@@ -158,7 +158,7 @@ public class AdminController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/views/profanity")
     public Response getProfanitySettingsView(@Context SecurityContext securityContext) {
-        return Response.status(Response.Status.OK).entity(new AdminInterface().getProfanitySettings()).build();
+        return Response.status(Response.Status.OK).entity(new AdminInterface().getBlockedWords()).build();
     }
 
     // Get Users View

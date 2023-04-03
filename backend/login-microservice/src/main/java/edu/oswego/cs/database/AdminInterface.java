@@ -281,98 +281,6 @@ public class AdminInterface {
         }
     }
 
-    
-
-    public void addBlockedWord(String word) throws CPRException {
-        // Validate input
-        if (word == null || word.isEmpty()) {
-            throw new CPRException(Response.Status.BAD_REQUEST, "Blocked word cannot be null or empty");
-        }
-        // Search for existing document with matching word
-        Document existingDoc = profanitySettings.find(eq("blocked_word", word)).first();
-        if (existingDoc != null) {
-            throw new CPRException(Response.Status.CONFLICT, "Blocked word already exists");
-        }
-        // Create a new document with the word to be added
-        Document doc = new Document("blocked_word", word);
-        // Insert the document into the blocked_words collection
-        try {
-            profanitySettings.insertOne(doc);
-        } catch (Exception e) {
-            throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to add blocked word to MongoDB");
-        }
-    }
-    
-
-    public void deleteBlockedWord(String word) throws CPRException {
-        // Validate input
-        if (word == null || word.isEmpty()) {
-            throw new CPRException(Response.Status.BAD_REQUEST, "Blocked word cannot be null or empty");
-        }
-        // Search for existing document with matching word
-        Document existingDoc = profanitySettings.find(eq("blocked_word", word)).first();
-        if (existingDoc == null) {
-            throw new CPRException(Response.Status.NOT_FOUND, "Blocked word not found");
-        }
-        // Delete the document with the matching word
-        try {
-            profanitySettings.deleteOne(existingDoc);
-        } catch (Exception e) {
-            throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to delete blocked word from MongoDB");
-        }
-    }
-    
-
-    public void addAllowedWord(String word) throws CPRException {
-        // Validate input
-        if (word == null || word.isEmpty()) {
-            throw new CPRException(Response.Status.BAD_REQUEST, "allowed word cannot be null or empty");
-        }
-        // Search for existing document with matching word
-        Document existingDoc = profanitySettings.find(eq("allowed_word", word)).first();
-        if (existingDoc != null) {
-            throw new CPRException(Response.Status.CONFLICT, "allowed word already exists");
-        }
-        // Create a new document with the word to be added
-        Document doc = new Document("allowed_word", word);
-        // Insert the document into the allowed_words collection
-        try {
-            profanitySettings.insertOne(doc);
-        } catch (Exception e) {
-            throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to add allowed word to MongoDB");
-        }
-    }
-    
-    
-    public void deleteAllowedWord(String word) throws CPRException {
-        // Validate input
-        if (word == null || word.isEmpty()) {
-            throw new CPRException(Response.Status.BAD_REQUEST, "allowed word cannot be null or empty");
-        }
-        // Search for existing document with matching word
-        Document existingDoc = profanitySettings.find(eq("allowed_word", word)).first();
-        if (existingDoc == null) {
-            throw new CPRException(Response.Status.NOT_FOUND, "allowed word not found");
-        }
-        // Delete the document with the matching word
-        try {
-            profanitySettings.deleteOne(existingDoc);
-        } catch (Exception e) {
-            throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to delete allowed word from MongoDB");
-        }
-    }
-
-
-    public ProfanitySettings getProfanitySettings() {
-       Document profanitySettingsDocument = profanitySettings.find().first();
-        assert profanitySettingsDocument != null;
-        ArrayList<String> blockedWords = profanitySettingsDocument.get("words", ArrayList.class);
-        ProfanitySettings profanitySettings = new ProfanitySettings();
-        profanitySettings.setWords(blockedWords);
-        return profanitySettings;
-    }
-
-
     public List<Course> getCoursesView() {
         List<Course> courses = new ArrayList<>();
         // iterate through MongoDB courses and add to list
@@ -427,8 +335,9 @@ public String getBlockedWords() {
 
     // Convert the List<String> to a JSON string using Gson
     Gson gson = new Gson();
+    String jsonBlockedWords = gson.toJson(blockedWords);
 
-    return gson.toJson(blockedWords);
+    return jsonBlockedWords;
 }
 
 public void updateBlockedWords(String jsonBlockedWords) {
