@@ -12,6 +12,7 @@ try {
     });
 
     client.commands = new Collection();
+    client.accounts = new Collection();
 
     for (const command of require('./commands')) {
         client.commands.set(command.data.name, command);

@@ -11,13 +11,13 @@ module.exports = {
             const command = commands.get(interaction.commandName);
 
             try { interaction.options.getSubcommand(); } catch (err) {
-                logger.info(`${interaction.channel.id} ${interaction.user.tag}: /${interaction.commandName}`);
+                logger.info(`${interaction.channel.id} ${interaction.member.displayName}: /${interaction.commandName}`);
                 await command.execute(interaction);
                 return;
             }
 
             let commandName = `${interaction.commandName} ${interaction.options.getSubcommand()}`;
-            logger.info(`${interaction.channel.id} ${interaction.user.tag}: /${commandName}`);
+            logger.info(`${interaction.channel.id} ${interaction.member.displayName}: /${commandName}`);
             await command.execute(interaction);
 
         } catch (err) {
