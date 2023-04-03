@@ -163,9 +163,11 @@ public class AssignmentInterface {
                 //remove the lock
                 assignmentLock.remove(assignment_id+team.getString("team_id")+"team_submission");
             }
-        } else submissionCollection.insertOne(new_submission);
-        //remove the lock
-        assignmentLock.remove(assignment_id+team.getString("team_id")+"team_submission");
+        } else {
+            submissionCollection.insertOne(new_submission);
+            //remove the lock
+            assignmentLock.remove(assignment_id+team.getString("team_id")+"team_submission");
+        }
     }
 
     public Document allAssignments(String course_id, String student_id) {
