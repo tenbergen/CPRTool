@@ -34,6 +34,7 @@ public class DeadlineTracker{
      */
     @PostConstruct
     public void init(){
+        System.out.println("init");
         List<Document> allAssignments = new AssignmentInterface().getAllAssignments();
         assignments = new ArrayList<>();
         reviews = new ArrayList<>();
