@@ -44,7 +44,7 @@ public class AuthServices {
 
         Map<String, String> tokens = new HashMap<>();
 
-        String lakerID = payload.getEmail().split("@")[0];
+        String lakerID = payload.getEmail();
         Set<String> roles = getRoles(lakerID);
 
         try {
@@ -85,7 +85,7 @@ public class AuthServices {
 
         Map<String, String> tokens = new HashMap<>();
 
-        String lakerID = payload.getName().split("@")[0];
+        String lakerID = payload.getName();
         Set<String> roles = getRoles(lakerID);
 
         try {
