@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.enterprise.context.ApplicationScoped;
 import java.io.IOException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -23,6 +24,7 @@ import java.util.List;
  * To test methods called by DeadlineTracker on a local build, you can change your computer time to simulate
  * time changes.
  */
+@ApplicationScoped
 @Singleton
 @Startup
 public class DeadlineTracker{
