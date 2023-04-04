@@ -305,16 +305,8 @@ public class EmailService {
 
         for(Document student : students){
             String to = student.getString("student_id");
-            List<Document> teams = new CourseInterface().getTeamsInCourse(courseID);
-            Document team = null;
-            for(Document t : teams){
-                if(t.getList("team_members", String.class).contains(student.getString("student_id"))){
-                    team = t;
-                }
-            }
 
             String body = "" + template; //copy template
-            body = body.replace("[Team Name]", team.getString("teamID"));
             body = body.replace("[Number of Peer Reviews]", assignment.getInteger("reviews_per_team").toString());
             body = body.replace("[Course Name]", course.getString("course_name"));
             body = body.replace("[Today's Date]", new Date().toString());
