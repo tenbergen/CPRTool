@@ -56,7 +56,9 @@ export const getCourseDetailsAsync = createAsyncThunk(
     const currentCourse = await axios.get(url).then((res) => {
       return res.data;
     });
-    await axios.get(deadlineUrl);
+    const nothing = await axios.get(deadlineUrl).then((res) => {
+        return res.data;
+    });
     return { currentCourse };
   }
 );
