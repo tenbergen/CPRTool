@@ -172,19 +172,23 @@ public class EmailResources {
     /**
      * Starts DeadlineTracker when a prof views any course. For some reason @Schedule, @Startup, and @ApplicationScoped
      * aren't working on Docker.
+     *
+     * @param securityContext context that doesn't do anything except trick the browser into letting me use this method
+     * @return OK Response
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("deadlinetracker")
     @RolesAllowed("professor")
-    public void deadlineTrackerInit(){
+    public Response deadlineTrackerInit(@Context SecurityContext securityContext){
         if(isDTUp){
-            return;
+            return Response.status(Response.Status.OK).build();
         }
         DeadlineTracker dt = new DeadlineTracker();
         dt.init();
         dt.start();
         isDTUp = true;
+        return Response.status(Response.Status.OK).build();
     }
 }
