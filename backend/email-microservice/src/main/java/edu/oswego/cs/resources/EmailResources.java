@@ -170,13 +170,14 @@ public class EmailResources {
     }
 
     /**
-     * Starts DeadlineTracker when anybody views any course. For some reason @Schedule, @Startup, and @ApplicationScoped
+     * Starts DeadlineTracker when a prof views any course. For some reason @Schedule, @Startup, and @ApplicationScoped
      * aren't working on Docker.
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("deadlinetracker")
+    @RolesAllowed("professor")
     public void deadlineTrackerInit(){
         if(isDTUp){
             return;
