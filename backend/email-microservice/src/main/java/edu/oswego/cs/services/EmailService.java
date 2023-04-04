@@ -58,7 +58,6 @@ public class EmailService {
         body = body.replace("[Name of Instructor]", course.getString("professor_id"));
         body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
 
-        System.out.println(body);
         sendEmail(course.getString("professor_id"), subject, body);
     }
 
@@ -86,7 +85,7 @@ public class EmailService {
         //prerequisites are met
 
         //load template
-        String body = getTemplate("allPeerReviewsSubmitted.html");
+        String body = getTemplate("allPeerReviewsSubmittedEmail.html");
 
         String subject = "An assignment has been submitted by all students and is ready for grading.";
         Document course = new CourseInterface().getCourse(courseID);
@@ -97,7 +96,6 @@ public class EmailService {
         body = body.replace("[Name of Instructor]", course.getString("professor_id"));
         body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
 
-        System.out.println(body);
         sendEmail(course.getString("professor_id"), subject, body);
     }
 
@@ -127,8 +125,7 @@ public class EmailService {
             body = body.replace("[Assignment Name]", new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID).getString("assignment_name"));
             body = body.replace("[Due Date]", new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID).getString("due_date"));
             body = body.replace("[Instructor Name]", new CourseInterface().getProfessor(securityContext).getString("professor_id"));
-            //print because I currently can't send mail
-            System.out.println(body);
+
             //send email
             sendEmail(student.getString("student_id"), subject, body);
         }
@@ -163,7 +160,6 @@ public class EmailService {
         body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
         body = body.replace("[Assignment Due Date]", assignment.getString("due_date"));
 
-        System.out.println(body);
         sendEmail(course.getString("professor_id"), subject, body);
     }
 
@@ -204,7 +200,6 @@ public class EmailService {
             body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
             body = body.replace("[Instructor Name]", course.getString("professor_id"));
 
-            System.out.println(body);
             sendEmail(to, subject, body);
         }
     }
@@ -253,7 +248,6 @@ public class EmailService {
             body = body.replace("[Grade]", submission.getInteger("grade").toString());
             body = body.replace("[Instructor Name]", course.getString("professor_id"));
 
-            System.out.println(body);
             sendEmail(to, subject, body);
         }
     }
@@ -281,7 +275,6 @@ public class EmailService {
         body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
         body = body.replace("[Name of Team That Submitted the Outlier Peer Review]", teamID);
 
-        System.out.println(body);
         sendEmail(course.getString("professor_id"), subject, body);
 
     }
@@ -315,7 +308,6 @@ public class EmailService {
             body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
             body = body.replace("[Instructor Name]", course.getString("professor_id"));
 
-            System.out.println(body);
             sendEmail(to, subject, body);
         }
     }
@@ -351,7 +343,6 @@ public class EmailService {
         body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
         body = body.replace("[Peer Review Due Date]", assignment.getString("peer_review_due_date"));
 
-        System.out.println(body);
         sendEmail(course.getString("professor_id"), subject, body);
     }
 
@@ -404,7 +395,6 @@ public class EmailService {
             body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
             body = body.replace("[Instructor Name]", course.getString("professor_id"));
 
-            System.out.println(body);
             sendEmail(to, subject, body);
         }
     }
