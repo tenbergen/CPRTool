@@ -5,12 +5,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.List;
 
-@NoArgsConstructor
 @Getter
 @Setter
 public class ProfanitySettings {
     private ArrayList<String> words;
+
+    public ProfanitySettings(List<String> blockedWords) {
+        this.words = new ArrayList<>(blockedWords);
+    }
 
     public ArrayList<String> getWords() {
         return words;

@@ -12,7 +12,6 @@ import javax.ws.rs.core.SecurityContext;
 import java.io.IOException;
 
 @Path("/admin")
-@RolesAllowed("admin")
 @Produces(MediaType.APPLICATION_JSON)
 public class AdminController {
 
@@ -65,6 +64,7 @@ public class AdminController {
     // Add Student User by User Id, First and Last Name
     @POST
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed("admin")
     @Path("/add/student/{user_id}/{first_name}/{last_name}")
     public Response addStudentUser(@Context SecurityContext securityContext, @PathParam("user_id") String userId,
             @PathParam("first_name") String firstName, @PathParam("last_name") String lastName) {
@@ -158,6 +158,7 @@ public class AdminController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/views/profanity")
     public Response getProfanitySettingsView(@Context SecurityContext securityContext) {
+        System.out.printf("Getting profanity settings view");
         return Response.status(Response.Status.OK).entity(new AdminInterface().getBlockedWords()).build();
     }
 

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import com.google.gson.Gson;
 import org.bson.Document;
 
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import com.mongodb.client.model.Filters;
@@ -37,7 +38,7 @@ public class AdminInterface {
             studentCollection = studentDB.getCollection("students");
             professorCollection = profAdminDb.getCollection("professors");
             courseCollection = courseDB.getCollection("courses");
-            profanitySettings = courseDB.getCollection("profanitySettings");
+            profanitySettings = profAdminDb.getCollection("profanitySettings");
         } catch (CPRException e) {
             throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to retrieve collections.");
         }
@@ -342,12 +343,22 @@ public String getBlockedWords() {
 
 public void updateBlockedWords(String jsonBlockedWords) {
     // Convert the JSON string to a List<String> using Gson
+    System.out.printf("jsonBlockedWords: %s%n", jsonBlockedWords);
     Gson gson = new Gson();
     List<String> blockedWords = gson.fromJson(jsonBlockedWords, List.class);
+    System.out.printf("blockedWords: %s%n", blockedWords);
+    ProfanitySettings temp = new ProfanitySettings(blockedWords);
 
     // Replace the blocked words in the collection with the new list
-    Document updateDocument = new Document("$set", new Document("words", blockedWords));
-    profanitySettings.updateOne(new Document(), updateDocument);
+//    MongoCollection<Document> profanitySettingsCollection = MongoUtils.getCollection("profanity_settings");
+    System.out.printf("profanitySettingsCollection: %s%n", profanitySettings);
+
+    profanitySettings.deleteMany(new Document());
+    System.out.println("Deleted all documents from collection");
+
+    Document profanitySettingsDocument = new Document("words", temp.getWords());
+    profanitySettings.insertOne(profanitySettingsDocument);
 }
+
 
 }
