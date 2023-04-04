@@ -12,12 +12,7 @@ const ProfessorTeamAccordion = ({ team, teams, setTeams }) => {
   const [studentId, setStudentId] = useState("");
   const members = [];
 
-  const [showPopup, setShowPopup] = useState(false);
-  const popupRef = useRef(null);
 
-  const togglePopup = () => {
-    setShowPopup(!showPopup);
-  };
 
   const handleSetActive = () => {
     if (isActive.includes(team)) {
