@@ -11,7 +11,7 @@ import CourseBarComponent from "../../components/CourseBarComponent";
 import ProfessorTeamComponent from "../../components/ProfessorComponents/CoursesPage/ProfessorTeamComponent";
 import Loader from "../../components/LoaderComponenets/Loader";
 import uuid from "react-uuid";
-import NavigationContainerComponent from "../../components/NavigationPaneComponents/NavigationContainerComponent";
+import NavigationContainerComponent from "../../components/ProfessorComponents/ProfessorNavigationComponents/NavigationContainerComponent";
 import ProfessorHeaderBar from "../../components/ProfessorComponents/ProfessorHeaderBar";
 import LogoutButton from "../../components/GlobalComponents/LogoutButton";
 
@@ -52,8 +52,7 @@ function ProfessorCoursePage() {
           <div className="page-container">
             <ProfessorHeaderBar/>
             <div className="pcp-container">
-
-              <CourseBarComponent />
+              <CourseBarComponent/>
               <div className="pcp-components">
                 <div className="pcp-component-links inter-28-light">
                   {components.map(
