@@ -373,19 +373,16 @@ public class EmailService {
 
         //get student who submitted
         Document s = new CourseInterface().getStudent(securityContext);
-        System.out.println("---------------Student ID: " + s.getString("student_id"));
 
         //get all students in team
         List<Document> teams = new CourseInterface().getTeamsInCourse(courseID);
         Document team = null;
         for(Document t : teams){
-            System.out.println(t.getList("team_members", String.class));
             for(String m : t.getList("team_members", String.class)){
                 if(m.equals(s.getString("student_id"))){
                     team = t;
                     break;
                 }
-                System.out.println("------" + m + " != " + s.getString("student_id"));
             }
             if(team != null){
                 break;
@@ -398,7 +395,7 @@ public class EmailService {
 
             String body = "" + template; //copy template
             body = body.replace("[Reviewed Team Name]", revTeamID);
-            body = body.replace("[Team Name]", team.getString("teamID"));
+            body = body.replace("[Team Name]", team.getString("team_id"));
             body = body.replace("[Course Name]", course.getString("course_name"));
             body = body.replace("[Today's Date]", new Date().toString());
             body = body.replace("[Name of Student]", studentDoc.getString("first_name") + " " + studentDoc.getString("last_name"));
