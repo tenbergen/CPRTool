@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class IdentifyingService {
     public void identifyingStudentService(SecurityContext securityContext, String studentID) {
         if (!securityContext.isUserInRole("professor")) {
-            String userID = securityContext.getUserPrincipal().getName().split("@")[0];
+            String userID = securityContext.getUserPrincipal().getName();
             if (!studentID.equals(userID))
                 throw new CPRException(Response.Status.FORBIDDEN, "User principal name doesn't match");
         }
@@ -20,7 +20,7 @@ public class IdentifyingService {
 
     public void identifyingProfessorAsStudentService(SecurityContext securityContext, MongoCollection<Document> courseCollection, String courseID) {
         if (securityContext.isUserInRole("professor")) {
-            String userID = securityContext.getUserPrincipal().getName().split("@")[0];
+            String userID = securityContext.getUserPrincipal().getName();
             Document courseDocument = courseCollection.find(Filters.eq("course_id", courseID)).first();
             if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "This professor does not exist.");
             String professorID = courseDocument.getString("professor_id");
@@ -37,7 +37,7 @@ public class IdentifyingService {
 
     public void identifyingProfessorService(SecurityContext securityContext, MongoCollection<Document> courseCollection, String courseID) {
         if (securityContext.isUserInRole("professor")) {
-            String userID = securityContext.getUserPrincipal().getName().split("@")[0];
+            String userID = securityContext.getUserPrincipal().getName();
             Document courseDocument = courseCollection.find(Filters.eq("course_id", courseID)).first();
             if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "This course does not exist.");
             String professorID = courseDocument.getString("professor_id");

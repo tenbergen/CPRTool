@@ -219,7 +219,7 @@ public class CourseInterface {
      * @param courseID the ID of the course from which the student is to be removed
      */
     public void removeStudent(SecurityContext securityContext, String studentID, String courseID) {
-        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
+        String professorID = securityContext.getUserPrincipal().getName();
         Document studentDocument = studentCollection.find(and(eq("student_id", studentID), eq("courses", courseID))).first();
         if (studentDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "This student does not exist.");
         Document courseDocument = courseCollection.find(and(eq("course_id", courseID), eq("professor_id", professorID))).first();
@@ -254,7 +254,7 @@ public class CourseInterface {
     }
 
     public void addStudentsFromCSV(SecurityContext securityContext, FileDAO fileDAO) {
-        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
+        String professorID = securityContext.getUserPrincipal().getName();
         List<StudentDAO> allStudents = parseStudentCSV(fileDAO.getCsvLines());
 
         String cid = fileDAO.getFilename();
@@ -269,7 +269,7 @@ public class CourseInterface {
         ArrayList<String> studentsToRemove = new ArrayList<>();
         ArrayList<String> studentsToAdd = new ArrayList<>();
 
-        for (StudentDAO studentDAO : allStudents) newStudentList.add(studentDAO.email.split("@")[0]);
+        for (StudentDAO studentDAO : allStudents) newStudentList.add(studentDAO.email);
 
         for (String student : oldStudentList) {
             if (!newStudentList.contains(student)) studentsToRemove.add(student);
@@ -282,7 +282,7 @@ public class CourseInterface {
         for (String student : studentsToRemove) removeStudent(securityContext, student, courseID);
 
         for (StudentDAO student : allStudents.stream()
-                .filter(s -> studentsToAdd.contains(s.email.split("@")[0]))
+                .filter(s -> studentsToAdd.contains(s.email))
                 .collect(Collectors.toList())) {
             addStudent(securityContext, student, courseID);
         }
