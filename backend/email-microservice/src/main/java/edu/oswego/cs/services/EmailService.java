@@ -295,7 +295,7 @@ public class EmailService {
      */
     public void peerReviewAssignedEmail(SecurityContext securityContext, String courseID, int assignmentID) throws IOException {
         //read contents of template
-        String template = getTemplate("peerReviewAssigned.html");
+        String template = getTemplate("peerReviewAssignedEmail.html");
 
         String subject = "Peer reviews have been assigned for your team";
         Document course = new CourseInterface().getCourse(courseID);
