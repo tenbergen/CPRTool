@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './styles/CreateAssignmentStyle.css';
 import SidebarComponent from '../../components/SidebarComponent';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -17,6 +17,8 @@ const CreateAssignmentPage = () => {
   const submitCourseUrl = `${profAssignmentUrl}/create-assignment`;
   const getAssUrl = `${profAssignmentUrl}/${courseId}/assignments`;
   const [loading, setLoading] = useState(false);
+  const [assignmentDate, setAssignmentDate] = useState(new Date().toISOString().split('T')[0]);
+  const [peerDate, setPeerDate] = useState(new Date().toISOString().split('T')[0]);
 
   const assignmentFileFormData = new FormData();
   let assignmentFileName = ""
@@ -78,35 +80,54 @@ const CreateAssignmentPage = () => {
   };
 
   const handleSubmit = async (data) => {
-    let { points } = data;
-    points = parseInt(points);
-    const course_id = courseId;
+    console.log(data);
+    const assignment = new Date(assignmentDate);
+    const peer = new Date(peerDate);
 
-    setLoading(true);
+    if (peer >= assignment) {
 
-    const sentData = { ...data, points, course_id };
+      let {points} = data;
+      points = parseInt(points);
+      const course_id = courseId;
 
-    await axios
-      .post(submitCourseUrl, sentData)
-      .then((res) => {})
-      .catch((e) => {
-        console.error(e.response.data);
-      });
+      setLoading(true);
 
-    const assignment_id = await axios
-      .get(getAssUrl)
-      .then((res) => {
-        return res.data.pop().assignment_id;
-      })
-      .catch((e) => {
-        console.error(e.response.data);
-      });
+      const sentData = {...data, points, course_id};;
 
-    await uploadFiles(assignment_id);
+      await axios
+          .post(submitCourseUrl, sentData)
+          .then((res) => {
+          })
+          .catch((e) => {
+            console.error(e.response.data);
+          });
+      const assignment_id = await axios
+          .get(getAssUrl)
+          .then((res) => {
+            return res.data.pop().assignment_id;
+          })
+          .catch((e) => {
+            console.error(e.response.data);
+          });
+      await uploadFiles(assignment_id);
 
-    setLoading(false);
-    navigate('/professor/' + courseId);
+      setLoading(false);
+      navigate('/professor/' + courseId);
+    }
   };
+
+  const assignmentChange = () => {
+    const select = document.querySelector("#cal");
+    const chosenDate = select.value;
+    console.log(chosenDate);
+    setAssignmentDate(chosenDate);
+  }
+
+  const peerChange = () => {
+    const select = document.querySelector("#cal1");
+    const chosenDate = select.value;
+    setPeerDate(chosenDate);
+  }
 
   return (
     <div>
@@ -138,7 +159,7 @@ const CreateAssignmentPage = () => {
                             <div className='input-field cap-input-field'>
                               <label className='inter-20-medium'>
                                 <span className='required'>
-                                  Name of assignment:
+                                  Name of Assignment:
                                 </span>
                               </label>
                               <Field name='assignment_name'>
@@ -198,9 +219,11 @@ const CreateAssignmentPage = () => {
                                     <input
                                         type='date'
                                         name='due_date'
+                                        id='cal'
                                         {...input}
                                         required
                                         min={new Date().toISOString().split('T')[0]}
+                                        //onSelect={assignmentChange}
                                     />
                                 )}
                               </Field>
@@ -289,9 +312,11 @@ const CreateAssignmentPage = () => {
                                     <input
                                         type='date'
                                         name='peer_review_due_date'
+                                        id='cal1'
                                         {...input}
                                         required
                                         min={new Date().toISOString().split('T')[0]}
+                                        //onSelect={peerChange}
                                     />
                                 )}
                               </Field>
@@ -315,6 +340,14 @@ const CreateAssignmentPage = () => {
                               </Field>
                             </div>
                           </div>
+                        </div>
+
+                        <div>
+                          <label className ='inter-20-medium'>
+                      <span className='required-alt'>
+                        Indicates Required Field
+                      </span>
+                          </label>
                         </div>
 
                         <div className='cap-button'>

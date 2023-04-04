@@ -2,7 +2,7 @@
     content: "*";
     color: #FF0000FF;
     font-size: 20px;
-    margin-left: 2px;
+    margin-left: 5px;
 }
 
 .required-alt::before {

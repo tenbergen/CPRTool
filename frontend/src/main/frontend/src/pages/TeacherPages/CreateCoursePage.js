@@ -90,7 +90,7 @@ const CreateCoursePage = () => {
                   <div className='input-field ccp-input-field'>
                     <label className='inter-20-medium'>
                       <span className='required'>
-                        Course name:
+                        Course Name:
                       </span>
                     </label>
                     <input
@@ -106,7 +106,7 @@ const CreateCoursePage = () => {
                     <div className='input-field ccp-input-field'>
                       <label className='inter-20-medium'>
                         <span className='required'>
-                          Course abbreviation:
+                          Course Abbreviation:
                         </span>
                       </label>
                       <input
@@ -121,7 +121,7 @@ const CreateCoursePage = () => {
                     <div className='input-field ccp-input-field'>
                       <label className='inter-20-medium'>
                         <span className='required'>
-                          Course section:
+                          Course Section:
                         </span>
                       </label>
                       <input
@@ -187,6 +187,14 @@ const CreateCoursePage = () => {
                     </div>
                     <div className='input-field ccp-input-field' 
                     />
+                  </div>
+
+                  <div>
+                    <label className ='inter-20-medium'>
+                      <span className='required-alt'>
+                        Indicates Required Field
+                      </span>
+                    </label>
                   </div>
 
                   <div className='ccp-button'>

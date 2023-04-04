@@ -8,7 +8,7 @@ import {
 import { useParams } from 'react-router-dom';
 import '../../styles/EditAssignmentStyle.css';
 import axios from 'axios';
-import '../../styles/RequiredField.css';
+import '../../../global_styles/RequiredField.css';
 
 const profAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`;
 
@@ -180,7 +180,7 @@ const ProfessorEditAssignmentComponent = () => {
           <form onSubmit={handleSubmit}>
             <div className='inter-16-medium-black eac-input-field'>
               <label className="required">
-                Name of assignment:
+                Name of Assignment:
               </label>
               <Field name='assignment_name'>
                 {({ input }) => (
@@ -400,6 +400,15 @@ const ProfessorEditAssignmentComponent = () => {
                 )}
               </Field>
             </div>
+
+            <div>
+              <label className ='inter-20-medium'>
+                      <span className='required-alt'>
+                        Indicates Required Field
+                      </span>
+              </label>
+            </div>
+
             <div className='cap-button'>
               <button className='green-button-medium' type='submit'> Save</button>
             </div>
