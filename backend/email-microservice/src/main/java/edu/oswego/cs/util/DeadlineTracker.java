@@ -25,6 +25,7 @@ import java.util.List;
  * time changes.
  */
 @Singleton
+@Startup
 public class DeadlineTracker extends Thread{
     private static List<Document> assignments; //list of assignment IDs whose deadline is yet to pass
     private static List<Document> reviews; //list of assignment IDs whose peer review deadline is yet to pass
@@ -32,7 +33,8 @@ public class DeadlineTracker extends Thread{
     /**
      * Goes through every assignment in the database and adds the ones with future deadlines to the lists
      */
-    public void init(){
+    public DeadlineTracker(){
+        super();
         System.out.println("-----------------------------------init");
         List<Document> allAssignments = new AssignmentInterface().getAllAssignments();
         assignments = new ArrayList<>();
@@ -47,6 +49,7 @@ public class DeadlineTracker extends Thread{
                 reviews.add(a);
             }
         }
+        start();
     }
 
     /**
