@@ -52,12 +52,8 @@ export const getCourseDetailsAsync = createAsyncThunk(
   async (courseId, thunkAPI) => {
     thunkAPI.dispatch(refreshTokenAsync());
     const url = `${viewCourseUrl}/courses/${courseId}`;
-    const deadlineUrl = `${process.env.REACT_APP_URL}/email/send/deadlinetracker`
     const currentCourse = await axios.get(url).then((res) => {
       return res.data;
-    });
-    const nothing = await axios.get(deadlineUrl).then((res) => {
-        return res.data;
     });
     return { currentCourse };
   }

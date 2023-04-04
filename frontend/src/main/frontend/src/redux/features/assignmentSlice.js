@@ -80,11 +80,16 @@ const sortByDueDate = (arr) => {
   });
 };
 
+const startDeadlineTimer = await axios.get(`${process.env.REACT_APP_URL}/email/send/deadlinetracker`).then((res) => {
+  return res.data;
+});
+
 export const getCourseAssignmentsAsync = createAsyncThunk(
   'assignments/getCourseAssignmentsAsync',
   async (courseId, thunkAPI) => {
     thunkAPI.dispatch(refreshTokenAsync());
     const courseAssignments = await getAssignments(courseId);
+    await startDeadlineTimer
     return { courseAssignments };
   }
 );
