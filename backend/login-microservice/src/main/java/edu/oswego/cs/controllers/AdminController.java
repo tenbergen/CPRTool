@@ -3,13 +3,13 @@ package edu.oswego.cs.controllers;
 import edu.oswego.cs.database.AdminInterface;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
+import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
-import java.io.IOException;
 
 @Path("/admin")
 @Produces(MediaType.APPLICATION_JSON)
@@ -20,7 +20,7 @@ public class AdminController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/delete/admin/{user_id}")
     public Response deleteAdminUser(@Context SecurityContext securityContext, @PathParam("user_id") String userId)
-            throws IOException {
+            throws Exception {
         new AdminInterface(userId).deleteAdminUser(userId);
         return Response.status(Response.Status.OK).entity("Admin user deleted.").build();
     }
@@ -45,8 +45,8 @@ public class AdminController {
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/delete/course/{course_id}")
-    public Response deleteCourse(@Context SecurityContext securityContext, @PathParam("course_id") String courseId) {
+    @Path("/delete/course/{crn}")
+    public Response deleteCourse(@Context SecurityContext securityContext, @PathParam("crn") String courseId) {
         new AdminInterface(securityContext.getUserPrincipal().getName()).deleteCourse(courseId);
         return Response.status(Response.Status.OK).entity("Course deleted.").build();
     }
@@ -64,7 +64,6 @@ public class AdminController {
     // Add Student User by User Id, First and Last Name
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed("admin")
     @Path("/add/student/{user_id}/{first_name}/{last_name}")
     public Response addStudentUser(@Context SecurityContext securityContext, @PathParam("user_id") String userId,
             @PathParam("first_name") String firstName, @PathParam("last_name") String lastName) {
@@ -148,8 +147,16 @@ public class AdminController {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/profanity/update")
-    public Response updateBlockedWords(@Context SecurityContext securityContext, @RequestBody String payload) throws Exception {
+    public Response updateBlockedWords(@Context SecurityContext securityContext, @RequestBody String payload)  {
         new AdminInterface().updateBlockedWords(payload);
+        return Response.status(Response.Status.OK).entity("Profanity settings updated.").build();
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/profanity/course/update/{crn}")
+    public Response updateBlockedWordsForCourse(@Context SecurityContext securityContext, @PathParam("crn") String crn, @RequestBody String payload)  {
+        new AdminInterface().updateBlockedWordsForCourse(crn, payload);
         return Response.status(Response.Status.OK).entity("Profanity settings updated.").build();
     }
 
@@ -158,6 +165,15 @@ public class AdminController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/views/profanity")
     public Response getProfanitySettingsView(@Context SecurityContext securityContext) {
+        System.out.printf("Getting profanity settings view");
+        return Response.status(Response.Status.OK).entity(new AdminInterface().getBlockedWords()).build();
+    }
+
+        // Get Profanity Settings View
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/views/profanity")
+    public Response getCourseProfanitySettings(@Context SecurityContext securityContext) {
         System.out.printf("Getting profanity settings view");
         return Response.status(Response.Status.OK).entity(new AdminInterface().getBlockedWords()).build();
     }

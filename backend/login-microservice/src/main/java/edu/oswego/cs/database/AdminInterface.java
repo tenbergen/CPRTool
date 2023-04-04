@@ -319,8 +319,8 @@ public class AdminInterface {
     }
 
 
-    public Boolean checkCourse(String course_id){
-        Document courseDocument = courseCollection.find(eq("course_id", course_id)).first();
+    public Boolean checkCourse(String crn){
+        Document courseDocument = courseCollection.find(eq("crn", crn)).first();
         if (courseDocument == null) {
             return false;
         }
@@ -349,8 +349,6 @@ public void updateBlockedWords(String jsonBlockedWords) {
     System.out.printf("blockedWords: %s%n", blockedWords);
     ProfanitySettings temp = new ProfanitySettings(blockedWords);
 
-    // Replace the blocked words in the collection with the new list
-//    MongoCollection<Document> profanitySettingsCollection = MongoUtils.getCollection("profanity_settings");
     System.out.printf("profanitySettingsCollection: %s%n", profanitySettings);
 
     profanitySettings.deleteMany(new Document());
@@ -361,4 +359,15 @@ public void updateBlockedWords(String jsonBlockedWords) {
 }
 
 
+    public void updateBlockedWordsForCourse(String crn, String payload) {
+        // Convert the JSON string to a List<String> using Gson
+        Gson gson = new Gson();
+        List<String> blockedWords = gson.fromJson(payload, List.class);
+        System.out.printf("blockedWords: %s%n", blockedWords);
+        ProfanitySettings temp = new ProfanitySettings(blockedWords);
+
+        System.out.printf("profanitySettingsCollection: %s%n", profanitySettings);
+
+        courseCollection.updateOne(eq("crn", crn), set("blocked_words", temp.getWords()));
+    }
 }
