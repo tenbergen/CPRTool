@@ -86,7 +86,7 @@ public class EmailService {
         //prerequisites are met
 
         //load template
-        String body = getTemplate("allAssignmentsSubmitted.html");
+        String body = getTemplate("allPeerReviewsSubmitted.html");
 
         String subject = "An assignment has been submitted by all students and is ready for grading.";
         Document course = new CourseInterface().getCourse(courseID);
