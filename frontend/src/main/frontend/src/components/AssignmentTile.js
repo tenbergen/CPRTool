@@ -15,7 +15,7 @@ const AssignmentTile = ({ assignment, submitted }) => {
   const { role } = useSelector((state) => state.auth);
   const { currentTeamId } = useSelector((state) => state.teams);
   const { courseId } = useParams();
-  const link = `/details/${role}/${courseId}/${assignment.assignment_id}`;
+  const link = `/${role}/${courseId}/${assignment.assignment_id}`;
 
   const onFileClick = async () => {
     const fileName =

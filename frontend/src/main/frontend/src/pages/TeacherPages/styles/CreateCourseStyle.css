@@ -31,13 +31,13 @@
 .ccp-input-field {
   width: 100%;
   margin-bottom: 7%;
-  display: flex;
+  display: flow;
   justify-content: center;
   align-items: center;
 }
 
 .ccp-input-field label {
-  margin-right: 2%;
+  margin-right: 70%;
 }
 
 .ccp-input-field input {

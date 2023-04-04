@@ -1,10 +1,11 @@
 import uuid from "react-uuid";
-import './_NavigationComponentStyle.css'
+import './_ProfessorNavigationComponents.css'
 import useCollapse from "react-collapsed";
 import HomeTileComponent from "./HomeTileComponent";
 import CoursesTileComponent from "./CoursesTileComponent";
 import {useRef, useState} from "react";
-import LogoutButton from "../GlobalComponents/LogoutButton";
+import LogoutButton from "../../GlobalComponents/LogoutButton";
+import BulkDownloadTileComponent from "./BulkDownloadTileComponent";
 
 const NavigationContainerComponent = () => {
 
@@ -19,6 +20,7 @@ const NavigationContainerComponent = () => {
             <div className="navigation-container">
                 <HomeTileComponent trigger={trigger} deactivateTiles={deactivateTiles}/>
                 <CoursesTileComponent trigger={trigger} deactivateTiles={deactivateTiles}/>
+                <BulkDownloadTileComponent trigger={trigger} deactivateTiles={deactivateTiles}/>
             </div>
             <LogoutButton/>
         </div>
