@@ -32,8 +32,7 @@ public class DeadlineTracker{
     /**
      * Goes through every assignment in the database and adds the ones with future deadlines to the lists
      */
-    @PostConstruct
-    public void init(){
+    public static void init(){
         System.out.println("-----------------------------------init");
         List<Document> allAssignments = new AssignmentInterface().getAllAssignments();
         assignments = new ArrayList<>();
@@ -56,7 +55,7 @@ public class DeadlineTracker{
      * comes up.
      */
     @Schedule(hour = "*", minute = "*/5", persistent = false)
-    public void check(){
+    public static void check(){
         System.out.println("----------------------------------check"); //proves that this method is actually being run.
         if(assignments == null || reviews == null){
             init();
