@@ -379,6 +379,7 @@ public class EmailService {
         List<Document> teams = new CourseInterface().getTeamsInCourse(courseID);
         Document team = null;
         for(Document t : teams){
+            System.out.println(t.getList("team_members", String.class));
             if(t.getList("team_members", String.class).contains(s.getString("student_id"))){
                 team = t;
             }
