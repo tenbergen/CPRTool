@@ -53,7 +53,6 @@ function ProfessorCoursePage() {
             <ProfessorHeaderBar/>
             <div className="pcp-container">
               <CourseBarComponent/>
-              {/*<NavigationContainerComponent/>*/}
               <div className="pcp-components">
                 <div className="pcp-component-links inter-28-light">
                   {components.map(
