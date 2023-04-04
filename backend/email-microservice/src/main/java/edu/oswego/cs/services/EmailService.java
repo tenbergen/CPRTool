@@ -241,7 +241,7 @@ public class EmailService {
             body = body.replace("[Name of Student]", studentDoc.getString("first_name") + " " + studentDoc.getString("last_name"));
             body = body.replace("[Course Name]", course.getString("course_name"));
             body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
-            body = body.replace("[Grade]", submission.getInteger("grade").toString());
+            body = body.replace("[Grade]", submission.getDouble("grade").toString());
             body = body.replace("[Instructor Name]", course.getString("professor_id"));
 
             sendEmail(to, subject, body);
