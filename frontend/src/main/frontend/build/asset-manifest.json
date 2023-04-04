@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.5c502aaa.css",
-    "main.js": "/static/js/main.4529c660.js",
+    "main.css": "/static/css/main.863a9ab6.css",
+    "main.js": "/static/js/main.20269a4b.js",
     "static/media/no-team-no-bg.png": "/static/media/no-team-no-bg.36f1a86caf0cc8c89ae0.png",
     "static/media/loading.gif": "/static/media/loading.803f24369a085e35482e.gif",
     "static/media/no-course.png": "/static/media/no-course.19f64cc5d34c49ed290f.png",
@@ -11,17 +11,18 @@
     "static/media/Courses.svg": "/static/media/Courses.6fda0fcfd145845126b4.svg",
     "static/media/CPR logo final-02.svg": "/static/media/CPR logo final-02.e1771c10368e86f15334.svg",
     "static/media/Home.svg": "/static/media/Home.35e7d66eca98d5e0f21b.svg",
+    "static/media/Bulk Download.svg": "/static/media/Bulk Download.3eb521e713406be59080.svg",
     "static/media/Logout.svg": "/static/media/Logout.dfcf8b594b902195566d.svg",
     "static/media/Admin_Header.svg": "/static/media/Admin_Header.ac40a935ef40bc49e4bb.svg",
     "index.html": "/index.html",
     "static/media/search.svg": "/static/media/search.83bf22fea51e5d789840c7ebeff532fe.svg",
     "static/media/Arrow_Default.svg": "/static/media/Arrow_Default.a6b2e888a50521367fd4.svg",
     "static/media/Arrow_Active.svg": "/static/media/Arrow_Active.3a543f19aaeb33588a5f.svg",
-    "main.5c502aaa.css.map": "/static/css/main.5c502aaa.css.map",
-    "main.4529c660.js.map": "/static/js/main.4529c660.js.map"
+    "main.863a9ab6.css.map": "/static/css/main.863a9ab6.css.map",
+    "main.20269a4b.js.map": "/static/js/main.20269a4b.js.map"
   },
   "entrypoints": [
-    "static/css/main.5c502aaa.css",
-    "static/js/main.4529c660.js"
+    "static/css/main.863a9ab6.css",
+    "static/js/main.20269a4b.js"
   ]
 }
