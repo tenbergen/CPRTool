@@ -221,10 +221,6 @@ public class EmailService {
         Document assignment = new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID);
         Document submission = new AssignmentInterface().getSubmission(assignmentID, teamID);
 
-        if((int)(submission.getDouble("grade").doubleValue()) != -1){ //may need to be changed as the grade system is updated.
-            return;
-        }
-
         //get all students in team
         List<Document> teams = new CourseInterface().getTeamsInCourse(courseID);
         Document team = null;
