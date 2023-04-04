@@ -221,7 +221,7 @@ public class EmailService {
         Document assignment = new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID);
         Document submission = new AssignmentInterface().getSubmission(assignmentID, teamID);
 
-        if(Integer.parseInt(submission.getString("grade")) != -1){ //may need to be changed as the grade system is updated.
+        if(submission.getInteger("grade") != -1){ //may need to be changed as the grade system is updated.
             return;
         }
 
