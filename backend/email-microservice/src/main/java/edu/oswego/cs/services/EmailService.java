@@ -311,7 +311,7 @@ public class EmailService {
             body = body.replace("[Course Name]", course.getString("course_name"));
             body = body.replace("[Today's Date]", new Date().toString());
             body = body.replace("[Name of Student]", student.getString("first_name") + " " + student.getString("last_name"));
-            body = body.replace("[Time of Submission]", assignment.getString("due_date"));
+            body = body.replace("[Due Date]", assignment.getString("peer_review_due_date"));
             body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
             body = body.replace("[Instructor Name]", course.getString("professor_id"));
 
@@ -373,6 +373,7 @@ public class EmailService {
 
         //get student who submitted
         Document s = new CourseInterface().getStudent(securityContext);
+        System.out.println("---------------Student ID: " + s.getString("student_id"));
 
         //get all students in team
         List<Document> teams = new CourseInterface().getTeamsInCourse(courseID);
