@@ -25,9 +25,6 @@ import java.util.List;
 @Path("send")
 @DenyAll
 public class EmailResources {
-
-    boolean isDTUp = false;
-
     /**
      * Called from CreateAssignmentPage.js in the frontend when the professor finished creating the assignment.
      *
@@ -166,29 +163,6 @@ public class EmailResources {
                                          @PathParam("teamID") String teamID,
                                          @PathParam("assignmentID") int assignmentID) throws IOException {
         new EmailService().outlierDetectedEmail(courseID, teamID, assignmentID);
-        return Response.status(Response.Status.OK).build();
-    }
-
-    /**
-     * Starts DeadlineTracker when a prof views any course. For some reason @Schedule, @Startup, and @ApplicationScoped
-     * aren't working on Docker.
-     *
-     * @param securityContext context that doesn't do anything except trick the browser into letting me use this method
-     * @return OK Response
-     */
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("deadlinetracker")
-    @RolesAllowed("professor")
-    public Response deadlineTrackerInit(@Context SecurityContext securityContext){
-        if(isDTUp){
-            return Response.status(Response.Status.OK).build();
-        }
-        DeadlineTracker dt = new DeadlineTracker();
-        dt.init();
-        dt.start();
-        isDTUp = true;
         return Response.status(Response.Status.OK).build();
     }
 }
