@@ -24,9 +24,7 @@ import java.util.List;
  * To test methods called by DeadlineTracker on a local build, you can change your computer time to simulate
  * time changes.
  */
-@ApplicationScoped
 @Singleton
-@Startup
 public class DeadlineTracker{
     private static List<Document> assignments; //list of assignment IDs whose deadline is yet to pass
     private static List<Document> reviews; //list of assignment IDs whose peer review deadline is yet to pass
@@ -36,7 +34,7 @@ public class DeadlineTracker{
      */
     @PostConstruct
     public void init(){
-        System.out.println("init");
+        System.out.println("-----------------------------------init");
         List<Document> allAssignments = new AssignmentInterface().getAllAssignments();
         assignments = new ArrayList<>();
         reviews = new ArrayList<>();
@@ -59,7 +57,7 @@ public class DeadlineTracker{
      */
     @Schedule(hour = "*", minute = "*/5", persistent = false)
     public void check(){
-        System.out.println("check"); //proves that this method is actually being run.
+        System.out.println("----------------------------------check"); //proves that this method is actually being run.
         if(assignments == null || reviews == null){
             init();
         }
