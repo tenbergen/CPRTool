@@ -380,8 +380,14 @@ public class EmailService {
         Document team = null;
         for(Document t : teams){
             System.out.println(t.getList("team_members", String.class));
-            if(t.getList("team_members", String.class).contains(s.getString("student_id"))){
-                team = t;
+            for(String m : t.getList("team_members", String.class)){
+                if(m.equals(s.getString("student_id"))){
+                    team = t;
+                    break;
+                }
+            }
+            if(team != null){
+                break;
             }
         }
         List<String> students = team.getList("team_members", String.class);
