@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -36,6 +37,8 @@ public class AssignmentInterface {
     static MongoCollection<Document> teamsCollection;
     static MongoCollection<Document> submissionCollection;
     static MongoCollection<Document> professorCollection;
+
+    static ConcurrentHashMap<String, Boolean> assignmentLock = new ConcurrentHashMap();
 
     static String reg = "/";
 
@@ -143,15 +146,28 @@ public class AssignmentInterface {
                 .append("peer_review_due_date", assignment.get("peer_review_due_date"));
 
         boolean submissionCheck = submissionCollection.find(and(eq("course_id", course_id), eq("assignment_id", assignment_id), eq("team_name", team.getString("team_id")))).iterator().hasNext();
+        // do some sort of spinning lock here so that only one teammate at a time is submitting an assignment at a time
+        //key is assignment_ID+team_name+type
+        while(assignmentLock.containsKey(assignment_id+team.getString("team_id")+"team_submission"));
+        //set the lock
+        assignmentLock.put(assignment_id+team.getString("team_id")+"team_submission", true);
         if (submissionCheck) {
             Document extensionCheck = submissionCollection.find(and(eq("course_id", course_id), eq("assignment_id", assignment_id), eq("team_name", team.getString("team_id")))).first();
             if (extensionCheck.getString("submission_name").equals(file_name)) {
+                //remove the lock
+                assignmentLock.remove(assignment_id+team.getString("team_id")+"team_submission");
                 throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("submission already exists").build());
             } else {
                 submissionCollection.deleteOne(extensionCheck);
                 submissionCollection.insertOne(new_submission);
+                //remove the lock
+                assignmentLock.remove(assignment_id+team.getString("team_id")+"team_submission");
             }
-        } else submissionCollection.insertOne(new_submission);
+        } else {
+            submissionCollection.insertOne(new_submission);
+            //remove the lock
+            assignmentLock.remove(assignment_id+team.getString("team_id")+"team_submission");
+        }
     }
 
     public Document allAssignments(String course_id, String student_id) {
