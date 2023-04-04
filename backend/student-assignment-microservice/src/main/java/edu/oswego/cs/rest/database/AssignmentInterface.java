@@ -37,6 +37,7 @@ public class AssignmentInterface {
     static MongoCollection<Document> teamsCollection;
     static MongoCollection<Document> submissionCollection;
     static MongoCollection<Document> professorCollection;
+    static MongoCollection<Document> studentCollection;
 
     static ConcurrentHashMap<String, Boolean> assignmentLock = new ConcurrentHashMap();
 
@@ -52,6 +53,7 @@ public class AssignmentInterface {
             teamsCollection = teamsDatabase.getCollection("teams");
             professorCollection = manager.getProfessorDB().getCollection("professors");
             courseCollection = manager.getCourseDB().getCollection("courses");
+            studentCollection = manager.getCourseDB().getCollection("students");
 
         } catch (WebApplicationException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
@@ -273,6 +275,18 @@ public class AssignmentInterface {
                 final_grade = ((int) (final_grade * 100) / 100.0); //round to the nearest 10th
                 submissionCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
                 assignmentsCollection.findOneAndUpdate(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), set("grade_finalized", true));
+
+                /* Updating student's grade */
+                for (String member : team_submission.getList("members", String.class)) {
+                    List<Document> grades = studentCollection.find(eq("student_id", member)).first().getList("grades", Document.class);
+                    if (grades == null) grades = new ArrayList<Document>();
+                    Document newAssignmentGrade = new Document()
+                            .append("assignment_id", assignmentID)
+                            .append("grade", final_grade)
+                            .append("team_name", team_submission.getString("team_name"));
+                    grades.add(newAssignmentGrade);
+                    studentCollection.findOneAndUpdate(eq("student_id", member), set("grades", grades));
+                }
             }
         }
     }
@@ -400,5 +414,42 @@ public class AssignmentInterface {
         return tempFile;
     }
 
+    /**
+     * Retrieves all assignments peratining to a specific course.
+     *
+     * @param courseId id of the course
+     */
+    public List<Document> getAllCourseAssignmentsAndPeerReviews(String courseId) {
 
+        /* Get all individual grades on assignments for students in the course */
+        Document course = courseCollection.find(eq("course_id", courseId)).first();
+        if (course == null) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Course does not exist.").toString());
+        }
+        List<String> enrolledStudents = course.getList("students", String.class);
+        List<Document> submissions = new ArrayList<>();
+        for (String studentId : enrolledStudents) {
+            List<Document> subs = submissionCollection.find(
+                    and(
+                            eq("course_id", courseId),
+                            (eq("members", studentId)),
+                            (eq("type", "team_submission"))
+                    )
+            ).into(new ArrayList<>());
+            for (Document sub : subs) {
+                sub.append("student_id", studentId);
+                submissions.add(sub);
+            }
+        }
+
+        /* Get all peer review scores for each team for assignments done by said team */
+        List<Document> peerReviews = submissionCollection.find(
+                                and(
+                                    eq("course_id", courseId),
+                                    (eq("type", "peer_review_submission"))
+                        )
+                ).into(new ArrayList<>());
+        submissions.addAll(peerReviews);
+        return submissions;
+    }
 }

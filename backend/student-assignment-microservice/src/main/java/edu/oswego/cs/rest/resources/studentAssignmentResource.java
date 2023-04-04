@@ -224,4 +224,11 @@ public class studentAssignmentResource {
         //send back the zip file Base64
         return response.build();
     }
+
+    @GET
+    @RolesAllowed("Professor")
+    @Path("{courseID}/all-grades")
+    public Response getAllAssignmentsAndPeerReviews(@PathParam("courseID") String courseId) {
+        return Response.status(Response.Status.OK).entity(new AssignmentInterface().getAllCourseAssignmentsAndPeerReviews(courseId)).build();
+    }
 }
