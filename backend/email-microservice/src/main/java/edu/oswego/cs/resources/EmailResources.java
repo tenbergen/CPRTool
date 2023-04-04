@@ -26,6 +26,8 @@ import java.util.List;
 @DenyAll
 public class EmailResources {
 
+    boolean isDTUp = false;
+
     /**
      * Called from CreateAssignmentPage.js in the frontend when the professor finished creating the assignment.
      *
@@ -165,5 +167,23 @@ public class EmailResources {
                                          @PathParam("assignmentID") int assignmentID) throws IOException {
         new EmailService().outlierDetectedEmail(courseID, teamID, assignmentID);
         return Response.status(Response.Status.OK).build();
+    }
+
+    /**
+     * Starts DeadlineTracker when anybody views any course. For some reason @Schedule, @Startup, and @ApplicationScoped
+     * aren't working on Docker.
+     */
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("deadlinetracker")
+    public void deadlineTrackerInit(){
+        if(isDTUp){
+            return;
+        }
+        DeadlineTracker dt = new DeadlineTracker();
+        dt.init();
+        dt.start();
+        isDTUp = true;
     }
 }
