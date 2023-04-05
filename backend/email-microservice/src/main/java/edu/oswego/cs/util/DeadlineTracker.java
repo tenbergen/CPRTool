@@ -54,7 +54,7 @@ public class DeadlineTracker{
      * Calls EmailService.assignmentDeadlinePassed() or EmailService.peerReviewDeadlinePassed() when the respective case
      * comes up.
      */
-    @Schedule(second = "", minute = "*/5", hour = "*", persistent = false)
+    @Schedule(second = "*/5", minute = "*", hour = "*", persistent = false)
     public void check() {
         System.out.println("----------------------------------check"); //proves that this method is actually being run.
         if(assignments == null || reviews == null){
