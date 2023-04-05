@@ -152,14 +152,6 @@ public class AdminController {
         return Response.status(Response.Status.OK).entity("Profanity settings updated.").build();
     }
 
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/profanity/course/update/{crn}")
-    public Response updateBlockedWordsForCourse(@Context SecurityContext securityContext, @PathParam("crn") String crn, @RequestBody String payload)  {
-        new AdminInterface().updateBlockedWordsForCourse(crn, payload);
-        return Response.status(Response.Status.OK).entity("Profanity settings updated.").build();
-    }
-
     // Get Profanity Settings View
     @GET
     @Produces(MediaType.APPLICATION_JSON)

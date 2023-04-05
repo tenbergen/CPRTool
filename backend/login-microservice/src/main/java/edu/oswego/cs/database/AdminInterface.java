@@ -327,47 +327,34 @@ public class AdminInterface {
         return true;
     }
 
-public String getBlockedWords() {
-    // Find the first document in the collection
-    Document profanitySettingsDocument = profanitySettings.find().first();
+    public String getBlockedWords() {
+        // Find the first document in the collection
+        Document profanitySettingsDocument = profanitySettings.find().first();
 
-    // Extract the blocked words from the document
-    List<String> blockedWords = profanitySettingsDocument.getList("words", String.class);
+        // Extract the blocked words from the document
+        List<String> blockedWords = profanitySettingsDocument.getList("words", String.class);
 
-    // Convert the List<String> to a JSON string using Gson
-    Gson gson = new Gson();
-    String jsonBlockedWords = gson.toJson(blockedWords);
-
-    return jsonBlockedWords;
-}
-
-public void updateBlockedWords(String jsonBlockedWords) {
-    // Convert the JSON string to a List<String> using Gson
-    System.out.printf("jsonBlockedWords: %s%n", jsonBlockedWords);
-    Gson gson = new Gson();
-    List<String> blockedWords = gson.fromJson(jsonBlockedWords, List.class);
-    System.out.printf("blockedWords: %s%n", blockedWords);
-    ProfanitySettings temp = new ProfanitySettings(blockedWords);
-
-    System.out.printf("profanitySettingsCollection: %s%n", profanitySettings);
-
-    profanitySettings.deleteMany(new Document());
-    System.out.println("Deleted all documents from collection");
-
-    Document profanitySettingsDocument = new Document("words", temp.getWords());
-    profanitySettings.insertOne(profanitySettingsDocument);
-}
-
-
-    public void updateBlockedWordsForCourse(String crn, String payload) {
-        // Convert the JSON string to a List<String> using Gson
+        // Convert the List<String> to a JSON string using Gson
         Gson gson = new Gson();
-        List<String> blockedWords = gson.fromJson(payload, List.class);
+        String jsonBlockedWords = gson.toJson(blockedWords);
+
+        return jsonBlockedWords;
+    }
+
+    public void updateBlockedWords(String jsonBlockedWords) {
+        // Convert the JSON string to a List<String> using Gson
+        System.out.printf("jsonBlockedWords: %s%n", jsonBlockedWords);
+        Gson gson = new Gson();
+        List<String> blockedWords = gson.fromJson(jsonBlockedWords, List.class);
         System.out.printf("blockedWords: %s%n", blockedWords);
         ProfanitySettings temp = new ProfanitySettings(blockedWords);
 
         System.out.printf("profanitySettingsCollection: %s%n", profanitySettings);
 
-        courseCollection.updateOne(eq("crn", crn), set("blocked_words", temp.getWords()));
+        profanitySettings.deleteMany(new Document());
+        System.out.println("Deleted all documents from collection");
+
+        Document profanitySettingsDocument = new Document("words", temp.getWords());
+        profanitySettings.insertOne(profanitySettingsDocument);
     }
 }

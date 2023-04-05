@@ -13,6 +13,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import javax.ws.rs.core.SecurityContext;
 
 @Path("professor")
@@ -89,4 +90,22 @@ public class CourseManagerResource {
         new CourseInterface().addStudentsFromCSV(securityContext, fileDAO);
         return Response.status(Response.Status.OK).entity("Student(s) successfully added.").build();
     }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("courses/{courseID}/profanity/update")
+    @RolesAllowed("professor")
+    public Response updateBlockedWordsForCourse(@Context SecurityContext securityContext, @PathParam("courseID") String crn, @RequestBody String payload)  {
+        new CourseInterface().updateBlockedWordsForCourse(crn, payload);
+        return Response.status(Response.Status.OK).entity("Profanity settings updated.").build();
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("courses/{courseID}/profanity/view")
+    @RolesAllowed("professor")
+    public Response getBlockedWordsForCourse(@Context SecurityContext securityContext, @PathParam("courseID") String crn)  {
+        return Response.status(Response.Status.OK).entity(new CourseInterface().getBlockedWordsForCourse(crn)).build();
+    }
+
 }
