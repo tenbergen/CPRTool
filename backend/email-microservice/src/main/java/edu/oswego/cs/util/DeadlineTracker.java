@@ -25,16 +25,14 @@ import java.util.List;
  * time changes.
  */
 @Singleton
-@Startup
-public class DeadlineTracker extends Thread{
+public class DeadlineTracker{
     private static List<Document> assignments; //list of assignment IDs whose deadline is yet to pass
     private static List<Document> reviews; //list of assignment IDs whose peer review deadline is yet to pass
 
     /**
      * Goes through every assignment in the database and adds the ones with future deadlines to the lists
      */
-    public DeadlineTracker(){
-        super();
+    public void init(){
         System.out.println("-----------------------------------init");
         List<Document> allAssignments = new AssignmentInterface().getAllAssignments();
         assignments = new ArrayList<>();
@@ -49,7 +47,6 @@ public class DeadlineTracker extends Thread{
                 reviews.add(a);
             }
         }
-        start();
     }
 
     /**
@@ -57,51 +54,47 @@ public class DeadlineTracker extends Thread{
      * Calls EmailService.assignmentDeadlinePassed() or EmailService.peerReviewDeadlinePassed() when the respective case
      * comes up.
      */
-    @Override
-    public void run() {
-        while (true) {
-            System.out.println("----------------------------------check"); //proves that this method is actually being run.
-            AssignmentInterface ai = new AssignmentInterface();
-            for (Document a : assignments) {
-                if (ai.doesAssignmentExist(a.getString("course_id"), a.getInteger("assignment_id"))) {
-                    //assignment exists
-                    if (new SimpleDateFormat("yyyy-MM-dd").parse(a.getString("due_date"), new ParsePosition(0)).getTime()
-                            < new Date().getTime()) {
-                        //due date has passed
-                        try {
-                            new EmailService().assignmentDeadlinePassed(a.getString("course_id"), a.getInteger("assignment_id"));
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                        assignments.remove(a);
+    @Schedule(second = "0", minute = "*/5", hour = "*", persistent = false)
+    public void check() {
+        if(assignments == null || reviews == null){
+            init();
+        }
+        System.out.println("----------------------------------check"); //proves that this method is actually being run.
+        AssignmentInterface ai = new AssignmentInterface();
+        for (Document a : assignments) {
+            if (ai.doesAssignmentExist(a.getString("course_id"), a.getInteger("assignment_id"))) {
+                //assignment exists
+                if (new SimpleDateFormat("yyyy-MM-dd").parse(a.getString("due_date"), new ParsePosition(0)).getTime()
+                        < new Date().getTime()) {
+                    //due date has passed
+                    try {
+                        new EmailService().assignmentDeadlinePassed(a.getString("course_id"), a.getInteger("assignment_id"));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
-                } else {
-                    //assignment doesn't exist
                     assignments.remove(a);
                 }
+            } else {
+                //assignment doesn't exist
+                assignments.remove(a);
             }
-            for (Document r : reviews) {
-                if (ai.doesAssignmentExist(r.getString("course_id"), r.getInteger("assignment_id"))) {
-                    //assignment exists
-                    if (new SimpleDateFormat("yyyy-MM-dd").parse(r.getString("peer_review_due_date"), new ParsePosition(0)).getTime()
-                            < new Date().getTime()) {
-                        //due date has passed
-                        try {
-                            new EmailService().peerReviewDeadlinePassed(r.getString("course_id"), r.getInteger("assignment_id"));
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                        reviews.remove(r);
+        }
+        for (Document r : reviews) {
+            if (ai.doesAssignmentExist(r.getString("course_id"), r.getInteger("assignment_id"))) {
+                //assignment exists
+                if (new SimpleDateFormat("yyyy-MM-dd").parse(r.getString("peer_review_due_date"), new ParsePosition(0)).getTime()
+                        < new Date().getTime()) {
+                    //due date has passed
+                    try {
+                        new EmailService().peerReviewDeadlinePassed(r.getString("course_id"), r.getInteger("assignment_id"));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
-                } else {
-                    //assignment doesn't exist
                     reviews.remove(r);
                 }
-            }
-            try {
-                sleep(300000); //sleep 5 minutes
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+            } else {
+                //assignment doesn't exist
+                reviews.remove(r);
             }
         }
     }
