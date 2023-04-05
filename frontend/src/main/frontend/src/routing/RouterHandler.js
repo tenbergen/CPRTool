@@ -13,6 +13,7 @@ import ProfessorAssignmentPage from '../pages/TeacherPages/ProfessorAssignmentPa
 import StudentSubmittedAssignmentPage from '../pages/StudentPages/StudentSubmittedAssignmentPage';
 import ProfessorSubmittedAssignmentPage from '../pages/TeacherPages/ProfessorSubmittedAssignmentPage';
 import AdminInterface from '../pages/AdminPages/AdminInterface'
+import ProfessorGradesPage from '../pages/TeacherPages/ProfessorGradesPage';
 
 const RouterHandler = () => {
   return (
@@ -31,6 +32,10 @@ const RouterHandler = () => {
             <Route
               path='professor/:courseId'
               element={<ProfessorCoursePage />}
+            />
+            <Route
+              path='professor/:courseId/grades'
+              element={<ProfessorGradesPage />}
             />
             <Route
               path='professor/:courseId/create/assignment'
