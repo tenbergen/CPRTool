@@ -7,7 +7,7 @@ import org.bson.Document;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import javax.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.core.SecurityContext;
 import java.io.*;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;

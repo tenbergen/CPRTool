@@ -6,7 +6,7 @@ import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.util.CPRException;
 import org.bson.Document;
 
-import javax.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
