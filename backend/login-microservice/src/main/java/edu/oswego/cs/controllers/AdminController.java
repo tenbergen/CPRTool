@@ -3,7 +3,6 @@ package edu.oswego.cs.controllers;
 import edu.oswego.cs.database.AdminInterface;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
-import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -12,6 +11,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 @Path("/admin")
+@RolesAllowed("admin")
 @Produces(MediaType.APPLICATION_JSON)
 public class AdminController {
 
@@ -165,15 +165,6 @@ public class AdminController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/views/profanity")
     public Response getProfanitySettingsView(@Context SecurityContext securityContext) {
-        System.out.printf("Getting profanity settings view");
-        return Response.status(Response.Status.OK).entity(new AdminInterface().getBlockedWords()).build();
-    }
-
-        // Get Profanity Settings View
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/views/profanity")
-    public Response getCourseProfanitySettings(@Context SecurityContext securityContext) {
         System.out.printf("Getting profanity settings view");
         return Response.status(Response.Status.OK).entity(new AdminInterface().getBlockedWords()).build();
     }
