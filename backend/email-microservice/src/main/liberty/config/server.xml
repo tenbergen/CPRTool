@@ -4,6 +4,7 @@
     <featureManager>
         <feature>microProfile-4.1</feature>
         <feature>javaMail-1.6</feature>
+        <feature>jakartaee-9.1</feature>
     </featureManager>
 
     <variable name="default.http.port" defaultValue="13133"/>
