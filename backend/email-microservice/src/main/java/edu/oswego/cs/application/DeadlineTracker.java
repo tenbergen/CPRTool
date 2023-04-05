@@ -4,11 +4,8 @@ import edu.oswego.cs.database.AssignmentInterface;
 import edu.oswego.cs.services.EmailService;
 import org.bson.Document;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.Schedule;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.ejb.Schedule;
+import jakarta.ejb.Singleton;
 import java.io.IOException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
