@@ -56,10 +56,10 @@ public class DeadlineTracker{
      */
     @Schedule(second = "0", minute = "*/5", hour = "*", persistent = false)
     public void check() {
+        System.out.println("----------------------------------check"); //proves that this method is actually being run.
         if(assignments == null || reviews == null){
             init();
         }
-        System.out.println("----------------------------------check"); //proves that this method is actually being run.
         AssignmentInterface ai = new AssignmentInterface();
         for (Document a : assignments) {
             if (ai.doesAssignmentExist(a.getString("course_id"), a.getInteger("assignment_id"))) {
