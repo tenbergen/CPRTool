@@ -1,3 +1,5 @@
+package edu.oswego.cs;
+
 import edu.oswego.cs.daos.AssignmentDAO;
 import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.daos.StudentDAO;
