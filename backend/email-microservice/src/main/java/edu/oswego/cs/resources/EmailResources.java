@@ -28,7 +28,6 @@ public class EmailResources {
     /**
      * Called from CreateAssignmentPage.js in the frontend when the professor finished creating the assignment.
      *
-     * @param securityContext context from which the professor id can be obtained
      * @param courseID course in which the assignment has been made
      * @param assignmentID id of the newly created assignment
      * @return OK Response
@@ -38,10 +37,9 @@ public class EmailResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{courseID}/{assignmentID}/assignment-created")
     @RolesAllowed("professor")
-    public Response assignmentCreatedEmail(@Context SecurityContext securityContext,
-                                           @PathParam("courseID") String courseID,
+    public Response assignmentCreatedEmail(@PathParam("courseID") String courseID,
                                            @PathParam("assignmentID") int assignmentID) throws IOException{
-        new EmailService().assignmentCreatedEmail(securityContext, courseID, assignmentID);
+        new EmailService().assignmentCreatedEmail(courseID, assignmentID);
         DeadlineTracker.addAssignment(new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID));
         return Response.status(Response.Status.OK).build();
     }
@@ -73,7 +71,6 @@ public class EmailResources {
      * Called from ProfessorAllSubmissionsComponent.js where the peer reviews get distributed. Since all teams get
      * the peer reviews at the same time, we can send the email to the entire class.
      *
-     * @param securityContext context for getting all students in the course
      * @param courseID ID of course in which the peer review is assigned
      * @param assignmentID ID of assignment for which reviews have been assigned
      * @return OK Response
@@ -83,10 +80,9 @@ public class EmailResources {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("{courseID}/{assignmentID}/peer-review-assigned")
     @RolesAllowed("professor")
-    public Response peerReviewAssignedEmail(@Context SecurityContext securityContext,
-                                            @PathParam("courseID") String courseID,
+    public Response peerReviewAssignedEmail(@PathParam("courseID") String courseID,
                                             @PathParam("assignmentID") int assignmentID) throws IOException {
-        new EmailService().peerReviewAssignedEmail(securityContext, courseID, assignmentID);
+        new EmailService().peerReviewAssignedEmail(courseID, assignmentID);
         return Response.status(Response.Status.OK).build();
     }
 
@@ -111,7 +107,7 @@ public class EmailResources {
         //both allPeerReviewsSubmitted and assignmentSubmitted can fire from the same submission so there's no reason
         //not to bundle them in the same HTTP method
         new EmailService().allPeerReviewsSubmittedEmail(courseID, assignmentID);
-        new EmailService().peerReviewSubmittedEmail(securityContext, courseID, teamID, assignmentID);
+        new EmailService().peerReviewSubmittedEmail(new CourseInterface().getProfessor(securityContext), courseID, teamID, assignmentID);
         //makeshift workaround for current grading situation. Once the professor can manually finalize the grades, please
         //migrate functionality to the gradeReceivedEmail method below and remove this entire if statement.
         if(new EmailService().allPRSubmitted(new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID))){

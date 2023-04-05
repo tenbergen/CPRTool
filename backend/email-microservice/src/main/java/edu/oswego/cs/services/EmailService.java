@@ -102,16 +102,15 @@ public class EmailService {
      * Sends an email to all the students in the course when an assignment is created by the professor.
      * Called when the professor finished posting the assignment.
      *
-     * @param securityContext context from which professor ID can be obtained
      * @param courseID the course in which the peer review is assigned
      * @param assignmentID the assignment that has been created
      */
-    public void assignmentCreatedEmail(SecurityContext securityContext, String courseID, int assignmentID) throws IOException {
+    public void assignmentCreatedEmail(String courseID, int assignmentID) throws IOException {
         //read contents of template
         String template = getTemplate("assignmentCreatedEmail.html");
 
         //get a list of all the students in the course
-        List<Document> students = new CourseInterface().getStudentsInCourse(securityContext, courseID);
+        List<Document> students = new CourseInterface().getStudentsInCourse(courseID);
 
         String subject = "A new assignment has been created in one of your classes.";
 
@@ -120,10 +119,10 @@ public class EmailService {
             //Fill in specifics
             body = body.replace("[Name of Student]", student.getString("first_name") + " " + student.getString("last_name"));
             body = body.replace("[Today's Date]", new Date().toString());
-            body = body.replace("[Course Name]", new CourseInterface().getCourse(securityContext, courseID).getString("course_name"));
+            body = body.replace("[Course Name]", new CourseInterface().getCourse(courseID).getString("course_name"));
             body = body.replace("[Assignment Name]", new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID).getString("assignment_name"));
             body = body.replace("[Due Date]", new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID).getString("due_date"));
-            body = body.replace("[Instructor Name]", new CourseInterface().getProfessor(securityContext).getString("professor_id"));
+            body = body.replace("[Instructor Name]", new CourseInterface().getCourse(courseID).getString("professor_id"));
 
             //send email
             sendEmail(student.getString("student_id"), subject, body);
@@ -277,11 +276,10 @@ public class EmailService {
     /**
      * Sends all the students in a course an email when peer reviews get assigned.
      *
-     * @param securityContext context for getting students in the course
      * @param courseID course in which the peer review is assigned
      * @param assignmentID submission being peer reviewed
      */
-    public void peerReviewAssignedEmail(SecurityContext securityContext, String courseID, int assignmentID) throws IOException {
+    public void peerReviewAssignedEmail(String courseID, int assignmentID) throws IOException {
         //read contents of template
         String template = getTemplate("peerReviewAssignedEmail.html");
 
@@ -289,7 +287,7 @@ public class EmailService {
         Document course = new CourseInterface().getCourse(courseID);
         Document assignment = new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID);
 
-        List<Document> students = new CourseInterface().getStudentsInCourse(securityContext, courseID);
+        List<Document> students = new CourseInterface().getStudentsInCourse(courseID);
 
         for(Document student : students){
             String to = student.getString("student_id");
@@ -344,21 +342,18 @@ public class EmailService {
     /**
      * Sends an email to all the members of a team after they submit a peer review to act as a digital receipt.
      *
-     * @param securityContext context from which the submitting team can be obtained
+     * @param s student who submitted the assignment
      * @param courseID course for which the peer review was submitted
      * @param revTeamID ID of team that was reviewed
      * @param assignmentID peer review that was submitted
      */
-    public void peerReviewSubmittedEmail(SecurityContext securityContext, String courseID, String revTeamID, int assignmentID) throws IOException {
+    public void peerReviewSubmittedEmail(Document s, String courseID, String revTeamID, int assignmentID) throws IOException {
         //read contents of template
         String template = getTemplate("peerReviewSubmittedEmail.html");
 
         String subject = "Peer Review Submission Receipt";
         Document course = new CourseInterface().getCourse(courseID);
         Document assignment = new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID);
-
-        //get student who submitted
-        Document s = new CourseInterface().getStudent(securityContext);
 
         //get all students in team
         List<Document> teams = new CourseInterface().getTeamsInCourse(courseID);

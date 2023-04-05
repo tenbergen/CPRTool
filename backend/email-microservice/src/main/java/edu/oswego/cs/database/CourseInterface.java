@@ -70,9 +70,8 @@ public class CourseInterface {
         return professorCollection.find(eq("professor_id", professorID)).first();
     }
 
-    public List<Document> getStudentsInCourse(SecurityContext securityContext, String courseID) {
-        String professorID = securityContext.getUserPrincipal().getName();
-        Document courseDocument = courseCollection.find(and(eq("course_id", courseID), eq("professor_id", professorID))).first();
+    public List<Document> getStudentsInCourse(String courseID) {
+        Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
         if (courseDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).build());
         List<String> studentIDs = courseDocument.getList("students", String.class);
         return studentIDs.stream()

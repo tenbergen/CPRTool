@@ -8,6 +8,7 @@ import org.bson.Document;
 
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.mongodb.client.model.Filters.and;
@@ -47,6 +48,24 @@ public class AssignmentInterface {
      */
     public List<Document> getAllAssignments() {
         MongoCursor<Document> query = assignmentsCollection.find().iterator();
+        List<Document> assignments = new ArrayList<>();
+        while (query.hasNext()) {
+            Document document = query.next();
+            assignments.add(document);
+        }
+        return assignments;
+    }
+
+    /**
+     * gets the assignments in the specified course
+     *
+     * @param courseID course with desired assignments
+     * @return list of assignments
+     */
+    public List<Document> getAssignmentsByCourse(String courseID) {
+        MongoCursor<Document> query = assignmentsCollection.find(eq("course_id", courseID)).iterator();
+        if (!query.hasNext()) return Collections.emptyList();
+
         List<Document> assignments = new ArrayList<>();
         while (query.hasNext()) {
             Document document = query.next();
