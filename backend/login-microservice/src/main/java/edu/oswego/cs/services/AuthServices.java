@@ -132,9 +132,6 @@ public class AuthServices {
             roles.add("student");
         }
 
-        if (roles.size() == 0)
-            throw new CPRException(Response.Status.UNAUTHORIZED, "User is not authorized to access this resource.");
-
         return roles;
     }
 
