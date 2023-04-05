@@ -4,10 +4,10 @@ import edu.oswego.cs.database.AssignmentInterface;
 import edu.oswego.cs.database.CourseInterface;
 import org.bson.Document;
 
-import javax.mail.*;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.*;
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import javax.ws.rs.core.SecurityContext;
 import java.io.*;
 import java.text.ParsePosition;
@@ -433,7 +433,7 @@ public class EmailService {
         prop.put("mail.smtp.auth", "true");
         prop.put("mail.smtp.socketFactory.port", "465");
         prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        Session session = Session.getInstance(prop, new javax.mail.Authenticator() {
+        Session session = Session.getInstance(prop, new jakarta.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication("cprtoolemail@gmail.com", "nxscmpuonighvnfp");
             }
