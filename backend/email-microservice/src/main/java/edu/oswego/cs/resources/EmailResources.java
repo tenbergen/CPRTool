@@ -3,7 +3,6 @@ package edu.oswego.cs.resources;
 import edu.oswego.cs.database.AssignmentInterface;
 import edu.oswego.cs.database.CourseInterface;
 import edu.oswego.cs.services.EmailService;
-import edu.oswego.cs.util.DeadlineTracker;
 import org.bson.Document;
 
 import javax.annotation.security.DenyAll;

@@ -1,4 +1,4 @@
-package edu.oswego.cs.util;
+package edu.oswego.cs.resources;
 
 import edu.oswego.cs.database.AssignmentInterface;
 import edu.oswego.cs.services.EmailService;
