@@ -2,6 +2,7 @@ const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js
 const decode = require("jwt-decode");
 const { logger } = require('../utils');
 const axios = require("axios");
+const fs = require("fs");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -22,7 +23,7 @@ module.exports = {
                 .setDescription('The new instructions for the homework assignment'))
             .addStringOption(option => option
                 .setName('due-date')
-                .setDescription('The new due date for the homework assignment'))
+                .setDescription('The YYYY-MM-DD new due date for the homework assignment'))
             .addIntegerOption(option => option
                 .setName('points')
                 .setDescription('The new total points for the homework assignment'))
@@ -44,7 +45,7 @@ module.exports = {
                 .setDescription('The new instructions for the peer review assignment'))
             .addStringOption(option => option
                 .setName('due-date')
-                .setDescription('The new due date for the peer review assignment'))
+                .setDescription('The YYYY-MM-DD new due date for the peer review assignment'))
             .addIntegerOption(option => option
                 .setName('points')
                 .setDescription('The new total points for the peer review assignment'))
@@ -163,24 +164,25 @@ module.exports = {
 
                 if (addFile) {
                     const base64File = await axios
-                        .get(addFile.url, { responseType: 'arraybuffer' })
+                        .get(addFile.url, { responseType: 'arraybuffer', responseEncoding: 'base64url' })
                         .then((res) => {
-                            return Buffer.from(res.data, 'binary')
-                                .toString('base64')
-                                .replace('data:', '')
-                                .replace(/^.+,/, '');
+                            let temp = Buffer.from(res.data, 'base64url').toString('base64url');
+                            temp = temp.replace('data:', '').replace(/^.+,/, '');
+                            return Buffer.from(temp, 'base64url');
                         })
                         .catch((err) => {
                             logger.error(err.stack);
                         });
 
+                    fs.writeFileSync(addFile.name, base64File.toString('base64url'), { encoding: 'base64url' });
+                    const file = fs.readFileSync(addFile.name, { encoding: 'base64' });
+
                     const fileData = new FormData();
-                    fileData.append(addFile.name, base64File);
+                    fileData.append(addFile.name, file);
 
                     await axios
                         .post(`${url}/assignments/${assignmentId}/upload`, fileData, config)
                         .catch(async (err) => {
-                            await interaction.reply('Error uploading file.');
                             logger.error(err.stack);
                         });
                 }
@@ -245,43 +247,51 @@ module.exports = {
                     });
 
                 if (addRubric) {
-                    const rubricBlob = await axios
-                        .get(addRubric.url, { responseType: 'blob' })
+                    const base64File = await axios
+                        .get(addRubric.url, { responseType: 'arraybuffer', responseEncoding: 'base64url' })
                         .then((res) => {
-                            return new Blob([res.data], { type: addRubric.contentType });
+                            let temp = Buffer.from(res.data, 'base64url').toString('base64url');
+                            temp = temp.replace('data:', '').replace(/^.+,/, '');
+                            return Buffer.from(temp, 'base64url');
                         })
                         .catch((err) => {
                             logger.error(err.stack);
                         });
 
+                    fs.writeFileSync(addRubric.name, base64File.toString('base64url'), { encoding: 'base64url' });
+                    const file = fs.readFileSync(addRubric.name, { encoding: 'base64' });
+
                     const rubricData = new FormData();
-                    rubricData.append(addRubric.name, rubricBlob);
+                    rubricData.append(addRubric.name, file);
 
                     await axios
                         .post(`${url}/assignments/${assignmentId}/peer-review/rubric/upload`, rubricData, config)
                         .catch(async (err) => {
-                            await interaction.reply('Error uploading rubric file.');
                             logger.error(err.stack);
                         });
                 }
 
                 if (addTemplate) {
-                    const templateBlob = await axios
-                        .get(addTemplate.url, { responseType: 'blob' })
+                    const base64File = await axios
+                        .get(addTemplate.url, { responseType: 'arraybuffer', responseEncoding: 'base64url' })
                         .then((res) => {
-                            return new Blob([res.data], { type: addTemplate.contentType });
+                            let temp = Buffer.from(res.data, 'base64url').toString('base64url');
+                            temp = temp.replace('data:', '').replace(/^.+,/, '');
+                            return Buffer.from(temp, 'base64url');
                         })
                         .catch((err) => {
                             logger.error(err.stack);
                         });
 
+                    fs.writeFileSync(addTemplate.name, base64File.toString('base64url'), { encoding: 'base64url' });
+                    const file = fs.readFileSync(addTemplate.name, { encoding: 'base64' });
+
                     const templateData = new FormData();
-                    templateData.append(addTemplate.name, templateBlob);
+                    templateData.append(addTemplate.name, file);
 
                     await axios
                         .post(`${url}/assignments/${assignmentId}/peer-review/template/upload`, templateData, config)
                         .catch(async (err) => {
-                            await interaction.reply('Error uploading template file.');
                             logger.error(err.stack);
                         });
                 }
