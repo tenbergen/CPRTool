@@ -12,3 +12,5 @@ FROM icr.io/appcafe/open-liberty:full-java17-openj9-ubi
 # Copy from the intermediate build container.
 COPY --from=maven src/main/liberty/config/server.xml /config/
 COPY --from=maven target/*.war /config/apps
+
+EXPOSE 13133

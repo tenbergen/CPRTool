@@ -12,7 +12,6 @@
     <variable name="app.context.root" defaultValue="/"/>
 
     <httpEndpoint
-            host="*"
             httpPort="${default.http.port}"
             httpsPort="${default.https.port}"
             id="defaultHttpEndpoint"
