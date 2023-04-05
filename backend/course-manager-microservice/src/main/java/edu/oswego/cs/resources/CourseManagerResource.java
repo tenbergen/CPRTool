@@ -100,7 +100,7 @@ public class CourseManagerResource {
         return Response.status(Response.Status.OK).entity("Profanity settings updated.").build();
     }
 
-    @POST
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("courses/{courseID}/profanity/view")
     @RolesAllowed("professor")
