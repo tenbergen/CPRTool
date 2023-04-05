@@ -5,7 +5,6 @@ import edu.oswego.cs.database.CourseInterface;
 import org.bson.Document;
 
 import jakarta.mail.*;
-import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import javax.ws.rs.core.SecurityContext;
