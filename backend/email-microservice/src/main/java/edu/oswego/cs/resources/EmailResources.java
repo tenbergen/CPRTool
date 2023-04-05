@@ -1,6 +1,5 @@
 package edu.oswego.cs.resources;
 
-import edu.oswego.cs.application.DeadlineTracker;
 import edu.oswego.cs.database.AssignmentInterface;
 import edu.oswego.cs.database.CourseInterface;
 import edu.oswego.cs.services.EmailService;
