@@ -13,7 +13,7 @@ jobs:
           password: $DOCKERHUB_PASSWORD
 
     steps:
-
+      - checkout
       - run:
           name: Install Docker Compose
           environment:
@@ -24,10 +24,10 @@ jobs:
             sudo mv ~/docker-compose /usr/local/bin/docker-compose
       - setup_remote_docker:
           version: 20.10.14
-      - checkout
+
       - run:
           name: Build Docker Image
-            - docker-compose -f "docker-compose-local.yml" up -d --build
+            - docker-compose -f docker-compose-local.yml up -d --build
 
 workflows:
   build:
