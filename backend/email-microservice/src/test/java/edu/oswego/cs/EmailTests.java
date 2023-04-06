@@ -8,8 +8,8 @@ import edu.oswego.cs.daos.TeamDAO;
 import edu.oswego.cs.database.AssignmentInterface;
 import edu.oswego.cs.database.CourseInterface;
 import edu.oswego.cs.services.EmailService;
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbBuilder;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -39,39 +39,42 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
     Additionally, I don't know how to add professors to the database through API calls so you need to manually add your
     professor emails to the database before running the tests.
+
+    If running the tests gives an "array out of bounds" error, make sure you've updated the getPath() method in
+    EmailService.java
  */
 public class EmailTests {
     private static final Jsonb jsonb = JsonbBuilder.create();
-    private String port = "13125";
-    private String baseUrl = "https://moxie.cs.oswego.edu:" + port;
-    private Client client;
+    private static String port = "3000";
+    private static String baseUrl = "http://localhost:" + port;
+    private static Client client;
     private Response okResponse = Response.status(Response.Status.OK).build();
 
-    private final String createCourseURL = baseUrl + port + "/manage/professor/courses/course/create/";
-    private final String createStudentURL = baseUrl + port + "/manage/professor/courses/course/student/add/";
-    private final String createAssignmentURL = baseUrl + port + "/assignments/professor/courses/create-assignment";
-    private final String createTeamURL = baseUrl + port + "/teams/team/create";
+    private static final String createCourseURL = baseUrl + "/manage/professor/courses/course/create/";
+    private static final String createStudentURL = baseUrl + "/manage/professor/courses/course/student/add/";
+    private final String createAssignmentURL = baseUrl + "/assignments/professor/courses/create-assignment";
+    private static final String createTeamURL = baseUrl + "/teams/team/create";
 
     //You must set these emails to emails you can access in order to properly test the microservice.
     private final String mainProfessorEmail = "pschmitt@oswego.edu";
     private final String altProfessorEmail = "squeeshyandpike@gmail.com";
-    private final String student1Email = "quantummechanistjp@gmail.com";
-    private final String student2Email = "yoinkysploinky994@gmail.com";
-    private final String student3Email = "starrringo889@gmail.com";
-    private final String student4Email = "peteymuskrat@gmail.com";
-    private final String student5Email = "gronkoxtreme@gmail.com";
-    private final String student6Email = "tunneldiggertsegrot@gmail.com";
-    private final String altStudentEmail = "balonjalbatross@gmail.com";
+    private static final String student1Email = "quantummechanistjp@gmail.com";
+    private static final String student2Email = "yoinkysploinky994@gmail.com";
+    private static final String student3Email = "starrringo889@gmail.com";
+    private static final String student4Email = "peteymuskrat@gmail.com";
+    private static final String student5Email = "gronkoxtreme@gmail.com";
+    private static final String student6Email = "tunneldiggertsegrot@gmail.com";
+    private static final String altStudentEmail = "balonjalbatross@gmail.com";
 
 
     //The following variables are all data that will be added to the database and will end up in the emails. Feel free
     //to change these up. The numbers correspond to the order of students' emails above.
-    private final String courseName = "test course";
-    private final String courseAbb = "TST101";
-    private final String crn = "101";
-    private final String altCourseName = "alt course";
-    private final String altCourseAbb = "ALT480";
-    private final String altcrn = "480";
+    private static final String courseName = "test course";
+    private static final String courseAbb = "TST101";
+    private static final String crn = "101";
+    private static final String altCourseName = "alt course";
+    private static final String altCourseAbb = "ALT480";
+    private static final String altcrn = "480";
     private final String fn1 = "George";
     private final String ln1 = "Washington";
     private final String fn2 = "John";
@@ -86,38 +89,38 @@ public class EmailTests {
     private final String ln6 = "Quincy Adams";
     private final String fnAlt = "Andrew";
     private final String lnAlt = "Jackson";
-    private final String ass1Name = "Assignment 1";
-    private final String ass1Due = "2023-5-20";
-    private final String ass1PRDue = "2023-5-30";
-    private final String ass2Name = "Assignment 2";
-    private final String ass2Due = "2023-6-10";
-    private final String ass2PRDue = "2023-6-20";
-    private final String team1Name = "12"; //students 1 and 2
-    private final String team2Name = "34"; //students 3 and 4
-    private final String team3Name = "56"; //students 5 and 6
+    private static final String ass1Name = "Assignment 1";
+    private static final String ass1Due = "2023-5-20";
+    private static final String ass1PRDue = "2023-5-30";
+    private static final String ass2Name = "Assignment 2";
+    private static final String ass2Due = "2023-6-10";
+    private static final String ass2PRDue = "2023-6-20";
+    private static final String team1Name = "12"; //students 1 and 2
+    private static final String team2Name = "34"; //students 3 and 4
+    private static final String team3Name = "56"; //students 5 and 6
 
 
-    private CourseDAO course;
-    private String courseID;
-    private CourseDAO alt;
-    private StudentDAO s1;
-    private StudentDAO s2;
-    private StudentDAO s3;
-    private StudentDAO s4;
-    private StudentDAO s5;
-    private StudentDAO s6;
-    private StudentDAO sAlt;
-    private AssignmentDAO ass1;
+    private static CourseDAO course;
+    private static String courseID;
+    private static CourseDAO alt;
+    private static StudentDAO s1;
+    private static StudentDAO s2;
+    private static StudentDAO s3;
+    private static StudentDAO s4;
+    private static StudentDAO s5;
+    private static StudentDAO s6;
+    private static StudentDAO sAlt;
+    private static AssignmentDAO ass1;
     private int ass1ID;
-    private AssignmentDAO ass2;
+    private static AssignmentDAO ass2;
     private int ass2ID;
-    private TeamDAO team1;
-    private TeamDAO team2;
-    private TeamDAO team3;
+    private static TeamDAO team1;
+    private static TeamDAO team2;
+    private static TeamDAO team3;
 
 
     @BeforeAll
-    public void setUpDB(){
+    public static void setUpDB(){
         //turn all the data into epic JSON format and add it to the database.
         course = new CourseDAO(courseAbb, courseName, "1", crn, "Spring", "2023");
         alt = new CourseDAO(altCourseAbb, altCourseName, "1", altcrn, "Spring", "2023");
@@ -163,7 +166,7 @@ public class EmailTests {
                 .post(Entity.entity(jsonb.toJson(team2), MediaType.APPLICATION_JSON));
         target.request(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(jsonb.toJson(team3), MediaType.APPLICATION_JSON));
-        target = client.target(baseUrl + port + "/teams/professor/team/add-student");
+        target = client.target(baseUrl + "/teams/professor/team/add-student");
         String teamParam1 = "{\n" +
                 "  \"course_id\": \"" + courseID + "\",\n" +
                 "  \"nominated_team_lead\": \"" + student1Email + "\",\n" +
@@ -230,13 +233,13 @@ public class EmailTests {
                 ass1ID = assignment.getInteger("assignment_id");
             }
         }
-        target = client.target(baseUrl + port + "assignments/student/courses/" + courseID + "/assignments/" + ass1ID + "/" + team1Name + "/upload");
+        target = client.target(baseUrl + "assignments/student/courses/" + courseID + "/assignments/" + ass1ID + "/" + team1Name + "/upload");
         target.request(MediaType.MULTIPART_FORM_DATA).accept(MediaType.MULTIPART_FORM_DATA)
                 .post(Entity.entity(jsonb.toJson(samplepdf), MediaType.APPLICATION_JSON));
-        target = client.target(baseUrl + port + "assignments/student/courses/" + courseID + "/assignments/" + ass1ID + "/" + team2Name + "/upload");
+        target = client.target(baseUrl + "assignments/student/courses/" + courseID + "/assignments/" + ass1ID + "/" + team2Name + "/upload");
         target.request(MediaType.MULTIPART_FORM_DATA).accept(MediaType.MULTIPART_FORM_DATA)
                 .post(Entity.entity(jsonb.toJson(samplepdf), MediaType.APPLICATION_JSON));
-        target = client.target(baseUrl + port + "assignments/student/courses/" + courseID + "/assignments/" + ass1ID + "/" + team3Name + "/upload");
+        target = client.target(baseUrl + "assignments/student/courses/" + courseID + "/assignments/" + ass1ID + "/" + team3Name + "/upload");
         target.request(MediaType.MULTIPART_FORM_DATA).accept(MediaType.MULTIPART_FORM_DATA)
                 .post(Entity.entity(jsonb.toJson(samplepdf), MediaType.APPLICATION_JSON));
 
@@ -269,22 +272,22 @@ public class EmailTests {
 
     @Test
     public void testAllPeerReviewsSubmittedEmail() throws IOException {
-        WebTarget target = client.target(baseUrl + port + "peer-review/assignments/" + courseID + "/" + ass1ID + "/" + team1Name + "/" + team2Name + "/100/upload");
+        WebTarget target = client.target(baseUrl + "peer-review/assignments/" + courseID + "/" + ass1ID + "/" + team1Name + "/" + team2Name + "/100/upload");
         target.request(MediaType.MULTIPART_FORM_DATA).accept(MediaType.MULTIPART_FORM_DATA)
                 .post(Entity.entity(jsonb.toJson(samplepdf), MediaType.APPLICATION_JSON));
-        target = client.target(baseUrl + port + "peer-review/assignments/" + courseID + "/" + ass1ID + "/" + team1Name + "/" + team3Name + "/100/upload");
+        target = client.target(baseUrl + "peer-review/assignments/" + courseID + "/" + ass1ID + "/" + team1Name + "/" + team3Name + "/100/upload");
         target.request(MediaType.MULTIPART_FORM_DATA).accept(MediaType.MULTIPART_FORM_DATA)
                 .post(Entity.entity(jsonb.toJson(samplepdf), MediaType.APPLICATION_JSON));
-        target = client.target(baseUrl + port + "peer-review/assignments/" + courseID + "/" + ass1ID + "/" + team2Name + "/" + team1Name + "/100/upload");
+        target = client.target(baseUrl + "peer-review/assignments/" + courseID + "/" + ass1ID + "/" + team2Name + "/" + team1Name + "/100/upload");
         target.request(MediaType.MULTIPART_FORM_DATA).accept(MediaType.MULTIPART_FORM_DATA)
                 .post(Entity.entity(jsonb.toJson(samplepdf), MediaType.APPLICATION_JSON));
-        target = client.target(baseUrl + port + "peer-review/assignments/" + courseID + "/" + ass1ID + "/" + team2Name + "/" + team3Name + "/100/upload");
+        target = client.target(baseUrl + "peer-review/assignments/" + courseID + "/" + ass1ID + "/" + team2Name + "/" + team3Name + "/100/upload");
         target.request(MediaType.MULTIPART_FORM_DATA).accept(MediaType.MULTIPART_FORM_DATA)
                 .post(Entity.entity(jsonb.toJson(samplepdf), MediaType.APPLICATION_JSON));
-        target = client.target(baseUrl + port + "peer-review/assignments/" + courseID + "/" + ass1ID + "/" + team3Name + "/" + team1Name + "/100/upload");
+        target = client.target(baseUrl + "peer-review/assignments/" + courseID + "/" + ass1ID + "/" + team3Name + "/" + team1Name + "/100/upload");
         target.request(MediaType.MULTIPART_FORM_DATA).accept(MediaType.MULTIPART_FORM_DATA)
                 .post(Entity.entity(jsonb.toJson(samplepdf), MediaType.APPLICATION_JSON));
-        target = client.target(baseUrl + port + "peer-review/assignments/" + courseID + "/" + ass1ID + "/" + team3Name + "/" + team2Name + "/100/upload");
+        target = client.target(baseUrl + "peer-review/assignments/" + courseID + "/" + ass1ID + "/" + team3Name + "/" + team2Name + "/100/upload");
         target.request(MediaType.MULTIPART_FORM_DATA).accept(MediaType.MULTIPART_FORM_DATA)
                 .post(Entity.entity(jsonb.toJson(samplepdf), MediaType.APPLICATION_JSON));
 

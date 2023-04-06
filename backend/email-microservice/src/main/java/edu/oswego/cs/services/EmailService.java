@@ -448,7 +448,8 @@ public class EmailService {
     }
 
     /**
-     * gets the path from the working directory to "defaultserver"
+     * gets the path from the working directory to "defaultserver". On the production build, you'll need to change this
+     * to the equivalent base target directiory directly above the "templates" folder.
      *
      * @return the path from the working directory to "defaultserver"
      */
@@ -458,6 +459,9 @@ public class EmailService {
         String targetDir = "defaultServer";
         StringBuilder relativePathPrefix = new StringBuilder();
 
+        if(slicedPath.length == 0){
+            return "";
+        }
         for (int i = slicedPath.length - 1; !slicedPath[i].equals(targetDir); i--) {
             relativePathPrefix.append("../");
         }
