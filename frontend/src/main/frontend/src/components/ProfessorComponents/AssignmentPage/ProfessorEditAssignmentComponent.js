@@ -308,7 +308,7 @@ const ProfessorEditAssignmentComponent = () => {
                         ? 'eac-crossmark'
                         : 'eac-crossmark-gone'
                     }
-                  >
+                  >Name of Ass
                     &#10060;
                   </span>
                 </div>
