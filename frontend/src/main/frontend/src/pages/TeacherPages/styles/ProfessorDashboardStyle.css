@@ -4,10 +4,10 @@
   height: 100vh;
 }
 
-.logout-out-and-create-course{
+.create-course{
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .welcome-banner {

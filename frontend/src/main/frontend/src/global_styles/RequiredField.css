@@ -1,0 +1,13 @@
+.required::after {
+    content: "*";
+    color: #FF0000FF;
+    font-size: 20px;
+    margin-left: 5px;
+}
+
+.required-alt::before {
+    content: "*";
+    color: #FF0000FF;
+    font-size: 20px;
+    margin-right: 2px;
+}
