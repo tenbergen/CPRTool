@@ -3,11 +3,11 @@ import '../../components/styles/FinalGrade.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import SidebarComponent from '../../components/SidebarComponent';
 import SubmittedAssBarComponent from '../../components/SubmittedAssBarComponent';
 import { getSubmittedAssignmentDetailsAsync } from '../../redux/features/submittedAssignmentSlice';
 import uuid from 'react-uuid';
 import {base64StringToBlob} from "blob-util";
+import ProfessorHeaderBar from "../../components/ProfessorComponents/ProfessorHeaderBar";
 function ProfessorSubmittedAssignmentPage() {
   const dispatch = useDispatch();
   const { currentSubmittedAssignment, currentSubmittedAssignmentLoaded } =
@@ -88,9 +88,9 @@ function ProfessorSubmittedAssignmentPage() {
 
 
   return (
-    <div>
+    <div className="page-container">
+      <ProfessorHeaderBar/>
       <div className='scp-parent'>
-        <SidebarComponent />
         <div className='scp-container'>
           <SubmittedAssBarComponent />
           <div className='scp-component'>

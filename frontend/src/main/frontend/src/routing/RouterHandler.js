@@ -27,26 +27,30 @@ const RouterHandler = () => {
 
           {/*professor-only routes*/}
           <Route element={<RoleRouteHandler allowedRoles={['professor']} />}>
-            <Route path='create/course' element={<CreateCoursePage />} />
+            <Route path='create' element={<CreateCoursePage />} />
             <Route
-              path='details/professor/:courseId'
+              path='professor/:courseId'
               element={<ProfessorCoursePage />}
             />
             <Route
-              path='details/professor/:courseId/create/assignment'
+              path='professor/:courseId/create/assignment'
               element={<CreateAssignmentPage />}
             />
             <Route
-              path='details/professor/:courseId/:assignmentId'
+              path='professor/:courseId/:assignmentId'
               element={<ProfessorAssignmentPage />}
             />
             <Route
-              path='details/professor/:courseId/:assignmentId/:teamId/submitted'
+              path='professor/:courseId/:assignmentId/:teamId/submitted'
               element={<ProfessorSubmittedAssignmentPage />}
             />
             <Route
-              path='details/professor/admin'
+              path='professor/admin'
               element={<AdminInterface />}
+            />
+            <Route
+                path='professor'
+                element={<App />}
             />
           </Route>
 
@@ -57,20 +61,24 @@ const RouterHandler = () => {
             }
           >
             <Route
-              path='details/student/:courseId'
+              path='student/:courseId'
               element={<StudentCoursePage />}
             />
             <Route
-              path='details/student/:courseId/:assignmentId/:assignmentType'
+              path='student/:courseId/:assignmentId/:assignmentType'
               element={<StudentAssignmentPage />}
             />
             <Route
-              path='details/student/:courseId/:assignmentId/:assignmentType/:teamId'
+              path='student/:courseId/:assignmentId/:assignmentType/:teamId'
               element={<StudentAssignmentPage />}
             />
             <Route
-              path='details/student/:courseId/:assignmentId/:teamId/submitted'
+              path='student/:courseId/:assignmentId/:teamId/submitted'
               element={<StudentSubmittedAssignmentPage />}
+            />
+            <Route
+                path='student'
+                element={<App />}
             />
           </Route>
         </Route>

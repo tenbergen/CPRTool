@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import './styles/ProfessorCourseStyle.css';
-import SidebarComponent from '../../components/SidebarComponent';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCourseDetailsAsync } from '../../redux/features/courseSlice';
@@ -10,6 +9,7 @@ import ProfessorEditAssignmentComponent from '../../components/ProfessorComponen
 import { getAssignmentDetailsAsync } from '../../redux/features/assignmentSlice';
 import Loader from '../../components/LoaderComponenets/Loader';
 import uuid from 'react-uuid';
+import ProfessorHeaderBar from "../../components/ProfessorComponents/ProfessorHeaderBar";
 
 const AssComponent = ({ active, component, onClick }) => {
   return (
@@ -46,36 +46,38 @@ function ProfessorAssignmentPage() {
   return (
     <div>
       {currentCourseLoaded ? (
-        <div className='scp-parent'>
-          <SidebarComponent />
-          <div className='scp-container'>
-            <GradeAssBarComponent />
-            <div className='scp-component'>
-              <div className='scp-component-links'>
-                {components.map(
-                  (t) =>
-                    t && (
-                      <AssComponent
-                        key={uuid()}
-                        component={t}
-                        active={t === chosen}
-                        onClick={() => onComponentClick(t)}
-                      />
-                    )
-                )}
-              </div>
-              <div>
-                {chosen === 'All Submissions' && (
-                  <ProfessorAllSubmissionsComponent />
-                )}
-                {chosen === 'Needs Grading' && (
-                  <ProfessorAllSubmissionsComponent />
-                )}
-                {chosen === 'Edit' && <ProfessorEditAssignmentComponent />}
+          <div className="page-container">
+            <ProfessorHeaderBar/>
+            <div className='scp-parent'>
+              <div className='scp-container'>
+                <GradeAssBarComponent />
+                <div className='scp-component'>
+                  <div className='scp-component-links'>
+                    {components.map(
+                        (t) =>
+                            t && (
+                                <AssComponent
+                                    key={uuid()}
+                                    component={t}
+                                    active={t === chosen}
+                                    onClick={() => onComponentClick(t)}
+                                />
+                            )
+                    )}
+                  </div>
+                  <div>
+                    {chosen === 'All Submissions' && (
+                        <ProfessorAllSubmissionsComponent />
+                    )}
+                    {chosen === 'Needs Grading' && (
+                        <ProfessorAllSubmissionsComponent />
+                    )}
+                    {chosen === 'Edit' && <ProfessorEditAssignmentComponent />}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
       ) : (
         <Loader />
       )}
