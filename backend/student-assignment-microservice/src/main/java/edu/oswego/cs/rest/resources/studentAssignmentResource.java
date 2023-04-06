@@ -184,6 +184,46 @@ public class studentAssignmentResource {
     /**
      *
      * @param courseID
+     * @return String
+     *
+     * Returns a Base64 string of the zip file containing all submission/peer review information relative to all the assignments
+     * in a given course that the frontend can decode and get a zip file from. Note that if no peer reviews are added to the assignment
+     * the Peer-Reviews folder won't be made.
+     *     Structure of the unzipped file goes:
+     * <Course ID>
+     *     |
+     *     |
+     *     L-><Assignment-Name>
+     *            |
+     *            |
+     *            |
+     *            L-><Submission> ---> <Submission File>
+     *            L-><Peer-Reviews>
+     *                     |
+     *                     |
+     *                     L-><Given> ---> <All Peer Reviews given for the current assignment>
+     *                     L-><Received> ---> <All Peer Reviews received for the current assignment>
+     */
+    @GET
+    @RolesAllowed("professor")
+    @Path("{course_id}/{student_id}/course-assignment-files")
+    public Response getAllCourseDocumentsStudent(@Context SecurityContext securityContext, @PathParam("course_id") String courseID, @PathParam("student_id") String studentID) throws IOException {
+        //make sure the user is the professor of the course
+        new AssignmentInterface().checkProfessor(securityContext, courseID);
+        //create the zip file
+        File zipFile = new AssignmentInterface().aggregateSubmissionsStudent(courseID, studentID);
+        //create the base64 representation
+        Response.ResponseBuilder response = Response.ok(Base64.getEncoder().encode(Files.readAllBytes(zipFile.toPath())));
+        response.header("Content-Disposition", "attachment; filename=" + courseID + "-" + studentID + "Submissions.zip");
+        //delete the temp file
+        zipFile.delete();
+        //send back the zip file Base64
+        return response.build();
+    }
+
+    /**
+     *
+     * @param courseID
      * @param assignmentID
      * @return String
      *
