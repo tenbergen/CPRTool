@@ -1,5 +1,6 @@
 package edu.oswego.cs;
 
+import edu.oswego.cs.application.DeadlineTracker;
 import edu.oswego.cs.daos.AssignmentDAO;
 import edu.oswego.cs.daos.CourseDAO;
 import edu.oswego.cs.daos.StudentDAO;
@@ -329,6 +330,11 @@ public class EmailTests {
     public void testOutlierEmail() throws IOException {
         new EmailService().outlierDetectedEmail(courseID, team3Name, ass1ID);
         //should send the professor an email
+    }
+
+    @Test
+    public void testDeadlineTimer(){
+        new DeadlineTracker().init();
     }
 
     private final String samplepdf = "{\n" +
