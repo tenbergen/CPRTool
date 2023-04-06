@@ -25,7 +25,9 @@ jobs:
       - setup_remote_docker:
           version: 20.10.14
       - checkout
-      - docker-compose -f "docker-compose-local.yml" up -d --build
+      - run:
+          name: Build Docker Image
+            - docker-compose -f "docker-compose-local.yml" up -d --build
 
 workflows:
   build:
