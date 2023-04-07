@@ -7,18 +7,50 @@ orbs:
 jobs:
   build:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/base:2023.04
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD
 
     steps:
-      - setup_remote_docker:
-          version: 19.03.13
       - checkout
-      - -build
+      - run:
+          name: Install Docker Compose
+          environment:
+            COMPOSE_VERSION: '1.29.2'
+          command: |
+            curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o ~/docker-compose
+            chmod +x ~/docker-compose
+            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+      - setup_remote_docker
 
-workflows:
-  build:
-    jobs:
-      - build
+  compile:
+    docker:
+      - image: cimg/base:2023.04
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD
+
+    steps:
+      - checkout
+      - command: |
+          docker-compose -f docker-compose-local.yml up -d --build
+
+  tests:
+    docker:
+      - image: cimg/base:2023.04
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD
+
+    steps:
+      - run:
+          name: Run tests
+          command: |
+            docker-compose -f docker-compose-local.yml exec -T app sh -c "mvn test"
+
+Workflow:
+  Job:
+    - build
+    - compile
+    - -tests
