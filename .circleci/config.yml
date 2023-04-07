@@ -7,7 +7,7 @@ orbs:
 jobs:
   build:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/base:2023.04
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD
