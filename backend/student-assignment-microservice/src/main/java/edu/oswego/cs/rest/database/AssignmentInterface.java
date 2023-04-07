@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -36,6 +37,8 @@ public class AssignmentInterface {
     static MongoCollection<Document> teamsCollection;
     static MongoCollection<Document> submissionCollection;
     static MongoCollection<Document> professorCollection;
+
+    static ConcurrentHashMap<String, Boolean> assignmentLock = new ConcurrentHashMap();
 
     static String reg = "/";
 
@@ -143,15 +146,28 @@ public class AssignmentInterface {
                 .append("peer_review_due_date", assignment.get("peer_review_due_date"));
 
         boolean submissionCheck = submissionCollection.find(and(eq("course_id", course_id), eq("assignment_id", assignment_id), eq("team_name", team.getString("team_id")))).iterator().hasNext();
+        // do some sort of spinning lock here so that only one teammate at a time is submitting an assignment at a time
+        //key is assignment_ID+team_name+type
+        while(assignmentLock.containsKey(assignment_id+team.getString("team_id")+"team_submission"));
+        //set the lock
+        assignmentLock.put(assignment_id+team.getString("team_id")+"team_submission", true);
         if (submissionCheck) {
             Document extensionCheck = submissionCollection.find(and(eq("course_id", course_id), eq("assignment_id", assignment_id), eq("team_name", team.getString("team_id")))).first();
             if (extensionCheck.getString("submission_name").equals(file_name)) {
+                //remove the lock
+                assignmentLock.remove(assignment_id+team.getString("team_id")+"team_submission");
                 throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("submission already exists").build());
             } else {
                 submissionCollection.deleteOne(extensionCheck);
                 submissionCollection.insertOne(new_submission);
+                //remove the lock
+                assignmentLock.remove(assignment_id+team.getString("team_id")+"team_submission");
             }
-        } else submissionCollection.insertOne(new_submission);
+        } else {
+            submissionCollection.insertOne(new_submission);
+            //remove the lock
+            assignmentLock.remove(assignment_id+team.getString("team_id")+"team_submission");
+        }
     }
 
     public Document allAssignments(String course_id, String student_id) {
@@ -341,6 +357,65 @@ public class AssignmentInterface {
 
     }
 
+    /**
+     * Add all assignment files related to a specific student
+     * @param submissions
+     * @param courseID
+     * @param studentID
+     * @param zipFolder
+     * @throws IOException
+     */
+    public void insertAssignmentFilesStudent(MongoCursor<Document> submissions, String courseID, String studentID, ZipOutputStream zipFolder) throws IOException {
+        while(submissions.hasNext()){
+            //get the current submission
+            Document currentSubmission = submissions.next();
+            //check and make sure the submission has the current studentID attached to the submitter. If it does not, just continue the loop
+            if(currentSubmission.getString("type").equals("team_submission")){
+                List<String> submission_members = currentSubmission.getList("members", String.class);
+                if (submission_members.stream().noneMatch(s -> s.equals(studentID))) {
+                    continue;
+                }
+            }else{
+                List<String> submission_members = currentSubmission.getList("reviewed_by_members", String.class);
+                if (submission_members.stream().noneMatch(s -> s.equals(studentID))) {
+                    continue;
+                }
+            }
+
+            //make the file path to save the submission in
+            String path;
+            String assignmentNameNoSpaces = currentSubmission.getString("assigment_name").replace(" ", "_");
+            Binary submission_data = (Binary) currentSubmission.get("submission_data");
+            if(currentSubmission.getString("type").equals("team_submission")){
+                path = courseID+"/"+assignmentNameNoSpaces+"/"+currentSubmission.getString("team_name")+"/submission/"+currentSubmission.getString("submission_name");
+                System.out.println(path);
+                ZipEntry curEntry = new ZipEntry(path);
+                zipFolder.putNextEntry(curEntry);
+                zipFolder.write(submission_data.getData(), 0, submission_data.getData().length);
+                zipFolder.closeEntry();
+            }else{
+                //if it is a peer review, save the data in the folder in both the to/from teams
+                String fromTeam = currentSubmission.getString("reviewed_by");
+                String toTeam = currentSubmission.getString("reviewed_team");
+                //from team first
+                path = courseID+"/"+assignmentNameNoSpaces+"/"+fromTeam+"/peer-reviews/given/"+currentSubmission.getString("submission_name");
+                ZipEntry curEntryFromTeam = new ZipEntry(path);
+                zipFolder.putNextEntry(curEntryFromTeam);
+                zipFolder.write(submission_data.getData(), 0, submission_data.getData().length);
+                zipFolder.closeEntry();
+
+
+                //to team last
+                path = courseID+"/"+assignmentNameNoSpaces+"/"+toTeam+"/peer-reviews/received/"+currentSubmission.getString("submission_name");
+                ZipEntry curEntryToTeam = new ZipEntry(path);
+                zipFolder.putNextEntry(curEntryToTeam);
+                zipFolder.write(submission_data.getData(), 0, submission_data.getData().length);
+                zipFolder.closeEntry();
+            }
+        }
+
+    }
+
 
     /**
      * Returns a zip file containing all completed assignment submissions
@@ -378,6 +453,33 @@ public class AssignmentInterface {
         String tempPath = tempFile.getAbsolutePath();
         ZipOutputStream zipFolder = new ZipOutputStream(new FileOutputStream(tempPath));
         insertAssignmentFiles(submissionCollection.find(eq("assignment_id", assignment_ID)).iterator(), courseID, zipFolder);
+        zipFolder.close();
+
+        //return the file with all the assignment data
+        return tempFile;
+    }
+
+
+    /**
+     * Returns a zip file containing all submissions related to the student with the given studentID
+     * @param courseID
+     * @param studentID
+     * @return
+     * @throws IOException
+     */
+    public File aggregateSubmissionsStudent(String courseID, String studentID) throws IOException {
+        //make the temporary zip folder
+        File tempFile = Files.createTempFile(courseID+studentID, ".zip").toFile();
+        String tempPath = tempFile.getAbsolutePath();
+        ZipOutputStream zipFolder = new ZipOutputStream(new FileOutputStream(tempPath));
+        //get a list of all the assignments
+        for (Document currentAssignment : assignmentsCollection.find(eq("course_id", courseID))) {
+            //get the next assignment related to the current course
+            //get this to get the submissions quicker
+            Integer assignment_ID = currentAssignment.getInteger("assignment_id");
+            //now iterate through the submissions for the assignment and put them in the proper place in the zip folder
+            insertAssignmentFilesStudent(submissionCollection.find(eq("assignment_id", assignment_ID)).iterator(), courseID, studentID, zipFolder);
+        }
         zipFolder.close();
 
         //return the file with all the assignment data
