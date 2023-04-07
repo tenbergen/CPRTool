@@ -1,8 +1,6 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
-const decode = require('jwt-decode');
-const { logger } = require('../utils');
+const { logger, authenticate } = require('../utils');
 const axios = require('axios');
-const fs = require("fs");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -66,44 +64,24 @@ module.exports = {
     /** @param {ChatInputCommandInteraction} interaction */
     async execute(interaction) {
         try {
-            const token = interaction.client.accounts.get(interaction.user.id);
-            if (!token) {
-                const commands = await interaction.guild.commands.fetch();
-                const command = commands.find(cmd => cmd.name === 'login');
-
-                await interaction.reply(`You are not logged in. Please login with </login:${command.id}>.`, { ephemeral: true });
-                return;
-            }
-
-            const role = decode(token).groups[0];
-            const config = {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            };
-
-            const courseId = await axios
-                .get('http://course-viewer:13128/view/professor/courses', config)
-                .then((res) => {
-                    return res.data.find(course => course.course_name === interaction.guild.name).course_id;
-                })
-                .catch((err) => {
-                    logger.error(err.stack);
+            const subcommand = interaction.options.getSubcommand();
+            const { headers, roles, courseId } = await authenticate(interaction)
+                .catch(async (err) => {
+                    await interaction.reply({ content: err.message, ephemeral: true });
+                    logger.error('User not logged in');
                 });
 
-            const subcommand = interaction.options.getSubcommand();
-
             if (subcommand === 'homework') {
-                if (role !== 'professor') {
-                    await interaction.reply('You are not authorized to create homework assignments.');
-                    return;
-                }
-
                 const name = interaction.options.getString('name');
                 const instructions = interaction.options.getString('instructions');
                 const dueDate = interaction.options.getString('due-date');
                 const points = interaction.options.getInteger('points');
                 const file = interaction.options.getAttachment('file');
+
+                if (!roles.includes('professor')) {
+                    await interaction.reply({ content: 'You are not authorized to create homework assignments!', ephemeral: true });
+                    return;
+                }
 
                 const url = 'http://professor-assignment:13130/assignments/professor/courses';
                 const data = {
@@ -115,15 +93,15 @@ module.exports = {
                 };
 
                 await axios
-                    .post(`${url}/create-assignment-no-peer-review`, data, config)
+                    .post(`${url}/create-assignment-no-peer-review`, data, headers)
                     .catch(async (err) => {
-                        await interaction.reply('Error creating homework assignment.');
+                        await interaction.reply({ content: 'Error creating homework assignment!', ephemeral: true });
                         logger.error(err.stack);
                     });
 
                 if (file) {
                     const assignmentId = await axios
-                        .get(`${url}/${courseId}/assignments`, config)
+                        .get(`${url}/${courseId}/assignments`, headers)
                         .then((res) => {
                             return res.data.find(assignment => assignment.assignment_name === name).assignment_id;
                         })
@@ -132,25 +110,20 @@ module.exports = {
                         });
 
                     const base64File = await axios
-                        .get(file.url, { responseType: 'arraybuffer', responseEncoding: 'base64url' })
+                        .get(file.url, { responseType: 'arraybuffer', responseEncoding: 'base64' })
                         .then((res) => {
-                            let temp = Buffer.from(res.data, 'base64url').toString('base64url');
-                            temp = temp.replace('data:', '').replace(/^.+,/, '');
-                            return Buffer.from(temp, 'base64url');
+                            return Buffer.from(res.data, 'base64').toString('base64');
                         })
                         .catch((err) => {
                             logger.error(err.stack);
                         });
 
-                    fs.writeFileSync(file.name, base64File.toString('base64url'), { encoding: 'base64url' });
-                    const fileActual = fs.readFileSync(file.name, { encoding: 'base64' });
-
                     const fileData = new FormData();
-                    fileData.append(file.name, fileActual);
+                    fileData.append(file.name, base64File);
 
                     await axios
-                        .post(`${url}/${courseId}/assignments/${assignmentId}/upload`, fileData, config)
-                        .catch(async (err) => {
+                        .post(`${url}/${courseId}/assignments/${assignmentId}/upload`, fileData, headers)
+                        .catch((err) => {
                             logger.error(err.stack);
                         });
                 }
@@ -158,17 +131,17 @@ module.exports = {
                 await interaction.reply('Homework assignment created!');
 
             } else if (subcommand === 'peer-review') {
-                if (role !== 'professor') {
-                    await interaction.reply('You are not authorized to create peer review assignments.');
-                    return;
-                }
-
                 const name = interaction.options.getString('name');
                 const instructions = interaction.options.getString('instructions');
                 const dueDate = interaction.options.getString('due-date');
                 const points = interaction.options.getInteger('points');
                 const rubric = interaction.options.getAttachment('rubric');
                 const template = interaction.options.getAttachment('template');
+
+                if (!roles.includes('professor')) {
+                    await interaction.reply({ content: 'You are not authorized to create peer review assignments!', ephemeral: true });
+                    return;
+                }
 
                 const url = `http://professor-assignment:13130/assignments/professor/courses/${courseId}`;
                 const data = {
@@ -178,7 +151,7 @@ module.exports = {
                 };
 
                 const assignmentId = await axios
-                    .get(`${url}/assignments`, config)
+                    .get(`${url}/assignments`, headers)
                     .then((res) => {
                         return res.data.find(assignment => assignment.assignment_name === name).assignment_id;
                     })
@@ -187,58 +160,48 @@ module.exports = {
                     });
 
                 await axios
-                    .put(`${url}/assignments/${assignmentId}/addPeerReviewData`, data, config)
+                    .put(`${url}/assignments/${assignmentId}/addPeerReviewData`, data, headers)
                     .catch(async (err) => {
-                        await interaction.reply('Error creating peer review.');
+                        await interaction.reply({ content: 'Error creating peer review!', ephemeral: true });
                         logger.error(err.stack);
                     });
 
                 if (rubric) {
                     const base64File = await axios
-                        .get(rubric.url, { responseType: 'arraybuffer', responseEncoding: 'base64url' })
+                        .get(rubric.url, { responseType: 'arraybuffer', responseEncoding: 'base64' })
                         .then((res) => {
-                            let temp = Buffer.from(res.data, 'base64url').toString('base64url');
-                            temp = temp.replace('data:', '').replace(/^.+,/, '');
-                            return Buffer.from(temp, 'base64url');
+                            return Buffer.from(res.data, 'base64').toString('base64');
                         })
                         .catch((err) => {
                             logger.error(err.stack);
                         });
 
-                    fs.writeFileSync(rubric.name, base64File.toString('base64url'), { encoding: 'base64url' });
-                    const file = fs.readFileSync(rubric.name, { encoding: 'base64' });
-
                     const rubricData = new FormData();
-                    rubricData.append(rubric.name, file);
+                    rubricData.append(rubric.name, base64File);
 
                     await axios
-                        .post(`${url}/assignments/${assignmentId}/peer-review/rubric/upload`, rubricData, config)
-                        .catch(async (err) => {
+                        .post(`${url}/assignments/${assignmentId}/peer-review/rubric/upload`, rubricData, headers)
+                        .catch((err) => {
                             logger.error(err.stack);
                         });
                 }
 
                 if (template) {
                     const base64File = await axios
-                        .get(template.url, { responseType: 'arraybuffer', responseEncoding: 'base64url' })
+                        .get(template.url, { responseType: 'arraybuffer', responseEncoding: 'base64' })
                         .then((res) => {
-                            let temp = Buffer.from(res.data, 'base64url').toString('base64url');
-                            temp = temp.replace('data:', '').replace(/^.+,/, '');
-                            return Buffer.from(temp, 'base64url');
+                            return Buffer.from(res.data, 'base64').toString('base64');
                         })
                         .catch((err) => {
                             logger.error(err.stack);
                         });
 
-                    fs.writeFileSync(template.name, base64File.toString('base64url'), { encoding: 'base64url' });
-                    const file = fs.readFileSync(template.name, { encoding: 'base64' });
-
                     const templateData = new FormData();
-                    templateData.append(template.name, file);
+                    templateData.append(template.name, base64File);
 
                     await axios
-                        .post(`${url}/assignments/${assignmentId}/peer-review/template/upload`, templateData, config)
-                        .catch(async (err) => {
+                        .post(`${url}/assignments/${assignmentId}/peer-review/template/upload`, templateData, headers)
+                        .catch((err) => {
                             logger.error(err.stack);
                         });
                 }
@@ -249,17 +212,17 @@ module.exports = {
                 const name = interaction.options.getString('name');
 
                 if (name.split(' ').length > 1) {
-                    await interaction.reply('Please enter a team name with no spaces.');
+                    await interaction.reply({ content: 'Please enter a team name with no spaces!', ephemeral: true });
                     return;
                 }
 
                 if (name === '') {
-                    await interaction.reply('Team name cannot be empty.');
+                    await interaction.reply({ content: 'Team name cannot be empty!', ephemeral: true });
                     return;
                 }
 
                 if (name.length > 20) {
-                    await interaction.reply('Team name is too long.');
+                    await interaction.reply({ content: 'Team name is too long!', ephemeral: true });
                     return;
                 }
 
@@ -270,9 +233,9 @@ module.exports = {
                 };
 
                 await axios
-                    .post('http://peer-review-teams:13129/teams/team/create', data, config)
+                    .post('http://peer-review-teams:13129/teams/team/create', data, headers)
                     .catch(async (err) => {
-                        await interaction.reply('Error creating team.');
+                        await interaction.reply('Error creating team!');
                         logger.error(err.stack);
                     });
 
