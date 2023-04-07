@@ -9,6 +9,7 @@ docker container stop cpr-professor-assignment && docker container rm cpr-profes
 docker container stop cpr-peer-review-teams && docker container rm cpr-peer-review-teams
 docker container stop cpr-student-assignment && docker container rm cpr-student-assignment
 docker container stop cpr-student-peer-review-assignment && docker container rm cpr-student-peer-review-assignment
+docker container stop cpr-discord-bot && docker container rm cpr-discord-bot
 docker container stop cpr-nginx && docker container rm cpr-nginx
 
 # Back out one level to access docker-compose.yml.
