@@ -123,16 +123,16 @@ public class AuthServices {
 
         if (professorCollection.find(eq("professor_id", lakerID)).first() != null) {
             roles.add("professor");
-            if (Objects.requireNonNull(professorCollection.find(eq("professor_id", lakerID)).first()).get("admin")
-                    .equals(true)) {
+            Document professorDoc = professorCollection.find(eq("professor_id", lakerID)).first();
+            if (professorDoc != null && professorDoc.containsKey("admin") && professorDoc.getBoolean("admin")) {
                 roles.add("admin");
             }
-
         } else {
             roles.add("student");
         }
 
         return roles;
+        
     }
 
     // Checks if professor database is empty
