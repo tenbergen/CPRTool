@@ -3,11 +3,19 @@ version: 2.1
 
 orbs:
   maven: circleci/maven@1.4.1
+
+jobs:
+    maven compile:
+        executor: maven/default
+    steps:
+      - checkout
+      - mvn clean
+      - mvn package
+
+
+
 workflows:
   build:
     jobs:
-      - maven compile:
+      - maven compile
 
-          steps:
-            - checkout
-            - verify mvn clean package
