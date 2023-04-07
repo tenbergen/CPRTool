@@ -34,7 +34,7 @@ public class ProfessorAssignmentTests {
 //    @BeforeAll
 //    public static void oneTimeSetup() {
 //        port = "13125";
-//        baseUrl = "http://moxie.cs.oswego.edu:" + port + "/assignments/professor";
+//        baseUrl = "https://moxie.cs.oswego.edu:" + port + "/assignments/professor";
 //
 //
 //        // variables for inserted assignments
