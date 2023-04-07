@@ -118,7 +118,7 @@ public class NavigationAndInput {
 
     @Test
     public void CreateCourseTest() {
-        // driver.get("http://moxie.cs.oswego.edu:13125/create/course");
+        // driver.get("http://moxie.cs.oswego.edu:13125/create");
 
         // WebDriverWait wait = new WebDriverWait(driver, 5);
 
@@ -209,9 +209,9 @@ public class NavigationAndInput {
 
 //            driver.findElement(By.xpath("//*[@id=\"courseList\"]/a[4]/li")).click();
 //            String strUrl = driver.getCurrentUrl();
-//            if(strUrl.contains("http://moxie.cs.oswego.edu:13125/details/student"))
+//            if(strUrl.contains("http://moxie.cs.oswego.edu:13125/student"))
 //            {
-//                String newUrl = strUrl.replace("http://moxie.cs.oswego.edu:13125/details/student","http://moxie.cs.oswego.edu:13125/details/professor");
+//                String newUrl = strUrl.replace("http://moxie.cs.oswego.edu:13125/student","http://moxie.cs.oswego.edu:13125/details/professor");
 //                driver.get(newUrl);
 //            }
 //

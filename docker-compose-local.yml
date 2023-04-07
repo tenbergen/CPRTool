@@ -153,7 +153,7 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
 
-  discord:
+  discord-bot:
     build:
       context: ./discord
     image: cpr-discord-bot
@@ -163,6 +163,9 @@ services:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
       TESTING_GUILD: ${TESTING_GUILD}
       NODE_ENV: ${NODE_ENV}
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
+      URL: ${URL}
 
   mongo:
     image: mongo:5.0.6

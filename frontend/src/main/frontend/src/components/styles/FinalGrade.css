@@ -1,3 +1,8 @@
+.page-container{
+  display: flex;
+  flex-direction: column;
+}
+
 .sac-parent {
   padding-left: 2%;
   padding-right: 2%;
