@@ -52,7 +52,6 @@ hs_err_pid
 
 /.gitignore
 /professor-list.txt
-/.env
 
 # Database folders
 db*
