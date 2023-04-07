@@ -25,9 +25,16 @@ jobs:
       - setup_remote_docker
 
   compile:
-    - run:
-      - name: Start all services declared in docker-compose-local.yml
-      command: |
+    docker:
+      - image: cimg/base:stable
+        auth:
+          username: mydockerhub-user
+          password: $DOCKERHUB_PASSWORD
+
+    steps:
+      - run:
+        - name: Start all services declared in docker-compose-local.yml
+        command: |
              docker-compose -f docker-compose-local.yml up -d --build
           
 
