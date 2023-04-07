@@ -22,8 +22,14 @@ jobs:
             curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o ~/docker-compose
             chmod +x ~/docker-compose
             sudo mv ~/docker-compose /usr/local/bin/docker-compose
+
+      - setup_remote_docker
+
       - run:
-          - docker-compose -f docker-compose-local.yml up -d --build
+          - name: Start all services declared in docker-compose-local.yml
+            command: |
+              docker-compose -f docker-compose-local.yml up -d --build
+          
 
 Workflow:
   Job:
