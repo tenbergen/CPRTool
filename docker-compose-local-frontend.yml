@@ -142,6 +142,21 @@ services:
       MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
+
+  discord:
+    build:
+      context: ./discord
+    image: cpr-discord-bot
+    container_name: cpr-discord-bot
+    restart: unless-stopped
+    environment:
+      DISCORD_TOKEN: ${DISCORD_TOKEN}
+      TESTING_GUILD: ${TESTING_GUILD}
+      NODE_ENV: ${NODE_ENV}
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
+      URL: ${URL}
+
   mongo:
     image: mongo:5.0.6
     command: mongod --port ${MONGO_PORT}
