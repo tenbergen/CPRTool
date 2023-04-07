@@ -1,6 +1,7 @@
 import { Field, Form } from 'react-final-form';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import * as React from 'react';
+import { useDispatch, useSelector, useState } from 'react-redux';
 import {
   getAssignmentDetailsAsync,
   getCourseAssignmentsAsync,
@@ -12,7 +13,13 @@ import '../../../global_styles/RequiredField.css';
 
 const profAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`;
 
+
 const ProfessorEditAssignmentComponent = () => {
+  const [checked, setChecked] = React.useState(false);
+
+  const handleChangeInCheckBox = () => {
+    setChecked(!checked);
+  };
   const dispatch = useDispatch();
   const { courseId, assignmentId } = useParams();
   const { currentAssignment, currentAssignmentLoaded } = useSelector(
@@ -154,17 +161,167 @@ const ProfessorEditAssignmentComponent = () => {
     }
   };
 
+  function PeerReviewData() {
+    if (checked) {
+      return <div>
+        <div className='inter-16-medium-black eac-instructions'>
+          <label className="required"> Peer Review Instructions: </label>
+          <Field name='peer_review_instructions'>
+            {({input}) => (
+                <textarea
+                    name='peer_review_instructions'
+                    {...input}
+                    required
+                />
+            )}
+          </Field>
+        </div>
+
+        <div className='inter-16-medium-black eac-assignment-files-multiple'>
+          <div>
+            <div
+                className='eac-assignment-files'
+                style={{marginBottom: '8%'}}
+            >
+              Current files:
+              <span
+                  className='eac-file-name'
+                  onClick={() =>
+                      onFileClick(currentAssignment.rubric_name, false, true)
+                  }
+              >
+                    {currentAssignmentLoaded
+                        ? currentAssignment.rubric_name
+                        : null}
+                  </span>
+              <span
+                  onClick={() =>
+                      deleteFile(currentAssignment.peer_review_rubric, true, false)
+                  }
+                  className={
+                    currentAssignmentLoaded &&
+                    currentAssignment.peer_review_rubric !== ''
+                        ? 'eac-crossmark'
+                        : 'eac-crossmark-gone'
+                  }
+              >
+                &#10060;
+                  </span>
+            </div>
+
+            <div
+                className='eac-assignment-files'
+                style={{marginBottom: '0'}}
+            >
+              <label> New rubric: </label>
+              <input
+                  type='file'
+                  name='peer_review_rubric'
+                  accept='.pdf,.zip,.docx'
+                  onChange={(e) => fileChangeHandler(e, 'rubric')}
+              />
+            </div>
+          </div>
+
+          <div>
+            <div
+                className='eac-assignment-files'
+                style={{marginBottom: '8%'}}
+            >
+              Current files:
+              <span
+                  onClick={() =>
+                      onFileClick(currentAssignment.peer_review_template_name, true, false)
+                  }
+              >
+                    {currentAssignmentLoaded
+                        ? currentAssignment.peer_review_template_name
+                        : null}
+                  </span>
+              <span
+                  onClick={() =>
+                      deleteFile(currentAssignment.peer_review_template, false, true)
+                  }
+                  className={
+                    currentAssignmentLoaded &&
+                    currentAssignment.peer_review_template !== ''
+                        ? 'eac-crossmark'
+                        : 'eac-crossmark-gone'
+                  }
+              >
+                    &#10060;
+                  </span>
+            </div>
+
+            <div
+                className='eac-assignment-files'
+                style={{marginBottom: '0'}}
+            >
+              <label> New template: </label>
+              <input
+                  type='file'
+                  name='peer_review_template'
+                  accept='.pdf,.zip..docx'
+                  onChange={(e) => fileChangeHandler(e, 'template')}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className='inter-16-medium-black eac-assignment-info'>
+          <label className="required"> Due Date: </label>
+          <Field name='peer_review_due_date'>
+            {({input}) => (
+                <input
+                    type='date'
+                    name='peer_review_due_date'
+                    {...input}
+                    required
+                    min={new Date().toISOString().split('T')[0]}
+                />
+            )}
+          </Field>
+
+          <label className="required"> Points: </label>
+          <Field name='peer_review_points'>
+            {({input}) => (
+                <input
+                    type='number'
+                    min='0'
+                    name='peer_review_points'
+                    {...input}
+                    required
+                    onWheel={(e) => e.target.blur()}
+                />
+            )}
+          </Field>
+        </div>
+      </div>
+    }else{
+      return <div></div>
+    }
+  }
+
   const initialValue = () => {
     if (currentAssignmentLoaded) {
-      return {
-        assignment_name: currentAssignment.assignment_name,
-        instructions: currentAssignment.instructions,
-        due_date: currentAssignment.due_date,
-        points: currentAssignment.points,
-        peer_review_instructions: currentAssignment.peer_review_instructions,
-        peer_review_due_date: currentAssignment.peer_review_due_date,
-        peer_review_points: currentAssignment.peer_review_points,
-      };
+      if(checked) {
+        return {
+          assignment_name: currentAssignment.assignment_name,
+          instructions: currentAssignment.instructions,
+          due_date: currentAssignment.due_date,
+          points: currentAssignment.points,
+          peer_review_instructions: currentAssignment.peer_review_instructions,
+          peer_review_due_date: currentAssignment.peer_review_due_date,
+          peer_review_points: currentAssignment.peer_review_points,
+        };
+      }else{
+        return {
+          assignment_name: currentAssignment.assignment_name,
+          instructions: currentAssignment.instructions,
+          due_date: currentAssignment.due_date,
+          points: currentAssignment.points,
+        }
+      }
     }
   };
 
@@ -268,139 +425,18 @@ const ProfessorEditAssignmentComponent = () => {
               </Field>
             </div>
 
-            <div className='inter-16-medium-black eac-instructions'>
-              <label className="required"> Peer Review Instructions: </label>
-              <Field name='peer_review_instructions'>
-                {({ input }) => (
-                  <textarea
-                    name='peer_review_instructions'
-                    {...input}
-                    required
-                  />
-                )}
-              </Field>
+            <div>
+              <label className ='inter-20-medium'>
+                <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={handleChangeInCheckBox}
+                />
+                Include Peer Review Data
+              </label>
             </div>
 
-            <div className='inter-16-medium-black eac-assignment-files-multiple'>
-              <div>
-                <div
-                  className='eac-assignment-files'
-                  style={{ marginBottom: '8%' }}
-                >
-                  Current files:
-                  <span
-                    className='eac-file-name'
-                    onClick={() =>
-                      onFileClick(currentAssignment.rubric_name, false,true)
-                    }
-                  >
-                    {currentAssignmentLoaded
-                      ? currentAssignment.rubric_name
-                      : null}
-                  </span>
-                  <span
-                    onClick={() =>
-                      deleteFile(currentAssignment.peer_review_rubric, true, false)
-                    }
-                    className={
-                      currentAssignmentLoaded &&
-                      currentAssignment.peer_review_rubric !== ''
-                        ? 'eac-crossmark'
-                        : 'eac-crossmark-gone'
-                    }
-                  >Name of Ass
-                    &#10060;
-                  </span>
-                </div>
-
-                <div
-                  className='eac-assignment-files'
-                  style={{ marginBottom: '0' }}
-                >
-                  <label> New rubric: </label>
-                  <input
-                    type='file'
-                    name='peer_review_rubric'
-                    accept='.pdf,.zip,.docx'
-                    onChange={(e) => fileChangeHandler(e, 'rubric')}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <div
-                  className='eac-assignment-files'
-                  style={{ marginBottom: '8%' }}
-                >
-                  Current files:
-                  <span
-                    onClick={() =>
-                      onFileClick(currentAssignment.peer_review_template_name, true,false)
-                    }
-                  >
-                    {currentAssignmentLoaded
-                      ? currentAssignment.peer_review_template_name
-                      : null}
-                  </span>
-                  <span
-                    onClick={() =>
-                      deleteFile(currentAssignment.peer_review_template, false, true)
-                    }
-                    className={
-                      currentAssignmentLoaded &&
-                      currentAssignment.peer_review_template !== ''
-                        ? 'eac-crossmark'
-                        : 'eac-crossmark-gone'
-                    }
-                  >
-                    &#10060;
-                  </span>
-                </div>
-
-                <div
-                  className='eac-assignment-files'
-                  style={{ marginBottom: '0' }}
-                >
-                  <label> New template: </label>
-                  <input
-                    type='file'
-                    name='peer_review_template'
-                    accept='.pdf,.zip..docx'
-                    onChange={(e) => fileChangeHandler(e, 'template')}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className='inter-16-medium-black eac-assignment-info'>
-              <label className="required"> Due Date: </label>
-              <Field name='peer_review_due_date'>
-                {({ input }) => (
-                  <input
-                    type='date'
-                    name='peer_review_due_date'
-                    {...input}
-                    required
-                    min={new Date().toISOString().split('T')[0]}
-                  />
-                )}
-              </Field>
-
-              <label className="required"> Points: </label>
-              <Field name='peer_review_points'>
-                {({ input }) => (
-                  <input
-                    type='number'
-                    min='0'
-                    name='peer_review_points'
-                    {...input}
-                    required
-                    onWheel={(e) => e.target.blur()}
-                  />
-                )}
-              </Field>
-            </div>
-
+            <PeerReviewData></PeerReviewData>
             <div>
               <label className ='inter-20-medium'>
                       <span className='required-alt'>
