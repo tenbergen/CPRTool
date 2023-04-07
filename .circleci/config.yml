@@ -6,8 +6,8 @@ orbs:
 workflows:
   build:
     jobs:
-      - maven/test:
-          executor: maven clean package
+      - maven compile:
+
           steps:
             - checkout
-            - mvn clean package
+            - verify mvn clean package
