@@ -32,10 +32,8 @@ jobs:
           password: $DOCKERHUB_PASSWORD
 
     steps:
-      - run:
-        - name: Start all services declared in docker-compose-local.yml
-        command: |
-             docker-compose -f docker-compose-local.yml up -d --build
+      command: |
+        docker-compose -f docker-compose-local.yml up -d --build
           
 
 Workflow:
