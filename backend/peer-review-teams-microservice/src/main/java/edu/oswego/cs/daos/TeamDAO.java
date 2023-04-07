@@ -35,4 +35,12 @@ public class TeamDAO {
         this.teamMembers = new ArrayList<>();
         this.teamSize = teamSize;
     }
+    public TeamDAO(String teamName, String courseID, int teamSize) {
+        this.teamID = null;
+        this.courseID = courseID;
+        this.teamFull = false;
+        this.teamLead = null;
+        this.teamMembers = new ArrayList<>();
+        this.teamSize = teamSize;
+    }
 }
