@@ -38,7 +38,7 @@
     padding-left: 70px
 }
 
-#course-accordion-title{
+.course-accordion-title-active{
     display: flex;
     flex-direction: row;
     background-color: #FFFFFF;
@@ -48,6 +48,23 @@
     margin-top: -1px;
     user-select: none;
     padding-left: 55px
+}
+
+.course-accordion-title-default{
+    display: flex;
+    flex-direction: row;
+    background-color: #F6F6F6;
+    border: 1px solid #101828;
+    height: 60px;
+    align-items: center;
+    margin-top: -1px;
+    user-select: none;
+    padding-left: 55px
+}
+
+#coursesContainer{
+    display: flex;
+    flex-direction: column;
 }
 
 .courses-icon-active{
