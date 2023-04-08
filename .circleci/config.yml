@@ -5,21 +5,22 @@ orbs:
   maven: circleci/maven@1.4.1
 
 jobs:
-    maven-compile:
-        executor: maven/default
+  clean:
+    executor: maven/default
     steps:
       - checkout
-      - run:
-          name: clean
-          command: mvn clean
+      - run: mvn clean
 
-      - run:
-            name: compile
-            command: mvn package
-
+  build:
+    executor: maven/default
+    steps:
+      - checkout
+      - run: mvn package
 
 workflows:
-  build:
+  clean_and_build:
     jobs:
-      - maven-compile
-
+      - clean
+      - build:
+          requires:
+            - clean
