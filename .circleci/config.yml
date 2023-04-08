@@ -13,7 +13,7 @@ jobs:
     executor: maven/default
     steps:
       - checkout
-      - run: mvn clean
+      - run: mvn dir/backend/course-manager-microservice clean
 
   build_course_manager:
     parameters:
@@ -23,7 +23,7 @@ jobs:
     executor: maven/default
     steps:
       - checkout
-      - run: mvn package
+      - run: mvn dir/backend/course-manager-microservice package
 
 workflows:
   clean_and_build:
