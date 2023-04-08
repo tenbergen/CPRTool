@@ -9,8 +9,9 @@ jobs:
         executor: maven/default
     steps:
       - checkout
-      - mvn clean
-      - mvn package
+      - command:
+        - mvn clean
+        - mvn package
 
 
 
