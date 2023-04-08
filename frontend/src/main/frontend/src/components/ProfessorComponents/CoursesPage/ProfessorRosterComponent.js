@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import noStudent from "../../../assets/no-student.png";
 import { CgAdd } from "react-icons/cg";
 import uuid from "react-uuid";
+import {base64StringToBlob} from "blob-util";
 
 const ProfessorRosterComponent = () => {
   const dispatch = useDispatch();
@@ -115,6 +116,34 @@ const ProfessorRosterComponent = () => {
   };
   const setFalse = () => setShow(false);
 
+  const onRosterClick = async () => {
+    const url = `${process.env.REACT_APP_URL}/assignments/student/${courseId}/${Email}/course-assignment-files`;
+
+    await axios
+        .get(url, { responseType: 'blob' })
+        .then((res) => prepareStudentFile(res["headers"]["content-disposition"], res.data.text()));
+  }
+
+  const prepareStudentFile = (teamDataName, teamData) => {
+    var filename = ""
+    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+    var matches = filenameRegex.exec(teamDataName);
+    if (matches != null && matches[1]) {
+      filename = matches[1].replace(/['"]/g, '');
+    }
+    teamData.then((res) => {
+        downloadFile(base64StringToBlob(res, 'application/zip'), filename)
+    })
+  };
+
+  const downloadFile = (blob, fileName) => {
+    const fileURL = URL.createObjectURL(blob);
+    const href = document.createElement('a');
+    href.href = fileURL;
+    href.download = fileName;
+    href.click();
+  };
+
   return (
     <div>
       <div className="RosterPage">
@@ -126,8 +155,10 @@ const ProfessorRosterComponent = () => {
                   <thead>
                     <tr>
                       <th className="rosterHeader">Name</th>
-                      <th className="rosterHeader">Email</th>
+                      <th className="rosterHeader">Laker Net ID</th>
+                      <th className="rosterHeader">Major</th>
                       <th className="rosterHeader">Team</th>
+                      <th className="rosterHeader">Actions</th>
                       <th className="rosterHeader"></th>
                     </tr>
                   </thead>
@@ -142,8 +173,17 @@ const ProfessorRosterComponent = () => {
                                 : ""}
                             </th>
                             <th className="rosterComp">{student.student_id}</th>
+                            <th className="rosterComp">Computer Science</th>
                             <th className="rosterComp">
                               {student.team !== null ? student.team : ""}
+                            </th>
+                            <th className="rosterComp">
+                              <span className='inter-16-bold-blue p2' >
+                                <button className='blue-button-small' onClick={onRosterClick} >
+                                {' '}
+                                  Download{' '}
+                                </button>
+                              </span>
                             </th>
                             <th className="rosterComp">
                               <div className="crossMark-wrapper">

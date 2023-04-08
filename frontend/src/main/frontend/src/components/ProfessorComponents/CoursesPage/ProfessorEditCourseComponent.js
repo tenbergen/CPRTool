@@ -10,6 +10,7 @@ import {
   getCoursesAsync,
 } from '../../../redux/features/courseSlice';
 import '../../../global_styles/RequiredField.css';
+import {base64StringToBlob} from "blob-util";
 
 const deleteCourseUrl = `${process.env.REACT_APP_URL}/manage/professor/courses`;
 const updateUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/update`;
@@ -122,6 +123,34 @@ const ProfessorEditCourseComponent = () => {
     dispatch(getCoursesAsync());
   };
 
+  const onCourseClick = async () => {
+    const url = `${process.env.REACT_APP_URL}/assignments/student/${courseId}/course-assignment-files`;
+
+    await axios
+        .get(url, { responseType: 'blob' })
+        .then((res) => prepareCourseFile(res["headers"]["content-disposition"], res.data.text()));
+  }
+
+  const prepareCourseFile = (teamDataName, teamData) => {
+    var filename = ""
+    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+    var matches = filenameRegex.exec(teamDataName);
+    if (matches != null && matches[1]) {
+      filename = matches[1].replace(/['"]/g, '');
+    }
+    teamData.then((res) => {
+      downloadFile(base64StringToBlob(res, 'application/zip'), filename)
+    })
+  };
+
+  const downloadFile = (blob, fileName) => {
+    const fileURL = URL.createObjectURL(blob);
+    const href = document.createElement('a');
+    href.href = fileURL;
+    href.download = fileName;
+    href.click();
+  };
+
   return (
     <div className='ecc-form'>
       <Form
@@ -224,17 +253,31 @@ const ProfessorEditCourseComponent = () => {
               </div>
             </div>
 
-            <div className='ecc-file-upload'>
-              <label>
-                {' '}
-                <span className='inter-20-bold'> Course CSV: </span>{' '}
-              </label>
-              <input
-                onChange={fileChangeHandler}
-                type='file'
-                name='course_csv'
-                accept='.csv'
-              />
+            <div className='ecc-row-multiple'>
+              <div className='ecc-file-upload'>
+                <label>
+                  {' '}
+                  <span className='inter-20-bold'> Course CSV: </span>{' '}
+                </label>
+                <input
+                  onChange={fileChangeHandler}
+                  type='file'
+                  name='course_csv'
+                  accept='.csv'
+                />
+              </div>
+              <div>
+                <label>
+                  {' '}
+                  <span className='inter-20-bold'> Bulk Download for Course </span>{' '}
+                </label>
+                <span className='inter-16-bold-blue p2' >
+                  <button className='blue-button-small' onClick={onCourseClick}>
+                  {' '}
+                    Download{' '}
+                  </button>
+                </span>
+              </div>
             </div>
 
             <div>
