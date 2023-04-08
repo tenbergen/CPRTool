@@ -11,13 +11,13 @@
 .ecc-input-field {
   width: 100%;
   margin-bottom: 5%;
-  display: flex;
+  display: flow;
   justify-content: center;
   align-items: center;
 }
 
 .ecc-input-field label {
-  margin-right: 10px;
+  margin-right: 500px;
 }
 
 .ecc-input-field input {
@@ -53,6 +53,7 @@
   font-size: 18px;
   line-height: 24px;
   letter-spacing: 0.5px;
+  margin-bottom: 25px;
 }
 .ecc-file-upload input::file-selector-button:hover {
   background-color: #1d2f99;

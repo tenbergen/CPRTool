@@ -4,7 +4,10 @@
 }
 
 .accordionTitle {
-  background-color: #4a7dfc;
+
+  border: 2px solid lightgray;
+  border-top: 30px solid #4a7dfc;
+  background-color: white;
   font-size: 20px;
   padding-left: 12px;
   padding-bottom: 20px;
@@ -31,13 +34,14 @@
 }
 
 .accordionTeamTitle {
-  margin-left: 12px;
+  margin-left: 30px;
 }
 
 .accordionContent {
   background-color: white;
   border: 2px solid lightgray;
-  border-radius: 0 0 5px 5px;
+  border-radius: 10px;
+  border-top: none;
 }
 
 .crossMarkTeam {
@@ -70,7 +74,8 @@
 }
 
 .teamA {
-  margin-left: 15px;
+  margin-left: 10px;
+  margin-top: 10px;
 
   width: 140px;
   height: 30px;
@@ -87,9 +92,9 @@
 
 .teamA:hover {
   cursor: pointer;
-  background-color: #6c63ff;
+  background-color: #027A48;
   color: #fff;
-  border-radius: 10px;
+  border-radius: 5px;
 }
 
 .no-team-wrapper {
@@ -139,3 +144,64 @@
   justify-content: center;
   align-items: center;
 }
+
+.modify-button {
+  width: 118px;
+  height: 34px;
+  background-color: #4a7dfc;
+  border-radius: 5px;
+  color: white;
+  border: none;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  margin-right: 10px;
+  content: "Modify";
+}
+
+.modify-button:hover{
+  background-color: #1d2f99;
+}
+.modify-button:active{
+  background-color: #102080;
+}
+
+.remove-button{
+  width: 118px;
+  height: 34px;
+  background-color: #f04438;
+  color: white;
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-right: 5px;
+  margin-bottom: 10px;
+}
+.remove-button:hover{
+  background-color: #D30E00;
+
+}
+.remove-button:active{
+  background-color: #C60D00;
+}
+
+.add-button{
+  width: 118px;
+  height: 34px;
+  background-color: #28a745;
+  color: white;
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-right: 5px;
+  margin-left: 1000px;
+  margin-bottom: 10px;
+
+}
+
+.add-button:hover{
+  background-color: #027A48;
+}
+.add-button:active{
+  background-color: #05603a;
+}
+
