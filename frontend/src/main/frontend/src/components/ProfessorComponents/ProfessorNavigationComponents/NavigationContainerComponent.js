@@ -9,18 +9,25 @@ import BulkDownloadTileComponent from "./BulkDownloadTileComponent";
 
 const NavigationContainerComponent = () => {
 
-    const [trigger, setTrigger] = useState(0)
+    const [coursesTrigger, setCoursesTrigger] = useState(0)
+    const [homeTrigger, setHomeTrigger] = useState(0)
+    const [homeActive, setHomeActive] = useState(false)
 
-    const deactivateTiles = () => {
-        setTrigger((trigger) => trigger + 1)
+    const deactivateCourses = () => {
+        setHomeActive(true)
+        setCoursesTrigger((trigger) => trigger + 1)
+    }
+
+    const deactivateHome = () => {
+        setHomeActive(false)
+        setHomeTrigger((trigger) => trigger + 1)
     }
 
     return (
         <div className="parent-container">
             <div className="navigation-container">
-                <HomeTileComponent trigger={trigger} deactivateTiles={deactivateTiles}/>
-                <CoursesTileComponent trigger={trigger} deactivateTiles={deactivateTiles}/>
-                <BulkDownloadTileComponent trigger={trigger} deactivateTiles={deactivateTiles}/>
+                <HomeTileComponent trigger={homeTrigger} deactivateCourses={deactivateCourses}/>
+                <CoursesTileComponent trigger={coursesTrigger} homeActive={homeActive} deactivateHome={deactivateHome}/>
             </div>
             <LogoutButton/>
         </div>

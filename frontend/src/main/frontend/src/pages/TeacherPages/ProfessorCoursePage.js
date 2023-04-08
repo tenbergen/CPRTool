@@ -52,7 +52,7 @@ function ProfessorCoursePage() {
           <div className="page-container">
             <ProfessorHeaderBar/>
             <div className="pcp-container">
-              <CourseBarComponent/>
+              <NavigationContainerComponent/>
               {/*<NavigationContainerComponent/>*/}
               <div className="pcp-components">
                 <div className="pcp-component-links inter-28-light">

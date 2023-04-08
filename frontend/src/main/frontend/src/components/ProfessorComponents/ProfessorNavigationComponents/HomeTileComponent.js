@@ -1,7 +1,7 @@
 import './_ProfessorNavigationComponents.css'
 import React, {forwardRef, useEffect, useImperativeHandle} from 'react';
 
-const HomeTileComponent = ({trigger, deactivateTiles}) => {
+const HomeTileComponent = ({trigger, deactivateCourses}) => {
 
     useEffect(() => {
         if(trigger){
@@ -13,7 +13,7 @@ const HomeTileComponent = ({trigger, deactivateTiles}) => {
     })
 
     const onClick = () => {
-        deactivateTiles()
+        deactivateCourses()
         setTimeout(() => {
             document.getElementById("home-tile").classList.remove("inter-24-medium")
             document.getElementById("home-tile").classList.add("inter-24-bold-blue")
