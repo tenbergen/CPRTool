@@ -15,17 +15,36 @@ const profAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/co
 
 
 const ProfessorEditAssignmentComponent = () => {
-  const [checked, setChecked] = React.useState(false);
+  const initialCheckBoxState = () =>{
+    if(alreadySetInitialCheckState){
+      return checked;
+    }
+    if(currentAssignmentLoaded) {
+      setChecked(currentAssignment.has_peer_review)
+      if(!alreadySetInitialCheckState){
+        console.log("setting initial state!")
+        setAlreadySetInitialCheckState(true)
+      }
+      return checked;
+    }
+    setChecked(false)
+    return checked;
+  }
 
   const handleChangeInCheckBox = () => {
+    if(currentAssignment.has_peer_review){
+      alert("Cannot remove peer review information once submitted!")
+    }
     setChecked(!checked);
   };
+
   const dispatch = useDispatch();
   const { courseId, assignmentId } = useParams();
   const { currentAssignment, currentAssignmentLoaded } = useSelector(
     (state) => state.assignments
   );
 
+  const [alreadySetInitialCheckState, setAlreadySetInitialCheckState] = React.useState(false);
   const assignmentFileFormData = new FormData();
   let assignmentFileName = ""
   const rubricFileFormData = new FormData();
@@ -36,8 +55,10 @@ const ProfessorEditAssignmentComponent = () => {
   const getAssUrl = `${profAssignmentUrl}/${courseId}/assignments`;
 
   useEffect(() => {
-    dispatch(getAssignmentDetailsAsync({ courseId, assignmentId }));
+    dispatch(getAssignmentDetailsAsync({courseId, assignmentId}));
   }, [courseId, assignmentId, dispatch]);
+
+  const [checked, setChecked] = React.useState(false);
 
   const fileChangeHandler = (event, fileType) => {
     let file = event.target.files[0];
@@ -62,21 +83,30 @@ const ProfessorEditAssignmentComponent = () => {
   };
 
   const handleSubmit = async (formObj) => {
-    const editUrl = `${getAssUrl}/${assignmentId}/edit`;
+    //do the update as normal if the assignment alread had peer review data
+    if(currentAssignment.has_peer_review) {
+      const editUrl = `${getAssUrl}/${assignmentId}/edit`;
 
-    if (JSON.stringify(() => initialValue()) === JSON.stringify(formObj)) {
-      alert('Nothing to save!');
-      return;
+      if (JSON.stringify(() => initialValue()) === JSON.stringify(formObj)) {
+        alert('Nothing to save!');
+        return;
+      }
+
+      await axios.put(editUrl, {...formObj, course_id: courseId}).catch((e) => {
+        console.error(e.response);
+      });
+
+      await submitNewFiles();
+      dispatch(getCourseAssignmentsAsync(courseId));
+      dispatch(getAssignmentDetailsAsync({courseId, assignmentId}));
+      alert('Successfully updated assignment!');
+    }else if(!checked){
+      //if the box is not checked, we will update the assignment without peer review data
+
+    }else{
+      //the box is checked and there was no peer review data previously,
+      //so now we first update the existing assignment then append new peer review data.
     }
-
-    await axios.put(editUrl, { ...formObj, course_id: courseId }).catch((e) => {
-      console.error(e.response);
-    });
-
-    await submitNewFiles();
-    dispatch(getCourseAssignmentsAsync(courseId));
-    dispatch(getAssignmentDetailsAsync({ courseId, assignmentId }));
-    alert('Successfully updated assignment!');
   };
 
   const submitNewFiles = async () => {
@@ -429,6 +459,7 @@ const ProfessorEditAssignmentComponent = () => {
               <label className ='inter-20-medium'>
                 <input
                     type="checkbox"
+                    defaultChecked={currentAssignmentLoaded ? initialCheckBoxState() : checked}
                     checked={checked}
                     onChange={handleChangeInCheckBox}
                 />
