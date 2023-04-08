@@ -5,13 +5,21 @@ orbs:
   maven: circleci/maven@1.4.1
 
 jobs:
-  clean:
+  clean_course_manager:
+    parameters:
+      app_src_directory:
+        type: string
+        default: "/backend/course-manager-microservice"
     executor: maven/default
     steps:
       - checkout
       - run: mvn clean
 
-  build:
+  build_course_manager:
+    parameters:
+      app_src_directory:
+        type: string
+        default: "/backend/course-manager-microservice"
     executor: maven/default
     steps:
       - checkout
@@ -20,7 +28,7 @@ jobs:
 workflows:
   clean_and_build:
     jobs:
-      - clean
-      - build:
+      - clean_course_manager
+      - build_course_manager:
           requires:
-            - clean
+            - clean_course_manager
