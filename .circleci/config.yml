@@ -6,24 +6,16 @@ orbs:
 
 jobs:
   clean_course_manager:
-    parameters:
-      app_src_directory:
-        type: string
-        default: "/backend/course-manager-microservice"
     executor: maven/default
     steps:
       - checkout
-      - run: mvn /backend/course-manager-microservice/ clean
+      - run: /backend/course-manager-microservice/ mvn clean
 
   build_course_manager:
-    parameters:
-      app_src_directory:
-        type: string
-        default: "/backend/course-manager-microservice"
     executor: maven/default
     steps:
       - checkout
-      - run: mvn /backend/course-manager-microservice/ package
+      - run: /backend/course-manager-microservice/ mvn package
 
 workflows:
   clean_and_build:
