@@ -172,4 +172,3 @@ const submittedAssignmentSlice = createSlice({
 });
 
 export default submittedAssignmentSlice.reducer;
-
