@@ -7,6 +7,7 @@ import { getSubmittedAssignmentsAsync } from '../../../redux/features/submittedA
 import AssignmentTile from '../../AssignmentTile';
 import uuid from 'react-uuid';
 import '../../ProfessorComponents/AssignmentPage/styles/ProfessorAllSubmissionsStyle.css'
+import {base64StringToBlob} from "blob-util";
 
 const ProfessorAllSubmissionsComponent = () => {
   const dispatch = useDispatch();
@@ -41,6 +42,34 @@ const ProfessorAllSubmissionsComponent = () => {
     setAssignedTeamCount(0);
   };
 
+  const onSubmitClick = async () => {
+    const url = `${process.env.REACT_APP_URL}/assignments/student/${assignmentId}/${courseId}/course-assignment-files`;
+
+    await axios
+        .get(url, { responseType: 'blob' })
+        .then((res) => prepareSubmissionFile(res["headers"]["content-disposition"], res.data.text()));
+  }
+
+  const prepareSubmissionFile = (teamDataName, teamData) => {
+    var filename = ""
+    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+    var matches = filenameRegex.exec(teamDataName);
+    if (matches != null && matches[1]) {
+      filename = matches[1].replace(/['"]/g, '');
+    }
+    teamData.then((res) => {
+      downloadFile(base64StringToBlob(res, 'application/zip'), filename)
+    })
+  };
+
+  const downloadFile = (blob, fileName) => {
+    const fileURL = URL.createObjectURL(blob);
+    const href = document.createElement('a');
+    href.href = fileURL;
+    href.download = fileName;
+    href.click();
+  };
+
   return (
     <div>
       {assignmentsLoaded ? (
@@ -57,6 +86,7 @@ const ProfessorAllSubmissionsComponent = () => {
                 )
             )}
           </div>
+          <div className='row-multiple'>
           <div
             className='input-field'
             style={{ marginLeft: '5%', marginBottom: '5%' }}
@@ -77,6 +107,15 @@ const ProfessorAllSubmissionsComponent = () => {
               Distribute Peer Reviews{' '}
             </button>
           </div>
+            <div className='inter-20-medium'> Bulk Download for this Assignment:
+            <span className='inter-16-bold-blue p2' >
+              <button className='blue-button-small' onClick={onSubmitClick}>
+                  {' '}
+                  Download{' '}
+              </button>
+              </span>
+            </div>
+        </div>
         </div>
       ) : null}
     </div>

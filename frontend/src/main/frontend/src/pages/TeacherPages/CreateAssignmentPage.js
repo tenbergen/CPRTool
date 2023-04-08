@@ -349,6 +349,23 @@ const CreateAssignmentPage = () => {
         </Form>
       )}
     </div>
+
+      // For Dom
+      // <div className='inter-20-medium-white ass-tile-title'> {' '}
+      //   <span> {'Assignment'} </span>
+      // </div>
+      // <div className='ass-tile-content' > // be sure to import the assignmentTile.css file to use this and others
+      //  <div>
+      //      Put code here for assignment
+      //  </div>
+      // <div className='inter-20-medium-white ass-tile-alt-title'> {' '}
+      //   <span> {'Peer Review'} </span>
+      //  <div className='ass-tile-alt-content' >
+      //    <div>
+      //      Put code for peer review here
+      //    </div>
+      //  </div>
+      // </div>
   );
 };
 
