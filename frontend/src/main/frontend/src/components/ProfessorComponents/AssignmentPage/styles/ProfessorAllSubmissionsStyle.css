@@ -17,3 +17,9 @@
 #distribute-button:active{
     background-color: #05603a;
 }
+
+.row-multiple {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}

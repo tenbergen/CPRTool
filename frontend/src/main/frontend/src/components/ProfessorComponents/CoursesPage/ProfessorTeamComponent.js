@@ -10,6 +10,7 @@ import {getCurrentCourseTeamAsync} from "../../../redux/features/teamSlice";
 import {useParams} from "react-router-dom";
 
 const ProfessorTeamComponent = () => {
+  const dispatch = useDispatch();
   const { courseId } = useParams();
   const { currentCourse } = useSelector((state) => state.courses);
   const getTeamsUrl = `${process.env.REACT_APP_URL}/teams/team/get/all/${currentCourse.course_id}`;
@@ -37,9 +38,11 @@ const ProfessorTeamComponent = () => {
 
   const createTeam = async () => {
     const team_name = prompt('Enter team name: ');
-    const createUrl = `${process.env.REACT_APP_URL}/teams/team/create`;
+    const lakerId = prompt("Enter student leader's Laker ID");
+    const createUrl = `${process.env.REACT_APP_URL}/${lakerId}/create`;
     const createData = {
       course_id: courseId,
+      student_id: lakerId,
       team_name: team_name,
     };
 
@@ -60,6 +63,7 @@ const ProfessorTeamComponent = () => {
         .post(createUrl, createData)
         .then((res) => {
           alert('Successfully created team');
+          dispatch(getCurrentCourseTeamAsync({ courseId, lakerId }));
         })
         .catch((e) => {
           console.error(e);
