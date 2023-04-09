@@ -1,12 +1,12 @@
 .bulk-download-icon-active{
-    background-image: url("../../../assets/icons/navigation/active/Bulk Download.svg");
+    background-image: url("../../assets/icons/navigation/active/Bulk Download.svg");
     width: 20px;
     height: 20px;
     margin: 0 16px 0 35px;
 }
 
 .bulk-download-icon-default{
-    background-image: url("../../../assets/icons/navigation/default/Bulk Download.svg");
+    background-image: url("../../assets/icons/navigation/default/Bulk Download.svg");
     width: 20px;
     height: 20px;
     margin: 0 16px 0 35px;
@@ -41,6 +41,7 @@
 .course-accordion-title-active{
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     background-color: #FFFFFF;
     border: 1px solid #101828;
     height: 60px;
@@ -53,6 +54,7 @@
 .course-accordion-title-default{
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     background-color: #F6F6F6;
     border: 1px solid #101828;
     height: 60px;
@@ -68,14 +70,14 @@
 }
 
 .courses-icon-active{
-    background-image: url("../../../assets/icons/navigation/active/Courses.svg");
+    background-image: url("../../assets/icons/navigation/active/Courses.svg");
     width: 21px;
     height: 20px;
     margin: 0 17px 0 35px;
 }
 
 .courses-icon-default{
-    background-image: url("../../../assets/icons/navigation/default/Courses.svg");
+    background-image: url("../../assets/icons/navigation/default/Courses.svg");
     width: 21px;
     height: 20px;
     margin: 0 17px 0 35px;
@@ -125,28 +127,28 @@
 }
 
 .dropdown-icon-active{
-    background-image: url("../../../assets/icons/navigation/active/Arrow_Active.svg");
+    background-image: url("../../assets/icons/navigation/active/Arrow_Active.svg");
     width: 17px;
     height: 9px;
     margin: 0 16px 0 35px;
 }
 
 .dropdown-icon-default{
-    background-image: url("../../../assets/icons/navigation/default/Arrow_Default.svg");
+    background-image: url("../../assets/icons/navigation/default/Arrow_Default.svg");
     width: 12px;
     height: 17px;
     margin: 0 16px 0 35px;
 }
 
 .home-icon-active{
-    background-image: url("../../../assets/icons/navigation/active/Home.svg");
+    background-image: url("../../assets/icons/navigation/active/Home.svg");
     width: 22px;
     height: 18px;
     margin: 0 16px 0 35px;
 }
 
 .home-icon-default{
-    background-image: url("../../../assets/icons/navigation/default/Home.svg");
+    background-image: url("../../assets/icons/navigation/default/Home.svg");
     width: 22px;
     height: 18px;
     margin: 0 16px 0 35px;
@@ -170,6 +172,10 @@
     width: 22px;
     height: 20px;
     margin: 0 16px 0 35px;
+}
+
+.invisible-div{
+    height: 0;
 }
 
 .navigation-container{

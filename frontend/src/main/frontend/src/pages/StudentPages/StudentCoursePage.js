@@ -12,6 +12,8 @@ import MyTeamComponent from '../../components/StudentComponents/CoursePage/MyTea
 import uuid from 'react-uuid';
 import AssBarComponent from "../../components/AssBarComponent";
 import StudentHeaderBar from "../../components/StudentComponents/StudentHeaderBar";
+import NavigationContainerComponent
+  from "../../components/NavigationComponents/NavigationContainerComponent";
 
 const CourseComponent = ({ active, component, onClick }) => {
   return (
@@ -51,7 +53,8 @@ function StudentCoursePage() {
       <StudentHeaderBar/>
       <div className='scp-parent'>
         <div className='scp-container'>
-          <AssBarComponent />
+          <NavigationContainerComponent/>
+          {/*<AssBarComponent />*/}
           <div className='scp-component'>
             {/* Not in a team yet */}
             {teamLoaded && currentTeamId === null && <StudentTeamComponent />}
