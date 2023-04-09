@@ -7,6 +7,7 @@ import CourseBarComponent from '../../components/CourseBarComponent';
 import { useSelector } from 'react-redux';
 import Breadcrumbs from "../../components/Breadcrumbs";
 import ProfessorHeaderBar from "../../components/ProfessorComponents/ProfessorHeaderBar";
+import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 
 const CreateCoursePage = () => {
   const submitCourseUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/create`;
@@ -82,7 +83,7 @@ const CreateCoursePage = () => {
           <div className="course-page-container">
             <ProfessorHeaderBar/>
             <div className='ccp-container'>
-              <CourseBarComponent title={`Hello, ${user_given_name}!`} />
+              <NavigationContainerComponent/>
               <div className='pcp-components'>
                 <Breadcrumbs />
                 <h2 className='inter-28-bold cpp-title'> Add new course </h2>

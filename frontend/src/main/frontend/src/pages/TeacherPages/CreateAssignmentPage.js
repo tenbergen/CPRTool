@@ -7,6 +7,7 @@ import { Field, Form } from 'react-final-form';
 import CourseBarComponent from '../../components/CourseBarComponent';
 import Loader from '../../components/LoaderComponenets/Loader';
 import ProfessorHeaderBar from "../../components/ProfessorComponents/ProfessorHeaderBar";
+import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 
 const profAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`;
 
@@ -129,218 +130,216 @@ const CreateAssignmentPage = () => {
           {({ handleSubmit }) => (
             <div className="page-container">
               <ProfessorHeaderBar/>
-              <div className='pcp-parent'>
-                <div className='ccp-container'>
-                  <CourseBarComponent title={'Courses'} />
-                  <div className='pcp-components'>
-                    <h2 className='inter-28-bold'> New Assignment </h2>
-                    <div className='cap-form'>
-                      <form onSubmit={handleSubmit}>
-                        {/*assignment field*/}
-                        <div className='field-container'>
-                          <div className='field-title'>
-                            {' '}
-                            <span className='inter-20-medium-white'> Assignment </span>{' '}
-                          </div>
-                          <div className='field-content'>
-                            <div className='input-field cap-input-field'>
-                              <label className='inter-20-medium'>
+              <div className='ccp-container'>
+                <NavigationContainerComponent/>
+                <div className='pcp-components'>
+                  <h2 className='inter-28-bold'> New Assignment </h2>
+                  <div className='cap-form'>
+                    <form onSubmit={handleSubmit}>
+                      {/*assignment field*/}
+                      <div className='field-container'>
+                        <div className='field-title'>
+                          {' '}
+                          <span className='inter-20-medium-white'> Assignment </span>{' '}
+                        </div>
+                        <div className='field-content'>
+                          <div className='input-field cap-input-field'>
+                            <label className='inter-20-medium'>
                                 <span className='required'>
                                   Name of Assignment:
                                 </span>
-                              </label>
-                              <Field name='assignment_name'>
-                                {({ input }) => (
-                                    <input
-                                        type='text'
-                                        name='assignment_name'
-                                        {...input}
-                                        required
-                                    />
-                                )}
-                              </Field>
-                            </div>
+                            </label>
+                            <Field name='assignment_name'>
+                              {({ input }) => (
+                                  <input
+                                      type='text'
+                                      name='assignment_name'
+                                      {...input}
+                                      required
+                                  />
+                              )}
+                            </Field>
+                          </div>
 
-                            <div className='input-field cap-instructions'>
-                              <label className='inter-20-medium'>
+                          <div className='input-field cap-instructions'>
+                            <label className='inter-20-medium'>
                                 <span className='required'>
                                   Instructions:
                                 </span>
-                              </label>
-                              <Field name='instructions'>
-                                {({ input }) => (
-                                    <textarea
-                                        name='instructions'
-                                        {...input}
-                                        required
-                                    />
-                                )}
-                              </Field>
-                            </div>
+                            </label>
+                            <Field name='instructions'>
+                              {({ input }) => (
+                                  <textarea
+                                      name='instructions'
+                                      {...input}
+                                      required
+                                  />
+                              )}
+                            </Field>
+                          </div>
 
-                            <div className='cap-assignment-files'>
-                              <label className='inter-20-medium'>
+                          <div className='cap-assignment-files'>
+                            <label className='inter-20-medium'>
                                 <span className='required'>
                                   Files:
                                 </span>
-                              </label>
-                              <input
-                                  type='file'
-                                  name='assignment_files'
-                                  accept='.pdf,.zip,.docx'
-                                  required
-                                  onChange={(e) =>
-                                      fileChangeHandler(e, 'assignment')
-                                  }
-                              />
-                            </div>
+                            </label>
+                            <input
+                                type='file'
+                                name='assignment_files'
+                                accept='.pdf,.zip,.docx'
+                                required
+                                onChange={(e) =>
+                                    fileChangeHandler(e, 'assignment')
+                                }
+                            />
+                          </div>
 
-                            <div className='input-field cap-assignment-info'>
-                              <label className='inter-20-medium'>
+                          <div className='input-field cap-assignment-info'>
+                            <label className='inter-20-medium'>
                                 <span className='required'>
                                   Due Date:
                                 </span>
-                              </label>
-                              <Field name='due_date'>
-                                {({ input }) => (
-                                    <input
-                                        type='date'
-                                        name='due_date'
-                                        {...input}
-                                        required
-                                        min={new Date().toISOString().split('T')[0]}
-                                    />
-                                )}
-                              </Field>
+                            </label>
+                            <Field name='due_date'>
+                              {({ input }) => (
+                                  <input
+                                      type='date'
+                                      name='due_date'
+                                      {...input}
+                                      required
+                                      min={new Date().toISOString().split('T')[0]}
+                                  />
+                              )}
+                            </Field>
 
-                              <label className='inter-20-medium'>
+                            <label className='inter-20-medium'>
                                 <span className='required'>
                                   Points:
                                 </span>
-                              </label>
-                              <Field name='points'>
-                                {({ input }) => (
-                                    <input
-                                        type='number'
-                                        name='points'
-                                        {...input}
-                                        required
-                                        onWheel={(e) => e.target.blur()}
-                                    />
-                                )}
-                              </Field>
-                            </div>
+                            </label>
+                            <Field name='points'>
+                              {({ input }) => (
+                                  <input
+                                      type='number'
+                                      name='points'
+                                      {...input}
+                                      required
+                                      onWheel={(e) => e.target.blur()}
+                                  />
+                              )}
+                            </Field>
                           </div>
                         </div>
+                      </div>
 
-                        {/*peer review fields*/}
-                        <div className='field-container'>
-                          <div className='field-title'>
-                            {' '}
-                            <span className='inter-20-medium-white'> Peer Review </span>{' '}
-                          </div>
-                          <div className='field-content'>
-                            <div className='input-field cap-instructions'>
-                              <label className='inter-20-medium'>
-                                {' '}
-                                <span className='required'>
+                      {/*peer review fields*/}
+                      <div className='field-container'>
+                        <div className='field-title'>
+                          {' '}
+                          <span className='inter-20-medium-white'> Peer Review </span>{' '}
+                        </div>
+                        <div className='field-content'>
+                          <div className='input-field cap-instructions'>
+                            <label className='inter-20-medium'>
+                              {' '}
+                              <span className='required'>
                                 Peer Review Instructions:
                                 </span>{' '}
-                              </label>
-                              <Field name='peer_review_instructions'>
-                                {({ input }) => (
-                                    <textarea
-                                        name='peer_review_instructions'
-                                        {...input}
-                                        required
-                                    />
-                                )}
-                              </Field>
-                            </div>
+                            </label>
+                            <Field name='peer_review_instructions'>
+                              {({ input }) => (
+                                  <textarea
+                                      name='peer_review_instructions'
+                                      {...input}
+                                      required
+                                  />
+                              )}
+                            </Field>
+                          </div>
 
-                            <div className='cap-assignment-files'>
-                              <label className='inter-20-medium'>
+                          <div className='cap-assignment-files'>
+                            <label className='inter-20-medium'>
                                 <span className='required'>
                                   Rubric:
                                 </span>
-                              </label>
-                              <input
-                                  type='file'
-                                  name='peer_review_rubric'
-                                  accept='.pdf,.zip,.docx'
-                                  required
-                                  onChange={(e) => fileChangeHandler(e, 'rubric')}
-                              />
+                            </label>
+                            <input
+                                type='file'
+                                name='peer_review_rubric'
+                                accept='.pdf,.zip,.docx'
+                                required
+                                onChange={(e) => fileChangeHandler(e, 'rubric')}
+                            />
 
-                              <label className='inter-20-medium'>
+                            <label className='inter-20-medium'>
                                 <span className='required'>
                                   Template:
                                 </span>
-                              </label>
-                              <input
-                                  type='file'
-                                  name='peer_review_template'
-                                  accept='.pdf,.zip,.docx'
-                                  required
-                                  onChange={(e) => fileChangeHandler(e, 'template')}
-                              />
-                            </div>
+                            </label>
+                            <input
+                                type='file'
+                                name='peer_review_template'
+                                accept='.pdf,.zip,.docx'
+                                required
+                                onChange={(e) => fileChangeHandler(e, 'template')}
+                            />
+                          </div>
 
-                            <div className='input-field cap-assignment-info'>
-                              <label className='inter-20-medium'>
+                          <div className='input-field cap-assignment-info'>
+                            <label className='inter-20-medium'>
                                 <span className='required'>
                                   Due Date:
                                 </span>
-                              </label>
-                              <Field name='peer_review_due_date'>
-                                {({ input }) => (
-                                    <input
-                                        type='date'
-                                        name='peer_review_due_date'
-                                        {...input}
-                                        required
-                                        min={new Date().toISOString().split('T')[0]}
-                                    />
-                                )}
-                              </Field>
+                            </label>
+                            <Field name='peer_review_due_date'>
+                              {({ input }) => (
+                                  <input
+                                      type='date'
+                                      name='peer_review_due_date'
+                                      {...input}
+                                      required
+                                      min={new Date().toISOString().split('T')[0]}
+                                  />
+                              )}
+                            </Field>
 
-                              <label className='inter-20-medium'>
+                            <label className='inter-20-medium'>
                                 <span className='required'>
                                   Points:
                                 </span>
-                              </label>
-                              <Field name='peer_review_points'>
-                                {({ input }) => (
-                                    <input
-                                        type='number'
-                                        min='0'
-                                        name='peer_review_points'
-                                        {...input}
-                                        required
-                                        onWheel={(e) => e.target.blur()}
-                                    />
-                                )}
-                              </Field>
-                            </div>
+                            </label>
+                            <Field name='peer_review_points'>
+                              {({ input }) => (
+                                  <input
+                                      type='number'
+                                      min='0'
+                                      name='peer_review_points'
+                                      {...input}
+                                      required
+                                      onWheel={(e) => e.target.blur()}
+                                  />
+                              )}
+                            </Field>
                           </div>
                         </div>
+                      </div>
 
-                        <div>
-                          <label className ='inter-20-medium'>
+                      <div>
+                        <label className ='inter-20-medium'>
                       <span className='required-alt'>
                         Indicates Required Field
                       </span>
-                          </label>
-                        </div>
+                        </label>
+                      </div>
 
-                        <div className='cap-button'>
-                          <button className='green-button-large' type='submit'>
-                            {' '}
-                            Create{' '}
-                          </button>
-                        </div>
-                      </form>
-                    </div>
+                      <div className='cap-button'>
+                        <button className='green-button-large' type='submit'>
+                          {' '}
+                          Create{' '}
+                        </button>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>

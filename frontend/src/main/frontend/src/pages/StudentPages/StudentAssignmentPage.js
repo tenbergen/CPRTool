@@ -7,6 +7,7 @@ import { getAssignmentDetailsAsync } from '../../redux/features/assignmentSlice'
 import RegularAssignmentComponent from '../../components/StudentComponents/AssignmentPage/RegularAssignmentComponent';
 import StudentPeerReviewComponent from '../../components/StudentComponents/AssignmentPage/StudentPeerReviewComponent';
 import StudentHeaderBar from "../../components/StudentComponents/StudentHeaderBar";
+import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 
 function StudentAssignmentPage() {
   const dispatch = useDispatch();
@@ -20,16 +21,14 @@ function StudentAssignmentPage() {
   return (
     <div className="page-container">
       <StudentHeaderBar/>
-      <div className='ap-parent'>
-        <div className='ap-container'>
-          <AssBarComponent />
-          <div className='ap-component'>
-            {assignmentType === 'peer-review' ? (
+      <div className='ap-container'>
+        <NavigationContainerComponent/>
+        <div className='ap-component'>
+          {assignmentType === 'peer-review' ? (
               <StudentPeerReviewComponent />
-            ) : (
+          ) : (
               <RegularAssignmentComponent />
-            )}
-          </div>
+          )}
         </div>
       </div>
     </div>
