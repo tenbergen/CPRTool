@@ -1,104 +1,136 @@
 button {
-  border: none;
+    border: none;
 }
+
 button:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .blue-button-small {
-  width: 118px;
-  height: 34px;
-  background-color: #4a7dfc;
-  border-radius: 5px;
-  color: white;
-  border: none;
-  font-family: "Inter", sans-serif;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 24px;
+    width: 118px;
+    height: 34px;
+    background-color: #4a7dfc;
+    border-radius: 5px;
+    color: white;
+    border: none;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
 }
-.blue-button-small:hover{
-  background-color: #1d2ff9;
+
+.blue-button-small:hover {
+    background-color: #1d2ff9;
 }
-.blue-button-small:active{
-  background-color: #102080;
+
+.blue-button-small:active {
+    background-color: #102080;
 }
 
 .blue-button-large {
-  width: 233px;
-  height: 50px;
-  background-color: #4a7dfc;
-  border-radius: 5px;
-  color: white;
+    width: 233px;
+    height: 50px;
+    background-color: #4a7dfc;
+    border-radius: 5px;
+    color: white;
 
-  font-family: "Inter", sans-serif;
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 24px;
-  letter-spacing: 0.5px;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
 }
-.blue-button-large:hover{
-  background-color: #1d2ff9;
+
+.blue-button-large:hover {
+    background-color: #1d2ff9;
 }
-.blue-button-large:active{
-  background-color: #102080;
+
+.blue-button-large:active {
+    background-color: #102080;
 }
 
 .green-button-large {
-  width: 300px;
-  height: 60px;
-  background-color: #28a745;
-  border-radius: 5px;
-  color: white;
+    width: 300px;
+    height: 60px;
+    background-color: #28a745;
+    border-radius: 5px;
+    color: white;
 
-  font-family: "Inter", sans-serif;
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 24px;
-  letter-spacing: 0.5px;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
 }
-.green-button-large:hover{
-  background-color: #027A48;
+
+.green-button-large:hover {
+    background-color: #027A48;
 }
-.green-button-large:active{
-  background-color: #05603a;
+
+.green-button-large:active {
+    background-color: #05603a;
 }
+
+.red-button-large {
+    width: 300px;
+    height: 60px;
+    background-color: #c60d00;
+    border-radius: 5px;
+    color: white;
+
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+}
+
+.red-button-large:hover {
+    background-color: #950d04;
+}
+
+.red-button-large:active {
+    background-color: #950d04;
+}
+
 
 .green-button-medium {
-  width: 140px;
-  height: 40px;
-  background-color: #28a745;
-  border-radius: 5px;
-  color: white;
+    width: 140px;
+    height: 40px;
+    background-color: #28a745;
+    border-radius: 5px;
+    color: white;
 
-  font-family: "Inter", sans-serif;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 24px;
-  letter-spacing: 0.5px;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
 }
-.green-button-medium:hover{
-  background-color: #027A48;
+
+.green-button-medium:hover {
+    background-color: #027A48;
 }
-.green-button-medium:active{
-  background-color: #05603a;
+
+.green-button-medium:active {
+    background-color: #05603a;
 }
 
 .cancel-button {
-  font-family: "Inter", sans-serif;
-  border: solid .5px #F04438;
-  border-radius: 5px;
-  font-size: 24px;
-  color: #F04438;
-  padding: 12px;
-  width: 300px;
-  padding-left: 12px;
+    font-family: "Inter", sans-serif;
+    border: solid .5px #F04438;
+    border-radius: 5px;
+    font-size: 24px;
+    color: #F04438;
+    padding: 12px;
+    width: 300px;
+    padding-left: 12px;
 }
 
 .cancel-button:hover {
-  cursor: pointer;
-  background-color: #F04438;
-  color: #fff;
-  opacity: 0.8;
-  text-decoration: none;
+    cursor: pointer;
+    background-color: #F04438;
+    color: #fff;
+    opacity: 0.8;
+    text-decoration: none;
 }
