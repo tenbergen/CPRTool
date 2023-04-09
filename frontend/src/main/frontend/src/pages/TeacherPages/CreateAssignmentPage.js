@@ -17,8 +17,6 @@ const CreateAssignmentPage = () => {
   const submitCourseUrl = `${profAssignmentUrl}/create-assignment`;
   const getAssUrl = `${profAssignmentUrl}/${courseId}/assignments`;
   const [loading, setLoading] = useState(false);
-  const [assignmentDate, setAssignmentDate] = useState(new Date().toISOString().split('T')[0]);
-  const [peerDate, setPeerDate] = useState(new Date().toISOString().split('T')[0]);
 
   const assignmentFileFormData = new FormData();
   let assignmentFileName = ""
@@ -80,19 +78,21 @@ const CreateAssignmentPage = () => {
   };
 
   const handleSubmit = async (data) => {
-    console.log(data);
-    const assignment = new Date(assignmentDate);
-    const peer = new Date(peerDate);
-
-    if (peer >= assignment) {
-
+    let due_date = new Date(data['due_date']).getTime()
+    let peer_review_due_date = new Date(data['peer_review_due_date']).getTime()
+    if (due_date >= peer_review_due_date) {
+      alert('Peer Review Due Date CANNOT be due before the due date of the Assignment!')
+      return
+    }
+    else {
       let {points} = data;
       points = parseInt(points);
       const course_id = courseId;
 
       setLoading(true);
 
-      const sentData = {...data, points, course_id};;
+      const sentData = {...data, points, course_id};
+      ;
 
       await axios
           .post(submitCourseUrl, sentData)
@@ -115,19 +115,6 @@ const CreateAssignmentPage = () => {
       navigate('/professor/' + courseId);
     }
   };
-
-  const assignmentChange = () => {
-    const select = document.querySelector("#cal");
-    const chosenDate = select.value;
-    console.log(chosenDate);
-    setAssignmentDate(chosenDate);
-  }
-
-  const peerChange = () => {
-    const select = document.querySelector("#cal1");
-    const chosenDate = select.value;
-    setPeerDate(chosenDate);
-  }
 
   return (
     <div>
@@ -219,11 +206,9 @@ const CreateAssignmentPage = () => {
                                     <input
                                         type='date'
                                         name='due_date'
-                                        id='cal'
                                         {...input}
                                         required
                                         min={new Date().toISOString().split('T')[0]}
-                                        //onSelect={assignmentChange}
                                     />
                                 )}
                               </Field>
@@ -312,11 +297,9 @@ const CreateAssignmentPage = () => {
                                     <input
                                         type='date'
                                         name='peer_review_due_date'
-                                        id='cal1'
                                         {...input}
                                         required
                                         min={new Date().toISOString().split('T')[0]}
-                                        //onSelect={peerChange}
                                     />
                                 )}
                               </Field>
