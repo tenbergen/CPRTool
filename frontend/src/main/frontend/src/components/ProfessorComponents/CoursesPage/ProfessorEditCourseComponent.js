@@ -9,6 +9,7 @@ import {
   getCourseDetailsAsync,
   getCoursesAsync,
 } from '../../../redux/features/courseSlice';
+import '../../../global_styles/RequiredField.css';
 
 const deleteCourseUrl = `${process.env.REACT_APP_URL}/manage/professor/courses`;
 const updateUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/update`;
@@ -44,7 +45,7 @@ const ProfessorEditCourseComponent = () => {
           uploadCsv();
         } else {
           dispatch(getCourseDetailsAsync(res.data));
-          navigate('/details/professor/' + res.data);
+          navigate('/professor/' + res.data);
         }
       })
       .catch((e) => {
@@ -66,7 +67,7 @@ const ProfessorEditCourseComponent = () => {
         window.alert('Error uploading CSV. Please try again.');
       });
     dispatch(getCourseDetailsAsync(courseId));
-    navigate('/details/professor/' + courseId);
+    navigate('/professor/' + courseId);
   };
 
   const deleteCourse = async () => {
@@ -132,9 +133,8 @@ const ProfessorEditCourseComponent = () => {
         {({ handleSubmit }) => (
           <form onSubmit={handleSubmit}>
             <div className='ecc-input-field'>
-              <label>
-                {' '}
-                <span className='inter-20-bold'> Name of course: </span>{' '}
+              <label className='required'>
+                <span className='inter-20-bold'>Name of course: </span>
               </label>
               <Field name='course_name'>
                 {({ input }) => (
@@ -145,7 +145,7 @@ const ProfessorEditCourseComponent = () => {
 
             <div className='ecc-row-multiple'>
               <div className='ecc-input-field'>
-                <label>
+                <label className='required'>
                   {' '}
                   <span className='inter-20-bold'> Course abbreviation: </span>{' '}
                 </label>
@@ -162,9 +162,9 @@ const ProfessorEditCourseComponent = () => {
               </div>
 
               <div className='ecc-input-field'>
-                <label>
+                <label className='required'>
                   {' '}
-                  <span className='inter-20-bold'> Course section: </span>{' '}
+                  <span className='inter-20-bold'> Course section : </span>{' '}
                 </label>
                 <Field name='course_section'>
                   {({ input }) => (
@@ -181,9 +181,8 @@ const ProfessorEditCourseComponent = () => {
 
             <div className='ecc-row-multiple'>
               <div className='ecc-input-field'>
-                <label>
-                  {' '}
-                  <span className='inter-20-bold'> Semester: </span>{' '}
+                <label className='required'>
+                  <span className='inter-20-bold'>Semester: </span>
                 </label>
                 <Field name='semester'>
                   {({ input }) => (
@@ -192,9 +191,8 @@ const ProfessorEditCourseComponent = () => {
                 </Field>
               </div>
               <div className='ecc-input-field'>
-                <label>
-                  {' '}
-                  <span className='inter-20-bold'> Year: </span>{' '}
+                <label className='required'>
+                  <span className='inter-20-bold'>Year: </span>{' '}
                 </label>
                 <Field name='year'>
                   {({ input }) => (
@@ -206,9 +204,8 @@ const ProfessorEditCourseComponent = () => {
 
             <div className='ecc-row-multiple'>
               <div className='ecc-input-field'>
-                <label>
-                  {' '}
-                  <span className='inter-20-bold'> CRN: </span>{' '}
+                <label className='required'>
+                  <span className='inter-20-bold'>CRN: </span>{' '}
                 </label>
                 <Field name='crn'>
                   {({ input }) => <input type='text' name='crn' {...input} />}
@@ -216,9 +213,8 @@ const ProfessorEditCourseComponent = () => {
               </div>
 
               <div className='ecc-input-field'>
-                <label>
-                  {' '}
-                  <span className='inter-20-bold'> Team size: </span>{' '}
+                <label className='required'>
+                  <span className='inter-20-bold'>Team size: </span>{' '}
                 </label>
                 <Field name='team_size'>
                   {({ input }) => (
@@ -240,6 +236,15 @@ const ProfessorEditCourseComponent = () => {
                 accept='.csv'
               />
             </div>
+
+            <div>
+              <label className ='inter-20-medium'>
+                      <span className='required-alt'>
+                        Indicates Required Field
+                      </span>
+              </label>
+            </div>
+
             <div id='ecc-button-container'>
               <button class = 'ecc-button' type='submit'>Save</button>
               <div className='ecc-delete'>

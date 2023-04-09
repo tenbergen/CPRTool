@@ -74,7 +74,7 @@ const RegularAssignmentComponent = () => {
       .post(submitAssUrl, assignmentFileFormData)
       .then((res) => {
         alert('Successfully uploaded assignment');
-        navigate(`/details/student/${courseId}`, {
+        navigate(`/student/${courseId}`, {
           state: { initialComponent: 'Submitted' },
         });
       })

@@ -1,17 +1,22 @@
 import { useEffect, useState } from 'react';
 import '../../styles/TeamManager.css';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import uuid from 'react-uuid';
 import noTeam from '../../../assets/no-team-no-bg.png';
 import loading from '../../../assets/loading.gif';
 import ProfessorTeamAccordion from './ProfessorTeamAccordion.jsx';
+import {getCurrentCourseTeamAsync} from "../../../redux/features/teamSlice";
+import {useParams} from "react-router-dom";
 
 const ProfessorTeamComponent = () => {
+  const dispatch = useDispatch();
+  const { courseId } = useParams();
   const { currentCourse } = useSelector((state) => state.courses);
   const getTeamsUrl = `${process.env.REACT_APP_URL}/teams/team/get/all/${currentCourse.course_id}`;
   const [teams, setTeams] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
 
   useEffect(() => {
     async function fetchData() {
@@ -30,6 +35,41 @@ const ProfessorTeamComponent = () => {
     }
     fetchData();
   }, [getTeamsUrl]);
+
+  const createTeam = async () => {
+    const team_name = prompt('Enter team name: ');
+    const lakerId = prompt("Enter student leader email minus the @oswego.edu");
+    const createUrl = `${process.env.REACT_APP_URL}/teams/team/create`;
+    const createData = {
+      course_id: courseId,
+      student_id: lakerId,
+      team_name: team_name,
+    };
+
+    if (team_name.split(' ').length > 1) {
+      alert('Please enter a team name with no spaces!');
+      return;
+    }
+    if (team_name === '') {
+      alert('Team name cannot be empty!');
+      return;
+    }
+    if (team_name.length > 20){
+      alert('Team name is too long!');
+      return;
+    }
+
+    await axios
+        .post(createUrl, createData)
+        .then((res) => {
+          alert('Successfully created team');
+          dispatch(getCurrentCourseTeamAsync({ courseId, lakerId }));
+        })
+        .catch((e) => {
+          console.error(e);
+          alert('Error creating team');
+        });
+  };
 
   return (
     <div className='team-container'>
@@ -67,6 +107,9 @@ const ProfessorTeamComponent = () => {
                 </div>
               </div></>
       }
+      <div id='createTeamButton'>
+        <button className='green-button-large' onClick={createTeam}> Create New Team</button>
+      </div>
     </div>
   );
 };
