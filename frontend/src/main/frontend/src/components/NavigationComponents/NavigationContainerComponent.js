@@ -4,7 +4,7 @@ import useCollapse from "react-collapsed";
 import HomeTileComponent from "./HomeTileComponent";
 import CoursesTileComponent from "./CoursesTileComponent";
 import {useRef, useState} from "react";
-import LogoutButton from "../../GlobalComponents/LogoutButton";
+import LogoutButton from "../GlobalComponents/LogoutButton";
 import BulkDownloadTileComponent from "./BulkDownloadTileComponent";
 
 const NavigationContainerComponent = () => {

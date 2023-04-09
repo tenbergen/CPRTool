@@ -3,9 +3,9 @@ import React, {useEffect, useState} from 'react';
 import { useDispatch , useSelector} from "react-redux";
 import CourseAccordionComponent from "./CourseAccordionComponent";
 import uuid from "react-uuid";
-import {getCourseDetailsAsync, getCurrentCourseStudentsAsync} from "../../../redux/features/courseSlice";
-import {getCombinedAssignmentPeerReviews, getCourseAssignmentsAsync} from "../../../redux/features/assignmentSlice";
-import {getCurrentCourseTeamAsync} from "../../../redux/features/teamSlice";
+import {getCourseDetailsAsync, getCurrentCourseStudentsAsync} from "../../redux/features/courseSlice";
+import {getCombinedAssignmentPeerReviews, getCourseAssignmentsAsync} from "../../redux/features/assignmentSlice";
+import {getCurrentCourseTeamAsync} from "../../redux/features/teamSlice";
 import {useParams} from "react-router-dom";
 
 const CoursesTileComponent = ({trigger, homeActive, deactivateHome}) => {
@@ -20,7 +20,7 @@ const CoursesTileComponent = ({trigger, homeActive, deactivateHome}) => {
     const [chosen, setChosen] = useState(courseId);
     const teamId = '1';
 
-    useEffect((trigger) => {
+    useEffect(() => {
         if(homeActive){
             setOPen(false)
             let coursesIcon = document.getElementById("courses-tile-first-line").children[0].children[0]
