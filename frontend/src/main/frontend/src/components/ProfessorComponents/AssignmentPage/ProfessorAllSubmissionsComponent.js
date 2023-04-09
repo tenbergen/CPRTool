@@ -135,7 +135,7 @@ const ProfessorAllSubmissionsComponent = () => {
               <span className="inter-16-bold-blue p2">
               <button className="blue-button-large" onClick={onSubmitClick}>
                 <div style={{ display: 'inline-block', verticalAlign: 'middle', margin: '0 auto' }}>
-                  <svg className={'bulk-download-icon-default'}
+                  <svg className={'bulk-download-white-icon-default'}
                        alt={'Bulk Download For Student'} style={{ display: 'inline-block', margin: '0 8px 0 0' }}></svg>
                   <span style={{ display: 'inline-block' }}>Download</span>
                 </div>

@@ -12,6 +12,13 @@
     margin: 0 16px 0 35px;
 }
 
+.bulk-download-white-icon-default {
+    background-image: url("../../../assets/icons/navigation/default/white_bulk_download.svg");
+    width: 20px;
+    height: 20px;
+    margin: 0 16px 0 35px;
+}
+
 #bulk-download-tile {
     display: flex;
     flex-direction: row;

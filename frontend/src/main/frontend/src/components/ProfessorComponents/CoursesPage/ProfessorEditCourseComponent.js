@@ -254,11 +254,13 @@ const ProfessorEditCourseComponent = () => {
               </div>
             </div>
 
-            <div className="ecc-row-multiple">
+            <div className="ecc-row-multiple" style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}>
               <div className="ecc-file-upload">
-                <label>
-                  {' '}
-                  <span className="inter-20-bold"> Course CSV: </span>{' '}
+                <label style={{ marginRight: '0' }}>
+                  <span className="inter-20-bold"> Course CSV: </span>
                 </label>
                 <input
                   onChange={fileChangeHandler}
@@ -267,15 +269,24 @@ const ProfessorEditCourseComponent = () => {
                   accept=".csv"
                 />
               </div>
-              <div>
+
+
+              <div style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                textAlign: 'center'
+              }}>
                 <label>
-                  {' '}
-                  <span className="inter-20-bold"> Bulk Download for Course </span>{' '}
+                  <span className="inter-20-bold"> Bulk Download for Course: </span>
                 </label>
                 <span className="inter-16-bold-blue p2">
-                  <button className="blue-button-small" type="button" onClick={onCourseClick}>
-                  {' '}
-                    Download{' '}
+                  <button className="blue-button-large" type="button" onClick={onCourseClick}
+                          style={{ width: '150px', height: '40px' }}>
+                    <div style={{ display: 'inline-block', verticalAlign: 'middle', margin: '0 auto' }}>
+                  <svg className={'bulk-download-white-icon-default'}
+                       alt={'Bulk Download For Student'} style={{ display: 'inline-block', margin: '0 8px 0 0' }}></svg>
+                  <span style={{ display: 'inline-block' }}>Download</span>
+                </div>
                   </button>
                 </span>
               </div>
@@ -303,12 +314,6 @@ const ProfessorEditCourseComponent = () => {
           </form>
         )}
       </Form>
-      {/*<div className='ecc-delete'>*/}
-      {/*  <div className='ecc-anchor' onClick={() => setShow(true)}>*/}
-      {/*    Delete course*/}
-      {/*  </div>*/}
-      {/*  <div>{showModal ? Modal() : null}</div>*/}
-      {/*</div>*/}
     </div>
   )
 }
