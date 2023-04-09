@@ -13,6 +13,7 @@ import noCourse from '.././../assets/no-course.png';
 import ProfessorHeaderBar from "../../components/ProfessorComponents/ProfessorHeaderBar";
 import LogoutButton from "../../components/GlobalComponents/LogoutButton";
 import StudentHeaderBar from "../../components/StudentComponents/StudentHeaderBar";
+import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 
 function StudentDashboardPage() {
   const dispatch = useDispatch();
@@ -40,7 +41,8 @@ function StudentDashboardPage() {
       ) : (
         <div className="page-container">
           <StudentHeaderBar/>
-          <div className={'StudentDashboard'}>
+          <div className='StudentDashboard'>
+            <NavigationContainerComponent/>
             <div id='student'>
               <div className='welcome-banner-st'>
                 <div className='inter-36-bold student-welcome'>
