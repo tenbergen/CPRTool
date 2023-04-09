@@ -13,12 +13,15 @@ const CourseAccordionComponent = ({course, onClick, trigger, deselectCourses}) =
         let title = document.getElementById(course.course_id.toString())
         title.classList.toggle("course-accordion-title-active")
         title.classList.toggle("course-accordion-title-default")
+        title.children[1].classList.toggle("dropdown-icon-default")
+        title.children[1].classList.toggle("dropdown-icon-active")
     }
 
     return(
         <div>
             <div id={course.course_id.toString()} className="course-accordion-title-default" onClick={() => toggleActive()}>
                 <span className="inter-20-medium">{course.course_name}</span>
+                <div className="dropdown-icon-default"/>
             </div>
             {open && (
                 <div id="courseOptions">
