@@ -6,6 +6,7 @@ import { getSubmittedAssignmentDetailsAsync } from '../../redux/features/submitt
 import SubmittedAssignmentComponent from '../../components/StudentComponents/AssignmentPage/SubmittedAssignmentComponent';
 import SubmittedAssBarComponent from '../../components/SubmittedAssBarComponent';
 import StudentHeaderBar from "../../components/StudentComponents/StudentHeaderBar";
+import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 
 function StudentSubmittedAssignmentPage() {
   const dispatch = useDispatch();
@@ -22,16 +23,14 @@ function StudentSubmittedAssignmentPage() {
   return (
     <div className="page-container">
       <StudentHeaderBar/>
-      <div className='ap-parent'>
-        <div className='ap-container'>
-          <SubmittedAssBarComponent />
-          <div className='ap-component'>
-            {currentSubmittedAssignmentLoaded ? (
+      <div className='ap-container'>
+        <NavigationContainerComponent/>
+        <div className='ap-component'>
+          {currentSubmittedAssignmentLoaded ? (
               <SubmittedAssignmentComponent
-                currentSubmittedAssignment={currentSubmittedAssignment}
+                  currentSubmittedAssignment={currentSubmittedAssignment}
               />
-            ) : null}
-          </div>
+          ) : null}
         </div>
       </div>
     </div>

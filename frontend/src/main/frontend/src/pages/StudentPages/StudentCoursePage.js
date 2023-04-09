@@ -12,6 +12,8 @@ import MyTeamComponent from '../../components/StudentComponents/CoursePage/MyTea
 import uuid from 'react-uuid';
 import AssBarComponent from "../../components/AssBarComponent";
 import StudentHeaderBar from "../../components/StudentComponents/StudentHeaderBar";
+import NavigationContainerComponent
+  from "../../components/NavigationComponents/NavigationContainerComponent";
 
 const CourseComponent = ({ active, component, onClick }) => {
   return (
@@ -49,24 +51,24 @@ function StudentCoursePage() {
   return (
     <div className="page-container">
       <StudentHeaderBar/>
-      <div className='scp-parent'>
-        <div className='scp-container'>
-          <AssBarComponent />
-          <div className='scp-component'>
-            {/* Not in a team yet */}
-            {teamLoaded && currentTeamId === null && <StudentTeamComponent />}
+      <div className='scp-container'>
+        <NavigationContainerComponent/>
+        {/*<AssBarComponent />*/}
+        <div className='scp-component'>
+          {/* Not in a team yet */}
+          {teamLoaded && currentTeamId === null && <StudentTeamComponent />}
 
-            {/* Already in a team */}
-            {teamLoaded && currentTeamId !== null && (
+          {/* Already in a team */}
+          {teamLoaded && currentTeamId !== null && (
               <div>
                 <div className='scp-component-links'>
                   {components.map((t) => (
-                    <CourseComponent
-                      key={uuid()}
-                      component={t}
-                      active={t === chosen}
-                      onClick={() => setChosen(t)}
-                    />
+                      <CourseComponent
+                          key={uuid()}
+                          component={t}
+                          active={t === chosen}
+                          onClick={() => setChosen(t)}
+                      />
                   ))}
                 </div>
                 <div>
@@ -75,8 +77,7 @@ function StudentCoursePage() {
                   {chosen === 'My Team' && <MyTeamComponent />}
                 </div>
               </div>
-            )}
-          </div>
+          )}
         </div>
       </div>
     </div>

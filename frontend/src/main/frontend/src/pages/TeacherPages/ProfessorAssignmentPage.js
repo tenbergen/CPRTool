@@ -10,6 +10,7 @@ import { getAssignmentDetailsAsync } from '../../redux/features/assignmentSlice'
 import Loader from '../../components/LoaderComponenets/Loader';
 import uuid from 'react-uuid';
 import ProfessorHeaderBar from "../../components/ProfessorComponents/ProfessorHeaderBar";
+import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 
 const AssComponent = ({ active, component, onClick }) => {
   return (
@@ -48,32 +49,30 @@ function ProfessorAssignmentPage() {
       {currentCourseLoaded ? (
           <div className="page-container">
             <ProfessorHeaderBar/>
-            <div className='scp-parent'>
-              <div className='scp-container'>
-                <GradeAssBarComponent />
-                <div className='scp-component'>
-                  <div className='scp-component-links'>
-                    {components.map(
-                        (t) =>
-                            t && (
-                                <AssComponent
-                                    key={uuid()}
-                                    component={t}
-                                    active={t === chosen}
-                                    onClick={() => onComponentClick(t)}
-                                />
-                            )
-                    )}
-                  </div>
-                  <div>
-                    {chosen === 'All Submissions' && (
-                        <ProfessorAllSubmissionsComponent />
-                    )}
-                    {chosen === 'Needs Grading' && (
-                        <ProfessorAllSubmissionsComponent />
-                    )}
-                    {chosen === 'Edit' && <ProfessorEditAssignmentComponent />}
-                  </div>
+            <div className='scp-container'>
+              <NavigationContainerComponent/>
+              <div className='scp-component'>
+                <div className='scp-component-links'>
+                  {components.map(
+                      (t) =>
+                          t && (
+                              <AssComponent
+                                  key={uuid()}
+                                  component={t}
+                                  active={t === chosen}
+                                  onClick={() => onComponentClick(t)}
+                              />
+                          )
+                  )}
+                </div>
+                <div>
+                  {chosen === 'All Submissions' && (
+                      <ProfessorAllSubmissionsComponent />
+                  )}
+                  {chosen === 'Needs Grading' && (
+                      <ProfessorAllSubmissionsComponent />
+                  )}
+                  {chosen === 'Edit' && <ProfessorEditAssignmentComponent />}
                 </div>
               </div>
             </div>
