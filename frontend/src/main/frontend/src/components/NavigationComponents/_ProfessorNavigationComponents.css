@@ -50,6 +50,9 @@
     user-select: none;
     padding-left: 55px
 }
+.course-accordion-title-active:hover{
+    cursor: pointer;
+}
 
 .course-accordion-title-default{
     display: flex;
@@ -62,6 +65,9 @@
     margin-top: -1px;
     user-select: none;
     padding-left: 55px
+}
+.course-accordion-title-default:hover{
+    cursor: pointer;
 }
 
 #coursesContainer{
