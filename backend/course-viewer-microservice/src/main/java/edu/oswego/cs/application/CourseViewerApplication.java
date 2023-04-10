@@ -1,4 +1,4 @@
-package edu.oif its alright im going to give swego.cs.application;
+package edu.oswego.cs.application;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
