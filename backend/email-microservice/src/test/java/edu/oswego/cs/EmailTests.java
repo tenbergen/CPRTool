@@ -148,4 +148,13 @@ public class EmailTests {
         new EmailService().outlierDetectedEmail(mainCourseID, team3Name, ass1ID);
         //should send the professor an email
     }
+
+    /*
+        Unfortunately, to check the DeadlineTracker's functionality and thus the full functionality of the
+        deadline passed emails, you'll need to mess with the computer clock. Make sure that all three assignments
+        have been in the database with deadlines and PR deadlines prior to your current computer time.
+        Next, set your computer time so it's past all the deadlines and PR deadlines, and wait another 5 minutes.
+        The main professor should receive one assignment deadline passed email for Assignment 1, and 2 peer
+        review deadline passed emails for Assignments 1 and 2.
+     */
 }
