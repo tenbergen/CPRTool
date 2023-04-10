@@ -38,6 +38,9 @@ import java.io.IOException;
 
     If running the tests gives an "array out of bounds" error, make sure you've updated the getPath() method in
     EmailService.java
+
+    Finally, the service is liable to non-critical errors if you create an assignment between when the microservice goes
+    up and when the clock next hits a 5-minute mark.
  */
 public class EmailTests {
     private static final Jsonb jsonb = JsonbBuilder.create();
