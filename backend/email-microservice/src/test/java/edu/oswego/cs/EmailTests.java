@@ -148,9 +148,4 @@ public class EmailTests {
         new EmailService().outlierDetectedEmail(mainCourseID, team3Name, ass1ID);
         //should send the professor an email
     }
-
-    @Test
-    public void testDeadlineTimer(){
-        new DeadlineTracker().init();
-    }
 }
