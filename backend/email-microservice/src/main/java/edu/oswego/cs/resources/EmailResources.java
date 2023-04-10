@@ -107,7 +107,7 @@ public class EmailResources {
         //both allPeerReviewsSubmitted and assignmentSubmitted can fire from the same submission so there's no reason
         //not to bundle them in the same HTTP method
         new EmailService().allPeerReviewsSubmittedEmail(courseID, assignmentID);
-        new EmailService().peerReviewSubmittedEmail(new CourseInterface().getProfessor(securityContext), courseID, teamID, assignmentID);
+        new EmailService().peerReviewSubmittedEmail(new CourseInterface().getStudent(securityContext), courseID, teamID, assignmentID);
         //makeshift workaround for current grading situation. Once the professor can manually finalize the grades, please
         //migrate functionality to the gradeReceivedEmail method below and remove this entire if statement.
         if(new EmailService().allPRSubmitted(new AssignmentInterface().getSpecifiedAssignment(courseID, assignmentID))){

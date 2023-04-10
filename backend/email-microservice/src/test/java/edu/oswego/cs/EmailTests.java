@@ -131,13 +131,6 @@ public class EmailTests {
     }
 
     @Test
-    public void testPeerReviewDeadlinePassedEmailButTheyWereAllSubmitted() throws IOException {
-        new EmailService().peerReviewDeadlinePassed(mainCourseID, ass1ID);
-
-        //the method itself doesn't check if the deadline passed, so this should send the professor an email
-    }
-
-    @Test
     public void testGradeReceivedEmail() throws IOException {
         new EmailService().gradeReceivedEmail(mainCourseID, ass1ID, team1Name);
         //should send an email to Students 1 and 2.
@@ -156,5 +149,26 @@ public class EmailTests {
         Next, set your computer time so it's past all the deadlines and PR deadlines, and wait another 5 minutes.
         The main professor should receive one assignment deadline passed email for Assignment 1, and 2 peer
         review deadline passed emails for Assignments 1 and 2.
+
+        You are also unknowingly testing the DeadlineTracker just by having the microservice run. The check()
+        method is called every 5 minutes according to your computer's time. To make sure the check() method is
+        being called, you can run the command docker logs cpr-email. The DeadlineTracker prints "--------check"
+        whenever the check() method is called. With that in mind, the outcome of the check() method depends
+        entirely on the contents of the database.
+     */
+
+    /*
+        To test the API calls of the email microservice, you should actually complete the tasks on the
+        running product. The tasks to complete are:
+        1) Create an assignment in a class with students
+        2) Turn in an assignment as a student in a team with at least one other student
+        3) Have every team in a class turn in an assignment
+        4) Distribute peer reviews in a class with students
+        5) Submit a peer review as a student in a team with at least one other student
+        6) Have every team in a class submit all of their peer reviews
+        7) Finalize an assignment's grades as a professor
+        8) Let an assignment's deadline and peer review deadline pass without all teams submitting
+        9) Have a team submit a statistical outlier grade (currently the frontend for that is not complete
+            so this one won't work until the page is done and I add the API call.)
      */
 }
