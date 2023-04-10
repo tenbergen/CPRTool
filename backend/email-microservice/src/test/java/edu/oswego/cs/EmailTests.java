@@ -1,35 +1,15 @@
 package edu.oswego.cs;
 
 import edu.oswego.cs.application.DeadlineTracker;
-import edu.oswego.cs.daos.AssignmentDAO;
-import edu.oswego.cs.daos.CourseDAO;
-import edu.oswego.cs.daos.StudentDAO;
-import edu.oswego.cs.daos.TeamDAO;
-import edu.oswego.cs.database.AssignmentInterface;
 import edu.oswego.cs.database.CourseInterface;
 import edu.oswego.cs.services.EmailService;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.client.WebTarget;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.bson.Document;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
-import static com.mongodb.client.model.Filters.and;
-import static com.mongodb.client.model.Filters.eq;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 /*
@@ -62,14 +42,14 @@ public class EmailTests {
 
     //You must set these emails to emails you can access in order to properly test the microservice.
     private final String mainProfessorEmail = "pschmitt@oswego.edu";
-    private final String altProfessorEmail = "squeeshyandpike@gmail.com";
+    private final String altProfessorEmail = "squeeshyandpike@gmail.com"; //should never receive any emails
     private static final String student1Email = "quantummechanistjp@gmail.com";
     private static final String student2Email = "yoinkysploinky994@gmail.com";
     private static final String student3Email = "starrringo889@gmail.com";
     private static final String student4Email = "tunneldiggertsegrot@gmail.com";
     private static final String student5Email = "gronkoxtreme@gmail.com";
     private static final String student6Email = "peteymuskrat@gmail.com";
-    private static final String altStudentEmail = "balonjalbatross@gmail.com";
+    private static final String altStudentEmail = "balonjalbatross@gmail.com"; //should never receive any emails
     private static final String team1Name = "12"; //students 1 and 2
     private static final String team2Name = "34"; //students 3 and 4
     private static final String team3Name = "56"; //students 5 and 6
