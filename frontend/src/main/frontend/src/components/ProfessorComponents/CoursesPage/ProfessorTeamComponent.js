@@ -37,9 +37,9 @@ const ProfessorTeamComponent = () => {
   }, [getTeamsUrl])
 
   const createTeam = async () => {
-    const team_name = prompt('Enter team name: ')
-    const lakerId = prompt('Enter student leader\'s Laker ID')
-    const createUrl = `${process.env.REACT_APP_URL}/${lakerId}/create`
+    const team_name = prompt('Enter team name: ');
+    const lakerId = prompt("Enter student leader email minus the @oswego.edu");
+    const createUrl = `${process.env.REACT_APP_URL}/teams/team/create`;
     const createData = {
       course_id: courseId,
       student_id: lakerId,
@@ -77,8 +77,6 @@ const ProfessorTeamComponent = () => {
         <button className="green-button-large" onClick={createTeam} style={{ marginBottom: '3%' }}> Create New Team
         </button>
       </div>
-      {console.log('loading')}
-      {console.log(isLoading)}
       {isLoading
         ? <div> {teams.length > 0 ? (
           <div className="acordion-wrapper">
