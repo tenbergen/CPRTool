@@ -195,6 +195,7 @@
     flex-direction: column;
     justify-content: space-between;
     background-color: #d4eefc;
+    height: 100%;
 }
 
 .semester-selection-active{

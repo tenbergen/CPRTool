@@ -7,6 +7,8 @@ import {
   setUserInformation,
 } from './redux/features/authSlice';
 import StudentDashboardPage from './pages/StudentPages/StudentDashboardPage';
+import HeaderBar from "./components/HeaderBar/HeaderBar";
+import NavigationContainerComponent from "./components/NavigationComponents/NavigationContainerComponent";
 
 function App() {
   const dispatch = useDispatch();

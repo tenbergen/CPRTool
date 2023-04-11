@@ -2,7 +2,8 @@ import './_ProfessorNavigationComponents.css'
 import React, {useState} from 'react';
 import {Link} from "react-router-dom";
 import {useSelector} from "react-redux";
-
+import professorAssignmentPage from "../../pages/TeacherPages/ProfessorAssignmentPage";
+import { Navigate } from "react-router-dom";
 const CourseAccordionComponent = ({course, onClick}) => {
     const role = useSelector((state) => state.auth.role);
     const [open, setOpen] = useState(false)
@@ -28,24 +29,32 @@ const CourseAccordionComponent = ({course, onClick}) => {
                 <div id="courseOptions">
                     {role === 'professor'
                         ? (
-                            <div id="accordionCourseDetails" className="course-accordion-submenu-tile inter-20-medium">Course Details</div>
+                            <Link to={`/${role}/${course.course_id}/details`} onClick={onClick}>
+                                <div id="accordionCourseDetails" className="course-accordion-submenu-tile inter-20-medium">Course Details</div>
+                            </Link>
                         ) : (
                             <div className="invisible-div"/>
                         )
                     }
-                    <Link to={`/${role}/${course.course_id}`} onClick={onClick}>
+                    <Link to={`/${role}/${course.course_id}/assignments`} onClick={onClick}>
                         <div id="accordionAssignments" className="course-accordion-submenu-tile inter-20-medium">Assignments</div>
                     </Link>
                     <div id="accordionPeerReviews" className="course-accordion-submenu-tile inter-20-medium">Peer Reviews</div>
-                    <div id="accordionTeams" className="course-accordion-submenu-tile inter-20-medium">Teams</div>
+                    <Link to={`/${role}/${course.course_id}/teams`} onClick={onClick}>
+                        <div id="accordionTeams" className="course-accordion-submenu-tile inter-20-medium">Teams</div>
+                    </Link>
                     {role === 'professor'
                         ? (
-                            <div id="accordionRoster" className="course-accordion-submenu-tile inter-20-medium">Roster</div>
+                            <Link to={`/${role}/${course.course_id}/roster`} onClick={onClick}>
+                                <div id="accordionRoster" className="course-accordion-submenu-tile inter-20-medium">Roster</div>
+                            </Link>
                         ) : (
                             <div className="invisible-div"/>
                         )
                     }
-                    <div id="accordionGradesOverview" className="course-accordion-submenu-tile inter-20-medium">Grades Overview</div>
+                    <Link to={`/${role}/${course.course_id}/grades`} onClick={onClick}>
+                        <div id="accordionGradesOverview" className="course-accordion-submenu-tile inter-20-medium">Grades Overview</div>
+                    </Link>
                 </div>
             )}
         </div>

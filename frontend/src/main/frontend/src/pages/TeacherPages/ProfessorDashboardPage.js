@@ -9,7 +9,7 @@ import {
   getCoursesAsync,
 } from "../../redux/features/courseSlice";
 import uuid from "react-uuid";
-import ProfessorHeaderBar from "../../components/ProfessorComponents/ProfessorHeaderBar";
+import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import LogoutButton from "../../components/GlobalComponents/LogoutButton";
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 
@@ -36,7 +36,7 @@ function ProfessorDashboardPage() {
 
   return (
       <div className="page-container">
-        <ProfessorHeaderBar/>
+        <HeaderBar/>
         <div className="pdp-container">
           <NavigationContainerComponent/>
           <div id="teacher">

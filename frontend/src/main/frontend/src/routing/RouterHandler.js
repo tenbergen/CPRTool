@@ -14,6 +14,7 @@ import StudentSubmittedAssignmentPage from '../pages/StudentPages/StudentSubmitt
 import ProfessorSubmittedAssignmentPage from '../pages/TeacherPages/ProfessorSubmittedAssignmentPage';
 import AdminInterface from '../pages/AdminPages/AdminInterface'
 import ProfessorGradesPage from '../pages/TeacherPages/ProfessorGradesPage';
+import ProfessorRosterComponent from "../components/ProfessorComponents/CoursesPage/ProfessorRosterComponent";
 
 const RouterHandler = () => {
   return (
@@ -38,7 +39,7 @@ const RouterHandler = () => {
               element={<ProfessorGradesPage />}
             />
             <Route
-              path='professor/:courseId/create/assignment'
+              path='professor/:courseId/assignments/create/assignment'
               element={<CreateAssignmentPage />}
             />
             <Route
@@ -56,6 +57,22 @@ const RouterHandler = () => {
             <Route
                 path='professor'
                 element={<App />}
+            />
+            <Route
+                path='/professor/:courseID/teams'
+                element={<ProfessorCoursePage chosen="Teams" />}
+            />
+            <Route
+                path='/professor/:courseID/roster'
+                element={<ProfessorCoursePage chosen="Roster" />}
+            />
+            <Route
+                path='/professor/:courseID/assignments'
+                element={<ProfessorCoursePage chosen="Assignments" />}
+            />
+            <Route
+                path='/professor/:courseID/details'
+                element={<ProfessorCoursePage chosen="Manage" />}
             />
           </Route>
 
@@ -85,6 +102,16 @@ const RouterHandler = () => {
                 path='student'
                 element={<App />}
             />
+            <Route
+                path='/student/:courseID/teams'
+                element={<StudentCoursePage chosen="My Team" />}
+            />
+            <Route
+                path='/student/:courseID/assignments'
+                element={<StudentCoursePage chosen="To Do" />}
+            />
+
+
           </Route>
         </Route>
       </Route>
