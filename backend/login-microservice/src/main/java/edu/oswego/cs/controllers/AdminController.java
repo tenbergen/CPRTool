@@ -3,6 +3,7 @@ package edu.oswego.cs.controllers;
 import edu.oswego.cs.database.AdminInterface;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
+import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -10,8 +11,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-@Path("/admin")
-@RolesAllowed("admin")
+// @Path("/admin")  // deprecated for now
+@DenyAll
+// @RolesAllowed("admin")
 @Produces(MediaType.APPLICATION_JSON)
 public class AdminController {
 
