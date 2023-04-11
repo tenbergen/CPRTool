@@ -73,7 +73,7 @@ function AdminInterface() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteCourseModal, setShowDeleteCourseModal] = useState(false);
-  const getUsersUrl = `${process.env.REACT_APP_URL}/admin/views/users`;
+  const getUsersUrl = `${process.env.REACT_APP_URL}/manage/admin/views/users`;
 
 
   const handleSearch = (event) => {
@@ -152,7 +152,7 @@ function AdminInterface() {
 
   const addUser = async (userFirstName, userLastName, userID, role) => {
     if (role === "Student") {
-      const url = `${process.env.REACT_APP_URL}/admin/add/student/${userID}/${userFirstName}/${userLastName}`;
+      const url = `${process.env.REACT_APP_URL}/manage/admin/add/student/${userID}/${userFirstName}/${userLastName}`;
       await axios
         .post(url)
         .then((res) => {
@@ -169,7 +169,7 @@ function AdminInterface() {
       console.log(url);
     }
     else if (role === "Admin") {
-      const url = `${process.env.REACT_APP_URL}/admin/add/admin/${userID}/${userFirstName}/${userLastName}`;
+      const url = `${process.env.REACT_APP_URL}/manage/admin/add/admin/${userID}/${userFirstName}/${userLastName}`;
       await axios
         .post(url)
         .then((res) => {
@@ -186,7 +186,7 @@ function AdminInterface() {
       console.log(url);
     }
     else if (role === "Teacher") {
-      const url = `${process.env.REACT_APP_URL}/admin/add/professor/${userID}/${userFirstName}/${userLastName}`;
+      const url = `${process.env.REACT_APP_URL}/manage/admin/add/professor/${userID}/${userFirstName}/${userLastName}`;
       await axios
         .post(url)
         .then((res) => {
@@ -225,7 +225,7 @@ function AdminInterface() {
 
   const deleteUser = async (userID, role) => {
     if (role === "Student") {
-      const url = `${process.env.REACT_APP_URL}/admin/delete/student/${userID}`;
+      const url = `${process.env.REACT_APP_URL}/manage/admin/delete/student/${userID}`;
       await axios
         .post(url)
         .then((res) => {
@@ -240,7 +240,7 @@ function AdminInterface() {
       console.log(url);
     }
     else if (role === "Admin") {
-      const url = `${process.env.REACT_APP_URL}/admin/delete/admin/${userID}`;
+      const url = `${process.env.REACT_APP_URL}/manage/admin/delete/admin/${userID}`;
       await axios
         .post(url)
         .then((res) => {
@@ -255,7 +255,7 @@ function AdminInterface() {
       console.log(url);
     }
     else if (role === "Teacher") {
-      const url = `${process.env.REACT_APP_URL}/admin/delete/professor/${userID}`;
+      const url = `${process.env.REACT_APP_URL}/manage/admin/delete/professor/${userID}`;
       await axios
         .post(url)
         .then((res) => {
@@ -277,7 +277,7 @@ function AdminInterface() {
 
   const editUser = async (userID, role, newRole) => {
     if (role === "Admin" && newRole === "Teacher") {
-      const url = `${process.env.REACT_APP_URL}/admin/roles/demote/adminToProfessor/${userID}`;
+      const url = `${process.env.REACT_APP_URL}/manage/admin/roles/demote/adminToProfessor/${userID}`;
       await axios
         .post(url)
         .then((res) => {
@@ -292,7 +292,7 @@ function AdminInterface() {
       console.log(url);
     }
     else if (role === "Teacher" && newRole === "Student") {
-      const url = `${process.env.REACT_APP_URL}/admin/roles/demote/professorToStudent/${userID}`;
+      const url = `${process.env.REACT_APP_URL}/manage/admin/roles/demote/professorToStudent/${userID}`;
       await axios
         .post(url)
         .then((res) => {
@@ -307,7 +307,7 @@ function AdminInterface() {
       console.log(url);
     }
     else if (role === "Teacher" && newRole === "Admin") {
-      const url = `${process.env.REACT_APP_URL}/admin/roles/promote/professorToAdmin/${userID}`;
+      const url = `${process.env.REACT_APP_URL}/manage/admin/roles/promote/professorToAdmin/${userID}`;
       await axios
         .post(url)
         .then((res) => {
@@ -322,7 +322,7 @@ function AdminInterface() {
       console.log(url);
     }
     else if (role === "Student" && newRole === "Teacher") {
-      const url = `${process.env.REACT_APP_URL}/admin/roles/promote/studentToProfessor/${userID}`;
+      const url = `${process.env.REACT_APP_URL}/manage/admin/roles/promote/studentToProfessor/${userID}`;
       await axios
         .post(url)
         .then((res) => {
