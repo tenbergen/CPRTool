@@ -24,7 +24,7 @@ public class AdminInterface {
 
     private final MongoCollection<Document> professorCollection;
     private final MongoCollection<Document> studentCollection;
-    private final MongoCollection<Document> CourseDAOCollection;
+    private final MongoCollection<Document> courseCollection;
     private final MongoCollection<Document> profanitySettings;
 
     // Make a generic method to receive a mongo collection and check connection
@@ -34,10 +34,10 @@ public class AdminInterface {
             MongoDatabase studentDB = databaseManager.getStudentDB();
             // Professors and Admins are in the same database, Admins are elevated
             MongoDatabase profAdminDb = databaseManager.getProfessorDB();
-            MongoDatabase CourseDAODB = databaseManager.getCourseDB();
+            MongoDatabase courseDB = databaseManager.getCourseDB();
             studentCollection = studentDB.getCollection("students");
             professorCollection = profAdminDb.getCollection("professors");
-            CourseDAOCollection = CourseDAODB.getCollection("CourseDAOs");
+            courseCollection = courseDB.getCollection("CourseDAOs");
             profanitySettings = profAdminDb.getCollection("profanitySettings");
         } catch (CPRException e) {
             throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to retrieve collections.");
@@ -54,7 +54,7 @@ public class AdminInterface {
             MongoDatabase CourseDAODB = databaseManager.getCourseDB();
             studentCollection = studentDB.getCollection("students");
             professorCollection = profAdminDb.getCollection("professors");
-            CourseDAOCollection = CourseDAODB.getCollection("CourseDAOs");
+            courseCollection = CourseDAODB.getCollection("CourseDAOs");
             profanitySettings = profAdminDb.getCollection("profanitySettings");
         } catch (CPRException e) {
             throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to retrieve collections.");
@@ -81,11 +81,11 @@ public class AdminInterface {
         professorCollection.deleteOne(eq("professor_id", user_id));
     }
 
-    public void deleteCourseDAO(String CourseDAO_id) {
-        if (!checkCourseDAO(CourseDAO_id)) {
+    public void deleteCourseDAO(String course_id) {
+        if (!checkCourse(course_id)) {
             throw new CPRException(Response.Status.NOT_FOUND, "CourseDAO not found.");
         }
-        CourseDAOCollection.deleteOne(eq("CourseDAO_id", CourseDAO_id));
+        courseCollection.deleteOne(eq("course_id", course_id));
     }
 
     public void deleteStudentUser(String user_id) {
@@ -254,26 +254,17 @@ public class AdminInterface {
                         eq("professor_id", user_id),
                         eq("admin", true)))
                 .first();
-        if (adminDocument == null) {
-            return false;
-        }
-        return true;
+        return adminDocument != null;
     }
 
     private Boolean checkStudent(String user_id) {
         Document studentDocument = studentCollection.find(eq("student_id", user_id)).first();
-        if (studentDocument == null) {
-            return false;
-        }
-        return true;
+        return studentDocument != null;
     }
 
     private Boolean checkProfessor(String user_id) {
         Document professorDocument = professorCollection.find(eq("professor_id", user_id)).first();
-        if (professorDocument == null) {
-            return false;
-        }
-        return true;
+        return professorDocument != null;
     }
 
     private void checkIfUserIdExists(String user_id) {
@@ -282,10 +273,11 @@ public class AdminInterface {
         }
     }
 
-    public List<CourseDAO> getCourseDAOsView() {
+    // TODO:  Add constructor paremeters for CourseDAO
+    public List<CourseDAO> getCourseView() {
         List<CourseDAO> CourseDAOs = new ArrayList<>();
         // iterate through MongoDB CourseDAOs and add to list
-        for (Document CourseDAO : CourseDAOCollection.find()) {
+        for (Document CourseDAO : courseCollection.find()) {
             CourseDAO c = new CourseDAO(
                 
             );
@@ -315,8 +307,8 @@ public class AdminInterface {
     }
 
 
-    public Boolean checkCourseDAO(String crn){
-        Document CourseDAODocument = CourseDAOCollection.find(eq("crn", crn)).first();
+    public Boolean checkCourse(String crn){
+        Document CourseDAODocument = courseCollection.find(eq("crn", crn)).first();
         if (CourseDAODocument == null) {
             return false;
         }
