@@ -73,7 +73,7 @@ function AdminInterface() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteCourseModal, setShowDeleteCourseModal] = useState(false);
-  const deleteUserName = "";
+  const getUsersUrl = `${process.env.REACT_APP_URL}/admin/views/users`;
 
 
   const handleSearch = (event) => {
@@ -104,7 +104,7 @@ function AdminInterface() {
     setFilterType(type);
   }
 
-  const [page, setPage] = useState("roles")
+  const [page, setPage] = useState("roles");
 
   const changePage = (page) => {
     setPage(page)
@@ -114,9 +114,40 @@ function AdminInterface() {
     setSelectedCourse(selectedCourse)
   }
 
+  const [deleteName, setDeleteName] = useState("");
+
   const getDeleteUser = (name) => {
-    deleteUserName = name;
-    console.log(deleteUser)
+    setDeleteName(name);
+  }
+
+  const [editName, setEditName] = useState("");
+
+  const getEditUser = (name) => {
+    setEditName(name);
+  }
+
+  const [deleteCourse, setDeleteCourse] = useState("");
+
+  const getDeleteCourse = (course) => {
+    setDeleteCourse(course);
+  }
+
+  const [currentRole, setCurrentRole] = useState("");
+
+  const getCurrentRole = (role) => {
+    setCurrentRole(role);
+  }
+
+  const [currentID, setCurrentID] = useState("");
+
+  const getCurrentID= (ID) => {
+    setCurrentID(ID);
+  }
+  
+  const [editRole, setEditRole] = useState("");
+
+  const getEditRole = (role) => {
+    setEditRole(role);
   }
 
   const addUser = async (userFirstName, userLastName, userID, role) => {
@@ -310,6 +341,10 @@ function AdminInterface() {
     setLakerID('');
     setSelectedUserRole('');
   }
+  
+  axios.get(getUsersUrl)
+    .then(response => console.log(response.data))
+    .catch(error => console.error("Uh oh"));
 
   return (
     <><Modal open={openModal} courseArr={selectedCourse} onClose={() => setOpenModal(false)} />
@@ -410,40 +445,22 @@ function AdminInterface() {
                         <div>{user.role}</div>
                         <div>
                           <div className='edit-container'>
-                            <button className='edit-button' onClick={() => setShowEditModal(true)}><img className='edit-icon' src={editIcon} /></button>
+                            <button className='edit-button' onClick={() => { 
+                              setShowEditModal(true); 
+                              getEditUser(user.name); 
+                              getCurrentID(user.netID); 
+                              getCurrentRole(user.role) }}>
+                              <img className='edit-icon' src={editIcon} />
+                            </button>
                             {showEditModal && (
                               <div className="edit-modal">
                                 <div className="modal-content">
-                                  <h2 className='modal-head'>Edit User</h2>
+                                  <h2 className='modal-head'>Edit {editName}</h2>
                                   <form>
-                                    <div className='add-user-name'>
-                                      <label>First Name</label>
-                                      <input className='add-user-fields'
-                                        type="text"
-                                        id="firstName"
-                                        name="firstName"
-                                        onChange={handleFirstName} />
-                                    </div>
-                                    <div className='add-user-name'>
-                                      <label>Last Name</label>
-                                      <input className='add-user-fields'
-                                        type="text"
-                                        id="lastName"
-                                        name="lastName"
-                                        onChange={handleLastName} />
-                                    </div>
-                                    <div className='add-user-email'>
-                                      <label>Laker Net ID</label>
-                                      <input className='add-user-fields'
-                                        type="text"
-                                        id="lakerID"
-                                        name="lakerID"
-                                        onChange={handleLakerID} />
-                                    </div>
                                     <div className="add-user-dropdown">
                                       <label for="role-filter">Role</label>
                                       <select name="role" id="add-user-role" defaultValue="Select Role" onChange>
-                                        <option disabled={true} value="Select Role">--Select Role--</option>
+                                        <option disabled={true} value="Select Role" onChange={(e) => setEditRole(e.target.value)}>--Select Role--</option>
                                         <option value="Admin">Admin</option>
                                         <option value="Teacher">Teacher</option>
                                         <option value="Student">Student</option>
@@ -451,7 +468,7 @@ function AdminInterface() {
                                     </div>
                                   </form>
                                   <div className='add-user-buttons'>
-                                    <button className='add-user-popup-button' onClick={() => { addUser(firstName, lastName, lakerID, selectedUserRole); setShowModal(false) }}>Save Changes</button>
+                                    <button className='add-user-popup-button' onClick={() => { editUser(currentID, currentRole, editRole); setShowEditModal(false) }}>Save Changes</button>
                                     <button className='cancel-user-button' onClick={() => setShowEditModal(false)}>Cancel</button>
                                   </div>
                                 </div>
@@ -465,7 +482,7 @@ function AdminInterface() {
                                 <div className="modal-content">
                                   <h2 className='modal-head'>Confirm</h2>
                                   <form>
-                                    <label className='confirm-remove'>Are you sure you want to remove { }?</label>
+                                    <label className='confirm-remove'>Are you sure you want to remove {deleteName}?</label>
                                   </form>
                                   <div className='remove-user-buttons'>
                                     <button className='remove-user-popup-button' onClick={() => { setShowDeleteModal(false); }}>Yes</button>
@@ -533,13 +550,13 @@ function AdminInterface() {
                         <div>{course.Semester}</div>
                         <div>
                           <div className='delete-container'>
-                            <button className='delete-button' onClick={() => setShowDeleteCourseModal(true)}>X</button>
+                            <button className='delete-button' onClick={() => { setShowDeleteCourseModal(true); getDeleteCourse(course.CRN) }}>X</button>
                             {showDeleteCourseModal && (
                               <div className="delete-modal">
                                 <div className="modal-content">
                                   <h2 className='modal-head'>Confirm</h2>
                                   <form>
-                                    <label className='confirm-remove'>Are you sure you want to remove {deleteUser}?</label>
+                                    <label className='confirm-remove'>Are you sure you want to remove {deleteCourse}?</label>
                                   </form>
                                   <div className='remove-user-buttons'>
                                     <button className='remove-user-popup-button' onClick={() => setShowDeleteCourseModal(false)}>Yes</button>
