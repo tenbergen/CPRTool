@@ -1,11 +1,11 @@
 package edu.oswego.cs.database;
 
-import edu.oswego.cs.dao.Course;
-import edu.oswego.cs.dao.ProfanitySettings;
-import edu.oswego.cs.dao.User;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import edu.oswego.cs.daos.CourseDAO;
+import edu.oswego.cs.daos.ProfanitySettings;
+import edu.oswego.cs.daos.UserDAO;
 import edu.oswego.cs.util.CPRException;
 
    import java.util.List;
@@ -24,7 +24,7 @@ public class AdminInterface {
 
     private final MongoCollection<Document> professorCollection;
     private final MongoCollection<Document> studentCollection;
-    private final MongoCollection<Document> courseCollection;
+    private final MongoCollection<Document> CourseDAOCollection;
     private final MongoCollection<Document> profanitySettings;
 
     // Make a generic method to receive a mongo collection and check connection
@@ -34,10 +34,10 @@ public class AdminInterface {
             MongoDatabase studentDB = databaseManager.getStudentDB();
             // Professors and Admins are in the same database, Admins are elevated
             MongoDatabase profAdminDb = databaseManager.getProfessorDB();
-            MongoDatabase courseDB = databaseManager.getCourseDB();
+            MongoDatabase CourseDAODB = databaseManager.getCourseDB();
             studentCollection = studentDB.getCollection("students");
             professorCollection = profAdminDb.getCollection("professors");
-            courseCollection = courseDB.getCollection("courses");
+            CourseDAOCollection = CourseDAODB.getCollection("CourseDAOs");
             profanitySettings = profAdminDb.getCollection("profanitySettings");
         } catch (CPRException e) {
             throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to retrieve collections.");
@@ -51,10 +51,10 @@ public class AdminInterface {
             MongoDatabase studentDB = databaseManager.getStudentDB();
             // Professors and Admins are in the same database, Admins are elevated
             MongoDatabase profAdminDb = databaseManager.getProfessorDB();
-            MongoDatabase courseDB = databaseManager.getCourseDB();
+            MongoDatabase CourseDAODB = databaseManager.getCourseDB();
             studentCollection = studentDB.getCollection("students");
             professorCollection = profAdminDb.getCollection("professors");
-            courseCollection = courseDB.getCollection("courses");
+            CourseDAOCollection = CourseDAODB.getCollection("CourseDAOs");
             profanitySettings = profAdminDb.getCollection("profanitySettings");
         } catch (CPRException e) {
             throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to retrieve collections.");
@@ -81,11 +81,11 @@ public class AdminInterface {
         professorCollection.deleteOne(eq("professor_id", user_id));
     }
 
-    public void deleteCourse(String course_id) {
-        if (!checkCourse(course_id)) {
-            throw new CPRException(Response.Status.NOT_FOUND, "Course not found.");
+    public void deleteCourseDAO(String CourseDAO_id) {
+        if (!checkCourseDAO(CourseDAO_id)) {
+            throw new CPRException(Response.Status.NOT_FOUND, "CourseDAO not found.");
         }
-        courseCollection.deleteOne(eq("course_id", course_id));
+        CourseDAOCollection.deleteOne(eq("CourseDAO_id", CourseDAO_id));
     }
 
     public void deleteStudentUser(String user_id) {
@@ -282,33 +282,29 @@ public class AdminInterface {
         }
     }
 
-    public List<Course> getCoursesView() {
-        List<Course> courses = new ArrayList<>();
-        // iterate through MongoDB courses and add to list
-        for (Document course : courseCollection.find()) {
-            Course c = new Course(
-                course.getString("course_name"),
-                course.getString("crn"),
-                course.getString("professor"),
-                course.getInteger("year"),
-                course.getString("semester")
+    public List<CourseDAO> getCourseDAOsView() {
+        List<CourseDAO> CourseDAOs = new ArrayList<>();
+        // iterate through MongoDB CourseDAOs and add to list
+        for (Document CourseDAO : CourseDAOCollection.find()) {
+            CourseDAO c = new CourseDAO(
+                
             );
-            courses.add(c);
+            CourseDAOs.add(c);
         }
-        return courses;
+        return CourseDAOs;
     }
 
 
     public Object getUsersView() {
-        List<User> users = new ArrayList<User>();
+        List<UserDAO> users = new ArrayList<UserDAO>();
         // iterate though mongodb users and add to list
         for (Document user : studentCollection.find()) {
-            User u = new User(user.getString("student_id"), "student",user.getString("first_name"), user.getString("last_name"));
+            UserDAO u = new UserDAO(user.getString("student_id"), "student",user.getString("first_name"), user.getString("last_name"));
             users.add(u);
         }
 
         for (Document user : professorCollection.find()) {
-            User u = new User(user.getString("professor_id"), "professor",user.getString("first_name"), user.getString("last_name"));
+            UserDAO u = new UserDAO(user.getString("professor_id"), "professor",user.getString("first_name"), user.getString("last_name"));
             if (user.getBoolean("admin")) {  // if is true override role to admin
                 u.setRole("admin");
             }
@@ -319,9 +315,9 @@ public class AdminInterface {
     }
 
 
-    public Boolean checkCourse(String crn){
-        Document courseDocument = courseCollection.find(eq("crn", crn)).first();
-        if (courseDocument == null) {
+    public Boolean checkCourseDAO(String crn){
+        Document CourseDAODocument = CourseDAOCollection.find(eq("crn", crn)).first();
+        if (CourseDAODocument == null) {
             return false;
         }
         return true;
