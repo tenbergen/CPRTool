@@ -194,7 +194,7 @@ function AdminInterface() {
 
   const deleteUser = async (userID, role) => {
     if (role === "Student") {
-      const url = `${process.env.REACT_APP_URL}/admin/delte/student/${userID}`;
+      const url = `${process.env.REACT_APP_URL}/admin/delete/student/${userID}`;
       await axios
         .post(url)
         .then((res) => {
@@ -209,7 +209,7 @@ function AdminInterface() {
       console.log(url);
     }
     else if (role === "Admin") {
-      const url = `${process.env.REACT_APP_URL}/admin/delte/admin/${userID}`;
+      const url = `${process.env.REACT_APP_URL}/admin/delete/admin/${userID}`;
       await axios
         .post(url)
         .then((res) => {
@@ -224,7 +224,7 @@ function AdminInterface() {
       console.log(url);
     }
     else if (role === "Teacher") {
-      const url = `${process.env.REACT_APP_URL}/admin/delte/professor/${userID}`;
+      const url = `${process.env.REACT_APP_URL}/admin/delete/professor/${userID}`;
       await axios
         .post(url)
         .then((res) => {
