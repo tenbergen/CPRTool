@@ -1,5 +1,6 @@
 import './ProfessorHeaderBar.css'
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const ProfessorHeaderBar = () => {
 
@@ -35,7 +36,9 @@ const ProfessorHeaderBar = () => {
             <div className="admin-dropdown">
                 <button id="admin-button" onClick={() => showDropdown()}></button>
                 <div id="dropdown-options" className="dropdown-content">
-                    <a href="#">Admin</a>
+                    <Link to={`/professor/admin`}>
+                        Admin
+                    </Link>
                     <a href="#">Instructor</a>
                     <a href="#">Student</a>
                 </div>

@@ -30,16 +30,14 @@ const CourseComponent = ({ active, component, onClick }) => {
   );
 };
 
-function StudentCoursePage() {
+function StudentCoursePage({chosen}) {
   const dispatch = useDispatch();
   const location = useLocation();
   const { courseId } = useParams();
   const { lakerId } = useSelector((state) => state.auth);
   const { currentTeamId, teamLoaded } = useSelector((state) => state.teams);
 
-  const initialState =
-    location.state !== null ? location.state.initialComponent : 'To Do';
-  const [chosen, setChosen] = useState(initialState);
+  const [chosenComponent, setChosenComponent] = useState(chosen);
 
   const components = ['To Do', 'Submitted', 'My Team'];
 
@@ -47,6 +45,10 @@ function StudentCoursePage() {
     dispatch(getCourseDetailsAsync(courseId));
     dispatch(getCurrentCourseTeamAsync({ courseId, lakerId }));
   }, [courseId, lakerId, dispatch]);
+
+  useEffect(() => {
+    setChosenComponent(chosen);
+  }, [chosen]);
 
   return (
     <div className="page-container">
@@ -66,15 +68,15 @@ function StudentCoursePage() {
                       <CourseComponent
                           key={uuid()}
                           component={t}
-                          active={t === chosen}
-                          onClick={() => setChosen(t)}
+                          active={t === chosenComponent}
+                          onClick={() => setChosenComponent(t)}
                       />
                   ))}
                 </div>
                 <div>
-                  {chosen === 'To Do' && <StudentToDoComponent />}
-                  {chosen === 'Submitted' && <StudentSubmittedComponent />}
-                  {chosen === 'My Team' && <MyTeamComponent />}
+                  {chosenComponent === 'To Do' && <StudentToDoComponent />}
+                  {chosenComponent === 'Submitted' && <StudentSubmittedComponent />}
+                  {chosenComponent === 'My Team' && <MyTeamComponent />}
                 </div>
               </div>
           )}
