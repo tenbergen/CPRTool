@@ -7,16 +7,17 @@ const HeaderBar = () => {
     const role = useSelector((state) => state.auth.role);
     const alt_role = localStorage.getItem('alt_role');
 
-    const handleLogoClick = () => {
-        window.location.replace('/')
-    }
-
     function showDropdown() {
         document.getElementById("dropdown-options").classList.toggle("show");
     }
 
     const studentView = () => {
         localStorage.setItem("alt_role", "student");
+        window.location.reload(false);
+    };
+
+    const professorView = () => {
+        localStorage.removeItem('alt_role');
         window.location.reload(false);
     };
 
@@ -51,7 +52,7 @@ const HeaderBar = () => {
                             <Link to={`/professor/admin`}>
                                 Admin
                             </Link>
-                            <a href="#">Instructor</a>
+                            <a href="#"onClick={professorView}>Instructor</a>
                             <a href="#" onClick={studentView}>Student</a>
                         </div>
                     </div>

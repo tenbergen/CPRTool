@@ -100,13 +100,13 @@ const ProfessorEditCourseComponent = () => {
   };
 
   const initialData = {
-    course_name: currentCourse.course_name,
-    course_section: currentCourse.course_section,
-    semester: currentCourse.semester,
-    abbreviation: currentCourse.abbreviation,
-    year: currentCourse.year,
-    crn: currentCourse.crn,
-    team_size: currentCourse.team_size,
+    course_name: currentCourse?.course_name,
+    course_section: currentCourse?.course_section,
+    semester: currentCourse?.semester,
+    abbreviation: currentCourse?.abbreviation,
+    year: currentCourse?.year,
+    crn: currentCourse?.crn,
+    team_size: currentCourse?.team_size,
   };
 
   const handleSubmit = async (formObj) => {
