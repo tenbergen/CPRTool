@@ -12,7 +12,7 @@ import ProfessorTeamComponent from "../../components/ProfessorComponents/Courses
 import Loader from "../../components/LoaderComponenets/Loader";
 import uuid from "react-uuid";
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
-import ProfessorHeaderBar from "../../components/ProfessorComponents/ProfessorHeaderBar";
+import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import { useLocation } from "react-router-dom";
 const CourseComponent = ({ active, component, onClick }) => {
   return (
@@ -52,7 +52,7 @@ function ProfessorCoursePage({chosen}) {
 
   return (
     <div>
-      <ProfessorHeaderBar/>
+      <HeaderBar/>
       {isLoading ? (
         <Loader />
       ) : (
