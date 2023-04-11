@@ -61,19 +61,6 @@ function ProfessorCoursePage({chosen}) {
             <div className="pcp-container">
               <NavigationContainerComponent/>
               <div className="pcp-components">
-                <div className="pcp-component-links inter-28-light">
-                  {components.map(
-                      (t) =>
-                          t && (
-                              <CourseComponent
-                                  key={uuid()}
-                                  component={t}
-                                  active={t === chosenComponent}
-                                  onClick={() => setChosenComponent(t)}
-                              />
-                          )
-                  )}
-                </div>
                 <div>
                   {chosenComponent === "Assignments" && <ProfessorAssignmentComponent />}
                   {chosenComponent === "Roster" && <ProfessorRosterComponent />}
