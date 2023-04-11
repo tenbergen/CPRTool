@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-@Path("/admin")
+@Path("admin")
 @RolesAllowed("admin")
 @Produces(MediaType.APPLICATION_JSON)
 public class AdminController {
