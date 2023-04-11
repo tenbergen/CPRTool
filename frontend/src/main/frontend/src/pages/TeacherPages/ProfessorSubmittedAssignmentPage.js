@@ -7,7 +7,7 @@ import SubmittedAssBarComponent from '../../components/SubmittedAssBarComponent'
 import { getSubmittedAssignmentDetailsAsync } from '../../redux/features/submittedAssignmentSlice';
 import uuid from 'react-uuid';
 import {base64StringToBlob} from "blob-util";
-import ProfessorHeaderBar from "../../components/ProfessorComponents/ProfessorHeaderBar";
+import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 function ProfessorSubmittedAssignmentPage() {
   const dispatch = useDispatch();
@@ -90,7 +90,7 @@ function ProfessorSubmittedAssignmentPage() {
 
   return (
     <div className="page-container">
-      <ProfessorHeaderBar/>
+      <HeaderBar/>
       <div className='scp-container'>
         <NavigationContainerComponent/>
         <div className='scp-component'>

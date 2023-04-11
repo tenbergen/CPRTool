@@ -10,10 +10,9 @@ import { getCourseDetailsAsync } from '../../redux/features/courseSlice';
 import { getCurrentCourseTeamAsync } from '../../redux/features/teamSlice';
 import MyTeamComponent from '../../components/StudentComponents/CoursePage/MyTeamComponent';
 import uuid from 'react-uuid';
-import AssBarComponent from "../../components/AssBarComponent";
-import StudentHeaderBar from "../../components/StudentComponents/StudentHeaderBar";
 import NavigationContainerComponent
   from "../../components/NavigationComponents/NavigationContainerComponent";
+import HeaderBar from "../../components/HeaderBar/HeaderBar";
 
 const CourseComponent = ({ active, component, onClick }) => {
   return (
@@ -52,7 +51,7 @@ function StudentCoursePage({chosen}) {
 
   return (
     <div className="page-container">
-      <StudentHeaderBar/>
+      <HeaderBar/>
       <div className='scp-container'>
         <NavigationContainerComponent/>
         {/*<AssBarComponent />*/}

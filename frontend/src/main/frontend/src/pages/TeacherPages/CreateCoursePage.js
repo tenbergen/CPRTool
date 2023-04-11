@@ -6,7 +6,7 @@ import Loader from '../../components/LoaderComponenets/Loader';
 import CourseBarComponent from '../../components/CourseBarComponent';
 import { useSelector } from 'react-redux';
 import Breadcrumbs from "../../components/Breadcrumbs";
-import ProfessorHeaderBar from "../../components/ProfessorComponents/ProfessorHeaderBar";
+import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 
 const CreateCoursePage = () => {
@@ -81,7 +81,7 @@ const CreateCoursePage = () => {
         <Loader />
       ) : (
           <div className="course-page-container">
-            <ProfessorHeaderBar/>
+            <HeaderBar/>
             <div className='ccp-container'>
               <NavigationContainerComponent/>
               <div className='pcp-components'>
