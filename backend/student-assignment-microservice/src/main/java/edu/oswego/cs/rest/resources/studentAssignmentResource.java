@@ -212,7 +212,6 @@ public class studentAssignmentResource {
     @Produces({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
     public Response getAllCourseDocumentsStudent(@Context SecurityContext securityContext, @PathParam("course_id") String courseID, @PathParam("student_id") String studentID) throws IOException {
         //make sure the user is the professor of the course
-        System.out.println("here we are");
         new AssignmentInterface().checkProfessor(securityContext, courseID);
         //create the zip file
         File zipFile = new AssignmentInterface().aggregateSubmissionsStudent(courseID, studentID);
