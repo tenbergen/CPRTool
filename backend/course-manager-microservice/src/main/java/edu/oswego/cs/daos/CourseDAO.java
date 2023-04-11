@@ -47,6 +47,4 @@ public class CourseDAO {
         this.teamSize = 1;
         this.courseID = this.abbreviation + "-" + this.courseSection + "-" + this.crn + "-" + this.semester + "-" + this.year;
     }
-
-    public CourseDAO()
 }

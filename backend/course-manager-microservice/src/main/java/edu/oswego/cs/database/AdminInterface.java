@@ -37,7 +37,7 @@ public class AdminInterface {
             MongoDatabase courseDB = databaseManager.getCourseDB();
             studentCollection = studentDB.getCollection("students");
             professorCollection = profAdminDb.getCollection("professors");
-            courseCollection = courseDB.getCollection("CourseDAOs");
+            courseCollection = courseDB.getCollection("courses");
             profanitySettings = profAdminDb.getCollection("profanitySettings");
         } catch (CPRException e) {
             throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to retrieve collections.");
@@ -51,10 +51,10 @@ public class AdminInterface {
             MongoDatabase studentDB = databaseManager.getStudentDB();
             // Professors and Admins are in the same database, Admins are elevated
             MongoDatabase profAdminDb = databaseManager.getProfessorDB();
-            MongoDatabase CourseDAODB = databaseManager.getCourseDB();
+            MongoDatabase courseDB = databaseManager.getCourseDB();
             studentCollection = studentDB.getCollection("students");
             professorCollection = profAdminDb.getCollection("professors");
-            courseCollection = CourseDAODB.getCollection("CourseDAOs");
+            courseCollection = courseDB.getCollection("courses");
             profanitySettings = profAdminDb.getCollection("profanitySettings");
         } catch (CPRException e) {
             throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to retrieve collections.");
@@ -81,9 +81,9 @@ public class AdminInterface {
         professorCollection.deleteOne(eq("professor_id", user_id));
     }
 
-    public void deleteCourseDAO(String course_id) {
+    public void deleteCourse(String course_id) {
         if (!checkCourse(course_id)) {
-            throw new CPRException(Response.Status.NOT_FOUND, "CourseDAO not found.");
+            throw new CPRException(Response.Status.NOT_FOUND, "Course not found.");
         }
         courseCollection.deleteOne(eq("course_id", course_id));
     }
@@ -275,15 +275,15 @@ public class AdminInterface {
 
     // TODO:  Add constructor paremeters for CourseDAO
     public List<CourseDAO> getCourseView() {
-        List<CourseDAO> CourseDAOs = new ArrayList<>();
+        List<CourseDAO> courses = new ArrayList<>();
         // iterate through MongoDB CourseDAOs and add to list
         for (Document CourseDAO : courseCollection.find()) {
             CourseDAO c = new CourseDAO(
                 
             );
-            CourseDAOs.add(c);
+            courses.add(c);
         }
-        return CourseDAOs;
+        return courses;
     }
 
 

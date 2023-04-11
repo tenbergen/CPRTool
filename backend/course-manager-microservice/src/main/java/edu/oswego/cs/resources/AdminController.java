@@ -174,6 +174,6 @@ public class AdminController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/views/courses")
     public Response getCoursesView(@Context SecurityContext securityContext) {
-        return Response.status(Response.Status.OK).entity(new AdminInterface().getCoursesView()).build();
+        return Response.status(Response.Status.OK).entity(new AdminInterface().getCourseView()).build();
     }
 }
