@@ -56,7 +56,7 @@ public class EmailService {
         body = body.replace("[Name of Instructor]", course.getString("professor_id"));
         body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
 
-        sendEmail(course.getString("professor_id"), subject, body);
+        sendEmail(new CourseInterface().getProfessorEmail(course.getString("professor_id")), subject, body);
     }
 
     /**
@@ -94,7 +94,7 @@ public class EmailService {
         body = body.replace("[Name of Instructor]", course.getString("professor_id"));
         body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
 
-        sendEmail(course.getString("professor_id"), subject, body);
+        sendEmail(new CourseInterface().getProfessorEmail(course.getString("professor_id")), subject, body);
     }
 
     /**
@@ -124,7 +124,7 @@ public class EmailService {
             body = body.replace("[Instructor Name]", new CourseInterface().getCourse(courseID).getString("professor_id"));
 
             //send email
-            sendEmail(student.getString("student_id"), subject, body);
+            sendEmail(new CourseInterface().getProfessorEmail(student.getString("student_id")), subject, body);
         }
     }
 
@@ -157,7 +157,7 @@ public class EmailService {
         body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
         body = body.replace("[Assignment Due Date]", assignment.getString("due_date"));
 
-        sendEmail(course.getString("professor_id"), subject, body);
+        sendEmail(new CourseInterface().getProfessorEmail(course.getString("professor_id")), subject, body);
     }
 
     /**
@@ -197,7 +197,7 @@ public class EmailService {
             body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
             body = body.replace("[Instructor Name]", course.getString("professor_id"));
 
-            sendEmail(to, subject, body);
+            sendEmail(new CourseInterface().getStudentEmail(to), subject, body);
         }
     }
 
@@ -241,7 +241,7 @@ public class EmailService {
             body = body.replace("[Grade]", submission.getDouble("grade").toString());
             body = body.replace("[Instructor Name]", course.getString("professor_id"));
 
-            sendEmail(to, subject, body);
+            sendEmail(new CourseInterface().getStudentEmail(to), subject, body);
         }
     }
 
@@ -268,7 +268,7 @@ public class EmailService {
         body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
         body = body.replace("[Name of Team That Submitted the Outlier Peer Review]", teamID);
 
-        sendEmail(course.getString("professor_id"), subject, body);
+        sendEmail(new CourseInterface().getProfessorEmail(course.getString("professor_id")), subject, body);
 
     }
 
@@ -300,7 +300,7 @@ public class EmailService {
             body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
             body = body.replace("[Instructor Name]", course.getString("professor_id"));
 
-            sendEmail(to, subject, body);
+            sendEmail(new CourseInterface().getStudentEmail(to), subject, body);
         }
     }
 
@@ -335,7 +335,7 @@ public class EmailService {
         body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
         body = body.replace("[Peer Review Due Date]", assignment.getString("peer_review_due_date"));
 
-        sendEmail(course.getString("professor_id"), subject, body);
+        sendEmail(new CourseInterface().getProfessorEmail(course.getString("professor_id")), subject, body);
     }
 
     /**
@@ -384,7 +384,7 @@ public class EmailService {
             body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
             body = body.replace("[Instructor Name]", course.getString("professor_id"));
 
-            sendEmail(to, subject, body);
+            sendEmail(new CourseInterface().getStudentEmail(to), subject, body);
         }
     }
 
@@ -436,7 +436,7 @@ public class EmailService {
             Message msg = new MimeMessage(session);
             msg.setFrom(new InternetAddress(from, "NoReply"));
             msg.addRecipient(Message.RecipientType.TO,
-                    new InternetAddress(to, "Fella"));
+                    new InternetAddress(to, "Recipient"));
             msg.setSubject(subject);
             msg.setContent(body, "text/html");
             Transport.send(msg);
@@ -514,5 +514,4 @@ public class EmailService {
         }
         return true;
     }
-
 }

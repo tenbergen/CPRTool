@@ -37,14 +37,6 @@ public class CourseInterface {
         }
     }
 
-    public Document getCourse(SecurityContext securityContext, String courseID) {
-        String professorID = securityContext.getUserPrincipal().getName();
-        Document document = courseCollection.find(and(eq("course_id", courseID), eq("professor_id", professorID))).first();
-        if (document == null)
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This course does not exist.").build());
-        return document;
-    }
-
     public Document getCourse(String courseID){
         Document document = courseCollection.find(eq("course_id", courseID)).first();
         if(document == null)
@@ -61,13 +53,8 @@ public class CourseInterface {
     }
 
     public Document getStudent(SecurityContext securityContext){
-        String studentID = securityContext.getUserPrincipal().getName();
+        String studentID = securityContext.getUserPrincipal().getName().split("@")[0];
         return studentCollection.find(eq("student_id", studentID)).first();
-    }
-
-    public Document getProfessor(SecurityContext securityContext) {
-        String professorID = securityContext.getUserPrincipal().getName();
-        return professorCollection.find(eq("professor_id", professorID)).first();
     }
 
     public List<Document> getStudentsInCourse(String courseID) {
@@ -83,5 +70,21 @@ public class CourseInterface {
         List<Document> teamsInCourse = new ArrayList<>();
         teamCollection.find(eq("course_id", courseID)).into(teamsInCourse);
         return teamsInCourse;
+    }
+
+    /**
+     * gets a student's full email from their id
+     *
+     * @param studentId id of the student
+     * @return the student's email
+     */
+    public String getStudentEmail(String studentId){
+        String domain = getStudent(studentId).getString("domain");
+        return (studentId + "@" + domain);
+    }
+
+    public String getProfessorEmail(String professorId){
+        String domain = professorCollection.find(eq(professorId)).first().getString("domain");
+        return (professorId + "@" + domain);
     }
 }

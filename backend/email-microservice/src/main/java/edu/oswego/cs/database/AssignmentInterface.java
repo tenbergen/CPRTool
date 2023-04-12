@@ -57,25 +57,6 @@ public class AssignmentInterface {
     }
 
     /**
-     * gets the assignments in the specified course
-     *
-     * @param courseID course with desired assignments
-     * @return list of assignments
-     */
-    public List<Document> getAssignmentsByCourse(String courseID) {
-        MongoCursor<Document> query = assignmentsCollection.find(eq("course_id", courseID)).iterator();
-        if (!query.hasNext()) return Collections.emptyList();
-
-        List<Document> assignments = new ArrayList<>();
-        while (query.hasNext()) {
-            Document document = query.next();
-            assignments.add(document);
-        }
-        return assignments;
-    }
-
-
-    /**
      * gets a particular assignment
      *
      * @param courseID course with desired assignment
