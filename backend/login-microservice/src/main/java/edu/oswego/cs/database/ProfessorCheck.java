@@ -57,7 +57,9 @@ public class ProfessorCheck {
                         .append("professor_id", professorID)
                         .append("domain", professorDomain)
                         .append("courses", courseList);
+                System.out.println(newProfessor);
                 professorCollection.insertOne(newProfessor);
+                System.out.println("professor added");
             }else{
                 System.out.println("Professor already exists");
             }
