@@ -35,7 +35,7 @@ module.exports = {
             const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
             if (process.env.NODE_ENV === 'production') {
-                await rest.put(Routes.applicationCommands('665318329040371725'), { body: commands });
+                await rest.put(Routes.applicationCommands(client.user.id), { body: commands });
 
             } else {
                 await rest.put(Routes.applicationGuildCommands(client.user.id, process.env.TESTING_GUILD), { body: commands });
