@@ -46,15 +46,20 @@ public class ProfessorCheck {
 
         for (String professorEmail : professorList) {
             String professorID = professorEmail.split("@")[0];
+            System.out.println("Professor ID: " + professorID);
             String professorDomain = professorEmail.split("@")[1];
+            System.out.println("Professor Domain: " + professorDomain);
             Document professorDocument = professorCollection.find(eq("professor_id", professorID)).first();
             if (professorDocument == null) {
+                System.out.println("Adding new professor");
                 List<String> courseList = new ArrayList<>();
                 Document newProfessor = new Document()
                         .append("professor_id", professorID)
                         .append("domain", professorDomain)
                         .append("courses", courseList);
                 professorCollection.insertOne(newProfessor);
+            }else{
+                System.out.println("Professor already exists");
             }
         }
 
