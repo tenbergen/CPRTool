@@ -40,14 +40,16 @@ module.exports = {
         };
 
         auth.roles = decode(token).groups;
-        auth.courseId = await axios
-            .get('http://course-viewer:13128/view/professor/courses', auth.headers)
-            .then((res) => {
-                return res.data.find(course => course.course_name === interaction.guild.name).course_id;
-            })
-            .catch((err) => {
-                console.error(err.stack);
-            });
+        auth.courseId = interaction.guild.name;
+
+        // auth.courseId = await axios
+        //     .get('http://course-viewer:13128/view/professor/courses', auth.headers)
+        //     .then((res) => {
+        //         return res.data.find(course => course.course_name === interaction.guild.name).course_id;
+        //     })
+        //     .catch((err) => {
+        //         console.error(err.stack);
+        //     });
 
         return auth;
     },
