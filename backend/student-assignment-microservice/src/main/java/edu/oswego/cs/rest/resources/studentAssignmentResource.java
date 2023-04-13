@@ -3,7 +3,6 @@ package edu.oswego.cs.rest.resources;
 
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 import edu.oswego.cs.rest.daos.FileDAO;
-import edu.oswego.cs.rest.daos.UpdateTeamGradeDAO;
 import edu.oswego.cs.rest.database.AssignmentInterface;
 import org.apache.tika.exception.TikaException;
 import org.bson.Document;
