@@ -8,30 +8,6 @@ import axios from 'axios';
 
 function AdminInterface() {
 
-  const [userList, setUserList] = useState([
-    { netID: 'ddimes', name: 'Danny Dimes', role: 'Admin' },
-    { netID: 'quads', name: 'Saquads Barkley', role: 'Teacher' },
-    { netID: 'ern', name: 'Ernie Spinkleton', role: 'Student' },
-    { netID: 'ern', name: 'Ernie Spinkleton', role: 'Student' },
-    { netID: 'ern', name: 'Ernie Spinkleton', role: 'Student' },
-    { netID: 'ern', name: 'Ernie Spinkleton', role: 'Student' },
-    { netID: 'ern', name: 'Ernie Spinkleton', role: 'Teacher' },
-    { netID: 'ern', name: 'Ernie Spinkleton', role: 'Student' },
-    { netID: 'ern', name: 'Ernie Spinkleton', role: 'Teacher' },
-    { netID: 'ern', name: 'Ernie Spinkleton', role: 'Student' },
-    { netID: 'ern', name: 'Ernie Spinkleton', role: 'Student' },
-    { netID: 'ern', name: 'Ernie Spinkleton', role: 'Student' },
-    { netID: 'ern', name: 'Ernie Spinkleton', role: 'Admin' },
-    { netID: 'ern', name: 'Ernie Spinkleton', role: 'Student' },
-    { netID: 'ern', name: 'Ernie Spinkleton', role: 'Student' },
-    { netID: 'ern', name: 'Ernie Spinkleton', role: 'Student' },
-    { netID: 'ern', name: 'Ernie Spinkleton', role: 'Student' },
-    { netID: 'ern', name: 'Ernie Spinkleton', role: 'Student' },
-    { netID: 'ern', name: 'Ernie Spinkleton', role: 'Student' },
-    { netID: 'perryp', name: 'Perry Platypus', role: 'Student' },
-    { netID: 'ern', name: 'Ernie Spinkleton', role: 'Student' },
-  ]);
-
   const [courseList, setCourseList] = useState([
     { Course: 'CSC 212 - Principles of Programming', Instructor: 'Perry', CRN: '101233', Year: '2022', Semester: 'Spring' },
     { Course: 'CSC 480 - Software Design', Instructor: 'Danny Dimes', CRN: '231193', Year: '2023', Semester: 'Fall' },
@@ -74,14 +50,25 @@ function AdminInterface() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteCourseModal, setShowDeleteCourseModal] = useState(false);
   const getUsersUrl = `${process.env.REACT_APP_URL}/manage/admin/views/users`;
+  const getCoursesUrl = `${process.env.REACT_APP_URL}/manage/admin/views/courses`;
 
+  let [userList, setUserList] = useState([]);
 
+  useEffect(() => {
+    axios.get(getUsersUrl)
+      .then(response => {
+        setUserList(response.data);
+        console.log(response.data);
+      })
+      .catch(error => console.error("Uh oh"));
+  }, []);
+  
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
 
   const filteredUsers = userList.filter((user) =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    user.first_name.toLowerCase().includes(searchTerm.toLowerCase()) &&
     (selectedRole === "all" || user.role === selectedRole)
   );
 
@@ -96,7 +83,6 @@ function AdminInterface() {
   const filteredProfanities = profanityList.filter((profanity) =>
     (profanity.profanity.toLowerCase().includes(searchTerm.toLowerCase()))
   );
-
 
   const [filterType, setFilterType] = useState(null);
 
@@ -151,7 +137,7 @@ function AdminInterface() {
   }
 
   const addUser = async (userFirstName, userLastName, userID, role) => {
-    if (role === "Student") {
+    if (role === "student") {
       const url = `${process.env.REACT_APP_URL}/manage/admin/add/student/${userID}/${userFirstName}/${userLastName}`;
       await axios
         .post(url)
@@ -168,7 +154,7 @@ function AdminInterface() {
       console.log(userLastName);
       console.log(url);
     }
-    else if (role === "Admin") {
+    else if (role === "admin") {
       const url = `${process.env.REACT_APP_URL}/manage/admin/add/admin/${userID}/${userFirstName}/${userLastName}`;
       await axios
         .post(url)
@@ -185,7 +171,7 @@ function AdminInterface() {
       console.log(userLastName);
       console.log(url);
     }
-    else if (role === "Teacher") {
+    else if (role === "teacher") {
       const url = `${process.env.REACT_APP_URL}/manage/admin/add/professor/${userID}/${userFirstName}/${userLastName}`;
       await axios
         .post(url)
@@ -224,7 +210,7 @@ function AdminInterface() {
   }
 
   const deleteUser = async (userID, role) => {
-    if (role === "Student") {
+    if (role === "student") {
       const url = `${process.env.REACT_APP_URL}/manage/admin/delete/student/${userID}`;
       await axios
         .post(url)
@@ -239,7 +225,7 @@ function AdminInterface() {
       console.log(userID);
       console.log(url);
     }
-    else if (role === "Admin") {
+    else if (role === "admin") {
       const url = `${process.env.REACT_APP_URL}/manage/admin/delete/admin/${userID}`;
       await axios
         .post(url)
@@ -254,7 +240,7 @@ function AdminInterface() {
       console.log(userID);
       console.log(url);
     }
-    else if (role === "Teacher") {
+    else if (role === "teacher") {
       const url = `${process.env.REACT_APP_URL}/manage/admin/delete/professor/${userID}`;
       await axios
         .post(url)
@@ -276,7 +262,7 @@ function AdminInterface() {
   }
 
   const editUser = async (userID, role, newRole) => {
-    if (role === "Admin" && newRole === "Teacher") {
+    if (role === "admin" && newRole === "teacher") {
       const url = `${process.env.REACT_APP_URL}/manage/admin/roles/demote/adminToProfessor/${userID}`;
       await axios
         .post(url)
@@ -291,7 +277,7 @@ function AdminInterface() {
       console.log(userID);
       console.log(url);
     }
-    else if (role === "Teacher" && newRole === "Student") {
+    else if (role === "teacher" && newRole === "student") {
       const url = `${process.env.REACT_APP_URL}/manage/admin/roles/demote/professorToStudent/${userID}`;
       await axios
         .post(url)
@@ -306,7 +292,7 @@ function AdminInterface() {
       console.log(userID);
       console.log(url);
     }
-    else if (role === "Teacher" && newRole === "Admin") {
+    else if (role === "teacher" && newRole === "admin") {
       const url = `${process.env.REACT_APP_URL}/manage/admin/roles/promote/professorToAdmin/${userID}`;
       await axios
         .post(url)
@@ -321,7 +307,7 @@ function AdminInterface() {
       console.log(userID);
       console.log(url);
     }
-    else if (role === "Student" && newRole === "Teacher") {
+    else if (role === "student" && newRole === "teacher") {
       const url = `${process.env.REACT_APP_URL}/manage/admin/roles/promote/studentToProfessor/${userID}`;
       await axios
         .post(url)
@@ -341,10 +327,10 @@ function AdminInterface() {
     setLakerID('');
     setSelectedUserRole('');
   }
-  
-  axios.get(getUsersUrl)
-    .then(response => console.log(response.data))
-    .catch(error => console.error("Uh oh"));
+
+  // axios.get(getCoursesUrl)
+  //   .then(response2 => console.log(response2.data))
+  //   .catch(error => console.error("Heck"));
 
   return (
     <><Modal open={openModal} courseArr={selectedCourse} onClose={() => setOpenModal(false)} />
@@ -359,6 +345,7 @@ function AdminInterface() {
             <button className='courses-tab' onClick={() => changePage('courses')} style={{ backgroundColor: page === "courses" ? "#4a7dfc" : "#E6E6E6", color: page === "courses" ? "white" : "black" }}>Courses</button>
             <button className='profanity-settings-tab' onClick={() => changePage('profanity')} style={{ backgroundColor: page === "profanity" ? "#4a7dfc" : "#E6E6E6", color: page === "profanity" ? "white" : "black" }}>Profanity Settings</button>
           </div>
+
           {page === "roles" && (
             <><div className='search-filter-add'>
               <div className='search-bar'>
@@ -375,13 +362,14 @@ function AdminInterface() {
                 <label for="role-filter">Role Filter</label>
                 <select name="role" id="role" onChange={(e) => setSelectedRole(e.target.value)}>
                   <option value="all">All</option>
-                  <option value="Admin">Admin</option>
-                  <option value="Teacher">Teacher</option>
-                  <option value="Student">Student</option>
+                  <option value="admin">Admin</option>
+                  <option value="teacher">Teacher</option>
+                  <option value="student">Student</option>
                 </select>
               </div>
               <div className='add-user-button-div'>
                 <button className='add-user-button' onClick={() => setShowModal(true)}>Add User +</button>
+
                 {showModal && (
                   <div className="modal">
                     <div className="modal-content">
@@ -415,9 +403,9 @@ function AdminInterface() {
                           <label for="role-filter">Role</label>
                           <select name="role" id="add-user-role" defaultValue="Select Role" onChange={(e) => setSelectedUserRole(e.target.value)}>
                             <option disabled={true} value="Select Role">--Select Role--</option>
-                            <option value="Admin">Admin</option>
-                            <option value="Teacher">Teacher</option>
-                            <option value="Student">Student</option>
+                            <option value="admin">Admin</option>
+                            <option value="teacher">Teacher</option>
+                            <option value="student">Student</option>
                           </select>
                         </div>
                       </form>
@@ -428,6 +416,7 @@ function AdminInterface() {
                     </div>
                   </div>
                 )}
+
               </div>
             </div><div>
                 <div className='user-list'>
@@ -440,18 +429,19 @@ function AdminInterface() {
                   <div className='all-user-items'>
                     {filteredUsers.map((user) => (
                       <div key={user.id} className='user-item'>
-                        <div>{user.name}</div>
+                        <div>{user.first_name}</div>
                         <div>{user.netID}</div>
                         <div>{user.role}</div>
                         <div>
                           <div className='edit-container'>
                             <button className='edit-button' onClick={() => { 
                               setShowEditModal(true); 
-                              getEditUser(user.name); 
+                              getEditUser(user.first_name); 
                               getCurrentID(user.netID); 
                               getCurrentRole(user.role) }}>
                               <img className='edit-icon' src={editIcon} />
                             </button>
+
                             {showEditModal && (
                               <div className="edit-modal">
                                 <div className="modal-content">
@@ -461,9 +451,9 @@ function AdminInterface() {
                                       <label for="role-filter">Role</label>
                                       <select name="role" id="add-user-role" defaultValue="Select Role" onChange>
                                         <option disabled={true} value="Select Role" onChange={(e) => setEditRole(e.target.value)}>--Select Role--</option>
-                                        <option value="Admin">Admin</option>
-                                        <option value="Teacher">Teacher</option>
-                                        <option value="Student">Student</option>
+                                        <option value="admin">Admin</option>
+                                        <option value="teacher">Teacher</option>
+                                        <option value="student">Student</option>
                                       </select>
                                     </div>
                                   </form>
@@ -474,9 +464,10 @@ function AdminInterface() {
                                 </div>
                               </div>
                             )}
+
                           </div>
                           <div className='delete-container'>
-                            <button className='delete-button' onClick={() => { setShowDeleteModal(true); getDeleteUser(user.name) }}>X</button>
+                            <button className='delete-button' onClick={() => { setShowDeleteModal(true); getDeleteUser(user.firsr_name) }}>X</button>
                             {showDeleteModal && (
                               <div className="delete-modal">
                                 <div className="modal-content">
@@ -491,6 +482,7 @@ function AdminInterface() {
                                 </div>
                               </div>
                             )}
+
                           </div>
                         </div>
                       </div>
