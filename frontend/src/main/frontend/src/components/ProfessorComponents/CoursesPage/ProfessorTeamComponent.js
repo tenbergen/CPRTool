@@ -8,6 +8,7 @@ import loading from '../../../assets/loading.gif'
 import ProfessorTeamAccordion from './ProfessorTeamAccordion.jsx'
 import { getCurrentCourseTeamAsync } from '../../../redux/features/teamSlice'
 import { useParams } from 'react-router-dom'
+import Breadcrumbs from "../../Breadcrumbs";
 
 const ProfessorTeamComponent = () => {
   const dispatch = useDispatch()
@@ -73,10 +74,7 @@ const ProfessorTeamComponent = () => {
 
   return (
     <div className="team-container">
-      <div id="createTeamButton">
-        <button className="green-button-large" onClick={createTeam} style={{ marginBottom: '3%' }}> Create New Team
-        </button>
-      </div>
+      <Breadcrumbs></Breadcrumbs>
       {isLoading
         ? <div> {teams.length > 0 ? (
           <div className="acordion-wrapper">
@@ -113,7 +111,13 @@ const ProfessorTeamComponent = () => {
           </div>
         </>
       }
+      <div id="createTeamButton">
+        <button className="green-button-large" onClick={createTeam} style={{ marginBottom: '3%' }}> Create New Team
+        </button>
+      </div>
     </div>
+
+
   )
 }
 
