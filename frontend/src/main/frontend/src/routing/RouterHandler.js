@@ -33,14 +33,14 @@ const RouterHandler = () => {
             <Route path='create' element={<CreateCoursePage />} />
             <Route
               path='professor/:courseId'
-              element={<ProfessorCoursePage />}
+              element={<ProfessorCoursePage chosen="Assignments" />}
             />
             <Route
               path='professor/:courseId/grades'
               element={<ProfessorGradesPage />}
             />
             <Route
-              path='professor/:courseId/assignments/create/assignment'
+              path='professor/:courseId/create/assignment'
               element={<CreateAssignmentPage />}
             />
             <Route
@@ -60,19 +60,19 @@ const RouterHandler = () => {
                 element={<App />}
             />
             <Route
-                path='/professor/:courseID/teams'
+                path='/professor/:courseId/teams'
                 element={<ProfessorCoursePage chosen="Teams" />}
             />
             <Route
-                path='/professor/:courseID/roster'
+                path='/professor/:courseId/roster'
                 element={<ProfessorCoursePage chosen="Roster" />}
             />
             <Route
-                path='/professor/:courseID/assignments'
+                path='/professor/:courseId/assignments'
                 element={<ProfessorCoursePage chosen="Assignments" />}
             />
             <Route
-                path='/professor/:courseID/details'
+                path='/professor/:courseId/details'
                 element={<ProfessorCoursePage chosen="Manage" />}
             />
           </Route>
@@ -108,11 +108,11 @@ const RouterHandler = () => {
                 element={<App />}
             />
             <Route
-                path='/student/:courseID/teams'
+                path='/student/:courseId/teams'
                 element={<StudentCoursePage chosen="My Team" />}
             />
             <Route
-                path='/student/:courseID/assignments'
+                path='/student/:courseId/assignments'
                 element={<StudentCoursePage chosen="To Do" />}
             />
 
