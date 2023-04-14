@@ -108,11 +108,11 @@ const RouterHandler = () => {
                 element={<App />}
             />
             <Route
-                path='/student/:courseID/teams'
+                path='/student/:courseId/teams'
                 element={<StudentCoursePage chosen="My Team" />}
             />
             <Route
-                path='/student/:courseID/assignments'
+                path='/student/:courseId/assignments'
                 element={<StudentCoursePage chosen="To Do" />}
             />
 
