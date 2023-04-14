@@ -1,19 +1,20 @@
-.bulk-download-icon-active {
-    background-image: url("../../../assets/icons/navigation/active/Bulk Download.svg");
+
+.bulk-download-icon-active{
+    background-image: url("../../assets/icons/navigation/active/Bulk Download.svg");
     width: 20px;
     height: 20px;
     margin: 0 16px 0 35px;
 }
 
-.bulk-download-icon-default {
-    background-image: url("../../../assets/icons/navigation/default/Bulk-Download.svg");
+.bulk-download-icon-default{
+    background-image: url("../../assets/icons/navigation/default/Bulk Download.svg");
     width: 20px;
     height: 20px;
     margin: 0 16px 0 35px;
 }
 
 .bulk-download-white-icon-default {
-    background-image: url("../../../assets/icons/navigation/default/white_bulk_download.svg");
+    background-image: url("../../assets/icons/navigation/default/white_bulk_download.svg");
     width: 17px;
     height: 17px;
     margin: 0 16px 0 35px;
@@ -46,9 +47,10 @@
     padding-left: 70px
 }
 
-#course-accordion-title {
+.course-accordion-title-active{
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     background-color: #FFFFFF;
     border: 1px solid #101828;
     height: 60px;
@@ -57,16 +59,40 @@
     user-select: none;
     padding-left: 55px
 }
+.course-accordion-title-active:hover{
+    cursor: pointer;
+}
 
-.courses-icon-active {
-    background-image: url("../../../assets/icons/navigation/active/Courses.svg");
+.course-accordion-title-default{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #F6F6F6;
+    border: 1px solid #101828;
+    height: 60px;
+    align-items: center;
+    margin-top: -1px;
+    user-select: none;
+    padding-left: 55px
+}
+.course-accordion-title-default:hover{
+    cursor: pointer;
+}
+
+#coursesContainer{
+    display: flex;
+    flex-direction: column;
+}
+
+.courses-icon-active{
+    background-image: url("../../assets/icons/navigation/active/Courses.svg");
     width: 21px;
     height: 20px;
     margin: 0 17px 0 35px;
 }
 
-.courses-icon-default {
-    background-image: url("../../../assets/icons/navigation/default/Courses.svg");
+.courses-icon-default{
+    background-image: url("../../assets/icons/navigation/default/Courses.svg");
     width: 21px;
     height: 20px;
     margin: 0 17px 0 35px;
@@ -116,29 +142,29 @@
     height: 60px;
 }
 
-.dropdown-icon-active {
-    background-image: url("../../../assets/icons/navigation/active/Arrow_Active.svg");
+.dropdown-icon-active{
+    background-image: url("../../assets/icons/navigation/active/Arrow_Active.svg");
     width: 17px;
     height: 9px;
     margin: 0 16px 0 35px;
 }
 
-.dropdown-icon-default {
-    background-image: url("../../../assets/icons/navigation/default/Arrow_Default.svg");
+.dropdown-icon-default{
+    background-image: url("../../assets/icons/navigation/default/Arrow_Default.svg");
     width: 12px;
     height: 17px;
     margin: 0 16px 0 35px;
 }
 
-.home-icon-active {
-    background-image: url("../../../assets/icons/navigation/active/Home.svg");
+.home-icon-active{
+    background-image: url("../../assets/icons/navigation/active/Home.svg");
     width: 22px;
     height: 18px;
     margin: 0 16px 0 35px;
 }
 
-.home-icon-default {
-    background-image: url("../../../assets/icons/navigation/default/Home.svg");
+.home-icon-default{
+    background-image: url("../../assets/icons/navigation/default/Home.svg");
     width: 22px;
     height: 18px;
     margin: 0 16px 0 35px;
@@ -165,7 +191,11 @@
     margin: 0 16px 0 35px;
 }
 
-.navigation-container {
+.invisible-div{
+    height: 0;
+}
+
+.navigation-container{
     display: flex;
     flex-direction: column;
     width: 365px;
@@ -175,6 +205,8 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    background-color: #d4eefc;
+    height: 100%;
 }
 
 .semester-selection-active {

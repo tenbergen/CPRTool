@@ -8,6 +8,8 @@ import Table from './Table';
 import { LinearScale, Chart } from "chart.js";
 import { CategoryScale } from "chart.js";
 import { LineElement, PointElement } from "chart.js";
+import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
+import HeaderBar from "../../components/HeaderBar/HeaderBar";
 
 Chart.register(LineElement);
 Chart.register(PointElement);
@@ -191,139 +193,159 @@ function ProfessorGradesPage() {
     };
 
     return (
-        <div className='admin-container'>
-            <div className='sidebar'>
-                <h1>Admin</h1>
-            </div>
-            <div className='user-roles'>
-                <h2>Grades Overview for { }</h2>
-                <div className='admin-tabs'>
-                    <button className='user-roles-tab' onClick={() => changePage('roles')} style={{ backgroundColor: page === "roles" ? "#4a7dfc" : "#E6E6E6", color: page === "roles" ? "white" : "black" }}>Grades</button>
-                    <button className='courses-tab' onClick={() => changePage('courses')} style={{ backgroundColor: page === "courses" ? "#4a7dfc" : "#E6E6E6", color: page === "courses" ? "white" : "black" }}>Numeric Stats</button>
-                    <button className='profanity-settings-tab' onClick={() => changePage('profanity')} style={{ backgroundColor: page === "profanity" ? "#4a7dfc" : "#E6E6E6", color: page === "profanity" ? "white" : "black" }}>Visual Stats</button>
-                </div>
-                {page === "roles" && (
-                    <><div className='search-filter-add'>
-                        <div className='search-bar'>
-                            <label>Assignment</label>
-                            <div className='assignment-dropdown'>
-                                <select name="assignment" id="role" onChange={(e) => setSelectedAssignment(e.target.value)}>
-                                    <option value="all">All</option>
-                                    {uniqueAssignments.map(item => {
-                                        return (<option key={item} value={item}>{item}</option>);
-                                    })}
-                                </select>
-                            </div>
-                        </div>
-                        <div className='dropdowns-div'>
-                            <div className="student-dropdown">
-                                <label for="role-filter">Student</label>
-                                <select name="student" id="role" onChange={(e) => setSelectedStudent(e.target.value)}>
-                                    <option value="all">All</option>
-                                    {uniqueNames.map(item => {
-                                        return (<option key={item} value={item}>{item}</option>);
-                                    })}
-                                </select>
-                            </div>
-                            <div className="team-dropdown">
-                                <label for="role-filter">Team</label>
-                                <select name="team" id="role" onChange={(e) => setSelectedTeam(e.target.value)}>
-                                    <option value="all">All</option>
-                                    {uniqueTeams.map(item => {
-                                        return (<option key={item} value={item}>{item}</option>);
-                                    })}
-                                </select>
-                            </div>
-                        </div>
-                        <div className='csv-download-button-div'>
-                            <button className='csv-download-button'>CSV Download</button>
-                        </div>
-                    </div><div>
-                            <div className='user-list'>
-                                <div className='user-item header'>
-                                    <div>Assignment</div>
-                                    <div>Name</div>
-                                    <div>Team</div>
-                                    <div>Grade</div>
-                                    <div>PR Given</div>
-                                    <div>PR Received</div>
-                                    <div>Submitted</div>
-                                    <div>Actions</div>
+        <div className="page-container">
+            <HeaderBar/>
+            <div className='admin-container'>
+                <NavigationContainerComponent/>
+                <div className='user-roles'>
+                    <h2>Grades Overview for {}</h2>
+                    <div className='admin-tabs'>
+                        <button className='user-roles-tab' onClick={() => changePage('roles')} style={{
+                            backgroundColor: page === "roles" ? "#4a7dfc" : "#E6E6E6",
+                            color: page === "roles" ? "white" : "black"
+                        }}>Grades
+                        </button>
+                        <button className='courses-tab' onClick={() => changePage('courses')} style={{
+                            backgroundColor: page === "courses" ? "#4a7dfc" : "#E6E6E6",
+                            color: page === "courses" ? "white" : "black"
+                        }}>Numeric Stats
+                        </button>
+                        <button className='profanity-settings-tab' onClick={() => changePage('profanity')} style={{
+                            backgroundColor: page === "profanity" ? "#4a7dfc" : "#E6E6E6",
+                            color: page === "profanity" ? "white" : "black"
+                        }}>Visual Stats
+                        </button>
+                    </div>
+                    {page === "roles" && (
+                        <>
+                            <div className='search-filter-add'>
+                                <div className='search-bar'>
+                                    <label>Assignment</label>
+                                    <div className='assignment-dropdown'>
+                                        <select name="assignment" id="role"
+                                                onChange={(e) => setSelectedAssignment(e.target.value)}>
+                                            <option value="all">All</option>
+                                            {uniqueAssignments.map(item => {
+                                                return (<option key={item} value={item}>{item}</option>);
+                                            })}
+                                        </select>
+                                    </div>
                                 </div>
-                                <div className='all-user-items'>
-                                    {filteredUsers.map((user) => (
-                                        <div key={user.id} className='user-item'>
-                                            <div>{user.assignment}</div>
-                                            <div className='name-div'>{user.name}</div>
-                                            <div className='team-div'>{user.team}</div>
-                                            <div className='grade-div'>{user.grade}</div>
-                                            <div>{user.prGiven}</div>
-                                            <div>{user.prReceived}</div>
-                                            <div className='submit-div'>{user.submitted}</div>
-                                            <div>
-                                                <div className='edit-container'>
-                                                    <button className='edit-button'><img className='edit-icon' src={editIcon} /></button>
-                                                </div>
-                                                <div className='delete-container'>
-                                                    <button className='delete-button'>X</button>
+                                <div className='dropdowns-div'>
+                                    <div className="student-dropdown">
+                                        <label htmlFor="role-filter">Student</label>
+                                        <select name="student" id="role"
+                                                onChange={(e) => setSelectedStudent(e.target.value)}>
+                                            <option value="all">All</option>
+                                            {uniqueNames.map(item => {
+                                                return (<option key={item} value={item}>{item}</option>);
+                                            })}
+                                        </select>
+                                    </div>
+                                    <div className="team-dropdown">
+                                        <label htmlFor="role-filter">Team</label>
+                                        <select name="team" id="role" onChange={(e) => setSelectedTeam(e.target.value)}>
+                                            <option value="all">All</option>
+                                            {uniqueTeams.map(item => {
+                                                return (<option key={item} value={item}>{item}</option>);
+                                            })}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className='csv-download-button-div'>
+                                    <button className='csv-download-button'>CSV Download</button>
+                                </div>
+                            </div>
+                            <div>
+                                <div className='user-list'>
+                                    <div className='user-item header'>
+                                        <div>Assignment</div>
+                                        <div>Name</div>
+                                        <div>Team</div>
+                                        <div>Grade</div>
+                                        <div>PR Given</div>
+                                        <div>PR Received</div>
+                                        <div>Submitted</div>
+                                        <div>Actions</div>
+                                    </div>
+                                    <div className='all-user-items'>
+                                        {filteredUsers.map((user) => (
+                                            <div key={user.id} className='user-item'>
+                                                <div>{user.assignment}</div>
+                                                <div className='name-div'>{user.name}</div>
+                                                <div className='team-div'>{user.team}</div>
+                                                <div className='grade-div'>{user.grade}</div>
+                                                <div>{user.prGiven}</div>
+                                                <div>{user.prReceived}</div>
+                                                <div className='submit-div'>{user.submitted}</div>
+                                                <div>
+                                                    <div className='edit-container'>
+                                                        <button className='edit-button'><img className='edit-icon'
+                                                                                             src={editIcon}/></button>
+                                                    </div>
+                                                    <div className='delete-container'>
+                                                        <button className='delete-button'>X</button>
+                                                    </div>
                                                 </div>
                                             </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+                    )}
+                    {page === "courses" && (
+                        <Table></Table>
+                    )}
+                    {page === "profanity" && (
+                        <div>
+                            <div className="stats-student-dropdown">
+                                <label htmlFor="role-filter">Student</label>
+                                <select name="student" id="role" defaultValue="Select Student"
+                                        onChange={(e) => setSelectedVisualStudent(e.target.value)}>
+                                    <option disabled={true} value="Select Student">--Select Student--</option>
+                                    {uniqueStatsNames.map(item => {
+                                        return (<option key={item} value={item}>{item}</option>);
+                                    })}
+                                </select>
+                            </div>
+                            <div style={{height: '350px', width: '800px'}}>
+                                <Line className='line-chart' data={getChartData()}/>
+                            </div>
+                            <div className='key-container'>
+                                <label className='key'>Key</label>
+                                <div className="box">
+                                    <div className="row">
+                                        <div className="column">
+                                            X-axis : Assignments
                                         </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div></>
-                )}
-                {page === "courses" && (
-                    <Table></Table>
-                )}
-                {page === "profanity" && (
-                    <div>
-                        <div className="stats-student-dropdown">
-                            <label for="role-filter">Student</label>
-                            <select name="student" id="role" defaultValue="Select Student" onChange={(e) => setSelectedVisualStudent(e.target.value)}>
-                                <option disabled={true} value="Select Student">--Select Student--</option>
-                                {uniqueStatsNames.map(item => {
-                                    return (<option key={item} value={item}>{item}</option>);
-                                })}
-                            </select>
-                        </div>
-                        <div style={{ height: '350px', width: '800px' }}>
-                            <Line className='line-chart' data={getChartData()} />
-                        </div>
-                        <div className='key-container'>
-                            <label className='key'>Key</label>
-                            <div class="box">
-                                <div class="row">
-                                    <div class="column">
-                                        X-axis : Assignments
+                                        <div className="column">
+                                            <span className="square blue"></span>
+                                            Students total grade
+                                        </div>
+                                        <div className="column">
+                                            <span className="square green"></span>
+                                            Students assignment grades
+                                        </div>
                                     </div>
-                                    <div class="column">
-                                        <span class="square blue"></span>
-                                        Students total grade
-                                    </div>
-                                    <div class="column">
-                                        <span class="square green"></span>
-                                        Students assignment grades
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="column">
-                                        Y-axis : Grades
-                                    </div>
-                                    <div class="column">
-                                        <span class="square orange"></span>
-                                        Mean of the class total grade
-                                    </div>
-                                    <div class="column">
-                                        <span class="square purple"></span>
-                                        Mean of the class assignment grades
+                                    <div className="row">
+                                        <div className="column">
+                                            Y-axis : Grades
+                                        </div>
+                                        <div className="column">
+                                            <span className="square orange"></span>
+                                            Mean of the class total grade
+                                        </div>
+                                        <div className="column">
+                                            <span className="square purple"></span>
+                                            Mean of the class assignment grades
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </div>
     );

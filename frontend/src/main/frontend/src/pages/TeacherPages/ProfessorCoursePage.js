@@ -11,10 +11,9 @@ import CourseBarComponent from "../../components/CourseBarComponent";
 import ProfessorTeamComponent from "../../components/ProfessorComponents/CoursesPage/ProfessorTeamComponent";
 import Loader from "../../components/LoaderComponenets/Loader";
 import uuid from "react-uuid";
-import NavigationContainerComponent from "../../components/ProfessorComponents/ProfessorNavigationComponents/NavigationContainerComponent";
-import ProfessorHeaderBar from "../../components/ProfessorComponents/ProfessorHeaderBar";
-import LogoutButton from "../../components/GlobalComponents/LogoutButton";
-
+import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
+import HeaderBar from "../../components/HeaderBar/HeaderBar";
+import { useLocation } from "react-router-dom";
 const CourseComponent = ({ active, component, onClick }) => {
   return (
     <p
@@ -30,13 +29,16 @@ const CourseComponent = ({ active, component, onClick }) => {
   );
 };
 
-function ProfessorCoursePage() {
+
+function ProfessorCoursePage({chosen}) {
   const [isLoading, setIsLoading] = useState(false);
   let dispatch = useDispatch();
   let { courseId } = useParams();
 
+
   const components = ["Assignments", "Roster", "Teams", "Manage"];
-  const [chosen, setChosen] = useState("Assignments");
+  const [chosenComponent, setChosenComponent] = useState(chosen);
+
 
   useEffect(() => {
     setIsLoading(true);
@@ -44,34 +46,26 @@ function ProfessorCoursePage() {
     setTimeout(() => setIsLoading(false), 200);
   }, [dispatch, courseId]);
 
+  useEffect(() => {
+    setChosenComponent(chosen);
+  }, [chosen]);
+
   return (
     <div>
+      <HeaderBar/>
       {isLoading ? (
         <Loader />
       ) : (
           <div className="page-container">
-            <ProfessorHeaderBar/>
+
             <div className="pcp-container">
-              <CourseBarComponent/>
+              <NavigationContainerComponent/>
               <div className="pcp-components">
-                <div className="pcp-component-links inter-28-light">
-                  {components.map(
-                      (t) =>
-                          t && (
-                              <CourseComponent
-                                  key={uuid()}
-                                  component={t}
-                                  active={t === chosen}
-                                  onClick={() => setChosen(t)}
-                              />
-                          )
-                  )}
-                </div>
                 <div>
-                  {chosen === "Assignments" && <ProfessorAssignmentComponent />}
-                  {chosen === "Roster" && <ProfessorRosterComponent />}
-                  {chosen === "Teams" && <ProfessorTeamComponent />}
-                  {chosen === "Manage" && <ProfessorEditCourseComponent />}
+                  {chosenComponent === "Assignments" && <ProfessorAssignmentComponent />}
+                  {chosenComponent === "Roster" && <ProfessorRosterComponent />}
+                  {chosenComponent === "Teams" && <ProfessorTeamComponent />}
+                  {chosenComponent === "Manage" && <ProfessorEditCourseComponent />}
                 </div>
               </div>
             </div>

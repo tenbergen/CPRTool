@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import '../../styles/Roster.css'
-import '../ProfessorNavigationComponents/_ProfessorNavigationComponents.css'
+import '../../../components/NavigationComponents/_ProfessorNavigationComponents.css'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   getCourseDetailsAsync,
@@ -15,7 +15,8 @@ import { base64StringToBlob } from 'blob-util'
 
 const ProfessorRosterComponent = () => {
   const dispatch = useDispatch()
-  const { courseId } = useParams()
+  const courseParse = window.location.pathname;
+  const courseId = courseParse.split("/")[2];
   const url = `${process.env.REACT_APP_URL}/manage/professor/courses`
   const { currentCourseStudents } = useSelector((state) => state.courses)
 

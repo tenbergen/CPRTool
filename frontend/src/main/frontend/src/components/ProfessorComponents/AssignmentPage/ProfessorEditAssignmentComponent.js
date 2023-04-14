@@ -21,11 +21,13 @@ let templateFileName = ''
 
 const ProfessorEditAssignmentComponent = () => {
   let navigate = useNavigate()
+  const [checked, setChecked] = React.useState(false)
   const initialCheckBoxState = () => {
     if (alreadySetInitialCheckState) {
       return checked
     }
     if (currentAssignmentLoaded) {
+      console.log(currentAssignment)
       setChecked(currentAssignment.has_peer_review)
       if (!alreadySetInitialCheckState) {
         setAlreadySetInitialCheckState(true)
@@ -53,9 +55,8 @@ const ProfessorEditAssignmentComponent = () => {
 
   useEffect(() => {
     dispatch(getAssignmentDetailsAsync({ courseId, assignmentId }))
+    console.log(checked)
   }, [courseId, assignmentId, dispatch])
-
-  const [checked, setChecked] = React.useState(false)
 
   const confirmDelete = async () => {
     let confirmAction = window.confirm(
@@ -616,8 +617,8 @@ const ProfessorEditAssignmentComponent = () => {
           <label className="inter-20-medium">
             <input
               type="checkbox"
-              defaultChecked={currentAssignmentLoaded ? initialCheckBoxState() : checked}
-              checked={checked}
+              // defaultChecked={currentAssignmentLoaded ? initialCheckBoxState() : checked}
+              checked={currentAssignmentLoaded ? initialCheckBoxState() : checked}
               onChange={handleChangeInCheckBox}
             />
             Include Peer Review Data

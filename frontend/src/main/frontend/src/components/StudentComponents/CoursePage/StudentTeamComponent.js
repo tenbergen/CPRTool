@@ -6,12 +6,30 @@ import axios from 'axios'
 import { getCurrentCourseTeamAsync } from '../../../redux/features/teamSlice'
 import uuid from 'react-uuid'
 
-const TeamComponent = () => {
+const StudentTeamComponent = () => {
   const dispatch = useDispatch()
   const { courseId } = useParams()
   const getTeamsUrl = `${process.env.REACT_APP_URL}/teams/team/get/all/${courseId}`
   const [teams, setTeams] = useState([])
   const { lakerId } = useSelector((state) => state.auth)
+  const [showModal, setShow] = useState(false);
+
+  const Modal = (teamId) => {
+    return (
+      <div id='modal'>
+        <div id='modalContent'>
+        <span id='deleteSpan'>
+          Are you sure you want to delete this course?
+        </span>
+
+          <div id='deleteButtons'>
+            <button id='ecc-delete-button-delete' class='inter-16-medium-red' onClick={joinTeam(teamId)}>Delete</button>
+            <button id='ecc-delete-button-cancel' class='inter-16-medium-white' onClick={() => setShow(false)}>Cancel</button>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   useEffect(() => {
     async function fetchData () {
@@ -108,10 +126,49 @@ const TeamComponent = () => {
         ))}
       </div>
       <div id="createTeamButton">
-        <button class="green-button-large" onClick={createTeam}> Create New Team</button>
+        <button className="green-button-large" onClick={createTeam}> Create New Team</button>
       </div>
     </h3>
   )
 }
 
-export default TeamComponent
+export default StudentTeamComponent
+//Danni's work in progress
+
+// return (
+//   <div id = "teams">
+//     <div className="teams-list">
+//       <h1 className="inter-36-bold" id="welcome-message">
+//         Create or Join a Team
+//       </h1>
+//     </div>
+//     <div className="team-container">
+//       <div className="team-list-wrapper">
+//         <div id="team-list">
+//           {teams.map(
+//             (team) =>
+//               team && (
+//                 <div className={'ass-tile'} style={{ marginLeft: 0, marginRight: 0 }}>
+//                   <div className="inter-20-medium-white ass-tile-title">
+//                     {' '}
+//                     <span>Team</span>
+//                   </div>
+//                   <div className="ass-tile-content" style={{ padding: '15px', boxSizing: 'border-box', cursor: 'default' }}>
+//                     <div className="ass-tile-info" style={{ display: 'block', boxSizing: 'border-box' }}>
+//                       <h2 className='inter-30' id='teamTitle'>
+//                         {team.team_id}
+//                       </h2>
+//
+//                     </div>
+//                   </div>
+//                 </div>
+//               )
+//           )}
+//         </div>
+//       </div>
+//     </div>
+//     <div id='createTeamButton'>
+//       <button class='green-button-large' onClick={createTeam}> Create New Team</button>
+//     </div>
+//   </div>
+// );
