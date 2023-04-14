@@ -1,0 +1,11 @@
+edu/oswego/cs/daos/StudentDAO.class
+edu/oswego/cs/resources/CourseManagerResource.class
+edu/oswego/cs/util/CourseUtil.class
+edu/oswego/cs/util/CPRException.class
+edu/oswego/cs/daos/CourseDAO.class
+edu/oswego/cs/cors/CorsFilter.class
+edu/oswego/cs/database/CourseInterface.class
+edu/oswego/cs/util/CSVUtil.class
+edu/oswego/cs/daos/FileDAO.class
+edu/oswego/cs/application/CourseManagerApplication.class
+edu/oswego/cs/database/DatabaseManager.class

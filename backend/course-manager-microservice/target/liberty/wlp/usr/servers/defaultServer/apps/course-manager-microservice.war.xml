@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archive>
+    <dir sourceOnDisk="/Volumes/Samsung_T5/cpr/backend/course-manager-microservice/target/classes" targetInArchive="/WEB-INF/classes"/>
+    <file sourceOnDisk="/Users/jamielafarr/.m2/repository/org/mongodb/mongo-java-driver/3.12.10/mongo-java-driver-3.12.10.jar" targetInArchive="/WEB-INF/lib/mongo-java-driver-3.12.10.jar"/>
+    <file sourceOnDisk="/Users/jamielafarr/.m2/repository/org/projectlombok/lombok/1.18.22/lombok-1.18.22.jar" targetInArchive="/WEB-INF/lib/lombok-1.18.22.jar"/>
+    <file sourceOnDisk="/Users/jamielafarr/.m2/repository/javax/json/bind/javax.json.bind-api/1.0/javax.json.bind-api-1.0.jar" targetInArchive="/WEB-INF/lib/javax.json.bind-api-1.0.jar"/>
+    <file sourceOnDisk="/Users/jamielafarr/.m2/repository/com/sun/activation/javax.activation/1.2.0/javax.activation-1.2.0.jar" targetInArchive="/WEB-INF/lib/javax.activation-1.2.0.jar"/>
+    <file sourceOnDisk="/Users/jamielafarr/.m2/repository/org/eclipse/yasson/1.0.0-RC1/yasson-1.0.0-RC1.jar" targetInArchive="/WEB-INF/lib/yasson-1.0.0-RC1.jar"/>
+    <file sourceOnDisk="/Users/jamielafarr/.m2/repository/javax/json/javax.json-api/1.1/javax.json-api-1.1.jar" targetInArchive="/WEB-INF/lib/javax.json-api-1.1.jar"/>
+    <file sourceOnDisk="/Users/jamielafarr/.m2/repository/javax/enterprise/cdi-api/1.2/cdi-api-1.2.jar" targetInArchive="/WEB-INF/lib/cdi-api-1.2.jar"/>
+    <file sourceOnDisk="/Users/jamielafarr/.m2/repository/javax/el/javax.el-api/3.0.0/javax.el-api-3.0.0.jar" targetInArchive="/WEB-INF/lib/javax.el-api-3.0.0.jar"/>
+    <file sourceOnDisk="/Users/jamielafarr/.m2/repository/javax/interceptor/javax.interceptor-api/1.2/javax.interceptor-api-1.2.jar" targetInArchive="/WEB-INF/lib/javax.interceptor-api-1.2.jar"/>
+    <file sourceOnDisk="/Users/jamielafarr/.m2/repository/javax/inject/javax.inject/1/javax.inject-1.jar" targetInArchive="/WEB-INF/lib/javax.inject-1.jar"/>
+    <file sourceOnDisk="/Users/jamielafarr/.m2/repository/com/ibm/websphere/appserver/api/com.ibm.websphere.appserver.api.jaxrs20/1.1.54/com.ibm.websphere.appserver.api.jaxrs20-1.1.54.jar" targetInArchive="/WEB-INF/lib/com.ibm.websphere.appserver.api.jaxrs20-1.1.54.jar"/>
+    <file sourceOnDisk="/Volumes/Samsung_T5/cpr/backend/course-manager-microservice/target/tmp/META-INF/MANIFEST.MF" targetInArchive="/META-INF/MANIFEST.MF"/>
+</archive>
