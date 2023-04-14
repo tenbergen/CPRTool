@@ -1,61 +1,61 @@
-import { useState } from 'react';
-import '../../styles/EditCourse.css';
-import '../../styles/DeleteModal.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
-import { Field, Form } from 'react-final-form';
+import { useState } from 'react'
+import '../../styles/EditCourse.css'
+import '../../styles/DeleteModal.css'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate, useParams } from 'react-router-dom'
+import axios from 'axios'
+import { Field, Form } from 'react-final-form'
 import {
   getCourseDetailsAsync,
   getCoursesAsync,
-} from '../../../redux/features/courseSlice';
-import '../../../global_styles/RequiredField.css';
+} from '../../../redux/features/courseSlice'
+import '../../../global_styles/RequiredField.css'
 import { base64StringToBlob } from 'blob-util'
 
-const deleteCourseUrl = `${process.env.REACT_APP_URL}/manage/professor/courses`;
-const updateUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/update`;
-const uploadCsvUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/student/mass-add`;
-const assignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`;
+const deleteCourseUrl = `${process.env.REACT_APP_URL}/manage/professor/courses`
+const updateUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/update`
+const uploadCsvUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/student/mass-add`
+const assignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`
 
 const ProfessorEditCourseComponent = () => {
-  let navigate = useNavigate();
-  let dispatch = useDispatch();
-  const { currentCourse } = useSelector((state) => state.courses);
-  const { courseAssignments } = useSelector((state) => state.assignments);
-  let { courseId } = useParams();
-  const [showModal, setShow] = useState(false);
-  const csvFormData = new FormData();
-  const courseParse = window.location.pathname;
-  const course = courseParse.split("/")[2];  
+  let navigate = useNavigate()
+  let dispatch = useDispatch()
+  const { currentCourse } = useSelector((state) => state.courses)
+  const { courseAssignments } = useSelector((state) => state.assignments)
+  let { courseId } = useParams()
+  const [showModal, setShow] = useState(false)
+  const csvFormData = new FormData()
+  const courseParse = window.location.pathname
+  const course = courseParse.split('/')[2]
 
   const fileChangeHandler = (event) => {
-    let file = event.target.files[0];
+    let file = event.target.files[0]
     const renamedFile = new File([file], currentCourse.course_id + '.csv', {
       type: file.type,
-    });
-    csvFormData.set('csv_file', renamedFile);
-  };
+    })
+    csvFormData.set('csv_file', renamedFile)
+  }
 
   const updateCourse = async (data) => {
-    const finalData = { ...data, course_id: currentCourse.course_id };
+    const finalData = { ...data, course_id: currentCourse.course_id }
 
     await axios
       .put(updateUrl, finalData)
       .then((res) => {
-        courseId = res.data;
-        window.alert('Course successfully updated!');
+        courseId = res.data
+        window.alert('Course successfully updated!')
         if (csvFormData.get('csv_file') != null) {
-          uploadCsv();
+          uploadCsv()
         } else {
-          dispatch(getCourseDetailsAsync(res.data));
-          navigate('/professor/' + res.data);
+          dispatch(getCourseDetailsAsync(res.data))
+          navigate('/professor/' + res.data)
         }
       })
       .catch((e) => {
-        console.error(e);
-        window.alert('Error updating course. Please try again.');
-      });
-  };
+        console.error(e)
+        window.alert('Error updating course. Please try again.')
+      })
+  }
 
   const uploadCsv = async () => {
     await axios
@@ -63,44 +63,45 @@ const ProfessorEditCourseComponent = () => {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
       .then((res) => {
-        window.alert('CSV successfully uploaded!');
+        window.alert('CSV successfully uploaded!')
       })
       .catch((e) => {
-        console.error(e.response.data);
-        window.alert('Error uploading CSV. Please try again.');
-      });
-    dispatch(getCourseDetailsAsync(course));
-    navigate('/professor/' + course);
-  };
+        console.error(e.response.data)
+        window.alert('Error uploading CSV. Please try again.')
+      })
+    dispatch(getCourseDetailsAsync(courseId))
+    navigate('/professor/' + courseId)
+  }
 
   const deleteCourse = async () => {
-    const url = `${deleteCourseUrl}/${course}/delete`;
-    await axios.delete(url).catch((e) => console.error(e.response.data));
-    if (courseAssignments.length > 0) await deleteAssignments();
-    navigate('/');
-  };
+    const url = `${deleteCourseUrl}/${courseId}/delete`
+    await axios.delete(url).catch((e) => console.error(e.response.data))
+    if (courseAssignments.length > 0) await deleteAssignments()
+    navigate('/')
+  }
 
   const deleteAssignments = async () => {
-    const url = `${assignmentUrl}/${course}/remove`;
-    await axios.delete(url).catch((e) => e.response.data);
-  };
+    const url = `${assignmentUrl}/${courseId}/remove`
+    await axios.delete(url).catch((e) => e.response.data)
+  }
 
   const Modal = () => {
     return (
-      <div id='deleteModal'>
-        <div id='modalContent'>
-          <span id='deleteSpan'>
+      <div id="deleteModal">
+        <div id="modalContent">
+          <span id="deleteSpan">
             Are you sure you want to delete this course?
           </span>
 
-          <div id='deleteButtons'>
-            <button id='ecc-delete-button-delete' class='inter-16-medium-red' onClick={deleteCourse}>Delete</button>
-            <button id='ecc-delete-button-cancel' class='inter-16-medium-white' onClick={() => setShow(false)}>Cancel</button>
+          <div id="deleteButtons">
+            <button id="ecc-delete-button-delete" class="inter-16-medium-red" onClick={deleteCourse}>Delete</button>
+            <button id="ecc-delete-button-cancel" class="inter-16-medium-white" onClick={() => setShow(false)}>Cancel
+            </button>
           </div>
         </div>
       </div>
-    );
-  };
+    )
+  }
 
   const initialData = {
     course_name: currentCourse?.course_name,
@@ -110,23 +111,23 @@ const ProfessorEditCourseComponent = () => {
     year: currentCourse?.year,
     crn: currentCourse?.crn,
     team_size: currentCourse?.team_size,
-  };
+  }
 
   const handleSubmit = async (formObj) => {
     if (JSON.stringify(initialData) === JSON.stringify(formObj)) {
       if (csvFormData.get('csv_file') != null) {
-        await uploadCsv();
+        await uploadCsv()
       } else {
-        alert('Nothing to save!');
+        alert('Nothing to save!')
       }
     } else {
-      await updateCourse(formObj);
+      await updateCourse(formObj)
     }
-    dispatch(getCoursesAsync());
-  };
+    dispatch(getCoursesAsync())
+  }
 
   const onCourseClick = async () => {
-    const url = `${process.env.REACT_APP_URL}/assignments/student/${course}/course-assignment-files`
+    const url = `${process.env.REACT_APP_URL}/assignments/student/${currentCourse.course_id}/course-assignment-files`
 
     await axios
       .get(url, { responseType: 'blob' })
@@ -154,159 +155,162 @@ const ProfessorEditCourseComponent = () => {
   }
 
   return (
-    <><div>
-      <h2 className='course-details-title'>Course Details</h2>
-    </div><div className='ecc-form'>
+    <>
+      <div>
+        <h2 className="course-details-title">Course Details</h2>
+      </div>
+      <div className="ecc-form">
         <Form
           onSubmit={async (formObj) => {
-            await handleSubmit(formObj);
+            await handleSubmit(formObj)
           }}
           initialValues={initialData}
         >
           {({ handleSubmit }) => (
-            <><form onSubmit={handleSubmit}>
-              <div className='info-container'>
-                <div className='info-header'></div>
-                <div className='ecc-input-field'>
-                  <label className='required'>
-                    <span className='inter-20-bold'>Name of course: </span>
-                  </label>
-                  <Field name='course_name'>
-                    {({ input }) => (
-                      <input type='text' name='course_name' {...input} required />
-                    )}
-                  </Field>
-                </div>
-
-                <div className='ecc-row-multiple'>
-                  <div className='ecc-input-field'>
-                    <label className='required'>
-                      {' '}
-                      <span className='inter-20-bold'> Course abbreviation: </span>{' '}
+            <>
+              <form onSubmit={handleSubmit}>
+                <div className="info-container">
+                  <div className="info-header"></div>
+                  <div className="ecc-input-field">
+                    <label className="required">
+                      <span className="inter-20-bold">Name of course: </span>
                     </label>
-                    <Field name='abbreviation'>
+                    <Field name="course_name">
                       {({ input }) => (
-                        <input
-                          type='text'
-                          name='abbreviation'
-                          {...input}
-                          required />
+                        <input type="text" name="course_name" {...input} required/>
                       )}
                     </Field>
                   </div>
 
-                  <div className='ecc-input-field'>
-                    <label className='required'>
-                      {' '}
-                      <span className='inter-20-bold'> Course section : </span>{' '}
-                    </label>
-                    <Field name='course_section'>
-                      {({ input }) => (
-                        <input
-                          type='text'
-                          name='course_section'
-                          {...input}
-                          required />
-                      )}
-                    </Field>
-                  </div>
-                </div>
+                  <div className="ecc-row-multiple">
+                    <div className="ecc-input-field">
+                      <label className="required">
+                        {' '}
+                        <span className="inter-20-bold"> Course abbreviation: </span>{' '}
+                      </label>
+                      <Field name="abbreviation">
+                        {({ input }) => (
+                          <input
+                            type="text"
+                            name="abbreviation"
+                            {...input}
+                            required/>
+                        )}
+                      </Field>
+                    </div>
 
-                <div className='ecc-row-multiple'>
-                  <div className='ecc-input-field'>
-                    <label className='required'>
-                      <span className='inter-20-bold'>Semester: </span>
-                    </label>
-                    <Field name='semester'>
-                      {({ input }) => (
-                        <input type='text' name='semester' {...input} required />
-                      )}
-                    </Field>
-                  </div>
-                  <div className='ecc-input-field'>
-                    <label className='required'>
-                      <span className='inter-20-bold'>Year: </span>{' '}
-                    </label>
-                    <Field name='year'>
-                      {({ input }) => (
-                        <input type='text' name='year' {...input} required />
-                      )}
-                    </Field>
-                  </div>
-                </div>
-
-                <div className='ecc-row-multiple'>
-                  <div className='ecc-input-field'>
-                    <label className='required'>
-                      <span className='inter-20-bold'>CRN: </span>{' '}
-                    </label>
-                    <Field name='crn'>
-                      {({ input }) => <input type='text' name='crn' {...input} />}
-                    </Field>
+                    <div className="ecc-input-field">
+                      <label className="required">
+                        {' '}
+                        <span className="inter-20-bold"> Course section : </span>{' '}
+                      </label>
+                      <Field name="course_section">
+                        {({ input }) => (
+                          <input
+                            type="text"
+                            name="course_section"
+                            {...input}
+                            required/>
+                        )}
+                      </Field>
+                    </div>
                   </div>
 
-                  <div className='ecc-input-field'>
-                    <label className='required'>
-                      <span className='inter-20-bold'>Team size: </span>{' '}
-                    </label>
-                    <Field name='team_size'>
-                      {({ input }) => (
-                        <input type='number' min='1' name='team_size' {...input} />
-                      )}
-                    </Field>
+                  <div className="ecc-row-multiple">
+                    <div className="ecc-input-field">
+                      <label className="required">
+                        <span className="inter-20-bold">Semester: </span>
+                      </label>
+                      <Field name="semester">
+                        {({ input }) => (
+                          <input type="text" name="semester" {...input} required/>
+                        )}
+                      </Field>
+                    </div>
+                    <div className="ecc-input-field">
+                      <label className="required">
+                        <span className="inter-20-bold">Year: </span>{' '}
+                      </label>
+                      <Field name="year">
+                        {({ input }) => (
+                          <input type="text" name="year" {...input} required/>
+                        )}
+                      </Field>
+                    </div>
                   </div>
-                </div>
 
-                <div className='roster-bulk-container'>
-                  <div className='ecc-bulk-download'>
-                    <label>
-                      <span className="inter-20-bold"> Bulk Download for Course </span>
-                    </label>
-                    <button className="bulk-download-button" type="button" onClick={onCourseClick}
-                      style={{ width: '150px', height: '40px' }}>Download
-                      <div style={{ display: 'inline-block', verticalAlign: 'middle', margin: '0 auto' }}>
-                      </div>
-                    </button>
+                  <div className="ecc-row-multiple">
+                    <div className="ecc-input-field">
+                      <label className="required">
+                        <span className="inter-20-bold">CRN: </span>{' '}
+                      </label>
+                      <Field name="crn">
+                        {({ input }) => <input type="text" name="crn" {...input} />}
+                      </Field>
+                    </div>
+
+                    <div className="ecc-input-field">
+                      <label className="required">
+                        <span className="inter-20-bold">Team size: </span>{' '}
+                      </label>
+                      <Field name="team_size">
+                        {({ input }) => (
+                          <input type="number" min="1" name="team_size" {...input} />
+                        )}
+                      </Field>
+                    </div>
                   </div>
 
-                  <div className='ecc-file-upload'>
-                    <label>
-                      {' '}
-                      <span className='inter-20-bold'> Roster Upload </span>{' '}
-                    </label>
-                    <input
-                      onChange={fileChangeHandler}
-                      type='file'
-                      name='course_csv'
-                      accept='.csv' />
-                  </div>
-                </div>
+                  <div className="roster-bulk-container">
+                    <div className="ecc-bulk-download">
+                      <label>
+                        <span className="inter-20-bold"> Bulk Download for Course </span>
+                      </label>
+                      <button className="bulk-download-button" type="button" onClick={onCourseClick}
+                              style={{ width: '150px', height: '40px' }}>Download
+                        <div style={{ display: 'inline-block', verticalAlign: 'middle', margin: '0 auto' }}>
+                        </div>
+                      </button>
+                    </div>
 
-                <div>
-                  <label className='inter-20-medium'>
-                    <span className='required-alt'>
+                    <div className="ecc-file-upload">
+                      <label>
+                        {' '}
+                        <span className="inter-20-bold"> Roster Upload </span>{' '}
+                      </label>
+                      <input
+                        onChange={fileChangeHandler}
+                        type="file"
+                        name="course_csv"
+                        accept=".csv"/>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="inter-20-medium">
+                    <span className="required-alt">
                       Indicates Required Field
                     </span>
-                  </label>
+                    </label>
+                  </div>
                 </div>
-              </div>
 
-            </form>
-            <div id='ecc-button-container'>
-              <form onSubmit={handleSubmit}>
-                  <button class='ecc-button' type='submit'>Save Changes</button>
               </form>
-              <button className='ecc-anchor' onClick={() => setShow(true)}>
-                 Delete course
-              </button>
+              <div id="ecc-button-container">
+                <form onSubmit={handleSubmit} style={{ marginTop: '5%' }}>
+                  <button className="ecc-button" type="submit">Save Changes</button>
+                </form>
+                <button className="ecc-anchor" onClick={() => setShow(true)}>
+                  Delete course
+                </button>
                 <div>{showModal ? Modal() : null}</div>
-            </div></>
-
-            
+              </div>
+            </>
           )}
         </Form>
-      </div></>
-  );
-};
+      </div>
+    </>
+  )
+}
 
-export default ProfessorEditCourseComponent;
+export default ProfessorEditCourseComponent

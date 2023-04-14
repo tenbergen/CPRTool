@@ -25,7 +25,7 @@ const HomeTileComponent = ({trigger, deactivateCourses}) => {
     }
 
     return (
-        <Link to={`/${role}`} onClick={onClick}>
+        <Link to={`/`} onClick={onClick}>
             <div id="home-tile" className="inter-24-medium">
                 <div className="home-icon-default"></div>
                 <p>Home</p>

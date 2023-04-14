@@ -35,7 +35,7 @@
   gap: 30px;
 }
 
-.ecc-file-upload{
+.ecc-file-upload {
   display: flex;
   gap: 10px;
 }
@@ -59,43 +59,31 @@
   letter-spacing: 0.5px;
   margin-bottom: 25px;
 }
+
 .ecc-file-upload input::file-selector-button:hover {
   background-color: #1d2f99;
   cursor: pointer;
 }
+
 .ecc-file-upload input::file-selector-button:active {
   background-color: #102080;
 }
 
-.ecc-button {
-  display: flex;
-  justify-content: center;
-  margin-top: 29%;
-  padding: 10px 45px 10px 45px;
-  border: none;
-  font-size: medium;
-  font-weight: bold;
-}
-
-.ecc-anchor {
-  display: flex;
-  justify-content: center;
-  margin-top: 5%;
-  padding: 10px 50px 10px 50px;
-  border: none;
-  font-size: medium;
-  font-weight: bold;
-}
 
 .ecc-anchor {
   font-family: "Inter", sans-serif;
   border: solid .5px #F04438;
   border-radius: 5px;
-  font-size: 20px; 
+  font-size: 20px;
   color: #F04438;
   width: 250px;
   line-height: 24px;
   letter-spacing: 0.5px;
+  display: flex;
+  justify-content: center;
+  margin-top: 5%;
+  padding: 10px 50px 10px 50px;
+  font-weight: bold;
 }
 
 .ecc-button {
@@ -108,10 +96,16 @@
   font-size: 20px;
   line-height: 24px;
   letter-spacing: 0.5px;
+  display: flex;
+  justify-content: center;
+  padding: 10px 50px 10px 50px;
+  border: none;
 }
+
 .ecc-button:hover {
   background-color: #027A48;
 }
+
 .ecc-button:active {
   background-color: #05603a;
 }
@@ -149,19 +143,19 @@
   border: none;
 }
 
-#ecc-button-container{
+#ecc-button-container {
   display: flex;
   justify-content: center;
   gap: 50px;
 }
 
-.roster-bulk-container{
+.roster-bulk-container {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
 }
 
-.ecc-bulk-download{
+.ecc-bulk-download {
   display: flex;
   gap: 10px;
 }
@@ -170,7 +164,7 @@
   margin-top: 2.5%;
 }
 
-.bulk-download-button{
+.bulk-download-button {
   width: 140px;
   height: 40px;
   background-color: #4a7dfc;
@@ -190,7 +184,7 @@
   background-color: #1d2f99;
 }
 
-.info-container{
+.info-container {
   border: solid #212529;
   border-width: 1px;
   border-radius: 5px;
@@ -206,6 +200,6 @@
   border-top-left-radius: 4px;
 }
 
-.course-details-title{
+.course-details-title {
   padding-left: 2%;
 }

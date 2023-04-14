@@ -14,7 +14,7 @@ const Breadcrumbs = () => {
                 return (
                     <span key={url}>
             <Link to={url}>{text}</Link>
-                        {i < paths.length - 1 && <span> / </span>}
+                        {i < paths.length - 1 && <span> ⏵ </span>}
           </span>
                 );
             })}
