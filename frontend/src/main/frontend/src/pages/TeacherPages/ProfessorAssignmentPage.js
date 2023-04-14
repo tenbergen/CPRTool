@@ -29,7 +29,11 @@ const AssComponent = ({ active, component, onClick }) => {
 
 function ProfessorAssignmentPage() {
   let dispatch = useDispatch();
-  let { courseId, assignmentId } = useParams();
+
+  const courseParse = window.location.pathname;
+  const courseId = courseParse.split("/")[2];
+
+  let { assignmentId } = useParams();
   const { currentCourseLoaded } = useSelector((state) => state.courses);
 
   const components = ['All Submissions', 'Needs Grading', 'Edit'];
