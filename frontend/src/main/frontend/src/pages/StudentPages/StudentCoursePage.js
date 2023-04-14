@@ -10,8 +10,9 @@ import { getCourseDetailsAsync } from '../../redux/features/courseSlice';
 import { getCurrentCourseTeamAsync } from '../../redux/features/teamSlice';
 import MyTeamComponent from '../../components/StudentComponents/CoursePage/MyTeamComponent';
 import uuid from 'react-uuid';
-import AssBarComponent from "../../components/AssBarComponent";
-import StudentHeaderBar from "../../components/StudentComponents/StudentHeaderBar";
+import NavigationContainerComponent
+  from "../../components/NavigationComponents/NavigationContainerComponent";
+import HeaderBar from "../../components/HeaderBar/HeaderBar";
 
 const CourseComponent = ({ active, component, onClick }) => {
   return (
@@ -28,16 +29,14 @@ const CourseComponent = ({ active, component, onClick }) => {
   );
 };
 
-function StudentCoursePage() {
+function StudentCoursePage({chosen}) {
   const dispatch = useDispatch();
   const location = useLocation();
   const { courseId } = useParams();
   const { lakerId } = useSelector((state) => state.auth);
   const { currentTeamId, teamLoaded } = useSelector((state) => state.teams);
 
-  const initialState =
-    location.state !== null ? location.state.initialComponent : 'To Do';
-  const [chosen, setChosen] = useState(initialState);
+  const [chosenComponent, setChosenComponent] = useState(chosen);
 
   const components = ['To Do', 'Submitted', 'My Team'];
 
@@ -46,37 +45,40 @@ function StudentCoursePage() {
     dispatch(getCurrentCourseTeamAsync({ courseId, lakerId }));
   }, [courseId, lakerId, dispatch]);
 
+  useEffect(() => {
+    setChosenComponent(chosen);
+  }, [chosen]);
+
   return (
     <div className="page-container">
-      <StudentHeaderBar/>
-      <div className='scp-parent'>
-        <div className='scp-container'>
-          <AssBarComponent />
-          <div className='scp-component'>
-            {/* Not in a team yet */}
-            {teamLoaded && currentTeamId === null && <StudentTeamComponent />}
+      <HeaderBar/>
+      <div className='scp-container'>
+        <NavigationContainerComponent/>
+        {/*<AssBarComponent />*/}
+        <div className='scp-component'>
+          {/* Not in a team yet */}
+          {teamLoaded && currentTeamId === null && <StudentTeamComponent />}
 
-            {/* Already in a team */}
-            {teamLoaded && currentTeamId !== null && (
+          {/* Already in a team */}
+          {teamLoaded && currentTeamId !== null && (
               <div>
                 <div className='scp-component-links'>
                   {components.map((t) => (
-                    <CourseComponent
-                      key={uuid()}
-                      component={t}
-                      active={t === chosen}
-                      onClick={() => setChosen(t)}
-                    />
+                      <CourseComponent
+                          key={uuid()}
+                          component={t}
+                          active={t === chosenComponent}
+                          onClick={() => setChosenComponent(t)}
+                      />
                   ))}
                 </div>
                 <div>
-                  {chosen === 'To Do' && <StudentToDoComponent />}
-                  {chosen === 'Submitted' && <StudentSubmittedComponent />}
-                  {chosen === 'My Team' && <MyTeamComponent />}
+                  {chosenComponent === 'To Do' && <StudentToDoComponent />}
+                  {chosenComponent === 'Submitted' && <StudentSubmittedComponent />}
+                  {chosenComponent === 'My Team' && <MyTeamComponent />}
                 </div>
               </div>
-            )}
-          </div>
+          )}
         </div>
       </div>
     </div>

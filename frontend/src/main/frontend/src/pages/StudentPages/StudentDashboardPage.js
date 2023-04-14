@@ -10,9 +10,9 @@ import {
 } from '../../redux/features/courseSlice';
 import uuid from 'react-uuid';
 import noCourse from '.././../assets/no-course.png';
-import ProfessorHeaderBar from "../../components/ProfessorComponents/ProfessorHeaderBar";
+import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import LogoutButton from "../../components/GlobalComponents/LogoutButton";
-import StudentHeaderBar from "../../components/StudentComponents/StudentHeaderBar";
+import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 
 function StudentDashboardPage() {
   const dispatch = useDispatch();
@@ -39,8 +39,9 @@ function StudentDashboardPage() {
         <Loader />
       ) : (
         <div className="page-container">
-          <StudentHeaderBar/>
-          <div className={'StudentDashboard'}>
+          <HeaderBar/>
+          <div className='StudentDashboard'>
+            <NavigationContainerComponent/>
             <div id='student'>
               <div className='welcome-banner-st'>
                 <div className='inter-36-bold student-welcome'>
