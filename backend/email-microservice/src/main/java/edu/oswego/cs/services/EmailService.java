@@ -502,6 +502,10 @@ public class EmailService {
     public boolean allPRSubmitted(Document assignment) {
         //get completed teams to see if all peer reviews have been submitted
         Map<String, List<String>> completedTeams = (Map<String, List<String>>) assignment.get("completed_teams");
+        if(!assignment.containsKey("reviews_per_team")){
+            //never got to PR stage
+            return false;
+        }
         int reviewsPerTeam = assignment.getInteger("reviews_per_team");
         for(Map.Entry<String, List<String>> entry : completedTeams.entrySet()){
             if(entry.getValue().size() != reviewsPerTeam){
