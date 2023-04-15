@@ -2,9 +2,25 @@
 
 .ecc-form {
     background-color: white;
-    padding-left: 2%;
-    padding-right: 2%;
-    padding-bottom: 2%;
+    border-radius: 50px;
+    padding: 1%;
+    overflow-y: scroll;
+    max-height: 80vh;
+}
+
+.ecc-form::-webkit-scrollbar {
+    width: 20px;
+}
+
+.ecc-form::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.ecc-form::-webkit-scrollbar-thumb {
+    background-color: #d6dee1;
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
 }
 
 .ecc-input-field {
@@ -229,4 +245,23 @@
     padding-right: 2%;
     display: flex;
     align-items: center;
+}
+
+.course-profanity-title {
+    display: flex;
+    align-items: center;
+}
+
+
+.course-profanity-details {
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+.course-profanity-details p {
+    font-size: 20px;
+    font-family: "Inter", sans-serif;
+    line-height: 25px;
+    font-style: normal;
+    font-weight: 400;
 }

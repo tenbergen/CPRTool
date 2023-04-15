@@ -40,11 +40,6 @@ const RouterHandler = () => {
               element={<ProfessorGradesPage/>}
             />
             <Route
-              path="professor/:courseId/profanity-settings"
-              // Placeholder for now till page gets made completely, was just testing my routing :)
-              element={<ProfessorGradesPage/>}
-            />
-            <Route
               path="professor/:courseId/create/assignment"
               element={<CreateAssignmentPage/>}
             />
@@ -79,6 +74,10 @@ const RouterHandler = () => {
             <Route
               path="/professor/:courseId/details"
               element={<ProfessorCoursePage chosen="Manage"/>}
+            />
+            <Route
+              path="professor/:courseId/details/Profanity Settings"
+              element={<ProfessorCoursePage chosen="Profanity"/>}
             />
           </Route>
 
