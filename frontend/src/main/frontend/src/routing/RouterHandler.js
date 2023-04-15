@@ -1,7 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import App from '../App';
 import CreateCoursePage from '../pages/TeacherPages/CreateCoursePage';
-import DisplayMatrix from '../pages/TeacherPages/DisplayMatrix';
 import ProfessorCoursePage from '../pages/TeacherPages/ProfessorCoursePage';
 import StudentCoursePage from '../pages/StudentPages/StudentCoursePage';
 import CreateAssignmentPage from '../pages/TeacherPages/CreateAssignmentPage';
@@ -54,11 +53,6 @@ const RouterHandler = () => {
               path='professor/admin'
               element={<AdminInterface />}
             />
-            <Route
-                path='details/professor/matrix'
-                element={<DisplayMatrix />}
-            />
-
             <Route
                 path='professor'
                 element={<App />}

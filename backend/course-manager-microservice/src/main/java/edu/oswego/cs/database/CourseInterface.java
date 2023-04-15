@@ -178,9 +178,7 @@ public class CourseInterface {
                     .append("first_name", studentFirstName)
                     .append("last_name", studentLastName)
                     .append("student_id", studentId)
-                    .append("courses", new ArrayList<String>())
-                    .append("team_submissions", new ArrayList<Document>())
-                    .append("peer_reviews", new ArrayList<Document>());
+                    .append("courses", new ArrayList<String>());
         }
 
         List<String> courseList = studentDocument.getList("courses", String.class);
