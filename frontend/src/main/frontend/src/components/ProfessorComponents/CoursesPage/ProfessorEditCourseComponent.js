@@ -156,9 +156,11 @@ const ProfessorEditCourseComponent = () => {
 
   return (
     <>
-      <div>
-        <h2 className="course-details-title">Course Details</h2>
-      </div>
+      <h2 className="course-details-title" style={{ justifyContent: 'space-between' }}>Course Details
+        <button className="profanity-button"
+                onClick={() => navigate('/professor/' + courseId + '/profanity-settings')}>Profanity Settings
+        </button>
+      </h2>
       <div className="ecc-form">
         <Form
           onSubmit={async (formObj) => {
