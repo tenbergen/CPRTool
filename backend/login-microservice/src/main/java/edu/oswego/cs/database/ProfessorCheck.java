@@ -38,7 +38,8 @@ public class ProfessorCheck {
         ArrayList<String> professorList = new ArrayList<>();
         while (line != null) {
             if (line.contains("@")) {
-                professorList.add(line);
+                String[] token = line.split("@");
+                professorList.add(token[0]);
             }
             line = reader.readLine();
         }

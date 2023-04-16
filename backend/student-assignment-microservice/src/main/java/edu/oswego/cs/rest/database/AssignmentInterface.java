@@ -304,7 +304,7 @@ public class AssignmentInterface {
      * @param courseID
      */
     public void checkProfessor(SecurityContext securityContext, String courseID){
-        String professorID = securityContext.getUserPrincipal().getName();
+        String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
         Document professorDocument = professorCollection.find(eq("professor_id", professorID)).first();
         if (professorDocument == null) throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("This professor does not exist.").build());
         Document courseDocument = courseCollection.find(Filters.eq("course_id", courseID)).first();

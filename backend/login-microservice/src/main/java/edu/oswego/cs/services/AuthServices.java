@@ -39,12 +39,14 @@ public class AuthServices {
 
     public Map<String, String> generateNewToken(String token) {
         Payload payload = googleService.validateToken(token);
-        if (payload == null)
+        if (payload == null) {
+            System.out.println("It's a AuthServices Problem");
             throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token.").build());
+        }
 
         Map<String, String> tokens = new HashMap<>();
 
-        String lakerID = payload.getEmail();
+        String lakerID = payload.getEmail().split("@")[0];
         Set<String> roles = getRoles(lakerID);
 
         try {
@@ -85,7 +87,7 @@ public class AuthServices {
 
         Map<String, String> tokens = new HashMap<>();
 
-        String lakerID = payload.getName();
+        String lakerID = payload.getName().split("@")[0];
         Set<String> roles = getRoles(lakerID);
 
         try {

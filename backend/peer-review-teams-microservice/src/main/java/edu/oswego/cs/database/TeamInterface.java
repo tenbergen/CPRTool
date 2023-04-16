@@ -173,7 +173,7 @@ public class TeamInterface {
     }
 
     public Document getTeamByTeamID(SecurityContext securityContext, String courseID, String teamID) {
-        String userID = securityContext.getUserPrincipal().getName();
+        String userID = securityContext.getUserPrincipal().getName().split("@")[0];
         Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
         if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Course not found");
         new IdentifyingService().identifyingProfessorService(securityContext, courseCollection, courseID);

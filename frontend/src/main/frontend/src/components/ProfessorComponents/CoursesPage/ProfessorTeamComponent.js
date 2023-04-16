@@ -38,7 +38,7 @@ const ProfessorTeamComponent = () => {
 
   const createTeam = async () => {
     const team_name = prompt('Enter team name: ');
-    const lakerId = prompt("Enter student leader email: ");
+    const lakerId = prompt("Enter student leader email minus the @oswego.edu: ");
     const createUrl = `${process.env.REACT_APP_URL}/teams/team/create`;
     const createData = {
       course_id: courseId,
