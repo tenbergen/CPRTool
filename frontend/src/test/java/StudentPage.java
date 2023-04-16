@@ -10,13 +10,14 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
+import java.time.Duration;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class StudentPage {
     private static WebDriver driver;
-    private static String downloadPath = "C:\\Users\\태영\\Downloads\\";
+    private static String downloadPath = "C:\\Users\\scarl\\Downloads\\";
 
     @BeforeAll
     public static void setupClass() {
@@ -26,13 +27,14 @@ public class StudentPage {
         // driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
 
-        driver.get("http://moxie.cs.oswego.edu:13125/");
+        //driver.get("http://moxie.cs.oswego.edu:13125/");
+        driver.get("http://localhost:3000/");
 
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#box > button")));
         driver.findElement(By.cssSelector("#box > button")).click();
 
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
 //Get all the window handles in a set
         Set<String> handles = driver.getWindowHandles();
@@ -44,14 +46,14 @@ public class StudentPage {
             driver.switchTo().window(newwin);
 //perform actions on new window
             driver.findElement(By.xpath("//*[@id=\"identifierId\"]")).sendKeys("id");
-            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
             driver.findElement(By.cssSelector("#identifierNext > div > button > span")).click();
 
             driver.findElement(By.xpath("//*[@id=\"password\"]/div[1]/div/div[1]/input")).sendKeys("password");
             driver.findElement(By.cssSelector("#passwordNext > div > button > span")).click();
             // driver.close();
             driver.switchTo().window(parent);
-            driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         }
     }
     @Test
@@ -69,7 +71,7 @@ public class StudentPage {
 
                         driver.findElement(By.xpath("//*[@id=\"assList\"]/div[2]/div/div[2]/div[2]/span")).click();
 
-                        Assertions.assertEquals("C:\\Users\\태영\\Downloads\\Week 9.pdf", downloadPath + driver.findElement(By.xpath("//*[@id=\"assList\"]/div[2]/div/div[2]/div[2]/span")).getText());
+                        Assertions.assertEquals("C:\\Users\\scarl\\Downloads\\Week 9.pdf", downloadPath + driver.findElement(By.xpath("//*[@id=\"assList\"]/div[2]/div/div[2]/div[2]/span")).getText());
 
 
                     }
@@ -135,7 +137,7 @@ public class StudentPage {
                         driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/div/div[2]/div[2]/div/div/div/h3/div[1]/input")).sendKeys("C:\\Users\\태영\\Downloads\\base.pdf");
                         driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/div/div[2]/div[2]/div/div/div/h3/div[2]/button")).click();
 
-                        WebDriverWait wait = new WebDriverWait(driver, 5);
+                        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
                         Alert alert = wait.until(ExpectedConditions.alertIsPresent());
 
                         Assertions.assertEquals("Successfully uploaded assignment", alert.getText());
@@ -192,7 +194,7 @@ public class StudentPage {
 
                            driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/div/div[2]/div[2]/div/div/div/h3/div[3]/div/button")).click();
 
-                            WebDriverWait wait = new WebDriverWait(driver, 5);
+                            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
                             Alert alert = wait.until(ExpectedConditions.alertIsPresent());
 
                             Assertions.assertEquals("Successfully uploaded peer review", alert.getText());
@@ -234,7 +236,7 @@ public class StudentPage {
                         if(driver.findElement(By.cssSelector("#root > div > div > div > div > div.ap-container > div.ap-component > div > div > div > div:nth-child(5) > div")).getText().contains("View feedback")){
                             Assertions.assertEquals("90",driver.findElement(By.cssSelector("#root > div > div > div > div > div.ap-container > div.ap-component > div > div > div > div:nth-child(5) > div > div > li > b")).getText());
                             driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/div/div[2]/div[2]/div/div/div/div[3]/div/div/li/span")).click();
-                            if(new File("C:\\Users\\태영\\Downloads\\from-Poggers-to-newTeam.pdf").exists()){
+                            if(new File("C:\\Users\\scarl\\Downloads\\from-Poggers-to-newTeam.pdf").exists()){
                                 Assertions.assertTrue(true);
                             }
                             
