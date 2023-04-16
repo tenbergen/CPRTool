@@ -149,6 +149,7 @@ public class CourseInterface {
      * @param student the student to be added to the course
      * @param courseID the course to add the student to
      */
+
     public void addStudent(SecurityContext securityContext, StudentDAO student, String courseID) {
         while (courseLocks.containsKey(courseID)); /* spin block (see explanation above) */
         courseLocks.put(courseID, true);
@@ -220,6 +221,7 @@ public class CourseInterface {
      * @param studentID the net ID of the student to be removed
      * @param courseID the ID of the course from which the student is to be removed
      */
+
     public void removeStudent(SecurityContext securityContext, String studentID, String courseID) {
         String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
         Document studentDocument = studentCollection.find(and(eq("student_id", studentID), eq("courses", courseID))).first();
@@ -254,6 +256,7 @@ public class CourseInterface {
             teamCollection.updateOne(eq("team_id", teamID), set("team_leader", newTeamLeader));
         }
     }
+
 
     public void addStudentsFromCSV(SecurityContext securityContext, FileDAO fileDAO) {
         String professorID = securityContext.getUserPrincipal().getName().split("@")[0];

@@ -89,6 +89,12 @@
             <version>8.0.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>edu.oswego.cs</groupId>
+            <artifactId>course-manager-microservice</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
