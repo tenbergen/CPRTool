@@ -15,7 +15,7 @@ jobs:
     executor: maven/default
     steps:
       - checkout
-      - run: CSC480-22S/backend/course-manager-microservice/pom.xml mvn package
+      - build
 
 workflows:
   clean_and_build:
