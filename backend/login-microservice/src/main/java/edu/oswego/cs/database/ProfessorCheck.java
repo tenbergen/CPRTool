@@ -38,20 +38,19 @@ public class ProfessorCheck {
         ArrayList<String> professorList = new ArrayList<>();
         while (line != null) {
             if (line.contains("@")) {
-                professorList.add(line);
+                String[] token = line.split("@");
+                professorList.add(token[0]);
             }
             line = reader.readLine();
         }
 
-        for (String professorEmail : professorList) {
-            String professorID = professorEmail.split("@")[0];
+        for (String professorID : professorList) {
             Document professorDocument = professorCollection.find(eq("professor_id", professorID)).first();
             if (professorDocument == null) {
                 List<String> courseList = new ArrayList<>();
                 Document newProfessor = new Document()
                         .append("professor_id", professorID)
                         .append("courses", courseList);
-                System.out.println(newProfessor);
                 professorCollection.insertOne(newProfessor);
             }
         }
