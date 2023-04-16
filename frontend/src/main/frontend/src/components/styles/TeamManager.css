@@ -1,7 +1,6 @@
 .accordion {
     overflow: auto;
     max-height: 70vh;
-    padding-top: 20px;
 }
 
 .accordionTitle {
@@ -12,10 +11,9 @@
     font-size: 20px;
     padding-left: 12px;
     padding-bottom: 20px;
-    padding-top: 30px;
+    padding-top: 20px;
     border-radius: 5px 5px 0 0;
     margin-bottom: 2%;
-    border-radius: 5px;
 }
 
 .accordionTitle:hover {
@@ -30,12 +28,6 @@
 .memberWrapper {
     display: flex;
     justify-content: space-between;
-}
-
-.buttonWrapper {
-    display: flex;
-    justify-content: flex-end;
-    padding: 10px;
 }
 
 .accordionHead {
@@ -56,7 +48,6 @@
 .crossMarkTeam {
     float: right;
     margin-right: 10px;
-    margin-top: 5px;
 }
 
 .plusMinusTeam:hover {
@@ -81,14 +72,6 @@
 .emailInput {
     border-radius: 5px;
     margin-left: 8px;
-}
-
-.even {
-    background-color: #FFFFFF;
-}
-
-.odd {
-    background-color: #f2f2f2;
 }
 
 .teamA {
@@ -164,7 +147,7 @@
 }
 
 .modify-button {
-    width: 130px;
+    width: 118px;
     height: 34px;
     background-color: #4a7dfc;
     border-radius: 5px;
@@ -176,10 +159,6 @@
     line-height: 24px;
     margin-right: 10px;
     content: "Modify";
-}
-
-.teamMembersItem{
-    margin-left: 65%;
 }
 
 .modify-button:hover {
@@ -196,7 +175,9 @@
     background-color: #f04438;
     color: white;
     border-radius: 5px;
-
+    margin-top: 10px;
+    margin-right: 5px;
+    margin-bottom: 10px;
 }
 
 .remove-button:hover {
@@ -214,9 +195,10 @@
     background-color: #28a745;
     color: white;
     border-radius: 5px;
+    margin-top: 10px;
     margin-right: 5px;
-    position: relative;
-
+    margin-left: 1000px;
+    margin-bottom: 10px;
 
 }
 
