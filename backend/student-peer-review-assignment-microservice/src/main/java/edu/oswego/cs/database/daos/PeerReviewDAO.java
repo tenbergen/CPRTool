@@ -1,4 +1,4 @@
-package edu.oswego.cs.daos;
+package edu.oswego.cs.database.daos;
 
 import javax.json.bind.annotation.JsonbProperty;
 import javax.persistence.Id;

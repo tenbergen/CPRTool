@@ -18,7 +18,7 @@ public class LoginTests {
 
     @BeforeAll
     public static void onTimeSetup(){
-        baseUrl = "http://moxie.cs.oswego.edu:13125/auth/token/generate/";
+        baseUrl = "https://moxie.cs.oswego.edu:13125/auth/token/generate/";
 
         // base jwt token found by intercepting the request in Burp ;D
         // we can manipulate this to see what else we can do with this request. XD

@@ -35,8 +35,8 @@ public class CourseManagerTests {
     @BeforeAll
     public static void oneTimeSetup() {
 
-        port = "13125";
-        baseUrl = "http://moxie.cs.oswego.edu:" + port + "/manage/professor/";
+        port = "3000";
+        baseUrl = "https://localhost:" + port + "/manage/professor/";
         String courseName = "JUnit Theory";
         String courseSection = "800";
         String crn = "54266";
