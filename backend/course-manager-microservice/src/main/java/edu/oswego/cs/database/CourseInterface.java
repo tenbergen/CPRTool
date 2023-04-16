@@ -154,7 +154,6 @@ public class CourseInterface {
         courseLocks.put(courseID, true);
         String professorID = securityContext.getUserPrincipal().getName().split("@")[0];
         String studentId = student.email.split("@")[0];
-        String studentDomain = student.email.split("@")[1];
         String studentLastName = student.fullName.split(", ")[0];
         String studentFirstName = student.fullName.split(", ")[1];
 
@@ -179,7 +178,6 @@ public class CourseInterface {
                     .append("first_name", studentFirstName)
                     .append("last_name", studentLastName)
                     .append("student_id", studentId)
-                    .append("domain", studentDomain)
                     .append("courses", new ArrayList<String>());
         }
 

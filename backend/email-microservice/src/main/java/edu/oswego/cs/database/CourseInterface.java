@@ -71,20 +71,4 @@ public class CourseInterface {
         teamCollection.find(eq("course_id", courseID)).into(teamsInCourse);
         return teamsInCourse;
     }
-
-    /**
-     * gets a student's full email from their id
-     *
-     * @param studentId id of the student
-     * @return the student's email
-     */
-    public String getStudentEmail(String studentId){
-        String domain = getStudent(studentId).getString("domain");
-        return (studentId + "@" + domain);
-    }
-
-    public String getProfessorEmail(String professorId){
-        String domain = professorCollection.find(eq(professorId)).first().getString("domain");
-        return (professorId + "@" + domain);
-    }
 }

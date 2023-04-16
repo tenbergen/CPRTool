@@ -20,6 +20,8 @@ import java.util.Properties;
  *
  */
 public class EmailService {
+    public static String domain = "@oswego.edu";
+
     /**
      * Sends an email to the professor informing them that all teams in the course have submitted an assignment.
      * The email will not be sent if the assignment deadline has passed.
@@ -56,7 +58,7 @@ public class EmailService {
         body = body.replace("[Name of Instructor]", course.getString("professor_id"));
         body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
 
-        sendEmail(new CourseInterface().getProfessorEmail(course.getString("professor_id")), subject, body);
+        sendEmail(course.getString("professor_id") + domain, subject, body);
     }
 
     /**
@@ -94,7 +96,7 @@ public class EmailService {
         body = body.replace("[Name of Instructor]", course.getString("professor_id"));
         body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
 
-        sendEmail(new CourseInterface().getProfessorEmail(course.getString("professor_id")), subject, body);
+        sendEmail(course.getString("professor_id") + domain, subject, body);
     }
 
     /**
@@ -124,7 +126,7 @@ public class EmailService {
             body = body.replace("[Instructor Name]", new CourseInterface().getCourse(courseID).getString("professor_id"));
 
             //send email
-            sendEmail(new CourseInterface().getProfessorEmail(student.getString("student_id")), subject, body);
+            sendEmail(student.getString("student_id") + domain, subject, body);
         }
     }
 
@@ -157,7 +159,7 @@ public class EmailService {
         body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
         body = body.replace("[Assignment Due Date]", assignment.getString("due_date"));
 
-        sendEmail(new CourseInterface().getProfessorEmail(course.getString("professor_id")), subject, body);
+        sendEmail(course.getString("professor_id") + domain, subject, body);
     }
 
     /**
@@ -197,7 +199,7 @@ public class EmailService {
             body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
             body = body.replace("[Instructor Name]", course.getString("professor_id"));
 
-            sendEmail(new CourseInterface().getStudentEmail(to), subject, body);
+            sendEmail(to + domain, subject, body);
         }
     }
 
@@ -241,7 +243,7 @@ public class EmailService {
             body = body.replace("[Grade]", submission.getDouble("grade").toString());
             body = body.replace("[Instructor Name]", course.getString("professor_id"));
 
-            sendEmail(new CourseInterface().getStudentEmail(to), subject, body);
+            sendEmail(to + domain, subject, body);
         }
     }
 
@@ -268,7 +270,7 @@ public class EmailService {
         body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
         body = body.replace("[Name of Team That Submitted the Outlier Peer Review]", teamID);
 
-        sendEmail(new CourseInterface().getProfessorEmail(course.getString("professor_id")), subject, body);
+        sendEmail(course.getString("professor_id") + domain, subject, body);
 
     }
 
@@ -300,7 +302,7 @@ public class EmailService {
             body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
             body = body.replace("[Instructor Name]", course.getString("professor_id"));
 
-            sendEmail(new CourseInterface().getStudentEmail(to), subject, body);
+            sendEmail(to + domain, subject, body);
         }
     }
 
@@ -335,7 +337,7 @@ public class EmailService {
         body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
         body = body.replace("[Peer Review Due Date]", assignment.getString("peer_review_due_date"));
 
-        sendEmail(new CourseInterface().getProfessorEmail(course.getString("professor_id")), subject, body);
+        sendEmail(course.getString("professor_id") + domain, subject, body);
     }
 
     /**
@@ -384,7 +386,7 @@ public class EmailService {
             body = body.replace("[Assignment Name]", assignment.getString("assignment_name"));
             body = body.replace("[Instructor Name]", course.getString("professor_id"));
 
-            sendEmail(new CourseInterface().getStudentEmail(to), subject, body);
+            sendEmail(to + domain, subject, body);
         }
     }
 

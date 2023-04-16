@@ -163,8 +163,7 @@ public class CourseManagerTests {
     @Test
     public void testAddStudent() {
         String email = "ThisIsNotAnEmail";
-        String domain = "ThisIsNotADomain";
-        StudentDAO studentDAO = new StudentDAO(email, domain, course.abbreviation, course.courseName, course.courseSection,
+        StudentDAO studentDAO = new StudentDAO(email, course.abbreviation, course.courseName, course.courseSection,
                 course.crn, course.semester, course.year);
         targetUrl = "courses/course/student/add/";
         WebTarget target = client.target(baseUrl + targetUrl);
@@ -177,9 +176,8 @@ public class CourseManagerTests {
 
     @Test
     public void testDeleteStudent() {
-        String email = "timmyTest";
-        String domain = "oswego.edu";
-        StudentDAO studentDAO = new StudentDAO(email, domain, course.abbreviation, course.courseName, course.courseSection,
+        String email = "timmyTest@oswego.edu";
+        StudentDAO studentDAO = new StudentDAO(email, course.abbreviation, course.courseName, course.courseSection,
                 course.crn, course.semester, course.year);
         targetUrl = "courses/course/student/delete/";
         WebTarget target = client.target(baseUrl + targetUrl);
@@ -192,11 +190,10 @@ public class CourseManagerTests {
 
     @Test
     public void testAddAndDeleteStudent() {
-        String email = "timmyTest";
-        String domain = "oswego.edu";
-        StudentDAO studentDAO = new StudentDAO(email, domain, course.abbreviation, course.courseName, course.courseSection,
+        String email = "timmyTest@oswego.edu";
+        StudentDAO studentDAO = new StudentDAO(email, course.abbreviation, course.courseName, course.courseSection,
                 course.crn, course.semester, course.year);
-        StudentDAO studentDNEDAO = new StudentDAO("tommyTrial", "@oswego.edu", course.abbreviation, course.courseName, course.courseSection,
+        StudentDAO studentDNEDAO = new StudentDAO("tommyTrial@oswego.edu", course.abbreviation, course.courseName, course.courseSection,
                 course.crn, course.semester, course.year);
         targetUrl = "courses/course/student/add/";
         WebTarget target = client.target(baseUrl + targetUrl);

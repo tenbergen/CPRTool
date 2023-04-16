@@ -12,7 +12,6 @@ import javax.persistence.Id;
 @NoArgsConstructor
 public class StudentDAO {
     @Id @JsonbProperty("email") public String email;
-    @JsonbProperty ("domain") public String domain;
     @JsonbProperty("abbreviation") public String abbreviation;
     @JsonbProperty("course_name") public String courseName;
     @JsonbProperty("course_section") public String courseSection;
@@ -30,7 +29,6 @@ public class StudentDAO {
     @JsonbCreator
     public StudentDAO(
             @NonNull @JsonbProperty("email") String email,
-            @NonNull @JsonbProperty("domain") String domain,
             @NonNull @JsonbProperty("abbreviation") String abbreviation,
             @NonNull @JsonbProperty("course_name") String courseName,
             @NonNull @JsonbProperty("course_section") String courseSection,
@@ -38,7 +36,6 @@ public class StudentDAO {
             @NonNull @JsonbProperty("semester") String semester,
             @NonNull @JsonbProperty("year") String year) {
         this.email = email;
-        this.domain = domain;
         this.abbreviation = abbreviation;
         this.courseName = courseName;
         this.courseSection = courseSection;
