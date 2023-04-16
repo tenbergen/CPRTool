@@ -21,10 +21,8 @@ public class GoogleService {
         System.out.println(token);
         GoogleIdToken idToken = verifyToken(token);
         System.out.println(idToken==null);
-        if (idToken == null) {
-            System.out.println("It's a GoogleService Problem");
+        if (idToken == null)
             throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token.").build());
-        }
 
         return idToken.getPayload();
     }
