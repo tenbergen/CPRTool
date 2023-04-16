@@ -1,7 +1,7 @@
 package edu.oswego.cs.resources;
 
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
-import edu.oswego.cs.database.daos.FileDAO;
+import edu.oswego.cs.daos.FileDAO;
 import edu.oswego.cs.database.PeerReviewAssignmentInterface;
 import edu.oswego.cs.distribution.AssignmentDistribution;
 import org.bson.Document;

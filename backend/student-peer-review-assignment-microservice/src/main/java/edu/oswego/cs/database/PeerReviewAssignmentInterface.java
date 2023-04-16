@@ -3,11 +3,13 @@ package edu.oswego.cs.database;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.util.JSON;
 import org.bson.Document;
 import org.bson.types.Binary;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.io.*;
 import java.util.*;
 import java.text.DecimalFormat;
@@ -22,10 +24,10 @@ public class PeerReviewAssignmentInterface {
     private final MongoCollection<Document> teamCollection;
     private final MongoCollection<Document> assignmentCollection;
     private final MongoCollection<Document> submissionsCollection;
+
     private final MongoCollection<Document> professorCollection;
 
     static ConcurrentHashMap<String, Boolean> peerReviewLock = new ConcurrentHashMap<String, Boolean>();
-
     MongoDatabase assignmentDB;
 
     public PeerReviewAssignmentInterface() {
@@ -36,6 +38,7 @@ public class PeerReviewAssignmentInterface {
             teamCollection = teamDB.getCollection("teams");
             assignmentCollection = assignmentDB.getCollection("assignments");
             submissionsCollection = assignmentDB.getCollection("submissions");
+            professorCollection = databaseManager.getProfessorDB().getCollection("professors");
         } catch (WebApplicationException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
         }
@@ -88,6 +91,14 @@ public class PeerReviewAssignmentInterface {
         //remove the lock
         peerReviewLock.remove(assignment_id+reviewedByTeam.getString("team_id")+reviewedTeam.getString("team_id")+"peer_review_submission");
 
+        // Store reviewed_team_members and teams in "teams" collection
+        teamCollection.updateOne(
+                eq("team_id", reviewedTeam.getString("team_id")),
+                new Document("$set", new Document()
+                        .append("reviewed_team",reviewedByTeam.getString("team_id"))
+                        .append("reviewed_members", reviewedByTeam.getList("team_members", String.class))));
+        System.out.println(reviewedTeam.getString("team_id"));
+        System.out.println(reviewedByTeam.getList("team_members", String.class));
         addCompletedTeam(course_id, assignment_id, srcTeamName, destinationTeam);
 
     }
@@ -317,7 +328,6 @@ public class PeerReviewAssignmentInterface {
         }
         return new Document().append("teams", teams);
     }
-
     public Document professorUpdate(String courseID, int assignmentID, String teamName, int grade) {
         Document team = submissionsCollection.findOneAndUpdate(and(
                         eq("course_id", courseID),
@@ -396,7 +406,6 @@ public class PeerReviewAssignmentInterface {
         int total_points = 0;
         int count_of_reviews_submitted = teams_that_graded.size();
 
-        //my code
         String[] temp = new String[count_of_reviews_submitted];
         int counter = 0;
         for(String teamsThatGraded : teams_that_graded){
@@ -425,8 +434,6 @@ public class PeerReviewAssignmentInterface {
         }
         DecimalFormat tenth = new DecimalFormat("0.##");
         double final_grade = Double.parseDouble(tenth.format((((double) total_points / count_of_reviews_submitted) / points) * 100));//round
-
-
 
         submissionsCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
     }
@@ -495,6 +502,38 @@ public class PeerReviewAssignmentInterface {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Team: " + teamName + " was not found for assignment").build());
         if (result.getInteger("grade") == null) return new Document("grade", -1);
         else return new Document("grade", result.getInteger("grade"));
+    }
+    /**
+     * The method gets the team names and their members from teamCollection and gets the final grade from submissionsCollection,
+     * then it returns a document object containg individual student and their grade.
+     */
+    public Document getGradeForStudent(String courseID, int assignmentID, String teamID, String studentID) {
+        Document reviewedTeam = teamCollection.find(eq("reviewed_team", teamID)).first();
+        //System.out.println(reviewedTeam);
+        if (reviewedTeam == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Reviewed Team not found.").build());
+        List<String> teamMembers = reviewedTeam.getList("reviewed_members", String.class);
+        //System.out.println(teamMembers);
+        if (teamMembers == null)
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No students found.").build());
+        if (!teamMembers.contains(studentID))
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Student not found.").build());
+        Document result = submissionsCollection.find(and(
+                eq("course_id", courseID),
+                eq("assignment_id", assignmentID),
+                eq("team_name", teamID),
+                eq("type", "team_submission")
+        )).first();
+        if (result == null) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No submission found.").build());
+        } else {
+            Document gradeDoc = new Document()
+                    .append("studentID", studentID)
+                    .append("grade", result.getDouble("grade"));
+           //
+            // System.out.println(gradeDoc);
+            return gradeDoc;
+        }
     }
 
     //redone matrix outlier detection
@@ -811,6 +850,8 @@ public class PeerReviewAssignmentInterface {
             return false;
         }
     }
+
+
 
     /**
      * abstraction method that calls calculate IQR, and uses the values calculated from there
@@ -1427,12 +1468,7 @@ public class PeerReviewAssignmentInterface {
 
             holderr.append("Average Grade Given", gradesHolder);
 
-    /**
-     * This is a method to be used for testing purposes, it will simplify writiing the test cases
-     * while keeping the same functionality as all other isOutlier methods
-     * */
-    public boolean isOutlier(int numberToCompare, int Q1, int Q3, int IQR){
-
+        }
 
         return allPotentialOutliers;
 

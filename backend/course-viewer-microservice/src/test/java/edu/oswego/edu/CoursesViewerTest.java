@@ -34,7 +34,7 @@ public class CoursesViewerTest {
     @BeforeAll
     public static void oneTimeSetup() {
         port = "13125";
-        baseUrl = "https://moxie.cs.oswego.edu:" + port + "/view/professor/";
+        baseUrl = "http://moxie.cs.oswego.edu:" + port + "/view/professor/";
 
 
         // variables for inserted courses
