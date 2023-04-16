@@ -51,6 +51,7 @@ const CreateAssignmentPage = () => {
     const assignmentFileUrl = `${getAssUrl}/${assignmentId}/upload`;
     const rubricUrl = `${getAssUrl}/${assignmentId}/peer-review/rubric/upload`;
     const templateUrl = `${getAssUrl}/${assignmentId}/peer-review/template/upload`;
+    const emailUrl = `${process.env.REACT_APP_URL}/email/send/${courseId}/${assignmentId}/assignment-created`;
 
     await axios
       .post(assignmentFileUrl, assignmentFileFormData)
@@ -75,6 +76,14 @@ const CreateAssignmentPage = () => {
         console.error(e);
         alert('Error uploading peer review template.');
       });
+
+    await axios
+        .post(emailUrl)
+        .then((res) => {})
+        .catch((e) => {
+          console.error(e.response.data);
+        });
+    console.log('');
   };
 
   const handleSubmit = async (data) => {

@@ -11,6 +11,7 @@ import {
 import uuid from "react-uuid";
 import ProfessorHeaderBar from "../../components/ProfessorComponents/ProfessorHeaderBar";
 import LogoutButton from "../../components/GlobalComponents/LogoutButton";
+import axios from "axios";
 
 function ProfessorDashboardPage() {
   const navigate = useNavigate();

@@ -75,6 +75,29 @@ services:
       MONGO_USERNAME: ${MONGO_USERNAME}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
 
+  email:
+    build:
+      context: ./backend/email-microservice
+    image: cpr-email
+    platform: linux/amd64
+    container_name: cpr-email
+    restart: unless-stopped
+    volumes:
+      - ./templates:/opt/ol/wlp/output/defaultServer/templates:rw
+      - ./backend/email-microservice/postfix-3.7.4:/opt/ol/wlp/output/defaultServer/postfix-3.7.4:r
+    environment:
+      JWK_ACCESS_URL: ${JWK_ACCESS_URL}
+      JWK_REFRESH_URL: ${JWK_REFRESH_URL}
+      MONGO_HOSTNAME: ${MONGO_HOSTNAME}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO2_PORT: ${MONGO2_PORT}
+      MONGO3_PORT: ${MONGO3_PORT}
+      MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
+      MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+
   peer-review-teams:
     build:
       context: ./backend/peer-review-teams-microservice
