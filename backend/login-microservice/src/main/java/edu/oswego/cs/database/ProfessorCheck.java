@@ -50,6 +50,7 @@ public class ProfessorCheck {
                 List<String> courseList = new ArrayList<>();
                 Document newProfessor = new Document()
                         .append("professor_id", professorID)
+                        .append("professor_domain", "gmail.com")
                         .append("courses", courseList);
                 professorCollection.insertOne(newProfessor);
             }
