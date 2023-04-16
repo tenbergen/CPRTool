@@ -4,8 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { getSubmittedAssignmentDetailsAsync } from '../../redux/features/submittedAssignmentSlice';
 import SubmittedAssignmentComponent from '../../components/StudentComponents/AssignmentPage/SubmittedAssignmentComponent';
-import SubmittedAssBarComponent from '../../components/SubmittedAssBarComponent';
-import StudentHeaderBar from "../../components/StudentComponents/StudentHeaderBar";
+import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
+import HeaderBar from "../../components/HeaderBar/HeaderBar";
 
 function StudentSubmittedAssignmentPage() {
   const dispatch = useDispatch();
@@ -21,17 +21,15 @@ function StudentSubmittedAssignmentPage() {
 
   return (
     <div className="page-container">
-      <StudentHeaderBar/>
-      <div className='ap-parent'>
-        <div className='ap-container'>
-          <SubmittedAssBarComponent />
-          <div className='ap-component'>
-            {currentSubmittedAssignmentLoaded ? (
+      <HeaderBar/>
+      <div className='ap-container'>
+        <NavigationContainerComponent/>
+        <div className='ap-component'>
+          {currentSubmittedAssignmentLoaded ? (
               <SubmittedAssignmentComponent
-                currentSubmittedAssignment={currentSubmittedAssignment}
+                  currentSubmittedAssignment={currentSubmittedAssignment}
               />
-            ) : null}
-          </div>
+          ) : null}
         </div>
       </div>
     </div>
