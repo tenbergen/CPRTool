@@ -27,10 +27,6 @@ import java.io.IOException;
         Assignment 2: Have all the teams submit something, but don't send out Peer Reviews
         Assignment 3: Have all the teams submit something and do all the peer reviews (2 per team)
 
-    It's not part of the tests, but if you set up these objects through the product's frontend then you'll
-    probably get a lot of emails while doing it. Gmail tends to double-up similar emails into
-    threads so I like to delete old emails from the CPR tool so the new ones don't get lost.
-
     Put all the ids for the database objects in the variables below.
 
     If you don't see any emails, try checking your spam folder. It should go without saying that all the emails you
@@ -70,88 +66,83 @@ public class EmailTests {
     @Test
     public void testCreateAssignmentEmail() throws IOException {
         new EmailService().assignmentCreatedEmail(mainCourseID, ass1ID);
-        //should send every student in the main course an email about Assignment 1.
+        //The appropriate email should be sent to all students in the main course, and nobody else.
     }
 
     @Test
     public void testAssignmentSubmittedEmail() throws IOException {
-        new EmailService().assignmentSubmittedEmail(mainCourseID, team1Name, ass2ID);
+        new EmailService().assignmentSubmittedEmail(mainCourseID, team1Name, ass1ID);
 
-        //should send an email about Assignment 2 to all students in Team 1.
+        //should send an email to students 1 & 2. This method should always send an email if called, unless the database
+        //is screwed up, in which case it will throw an exception.
     }
 
     @Test
     public void testAllAssignmentsSubmittedEmail() throws IOException {
-        new EmailService().allAssignmentsSubmittedEmail(mainCourseID, ass2ID);
-        //should send an email about Assignment 2 to the professor of the main course.
+        new EmailService().allAssignmentsSubmittedEmail(mainCourseID, ass1ID);
+        //should send an email to the professor of the main course.
     }
 
     @Test
     public void testAllAssignmentsSubmittedEmailButNotAllTheAssignmentsAreSubmitted() throws IOException {
-        new EmailService().allAssignmentsSubmittedEmail(mainCourseID, ass1ID);
-        //should not send any emails, since not all assignments have been submitted for assignment 1.
+        new EmailService().allAssignmentsSubmittedEmail(mainCourseID, ass2ID);
+        //should not send any emails, since not all assignments have been submitted for assignment 2.
     }
 
     @Test
     public void testPeerReviewAssignedEmail() throws IOException {
-        new EmailService().peerReviewAssignedEmail(mainCourseID, ass3ID);
-        //should send an email about Assignment 3 to all the students in the main course.
+        new EmailService().peerReviewAssignedEmail(mainCourseID, ass1ID);
+        //should send an email to all the students in the main course.
     }
 
     @Test
     public void testPeerReviewSubmittedEmail() throws IOException {
-        new EmailService().peerReviewSubmittedEmail(new CourseInterface().getStudent(student3Email), mainCourseID, team1Name, ass3ID);
-        //should send an email about Assignment 3 to all the students in students 3's team.
+        new EmailService().peerReviewSubmittedEmail(new CourseInterface().getStudent(student3Email), mainCourseID, team1Name, ass1ID);
+        //should send an email to students 3 and 4.
     }
 
     @Test
     public void testAllPeerReviewsSubmittedEmailButNotAllThePeerReviewsAreSubmitted() throws IOException {
         new EmailService().allPeerReviewsSubmittedEmail(mainCourseID, ass2ID);
-        //should not send an email to the professor because not all peer reviews for assignment 2 have been submitted.
     }
 
     @Test
     public void testAllPeerReviewsSubmittedEmail() throws IOException {
-        new EmailService().allAssignmentsSubmittedEmail(mainCourseID, ass3ID);
-        //should send an email about Assignment 3 to the main course professor
+        new EmailService().allAssignmentsSubmittedEmail(mainCourseID, ass1ID);
+        //should send an email to the professor of the main course.
     }
 
     @Test
     public void testAssignmentDeadlinePassedEmail() throws IOException {
-        new EmailService().assignmentDeadlinePassed(mainCourseID, ass1ID);
+        new EmailService().assignmentDeadlinePassed(mainCourseID, ass2ID);
 
-        //(the actual deadline check is done by DeadlineTracker.check(), so this method won't actually check if the
-        // assignment is late)
-        //should send an email about Assignment 1 to the main course professor
+        //the method itself doesn't check if the deadline passed, so this should send the professor an email
     }
 
     @Test
     public void testAssignmentDeadlinePassedEmailButTheyWereAllSubmitted() throws IOException {
-        new EmailService().assignmentDeadlinePassed(mainCourseID, ass2ID);
-        //should not send any emails because all the teams submitted for Assignment 2.
+        new EmailService().assignmentDeadlinePassed(mainCourseID, ass1ID);
+
+        //No email should be sent.
     }
 
     @Test
     public void testPeerReviewDeadlinePassedEmail() throws IOException {
         new EmailService().peerReviewDeadlinePassed(mainCourseID, ass2ID);
 
-        //(the actual deadline check is done by DeadlineTracker.check(), so this method won't actually check if the
-        // assignment is late)
-        //should send an email about Assignment 2 to the main course professor
+        //the method itself doesn't check if the deadline passed, so this should send the professor an email
     }
 
     @Test
     public void testGradeReceivedEmail() throws IOException {
-        new EmailService().gradeReceivedEmail(mainCourseID, ass3ID, team1Name);
-        //(the method itself doesn't actually check if the grade is finalized, since that's done on the frontend)
-        //should send an email about Assignment 3 to all the students in team 1.
+        new EmailService().gradeReceivedEmail(mainCourseID, ass1ID, team1Name);
+        //should send an email to Students 1 and 2.
     }
 
     @Test
     public void testOutlierEmail() throws IOException {
-        new EmailService().outlierDetectedEmail(mainCourseID, team3Name, ass3ID);
-        //(the method itself doesn't actually check for an outlier, since that's done on the frontend)
-        //should send the professor an email about Assignment 3.
+        new EmailService().outlierDetectedEmail(mainCourseID, team3Name, ass1ID);
+        //should send the professor an email
     }
 
     /*
@@ -180,8 +171,7 @@ public class EmailTests {
         4) Distribute peer reviews in a class with students
         5) Submit a peer review as a student in a team with at least one other student
         6) Have every team in a class submit all of their peer reviews
-        7) Finalize an assignment's grades as a professor (currently the frontend of that is not complete
-            so this one won't work until the page is done and I add the API call.)
+        7) Finalize an assignment's grades as a professor
         8) Let an assignment's deadline and peer review deadline pass without all teams submitting
         9) Have a team submit a statistical outlier grade (currently the frontend for that is not complete
             so this one won't work until the page is done and I add the API call.)
