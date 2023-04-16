@@ -8,20 +8,20 @@ import axios from 'axios';
 
 function AdminInterface() {
 
-  const [courseList, setCourseList] = useState([
-    { Course: 'CSC 212 - Principles of Programming', Instructor: 'Perry', CRN: '101233', Year: '2022', Semester: 'Spring' },
-    { Course: 'CSC 480 - Software Design', Instructor: 'Danny Dimes', CRN: '231193', Year: '2023', Semester: 'Fall' },
-    { Course: 'CSC 241 - Extreme Java', Instructor: 'Danny Dimes', CRN: '235790', Year: '2024', Semester: 'Fall' },
-    { Course: 'HCI 509 - Research Methods', Instructor: 'Danny Dimes', CRN: '345356', Year: '2023', Semester: 'Winter' },
-    { Course: 'ISC 210 - Informatics', Instructor: 'Danny Dimes', CRN: '123573', Year: '2023', Semester: 'Fall' },
-    { Course: 'HCI 530 - Data Visualization', Instructor: 'Danny Dimes', CRN: '9111123', Year: '2023', Semester: 'Fall' },
-    { Course: 'CSC 431 - Microprocessors', Instructor: 'Danny Dimes', CRN: '567234', Year: '2023', Semester: 'Summer' },
-    { Course: 'ACC 201 - Principles of Accounting I', Instructor: 'Danny Dimes', CRN: '991808', Year: '2023', Semester: 'Fall' },
-    { Course: 'HCI 550 - Project I', Instructor: 'Danny Dimes', CRN: '123456', Year: '2023', Semester: 'Summer' },
-    { Course: 'HCI 551 - Project II', Instructor: 'Danny Dimes', CRN: '651322', Year: '2023', Semester: 'Fall' },
-    { Course: 'ISC 246 - Database Management', Instructor: 'Danny Dimes', CRN: '312332', Year: '2023', Semester: 'Summer' },
-    { Course: 'MUS 101 - World of Music', Instructor: 'Danny Dimes', CRN: '722987', Year: '2024', Semester: 'Winter' },
-  ]);
+  // const [courseList, setCourseList] = useState([
+  //   { Course: 'CSC 212 - Principles of Programming', Instructor: 'Perry', CRN: '101233', Year: '2022', Semester: 'Spring' },
+  //   { Course: 'CSC 480 - Software Design', Instructor: 'Danny Dimes', CRN: '231193', Year: '2023', Semester: 'Fall' },
+  //   { Course: 'CSC 241 - Extreme Java', Instructor: 'Danny Dimes', CRN: '235790', Year: '2024', Semester: 'Fall' },
+  //   { Course: 'HCI 509 - Research Methods', Instructor: 'Danny Dimes', CRN: '345356', Year: '2023', Semester: 'Winter' },
+  //   { Course: 'ISC 210 - Informatics', Instructor: 'Danny Dimes', CRN: '123573', Year: '2023', Semester: 'Fall' },
+  //   { Course: 'HCI 530 - Data Visualization', Instructor: 'Danny Dimes', CRN: '9111123', Year: '2023', Semester: 'Fall' },
+  //   { Course: 'CSC 431 - Microprocessors', Instructor: 'Danny Dimes', CRN: '567234', Year: '2023', Semester: 'Summer' },
+  //   { Course: 'ACC 201 - Principles of Accounting I', Instructor: 'Danny Dimes', CRN: '991808', Year: '2023', Semester: 'Fall' },
+  //   { Course: 'HCI 550 - Project I', Instructor: 'Danny Dimes', CRN: '123456', Year: '2023', Semester: 'Summer' },
+  //   { Course: 'HCI 551 - Project II', Instructor: 'Danny Dimes', CRN: '651322', Year: '2023', Semester: 'Fall' },
+  //   { Course: 'ISC 246 - Database Management', Instructor: 'Danny Dimes', CRN: '312332', Year: '2023', Semester: 'Summer' },
+  //   { Course: 'MUS 101 - World of Music', Instructor: 'Danny Dimes', CRN: '722987', Year: '2024', Semester: 'Winter' },
+  // ]);
 
   const [profanityList, setProfanityList] = useState([
     { profanity: 'heck', excludedCourses: [] },
@@ -53,6 +53,7 @@ function AdminInterface() {
   const getCoursesUrl = `${process.env.REACT_APP_URL}/manage/admin/views/courses`;
 
   let [userList, setUserList] = useState([]);
+  let [courseList, setCourseList] = useState([]);
 
   useEffect(() => {
     axios.get(getUsersUrl)
@@ -62,22 +63,39 @@ function AdminInterface() {
       })
       .catch(error => console.error("Uh oh"));
   }, []);
+
+  useEffect(() => {
+    axios.get(getCoursesUrl)
+      .then(response => {
+        setCourseList(response.data);
+        console.log(response.data);
+      })
+      .catch(error => console.error("Uh oh"));
+  }, []);
+
+  function refreshPage() {
+    window.location.reload(false);
+  }
   
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
-  };
+  }; 
 
   const filteredUsers = userList.filter((user) =>
-    user.first_name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    (user.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.user_id.toLowerCase().includes(searchTerm.toLowerCase())) &&
     (selectedRole === "all" || user.role === selectedRole)
   );
 
   const filteredCourses = courseList.filter((course) =>
-    (course.Course.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      course.Instructor.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      course.CRN.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    (selectedYear === "all" || course.Year === selectedYear) &&
-    (selectedSemester === "all" || course.Semester === selectedSemester)
+    (course.courseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.abbreviation.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.courseSection.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.professorID.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.crn.toLowerCase().includes(searchTerm.toLowerCase())) &&
+    (selectedYear === "all" || course.year === selectedYear) &&
+    (selectedSemester === "all" || course.semester === selectedSemester)
   );
 
   const filteredProfanities = profanityList.filter((profanity) =>
@@ -102,26 +120,32 @@ function AdminInterface() {
 
   const [deleteName, setDeleteName] = useState("");
 
-  const getDeleteUser = (name) => {
-    setDeleteName(name);
+  const getDeleteUser = (firstName, lastName) => {
+    setDeleteName(firstName + " " + lastName);
   }
 
   const [editName, setEditName] = useState("");
 
-  const getEditUser = (name) => {
-    setEditName(name);
+  const getEditUser = (firstName, lastName) => {
+    setEditName(firstName + " " + lastName);
   }
 
-  const [deleteCourse, setDeleteCourse] = useState("");
+  const [deleteCourseName, setDeleteCourseName] = useState("");
 
   const getDeleteCourse = (course) => {
-    setDeleteCourse(course);
+    setDeleteCourseName(course);
   }
 
   const [currentRole, setCurrentRole] = useState("");
 
   const getCurrentRole = (role) => {
     setCurrentRole(role);
+  }
+
+  const [courseID, setCourseID] = useState("");
+
+  const getCourseID= (courseid) => {
+    setCourseID(courseid);
   }
 
   const [currentID, setCurrentID] = useState("");
@@ -143,6 +167,7 @@ function AdminInterface() {
         .post(url)
         .then((res) => {
           alert('Succesfully added user');
+          refreshPage();
           console.log(res.data);
         })
         .catch((e) => {
@@ -160,6 +185,7 @@ function AdminInterface() {
         .post(url)
         .then((res) => {
           alert('Succesfully added user');
+          refreshPage();
           console.log(res.data);
         })
         .catch((e) => {
@@ -171,12 +197,13 @@ function AdminInterface() {
       console.log(userLastName);
       console.log(url);
     }
-    else if (role === "teacher") {
+    else if (role === "professor") {
       const url = `${process.env.REACT_APP_URL}/manage/admin/add/professor/${userID}/${userFirstName}/${userLastName}`;
       await axios
         .post(url)
         .then((res) => {
           alert('Succesfully added user');
+          refreshPage();
           console.log(res.data);
         })
         .catch((e) => {
@@ -216,6 +243,7 @@ function AdminInterface() {
         .post(url)
         .then((res) => {
           alert('Succesfully deleted user');
+          refreshPage();
           console.log(res.data);
         })
         .catch((e) => {
@@ -231,6 +259,7 @@ function AdminInterface() {
         .post(url)
         .then((res) => {
           alert('Succesfully deleted user');
+          refreshPage();
           console.log(res.data);
         })
         .catch((e) => {
@@ -240,12 +269,13 @@ function AdminInterface() {
       console.log(userID);
       console.log(url);
     }
-    else if (role === "teacher") {
+    else if (role === "professor") {
       const url = `${process.env.REACT_APP_URL}/manage/admin/delete/professor/${userID}`;
       await axios
         .post(url)
         .then((res) => {
           alert('Succesfully deleted user');
+          refreshPage();
           console.log(res.data);
         })
         .catch((e) => {
@@ -261,13 +291,30 @@ function AdminInterface() {
     setSelectedUserRole('');
   }
 
+  const deleteCourse = async (courseID) => {
+      const url = `${process.env.REACT_APP_URL}/manage/professor/courses/${courseID}/delete`;
+      await axios
+        .post(url)
+        .then((res) => {
+          alert('Succesfully deleted course');
+          refreshPage();
+          console.log(res.data);
+        })
+        .catch((e) => {
+          console.error(e);
+          alert('Error deleting course');
+        });
+      console.log(courseID);
+  }
+
   const editUser = async (userID, role, newRole) => {
-    if (role === "admin" && newRole === "teacher") {
+    if (role === "admin" && newRole === "professor") {
       const url = `${process.env.REACT_APP_URL}/manage/admin/roles/demote/adminToProfessor/${userID}`;
       await axios
         .post(url)
         .then((res) => {
           alert('Succesfully edited user');
+          refreshPage();
           console.log(res.data);
         })
         .catch((e) => {
@@ -277,12 +324,13 @@ function AdminInterface() {
       console.log(userID);
       console.log(url);
     }
-    else if (role === "teacher" && newRole === "student") {
+    else if (role === "professor" && newRole === "student") {
       const url = `${process.env.REACT_APP_URL}/manage/admin/roles/demote/professorToStudent/${userID}`;
       await axios
         .post(url)
         .then((res) => {
           alert('Succesfully edited user');
+          refreshPage();
           console.log(res.data);
         })
         .catch((e) => {
@@ -292,12 +340,13 @@ function AdminInterface() {
       console.log(userID);
       console.log(url);
     }
-    else if (role === "teacher" && newRole === "admin") {
+    else if (role === "professor" && newRole === "admin") {
       const url = `${process.env.REACT_APP_URL}/manage/admin/roles/promote/professorToAdmin/${userID}`;
       await axios
         .post(url)
         .then((res) => {
           alert('Succesfully edited user');
+          refreshPage();
           console.log(res.data);
         })
         .catch((e) => {
@@ -307,12 +356,13 @@ function AdminInterface() {
       console.log(userID);
       console.log(url);
     }
-    else if (role === "student" && newRole === "teacher") {
+    else if (role === "student" && newRole === "professor") {
       const url = `${process.env.REACT_APP_URL}/manage/admin/roles/promote/studentToProfessor/${userID}`;
       await axios
         .post(url)
         .then((res) => {
           alert('Succesfully edited user');
+          refreshPage();
           console.log(res.data);
         })
         .catch((e) => {
@@ -328,12 +378,13 @@ function AdminInterface() {
     setSelectedUserRole('');
   }
 
-  // axios.get(getCoursesUrl)
-  //   .then(response2 => console.log(response2.data))
-  //   .catch(error => console.error("Heck"));
+  const uniqueYears = courseList
+        .filter((course, index, arr) => arr.findIndex(u => u.year === course.year) === index)
+        .map(course => course.year);
 
   return (
     <><Modal open={openModal} courseArr={selectedCourse} onClose={() => setOpenModal(false)} />
+    {/* Need to replace the following div with navbar */}
       <div className='admin-container'>
         <div className='sidebar'>
           <h1>Admin</h1>
@@ -363,7 +414,7 @@ function AdminInterface() {
                 <select name="role" id="role" onChange={(e) => setSelectedRole(e.target.value)}>
                   <option value="all">All</option>
                   <option value="admin">Admin</option>
-                  <option value="teacher">Teacher</option>
+                  <option value="professor">Professor</option>
                   <option value="student">Student</option>
                 </select>
               </div>
@@ -404,7 +455,7 @@ function AdminInterface() {
                           <select name="role" id="add-user-role" defaultValue="Select Role" onChange={(e) => setSelectedUserRole(e.target.value)}>
                             <option disabled={true} value="Select Role">--Select Role--</option>
                             <option value="admin">Admin</option>
-                            <option value="teacher">Teacher</option>
+                            <option value="professor">Professor</option>
                             <option value="student">Student</option>
                           </select>
                         </div>
@@ -429,15 +480,18 @@ function AdminInterface() {
                   <div className='all-user-items'>
                     {filteredUsers.map((user) => (
                       <div key={user.id} className='user-item'>
-                        <div>{user.first_name}</div>
-                        <div>{user.netID}</div>
+                        <div className='name-list'>
+                          <div>{user.first_name}</div>
+                          <div>{user.last_name}</div>
+                        </div>
+                        <div>{user.user_id}</div>
                         <div>{user.role}</div>
                         <div>
                           <div className='edit-container'>
                             <button className='edit-button' onClick={() => { 
                               setShowEditModal(true); 
-                              getEditUser(user.first_name); 
-                              getCurrentID(user.netID); 
+                              getEditUser(user.first_name, user.last_name); 
+                              getCurrentID(user.user_id); 
                               getCurrentRole(user.role) }}>
                               <img className='edit-icon' src={editIcon} />
                             </button>
@@ -449,10 +503,10 @@ function AdminInterface() {
                                   <form>
                                     <div className="add-user-dropdown">
                                       <label for="role-filter">Role</label>
-                                      <select name="role" id="add-user-role" defaultValue="Select Role" onChange>
-                                        <option disabled={true} value="Select Role" onChange={(e) => setEditRole(e.target.value)}>--Select Role--</option>
+                                      <select name="role" id="add-user-role" defaultValue="Select Role" onChange={(e) => setEditRole(e.target.value)}>
+                                        <option disabled={true} value="Select Role">--Select Role--</option>
                                         <option value="admin">Admin</option>
-                                        <option value="teacher">Teacher</option>
+                                        <option value="professor">Professor</option>
                                         <option value="student">Student</option>
                                       </select>
                                     </div>
@@ -467,7 +521,12 @@ function AdminInterface() {
 
                           </div>
                           <div className='delete-container'>
-                            <button className='delete-button' onClick={() => { setShowDeleteModal(true); getDeleteUser(user.firsr_name) }}>X</button>
+                            <button className='delete-button' onClick={() => { 
+                              setShowDeleteModal(true); 
+                              getDeleteUser(user.first_name, user.last_name); 
+                              getCurrentID(user.user_id); 
+                              getCurrentRole(user.role) }}>
+                                X</button>
                             {showDeleteModal && (
                               <div className="delete-modal">
                                 <div className="modal-content">
@@ -476,7 +535,7 @@ function AdminInterface() {
                                     <label className='confirm-remove'>Are you sure you want to remove {deleteName}?</label>
                                   </form>
                                   <div className='remove-user-buttons'>
-                                    <button className='remove-user-popup-button' onClick={() => { setShowDeleteModal(false); }}>Yes</button>
+                                    <button className='remove-user-popup-button' onClick={() => { setShowDeleteModal(false); deleteUser(currentID, currentRole)}}>Yes</button>
                                     <button className='cancel-user-delete-button' onClick={() => setShowDeleteModal(false)}>No</button>
                                   </div>
                                 </div>
@@ -507,19 +566,19 @@ function AdminInterface() {
                 <label for="role-filter">Year</label>
                 <select name="role" id="role" onChange={(e) => setSelectedYear(e.target.value)}>
                   <option value="all">All</option>
-                  <option value="2022">2022</option>
-                  <option value="2023">2023</option>
-                  <option value="2024">2024</option>
+                  {uniqueYears.map(item => {
+                    return (<option key={item} value={item}>{item}</option>);
+                  })}
                 </select>
               </div>
               <div className="dropdown-semester">
                 <label for="role-filter">Semester</label>
                 <select name="role" id="role" onChange={(e) => setSelectedSemester(e.target.value)}>
                   <option value="all">All</option>
-                  <option value="Spring">Spring</option>
-                  <option value="Summer">Summer</option>
-                  <option value="Fall">Fall</option>
-                  <option value="Winter">Winter</option>
+                  <option value="spring">Spring</option>
+                  <option value="summer">Summer</option>
+                  <option value="fall">Fall</option>
+                  <option value="winter">Winter</option>
                 </select>
               </div>
             </div><div>
@@ -535,23 +594,32 @@ function AdminInterface() {
                   <div className='all-user-items'>
                     {filteredCourses.map((course) => (
                       <div key={course.id} className='user-item'>
-                        <div className='courses-list'>{course.Course}</div>
-                        <div>{course.Instructor}</div>
-                        <div>{course.CRN}</div>
-                        <div>{course.Year}</div>
-                        <div>{course.Semester}</div>
+                        <div className='courses-list'>
+                          <div className='abbreviation-section-container'>
+                            <div>{course.abbreviation}</div>
+                            <div>{course.courseSection} - </div>
+                          </div>
+                          <div>{course.courseName}</div>
+                        </div>
+                        <div>{course.professorID}</div>
+                        <div>{course.crn}</div>
+                        <div>{course.year}</div>
+                        <div>{course.semester}</div>
                         <div>
                           <div className='delete-container'>
-                            <button className='delete-button' onClick={() => { setShowDeleteCourseModal(true); getDeleteCourse(course.CRN) }}>X</button>
+                            <button className='delete-button' onClick={() => { 
+                              setShowDeleteCourseModal(true); 
+                              getDeleteCourse(course.crn);
+                              getCourseID(course.courseID) }}>X</button>
                             {showDeleteCourseModal && (
                               <div className="delete-modal">
                                 <div className="modal-content">
                                   <h2 className='modal-head'>Confirm</h2>
                                   <form>
-                                    <label className='confirm-remove'>Are you sure you want to remove {deleteCourse}?</label>
+                                    <label className='confirm-remove'>Are you sure you want to remove {deleteCourseName}?</label>
                                   </form>
                                   <div className='remove-user-buttons'>
-                                    <button className='remove-user-popup-button' onClick={() => setShowDeleteCourseModal(false)}>Yes</button>
+                                    <button className='remove-user-popup-button' onClick={() => { setShowDeleteCourseModal(false); deleteCourse(courseID) }}>Yes</button>
                                     <button className='cancel-user-delete-button' onClick={() => setShowDeleteCourseModal(false)}>No</button>
                                   </div>
                                 </div>

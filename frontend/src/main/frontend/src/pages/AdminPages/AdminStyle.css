@@ -330,6 +330,15 @@ input[type='text'] {
   padding-right: 40px;
 }
 
+.abbreviation-section-container{
+  display: flex;
+}
+
+.name-list{
+  display: flex;
+  gap: 6px;
+}
+
 .overlay {
   position: fixed;
   width: 100%;
@@ -447,7 +456,7 @@ input[type='text'] {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.02);
+  background-color: rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -460,7 +469,7 @@ input[type='text'] {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.02);
+  background-color: rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: center;
   align-items: center;
