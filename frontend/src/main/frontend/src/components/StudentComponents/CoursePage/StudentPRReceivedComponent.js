@@ -7,7 +7,7 @@ import AssignmentTile from '../../AssignmentTile';
 import uuid from 'react-uuid';
 import noData from '../../../assets/no-data.png';
 import AssBarComponent from "../../AssBarComponent";
-import PRReceivedTile from "../../styles/PRReceivedTile";
+import PRReceivedTile from "../../PRReceivedTile";
 
 const StudentToDoComponent = () => {
   const dispatch = useDispatch();
