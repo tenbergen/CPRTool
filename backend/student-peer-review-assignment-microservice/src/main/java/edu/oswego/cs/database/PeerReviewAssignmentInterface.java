@@ -32,12 +32,10 @@ public class PeerReviewAssignmentInterface {
         DatabaseManager databaseManager = new DatabaseManager();
         try {
             MongoDatabase teamDB = databaseManager.getTeamDB();
-            MongoDatabase professorDB = databaseManager.getProfessorDB();
             assignmentDB = databaseManager.getAssignmentDB();
             teamCollection = teamDB.getCollection("teams");
             assignmentCollection = assignmentDB.getCollection("assignments");
             submissionsCollection = assignmentDB.getCollection("submissions");
-            professorCollection = professorDB.getCollection("professors");
         } catch (WebApplicationException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
         }
@@ -1248,11 +1246,13 @@ public class PeerReviewAssignmentInterface {
         iterable.into(results);
 
 
+
         Document allPotentialOutliers = new Document();
 
 
+
         //for each assignment that is peer-reviewed? or also just regular assignments
-        for (Document assignment : results) {
+        for(Document assignment : results ) {
 
 
             //error check to see if the assignment is completed(all grades have been finished for each respective assignment)
@@ -1329,6 +1329,7 @@ public class PeerReviewAssignmentInterface {
                     matrixOfGrades.append(teamForThisAssignment, gradesToOutliers);
 
 
+
                 }
                 allPotentialOutliers.append(assignment.get("assignment_id", Integer.class).toString(), matrixOfGrades);
 
@@ -1341,14 +1342,14 @@ public class PeerReviewAssignmentInterface {
         HashMap<String, HashMap<String, Integer>> teamsToCountOfReviews = new HashMap<>();
 
 
-        for (String key : allPotentialOutliers.keySet()) {
+        for(String key : allPotentialOutliers.keySet()){
             Object val = allPotentialOutliers.get(key);
 
             Document keys = (Document) val;
 
             HashMap<String, Integer> temp = new HashMap<>();
             HashMap<String, Integer> otherTemp = new HashMap<>();
-            for (String values : keys.keySet()) {
+            for(String values : keys.keySet()){
                 temp.put(values, 0);
                 otherTemp.put(values, 0);
             }
@@ -1358,9 +1359,10 @@ public class PeerReviewAssignmentInterface {
         }
 
 
+
         //again i know it is ridiculous for this many loops but the way the JSON doc created earlier is formatted
         //is is necessary to loop over all the information to grab the right information
-        for (String keys : allPotentialOutliers.keySet()) {
+        for(String keys : allPotentialOutliers.keySet()) {
 
             Object allMatrices = allPotentialOutliers.get(keys);
 
@@ -1400,7 +1402,8 @@ public class PeerReviewAssignmentInterface {
         }
 
 
-        for (String assignmentNumber : teamsToGradesGiven.keySet()) {
+
+        for(String assignmentNumber : teamsToGradesGiven.keySet()) {
             //find the location of each respective doc and then add the averages to each respectove assignment
             HashMap<String, Integer> temp = new HashMap<>();
             temp = teamsToGradesGiven.get(assignmentNumber);
@@ -1423,8 +1426,16 @@ public class PeerReviewAssignmentInterface {
             Document holderr = (Document) holder;
 
             holderr.append("Average Grade Given", gradesHolder);
-        }
+
+    /**
+     * This is a method to be used for testing purposes, it will simplify writiing the test cases
+     * while keeping the same functionality as all other isOutlier methods
+     * */
+    public boolean isOutlier(int numberToCompare, int Q1, int Q3, int IQR){
+
+
         return allPotentialOutliers;
+
     }
 
 
