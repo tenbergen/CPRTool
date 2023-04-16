@@ -385,11 +385,11 @@ function AdminInterface() {
   return (
     <><Modal open={openModal} courseArr={selectedCourse} onClose={() => setOpenModal(false)} />
     {/* Need to replace the following div with navbar */}
-      <div className='admin-container'>
-        <div className='sidebar'>
+      <div className='admin-page-container'>
+        <div className='admin-sidebar'>
           <h1>Admin</h1>
         </div>
-        <div className='user-roles'>
+        <div className='admin-user-roles'>
           <h2>Admin</h2>
           <div className='admin-tabs'>
             <button className='user-roles-tab' onClick={() => changePage('roles')} style={{ backgroundColor: page === "roles" ? "#4a7dfc" : "#E6E6E6", color: page === "roles" ? "white" : "black" }}>User Roles</button>
