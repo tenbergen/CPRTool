@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.List;
 
@@ -58,40 +59,57 @@ public class DeadlineTracker{
             init();
         }
         AssignmentInterface ai = new AssignmentInterface();
-        for (Document a : assignments) {
-            if (ai.doesAssignmentExist(a.getString("course_id"), a.getInteger("assignment_id"))) {
-                //assignment exists
-                if (new SimpleDateFormat("yyyy-MM-dd").parse(a.getString("due_date"), new ParsePosition(0)).getTime()
-                        < new Date().getTime()) {
-                    //due date has passed
-                    try {
-                        new EmailService().assignmentDeadlinePassed(a.getString("course_id"), a.getInteger("assignment_id"));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+        Document current = null;
+        boolean reviewing = false;
+        boolean searching = true;
+        while(searching) { //while loop and try/catch allow for easy for loop but we can still avoid concurrent exceptions.
+            try {
+                for (Document a : assignments) {
+                    current = a;
+                    if (ai.doesAssignmentExist(a.getString("course_id"), a.getInteger("assignment_id"))) {
+                        //assignment exists
+                        if (new SimpleDateFormat("yyyy-MM-dd").parse(a.getString("due_date"), new ParsePosition(0)).getTime()
+                                < new Date().getTime()) {
+                            //due date has passed
+                            try {
+                                new EmailService().assignmentDeadlinePassed(a.getString("course_id"), a.getInteger("assignment_id"));
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                            assignments.remove(a);
+                        }
+                    } else {
+                        //assignment doesn't exist
+                        assignments.remove(a);
                     }
-                    assignments.remove(a);
                 }
-            } else {
-                //assignment doesn't exist
-                assignments.remove(a);
-            }
-        }
-        for (Document r : reviews) {
-            if (ai.doesAssignmentExist(r.getString("course_id"), r.getInteger("assignment_id"))) {
-                //assignment exists
-                if (new SimpleDateFormat("yyyy-MM-dd").parse(r.getString("peer_review_due_date"), new ParsePosition(0)).getTime()
-                        < new Date().getTime()) {
-                    //due date has passed
-                    try {
-                        new EmailService().peerReviewDeadlinePassed(r.getString("course_id"), r.getInteger("assignment_id"));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+                reviewing = true;
+                for (Document r : reviews) {
+                    current = r;
+                    if (ai.doesAssignmentExist(r.getString("course_id"), r.getInteger("assignment_id"))) {
+                        //assignment exists
+                        if (new SimpleDateFormat("yyyy-MM-dd").parse(r.getString("peer_review_due_date"), new ParsePosition(0)).getTime()
+                                < new Date().getTime()) {
+                            //due date has passed
+                            try {
+                                new EmailService().peerReviewDeadlinePassed(r.getString("course_id"), r.getInteger("assignment_id"));
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                            reviews.remove(r);
+                        }
+                    } else {
+                        //assignment doesn't exist
+                        reviews.remove(r);
                     }
-                    reviews.remove(r);
                 }
-            } else {
-                //assignment doesn't exist
-                reviews.remove(r);
+                searching = false;
+            } catch (ConcurrentModificationException e) {
+                if (reviewing) {
+                    reviews.remove(current);
+                } else {
+                    assignments.remove(current);
+                }
             }
         }
     }
