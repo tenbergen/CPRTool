@@ -1,4 +1,4 @@
-package edu.oswego.cs.daos;
+package edu.oswego.cs.database.daos;
 
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
 
