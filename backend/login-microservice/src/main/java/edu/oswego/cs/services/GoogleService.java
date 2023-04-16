@@ -28,6 +28,7 @@ public class GoogleService {
     }
 
     protected GoogleIdToken verifyToken(String token) {
+        System.out.println(System.getenv("CLIENT_ID"));
         try {
             GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier
                     .Builder(new NetHttpTransport(), new GsonFactory())
