@@ -1,21 +1,20 @@
 import { useEffect, useState } from 'react'
 import './styles/ProfessorCourseStyle.css'
-import SidebarComponent from '../../components/SidebarComponent'
 import ProfessorRosterComponent from '../../components/ProfessorComponents/CoursesPage/ProfessorRosterComponent'
 import { useParams } from 'react-router-dom'
 import ProfessorEditCourseComponent
   from '../../components/ProfessorComponents/CoursesPage/ProfessorEditCourseComponent'
 import ProfessorAssignmentComponent
   from '../../components/ProfessorComponents/CoursesPage/ProfessorAssignmentComponent'
+import ProfessorProfanitySettingsComponent
+  from '../../components/ProfessorComponents/CoursesPage/ProfessorProfanitySettingsComponent'
 import { useDispatch } from 'react-redux'
 import { getCourseDetailsAsync } from '../../redux/features/courseSlice'
-import CourseBarComponent from '../../components/CourseBarComponent'
 import ProfessorTeamComponent from '../../components/ProfessorComponents/CoursesPage/ProfessorTeamComponent'
 import Loader from '../../components/LoaderComponenets/Loader'
-import uuid from 'react-uuid'
 import NavigationContainerComponent from '../../components/NavigationComponents/NavigationContainerComponent'
 import HeaderBar from '../../components/HeaderBar/HeaderBar'
-import { useLocation } from 'react-router-dom'
+import Breadcrumbs from '../../components/Breadcrumbs'
 
 const CourseComponent = ({ active, component, onClick }) => {
   return (
@@ -60,11 +59,13 @@ function ProfessorCoursePage ({ chosen }) {
           <div className="pdp-container">
             <NavigationContainerComponent/>
             <div className="pcp-components">
+              <Breadcrumbs/>
               <div>
                 {chosenComponent === 'Assignments' && <ProfessorAssignmentComponent/>}
                 {chosenComponent === 'Roster' && <ProfessorRosterComponent/>}
                 {chosenComponent === 'Teams' && <ProfessorTeamComponent/>}
                 {chosenComponent === 'Manage' && <ProfessorEditCourseComponent/>}
+                {chosenComponent === 'Profanity' && <ProfessorProfanitySettingsComponent/>}
               </div>
             </div>
           </div>
