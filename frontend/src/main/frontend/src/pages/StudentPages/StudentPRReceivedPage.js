@@ -16,7 +16,7 @@ import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import StudentPRReceivedComponent from "../../components/StudentComponents/CoursePage/StudentPRReceivedComponent";
 import {getAssignmentDetailsAsync} from "../../redux/features/assignmentSlice";
 
-const CourseComponent = ({ active, component, onClick }) => {
+const PeerReviewComponent = ({ active, component, onClick }) => {
   return (
     <p
       onClick={onClick}
@@ -31,7 +31,7 @@ const CourseComponent = ({ active, component, onClick }) => {
   );
 };
 
-function StudentCoursePage({chosen}) {
+function StudentPeerReviewPage({chosen}) {
   const dispatch = useDispatch();
   const location = useLocation();
   const { courseId } = useParams();
