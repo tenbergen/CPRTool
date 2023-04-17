@@ -61,7 +61,7 @@ function ProfessorProfanitySettingsComponent () {
 
   const handleSubmit = async () => {
     //remove any extraneous new line characters while turning the input back into an array
-    const blockedWordsArray = textboxInput.profanityText.split('\n').filter((str) => str !== '')
+    const blockedWordsArray = textboxInput.profanityText.split('\n').filter((str, index, arr) => str !== '' && arr.indexOf(str) === index)
     //printing them out to the console just so you can see the array that gets made
     console.log(blockedWordsArray)
   }

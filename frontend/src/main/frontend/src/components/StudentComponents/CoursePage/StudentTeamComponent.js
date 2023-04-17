@@ -12,24 +12,25 @@ const StudentTeamComponent = () => {
   const getTeamsUrl = `${process.env.REACT_APP_URL}/teams/team/get/all/${courseId}`
   const [teams, setTeams] = useState([])
   const { lakerId } = useSelector((state) => state.auth)
-  const [showModal, setShow] = useState(false);
+  const [showModal, setShow] = useState(false)
 
   const Modal = (teamId) => {
     return (
-      <div id='modal'>
-        <div id='modalContent'>
-        <span id='deleteSpan'>
+      <div id="modal">
+        <div id="modalContent">
+        <span id="deleteSpan">
           Are you sure you want to delete this course?
         </span>
 
-          <div id='deleteButtons'>
-            <button id='ecc-delete-button-delete' class='inter-16-medium-red' onClick={joinTeam(teamId)}>Delete</button>
-            <button id='ecc-delete-button-cancel' class='inter-16-medium-white' onClick={() => setShow(false)}>Cancel</button>
+          <div id="deleteButtons">
+            <button id="ecc-delete-button-delete" class="inter-16-medium-red" onClick={joinTeam(teamId)}>Delete</button>
+            <button id="ecc-delete-button-cancel" class="inter-16-medium-white" onClick={() => setShow(false)}>Cancel
+            </button>
           </div>
         </div>
       </div>
-    );
-  };
+    )
+  }
 
   useEffect(() => {
     async function fetchData () {
