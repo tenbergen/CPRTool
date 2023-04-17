@@ -16,6 +16,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
+
+//reset
 @Path("professor")
 @DenyAll
 public class CourseManagerResource {
