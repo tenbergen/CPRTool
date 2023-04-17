@@ -8,12 +8,9 @@ import Table from './Table';
 import { LinearScale, Chart } from "chart.js";
 import { CategoryScale } from "chart.js";
 import { LineElement, PointElement } from "chart.js";
-<<<<<<< HEAD
 import axios from 'axios';
-=======
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 import HeaderBar from "../../components/HeaderBar/HeaderBar";
->>>>>>> GUI
 
 Chart.register(LineElement);
 Chart.register(PointElement);
