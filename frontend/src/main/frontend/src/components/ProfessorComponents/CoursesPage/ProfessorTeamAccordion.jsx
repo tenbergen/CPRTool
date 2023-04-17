@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import "../../styles/TeamManager.css";
 import uuid from "react-uuid";
 import React, {useRef,useEffect } from 'react';
-import Popup from "../../GlobalComponents/PopUp";
 
 const ProfessorTeamAccordion = ({ team, teams, setTeams }) => {
   const { currentCourse } = useSelector((state) => state.courses);
@@ -115,10 +114,6 @@ const ProfessorTeamAccordion = ({ team, teams, setTeams }) => {
               {/*{isActive.includes(team) ? "-" : "+"}*/}
               <div className="accordionTeamTitle inter-24-bold">{team.team_id}</div>
             </div>
-            <div className= "teamMembersItem">
-              <span style={{ fontSize: '22px', fontWeight: 'bold' }}> {members.length}/4 </span>
-              <div style={{ fontSize: '12px' }}>Team Members</div>
-            </div>
             <div>
               <button  className="modify-button" >
                 Modify
@@ -129,10 +124,29 @@ const ProfessorTeamAccordion = ({ team, teams, setTeams }) => {
         </div>
         {isActive.includes(team) && (
             <div className="accordionContent">
-              <div className="buttonWrapper">
-
-
-                <Popup trigger={<button onClick={handleSetAdd} alt="add-button" className={"add-button"}> Add +</button>} content={<div>
+              <div>
+                <button onClick={handleSetAdd} alt="plus-button" className={"add-button"}> Add</button>
+                <button onClick={() => handleDeleteTeam(team.team_id)} className="remove-button" >
+                  Remove
+                </button>
+              </div>
+              {members.map(
+                  (name) =>
+                      name && (
+                          <div key={uuid()} className="memberItem">
+                            <div className="memberWrapper">
+                              <div className="teamMember inter-20-medium">{name}</div>
+                              <span
+                                  onClick={() => handleRemoveStudent(name)}
+                                  className="crossMarkTeam"
+                              >
+                      &#10060;
+                    </span>
+                            </div>
+                          </div>
+                      )
+              )}
+              {isAdd.includes(team) ? (
                   <div className="teamMember">
                     <label className='inter-20-medium'>Student Laker ID:</label>
                     <input
@@ -147,41 +161,8 @@ const ProfessorTeamAccordion = ({ team, teams, setTeams }) => {
                       Add
                     </button>
                   </div>
-                </div>} />
-
-                <Popup
-                    trigger={<button className="remove-button" >
-                      Remove -
-                    </button>}
-                    content={
-                  <div className="removePopUp">
-                    <span style={{ display: 'block', textAlign: 'center', fontWeight: 'bold', fontSize: '30px' }}>Confirm</span>
-                    <span> Are you sure you want to delete team "{team.team_id}" from this Course?</span>
-
-                    <div style={{ textAlign: 'center' }}>
-                      <button onClick={() => handleDeleteTeam(team.team_id)} className="remove-button">
-                        Yes
-                      </button>
-                    </div>
-                  </div>}
-                />
-
-              </div>
-              {members.map(
-                  (name, index) =>
-                      name && (
-                          <div key={uuid()} className={`memberItem ${index % 2 === 0 ? 'even' : 'odd'}`}>
-                            <div className="memberWrapper">
-                              <div className="teamMember inter-20-medium">{name}</div>
-                              <span
-                                  onClick={() => handleRemoveStudent(name)}
-                                  className="crossMarkTeam"
-                              >
-                      &#10060;
-                    </span>
-                            </div>
-                          </div>
-                      )
+              ) : (
+                  <div></div>
               )}
             </div>
         )}
