@@ -172,8 +172,7 @@ function AdminInterface() {
           console.log(res.data);
         })
         .catch((e) => {
-          console.error(e);
-          alert('Error adding user');
+          alert(e.message);
         });
       console.log(userID);
       console.log(userFirstName);
@@ -185,13 +184,12 @@ function AdminInterface() {
       await axios
         .post(url)
         .then((res) => {
-          alert('Succesfully added user');
+          alert('Successfully added user');
           refreshPage();
           console.log(res.data);
         })
         .catch((e) => {
-          console.error(e);
-          alert('Error adding user');
+          alert(e.message);
         });
       console.log(userID);
       console.log(userFirstName);
@@ -208,8 +206,7 @@ function AdminInterface() {
           console.log(res.data);
         })
         .catch((e) => {
-          console.error(e);
-          alert('Error adding user');
+          alert(e.message);
         });
       console.log(userID);
       console.log(userFirstName);
@@ -248,8 +245,7 @@ function AdminInterface() {
           console.log(res.data);
         })
         .catch((e) => {
-          console.error(e);
-          alert('Error deleting user');
+          alert(e.message);
         });
       console.log(userID);
       console.log(url);
@@ -264,8 +260,7 @@ function AdminInterface() {
           console.log(res.data);
         })
         .catch((e) => {
-          console.error(e);
-          alert('Error deleting user');
+          alert(e.message);
         });
       console.log(userID);
       console.log(url);
@@ -280,8 +275,7 @@ function AdminInterface() {
           console.log(res.data);
         })
         .catch((e) => {
-          console.error(e);
-          alert('Error deleting user');
+          alert(e.message);
         });
       console.log(userID);
       console.log(url);
@@ -293,7 +287,7 @@ function AdminInterface() {
   }
 
   const deleteCourse = async (courseID) => {
-      const url = `${process.env.REACT_APP_URL}/manage/professor/courses/${courseID}/delete`;
+      const url = `${process.env.REACT_APP_URL}/manage/admin/delete/course/${courseID}`;
       await axios
         .delete(url)
         .then((res) => {
@@ -302,8 +296,7 @@ function AdminInterface() {
           console.log(res.data);
         })
         .catch((e) => {
-          console.error(e);
-          alert('Error deleting course');
+          alert(e.message);
         });
       console.log(courseID);
   }
@@ -319,8 +312,7 @@ function AdminInterface() {
           console.log(res.data);
         })
         .catch((e) => {
-          console.error(e);
-          alert('Error editing user');
+          alert(e.message);
         });
       console.log(userID);
       console.log(url);
@@ -335,8 +327,7 @@ function AdminInterface() {
           console.log(res.data);
         })
         .catch((e) => {
-          console.error(e);
-          alert('Error editing user');
+          alert(e.message);
         });
       console.log(userID);
       console.log(url);
@@ -351,8 +342,7 @@ function AdminInterface() {
           console.log(res.data);
         })
         .catch((e) => {
-          console.error(e);
-          alert('Error editing user');
+          alert(e.message);
         });
       console.log(userID);
       console.log(url);
@@ -367,8 +357,7 @@ function AdminInterface() {
           console.log(res.data);
         })
         .catch((e) => {
-          console.error(e);
-          alert('Error editing user');
+          alert(e.message);
         });
       console.log(userID);
       console.log(url);
