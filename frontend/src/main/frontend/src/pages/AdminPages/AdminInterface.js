@@ -61,7 +61,7 @@ function AdminInterface() {
         setUserList(response.data);
         console.log(response.data);
       })
-      .catch(error => console.error("Uh oh"));
+      .catch(error => console.error(error.message));
   }, []);
 
   useEffect(() => {
@@ -70,7 +70,7 @@ function AdminInterface() {
         setCourseList(response.data);
         console.log(response.data);
       })
-      .catch(error => console.error("Uh oh"));
+      .catch(error => console.error(error.message));
   }, []);
 
   function refreshPage() {
