@@ -289,30 +289,17 @@ public class CourseInterface {
         }
     }
 
-<<<<<<< HEAD
-    public void updateBlockedWordsForCourse(String crn, String payload) {
-        Document courseDocument = courseCollection.find(eq("crn", crn)).first();
-=======
     public void updateBlockedWordsForCourse(String course_id, String payload) {
         Document courseDocument = courseCollection.find(eq("course_id", course_id)).first();
->>>>>>> GUI
         if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "This course does not exist.");
         Gson gson = new Gson();
         List<String> blockedWords = gson.fromJson(payload, List.class);
         courseDocument.put("blocked_words", blockedWords);
-<<<<<<< HEAD
-        courseCollection.updateOne(eq("crn", crn), set("blocked_words", blockedWords));
-    }
-
-    public String getBlockedWordsForCourse(String crn){
-        Document courseDocument = courseCollection.find(eq("crn", crn)).first();
-=======
         courseCollection.updateOne(eq("course_id", course_id), set("blocked_words", blockedWords));
     }
 
     public String getBlockedWordsForCourse(String course_id){
         Document courseDocument = courseCollection.find(eq("course_id", course_id)).first();
->>>>>>> GUI
         if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "This course does not exist.");
         Gson gson = new Gson();
         List<String> blockedWords = courseDocument.getList("blocked_words", String.class);
