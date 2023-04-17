@@ -7,7 +7,8 @@ import SubmittedAssBarComponent from '../../components/SubmittedAssBarComponent'
 import { getSubmittedAssignmentDetailsAsync } from '../../redux/features/submittedAssignmentSlice';
 import uuid from 'react-uuid';
 import {base64StringToBlob} from "blob-util";
-import ProfessorHeaderBar from "../../components/ProfessorComponents/ProfessorHeaderBar";
+import HeaderBar from "../../components/HeaderBar/HeaderBar";
+import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 function ProfessorSubmittedAssignmentPage() {
   const dispatch = useDispatch();
   const { currentSubmittedAssignment, currentSubmittedAssignmentLoaded } =
@@ -89,13 +90,12 @@ function ProfessorSubmittedAssignmentPage() {
 
   return (
     <div className="page-container">
-      <ProfessorHeaderBar/>
-      <div className='scp-parent'>
-        <div className='scp-container'>
-          <SubmittedAssBarComponent />
-          <div className='scp-component'>
-            <div>
-              {currentSubmittedAssignmentLoaded ? (
+      <HeaderBar/>
+      <div className='scp-container'>
+        <NavigationContainerComponent/>
+        <div className='scp-component'>
+          <div>
+            {currentSubmittedAssignmentLoaded ? (
                 <div className='sac-parent'>
                   <h2 className='assignment-name'>
                     {currentSubmittedAssignment.assignment_name}
@@ -120,10 +120,10 @@ function ProfessorSubmittedAssignmentPage() {
                       <div className='ap-assignment-files'>
                         <span className='sac-title'> Rubric: </span>
                         <span
-                          className='sac-filename'
-                          onClick={() =>
-                            onRubricFileClick(currentSubmittedAssignment.rubric_name)
-                          }
+                            className='sac-filename'
+                            onClick={() =>
+                                onRubricFileClick(currentSubmittedAssignment.rubric_name)
+                            }
                         >
                           {currentSubmittedAssignment.rubric_name}
                         </span>
@@ -132,10 +132,10 @@ function ProfessorSubmittedAssignmentPage() {
                       <div className='ap-assignment-files'>
                         <span className='sac-title'>Template:</span>
                         <span
-                          className='sac-filename'
-                          onClick={() =>
-                            onTemplateClick(currentSubmittedAssignment.peer_review_template_name)
-                          }
+                            className='sac-filename'
+                            onClick={() =>
+                                onTemplateClick(currentSubmittedAssignment.peer_review_template_name)
+                            }
                         >
                           {currentSubmittedAssignment.peer_review_template_name}
                         </span>
@@ -144,8 +144,8 @@ function ProfessorSubmittedAssignmentPage() {
                       <div className='ap-assignment-files'>
                         <span className='sac-title'> Team Files: </span>
                         <span
-                          className='sac-filename'
-                          onClick={() => onTeamFileClick(currentSubmittedAssignment.submission_name)}
+                            className='sac-filename'
+                            onClick={() => onTeamFileClick(currentSubmittedAssignment.submission_name)}
                         >
                           {currentSubmittedAssignment.submission_name}
                         </span>
@@ -157,38 +157,38 @@ function ProfessorSubmittedAssignmentPage() {
                         <span className='sac-title'> Peer reviews: </span>
                         <div className='peerReviewList'>
                           {currentSubmittedAssignment.peer_reviews !== null
-                            ? currentSubmittedAssignment.peer_reviews.map(
-                                (peerReview) =>
-                                  peerReview && (
-                                    <li
-                                      key={uuid()}
-                                      className='psa-peerReviewListItem'
-                                    >
-                                      <b> {peerReview.reviewed_by} </b>
-                                      <div>
+                              ? currentSubmittedAssignment.peer_reviews.map(
+                                  (peerReview) =>
+                                      peerReview && (
+                                          <li
+                                              key={uuid()}
+                                              className='psa-peerReviewListItem'
+                                          >
+                                            <b> {peerReview.reviewed_by} </b>
+                                            <div>
                                         <span>
                                           {' '}
                                           {peerReview.grade === -1
-                                            ? 'Pending'
-                                            : peerReview.grade}{' '}
+                                              ? 'Pending'
+                                              : peerReview.grade}{' '}
                                         </span>
-                                        &nbsp;
-                                        <span
-                                          className='psa-sac-filename'
-                                          onClick={() =>
-                                            onFeedBackClick(
-                                              peerReview.reviewed_by,
-                                              peerReview.submission_name
-                                            )
-                                          }
-                                        >
+                                              &nbsp;
+                                              <span
+                                                  className='psa-sac-filename'
+                                                  onClick={() =>
+                                                      onFeedBackClick(
+                                                          peerReview.reviewed_by,
+                                                          peerReview.submission_name
+                                                      )
+                                                  }
+                                              >
                                           View feedback
                                         </span>
-                                      </div>
-                                    </li>
-                                  )
+                                            </div>
+                                          </li>
+                                      )
                               )
-                            : null}
+                              : null}
                         </div>
                       </div>
                     </div>
@@ -202,8 +202,7 @@ function ProfessorSubmittedAssignmentPage() {
                     </div>
                   </div>
                 </div>
-              ) : null}
-            </div>
+            ) : null}
           </div>
         </div>
       </div>

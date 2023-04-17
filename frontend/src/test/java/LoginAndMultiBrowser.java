@@ -30,12 +30,14 @@ public class LoginAndMultiBrowser {
     public void LoginTest(){
 
         // enter the front end app
-        cDriver.get("http://129.3.168.61:13129/");
+        //cDriver.get("http://129.3.168.61:13129/");
+        cDriver.get("http://localhost:3000/");
+
         // maximize the window
         cDriver.manage().window().maximize();
 
         // click the login button
-        WebDriverWait wait = new WebDriverWait(cDriver,10);
+        WebDriverWait wait = new WebDriverWait(cDriver,Duration.ofSeconds(10));
         WebElement loginButton = wait.until(
                 ExpectedConditions.presenceOfElementLocated(By.cssSelector(".googleButton > button:nth-child(1)")));
         loginButton.click();
@@ -45,7 +47,9 @@ public class LoginAndMultiBrowser {
     @Test
     public void openEditCourseTest(){
 
-        cDriver.get("http://129.3.168.61:13129/");
+        //cDriver.get("http://129.3.168.61:13125/");
+        cDriver.get("http://localhost:3000/");
+
         cDriver.manage().window().maximize();
         WebDriverWait wait = (WebDriverWait) new WebDriverWait(cDriver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.elementToBeClickable(By.cssSelector(".googleButton > button:nth-child(1)")));
@@ -64,12 +68,14 @@ public class LoginAndMultiBrowser {
     public void LoginTestFireFox(){
 
         // enter the front end app
-        fDriver.get("http://129.3.168.61:13129/");
+        //fDriver.get("http://129.3.168.61:13129/");
+        fDriver.get("http://localhost:3000/");
+
         // maximize the window
         fDriver.manage().window().maximize();
 
         // click the login button
-        WebDriverWait wait = new WebDriverWait(fDriver,10);
+        WebDriverWait wait = new WebDriverWait(fDriver,Duration.ofSeconds(10));
         WebElement loginButton = wait.until(
                 ExpectedConditions.presenceOfElementLocated(By.cssSelector(".googleButton > button:nth-child(1)")));
         loginButton.click();
@@ -79,9 +85,11 @@ public class LoginAndMultiBrowser {
     @Test
     public void openEditCourseTestFireFox(){
 
-        fDriver.get("http://129.3.168.61:13129/");
+        //fDriver.get("http://129.3.168.61:13129/");
+        fDriver.get("http://localhost:3000/");
+
         fDriver.manage().window().maximize();
-        WebDriverWait wait = new WebDriverWait(fDriver,10);
+        WebDriverWait wait = new WebDriverWait(fDriver,Duration.ofSeconds(10));
         WebElement loginButton = wait.until(
                 ExpectedConditions.presenceOfElementLocated(By.cssSelector(".googleButton > button:nth-child(1)")));
         loginButton.click();

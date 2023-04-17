@@ -13,8 +13,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import javax.ws.rs.core.SecurityContext;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
 @Path("professor")
 @DenyAll
@@ -91,7 +91,7 @@ public class CourseManagerResource {
         return Response.status(Response.Status.OK).entity("Student(s) successfully added.").build();
     }
 
-    @POST
+        @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("courses/{crn}/profanity/update")
     @RolesAllowed("professor")
@@ -107,5 +107,4 @@ public class CourseManagerResource {
     public Response getBlockedWordsForCourse(@Context SecurityContext securityContext, @PathParam("crn") String crn)  {
         return Response.status(Response.Status.OK).entity(new CourseInterface().getBlockedWordsForCourse(crn)).build();
     }
-
 }
