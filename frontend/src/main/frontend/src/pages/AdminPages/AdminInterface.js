@@ -240,7 +240,7 @@ function AdminInterface() {
     if (role === "student") {
       const url = `${process.env.REACT_APP_URL}/manage/admin/delete/student/${userID}`;
       await axios
-        .post(url)
+        .delete(url)
         .then((res) => {
           alert('Succesfully deleted user');
           refreshPage();
@@ -256,7 +256,7 @@ function AdminInterface() {
     else if (role === "admin") {
       const url = `${process.env.REACT_APP_URL}/manage/admin/delete/admin/${userID}`;
       await axios
-        .post(url)
+        .delete(url)
         .then((res) => {
           alert('Succesfully deleted user');
           refreshPage();
@@ -272,7 +272,7 @@ function AdminInterface() {
     else if (role === "professor") {
       const url = `${process.env.REACT_APP_URL}/manage/admin/delete/professor/${userID}`;
       await axios
-        .post(url)
+        .delete(url)
         .then((res) => {
           alert('Succesfully deleted user');
           refreshPage();
@@ -294,7 +294,7 @@ function AdminInterface() {
   const deleteCourse = async (courseID) => {
       const url = `${process.env.REACT_APP_URL}/manage/professor/courses/${courseID}/delete`;
       await axios
-        .post(url)
+        .delete(url)
         .then((res) => {
           alert('Succesfully deleted course');
           refreshPage();
