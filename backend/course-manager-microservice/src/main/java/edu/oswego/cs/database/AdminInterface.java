@@ -26,6 +26,10 @@ public class AdminInterface {
     private final MongoCollection<Document> studentCollection;
     private final MongoCollection<Document> courseCollection;
     private final MongoCollection<Document> profanitySettings;
+    private final MongoCollection<Document> assignmentCollection;
+    private final MongoCollection<Document> submissionCollection;
+    private final MongoCollection<Document> teamCollection;
+
 
     // Make a generic method to receive a mongo collection and check connection
     public AdminInterface() {
@@ -35,10 +39,15 @@ public class AdminInterface {
             // Professors and Admins are in the same database, Admins are elevated
             MongoDatabase profAdminDb = databaseManager.getProfessorDB();
             MongoDatabase courseDB = databaseManager.getCourseDB();
+            MongoDatabase assignmentDB = databaseManager.getAssignmentDB();
+            MongoDatabase teamDB = databaseManager.getTeamDB();
             studentCollection = studentDB.getCollection("students");
             professorCollection = profAdminDb.getCollection("professors");
             courseCollection = courseDB.getCollection("courses");
             profanitySettings = profAdminDb.getCollection("profanitySettings");
+            assignmentCollection = assignmentDB.getCollection("assignments");
+            submissionCollection = assignmentDB.getCollection("submissions");
+            teamCollection = teamDB.getCollection("teams");
         } catch (CPRException e) {
             throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to retrieve collections.");
         }
@@ -350,5 +359,16 @@ public class AdminInterface {
 
         Document profanitySettingsDocument = new Document("words", temp.getWords());
         profanitySettings.insertOne(profanitySettingsDocument);
+    }
+
+    public void removeCourseAsAdmin(SecurityContext securityContext, String courseID) {
+        Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
+        if (courseDocument == null) throw new CPRException(Response.Status.BAD_REQUEST, "This course does not exist.");
+        new CourseUtil().updateCoursesArrayInProfessorDb(securityContext, professorCollection, courseID, null, "DELETE");
+        new CourseUtil().updateCoursesArrayInStudentDb(studentCollection, courseID, null, "DELETE");
+        new CourseUtil().updateCoursesKeyInDBs(assignmentCollection, courseID, null, "DELETE");
+        new CourseUtil().updateCoursesKeyInDBs(submissionCollection, courseID, null, "DELETE");
+        new CourseUtil().updateCoursesKeyInDBs(teamCollection, courseID, null, "DELETE");
+        courseCollection.deleteOne(eq("course_id", courseID));
     }
 }
