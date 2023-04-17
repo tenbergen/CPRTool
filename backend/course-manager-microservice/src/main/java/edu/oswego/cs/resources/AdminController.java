@@ -168,7 +168,7 @@ public class AdminController {
     }
 
     // Get Profanity Settings View
-    @RolesAllowed("admin")
+    @RolesAllowed({"admin","professor"})
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/views/profanity")
