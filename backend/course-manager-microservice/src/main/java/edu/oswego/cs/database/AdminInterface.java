@@ -127,7 +127,8 @@ public class AdminInterface {
         Document newAdmin = new Document("professor_id", user_id)
                 .append("first_name", firstName)
                 .append("last_name", lastName)
-                .append("admin", true);
+                .append("admin", true)
+                .append("courses", new ArrayList<String>());
         professorCollection.insertOne(newAdmin);
     }
 
@@ -151,7 +152,9 @@ public class AdminInterface {
         Document newProfessor = new Document("professor_id", user_id)
                 .append("first_name", firstName)
                 .append("last_name", lastName)
-                .append("admin", false);
+                .append("admin", false)
+                .append("courses", new ArrayList<String>());
+
         professorCollection.insertOne(newProfessor);
     }
 
