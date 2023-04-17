@@ -120,10 +120,6 @@ const RouterHandler = () => {
               path="/student/:courseId/assignments"
               element={<StudentCoursePage chosen="To Do"/>}
             />
-            <Route
-                path="/student/:courseId/:assignmentId/peer-review"
-                element={<PeerReviewPage/>}
-            />
           </Route>
         </Route>
       </Route>
