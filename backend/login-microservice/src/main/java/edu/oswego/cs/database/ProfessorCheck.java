@@ -4,6 +4,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.util.CPRException;
 import org.bson.Document;
+import org.checkerframework.checker.units.qual.A;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.WebApplicationException;
@@ -36,21 +37,25 @@ public class ProfessorCheck {
         var reader = new BufferedReader(new FileReader(path + "professor-list.txt"));
         String line = reader.readLine();
         ArrayList<String> professorList = new ArrayList<>();
+        ArrayList<String> professorDomainList = new ArrayList<>();
         while (line != null) {
             if (line.contains("@")) {
                 String[] token = line.split("@");
                 professorList.add(token[0]);
+                professorDomainList.add(token[1]);
             }
             line = reader.readLine();
         }
 
-        for (String professorID : professorList) {
+        for (int i = 0; i < professorList.size(); i++) {
+            String professorID = professorList.get(i);
+            String professorDomain = professorDomainList.get(i);
             Document professorDocument = professorCollection.find(eq("professor_id", professorID)).first();
             if (professorDocument == null) {
                 List<String> courseList = new ArrayList<>();
                 Document newProfessor = new Document()
                         .append("professor_id", professorID)
-                        .append("professor_domain", "gmail.com")
+                        .append("professor_domain", professorDomain)
                         .append("courses", courseList);
                 professorCollection.insertOne(newProfessor);
             }

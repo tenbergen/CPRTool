@@ -71,4 +71,22 @@ public class CourseInterface {
         teamCollection.find(eq("course_id", courseID)).into(teamsInCourse);
         return teamsInCourse;
     }
+
+    public String getProfessorEmail(String professorId){
+        Document professor = professorCollection.find(eq("professor_id", professorId)).first();
+        String domain = professor.getString("professor_domain");
+        if(domain == null){
+            domain = "oswego.edu";
+        }
+        return (professorId + "@" + domain);
+    }
+
+    public String getStudentEmail(String studentId){
+        Document student = studentCollection.find(eq("student_id", studentId)).first();
+        String domain = student.getString("student_domain");
+        if(domain == null){
+            domain = "oswego.edu";
+        }
+        return (studentId + "@" + domain);
+    }
 }
