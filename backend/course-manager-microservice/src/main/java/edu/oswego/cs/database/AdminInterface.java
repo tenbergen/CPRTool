@@ -11,10 +11,12 @@ import edu.oswego.cs.util.CPRException;
    import java.util.List;
 import java.util.ArrayList;
 import com.google.gson.Gson;
+import edu.oswego.cs.util.CourseUtil;
 import org.bson.Document;
 
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 import com.mongodb.client.model.Filters;
 import static com.mongodb.client.model.Filters.eq;
@@ -61,10 +63,15 @@ public class AdminInterface {
             // Professors and Admins are in the same database, Admins are elevated
             MongoDatabase profAdminDb = databaseManager.getProfessorDB();
             MongoDatabase courseDB = databaseManager.getCourseDB();
+            MongoDatabase assignmentDB = databaseManager.getAssignmentDB();
+            MongoDatabase teamDB = databaseManager.getTeamDB();
             studentCollection = studentDB.getCollection("students");
             professorCollection = profAdminDb.getCollection("professors");
             courseCollection = courseDB.getCollection("courses");
             profanitySettings = profAdminDb.getCollection("profanitySettings");
+            assignmentCollection = assignmentDB.getCollection("assignments");
+            submissionCollection = assignmentDB.getCollection("submissions");
+            teamCollection = teamDB.getCollection("teams");
         } catch (CPRException e) {
             throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to retrieve collections.");
         }
@@ -90,12 +97,7 @@ public class AdminInterface {
         professorCollection.deleteOne(eq("professor_id", user_id));
     }
 
-    public void deleteCourse(String course_id) {
-        if (!checkCourse(course_id)) {
-            throw new CPRException(Response.Status.NOT_FOUND, "Course not found.");
-        }
-        courseCollection.deleteOne(eq("course_id", course_id));
-    }
+
 
     public void deleteStudentUser(String user_id) {
 

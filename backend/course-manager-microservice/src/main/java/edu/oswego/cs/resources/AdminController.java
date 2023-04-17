@@ -49,9 +49,9 @@ public class AdminController {
     @RolesAllowed("admin")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/delete/course/{crn}")
-    public Response deleteCourse(@Context SecurityContext securityContext, @PathParam("crn") String courseId) {
-        new AdminInterface(securityContext.getUserPrincipal().getName()).deleteCourse(courseId);
+    @Path("/delete/course/{course_id}")
+    public Response deleteCourse(@Context SecurityContext securityContext, @PathParam("course_id") String courseId) {
+        new AdminInterface(securityContext.getUserPrincipal().getName()).removeCourseAsAdmin(securityContext, courseId);
         return Response.status(Response.Status.OK).entity("Course deleted.").build();
     }
 
