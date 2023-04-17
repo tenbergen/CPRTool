@@ -5,6 +5,8 @@ import searchIcon from './search.svg';
 import plusIcon from './plus.png';
 import Modal from './Modal';
 import axios from 'axios';
+import HeaderBar from '../../components/HeaderBar/HeaderBar';
+import LogoutButton from '../../components/GlobalComponents/LogoutButton';
 
 function AdminInterface() {
 
@@ -375,9 +377,13 @@ function AdminInterface() {
   return (
     <><Modal open={openModal} courseArr={selectedCourse} onClose={() => setOpenModal(false)} />
     {/* Need to replace the following div with navbar */}
+    <HeaderBar/>
       <div className='admin-page-container'>
         <div className='admin-sidebar'>
           <h1>Admin</h1>
+          <div className='admin-logout'>
+            <LogoutButton/>
+          </div>
         </div>
         <div className='admin-user-roles'>
           <h2>Admin</h2>
@@ -460,14 +466,14 @@ function AdminInterface() {
 
               </div>
             </div><div>
-                <div className='user-list'>
+                <div className='admin-user-list'>
                   <div className='user-item header'>
                     <div>Name</div>
                     <div>Laker Net ID</div>
                     <div>Role</div>
                     <div>Actions</div>
                   </div>
-                  <div className='all-user-items'>
+                  <div className='admin-all-user-items'>
                     {filteredUsers.map((user) => (
                       <div key={user.id} className='user-item'>
                         <div className='name-list'>
@@ -565,14 +571,14 @@ function AdminInterface() {
                 <label for="role-filter">Semester</label>
                 <select name="role" id="role" onChange={(e) => setSelectedSemester(e.target.value)}>
                   <option value="all">All</option>
-                  <option value="spring">Spring</option>
-                  <option value="summer">Summer</option>
-                  <option value="fall">Fall</option>
-                  <option value="winter">Winter</option>
+                  <option value="Spring">Spring</option>
+                  <option value="Summer">Summer</option>
+                  <option value="Fall">Fall</option>
+                  <option value="Winter">Winter</option>
                 </select>
               </div>
             </div><div>
-                <div className='user-list'>
+                <div className='admin-user-list'>
                   <div className='user-item header'>
                     <div className='courses-list'>Courses</div>
                     <div>Instructor</div>
@@ -581,13 +587,12 @@ function AdminInterface() {
                     <div>Semester</div>
                     <div>Actions</div>
                   </div>
-                  <div className='all-user-items'>
+                  <div className='admin-all-user-items'>
                     {filteredCourses.map((course) => (
                       <div key={course.id} className='user-item'>
                         <div className='courses-list'>
                           <div className='abbreviation-section-container'>
-                            <div>{course.abbreviation}</div>
-                            <div>{course.course_section} - </div>
+                            <div>{course.abbreviation} -</div>
                           </div>
                           <div>{course.course_name}</div>
                         </div>
@@ -644,13 +649,13 @@ function AdminInterface() {
                 </div>
               </div>
             </div><div>
-                <div className='user-list'>
+                <div className='admin-user-list'>
                   <div className='user-item header'>
                     <div>Profanity</div>
                     <div>Courses Excluded From</div>
                     <div>Actions</div>
                   </div>
-                  <div className='all-user-items'>
+                  <div className='admin-all-user-items'>
                     {filteredProfanities.map((profanity) => (
                       <div key={profanity.id} className='user-item'>
                         <div>{profanity.profanity}</div>
