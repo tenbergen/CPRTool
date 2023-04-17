@@ -23,7 +23,6 @@ const CreateAssignmentPage = () => {
   let { courseId } = useParams()
 
   const submitCourseUrl = `${profAssignmentUrl}/create-assignment`
-  const testUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/1/peer-review-team-reviewers/12}`
   const submitCourseNoPeerReviewURL = `${profAssignmentUrl}/create-assignment-no-peer-review`
   const getAssUrl = `${profAssignmentUrl}/${courseId}/assignments`
   const [loading, setLoading] = useState(false)
@@ -119,11 +118,6 @@ const CreateAssignmentPage = () => {
           .catch((e) => {
             console.error(e.response.data)
           })
-        await axios
-            .get(testUrl)
-            .then((res) => {
-              console.log(res)
-            })
         const assignment_id = await axios
           .get(getAssUrl)
           .then((res) => {

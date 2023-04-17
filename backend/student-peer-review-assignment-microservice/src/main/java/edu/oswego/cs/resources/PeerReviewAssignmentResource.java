@@ -212,17 +212,6 @@ public class PeerReviewAssignmentResource {
         return Response.status(Response.Status.OK).entity(assignedTeams).build();
     }
 
-    @GET
-    @RolesAllowed({"professor", "student"})
-    @Path("{courseID}/{assignmentID}/peer-review-team-reviewers/{teamName}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getTeamReviewers(@PathParam("courseID") String courseID,
-                                     @PathParam("assignmentID") int assignmentID,
-                                     @PathParam("teamName") String teamName) {
-        List<String> reviewingTeams = new PeerReviewAssignmentInterface().getReviewingTeams(courseID, assignmentID, teamName);
-        return Response.status(Response.Status.OK).entity(reviewingTeams).build();
-    }
-
     //deprecated so not even going to bother
 
     /**

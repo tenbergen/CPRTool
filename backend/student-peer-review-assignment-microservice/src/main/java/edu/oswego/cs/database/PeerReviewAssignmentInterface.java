@@ -1469,29 +1469,4 @@ public class PeerReviewAssignmentInterface {
 
         return allPotentialOutliers;
     }
-
-    /**
-     * Returns a list of every team in the class assigned to review the given team on this specific assignment
-     *
-     * @param courseID course in which the team and assignment exist
-     * @param assignmentID assignment in question
-     * @param teamName team being reviewed
-     * @return list of names of teams reviewing the given team
-     */
-    public List<String> getReviewingTeams(String courseID, int assignmentID, String teamName) {
-        Document assignment = assignmentCollection.find(and(eq("assignment_id", assignmentID), eq("course_id", courseID))).first();
-        List<String> teams = getTeams(courseID, assignmentID);
-        ArrayList<String> reviewers = new ArrayList<>();
-        assert assignment != null;
-        Document assignedTeams = Document.parse(assignment.get("assigned_teams").toString());
-        for(String team : teams){
-            if(team != teamName){
-                List<String> assigned = assignedTeams.getList(team, String.class);
-                if(assigned.contains(teamName)){
-                    reviewers.add(team);
-                }
-            }
-        }
-        return reviewers;
-    }
 }
