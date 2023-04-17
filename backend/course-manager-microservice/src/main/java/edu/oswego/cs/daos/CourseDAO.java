@@ -34,13 +34,17 @@ public class CourseDAO {
             @NonNull @JsonbProperty("course_section") String courseSection,
             @NonNull @JsonbProperty("crn") String crn,
             @NonNull @JsonbProperty("semester") String semester,
-            @NonNull @JsonbProperty("year") String year)
+            @NonNull @JsonbProperty("year") String year),
+            @JsonbCreator("professor_id") String professorId
     {
         this.abbreviation = abbreviation;
         this.courseName = courseName;
         this.courseSection = courseSection;
         this.crn = crn;
         this.professorID = "";
+        if professorId != null{
+            this.professorID = professorId
+        }
         this.semester = semester;
         this.students = new ArrayList<>();
         this.year = year;

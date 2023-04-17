@@ -277,10 +277,16 @@ public class AdminInterface {
     public List<CourseDAO> getCourseView() {
         List<CourseDAO> courses = new ArrayList<>();
         // iterate through MongoDB CourseDAOs and add to list
-        for (Document CourseDAO : courseCollection.find()) {
+        for (Document course : courseCollection.find()) {
             CourseDAO c = new CourseDAO(
-                
-            );
+                course.getString("abbreviation"),
+                course.getString("course_name"),
+                course.getString("course_section"),
+                course.getString("crn"),
+                course.getString("semester"),
+                course.getString("year"),
+                course.getString("professor_id")
+                );
             courses.add(c);
         }
         return courses;
