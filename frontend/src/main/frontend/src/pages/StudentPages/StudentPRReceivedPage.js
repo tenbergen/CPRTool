@@ -14,6 +14,7 @@ import NavigationContainerComponent
   from "../../components/NavigationComponents/NavigationContainerComponent";
 import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import StudentPRReceivedComponent from "../../components/StudentComponents/CoursePage/StudentPRReceivedComponent";
+import {getAssignmentDetailsAsync} from "../../redux/features/assignmentSlice";
 
 const CourseComponent = ({ active, component, onClick }) => {
   return (
@@ -34,17 +35,19 @@ function StudentCoursePage({chosen}) {
   const dispatch = useDispatch();
   const location = useLocation();
   const { courseId } = useParams();
+  const { assignmentId } = useParams();
   const { lakerId } = useSelector((state) => state.auth);
   const { currentTeamId, teamLoaded } = useSelector((state) => state.teams);
 
   const [chosenComponent, setChosenComponent] = useState(chosen);
 
-  const components = ['To Do', 'Submitted', 'My Team'];
+  const components = ['Given', 'Received'];
 
   useEffect(() => {
     dispatch(getCourseDetailsAsync(courseId));
     dispatch(getCurrentCourseTeamAsync({ courseId, lakerId }));
-  }, [courseId, lakerId, dispatch]);
+    dispatch(getAssignmentDetailsAsync(assignmentId))
+  }, [courseId, assignmentId, lakerId, dispatch]);
 
   useEffect(() => {
     setChosenComponent(chosen);
@@ -74,7 +77,7 @@ function StudentCoursePage({chosen}) {
                   ))}
                 </div>
                 <div>
-                  chosenComponent === 'To Do' && <StudentPRReceivedComponent />
+                  <StudentPRReceivedComponent />
                 </div>
               </div>
           )}

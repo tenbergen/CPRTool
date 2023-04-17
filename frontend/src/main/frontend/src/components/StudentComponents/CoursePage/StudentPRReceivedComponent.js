@@ -16,6 +16,7 @@ const StudentToDoComponent = () => {
     store.assignments;
   const { currentTeamId, teamLoaded } = store.teams;
   const { courseId } = useParams();
+  const { assignmentId } = useParams();
   const { lakerId } = store.auth;
 
   useEffect(() => {
@@ -27,20 +28,7 @@ const StudentToDoComponent = () => {
   return (
     <h3>
       {assignmentsLoaded && teamLoaded ? (
-        <div id='assList'>
-          {combinedAssignmentPeerReviews.length === 0 ? (
-            <div className='no-todo-wrapper'>
-              <img className='no-todo-img' src={noData} alt='No Todo' />
-              <div className='no-todo-head'>No assignments to show here</div>
-            </div>
-          ) : (
-            <div>
-              {combinedAssignmentPeerReviews.map((assignment) => (
-                <PRReceivedTile key={uuid()} assignment={assignment} />
-              ))}
-            </div>
-          )}
-        </div>
+          {assignmentId}
       ) : null}
     </h3>
   );

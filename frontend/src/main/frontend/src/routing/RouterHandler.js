@@ -121,7 +121,7 @@ const RouterHandler = () => {
               element={<StudentCoursePage chosen="To Do"/>}
             />
             <Route
-                path="/student/:courseId/received"
+                path="/student/:courseId/:assignmentId/:teamId/received"
                 element={<StudentPRReceivedPage/>}
             />
 
