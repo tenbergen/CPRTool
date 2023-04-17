@@ -67,8 +67,9 @@ function AdminInterface() {
   useEffect(() => {
     axios.get(getCoursesUrl)
       .then(response => {
-        setCourseList(response.data);
         console.log(response.data);
+        setCourseList(response.data);
+        
       })
       .catch(error => console.error(error.message));
   }, []);
@@ -89,10 +90,10 @@ function AdminInterface() {
   );
 
   const filteredCourses = courseList.filter((course) =>
-    (course.courseName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (course.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       course.abbreviation.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      course.courseSection.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      course.professorID.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.course_section.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.professor_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       course.crn.toLowerCase().includes(searchTerm.toLowerCase())) &&
     (selectedYear === "all" || course.year === selectedYear) &&
     (selectedSemester === "all" || course.semester === selectedSemester)
@@ -597,11 +598,11 @@ function AdminInterface() {
                         <div className='courses-list'>
                           <div className='abbreviation-section-container'>
                             <div>{course.abbreviation}</div>
-                            <div>{course.courseSection} - </div>
+                            <div>{course.course_section} - </div>
                           </div>
-                          <div>{course.courseName}</div>
+                          <div>{course.course_name}</div>
                         </div>
-                        <div>{course.professorID}</div>
+                        <div>{course.professor_id}</div>
                         <div>{course.crn}</div>
                         <div>{course.year}</div>
                         <div>{course.semester}</div>
@@ -610,7 +611,7 @@ function AdminInterface() {
                             <button className='delete-button' onClick={() => { 
                               setShowDeleteCourseModal(true); 
                               getDeleteCourse(course.crn);
-                              getCourseID(course.courseID) }}>X</button>
+                              getCourseID(course.course_id) }}>X</button>
                             {showDeleteCourseModal && (
                               <div className="delete-modal">
                                 <div className="modal-content">
