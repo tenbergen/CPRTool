@@ -144,7 +144,8 @@ public class AuthServices {
             Document professor = new Document("professor_id", user_id)
                     .append("admin", true)
                     .append("first_name", first_name)
-                    .append("last_name", last_name);
+                    .append("last_name", last_name)
+                    .append("courses", new ArrayList<String>());
             professorCollection.insertOne(professor);
         }
     }
