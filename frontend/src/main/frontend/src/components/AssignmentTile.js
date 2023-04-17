@@ -14,8 +14,9 @@ const AssignmentTile = ({ assignment, submitted }) => {
 
   const { role } = useSelector((state) => state.auth);
   const { currentTeamId } = useSelector((state) => state.teams);
-  const { courseId } = useParams();
-  const link = `/details/${role}/${courseId}/${assignment.assignment_id}`;
+  const course = window.location.pathname;
+  const courseId = course.split("/")[2];
+  const link = `/${role}/${courseId}/${assignment.assignment_id}`;
 
   const onFileClick = async () => {
     const fileName =
@@ -57,7 +58,7 @@ const AssignmentTile = ({ assignment, submitted }) => {
   const onTileClick = () => {
     const tileLink = submitted
       ? role === 'student'
-        ? `/details/student/${courseId}/${assignment.assignment_id}/${currentTeamId}/submitted`
+        ? `/student/${courseId}/${assignment.assignment_id}/${currentTeamId}/submitted`
         : `${link}/${assignment.team_name}/submitted`
       : role === 'student'
       ? assignment.assignment_type === 'peer-review'

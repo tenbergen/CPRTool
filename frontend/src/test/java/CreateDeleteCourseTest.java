@@ -9,6 +9,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -24,13 +25,13 @@ public class CreateDeleteCourseTest {
         // driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
 
-        driver.get("http://moxie.cs.oswego.edu:13125/");
-
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        //driver.get("http://moxie.cs.oswego.edu:13125/");
+        driver.get("http://localhost:3000/");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#box > button")));
         driver.findElement(By.cssSelector("#box > button")).click();
 
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
 //Get all the window handles in a set
         Set<String> handles = driver.getWindowHandles();
@@ -42,20 +43,20 @@ public class CreateDeleteCourseTest {
             driver.switchTo().window(newwin);
 //perform actions on new window
             driver.findElement(By.xpath("//*[@id=\"identifierId\"]")).sendKeys("id");
-            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
             driver.findElement(By.cssSelector("#identifierNext > div > button > span")).click();
 
             driver.findElement(By.xpath("//*[@id=\"password\"]/div[1]/div/div[1]/input")).sendKeys("password");
             driver.findElement(By.cssSelector("#passwordNext > div > button > span")).click();
             // driver.close();
             driver.switchTo().window(parent);
-            driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         }
     }
 
     @Test
     public void CreateCourseTest() {
-        // driver.get("http://moxie.cs.oswego.edu:13125/create/course");
+        // driver.get("http://moxie.cs.oswego.edu:13125/create");
 
         // WebDriverWait wait = new WebDriverWait(driver, 5);
 
@@ -106,14 +107,16 @@ public class CreateDeleteCourseTest {
 
         driver.findElement(By.xpath("//*[@id=\"deleteButtons\"]/button[1]")).click();
 
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         Alert alert = wait.until(ExpectedConditions.alertIsPresent());
 
         // simpleAlert.accept();
 
         Assertions.assertEquals("Course successfully updated!", alert.getText());
         alert.accept();
-        driver.navigate().to("http://moxie.cs.oswego.edu:13125/");
+        //driver.navigate().to("http://moxie.cs.oswego.edu:13125/");
+        driver.navigate().to("http://localhost:3000/");
+        driver.navigate().refresh();
 
         try{
             if (driver.findElement(By.cssSelector("#courseList > a:nth-child(3) > li")).getText().contains("Math")){
@@ -136,7 +139,7 @@ public class CreateDeleteCourseTest {
 
         driver.findElement(By.xpath("//*[@id=\"deleteButtons\"]/button[2]")).click();
 
-        Assertions.assertEquals("http://moxie.cs.oswego.edu:13125/details/professor/CSC378-800-54266-Spring-2023", driver.getCurrentUrl());
+        Assertions.assertEquals("http://moxie.cs.oswego.edu:13125/professor/CSC378-800-54266-Spring-2023", driver.getCurrentUrl());
 
 
     }

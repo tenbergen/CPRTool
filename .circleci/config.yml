@@ -1,0 +1,26 @@
+
+version: 2.1
+
+orbs:
+  maven: circleci/maven@1.4.1
+
+jobs:
+  clean_course_manager:
+    executor: maven/default
+    steps:
+      - checkout
+      - run: CSC480-22S/backend/course-manager-microservice/pom.xml mvn clean
+
+  build_course_manager:
+    executor: maven/default
+    steps:
+      - checkout
+      - build
+
+workflows:
+  clean_and_build:
+    jobs:
+      - clean_course_manager
+      - build_course_manager:
+          requires:
+            - clean_course_manager

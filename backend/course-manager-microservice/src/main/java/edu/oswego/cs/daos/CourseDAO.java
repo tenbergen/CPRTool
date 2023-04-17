@@ -25,6 +25,7 @@ public class CourseDAO {
     @JsonbProperty("students") @ElementCollection public List<String> students;
     @JsonbProperty("year") public String year;
     @JsonbProperty("team_size") public int teamSize;
+    @JsonbProperty("blocked_words") @ElementCollection public List<String> blockedWords = new ArrayList<>();
 
     @JsonbCreator
     public CourseDAO(

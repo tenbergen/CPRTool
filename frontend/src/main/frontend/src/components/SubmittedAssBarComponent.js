@@ -7,6 +7,7 @@ import {
   getSubmittedAssignmentsAsync,
 } from '../redux/features/submittedAssignmentSlice';
 import uuid from 'react-uuid';
+import LogoutButton from "./GlobalComponents/LogoutButton";
 
 const SubAssBarLink = ({ active, assignment, onClick }) => {
   const normalStyle = { backgroundColor: 'rgba(255, 255, 255, 0.25)' };
@@ -48,7 +49,7 @@ const SubmittedAssBarComponent = () => {
     const chosen = assignment.assignment_id + teamId;
     setChosen(chosen);
     navigate(
-      `/details/${role}/${courseId}/${assignment.assignment_id}/${assignment.team_name}/submitted`
+      `/${role}/${courseId}/${assignment.assignment_id}/${assignment.team_name}/submitted`
     );
     dispatch(
       getSubmittedAssignmentDetailsAsync({ courseId, assignmentId, teamId })
@@ -56,7 +57,7 @@ const SubmittedAssBarComponent = () => {
   };
 
   const onCourseClick = () => {
-    navigate(`/details/${role}/${courseId}`);
+    navigate(`/${role}/${courseId}`);
   };
 
   return (
@@ -69,7 +70,7 @@ const SubmittedAssBarComponent = () => {
         >
           {courseId}
         </span>
-        <h2 className='kumba-30'> Assignments </h2>
+        <h2 className='kumba-30'> Assignments</h2>
       </div>
       <div className='abc-assignments'>
         {assignmentsLoaded
@@ -88,6 +89,7 @@ const SubmittedAssBarComponent = () => {
             )
           : null}
       </div>
+      <LogoutButton/>
     </div>
   );
 };

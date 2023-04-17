@@ -1,0 +1,316 @@
+
+.bulk-download-icon-active{
+    background-image: url("../../assets/icons/navigation/active/Bulk Download.svg");
+    width: 20px;
+    height: 20px;
+    margin: 0 16px 0 35px;
+}
+
+.bulk-download-icon-default{
+    background-image: url("../../assets/icons/navigation/default/Bulk Download.svg");
+    width: 20px;
+    height: 20px;
+    margin: 0 16px 0 35px;
+}
+
+.bulk-download-white-icon-default {
+    background-image: url("../../assets/icons/navigation/default/white_bulk_download.svg");
+    width: 17px;
+    height: 17px;
+    margin: 0 16px 0 35px;
+}
+
+#bulk-download-tile {
+    display: flex;
+    flex-direction: row;
+    background-color: #F7F7F7;
+    border: 1px solid #101828;
+    height: 60px;
+    align-items: center;
+    margin-top: -1px;
+    user-select: none;
+}
+
+#bulk-download-tile:hover {
+    cursor: pointer;
+}
+
+.course-accordion-submenu-tile {
+    display: flex;
+    flex-direction: row;
+    background-color: #FFFFFF;
+    border: 1px solid #101828;
+    height: 60px;
+    align-items: center;
+    margin-top: -1px;
+    user-select: none;
+    padding-left: 70px
+}
+
+.course-accordion-title-active{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #FFFFFF;
+    border: 1px solid #101828;
+    height: 60px;
+    align-items: center;
+    margin-top: -1px;
+    user-select: none;
+    padding-left: 55px
+}
+.course-accordion-title-active:hover{
+    cursor: pointer;
+}
+
+.course-accordion-title-default{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #F6F6F6;
+    border: 1px solid #101828;
+    height: 60px;
+    align-items: center;
+    margin-top: -1px;
+    user-select: none;
+    padding-left: 55px
+}
+.course-accordion-title-default:hover{
+    cursor: pointer;
+}
+
+#coursesContainer{
+    display: flex;
+    flex-direction: column;
+}
+
+.courses-icon-active{
+    background-image: url("../../assets/icons/navigation/active/Courses.svg");
+    width: 21px;
+    height: 20px;
+    margin: 0 17px 0 35px;
+}
+
+.courses-icon-default{
+    background-image: url("../../assets/icons/navigation/default/Courses.svg");
+    width: 21px;
+    height: 20px;
+    margin: 0 17px 0 35px;
+}
+
+#courses-tile {
+    display: flex;
+    flex-direction: column;
+    background-color: #F6F6F6;
+    border: 1px solid #101828;
+    margin-top: -1px;
+    justify-items: center;
+    user-select: none;
+}
+
+#courses-tile-first-line {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 60px;
+    justify-content: space-between;
+}
+
+#courses-tile-first-line:hover {
+    cursor: pointer;
+}
+
+.courses-tile-heading {
+    display: flex;
+    flex-direction: row;
+    color: #4a7dfc;
+    align-items: center;
+}
+
+#courses-tile-second-line {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 44px;
+}
+
+.courses-tile-active {
+    height: 100px;
+}
+
+.courses-tile-inactive {
+    height: 60px;
+}
+
+.dropdown-icon-active{
+    background-image: url("../../assets/icons/navigation/active/Arrow_Active.svg");
+    width: 17px;
+    height: 9px;
+    margin: 0 16px 0 35px;
+}
+
+.dropdown-icon-default{
+    background-image: url("../../assets/icons/navigation/default/Arrow_Default.svg");
+    width: 12px;
+    height: 17px;
+    margin: 0 16px 0 35px;
+}
+
+.home-icon-active{
+    background-image: url("../../assets/icons/navigation/active/Home.svg");
+    width: 22px;
+    height: 18px;
+    margin: 0 16px 0 35px;
+}
+
+.home-icon-default{
+    background-image: url("../../assets/icons/navigation/default/Home.svg");
+    width: 22px;
+    height: 18px;
+    margin: 0 16px 0 35px;
+}
+
+#home-tile {
+    display: flex;
+    flex-direction: row;
+    background-color: #F6F6F6;
+    border: 1px solid #101828;
+    height: 60px;
+    align-items: center;
+    margin-top: -1px;
+    user-select: none;
+}
+
+#home-tile:hover {
+    cursor: pointer;
+}
+
+.icon {
+    width: 22px;
+    height: 20px;
+    margin: 0 16px 0 35px;
+}
+
+.invisible-div{
+    height: 0;
+}
+
+.navigation-container{
+    display: flex;
+    flex-direction: column;
+    width: 365px;
+}
+
+.parent-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #d4eefc;
+    height: 100%;
+}
+
+.semester-selection-active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 33px;
+    height: 30px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    background-color: #4a7dfc;
+    user-select: none;
+}
+
+.semester-selection-active:hover {
+    cursor: pointer;
+}
+
+.semester-selection-inactive {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 31px;
+    height: 28px;
+    border: 1px solid #212529;
+    border-radius: 5px;
+    margin-right: 10px;
+    background-color: #F6F6F6;
+    user-select: none;
+}
+
+.semester-selection-inactive:hover {
+    cursor: pointer;
+}
+
+.year-individual-selection {
+    height: 26px;
+    border: #4b5563 solid 1px;
+    margin-top: -1px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 25px;
+    border-bottom: none;
+}
+
+.year-individual-selection:first-child {
+    border-radius: 5px 5px 0 0;
+}
+
+.year-individual-selection:last-child {
+    border-bottom: #4b5563 solid 1px;
+    border-radius: 0 0 5px 5px;
+}
+
+.year-individual-selection:hover {
+    background-color: lightgrey;
+}
+
+/* Popup container */
+#year-popup {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: 90px;
+    height: 30px;
+    border: 1px solid #212529;
+    border-radius: 5px;
+    margin-left: 5px;
+}
+
+/* The actual popup (appears on top) */
+#year-popup .popup-text {
+    visibility: hidden;
+    width: 92px;
+    background-color: #F7F7F7;
+    color: #2a2b32;
+    text-align: center;
+    position: absolute;
+    z-index: 1;
+    top: 125%;
+    left: 88%;
+    margin-left: -80px;
+    border-radius: 5px;
+}
+
+/* Popup arrow */
+#year-popup .popup-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+#year-popup .show {
+    visibility: visible;
+}
+

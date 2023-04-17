@@ -52,8 +52,31 @@ public class TeamInterface {
             throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to retrieve collections.");
         }
     }
+//    public void createTeam(@Context SecurityContext securityContext, TeamParam request) {
+//        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
+//        if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Course not found");
+//        new IdentifyingService().identifyingStudentService(securityContext, request.getStudentID());
+//        new IdentifyingService().identifyingProfessorAsStudentService(securityContext, courseCollection, request.getCourseID());
+//        new SecurityService().generateTeamNameSecurity(securityContext, teamCollection, courseDocument, request);
+//
+//        if (request.getTeamName().length() > 25 || request.getTeamName().length() <= 0) {
+//            throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Team name must be within 1 and 25 characters long.");
+//        }
+//
+//        int teamSize = new TeamService().getTeamSize(courseDocument);
+//        TeamDAO newTeam = new TeamDAO(request.getTeamName(), request.getCourseID(), teamSize, request.getStudentID());
+//        newTeam.getTeamMembers().add(request.getStudentID());
+//        newTeam.setTeamMembers(newTeam.getTeamMembers());
+//
+//        if (teamSize == 1) newTeam.setTeamFull(true);
+//
+//        Jsonb jsonb = JsonbBuilder.create();
+//        Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(newTeam), MediaType.APPLICATION_JSON_TYPE);
+//        Document teamDocument = Document.parse(courseDAOEntity.getEntity());
+//        teamCollection.insertOne(teamDocument);
+//    }
 
-    public void createTeam(@Context SecurityContext securityContext, TeamParam request) {
+   public void createTeam(@Context SecurityContext securityContext, TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Course not found");
         new IdentifyingService().identifyingStudentService(securityContext, request.getStudentID());
@@ -67,6 +90,36 @@ public class TeamInterface {
         int teamSize = new TeamService().getTeamSize(courseDocument);
         TeamDAO newTeam = new TeamDAO(request.getTeamName(), request.getCourseID(), teamSize, request.getStudentID());
         newTeam.getTeamMembers().add(request.getStudentID());
+        newTeam.setTeamMembers(newTeam.getTeamMembers());
+
+        if (teamSize == 1) newTeam.setTeamFull(true);
+
+        Jsonb jsonb = JsonbBuilder.create();
+        Entity<String> courseDAOEntity = Entity.entity(jsonb.toJson(newTeam), MediaType.APPLICATION_JSON_TYPE);
+        Document teamDocument = Document.parse(courseDAOEntity.getEntity());
+        teamCollection.insertOne(teamDocument);
+    }
+
+    public void createTeamProffessor(@Context SecurityContext securityContext, TeamParam request, String studentID) {
+        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
+        if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Course not found");
+        new IdentifyingService().identifyingProfessorAsStudentService(securityContext, courseCollection, request.getCourseID());
+        new SecurityService().generateTeamNameSecurity(securityContext, teamCollection, courseDocument, request);
+
+        if (request.getTeamName().length() > 25 || request.getTeamName().length() <= 0) {
+            throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Team name must be within 1 and 25 characters long.");
+        }
+
+        if (!new SecurityService().isStudentValid(courseDocument, studentID)) {
+            throw new CPRException(Response.Status.NOT_FOUND, "Student not found in this course.");
+        }
+
+        int teamSize = new TeamService().getTeamSize(courseDocument);
+        TeamDAO newTeam = new TeamDAO(request.getTeamName(), request.getCourseID(), teamSize);
+
+        new IdentifyingService().identifyingStudentService(securityContext, studentID);
+        newTeam.getTeamMembers().add(studentID);
+
         newTeam.setTeamMembers(newTeam.getTeamMembers());
 
         if (teamSize == 1) newTeam.setTeamFull(true);

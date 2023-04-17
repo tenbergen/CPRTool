@@ -3,7 +3,6 @@ import './styles/StudentCourseStyle.css';
 import SidebarComponent from '../../components/SidebarComponent';
 import StudentTeamComponent from '../../components/StudentComponents/CoursePage/StudentTeamComponent';
 import StudentToDoComponent from '../../components/StudentComponents/CoursePage/StudentToDoComponent';
-import CourseBarComponent from '../../components/CourseBarComponent';
 import StudentSubmittedComponent from '../../components/StudentComponents/CoursePage/StudentSubmittedComponent';
 import { useLocation, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,8 +10,9 @@ import { getCourseDetailsAsync } from '../../redux/features/courseSlice';
 import { getCurrentCourseTeamAsync } from '../../redux/features/teamSlice';
 import MyTeamComponent from '../../components/StudentComponents/CoursePage/MyTeamComponent';
 import uuid from 'react-uuid';
-import AssBarComponent from "../../components/AssBarComponent";
-import AssignmentTile from "../../components/AssignmentTile";
+import NavigationContainerComponent
+  from "../../components/NavigationComponents/NavigationContainerComponent";
+import HeaderBar from "../../components/HeaderBar/HeaderBar";
 
 const CourseComponent = ({ active, component, onClick }) => {
   return (
@@ -29,16 +29,14 @@ const CourseComponent = ({ active, component, onClick }) => {
   );
 };
 
-function StudentCoursePage() {
+function StudentCoursePage({chosen}) {
   const dispatch = useDispatch();
   const location = useLocation();
   const { courseId } = useParams();
   const { lakerId } = useSelector((state) => state.auth);
   const { currentTeamId, teamLoaded } = useSelector((state) => state.teams);
 
-  const initialState =
-    location.state !== null ? location.state.initialComponent : 'To Do';
-  const [chosen, setChosen] = useState(initialState);
+  const [chosenComponent, setChosenComponent] = useState(chosen);
 
   const components = ['To Do', 'Submitted', 'My Team'];
 
@@ -47,37 +45,40 @@ function StudentCoursePage() {
     dispatch(getCurrentCourseTeamAsync({ courseId, lakerId }));
   }, [courseId, lakerId, dispatch]);
 
-  return (
-    <div>
-      <div className='scp-parent'>
-        <SidebarComponent />
-        <div className='scp-container'>
-          <AssBarComponent />
-          <div className='scp-component'>
-            {/* Not in a team yet */}
-            {teamLoaded && currentTeamId === null && <StudentTeamComponent />}
+  useEffect(() => {
+    setChosenComponent(chosen);
+  }, [chosen]);
 
-            {/* Already in a team */}
-            {teamLoaded && currentTeamId !== null && (
+  return (
+    <div className="page-container">
+      <HeaderBar/>
+      <div className='scp-container'>
+        <NavigationContainerComponent/>
+        {/*<AssBarComponent />*/}
+        <div className='scp-component'>
+          {/* Not in a team yet */}
+          {teamLoaded && currentTeamId === null && <StudentTeamComponent />}
+
+          {/* Already in a team */}
+          {teamLoaded && currentTeamId !== null && (
               <div>
                 <div className='scp-component-links'>
                   {components.map((t) => (
-                    <CourseComponent
-                      key={uuid()}
-                      component={t}
-                      active={t === chosen}
-                      onClick={() => setChosen(t)}
-                    />
+                      <CourseComponent
+                          key={uuid()}
+                          component={t}
+                          active={t === chosenComponent}
+                          onClick={() => setChosenComponent(t)}
+                      />
                   ))}
                 </div>
                 <div>
-                  {chosen === 'To Do' && <StudentToDoComponent />}
-                  {chosen === 'Submitted' && <StudentSubmittedComponent />}
-                  {chosen === 'My Team' && <MyTeamComponent />}
+                  {chosenComponent === 'To Do' && <StudentToDoComponent />}
+                  {chosenComponent === 'Submitted' && <StudentSubmittedComponent />}
+                  {chosenComponent === 'My Team' && <MyTeamComponent />}
                 </div>
               </div>
-            )}
-          </div>
+          )}
         </div>
       </div>
     </div>

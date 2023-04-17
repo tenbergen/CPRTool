@@ -1,7 +1,7 @@
 package edu.oswego.cs.resources;
 
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
-import edu.oswego.cs.daos.FileDAO;
+import edu.oswego.cs.database.daos.FileDAO;
 import edu.oswego.cs.database.PeerReviewAssignmentInterface;
 import edu.oswego.cs.distribution.AssignmentDistribution;
 import org.bson.Document;
@@ -87,7 +87,7 @@ public class PeerReviewAssignmentResource {
                              @PathParam("assignmentID") int assignmentID,
                              @PathParam("teamName") String team_name) {
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
-        return Response.status(Response.Status.OK).entity(peerReviewAssignmentInterface.getTeamGrades(courseID, assignmentID, team_name)).build();
+        return Response.status(Response.Status.OK).entity(peerReviewAssignmentInterface.redoneGetTeamGrades(courseID, assignmentID, team_name)).build();//GetTeamGrades(courseID, assignmentID, team_name)).build();
     }
 
     /**
@@ -155,7 +155,7 @@ public class PeerReviewAssignmentResource {
         //grab instance of peer review interface
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
         //the function to grab all of the
-        Document matrixOfGrades = peerReviewAssignmentInterface.allPotentialOutliers(courseID);
+        Document matrixOfGrades = peerReviewAssignmentInterface.getAllPotentialOutliersAndGrades(courseID);//allPotentialOutliers(courseID);
 
         if(peerReviewAssignmentInterface == null || matrixOfGrades == null)
             return Response.status(Response.Status.BAD_REQUEST).entity("Error getting all the potential outliers").build();
@@ -181,7 +181,7 @@ public class PeerReviewAssignmentResource {
         //grab instance of peer review interface
         PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
         //the function to grab all of the
-        Document matrixOfGrades = peerReviewAssignmentInterface.getMatrixOfGrades(courseID, assignmentID);
+        Document matrixOfGrades = peerReviewAssignmentInterface.getMatrixOfOutlierAndGrades(courseID, assignmentID);//getMatrixOfGrades(courseID, assignmentID);
 
         if(peerReviewAssignmentInterface == null || matrixOfGrades == null)
             return Response.status(Response.Status.BAD_REQUEST).entity("Error getting matrix of grades").build();

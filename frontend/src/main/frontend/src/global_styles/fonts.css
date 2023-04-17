@@ -1,5 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');
 
+.inter-12-light-italic{
+  font-family: "Inter", sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 14px;
+  color: #212529;
+  font-style: italic;
+}
+
+.inter-14-medium-black{
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  color: #212529;
+}
+
+.inter-14-medium-white{
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  color: #f6f6f6;
+}
+
 .inter-16-medium-white {
   font-family: "Inter", sans-serif;
   font-weight: 500;
@@ -40,6 +65,14 @@
   color: #212529;
 }
 
+.inter-18-medium{
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  color: #212529;
+}
+
 .inter-20-extralight{
   font-family: "Inter", sans-serif;
   font-weight: 200;
@@ -72,6 +105,14 @@
   color: #ffffff;
 }
 
+.inter-20-bold-blue{
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  color: #4a7dfc;
+}
+
 .inter-20-bold {
   font-family: "Inter", sans-serif;
   font-weight: 700;
@@ -85,8 +126,17 @@
   font-weight: 500;
   font-size: 24px;
   line-height: 24px;
-  letter-spacing: 1px;
+  letter-spacing: .2px;
   color: #212529;
+}
+
+.inter-24-bold-blue{
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 24px;
+  letter-spacing: .2px;
+  color: #4a7dfc;
 }
 
 .inter-24-medium-white{

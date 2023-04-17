@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './styles/CreateCourseStyle.css';
-import SidebarComponent from '../../components/SidebarComponent';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../../components/LoaderComponenets/Loader';
 import CourseBarComponent from '../../components/CourseBarComponent';
 import { useSelector } from 'react-redux';
 import Breadcrumbs from "../../components/Breadcrumbs";
+import HeaderBar from "../../components/HeaderBar/HeaderBar";
+import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 
 const CreateCoursePage = () => {
   const submitCourseUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/create`;
@@ -14,6 +15,8 @@ const CreateCoursePage = () => {
   const { user_given_name } = useSelector((state) => state.auth);
   let navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const { currentCourse } = useSelector((state) => state.courses);
+  const csvFormData = new FormData();
 
   useEffect(() => {
     setIsLoading(true);
@@ -29,6 +32,14 @@ const CreateCoursePage = () => {
     crn: 0,
   });
 
+  const fileChangeHandler = (event) => {
+    let file = event.target.files[0];
+    const renamedFile = new File([file], currentCourse.course_id + '.csv', {
+      type: file.type,
+    });
+    csvFormData.set('csv_file', renamedFile);
+  };
+
   const { course_name, course_section, semester, abbreviation, year, crn } =
     formData;
 
@@ -41,8 +52,12 @@ const CreateCoursePage = () => {
       course_name === '' ||
       course_section === '' ||
       semester === '' ||
-      year === undefined ||
-      crn === undefined
+      year === "" ||
+      crn === "" ||
+      parseInt(crn) <= 0 ||
+      parseInt(year) < parseInt(new Date().getFullYear().toString()) ||
+      isNaN(parseInt(crn)) ||
+      isNaN(parseInt(year))
     ) {
       alert("Fields can't be empty!");
     } else {
@@ -75,89 +90,135 @@ const CreateCoursePage = () => {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className='pcp-parent'>
-          <SidebarComponent />
+        <div className="course-page-container">
+          <HeaderBar />
           <div className='ccp-container'>
-            <CourseBarComponent title={`Hello, ${user_given_name}!`} />
+            <NavigationContainerComponent />
             <div className='pcp-components'>
               <Breadcrumbs />
               <h2 className='inter-28-bold cpp-title'> Add new course </h2>
               <form className='ccp-form'>
-                <div className='input-field ccp-input-field'>
-                  <label className='inter-20-medium'> Course name: </label>
-                  <input
-                    type='text'
-                    name='course_name'
-                    value={course_name}
-                    required
-                    onChange={(e) => OnChange(e)}
-                  />
-                </div>
-
-                <div className='cpp-row-multiple'>
+                <div className='info-container'>
+                  <div className='info-header'></div>
                   <div className='input-field ccp-input-field'>
-                    <label className='inter-20-medium'> Course abbreviation: </label>
+                    <label className='inter-20-medium'>
+                      <span className='required'>
+                        Course Name:
+                      </span>
+                    </label>
                     <input
                       type='text'
-                      name='abbreviation'
-                      value={abbreviation}
+                      name='course_name'
+                      value={course_name}
                       required
                       onChange={(e) => OnChange(e)}
                     />
                   </div>
 
-                  <div className='input-field ccp-input-field'>
-                    <label className='inter-20-medium'> Course section: </label>
-                    <input
-                      type='text'
-                      name='course_section'
-                      value={course_section}
-                      required
-                      onChange={(e) => OnChange(e)}
-                    />
-                  </div>
-                </div>
+                  <div className='cpp-row-multiple'>
+                    <div className='input-field ccp-input-field'>
+                      <label className='inter-20-medium'>
+                        <span className='required'>
+                          Course Abbreviation:
+                        </span>
+                      </label>
+                      <input
+                        type='text'
+                        name='abbreviation'
+                        value={abbreviation}
+                        required
+                        onChange={(e) => OnChange(e)}
+                      />
+                    </div>
 
-                <div className='cpp-row-multiple'>
-                  <div className='input-field ccp-input-field'>
-                    <label className='inter-20-medium'> Semester: </label>
-                    <input
-                      type='text'
-                      name='semester'
-                      value={semester}
-                      required
-                      onChange={(e) => OnChange(e)}
-                    />
+                    <div className='input-field ccp-input-field'>
+                      <label className='inter-20-medium'>
+                        <span className='required'>
+                          Course Section:
+                        </span>
+                      </label>
+                      <input
+                        type='text'
+                        name='course_section'
+                        value={course_section}
+                        required
+                        onChange={(e) => OnChange(e)}
+                      />
+                    </div>
                   </div>
 
-                  <div className='input-field ccp-input-field'>
-                    <label className='inter-20-medium'> Year: </label>
-                    <input
-                      type='number'
-                      min={new Date().getFullYear().toString()}
-                      step='1'
-                      name='year'
-                      value={year}
-                      required
-                      onChange={(e) => OnChange(e)}
-                      onWheel={(e) => e.target.blur()}
-                    />
-                  </div>
-                </div>
+                  <div className='cpp-row-multiple'>
+                    <div className='input-field ccp-input-field'>
+                      <label className='inter-20-medium'>
+                        <span className='required'>
+                          Semester:
+                        </span>
+                      </label>
+                      <input
+                        type='text'
+                        name='semester'
+                        value={semester}
+                        required
+                        onChange={(e) => OnChange(e)}
+                      />
+                    </div>
 
-                <div className='cpp-row-multiple'>
-                  <div className='input-field ccp-input-field'>
-                    <label className='inter-20-medium'> CRN: </label>
-                    <input
-                      type='number'
-                      name='crn'
-                      value={crn}
-                      required
-                      onChange={(e) => OnChange(e)}
-                      onWheel={(e) => e.target.blur()}
-                    />
+                    <div className='input-field ccp-input-field'>
+                      <label className='inter-20-medium'>
+                        <span className='required'>
+                          Year:
+                        </span>
+                      </label>
+                      <input
+                        type='number'
+                        min={new Date().getFullYear().toString()}
+                        step='1'
+                        name='year'
+                        value={year}
+                        required
+                        onChange={(e) => OnChange(e)}
+                        onWheel={(e) => e.target.blur()}
+                      />
+                    </div>
                   </div>
-                  <div className='input-field ccp-input-field' />
+
+                  <div className='crn-csv-container'>
+                    <div className='input-field ccp-input-field'>
+                      <label className='inter-20-medium'>
+                        <span className='required'>
+                          CRN:
+                        </span>
+                      </label>
+                      <input
+                        type='number'
+                        name='crn'
+                        value={crn}
+                        required
+                        onChange={(e) => OnChange(e)}
+                        onWheel={(e) => e.target.blur()}
+                      />
+                    </div>
+
+                    <div className='ccp-file-upload'>
+                      <label>
+                        {' '}
+                        <span className='inter-20-bold'> Roster Upload </span>{' '}
+                      </label>
+                      <input className='browse-button'
+                        onChange={fileChangeHandler}
+                        type='file'
+                        name='course_csv'
+                        accept='.csv' />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className='inter-20-medium'>
+                      <span className='required-alt'>
+                        Indicates Required Field
+                      </span>
+                    </label>
+                  </div>
                 </div>
 
                 <div className='ccp-button'>
