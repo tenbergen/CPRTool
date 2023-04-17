@@ -155,161 +155,161 @@ const ProfessorEditCourseComponent = () => {
   }
 
   return (
-    <>
-      <div>
-        <h2 className="course-details-title">Course Details</h2>
-      </div>
-      <div className="ecc-form">
-        <Form
-          onSubmit={async (formObj) => {
-            await handleSubmit(formObj)
-          }}
-          initialValues={initialData}
-        >
-          {({ handleSubmit }) => (
-            <>
-              <form onSubmit={handleSubmit}>
-                <div className="info-container">
-                  <div className="info-header"></div>
+    <div className="ecc-form">
+      <h2 className="course-details-title" style={{ justifyContent: 'space-between' }}>Course Details
+        <button className="profanity-button"
+                onClick={() => navigate('/professor/' + courseId + '/details/Profanity Settings')}>Profanity Settings
+        </button>
+      </h2>
+      <Form
+        onSubmit={async (formObj) => {
+          await handleSubmit(formObj)
+        }}
+        initialValues={initialData}
+      >
+        {({ handleSubmit }) => (
+          <>
+            <form onSubmit={handleSubmit}>
+              <div className="info-container">
+                <div className="info-header"></div>
+                <div className="ecc-input-field">
+                  <label className="required">
+                    <span className="inter-20-bold">Name of course: </span>
+                  </label>
+                  <Field name="course_name">
+                    {({ input }) => (
+                      <input type="text" name="course_name" {...input} required/>
+                    )}
+                  </Field>
+                </div>
+
+                <div className="ecc-row-multiple">
                   <div className="ecc-input-field">
                     <label className="required">
-                      <span className="inter-20-bold">Name of course: </span>
+                      {' '}
+                      <span className="inter-20-bold"> Course abbreviation: </span>{' '}
                     </label>
-                    <Field name="course_name">
+                    <Field name="abbreviation">
                       {({ input }) => (
-                        <input type="text" name="course_name" {...input} required/>
+                        <input
+                          type="text"
+                          name="abbreviation"
+                          {...input}
+                          required/>
                       )}
                     </Field>
                   </div>
 
-                  <div className="ecc-row-multiple">
-                    <div className="ecc-input-field">
-                      <label className="required">
-                        {' '}
-                        <span className="inter-20-bold"> Course abbreviation: </span>{' '}
-                      </label>
-                      <Field name="abbreviation">
-                        {({ input }) => (
-                          <input
-                            type="text"
-                            name="abbreviation"
-                            {...input}
-                            required/>
-                        )}
-                      </Field>
-                    </div>
-
-                    <div className="ecc-input-field">
-                      <label className="required">
-                        {' '}
-                        <span className="inter-20-bold"> Course section : </span>{' '}
-                      </label>
-                      <Field name="course_section">
-                        {({ input }) => (
-                          <input
-                            type="text"
-                            name="course_section"
-                            {...input}
-                            required/>
-                        )}
-                      </Field>
-                    </div>
-                  </div>
-
-                  <div className="ecc-row-multiple">
-                    <div className="ecc-input-field">
-                      <label className="required">
-                        <span className="inter-20-bold">Semester: </span>
-                      </label>
-                      <Field name="semester">
-                        {({ input }) => (
-                          <input type="text" name="semester" {...input} required/>
-                        )}
-                      </Field>
-                    </div>
-                    <div className="ecc-input-field">
-                      <label className="required">
-                        <span className="inter-20-bold">Year: </span>{' '}
-                      </label>
-                      <Field name="year">
-                        {({ input }) => (
-                          <input type="text" name="year" {...input} required/>
-                        )}
-                      </Field>
-                    </div>
-                  </div>
-
-                  <div className="ecc-row-multiple">
-                    <div className="ecc-input-field">
-                      <label className="required">
-                        <span className="inter-20-bold">CRN: </span>{' '}
-                      </label>
-                      <Field name="crn">
-                        {({ input }) => <input type="text" name="crn" {...input} />}
-                      </Field>
-                    </div>
-
-                    <div className="ecc-input-field">
-                      <label className="required">
-                        <span className="inter-20-bold">Team size: </span>{' '}
-                      </label>
-                      <Field name="team_size">
-                        {({ input }) => (
-                          <input type="number" min="1" name="team_size" {...input} />
-                        )}
-                      </Field>
-                    </div>
-                  </div>
-
-                  <div className="roster-bulk-container">
-                    <div className="ecc-bulk-download">
-                      <label>
-                        <span className="inter-20-bold"> Bulk Download for Course </span>
-                      </label>
-                      <button className="bulk-download-button" type="button" onClick={onCourseClick}
-                              style={{ width: '150px', height: '40px' }}>Download
-                        <div style={{ display: 'inline-block', verticalAlign: 'middle', margin: '0 auto' }}>
-                        </div>
-                      </button>
-                    </div>
-
-                    <div className="ecc-file-upload">
-                      <label>
-                        {' '}
-                        <span className="inter-20-bold"> Roster Upload </span>{' '}
-                      </label>
-                      <input
-                        onChange={fileChangeHandler}
-                        type="file"
-                        name="course_csv"
-                        accept=".csv"/>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="inter-20-medium">
-                    <span className="required-alt">
-                      Indicates Required Field
-                    </span>
+                  <div className="ecc-input-field">
+                    <label className="required">
+                      {' '}
+                      <span className="inter-20-bold"> Course section : </span>{' '}
                     </label>
+                    <Field name="course_section">
+                      {({ input }) => (
+                        <input
+                          type="text"
+                          name="course_section"
+                          {...input}
+                          required/>
+                      )}
+                    </Field>
                   </div>
                 </div>
 
-              </form>
-              <div id="ecc-button-container">
-                <form onSubmit={handleSubmit} style={{ marginTop: '5%' }}>
-                  <button className="ecc-button" type="submit">Save Changes</button>
-                </form>
-                <button className="ecc-anchor" onClick={() => setShow(true)}>
-                  Delete course
-                </button>
-                <div>{showModal ? Modal() : null}</div>
+                <div className="ecc-row-multiple">
+                  <div className="ecc-input-field">
+                    <label className="required">
+                      <span className="inter-20-bold">Semester: </span>
+                    </label>
+                    <Field name="semester">
+                      {({ input }) => (
+                        <input type="text" name="semester" {...input} required/>
+                      )}
+                    </Field>
+                  </div>
+                  <div className="ecc-input-field">
+                    <label className="required">
+                      <span className="inter-20-bold">Year: </span>{' '}
+                    </label>
+                    <Field name="year">
+                      {({ input }) => (
+                        <input type="text" name="year" {...input} required/>
+                      )}
+                    </Field>
+                  </div>
+                </div>
+
+                <div className="ecc-row-multiple">
+                  <div className="ecc-input-field">
+                    <label className="required">
+                      <span className="inter-20-bold">CRN: </span>{' '}
+                    </label>
+                    <Field name="crn">
+                      {({ input }) => <input type="text" name="crn" {...input} />}
+                    </Field>
+                  </div>
+
+                  <div className="ecc-input-field">
+                    <label className="required">
+                      <span className="inter-20-bold">Team size: </span>{' '}
+                    </label>
+                    <Field name="team_size">
+                      {({ input }) => (
+                        <input type="number" min="1" name="team_size" {...input} />
+                      )}
+                    </Field>
+                  </div>
+                </div>
+
+                <div className="roster-bulk-container">
+                  <div className="ecc-bulk-download">
+                    <label>
+                      <span className="inter-20-bold"> Bulk Download for Course </span>
+                    </label>
+                    <button className="bulk-download-button" type="button" onClick={onCourseClick}
+                            style={{ width: '150px', height: '40px' }}>Download
+                      <div style={{ display: 'inline-block', verticalAlign: 'middle', margin: '0 auto' }}>
+                      </div>
+                    </button>
+                  </div>
+
+                  <div className="ecc-file-upload">
+                    <label>
+                      {' '}
+                      <span className="inter-20-bold"> Roster Upload </span>{' '}
+                    </label>
+                    <input
+                      onChange={fileChangeHandler}
+                      type="file"
+                      name="course_csv"
+                      accept=".csv"/>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="inter-20-medium">
+                    <span className="required-alt">
+                      Indicates Required Field
+                    </span>
+                  </label>
+                </div>
               </div>
-            </>
-          )}
-        </Form>
-      </div>
-    </>
+
+            </form>
+            <div id="ecc-button-container">
+              <form onSubmit={handleSubmit} style={{ marginTop: '5%' }}>
+                <button className="ecc-button" type="submit">Save Changes</button>
+              </form>
+              <button className="ecc-anchor" onClick={() => setShow(true)}>
+                Delete course
+              </button>
+              <div>{showModal ? Modal() : null}</div>
+            </div>
+          </>
+        )}
+      </Form>
+    </div>
   )
 }
 
