@@ -1469,4 +1469,18 @@ public class PeerReviewAssignmentInterface {
 
         return allPotentialOutliers;
     }
+
+    public List<String> getReviewTeams(String courseID, int assignmentID, String teamName) {
+        Document assignment = assignmentCollection.find(and(eq("assignment_id", assignmentID), eq("course_id", courseID))).first();
+        Document assignedTeams = Document.parse(assignment.getString("assigned_teams"));
+        List<String> teams = assignment.getList("all_teams", String.class);
+        ArrayList<String> reviewTeams = new ArrayList<>();
+        for(String team : teams){
+            List<String> teamList = assignedTeams.getList(team, String.class);
+            if(teamList.contains(teamName)){
+                reviewTeams.add(team);
+            }
+        }
+        return reviewTeams;
+    }
 }

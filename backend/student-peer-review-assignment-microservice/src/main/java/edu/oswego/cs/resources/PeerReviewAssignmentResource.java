@@ -212,6 +212,28 @@ public class PeerReviewAssignmentResource {
         return Response.status(Response.Status.OK).entity(assignedTeams).build();
     }
 
+    /**
+     * Endpoint to get the teams that were assigned to as specific target team to peer-review
+     *
+     * @param courseID course in which team exists
+     * @param assignmentID the peer review assignment
+     * @param teamName the target team
+     * @return all teams assigned to review the target team for this peer review assignment
+     */
+    @GET
+    @RolesAllowed({"professor", "student"})
+    @Path("{courseID}/{assignmentID}/peer-review-team-reviewers/{teamName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTeamReviewers(@PathParam("courseID") String courseID,
+                                       @PathParam("assignmentID") int assignmentID,
+                                       @PathParam("teamName") String teamName) {
+        PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
+        List<String> reviewTeams = peerReviewAssignmentInterface.getReviewTeams(courseID, assignmentID, teamName);
+        if (reviewTeams == null)
+            return Response.status(Response.Status.BAD_REQUEST).entity("Team name does not exist.").build();
+        return Response.status(Response.Status.OK).entity(reviewTeams).build();
+    }
+
     //deprecated so not even going to bother
 
     /**
