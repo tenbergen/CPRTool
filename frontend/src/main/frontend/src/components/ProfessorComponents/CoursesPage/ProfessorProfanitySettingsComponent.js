@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 import { getAssignmentDetailsAsync } from '../../../redux/features/assignmentSlice'
 
 function ProfessorProfanitySettingsComponent () {
-  //yse this course id value for doing the get and post requests :)
+  //use this course id value for doing the get and post requests :)
   let { courseId } = useParams()
   let navigate = useNavigate()
   //DUMMY VALUES
@@ -37,6 +37,28 @@ function ProfessorProfanitySettingsComponent () {
     }
   }
   const [textboxInput, setTextBoxInput] = useState(initialValueSet)
+  const [showModal, setShowModal] = useState(false)
+
+  //modal object
+  const Modal = () => {
+    return (
+      <div id="modalSuccess">
+        <div id="modalSuccessContent">
+          <svg className={'cross'} onClick={() => navigate(-1)}></svg>
+          <span className="inter-28-bold"
+                style={{
+                  justifyContent: 'center',
+                  verticalAlign: 'middle',
+                  position: 'absolute',
+                  top: '33%'
+                }}>
+             <svg className={'check_image'}></svg>
+            <div>Success! <p>Course Profanity info successfully updated!</p></div>
+           </span>
+        </div>
+      </div>
+    )
+  }
 
   const loadDefaults = () => {
     //you would run this a lot like how the do in ProfessorEditAssignmentComponent
@@ -61,9 +83,10 @@ function ProfessorProfanitySettingsComponent () {
 
   const handleSubmit = async () => {
     //remove any extraneous new line characters while turning the input back into an array
-    const blockedWordsArray = textboxInput.profanityText.split('\n').filter((str) => str !== '')
+    const blockedWordsArray = textboxInput.profanityText.split('\n').filter((str, index, arr) => str !== '' && arr.indexOf(str) === index)
     //printing them out to the console just so you can see the array that gets made
     console.log(blockedWordsArray)
+    setShowModal(true)
   }
 
   return (
@@ -87,7 +110,8 @@ function ProfessorProfanitySettingsComponent () {
           </form>
           <div id="ecc-button-container">
             <form onSubmit={handleSubmit} style={{ marginTop: '5%' }}>
-              <button className="ecc-button" type="button" onClick={() => handleSubmit()}>Save Changes</button>
+              <button className="ecc-button" type="button" onClick={() => handleSubmit()}>Save
+                Changes <div>{showModal ? Modal() : null}</div></button>
             </form>
             <button className="ecc-anchor-cancel" onClick={() => navigate(-1)}>
               Go Back

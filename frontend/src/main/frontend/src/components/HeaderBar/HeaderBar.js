@@ -16,12 +16,14 @@ const HeaderBar = () => {
     localStorage.setItem('alt_role', 'student')
     //since the professor can change views from any page now, it is necessary to redirect them back to the route url
     navigate('/')
+    window.location.reload(false)
   }
 
   const professorView = () => {
     localStorage.removeItem('alt_role')
     //since the professor can change views from any page now, it is necessary to redirect them back to the route url
     navigate('/')
+    window.location.reload(false)
   }
 
 // // Close the dropdown menu if the user clicks outside of it
