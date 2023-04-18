@@ -26,6 +26,13 @@ const HeaderBar = () => {
     window.location.reload(false)
   }
 
+  const adminView = () => {
+    localStorage.removeItem('alt_role')
+    //since the professor can change views from any page now, it is necessary to redirect them back to the route url
+    navigate('/professor/admin')
+    window.location.reload(false)
+  }
+
 // // Close the dropdown menu if the user clicks outside of it
 //     window.onclick = function(event) {
 //         if (!event.target.matches('#admin-button')) {
@@ -54,9 +61,7 @@ const HeaderBar = () => {
           <div className="admin-dropdown">
             <button id="admin-button" onClick={() => showDropdown()}></button>
             <div id="dropdown-options" className="dropdown-content">
-              <Link to={`/professor/admin`}>
-                Admin
-              </Link>
+              <a href="#" onClick={adminView}>Admin</a>
               <a href="#" onClick={professorView}>Instructor</a>
               <a href="#" onClick={studentView}>Student</a>
             </div>
