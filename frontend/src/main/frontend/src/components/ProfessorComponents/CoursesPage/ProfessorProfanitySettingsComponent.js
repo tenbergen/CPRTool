@@ -1,27 +1,32 @@
 import '../../styles/EditCourse.css'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Field, Form } from 'react-final-form'
-import { getCoursesAsync } from '../../../redux/features/courseSlice'
+import { getCourseDetailsAsync, getCoursesAsync } from '../../../redux/features/courseSlice'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { getAssignmentDetailsAsync } from '../../../redux/features/assignmentSlice'
+import axios from 'axios'
+import { getCurrentCourseTeamAsync } from '../../../redux/features/teamSlice'
 
 function ProfessorProfanitySettingsComponent () {
-  //use this course id value for doing the get and post requests :)
+  const dispatch = useDispatch()
+  //use this course id value for doing the get and post requests
   let { courseId } = useParams()
+  const updateProfanityUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/` + courseId + `/profanity/update`
   let navigate = useNavigate()
+  let profaninityArray = []
   //DUMMY VALUES
-  //this list would be what the instructor has set to their custom blocked word list
-  const profaninityArray = JSON.parse('["Heck", "Phoebe Bridgers", "Conor Oberst", "Another"]')
-  //this list would be the defualt from the admin
+  //this list would be the default from the admin
   const defaultProfanityArray = JSON.parse('["Dank", "Plonk", "Bad", "Words"]')
   const { currentCourse } = useSelector((state) => state.courses)
 
   useEffect(() => {
-    //leaving the courseId dependency since you'll need it to query backend to get the list of blocked words
-    //keeping this blank for now but this is where we would talk to the frontend to get the initial blocked words array
-  }, [courseId])
+    //set the profanity array value to whatever the current course has it as so long as it is not null
+    profaninityArray = currentCourse == null ? null : currentCourse.blocked_words
+    //set the text box input to the currently loaded bad words
+    setTextBoxInput(initialValueSet)
+  }, [currentCourse])
 
   const initialValueSet = () => {
     //you would run this a lot like how the do in ProfessorEditAssignmentComponent
@@ -42,19 +47,33 @@ function ProfessorProfanitySettingsComponent () {
   //modal object
   const Modal = () => {
     return (
-      <div id="modalSuccess">
-        <div id="modalSuccessContent">
-          <svg className={'cross'} onClick={() => navigate(-1)}></svg>
-          <span className="inter-28-bold"
-                style={{
-                  justifyContent: 'center',
-                  verticalAlign: 'middle',
-                  position: 'absolute',
-                  top: '33%'
-                }}>
-             <svg className={'check_image'}></svg>
-            <div>Success! <p>Course Profanity info successfully updated!</p></div>
-           </span>
+      <div id="modal">
+        <div id="modalContent" style={{
+          height: '40%',
+          width: '45%'
+        }}>
+          <svg className="cross" style={{}} onClick={async () => {
+            navigate(-1)
+            dispatch(getCourseDetailsAsync(courseId))
+          }}></svg>
+          <span
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              verticalAlign: 'middle',
+              position: 'absolute',
+              top: '27%'
+            }}>
+                        <svg className={'check_image'}></svg>
+                        <div className="inter-28-bold"
+                             style={{
+                               marginTop: '3%',
+                               marginBottom: '8%'
+                             }}>Success!</div>
+                        <p style={{ color: 'black' }}>Course profanity list successfully updated!</p>
+                    </span>
         </div>
       </div>
     )
@@ -86,7 +105,15 @@ function ProfessorProfanitySettingsComponent () {
     const blockedWordsArray = textboxInput.profanityText.split('\n').filter((str, index, arr) => str !== '' && arr.indexOf(str) === index)
     //printing them out to the console just so you can see the array that gets made
     console.log(blockedWordsArray)
-    setShowModal(true)
+    await axios
+      .post(updateProfanityUrl, blockedWordsArray)
+      .then((res) => {
+        setShowModal(true)
+      })
+      .catch((e) => {
+        console.error(e)
+        alert('Error updating profanity list')
+      })
   }
 
   return (
