@@ -95,18 +95,18 @@ public class CourseManagerResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("courses/{crn}/profanity/update")
+    @Path("courses/{course_id}/profanity/update")
     @RolesAllowed("professor")
-    public Response updateBlockedWordsForCourse(@Context SecurityContext securityContext, @PathParam("crn") String crn, @RequestBody String payload) {
-        new CourseInterface().updateBlockedWordsForCourse(crn, payload);
+    public Response updateBlockedWordsForCourse(@Context SecurityContext securityContext, @PathParam("course_id") String course_id, @RequestBody String payload) {
+        new CourseInterface().updateBlockedWordsForCourse(course_id, payload);
         return Response.status(Response.Status.OK).entity("Profanity settings updated.").build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("courses/{crn}/profanity/view")
+    @Path("courses/{course_id}/profanity/view")
     @RolesAllowed("professor")
-    public Response getBlockedWordsForCourse(@Context SecurityContext securityContext, @PathParam("crn") String crn) {
-        return Response.status(Response.Status.OK).entity(new CourseInterface().getBlockedWordsForCourse(crn)).build();
+    public Response getBlockedWordsForCourse(@Context SecurityContext securityContext, @PathParam("course_id") String course_id) {
+        return Response.status(Response.Status.OK).entity(new CourseInterface().getBlockedWordsForCourse(course_id)).build();
     }
 }
