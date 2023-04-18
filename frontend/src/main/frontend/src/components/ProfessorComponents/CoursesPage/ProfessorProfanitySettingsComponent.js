@@ -14,11 +14,12 @@ function ProfessorProfanitySettingsComponent () {
   //use this course id value for doing the get and post requests
   let { courseId } = useParams()
   const updateProfanityUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/` + courseId + `/profanity/update`
+  const getAdminProfanityUrl = `${process.env.REACT_APP_URL}/manage/admin/views/profanity`
   let navigate = useNavigate()
   let profaninityArray = []
   //DUMMY VALUES
   //this list would be the default from the admin
-  const defaultProfanityArray = JSON.parse('["Dank", "Plonk", "Bad", "Words"]')
+  const defaultProfanityArray = []
   const { currentCourse } = useSelector((state) => state.courses)
 
   useEffect(() => {
@@ -79,17 +80,25 @@ function ProfessorProfanitySettingsComponent () {
     )
   }
 
-  const loadDefaults = () => {
+  const loadDefaults = async () => {
     //you would run this a lot like how the do in ProfessorEditAssignmentComponent
-    let profanityText = defaultProfanityArray[0]
-    defaultProfanityArray.forEach(element => {
-        if (element !== defaultProfanityArray[0]) {
-          profanityText += '\n' + element
-        }
-      }
-    )
-    setTextBoxInput(() => {return { profanityText } })
-    console.log(textboxInput)
+    await axios
+      .get(getAdminProfanityUrl)
+      .then((res) => {
+        let profanityText = res.data[0]
+        let defaultProfanityArray = res.data
+        defaultProfanityArray.forEach(element => {
+            if (element !== defaultProfanityArray[0]) {
+              profanityText += '\n' + element
+            }
+          }
+        )
+        setTextBoxInput(() => {return { profanityText } })
+      })
+      .catch((e) => {
+        console.error(e)
+        alert('Error updating profanity list')
+      })
   }
 
   const handleTextBoxChange = event => {
@@ -103,8 +112,6 @@ function ProfessorProfanitySettingsComponent () {
   const handleSubmit = async () => {
     //remove any extraneous new line characters while turning the input back into an array
     const blockedWordsArray = textboxInput.profanityText.split('\n').filter((str, index, arr) => str !== '' && arr.indexOf(str) === index)
-    //printing them out to the console just so you can see the array that gets made
-    console.log(blockedWordsArray)
     await axios
       .post(updateProfanityUrl, blockedWordsArray)
       .then((res) => {
