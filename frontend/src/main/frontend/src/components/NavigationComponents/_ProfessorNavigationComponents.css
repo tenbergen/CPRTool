@@ -1,3 +1,4 @@
+
 .bulk-download-icon-active{
     background-image: url("../../assets/icons/navigation/active/Bulk Download.svg");
     width: 20px;
@@ -12,7 +13,14 @@
     margin: 0 16px 0 35px;
 }
 
-#bulk-download-tile{
+.bulk-download-white-icon-default {
+    background-image: url("../../assets/icons/navigation/default/white_bulk_download.svg");
+    width: 17px;
+    height: 17px;
+    margin: 0 16px 0 35px;
+}
+
+#bulk-download-tile {
     display: flex;
     flex-direction: row;
     background-color: #F7F7F7;
@@ -22,11 +30,12 @@
     margin-top: -1px;
     user-select: none;
 }
-#bulk-download-tile:hover{
+
+#bulk-download-tile:hover {
     cursor: pointer;
 }
 
-.course-accordion-submenu-tile{
+.course-accordion-submenu-tile {
     display: flex;
     flex-direction: row;
     background-color: #FFFFFF;
@@ -89,7 +98,7 @@
     margin: 0 17px 0 35px;
 }
 
-#courses-tile{
+#courses-tile {
     display: flex;
     flex-direction: column;
     background-color: #F6F6F6;
@@ -99,36 +108,37 @@
     user-select: none;
 }
 
-#courses-tile-first-line{
+#courses-tile-first-line {
     display: flex;
     flex-direction: row;
     align-items: center;
     height: 60px;
     justify-content: space-between;
 }
-#courses-tile-first-line:hover{
+
+#courses-tile-first-line:hover {
     cursor: pointer;
 }
 
-.courses-tile-heading{
+.courses-tile-heading {
     display: flex;
     flex-direction: row;
     color: #4a7dfc;
     align-items: center;
 }
 
-#courses-tile-second-line{
+#courses-tile-second-line {
     display: flex;
     flex-direction: row;
     align-items: center;
     margin-left: 44px;
 }
 
-.courses-tile-active{
+.courses-tile-active {
     height: 100px;
 }
 
-.courses-tile-inactive{
+.courses-tile-inactive {
     height: 60px;
 }
 
@@ -160,7 +170,7 @@
     margin: 0 16px 0 35px;
 }
 
-#home-tile{
+#home-tile {
     display: flex;
     flex-direction: row;
     background-color: #F6F6F6;
@@ -170,11 +180,12 @@
     margin-top: -1px;
     user-select: none;
 }
-#home-tile:hover{
+
+#home-tile:hover {
     cursor: pointer;
 }
 
-.icon{
+.icon {
     width: 22px;
     height: 20px;
     margin: 0 16px 0 35px;
@@ -190,14 +201,15 @@
     width: 365px;
 }
 
-.parent-container{
+.parent-container {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     background-color: #d4eefc;
+    height: 100%;
 }
 
-.semester-selection-active{
+.semester-selection-active {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -209,11 +221,12 @@
     background-color: #4a7dfc;
     user-select: none;
 }
-.semester-selection-active:hover{
+
+.semester-selection-active:hover {
     cursor: pointer;
 }
 
-.semester-selection-inactive{
+.semester-selection-inactive {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -225,11 +238,12 @@
     background-color: #F6F6F6;
     user-select: none;
 }
-.semester-selection-inactive:hover{
+
+.semester-selection-inactive:hover {
     cursor: pointer;
 }
 
-.year-individual-selection{
+.year-individual-selection {
     height: 26px;
     border: #4b5563 solid 1px;
     margin-top: -1px;
@@ -239,14 +253,17 @@
     padding-left: 25px;
     border-bottom: none;
 }
-.year-individual-selection:first-child{
+
+.year-individual-selection:first-child {
     border-radius: 5px 5px 0 0;
 }
-.year-individual-selection:last-child{
+
+.year-individual-selection:last-child {
     border-bottom: #4b5563 solid 1px;
     border-radius: 0 0 5px 5px;
 }
-.year-individual-selection:hover{
+
+.year-individual-selection:hover {
     background-color: lightgrey;
 }
 

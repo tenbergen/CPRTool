@@ -9,7 +9,7 @@ import ProfessorEditAssignmentComponent from '../../components/ProfessorComponen
 import { getAssignmentDetailsAsync } from '../../redux/features/assignmentSlice';
 import Loader from '../../components/LoaderComponenets/Loader';
 import uuid from 'react-uuid';
-import ProfessorHeaderBar from "../../components/ProfessorComponents/ProfessorHeaderBar";
+import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 
 const AssComponent = ({ active, component, onClick }) => {
@@ -29,7 +29,11 @@ const AssComponent = ({ active, component, onClick }) => {
 
 function ProfessorAssignmentPage() {
   let dispatch = useDispatch();
-  let { courseId, assignmentId } = useParams();
+
+  const courseParse = window.location.pathname;
+  const courseId = courseParse.split("/")[2];
+
+  let { assignmentId } = useParams();
   const { currentCourseLoaded } = useSelector((state) => state.courses);
 
   const components = ['All Submissions', 'Needs Grading', 'Edit'];
@@ -48,7 +52,7 @@ function ProfessorAssignmentPage() {
     <div>
       {currentCourseLoaded ? (
           <div className="page-container">
-            <ProfessorHeaderBar/>
+            <HeaderBar/>
             <div className='scp-container'>
               <NavigationContainerComponent/>
               <div className='scp-component'>

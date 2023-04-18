@@ -1,8 +1,10 @@
 import './_ProfessorNavigationComponents.css'
 import React, {forwardRef, useEffect, useImperativeHandle} from 'react';
+import { Link } from 'react-router-dom';
+import {useSelector} from "react-redux";
 
 const HomeTileComponent = ({trigger, deactivateCourses}) => {
-
+    const role = useSelector((state) => state.auth.role);
     useEffect(() => {
         if(trigger){
             document.getElementById("home-tile").classList.remove("inter-24-bold-blue")
@@ -23,10 +25,12 @@ const HomeTileComponent = ({trigger, deactivateCourses}) => {
     }
 
     return (
-        <div id="home-tile" className="inter-24-medium" onClick={() => onClick()}>
-            <div className="home-icon-default"></div>
-            <p>Home</p>
-        </div>
+        <Link to={`/`} onClick={onClick}>
+            <div id="home-tile" className="inter-24-medium">
+                <div className="home-icon-default"></div>
+                <p>Home</p>
+            </div>
+        </Link>
     );
 };
 
