@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './styles/ProfessorGradesStyling.css';
 import editIcon from '../AdminPages/edit.png';
 import { setCurrentCourse } from '../../redux/features/courseSlice';
@@ -8,6 +8,7 @@ import Table from './Table';
 import { LinearScale, Chart } from "chart.js";
 import { CategoryScale } from "chart.js";
 import { LineElement, PointElement } from "chart.js";
+import axios from 'axios';
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 import HeaderBar from "../../components/HeaderBar/HeaderBar";
 
@@ -58,6 +59,10 @@ function ProfessorGradesPage() {
     const [selectedStudent, setSelectedStudent] = useState("all");
     const [selectedVisualStudent, setSelectedVisualStudent] = useState("all");
     const [selectedTeam, setSelectedTeam] = useState("all");
+    const courseId = window.location.pathname;
+    const course = courseId.split("/")[2];
+    const getAllAssignmentsUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses/${course}/assignments`;
+    const getAllStudentsUrl = `${process.env.REACT_APP_URL}/course/professor/courses/${course}/students`;
 
     const filteredUsers = userList.filter((user) =>
         (selectedAssignment === "all" || user.assignment === selectedAssignment) &&
@@ -94,6 +99,35 @@ function ProfessorGradesPage() {
     const uniqueTeams = userList
         .filter((user, index, arr) => arr.findIndex(u => u.team === user.team) === index)
         .map(user => user.team);
+
+    // const [students, setStudents] = useState([]);
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //     const response = await fetch(`${process.env.REACT_APP_URL}/course/professor/courses/${course}/students`);
+    //     const data = await response.json();
+    //     setStudents(data);
+    //     console.log(students)
+    //     };
+    //     fetchData();
+    // }, []);
+
+    axios.get(getAllStudentsUrl)
+        .then(response => console.log(response.data))
+        .catch(error => console.error("Uh oh"));
+
+    axios.get(getAllAssignmentsUrl)
+        .then(response => {
+            //console.log(response.data); 
+            const getAllSubmissions = response.data;
+            for (let i = 1; i <= response.data.length; i++) {
+                axios.get(`${process.env.REACT_APP_URL}/assignments/professor/courses/${course}/assignments/${i}`)
+                    .then(response2 => {
+                        console.log(response2.data)
+                    })
+            }
+        })
+        .catch(error => console.error("Uh oh"));
 
 
     const getChartData = () => {
@@ -164,7 +198,7 @@ function ProfessorGradesPage() {
                 data.datasets[1].data.push(meanSum / count);
             });
         });
-        
+
         const grades2 = [[], [], [], [], [], []]; // initialize an array to store the grades for each assignment
 
         userStatsList.forEach((user) => {
