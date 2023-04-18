@@ -14,6 +14,8 @@ import StudentSubmittedAssignmentPage from '../pages/StudentPages/StudentSubmitt
 import ProfessorSubmittedAssignmentPage from '../pages/TeacherPages/ProfessorSubmittedAssignmentPage';
 import AdminInterface from '../pages/AdminPages/AdminInterface'
 import ProfessorGradesPage from '../pages/TeacherPages/ProfessorGradesPage';
+import ProfessorRosterComponent from "../components/ProfessorComponents/CoursesPage/ProfessorRosterComponent";
+import StudentGradesPage from '../pages/StudentPages/StudentGradesPage';
 
 const RouterHandler = () => {
   return (
@@ -31,7 +33,7 @@ const RouterHandler = () => {
             <Route path='create' element={<CreateCoursePage />} />
             <Route
               path='professor/:courseId'
-              element={<ProfessorCoursePage />}
+              element={<ProfessorCoursePage chosen="Assignments" />}
             />
             <Route
               path='professor/:courseId/grades'
@@ -56,6 +58,22 @@ const RouterHandler = () => {
             <Route
                 path='professor'
                 element={<App />}
+            />
+            <Route
+                path='/professor/:courseId/teams'
+                element={<ProfessorCoursePage chosen="Teams" />}
+            />
+            <Route
+                path='/professor/:courseId/roster'
+                element={<ProfessorCoursePage chosen="Roster" />}
+            />
+            <Route
+                path='/professor/:courseId/assignments'
+                element={<ProfessorCoursePage chosen="Assignments" />}
+            />
+            <Route
+                path='/professor/:courseId/details'
+                element={<ProfessorCoursePage chosen="Manage" />}
             />
           </Route>
 
@@ -82,9 +100,23 @@ const RouterHandler = () => {
               element={<StudentSubmittedAssignmentPage />}
             />
             <Route
+                path='student/:courseId/grades'
+                element={<StudentGradesPage />}
+            />
+            <Route
                 path='student'
                 element={<App />}
             />
+            <Route
+                path='/student/:courseId/teams'
+                element={<StudentCoursePage chosen="My Team" />}
+            />
+            <Route
+                path='/student/:courseId/assignments'
+                element={<StudentCoursePage chosen="To Do" />}
+            />
+
+
           </Route>
         </Route>
       </Route>

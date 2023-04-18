@@ -1,5 +1,6 @@
 package edu.oswego.cs.database;
 
+import com.google.gson.Gson;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Updates;
@@ -178,7 +179,9 @@ public class CourseInterface {
                     .append("first_name", studentFirstName)
                     .append("last_name", studentLastName)
                     .append("student_id", studentId)
-                    .append("courses", new ArrayList<String>());
+                    .append("courses", new ArrayList<String>())
+                    .append("team_submissions", new ArrayList<Document>())
+                    .append("peer_reviews", new ArrayList<Document>());
         }
 
         List<String> courseList = studentDocument.getList("courses", String.class);
@@ -286,5 +289,22 @@ public class CourseInterface {
                 .collect(Collectors.toList())) {
             addStudent(securityContext, student, courseID);
         }
+    }
+
+    public void updateBlockedWordsForCourse(String course_id, String payload) {
+        Document courseDocument = courseCollection.find(eq("course_id", course_id)).first();
+        if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "This course does not exist.");
+        Gson gson = new Gson();
+        List<String> blockedWords = gson.fromJson(payload, List.class);
+        courseDocument.put("blocked_words", blockedWords);
+        courseCollection.updateOne(eq("course_id", course_id), set("blocked_words", blockedWords));
+    }
+
+    public String getBlockedWordsForCourse(String course_id){
+        Document courseDocument = courseCollection.find(eq("course_id", course_id)).first();
+        if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "This course does not exist.");
+        Gson gson = new Gson();
+        List<String> blockedWords = courseDocument.getList("blocked_words", String.class);
+        return gson.toJson(blockedWords);
     }
 }

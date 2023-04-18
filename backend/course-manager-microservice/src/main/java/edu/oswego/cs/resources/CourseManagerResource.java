@@ -14,7 +14,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
+
+//reset
 @Path("professor")
 @DenyAll
 public class CourseManagerResource {
@@ -88,5 +91,22 @@ public class CourseManagerResource {
         fileDAO = FileDAO.FileFactory(body.getAllAttachments());
         new CourseInterface().addStudentsFromCSV(securityContext, fileDAO);
         return Response.status(Response.Status.OK).entity("Student(s) successfully added.").build();
+    }
+
+        @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("courses/{crn}/profanity/update")
+    @RolesAllowed("professor")
+    public Response updateBlockedWordsForCourse(@Context SecurityContext securityContext, @PathParam("crn") String crn, @RequestBody String payload)  {
+        new CourseInterface().updateBlockedWordsForCourse(crn, payload);
+        return Response.status(Response.Status.OK).entity("Profanity settings updated.").build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("courses/{crn}/profanity/view")
+    @RolesAllowed("professor")
+    public Response getBlockedWordsForCourse(@Context SecurityContext securityContext, @PathParam("crn") String crn)  {
+        return Response.status(Response.Status.OK).entity(new CourseInterface().getBlockedWordsForCourse(crn)).build();
     }
 }

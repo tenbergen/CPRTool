@@ -2,55 +2,25 @@
 version: 2.1
 
 orbs:
-  maven: circleci/maven@1.4.0
+  maven: circleci/maven@1.4.1
 
 jobs:
-  build:
-    docker:
-      - image: cimg/base:2023.04
-        auth:
-          username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD
-
+  clean_course_manager:
+    executor: maven/default
     steps:
       - checkout
-      - run:
-          name: Install Docker Compose
-          environment:
-            COMPOSE_VERSION: '1.29.2'
-          command: |
-            curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o ~/docker-compose
-            chmod +x ~/docker-compose
-            sudo mv ~/docker-compose /usr/local/bin/docker-compose
-      - setup_remote_docker
+      - run: CSC480-22S/backend/course-manager-microservice/pom.xml mvn clean
 
-  compile:
-    docker:
-      - image: cimg/base:2023.04
-        auth:
-          username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD
-
+  build_course_manager:
+    executor: maven/default
     steps:
       - checkout
-      - command: |
-          docker-compose -f docker-compose-local.yml up -d --build
+      - build
 
-  tests:
-    docker:
-      - image: cimg/base:2023.04
-        auth:
-          username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD
-
-    steps:
-      - run:
-          name: Run tests
-          command: |
-            docker-compose -f docker-compose-local.yml exec -T app sh -c "mvn test"
-
-Workflow:
-  Job:
-    - build
-    - compile
-    - -tests
+workflows:
+  clean_and_build:
+    jobs:
+      - clean_course_manager
+      - build_course_manager:
+          requires:
+            - clean_course_manager

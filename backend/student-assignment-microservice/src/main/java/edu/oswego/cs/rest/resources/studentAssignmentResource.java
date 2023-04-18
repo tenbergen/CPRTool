@@ -1,3 +1,4 @@
+
 package edu.oswego.cs.rest.resources;
 
 import com.ibm.websphere.jaxrs20.multipart.IAttachment;
@@ -6,6 +7,7 @@ import edu.oswego.cs.rest.database.AssignmentInterface;
 import org.apache.tika.exception.TikaException;
 import org.bson.Document;
 import org.bson.types.Binary;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.xml.sax.SAXException;
 
 import javax.annotation.security.DenyAll;
@@ -26,6 +28,7 @@ import java.util.List;
 public class studentAssignmentResource {
 
     //change
+
     /**
      * Retrieves the assignment from its location on the server and passes it to the front end via the request header
      * as a stream. The request entity passes an InputStream[] with the assignment files in each array.
@@ -44,7 +47,8 @@ public class studentAssignmentResource {
             @PathParam("assignmentID") int assignmentID,
             @PathParam("teamName") String teamName) {
         Document teamSubmission = new AssignmentInterface().getSpecifiedTeamSubmission(courseID, assignmentID, teamName);
-        if(teamSubmission == null) return Response.status(Response.Status.BAD_REQUEST).entity("Assignment Does Not Exist").build();
+        if (teamSubmission == null)
+            return Response.status(Response.Status.BAD_REQUEST).entity("Assignment Does Not Exist").build();
 
         Binary fileData = (Binary) teamSubmission.get("submission_data");
         Response.ResponseBuilder response = Response.ok(Base64.getEncoder().encode(fileData.getData()));
@@ -53,6 +57,7 @@ public class studentAssignmentResource {
     }
 
     //change
+
     /**
      * File is uploaded as form-data and passed back as a List<IAttachment>
      * The attachment is processed in FileDao.FileFactory, which reads and
@@ -140,33 +145,33 @@ public class studentAssignmentResource {
     }
 
     /**
-     *
      * @param courseID
      * @return String
-     *
+     * <p>
      * Returns a Base64 string of the zip file containing all submission/peer review information relative to all the assignments
      * in a given course that the frontend can decode and get a zip file from. Note that if no peer reviews are added to the assignment
      * the Peer-Reviews folder won't be made.
-     *     Structure of the unzipped file goes:
+     * Structure of the unzipped file goes:
      * <Course ID>
-     *     |
-     *     |
-     *     L-><Assignment-Name>
-     *            |
-     *            |
-     *            L-> <Team-Name>
-     *                    |
-     *                    |
-     *                    L-><Submission> ---> <Submission File>
-     *                    L-><Peer-Reviews>
-     *                             |
-     *                             |
-     *                             L-><Given> ---> <All Peer Reviews given for the current assignment>
-     *                             L-><Received> ---> <All Peer Reviews received for the current assignment>
+     * |
+     * |
+     * L-><Assignment-Name>
+     * |
+     * |
+     * L-> <Team-Name>
+     * |
+     * |
+     * L-><Submission> ---> <Submission File>
+     * L-><Peer-Reviews>
+     * |
+     * |
+     * L-><Given> ---> <All Peer Reviews given for the current assignment>
+     * L-><Received> ---> <All Peer Reviews received for the current assignment>
      */
     @GET
     @RolesAllowed("professor")
     @Path("{course_id}/course-assignment-files")
+    @Produces({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
     public Response getAllCourseDocuments(@Context SecurityContext securityContext, @PathParam("course_id") String courseID) throws IOException {
         //make sure the user is the professor of the course
         new AssignmentInterface().checkProfessor(securityContext, courseID);
@@ -182,33 +187,34 @@ public class studentAssignmentResource {
     }
 
     /**
-     *
      * @param courseID
      * @return String
-     *
+     * <p>
      * Returns a Base64 string of the zip file containing all submission/peer review information relative to all the assignments
      * in a given course that the frontend can decode and get a zip file from. Note that if no peer reviews are added to the assignment
      * the Peer-Reviews folder won't be made.
-     *     Structure of the unzipped file goes:
+     * Structure of the unzipped file goes:
      * <Course ID>
-     *     |
-     *     |
-     *     L-><Assignment-Name>
-     *            |
-     *            |
-     *            |
-     *            L-><Submission> ---> <Submission File>
-     *            L-><Peer-Reviews>
-     *                     |
-     *                     |
-     *                     L-><Given> ---> <All Peer Reviews given for the current assignment>
-     *                     L-><Received> ---> <All Peer Reviews received for the current assignment>
+     * |
+     * |
+     * L-><Assignment-Name>
+     * |
+     * |
+     * |
+     * L-><Submission> ---> <Submission File>
+     * L-><Peer-Reviews>
+     * |
+     * |
+     * L-><Given> ---> <All Peer Reviews given for the current assignment>
+     * L-><Received> ---> <All Peer Reviews received for the current assignment>
      */
     @GET
     @RolesAllowed("professor")
-    @Path("{course_id}/{student_id}/course-assignment-files")
+    @Path("{course_id}/{student_id}/course-assignment-files-student")
+    @Produces({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
     public Response getAllCourseDocumentsStudent(@Context SecurityContext securityContext, @PathParam("course_id") String courseID, @PathParam("student_id") String studentID) throws IOException {
         //make sure the user is the professor of the course
+        System.out.println("here we are");
         new AssignmentInterface().checkProfessor(securityContext, courseID);
         //create the zip file
         File zipFile = new AssignmentInterface().aggregateSubmissionsStudent(courseID, studentID);
@@ -222,35 +228,35 @@ public class studentAssignmentResource {
     }
 
     /**
-     *
      * @param courseID
      * @param assignmentID
      * @return String
-     *
+     * <p>
      * Returns a Base64 string of the zip file containing all submission/peer review information relative to the given assignment
      * that the frontend can decode and get a zip file from. Note that if no peer reviews are added to the assignment
      * the Peer-Reviews folder won't be made.
-     *     Structure of unzipped file goes:
-     *
+     * Structure of unzipped file goes:
+     * <p>
      * <Course ID>
-     *     |
-     *     |
-     *     L-><Assignment-Name>
-     *            |
-     *            |
-     *            L-> <Team-Name>
-     *                    |
-     *                    |
-     *                    L-><Submission> ---> <Submission File>
-     *                    L-><Peer-Reviews>
-     *                             |
-     *                             |
-     *                             L-><Given> ---> <All Peer Reviews given for the current assignment>
-     *                             L-><Received> ---> <All Peer Reviews received for the current assignment>
+     * |
+     * |
+     * L-><Assignment-Name>
+     * |
+     * |
+     * L-> <Team-Name>
+     * |
+     * |
+     * L-><Submission> ---> <Submission File>
+     * L-><Peer-Reviews>
+     * |
+     * |
+     * L-><Given> ---> <All Peer Reviews given for the current assignment>
+     * L-><Received> ---> <All Peer Reviews received for the current assignment>
      */
     @GET
     @RolesAllowed("professor")
     @Path("{assignment_id}/{course_id}/course-assignment-files")
+    @Produces({MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM})
     public Response getAssignmentDocuments(@Context SecurityContext securityContext, @PathParam("course_id") String courseID, @PathParam("assignment_id") String assignmentID) throws IOException {
         //make sure the user is the professor of the course
         new AssignmentInterface().checkProfessor(securityContext, courseID);
@@ -263,5 +269,34 @@ public class studentAssignmentResource {
         zipFile.delete();
         //send back the zip file Base64
         return response.build();
+    }
+
+    @GET
+    @RolesAllowed("professor")
+    @Path("{courseID}/all-grades")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllAssignmentsAndPeerReviews(@PathParam("courseID") String courseId) {
+        List<Document> docs = new AssignmentInterface().getAllCourseAssignmentsAndPeerReviews(courseId);
+        return Response.status(Response.Status.OK).entity(docs).build();
+    }
+
+    @POST
+    @RolesAllowed("professor")
+    @Path("edit/{assignmentId}/{teamName}/{type}/{reviewedBy}/{newGrade}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateTeamGrade(@PathParam("assignmentId") int assignmentId, @PathParam("teamName") String teamName, @PathParam("type") String type,
+                                    @PathParam("reviewedBy") String reviewedBy, @PathParam("newGrade") String newGrade) {
+        new AssignmentInterface().updateTeamGrade(teamName, reviewedBy, assignmentId, newGrade, type);
+        return Response.status(201).build();
+    }
+
+    @POST
+    @RolesAllowed("professor")
+    @Path("edit/{studentId}/{assignmentId}/{reviewedBy}/{type}/{newGrade}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateIndividualGrade(@PathParam("newGrade") String newGrade, @PathParam("studentId") String studentId, @PathParam("assignmentId") int assignmentId,
+                                          @PathParam("type") String type, @PathParam("reviewedBy") String reviewedBy) {
+        new AssignmentInterface().updateIndividualGrade(studentId, assignmentId, reviewedBy,newGrade, type);
+        return Response.status(201).build();
     }
 }
