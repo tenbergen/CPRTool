@@ -52,7 +52,7 @@ function AdminProfanityComponent () {
   //modal object
   const Modal = () => {
     return (
-      <div id="modal">
+      <div id="modal" style={{ position: 'fixed' }}>
         <div id="modalContent" style={{
           height: '40%',
           width: '45%'
@@ -106,9 +106,10 @@ function AdminProfanityComponent () {
   }
 
   return (
-    <div className="ecc-form">
+    <div className="ecc-form" style={{ padding: '0%', borderRadius: '0px' }}>
       <div className="course-profanity-details">
-        <p>Please enter words that you want to include in the global profanity checking list.</p>
+        <p style={{ paddingTop: '0%' }}>Please enter words that you want to include in the global profanity checking
+          list.</p>
         <p><i>(New words to be separated by a line, press "Enter" to add new words and "Delete" to remove)</i></p>
         <div className="ecc-input-field">
           <form onSubmit={handleSubmit}>
@@ -116,14 +117,17 @@ function AdminProfanityComponent () {
                                 required/>
           </form>
           <div id="ecc-button-container">
-            <form onSubmit={handleSubmit} style={{ marginTop: '5%' }}>
-              <button className="ecc-button" type="button" onClick={() => handleSubmit()}>Save
-                Changes <div>{showModal ? Modal() : null}</div></button>
+            <form onSubmit={handleSubmit} style={{ marginTop: '2%' }}>
+              <button className="ecc-button" type="button"
+                      onClick={() => handleSubmit()}>Save
+                Changes
+              </button>
             </form>
           </div>
         </div>
 
       </div>
+      <div>{showModal ? Modal() : null}</div>
     </div>
   )
 }
