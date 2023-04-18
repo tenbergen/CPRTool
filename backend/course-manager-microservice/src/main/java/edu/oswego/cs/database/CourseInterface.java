@@ -19,7 +19,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.concurrent.ConcurrentHashMap;
@@ -290,17 +289,17 @@ public class CourseInterface {
         }
     }
 
-    public void updateBlockedWordsForCourse(String crn, String payload) {
-        Document courseDocument = courseCollection.find(eq("crn", crn)).first();
+    public void updateBlockedWordsForCourse(String course_id, String payload) {
+        Document courseDocument = courseCollection.find(eq("course_id", course_id)).first();
         if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "This course does not exist.");
         Gson gson = new Gson();
         List<String> blockedWords = gson.fromJson(payload, List.class);
         courseDocument.put("blocked_words", blockedWords);
-        courseCollection.updateOne(eq("crn", crn), set("blocked_words", blockedWords));
+        courseCollection.updateOne(eq("course_id", course_id), set("blocked_words", blockedWords));
     }
 
-    public String getBlockedWordsForCourse(String crn){
-        Document courseDocument = courseCollection.find(eq("crn", crn)).first();
+    public String getBlockedWordsForCourse(String course_id){
+        Document courseDocument = courseCollection.find(eq("course_id", course_id)).first();
         if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "This course does not exist.");
         Gson gson = new Gson();
         List<String> blockedWords = courseDocument.getList("blocked_words", String.class);

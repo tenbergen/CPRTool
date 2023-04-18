@@ -36,4 +36,3 @@ import edu.oswego.cs.requests.TeamParam;
             assertTrue(insertedTeam.getTeamMembers().contains(studentID));
         }
     }
-

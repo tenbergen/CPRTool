@@ -1,4 +1,4 @@
-package edu.oswego.cs.dao;
+package edu.oswego.cs.daos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class UserDAO {
     String user_id;
     String role;
     String first_name;

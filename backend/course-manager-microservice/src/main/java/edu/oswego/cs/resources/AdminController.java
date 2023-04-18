@@ -1,8 +1,9 @@
-package edu.oswego.cs.controllers;
+package edu.oswego.cs.resources;
 
 import edu.oswego.cs.database.AdminInterface;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
+import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -10,12 +11,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-@Path("/admin")
-@RolesAllowed("admin")
-@Produces(MediaType.APPLICATION_JSON)
+@Path("admin")
+@DenyAll
 public class AdminController {
 
     // Delete Admin User by User id and all associated data
+    @RolesAllowed("admin")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/delete/admin/{user_id}")
@@ -26,6 +27,7 @@ public class AdminController {
     }
 
     // Delete Student User by User id and all associated data.
+    @RolesAllowed("admin")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/delete/student/{user_id}")
@@ -35,6 +37,7 @@ public class AdminController {
     }
 
     // Delete Professor User by User id and all associated data.
+    @RolesAllowed("admin")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/delete/professor/{user_id}")
@@ -43,15 +46,18 @@ public class AdminController {
         return Response.status(Response.Status.OK).entity("Professor user deleted.").build();
     }
 
+    @RolesAllowed("admin")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/delete/course/{crn}")
-    public Response deleteCourse(@Context SecurityContext securityContext, @PathParam("crn") String courseId) {
-        new AdminInterface(securityContext.getUserPrincipal().getName()).deleteCourse(courseId);
+    @Path("/delete/course/{course_id}")
+    public Response deleteCourse(@Context SecurityContext securityContext, @PathParam("course_id") String courseId) {
+        System.out.printf("Deleting course %s", courseId);
+        new AdminInterface(securityContext.getUserPrincipal().getName()).removeCourseAsAdmin(securityContext, courseId);
         return Response.status(Response.Status.OK).entity("Course deleted.").build();
     }
 
     // Add Admin User by User Id, First and Last Name
+    @RolesAllowed("admin")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/add/admin/{user_id}/{first_name}/{last_name}")
@@ -62,6 +68,7 @@ public class AdminController {
     }
 
     // Add Student User by User Id, First and Last Name
+    @RolesAllowed("admin")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/add/student/{user_id}/{first_name}/{last_name}")
@@ -73,6 +80,7 @@ public class AdminController {
     }
 
     // Add Admin User by User Id, First and Last Name
+    @RolesAllowed("admin")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/add/professor/{user_id}/{first_name}/{last_name}")
@@ -83,6 +91,7 @@ public class AdminController {
     }
 
     // Promote Professor User to Admin User by User Id
+    @RolesAllowed("admin")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/roles/promote/professorToAdmin/{user_id}")
@@ -93,6 +102,7 @@ public class AdminController {
     }
 
     // Promote Student User to Professor User by User Id
+    @RolesAllowed("admin")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/roles/promote/studentToProfessor/{user_id}")
@@ -103,6 +113,7 @@ public class AdminController {
     }
 
     // Promote Student User to Admin User by User Id
+    @RolesAllowed("admin")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/roles/promote/studentToAdmin/{user_id}")
@@ -113,6 +124,7 @@ public class AdminController {
     }
 
     // Demote Professor User to Student User by User Id
+    @RolesAllowed("admin")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/roles/demote/professorToStudent/{user_id}")
@@ -123,6 +135,7 @@ public class AdminController {
     }
 
     // Demote Admin User to Professor User by User Id
+    @RolesAllowed("admin")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/roles/demote/adminToProfessor/{user_id}")
@@ -133,6 +146,7 @@ public class AdminController {
     }
 
     // Demote Admin User to Student User by User Id
+    @RolesAllowed("admin")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/roles/demote/adminToStudent/{user_id}")
@@ -143,6 +157,7 @@ public class AdminController {
     }
 
     // Add Blocked Word
+    @RolesAllowed("admin")
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -153,6 +168,7 @@ public class AdminController {
     }
 
     // Get Profanity Settings View
+    @RolesAllowed({"admin","professor"})
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/views/profanity")
@@ -162,6 +178,7 @@ public class AdminController {
     }
 
     // Get Users View
+    @RolesAllowed("admin")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/views/users")
@@ -170,10 +187,11 @@ public class AdminController {
     }
 
     // Get Courses view
+    @RolesAllowed("admin")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/views/courses")
     public Response getCoursesView(@Context SecurityContext securityContext) {
-        return Response.status(Response.Status.OK).entity(new AdminInterface().getCoursesView()).build();
+        return Response.status(Response.Status.OK).entity(new AdminInterface().getCourseView()).build();
     }
 }

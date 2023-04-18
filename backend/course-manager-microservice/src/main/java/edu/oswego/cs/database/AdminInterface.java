@@ -1,20 +1,22 @@
 package edu.oswego.cs.database;
 
-import edu.oswego.cs.dao.Course;
-import edu.oswego.cs.dao.ProfanitySettings;
-import edu.oswego.cs.dao.User;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import edu.oswego.cs.daos.CourseDAO;
+import edu.oswego.cs.daos.ProfanitySettings;
+import edu.oswego.cs.daos.UserDAO;
 import edu.oswego.cs.util.CPRException;
 
    import java.util.List;
 import java.util.ArrayList;
 import com.google.gson.Gson;
+import edu.oswego.cs.util.CourseUtil;
 import org.bson.Document;
 
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 import com.mongodb.client.model.Filters;
 import static com.mongodb.client.model.Filters.eq;
@@ -26,6 +28,10 @@ public class AdminInterface {
     private final MongoCollection<Document> studentCollection;
     private final MongoCollection<Document> courseCollection;
     private final MongoCollection<Document> profanitySettings;
+    private final MongoCollection<Document> assignmentCollection;
+    private final MongoCollection<Document> submissionCollection;
+    private final MongoCollection<Document> teamCollection;
+
 
     // Make a generic method to receive a mongo collection and check connection
     public AdminInterface() {
@@ -35,10 +41,15 @@ public class AdminInterface {
             // Professors and Admins are in the same database, Admins are elevated
             MongoDatabase profAdminDb = databaseManager.getProfessorDB();
             MongoDatabase courseDB = databaseManager.getCourseDB();
+            MongoDatabase assignmentDB = databaseManager.getAssignmentDB();
+            MongoDatabase teamDB = databaseManager.getTeamDB();
             studentCollection = studentDB.getCollection("students");
             professorCollection = profAdminDb.getCollection("professors");
             courseCollection = courseDB.getCollection("courses");
             profanitySettings = profAdminDb.getCollection("profanitySettings");
+            assignmentCollection = assignmentDB.getCollection("assignments");
+            submissionCollection = assignmentDB.getCollection("submissions");
+            teamCollection = teamDB.getCollection("teams");
         } catch (CPRException e) {
             throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to retrieve collections.");
         }
@@ -52,10 +63,15 @@ public class AdminInterface {
             // Professors and Admins are in the same database, Admins are elevated
             MongoDatabase profAdminDb = databaseManager.getProfessorDB();
             MongoDatabase courseDB = databaseManager.getCourseDB();
+            MongoDatabase assignmentDB = databaseManager.getAssignmentDB();
+            MongoDatabase teamDB = databaseManager.getTeamDB();
             studentCollection = studentDB.getCollection("students");
             professorCollection = profAdminDb.getCollection("professors");
             courseCollection = courseDB.getCollection("courses");
             profanitySettings = profAdminDb.getCollection("profanitySettings");
+            assignmentCollection = assignmentDB.getCollection("assignments");
+            submissionCollection = assignmentDB.getCollection("submissions");
+            teamCollection = teamDB.getCollection("teams");
         } catch (CPRException e) {
             throw new CPRException(Response.Status.INTERNAL_SERVER_ERROR, "Failed to retrieve collections.");
         }
@@ -81,12 +97,7 @@ public class AdminInterface {
         professorCollection.deleteOne(eq("professor_id", user_id));
     }
 
-    public void deleteCourse(String course_id) {
-        if (!checkCourse(course_id)) {
-            throw new CPRException(Response.Status.NOT_FOUND, "Course not found.");
-        }
-        courseCollection.deleteOne(eq("course_id", course_id));
-    }
+
 
     public void deleteStudentUser(String user_id) {
 
@@ -116,7 +127,8 @@ public class AdminInterface {
         Document newAdmin = new Document("professor_id", user_id)
                 .append("first_name", firstName)
                 .append("last_name", lastName)
-                .append("admin", true);
+                .append("admin", true)
+                .append("courses", new ArrayList<String>());
         professorCollection.insertOne(newAdmin);
     }
 
@@ -140,7 +152,9 @@ public class AdminInterface {
         Document newProfessor = new Document("professor_id", user_id)
                 .append("first_name", firstName)
                 .append("last_name", lastName)
-                .append("admin", false);
+                .append("admin", false)
+                .append("courses", new ArrayList<String>());
+
         professorCollection.insertOne(newProfessor);
     }
 
@@ -254,26 +268,17 @@ public class AdminInterface {
                         eq("professor_id", user_id),
                         eq("admin", true)))
                 .first();
-        if (adminDocument == null) {
-            return false;
-        }
-        return true;
+        return adminDocument != null;
     }
 
     private Boolean checkStudent(String user_id) {
         Document studentDocument = studentCollection.find(eq("student_id", user_id)).first();
-        if (studentDocument == null) {
-            return false;
-        }
-        return true;
+        return studentDocument != null;
     }
 
     private Boolean checkProfessor(String user_id) {
         Document professorDocument = professorCollection.find(eq("professor_id", user_id)).first();
-        if (professorDocument == null) {
-            return false;
-        }
-        return true;
+        return professorDocument != null;
     }
 
     private void checkIfUserIdExists(String user_id) {
@@ -282,17 +287,20 @@ public class AdminInterface {
         }
     }
 
-    public List<Course> getCoursesView() {
-        List<Course> courses = new ArrayList<>();
-        // iterate through MongoDB courses and add to list
+    // TODO:  Add constructor paremeters for CourseDAO
+    public List<CourseDAO> getCourseView() {
+        List<CourseDAO> courses = new ArrayList<>();
+        // iterate through MongoDB CourseDAOs and add to list
         for (Document course : courseCollection.find()) {
-            Course c = new Course(
+            CourseDAO c = new CourseDAO(
+                course.getString("abbreviation"),
                 course.getString("course_name"),
+                course.getString("course_section"),
                 course.getString("crn"),
-                course.getString("professor"),
-                course.getInteger("year"),
-                course.getString("semester")
-            );
+                course.getString("semester"),
+                course.getString("year"),
+                course.getString("professor_id")
+                );
             courses.add(c);
         }
         return courses;
@@ -300,15 +308,15 @@ public class AdminInterface {
 
 
     public Object getUsersView() {
-        List<User> users = new ArrayList<User>();
+        List<UserDAO> users = new ArrayList<UserDAO>();
         // iterate though mongodb users and add to list
         for (Document user : studentCollection.find()) {
-            User u = new User(user.getString("student_id"), "student",user.getString("first_name"), user.getString("last_name"));
+            UserDAO u = new UserDAO(user.getString("student_id"), "student",user.getString("first_name"), user.getString("last_name"));
             users.add(u);
         }
 
         for (Document user : professorCollection.find()) {
-            User u = new User(user.getString("professor_id"), "professor",user.getString("first_name"), user.getString("last_name"));
+            UserDAO u = new UserDAO(user.getString("professor_id"), "professor",user.getString("first_name"), user.getString("last_name"));
             if (user.getBoolean("admin")) {  // if is true override role to admin
                 u.setRole("admin");
             }
@@ -320,8 +328,8 @@ public class AdminInterface {
 
 
     public Boolean checkCourse(String crn){
-        Document courseDocument = courseCollection.find(eq("crn", crn)).first();
-        if (courseDocument == null) {
+        Document CourseDAODocument = courseCollection.find(eq("crn", crn)).first();
+        if (CourseDAODocument == null) {
             return false;
         }
         return true;
@@ -356,5 +364,16 @@ public class AdminInterface {
 
         Document profanitySettingsDocument = new Document("words", temp.getWords());
         profanitySettings.insertOne(profanitySettingsDocument);
+    }
+
+    public void removeCourseAsAdmin(SecurityContext securityContext, String courseID) {
+        Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
+        if (courseDocument == null) throw new CPRException(Response.Status.BAD_REQUEST, "This course does not exist.");
+        new CourseUtil().updateCoursesArrayInProfessorDb(securityContext, professorCollection, courseID, null, "DELETE");
+        new CourseUtil().updateCoursesArrayInStudentDb(studentCollection, courseID, null, "DELETE");
+        new CourseUtil().updateCoursesKeyInDBs(assignmentCollection, courseID, null, "DELETE");
+        new CourseUtil().updateCoursesKeyInDBs(submissionCollection, courseID, null, "DELETE");
+        new CourseUtil().updateCoursesKeyInDBs(teamCollection, courseID, null, "DELETE");
+        courseCollection.deleteOne(eq("course_id", courseID));
     }
 }

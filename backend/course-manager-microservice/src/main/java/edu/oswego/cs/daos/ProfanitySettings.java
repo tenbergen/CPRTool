@@ -1,4 +1,4 @@
-package edu.oswego.cs.dao;
+package edu.oswego.cs.daos;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
