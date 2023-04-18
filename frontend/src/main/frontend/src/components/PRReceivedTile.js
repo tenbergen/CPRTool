@@ -4,48 +4,29 @@ import axios from 'axios';
 import './styles/AssignmentTile.css';
 import { useEffect } from 'react';
 import {
-    getAssignmentDetailsAsync,
-    getCombinedAssignmentPeerReviews,
-    getCourseAssignmentsAsync
+    getCombinedAssignmentPeerReviews
 } from '../redux/features/assignmentSlice';
 
-const assignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`;
-
-//page to route to
-//PeerReviewGRComponent
-
-const AssignmentTile = ({ assignment, submitted }) => {
+const PRTile = ({ peerReview, submitted }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    const title =
-        "Assignment #" + assignment.assignment_id;
-
-    const assID = assignment.assignment_id;
 
     const { role } = useSelector((state) => state.auth);
     const { currentTeamId } = useSelector((state) => state.teams);
     const { courseId } = useParams();
-    const link = `/${role}/${courseId}/${assignment.assignment_id}`;
-    console.log("assignmentID: " + assID);
-    console.log("courseID: " + courseId);
+    const { lakerId } = useSelector((state) => state.auth);
+    const link = `/${role}/${courseId}/${peerReview.assignment_id}`;
 
-
-    //causing issues
     useEffect(() => {
         dispatch(
-            getAssignmentDetailsAsync({ courseId, assID })
+            getCombinedAssignmentPeerReviews({ courseId, currentTeamId, lakerId })
         );
-    }, [courseId, assID, dispatch]);
-
-    //added code
-    console.log("assignment due date: " + assignment.due_date);//.description);
-    console.log("assignment name:" + assignment.assignment_name);
+    }, [courseId, currentTeamId, lakerId, dispatch]);
 
     const onFileClick = async () => {
         const fileName =
-            assignment.assignment_type = 'peer-review';
-        const assignmentId = assignment.assignment_id;
+            peerReview.assignment_type = 'peer-review';
+        const assignmentId = peerReview.assignment_id;
         const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/download/${fileName}`;
         await axios
             .get(url, { responseType: 'blob' })
@@ -60,30 +41,14 @@ const AssignmentTile = ({ assignment, submitted }) => {
         href.click();
     };
 
-    const confirmDelete = async () => {
-        let confirmAction = window.confirm(
-            'Are you sure to delete this assignment?'
-        );
-        if (confirmAction) {
-            await deleteAssignment();
-        }
-    };
-
-    const deleteAssignment = async () => {
-        const url = `${assignmentUrl}/${courseId}/assignments/${assignment.assignment_id}/remove`;
-        await axios.delete(url);
-        dispatch(getCourseAssignmentsAsync(courseId));
-        alert('Assignment successfully deleted.');
-    };
-
-    const onTileClick = () => {
+    const onButtonClick = () => {
         const tileLink = submitted
             ? role === 'student'
-                ? `/student/${courseId}/${assignment.assignment_id}/${currentTeamId}/submitted`
-                : `${link}/${assignment.team_name}/submitted`
+                ? `/student/${courseId}/${peerReview.assignment_id}/${currentTeamId}/submitted`
+                : `${link}/${peerReview.team_name}/submitted`
             : role === 'student'
-                ? assignment.assignment_type === 'peer-review'
-                    ? `${link}/peer-review/${assignment.peer_review_team}`
+                ? peerReview.assignment_type === 'peer-review'
+                    ? `${link}/peer-review/${peerReview.peer_review_team}`
                     : `${link}/normal`
                 : `${link}`;
 
@@ -94,7 +59,7 @@ const AssignmentTile = ({ assignment, submitted }) => {
         <div>
             <div
                 className={
-                    assignment.assignment_type === 'peer-review'
+                    peerReview.assignment_type === 'peer-review'
                         ? 'ass-tile'
                         : 'ass-tile'
                 }
@@ -103,30 +68,30 @@ const AssignmentTile = ({ assignment, submitted }) => {
                     {/*{' '}*/}
                     <span> {title} </span>
                 </div>
-                <div className='ass-tile-content' onClick={onTileClick}>
+                <div className='ass-tile-content' onClick={onButtonClick}>
                     <div className='ass-tile-info' >
             <span className='inter-24-bold'>
                 {'Assignment Details: '}
-                {assignment.assignment_name}
+                {peerReview.assignment_name}
                 {console.log(assignment.assignment_name)}
                 <br />
 
                 <span className = 'inter-14-medium-black'>
                     {'Due Date: '}
-                    {assignment.due_date}
+                    {peerReview.due_date}
                     {console.log(assignment.due_date)}
                     {submitted
-                        ? assignment.grade === -1
+                        ? peerReview.grade === -1
                             ? 'Pending'
-                            : assignment.grade
-                        : assignment.due_date}
+                            : peerReview.grade
+                        : peerReview.due_date}
                 </span>
 
             </span>
 
                         <span className='inter-20-medium'>
               {submitted
-                  ? assignment.grade === -1
+                  ? peerReview.grade === -1
                       ? 'Assigned'
                       : "Graded"
                   : "Pending PR"}
@@ -137,9 +102,9 @@ const AssignmentTile = ({ assignment, submitted }) => {
                     {!submitted && (
                         <div className='ass-tile-links'>
               <span className='inter-16-bold-blue ass-tile-files' onClick={onFileClick}>
-                {assignment.assignment_type === 'peer-review'
-                    ? assignment.peer_review_rubric
-                    : assignment.assignment_instructions}
+                {peerReview.assignment_type === 'peer-review'
+                    ? peerReview.peer_review_rubric
+                    : peerReview.assignment_instructions}
               </span>
                         </div>
                     )}
@@ -149,4 +114,4 @@ const AssignmentTile = ({ assignment, submitted }) => {
     );
 };
 
-export default AssignmentTile;
+export default PRTile;
