@@ -98,6 +98,19 @@
     background-color: #102080;
 }
 
+.check_image {
+    background-image: url("../../assets/icons/Green_Check.svg");
+    height: 52px;
+    width: 53px;
+    margin-bottom: 5%;
+}
+
+.cross {
+    background-image: url("../../assets/icons/Corner_X.svg");
+    height: 21px;
+    width: 21px;
+    align-self: flex-end;
+}
 
 .ecc-anchor {
     font-family: "Inter", sans-serif;

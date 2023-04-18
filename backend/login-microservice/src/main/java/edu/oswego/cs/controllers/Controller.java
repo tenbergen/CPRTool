@@ -31,6 +31,7 @@ public class Controller {
     @Produces(MediaType.APPLICATION_JSON)
     public Response refreshToken(@Context SecurityContext securityContext) throws IOException {
         return Response.status(Response.Status.OK).entity(new AuthServices().refreshToken(securityContext)).build();
+
     }
 
 }
