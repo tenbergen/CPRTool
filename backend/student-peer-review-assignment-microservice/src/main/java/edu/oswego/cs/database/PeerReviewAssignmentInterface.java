@@ -575,7 +575,7 @@ public class PeerReviewAssignmentInterface {
             Document gradeDoc = new Document()
                     .append("studentID", studentID)
                     .append("grade", result.getDouble("grade"));
-           //
+            //
             // System.out.println(gradeDoc);
             return gradeDoc;
         }
@@ -696,24 +696,19 @@ public class PeerReviewAssignmentInterface {
             //append to overall grades holder
             gradesGivenHolder.append(teamName, indGradesHolder);
 
-                }
-
-            }
         }
 
-
-
         matrixHolder.append("Average Grades Given", gradesGivenHolder);
+        //   matrixHolder.append("Average Grade Given", gradeHolder);
 
-            //create document to then append to the matric doc(for grades given averages)
-            for (String key : temp.keySet()) {
-                //first calculate average
-                double average = (double) teamsToGradesGiven.get(assignmentNumber).get(key) / (double) teamsToCountOfReviews.get(assignmentNumber).get(key);
-
+        //create document to then append to the matrix doc(for grades given averages)
+//        for (String key : temp.keySet()) {
+//            //first calculate average
+//            double average = (double) teamsToGradesGiven.get(assignmentNumber).get(key) / (double) teamsToCountOfReviews.get(assignmentNumber).get(key);
+//        }
         return matrixHolder;
     }
 
-            holderr.append("Average Grade Given", gradesHolder);
 
     //redone outlier detection over time
     public Document getAllPotentialOutliersAndGrades(String courseID) {
@@ -841,29 +836,24 @@ public class PeerReviewAssignmentInterface {
                 gradesGivenHolder.append(teamName, indGradesHolder);
 
             }
-            matrixOfGrades.append(teamForThisAssignment, gradesToOutliers);
+            //       matrixOfGrades.append(teamForThisAssignment, gradesToOutliers);
 
         }
 
-            matrixHolder.append("Average Grades Given", gradesGivenHolder);
+        //    matrixHolder.append("Average Grades Given", gradesGivenHolder);
 
-                //to get the grade document we need to go one step further
-                Document gradesAndBoolean = (Document) valuesOfEachKey.get(subKeySet);
+        //to get the grade document we need to go one step further
+        //        Document gradesAndBoolean = (Document) valuesOfEachKey.get(subKeySet);
 
-            allPotentialOutliers.append(String.valueOf(assignmentID), matrixHolder);
-
-            }
-
-        }
-
+        //    allPotentialOutliers.append(String.valueOf(assignmentID), matrixHolder);
 
         return allPotentialOutliers;
     }
 
-        matrixOfGrades.append("Average Grade Given", gradesHolder);
+    //    matrixOfGrades.append("Average Grade Given", gradesHolder);
 
-        return matrixOfGrades;
-    }
+    //    return matrixOfGrades;
+    //}
 
     /**
      * abstraction method that calls calculate IQR, and uses the values calculated from there
@@ -995,9 +985,6 @@ public class PeerReviewAssignmentInterface {
 
         }
 
-
-        }
-
         int IQR = 0;
         //after all of the team grades are obtained,
 
@@ -1080,6 +1067,7 @@ public class PeerReviewAssignmentInterface {
 
         //for every team in the course, grab the points, and add them to an integer array
         List<Integer> gradesForAssignment = new ArrayList<Integer>();
+        int gradeFinalizedCounter = 0;
         //for each assignment that is completed
         for (Document eachAssignment : results) {
             System.out.println("Iterating over new assignment");
@@ -1111,13 +1099,12 @@ public class PeerReviewAssignmentInterface {
 
                 }
 
-
             }
 
         }
 
 
-        if (gradesForAssignment == null || gradeFinalizedCounter == 0) {
+        if (gradesForAssignment == null || gradeFinalizedCounter == 0)
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No grades have been finalized, therefore outlier detection over time will not be accurate").build());
 
         int IQR = 0;
@@ -1523,10 +1510,7 @@ public class PeerReviewAssignmentInterface {
          * */
 
     /*public boolean isOutlier(int numberToCompare, int Q1, int Q3, int IQR){
-
-
         return allPotentialOutliers;
-
     }
     */
 
