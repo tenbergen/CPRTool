@@ -1,14 +1,16 @@
-import { useEffect, useState, ChangeEvent } from 'react';
-import './AdminStyle.css';
-import editIcon from './edit.png';
-import searchIcon from './search.svg';
-import plusIcon from './plus.png';
-import Modal from './Modal';
-import axios from 'axios';
-import HeaderBar from '../../components/HeaderBar/HeaderBar';
-import LogoutButton from '../../components/GlobalComponents/LogoutButton';
+import { useEffect, useState, ChangeEvent } from 'react'
+import './AdminStyle.css'
+import editIcon from './edit.png'
+import searchIcon from './search.svg'
+import plusIcon from './plus.png'
+import Modal from './Modal'
+import axios from 'axios'
+import HeaderBar from '../../components/HeaderBar/HeaderBar'
+import LogoutButton from '../../components/GlobalComponents/LogoutButton'
+import AdminProfanityComponent from './AdminProfanityComponent'
+import AdminNavigationContainerComponent from '../../components/NavigationComponents/AdminNavigationContainerComponent'
 
-function AdminInterface() {
+function AdminInterface () {
 
   // const [courseList, setCourseList] = useState([
   //   { Course: 'CSC 212 - Principles of Programming', Instructor: 'Perry', CRN: '101233', Year: '2022', Semester: 'Spring' },
@@ -38,58 +40,58 @@ function AdminInterface() {
     { profanity: 'profanity1', excludedCourses: [] },
     { profanity: 'profanity2', excludedCourses: [] },
     { profanity: 'profanity3', excludedCourses: [] },
-  ]);
+  ])
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedRole, setSelectedRole] = useState("all");
-  const [selectedUserRole, setSelectedUserRole] = useState("");
-  const [selectedYear, setSelectedYear] = useState("all");
-  const [selectedSemester, setSelectedSemester] = useState("all");
-  const [openModal, setOpenModal] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteCourseModal, setShowDeleteCourseModal] = useState(false);
-  const getUsersUrl = `${process.env.REACT_APP_URL}/manage/admin/views/users`;
-  const getCoursesUrl = `${process.env.REACT_APP_URL}/manage/admin/views/courses`;
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedRole, setSelectedRole] = useState('all')
+  const [selectedUserRole, setSelectedUserRole] = useState('')
+  const [selectedYear, setSelectedYear] = useState('all')
+  const [selectedSemester, setSelectedSemester] = useState('all')
+  const [openModal, setOpenModal] = useState(false)
+  const [selectedCourse, setSelectedCourse] = useState([])
+  const [showModal, setShowModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [showDeleteCourseModal, setShowDeleteCourseModal] = useState(false)
+  const getUsersUrl = `${process.env.REACT_APP_URL}/manage/admin/views/users`
+  const getCoursesUrl = `${process.env.REACT_APP_URL}/manage/admin/views/courses`
 
-  let [userList, setUserList] = useState([]);
-  let [courseList, setCourseList] = useState([]);
+  let [userList, setUserList] = useState([])
+  let [courseList, setCourseList] = useState([])
 
   useEffect(() => {
     axios.get(getUsersUrl)
       .then(response => {
-        setUserList(response.data);
-        console.log(response.data);
+        setUserList(response.data)
+        console.log(response.data)
       })
-      .catch(error => console.error(error.message));
-  }, []);
+      .catch(error => console.error(error.message))
+  }, [])
 
   useEffect(() => {
     axios.get(getCoursesUrl)
       .then(response => {
-        console.log(response.data);
-        setCourseList(response.data);
-        
-      })
-      .catch(error => console.error(error.message));
-  }, []);
+        console.log(response.data)
+        setCourseList(response.data)
 
-  function refreshPage() {
-    window.location.reload(false);
+      })
+      .catch(error => console.error(error.message))
+  }, [])
+
+  function refreshPage () {
+    window.location.reload(false)
   }
-  
+
   const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
-  }; 
+    setSearchTerm(event.target.value)
+  }
 
   const filteredUsers = userList.filter((user) =>
     (user.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.user_id.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    (selectedRole === "all" || user.role === selectedRole)
-  );
+      user.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.user_id.toLowerCase().includes(searchTerm.toLowerCase())) &&
+    (selectedRole === 'all' || user.role === selectedRole)
+  )
 
   const filteredCourses = courseList.filter((course) =>
     (course.course_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -97,21 +99,21 @@ function AdminInterface() {
       course.course_section.toLowerCase().includes(searchTerm.toLowerCase()) ||
       course.professor_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       course.crn.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    (selectedYear === "all" || course.year === selectedYear) &&
-    (selectedSemester === "all" || course.semester === selectedSemester)
-  );
+    (selectedYear === 'all' || course.year === selectedYear) &&
+    (selectedSemester === 'all' || course.semester === selectedSemester)
+  )
 
   const filteredProfanities = profanityList.filter((profanity) =>
     (profanity.profanity.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  )
 
-  const [filterType, setFilterType] = useState(null);
+  const [filterType, setFilterType] = useState(null)
 
   const handleFilterClick = (type) => {
-    setFilterType(type);
+    setFilterType(type)
   }
 
-  const [page, setPage] = useState("roles");
+  const [page, setPage] = useState('roles')
 
   const changePage = (page) => {
     setPage(page)
@@ -121,385 +123,395 @@ function AdminInterface() {
     setSelectedCourse(selectedCourse)
   }
 
-  const [deleteName, setDeleteName] = useState("");
+  const [deleteName, setDeleteName] = useState('')
 
   const getDeleteUser = (firstName, lastName) => {
-    setDeleteName(firstName + " " + lastName);
+    setDeleteName(firstName + ' ' + lastName)
   }
 
-  const [editName, setEditName] = useState("");
+  const [editName, setEditName] = useState('')
 
   const getEditUser = (firstName, lastName) => {
-    setEditName(firstName + " " + lastName);
+    setEditName(firstName + ' ' + lastName)
   }
 
-  const [deleteCourseName, setDeleteCourseName] = useState("");
+  const [deleteCourseName, setDeleteCourseName] = useState('')
 
   const getDeleteCourse = (course) => {
-    setDeleteCourseName(course);
+    setDeleteCourseName(course)
   }
 
-  const [currentRole, setCurrentRole] = useState("");
+  const [currentRole, setCurrentRole] = useState('')
 
   const getCurrentRole = (role) => {
-    setCurrentRole(role);
+    setCurrentRole(role)
   }
 
-  const [courseID, setCourseID] = useState("");
+  const [courseID, setCourseID] = useState('')
 
-  const getCourseID= (courseid) => {
-    setCourseID(courseid);
+  const getCourseID = (courseid) => {
+    setCourseID(courseid)
   }
 
-  const [currentID, setCurrentID] = useState("");
+  const [currentID, setCurrentID] = useState('')
 
-  const getCurrentID= (ID) => {
-    setCurrentID(ID);
+  const getCurrentID = (ID) => {
+    setCurrentID(ID)
   }
-  
-  const [editRole, setEditRole] = useState("");
+
+  const [editRole, setEditRole] = useState('')
 
   const getEditRole = (role) => {
-    setEditRole(role);
+    setEditRole(role)
   }
 
   const addUser = async (userFirstName, userLastName, userID, role) => {
-    if (role === "student") {
-      const url = `${process.env.REACT_APP_URL}/manage/admin/add/student/${userID}/${userFirstName}/${userLastName}`;
+    if (role === 'student') {
+      const url = `${process.env.REACT_APP_URL}/manage/admin/add/student/${userID}/${userFirstName}/${userLastName}`
       await axios
         .post(url)
         .then((res) => {
-          alert('Succesfully added user');
-          refreshPage();
-          console.log(res.data);
+          alert('Succesfully added user')
+          refreshPage()
+          console.log(res.data)
         })
         .catch((e) => {
-          alert(e.message);
-        });
-      console.log(userID);
-      console.log(userFirstName);
-      console.log(userLastName);
-      console.log(url);
-    }
-    else if (role === "admin") {
-      const url = `${process.env.REACT_APP_URL}/manage/admin/add/admin/${userID}/${userFirstName}/${userLastName}`;
+          alert(e.message)
+        })
+      console.log(userID)
+      console.log(userFirstName)
+      console.log(userLastName)
+      console.log(url)
+    } else if (role === 'admin') {
+      const url = `${process.env.REACT_APP_URL}/manage/admin/add/admin/${userID}/${userFirstName}/${userLastName}`
       await axios
         .post(url)
         .then((res) => {
-          alert('Successfully added user');
-          refreshPage();
-          console.log(res.data);
+          alert('Successfully added user')
+          refreshPage()
+          console.log(res.data)
         })
         .catch((e) => {
-          alert(e.message);
-        });
-      console.log(userID);
-      console.log(userFirstName);
-      console.log(userLastName);
-      console.log(url);
-    }
-    else if (role === "professor") {
-      const url = `${process.env.REACT_APP_URL}/manage/admin/add/professor/${userID}/${userFirstName}/${userLastName}`;
+          alert(e.message)
+        })
+      console.log(userID)
+      console.log(userFirstName)
+      console.log(userLastName)
+      console.log(url)
+    } else if (role === 'professor') {
+      const url = `${process.env.REACT_APP_URL}/manage/admin/add/professor/${userID}/${userFirstName}/${userLastName}`
       await axios
         .post(url)
         .then((res) => {
-          alert('Succesfully added user');
-          refreshPage();
-          console.log(res.data);
+          alert('Succesfully added user')
+          refreshPage()
+          console.log(res.data)
         })
         .catch((e) => {
-          alert(e.message);
-        });
-      console.log(userID);
-      console.log(userFirstName);
-      console.log(userLastName);
-      console.log(url);
+          alert(e.message)
+        })
+      console.log(userID)
+      console.log(userFirstName)
+      console.log(userLastName)
+      console.log(url)
     }
-    setFirstName('');
-    setLastName('');
-    setLakerID('');
-    setSelectedUserRole('');
+    setFirstName('')
+    setLastName('')
+    setLakerID('')
+    setSelectedUserRole('')
   }
 
-  const [firstName, setFirstName] = useState('');
+  const [firstName, setFirstName] = useState('')
   const handleFirstName = (event) => {
-    setFirstName(event.target.value);
+    setFirstName(event.target.value)
   }
 
-  const [lastName, setLastName] = useState('');
+  const [lastName, setLastName] = useState('')
   const handleLastName = (event) => {
-    setLastName(event.target.value);
+    setLastName(event.target.value)
   }
 
-  const [lakerID, setLakerID] = useState('');
+  const [lakerID, setLakerID] = useState('')
   const handleLakerID = (event) => {
-    setLakerID(event.target.value);
+    setLakerID(event.target.value)
   }
 
   const deleteUser = async (userID, role) => {
-    if (role === "student") {
-      const url = `${process.env.REACT_APP_URL}/manage/admin/delete/student/${userID}`;
+    if (role === 'student') {
+      const url = `${process.env.REACT_APP_URL}/manage/admin/delete/student/${userID}`
       await axios
         .delete(url)
         .then((res) => {
-          alert('Succesfully deleted user');
-          refreshPage();
-          console.log(res.data);
+          alert('Succesfully deleted user')
+          refreshPage()
+          console.log(res.data)
         })
         .catch((e) => {
-          alert(e.message);
-        });
-      console.log(userID);
-      console.log(url);
-    }
-    else if (role === "admin") {
-      const url = `${process.env.REACT_APP_URL}/manage/admin/delete/admin/${userID}`;
+          alert(e.message)
+        })
+      console.log(userID)
+      console.log(url)
+    } else if (role === 'admin') {
+      const url = `${process.env.REACT_APP_URL}/manage/admin/delete/admin/${userID}`
       await axios
         .delete(url)
         .then((res) => {
-          alert('Succesfully deleted user');
-          refreshPage();
-          console.log(res.data);
+          alert('Succesfully deleted user')
+          refreshPage()
+          console.log(res.data)
         })
         .catch((e) => {
-          alert(e.message);
-        });
-      console.log(userID);
-      console.log(url);
-    }
-    else if (role === "professor") {
-      const url = `${process.env.REACT_APP_URL}/manage/admin/delete/professor/${userID}`;
+          alert(e.message)
+        })
+      console.log(userID)
+      console.log(url)
+    } else if (role === 'professor') {
+      const url = `${process.env.REACT_APP_URL}/manage/admin/delete/professor/${userID}`
       await axios
         .delete(url)
         .then((res) => {
-          alert('Succesfully deleted user');
-          refreshPage();
-          console.log(res.data);
+          alert('Succesfully deleted user')
+          refreshPage()
+          console.log(res.data)
         })
         .catch((e) => {
-          alert(e.message);
-        });
-      console.log(userID);
-      console.log(url);
+          alert(e.message)
+        })
+      console.log(userID)
+      console.log(url)
     }
-    setFirstName('');
-    setLastName('');
-    setLakerID('');
-    setSelectedUserRole('');
+    setFirstName('')
+    setLastName('')
+    setLakerID('')
+    setSelectedUserRole('')
   }
 
   const deleteCourse = async (courseID) => {
-      const url = `${process.env.REACT_APP_URL}/manage/admin/delete/course/${courseID}`;
-      await axios
-        .delete(url)
-        .then((res) => {
-          alert('Succesfully deleted course');
-          refreshPage();
-          console.log(res.data);
-        })
-        .catch((e) => {
-          alert(e.message);
-        });
-      console.log(courseID);
+    const url = `${process.env.REACT_APP_URL}/manage/admin/delete/course/${courseID}`
+    await axios
+      .delete(url)
+      .then((res) => {
+        alert('Succesfully deleted course')
+        refreshPage()
+        console.log(res.data)
+      })
+      .catch((e) => {
+        alert(e.message)
+      })
+    console.log(courseID)
   }
 
   const editUser = async (userID, role, newRole) => {
-    if (role === "admin" && newRole === "professor") {
-      const url = `${process.env.REACT_APP_URL}/manage/admin/roles/demote/adminToProfessor/${userID}`;
+    if (role === 'admin' && newRole === 'professor') {
+      const url = `${process.env.REACT_APP_URL}/manage/admin/roles/demote/adminToProfessor/${userID}`
       await axios
         .post(url)
         .then((res) => {
-          alert('Succesfully edited user');
-          refreshPage();
-          console.log(res.data);
+          alert('Succesfully edited user')
+          refreshPage()
+          console.log(res.data)
         })
         .catch((e) => {
-          alert(e.message);
-        });
-      console.log(userID);
-      console.log(url);
-    }
-    else if (role === "professor" && newRole === "student") {
-      const url = `${process.env.REACT_APP_URL}/manage/admin/roles/demote/professorToStudent/${userID}`;
+          alert(e.message)
+        })
+      console.log(userID)
+      console.log(url)
+    } else if (role === 'professor' && newRole === 'student') {
+      const url = `${process.env.REACT_APP_URL}/manage/admin/roles/demote/professorToStudent/${userID}`
       await axios
         .post(url)
         .then((res) => {
-          alert('Succesfully edited user');
-          refreshPage();
-          console.log(res.data);
+          alert('Succesfully edited user')
+          refreshPage()
+          console.log(res.data)
         })
         .catch((e) => {
-          alert(e.message);
-        });
-      console.log(userID);
-      console.log(url);
-    }
-    else if (role === "professor" && newRole === "admin") {
-      const url = `${process.env.REACT_APP_URL}/manage/admin/roles/promote/professorToAdmin/${userID}`;
+          alert(e.message)
+        })
+      console.log(userID)
+      console.log(url)
+    } else if (role === 'professor' && newRole === 'admin') {
+      const url = `${process.env.REACT_APP_URL}/manage/admin/roles/promote/professorToAdmin/${userID}`
       await axios
         .post(url)
         .then((res) => {
-          alert('Succesfully edited user');
-          refreshPage();
-          console.log(res.data);
+          alert('Succesfully edited user')
+          refreshPage()
+          console.log(res.data)
         })
         .catch((e) => {
-          alert(e.message);
-        });
-      console.log(userID);
-      console.log(url);
-    }
-    else if (role === "student" && newRole === "professor") {
-      const url = `${process.env.REACT_APP_URL}/manage/admin/roles/promote/studentToProfessor/${userID}`;
+          alert(e.message)
+        })
+      console.log(userID)
+      console.log(url)
+    } else if (role === 'student' && newRole === 'professor') {
+      const url = `${process.env.REACT_APP_URL}/manage/admin/roles/promote/studentToProfessor/${userID}`
       await axios
         .post(url)
         .then((res) => {
-          alert('Succesfully edited user');
-          refreshPage();
-          console.log(res.data);
+          alert('Succesfully edited user')
+          refreshPage()
+          console.log(res.data)
         })
         .catch((e) => {
-          alert(e.message);
-        });
-      console.log(userID);
-      console.log(url);
+          alert(e.message)
+        })
+      console.log(userID)
+      console.log(url)
     }
-    setFirstName('');
-    setLastName('');
-    setLakerID('');
-    setSelectedUserRole('');
+    setFirstName('')
+    setLastName('')
+    setLakerID('')
+    setSelectedUserRole('')
   }
 
   const uniqueYears = courseList
-        .filter((course, index, arr) => arr.findIndex(u => u.year === course.year) === index)
-        .map(course => course.year);
+    .filter((course, index, arr) => arr.findIndex(u => u.year === course.year) === index)
+    .map(course => course.year)
 
   return (
-    <><Modal open={openModal} courseArr={selectedCourse} onClose={() => setOpenModal(false)} />
-    {/* Need to replace the following div with navbar */}
-    <HeaderBar/>
-      <div className='admin-page-container'>
-        <div className='admin-sidebar'>
-          <h1>Admin</h1>
-          <div className='admin-logout'>
-            <LogoutButton/>
-          </div>
-        </div>
-        <div className='admin-user-roles'>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}><Modal open={openModal}
+                                                                                      courseArr={selectedCourse}
+                                                                                      onClose={() => setOpenModal(false)}/>
+      <HeaderBar/>
+      <div className="admin-page-container">
+        <AdminNavigationContainerComponent/>
+        <div className="admin-user-roles">
           <h2>Admin</h2>
-          <div className='admin-tabs'>
-            <button className='user-roles-tab' onClick={() => changePage('roles')} style={{ backgroundColor: page === "roles" ? "#4a7dfc" : "#E6E6E6", color: page === "roles" ? "white" : "black" }}>User Roles</button>
-            <button className='courses-tab' onClick={() => changePage('courses')} style={{ backgroundColor: page === "courses" ? "#4a7dfc" : "#E6E6E6", color: page === "courses" ? "white" : "black" }}>Courses</button>
-            <button className='profanity-settings-tab' onClick={() => changePage('profanity')} style={{ backgroundColor: page === "profanity" ? "#4a7dfc" : "#E6E6E6", color: page === "profanity" ? "white" : "black" }}>Profanity Settings</button>
+          <div className="admin-tabs">
+            <button className="user-roles-tab" onClick={() => changePage('roles')} style={{
+              backgroundColor: page === 'roles' ? '#4a7dfc' : '#E6E6E6',
+              color: page === 'roles' ? 'white' : 'black'
+            }}>User Roles
+            </button>
+            <button className="courses-tab" onClick={() => changePage('courses')} style={{
+              backgroundColor: page === 'courses' ? '#4a7dfc' : '#E6E6E6',
+              color: page === 'courses' ? 'white' : 'black'
+            }}>Courses
+            </button>
+            <button className="profanity-settings-tab" onClick={() => changePage('profanity')} style={{
+              backgroundColor: page === 'profanity' ? '#4a7dfc' : '#E6E6E6',
+              color: page === 'profanity' ? 'white' : 'black'
+            }}>Profanity Settings
+            </button>
           </div>
 
-          {page === "roles" && (
-            <><div className='search-filter-add'>
-              <div className='search-bar'>
-                <label>Search</label>
-                <div className='search-icon-div'>
-                  <input
-                    type='text'
-                    value={searchTerm}
-                    onChange={handleSearch} />
-                  <button className='search-button'><img className='search-icon' src={searchIcon} /></button>
+          {page === 'roles' && (
+            <>
+              <div className="search-filter-add">
+                <div className="search-bar">
+                  <label>Search</label>
+                  <div className="search-icon-div">
+                    <input
+                      type="text"
+                      value={searchTerm}
+                      onChange={handleSearch}/>
+                    <button className="search-button"><img className="search-icon" src={searchIcon}/></button>
+                  </div>
                 </div>
-              </div>
-              <div className="dropdown">
-                <label for="role-filter">Role Filter</label>
-                <select name="role" id="role" onChange={(e) => setSelectedRole(e.target.value)}>
-                  <option value="all">All</option>
-                  <option value="admin">Admin</option>
-                  <option value="professor">Professor</option>
-                  <option value="student">Student</option>
-                </select>
-              </div>
-              <div className='add-user-button-div'>
-                <button className='add-user-button' onClick={() => setShowModal(true)}>Add User +</button>
+                <div className="dropdown">
+                  <label for="role-filter">Role Filter</label>
+                  <select name="role" id="role" onChange={(e) => setSelectedRole(e.target.value)}>
+                    <option value="all">All</option>
+                    <option value="admin">Admin</option>
+                    <option value="professor">Professor</option>
+                    <option value="student">Student</option>
+                  </select>
+                </div>
+                <div className="add-user-button-div">
+                  <button className="add-user-button" onClick={() => setShowModal(true)}>Add User +</button>
 
-                {showModal && (
-                  <div className="modal">
-                    <div className="modal-content">
-                      <h2 className='modal-head'>Add User</h2>
-                      <form>
-                        <div className='add-user-name'>
-                          <label>First Name</label>
-                          <input className='add-user-fields'
-                            type="text"
-                            id="firstName"
-                            name="firstName"
-                            onChange={handleFirstName} />
+                  {showModal && (
+                    <div className="modal">
+                      <div className="modal-content">
+                        <h2 className="modal-head">Add User</h2>
+                        <form>
+                          <div className="add-user-name">
+                            <label>First Name</label>
+                            <input className="add-user-fields"
+                                   type="text"
+                                   id="firstName"
+                                   name="firstName"
+                                   onChange={handleFirstName}/>
+                          </div>
+                          <div className="add-user-name">
+                            <label>Last Name</label>
+                            <input className="add-user-fields"
+                                   type="text"
+                                   id="lastName"
+                                   name="lastName"
+                                   onChange={handleLastName}/>
+                          </div>
+                          <div className="add-user-email">
+                            <label>Laker Net ID</label>
+                            <input className="add-user-fields"
+                                   type="text"
+                                   id="lakerID"
+                                   name="lakerID"
+                                   onChange={handleLakerID}/>
+                          </div>
+                          <div className="add-user-dropdown">
+                            <label for="role-filter">Role</label>
+                            <select name="role" id="add-user-role" defaultValue="Select Role"
+                                    onChange={(e) => setSelectedUserRole(e.target.value)}>
+                              <option disabled={true} value="Select Role">--Select Role--</option>
+                              <option value="admin">Admin</option>
+                              <option value="professor">Professor</option>
+                              <option value="student">Student</option>
+                            </select>
+                          </div>
+                        </form>
+                        <div className="add-user-buttons">
+                          <button className="add-user-popup-button" onClick={() => {
+                            addUser(firstName, lastName, lakerID, selectedUserRole)
+                            setShowModal(false)
+                          }}>Add
+                          </button>
+                          <button className="cancel-user-button" onClick={() => setShowModal(false)}>Cancel</button>
                         </div>
-                        <div className='add-user-name'>
-                          <label>Last Name</label>
-                          <input className='add-user-fields'
-                            type="text"
-                            id="lastName"
-                            name="lastName"
-                            onChange={handleLastName} />
-                        </div>
-                        <div className='add-user-email'>
-                          <label>Laker Net ID</label>
-                          <input className='add-user-fields'
-                            type="text"
-                            id="lakerID"
-                            name="lakerID"
-                            onChange={handleLakerID} />
-                        </div>
-                        <div className="add-user-dropdown">
-                          <label for="role-filter">Role</label>
-                          <select name="role" id="add-user-role" defaultValue="Select Role" onChange={(e) => setSelectedUserRole(e.target.value)}>
-                            <option disabled={true} value="Select Role">--Select Role--</option>
-                            <option value="admin">Admin</option>
-                            <option value="professor">Professor</option>
-                            <option value="student">Student</option>
-                          </select>
-                        </div>
-                      </form>
-                      <div className='add-user-buttons'>
-                        <button className='add-user-popup-button' onClick={() => { addUser(firstName, lastName, lakerID, selectedUserRole); setShowModal(false) }}>Add</button>
-                        <button className='cancel-user-button' onClick={() => setShowModal(false)}>Cancel</button>
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
+                </div>
               </div>
-            </div><div>
-                <div className='admin-user-list'>
-                  <div className='user-item header'>
+              <div>
+                <div className="admin-user-list">
+                  <div className="user-item header">
                     <div>Name</div>
                     <div>Laker Net ID</div>
                     <div>Role</div>
                     <div>Actions</div>
                   </div>
-                  <div className='admin-all-user-items'>
+                  <div className="admin-all-user-items">
                     {filteredUsers.map((user) => (
-                      <div key={user.id} className='user-item'>
-                        <div className='name-list'>
+                      <div key={user.id} className="user-item">
+                        <div className="name-list">
                           <div>{user.first_name}</div>
                           <div>{user.last_name}</div>
                         </div>
                         <div>{user.user_id}</div>
                         <div>{user.role}</div>
                         <div>
-                          <div className='edit-container'>
-                            <button className='edit-button' onClick={() => { 
-                              setShowEditModal(true); 
-                              getEditUser(user.first_name, user.last_name); 
-                              getCurrentID(user.user_id); 
-                              getCurrentRole(user.role) }}>
-                              <img className='edit-icon' src={editIcon} />
+                          <div className="edit-container">
+                            <button className="edit-button" onClick={() => {
+                              setShowEditModal(true)
+                              getEditUser(user.first_name, user.last_name)
+                              getCurrentID(user.user_id)
+                              getCurrentRole(user.role)
+                            }}>
+                              <img className="edit-icon" src={editIcon}/>
                             </button>
 
                             {showEditModal && (
                               <div className="edit-modal">
                                 <div className="modal-content">
-                                  <h2 className='modal-head'>Edit {editName}</h2>
+                                  <h2 className="modal-head">Edit {editName}</h2>
                                   <form>
                                     <div className="add-user-dropdown">
                                       <label for="role-filter">Role</label>
-                                      <select name="role" id="add-user-role" defaultValue="Select Role" onChange={(e) => setEditRole(e.target.value)}>
+                                      <select name="role" id="add-user-role" defaultValue="Select Role"
+                                              onChange={(e) => setEditRole(e.target.value)}>
                                         <option disabled={true} value="Select Role">--Select Role--</option>
                                         <option value="admin">Admin</option>
                                         <option value="professor">Professor</option>
@@ -507,32 +519,47 @@ function AdminInterface() {
                                       </select>
                                     </div>
                                   </form>
-                                  <div className='add-user-buttons'>
-                                    <button className='add-user-popup-button' onClick={() => { editUser(currentID, currentRole, editRole); setShowEditModal(false) }}>Save Changes</button>
-                                    <button className='cancel-user-button' onClick={() => setShowEditModal(false)}>Cancel</button>
+                                  <div className="add-user-buttons">
+                                    <button className="add-user-popup-button" onClick={() => {
+                                      editUser(currentID, currentRole, editRole)
+                                      setShowEditModal(false)
+                                    }}>Save Changes
+                                    </button>
+                                    <button className="cancel-user-button"
+                                            onClick={() => setShowEditModal(false)}>Cancel
+                                    </button>
                                   </div>
                                 </div>
                               </div>
                             )}
 
                           </div>
-                          <div className='delete-container'>
-                            <button className='delete-button' onClick={() => { 
-                              setShowDeleteModal(true); 
-                              getDeleteUser(user.first_name, user.last_name); 
-                              getCurrentID(user.user_id); 
-                              getCurrentRole(user.role) }}>
-                                X</button>
+                          <div className="delete-container">
+                            <button className="delete-button" onClick={() => {
+                              setShowDeleteModal(true)
+                              getDeleteUser(user.first_name, user.last_name)
+                              getCurrentID(user.user_id)
+                              getCurrentRole(user.role)
+                            }}>
+                              X
+                            </button>
                             {showDeleteModal && (
                               <div className="delete-modal">
                                 <div className="modal-content">
-                                  <h2 className='modal-head'>Confirm</h2>
+                                  <h2 className="modal-head">Confirm</h2>
                                   <form>
-                                    <label className='confirm-remove'>Are you sure you want to remove {deleteName}?</label>
+                                    <label className="confirm-remove">Are you sure you want to
+                                      remove {deleteName}?</label>
                                   </form>
-                                  <div className='remove-user-buttons'>
-                                    <button className='remove-user-popup-button' onClick={() => { setShowDeleteModal(false); deleteUser(currentID, currentRole)}}>Yes</button>
-                                    <button className='cancel-user-delete-button' onClick={() => setShowDeleteModal(false)}>No</button>
+                                  <div className="remove-user-buttons">
+                                    <button className="remove-user-popup-button" onClick={() => {
+                                      setShowDeleteModal(false)
+                                      deleteUser(currentID, currentRole)
+                                    }}>Yes
+                                    </button>
+                                    <button className="cancel-user-delete-button"
+                                            onClick={() => setShowDeleteModal(false)}>No
+                                    </button>
                                   </div>
                                 </div>
                               </div>
@@ -544,54 +571,57 @@ function AdminInterface() {
                     ))}
                   </div>
                 </div>
-              </div></>
+              </div>
+            </>
           )}
-          {page === "courses" && (
-            <><div className='search-year-semester'>
-              <div className='search-bar-courses'>
-                <label>Search</label>
-                <div className='search-icon-div'>
-                  <input
-                    type='text'
-                    value={searchTerm}
-                    onChange={handleSearch} />
-                  <button className='search-button'><img className='search-icon' src={searchIcon} /></button>
+          {page === 'courses' && (
+            <>
+              <div className="search-year-semester">
+                <div className="search-bar-courses">
+                  <label>Search</label>
+                  <div className="search-icon-div">
+                    <input
+                      type="text"
+                      value={searchTerm}
+                      onChange={handleSearch}/>
+                    <button className="search-button"><img className="search-icon" src={searchIcon}/></button>
+                  </div>
+                </div>
+                <div className="dropdown-year">
+                  <label for="role-filter">Year</label>
+                  <select name="role" id="role" onChange={(e) => setSelectedYear(e.target.value)}>
+                    <option value="all">All</option>
+                    {uniqueYears.map(item => {
+                      return (<option key={item} value={item}>{item}</option>)
+                    })}
+                  </select>
+                </div>
+                <div className="dropdown-semester">
+                  <label for="role-filter">Semester</label>
+                  <select name="role" id="role" onChange={(e) => setSelectedSemester(e.target.value)}>
+                    <option value="all">All</option>
+                    <option value="Spring">Spring</option>
+                    <option value="Summer">Summer</option>
+                    <option value="Fall">Fall</option>
+                    <option value="Winter">Winter</option>
+                  </select>
                 </div>
               </div>
-              <div className="dropdown-year">
-                <label for="role-filter">Year</label>
-                <select name="role" id="role" onChange={(e) => setSelectedYear(e.target.value)}>
-                  <option value="all">All</option>
-                  {uniqueYears.map(item => {
-                    return (<option key={item} value={item}>{item}</option>);
-                  })}
-                </select>
-              </div>
-              <div className="dropdown-semester">
-                <label for="role-filter">Semester</label>
-                <select name="role" id="role" onChange={(e) => setSelectedSemester(e.target.value)}>
-                  <option value="all">All</option>
-                  <option value="Spring">Spring</option>
-                  <option value="Summer">Summer</option>
-                  <option value="Fall">Fall</option>
-                  <option value="Winter">Winter</option>
-                </select>
-              </div>
-            </div><div>
-                <div className='admin-user-list'>
-                  <div className='user-item header'>
-                    <div className='courses-list'>Courses</div>
+              <div>
+                <div className="admin-user-list">
+                  <div className="user-item header">
+                    <div className="courses-list">Courses</div>
                     <div>Instructor</div>
                     <div>CRN</div>
                     <div>Year</div>
                     <div>Semester</div>
                     <div>Actions</div>
                   </div>
-                  <div className='admin-all-user-items'>
+                  <div className="admin-all-user-items">
                     {filteredCourses.map((course) => (
-                      <div key={course.id} className='user-item'>
-                        <div className='courses-list'>
-                          <div className='abbreviation-section-container'>
+                      <div key={course.id} className="user-item">
+                        <div className="courses-list">
+                          <div className="abbreviation-section-container">
                             <div>{course.abbreviation} -</div>
                           </div>
                           <div>{course.course_name}</div>
@@ -601,21 +631,30 @@ function AdminInterface() {
                         <div>{course.year}</div>
                         <div>{course.semester}</div>
                         <div>
-                          <div className='delete-container'>
-                            <button className='delete-button' onClick={() => { 
-                              setShowDeleteCourseModal(true); 
-                              getDeleteCourse(course.crn);
-                              getCourseID(course.course_id) }}>X</button>
+                          <div className="delete-container">
+                            <button className="delete-button" onClick={() => {
+                              setShowDeleteCourseModal(true)
+                              getDeleteCourse(course.crn)
+                              getCourseID(course.course_id)
+                            }}>X
+                            </button>
                             {showDeleteCourseModal && (
                               <div className="delete-modal">
                                 <div className="modal-content">
-                                  <h2 className='modal-head'>Confirm</h2>
+                                  <h2 className="modal-head">Confirm</h2>
                                   <form>
-                                    <label className='confirm-remove'>Are you sure you want to remove {deleteCourseName}?</label>
+                                    <label className="confirm-remove">Are you sure you want to
+                                      remove {deleteCourseName}?</label>
                                   </form>
-                                  <div className='remove-user-buttons'>
-                                    <button className='remove-user-popup-button' onClick={() => { setShowDeleteCourseModal(false); deleteCourse(courseID) }}>Yes</button>
-                                    <button className='cancel-user-delete-button' onClick={() => setShowDeleteCourseModal(false)}>No</button>
+                                  <div className="remove-user-buttons">
+                                    <button className="remove-user-popup-button" onClick={() => {
+                                      setShowDeleteCourseModal(false)
+                                      deleteCourse(courseID)
+                                    }}>Yes
+                                    </button>
+                                    <button className="cancel-user-delete-button"
+                                            onClick={() => setShowDeleteCourseModal(false)}>No
+                                    </button>
                                   </div>
                                 </div>
                               </div>
@@ -626,59 +665,16 @@ function AdminInterface() {
                     ))}
                   </div>
                 </div>
-              </div></>
+              </div>
+            </>
           )}
-          {page === "profanity" && (
-            <><div className='search-year-semester'>
-              <div className='search-bar-courses'>
-                <label>Search</label>
-                <div className='search-icon-div'>
-                  <input
-                    type='text'
-                    value={searchTerm}
-                    onChange={handleSearch} />
-                  <button className='search-button'><img className='search-icon' src={searchIcon} /></button>
-                </div>
-              </div>
-              <div className="add-profanity">
-                <label>Add Profanity</label>
-                <div className='profanity-icon-div'>
-                  <input
-                    type='text' />
-                  <button className='plus-profanity-button'><img className='plus-icon' src={plusIcon} /></button>
-                </div>
-              </div>
-            </div><div>
-                <div className='admin-user-list'>
-                  <div className='user-item header'>
-                    <div>Profanity</div>
-                    <div>Courses Excluded From</div>
-                    <div>Actions</div>
-                  </div>
-                  <div className='admin-all-user-items'>
-                    {filteredProfanities.map((profanity) => (
-                      <div key={profanity.id} className='user-item'>
-                        <div>{profanity.profanity}</div>
-                        <div className='excluded-courses-div'>
-                          <div><button className='excluded-courses-button' onClick={() => { setOpenModal(true); changeCourse(profanity.excludedCourses) }}>{profanity.excludedCourses.length}</button></div>
-                        </div>
-                        <div>
-                          <div className='edit-container'>
-                            <button className='edit-button'><img className='edit-icon' src={editIcon} /></button>
-                          </div>
-                          <div className='delete-container'>
-                            <button className='delete-button'>X</button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div></>
+          {page === 'profanity' && (
+            <AdminProfanityComponent/>
           )}
         </div>
-      </div></>
-  );
+      </div>
+    </div>
+  )
 }
 
-export default AdminInterface;
+export default AdminInterface
