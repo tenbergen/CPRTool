@@ -2,23 +2,25 @@
 version: 2.1
 
 orbs:
-  maven: circleci/maven@1.4.0
+  maven: circleci/maven@1.4.1
 
 jobs:
-  build:
-    docker:
-      - image: cimg/base:stable
-        auth:
-          username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD
-
+  clean_course_manager:
+    executor: maven/default
     steps:
-      - setup_remote_docker:
-          version: 19.03.13
       - checkout
-      - -build
+      - run: CSC480-22S/backend/course-manager-microservice/pom.xml mvn clean
+
+  build_course_manager:
+    executor: maven/default
+    steps:
+      - checkout
+      - build
 
 workflows:
-  build:
+  clean_and_build:
     jobs:
-      - build
+      - clean_course_manager
+      - build_course_manager:
+          requires:
+            - clean_course_manager

@@ -43,7 +43,7 @@ public class ProfessorAssignmentResource {
     @RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/create-assignment-no-peer-review")
-    public Response createAssignmentNoPeerReview(AssignmentNoPeerReviewDAO assignmentNoPeerReviewDAO) throws IOException{
+    public Response createAssignmentNoPeerReview(AssignmentNoPeerReviewDAO assignmentNoPeerReviewDAO) throws IOException {
         Document assignmentDocument = new AssignmentInterface().createAssignmentNoPeerReview(assignmentNoPeerReviewDAO);
         return Response.status(Response.Status.OK).entity(assignmentDocument).build();
     }
@@ -95,10 +95,11 @@ public class ProfessorAssignmentResource {
      * @param assignmentID
      * @return
      */
-    @PUT@RolesAllowed("professor")
+    @PUT
+    @RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}/addPeerReviewData")
-    public Response addPeerReviewData(PeerReviewAddOnDAO peerReviewAddOnDAO, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID){
+    public Response addPeerReviewData(PeerReviewAddOnDAO peerReviewAddOnDAO, @PathParam("courseID") String courseID, @PathParam("assignmentID") int assignmentID) {
         String assignmentName = new AssignmentInterface().addPeerReviewDataToAssignment(courseID, assignmentID, peerReviewAddOnDAO);
         return Response.status(Response.Status.OK).entity("Successfully added peer review data to " + courseID + ":" + assignmentName).build();
     }
@@ -146,9 +147,9 @@ public class ProfessorAssignmentResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/courses/{courseID}/assignments/{assignmentID}/upload")
     public Response addFileToAssignment
-            (List<IAttachment> attachments,
-             @PathParam("courseID") String courseID,
-             @PathParam("assignmentID") int assignmentID)
+    (List<IAttachment> attachments,
+     @PathParam("courseID") String courseID,
+     @PathParam("assignmentID") int assignmentID)
             throws Exception {
         for (IAttachment attachment : attachments) {
             if (attachment == null) continue;
@@ -235,6 +236,7 @@ public class ProfessorAssignmentResource {
     }
 
     //change
+
     /**
      * Retrieves the assignment from its location on the server and passes it to the front end via the request header
      * as a stream. The request entity passes an InputStream[] with the assignment files in each array.
@@ -278,7 +280,6 @@ public class ProfessorAssignmentResource {
     }
 
 
-
     //Change
     @DELETE
     @RolesAllowed("professor")
@@ -298,6 +299,7 @@ public class ProfessorAssignmentResource {
         new AssignmentInterface().removePeerReviewTemplate(courseID, assignmentID);
         return Response.status(Response.Status.OK).entity("File successfully deleted.").build();
     }
+
     @DELETE
     @RolesAllowed("professor")
     @Consumes(MediaType.APPLICATION_JSON)
