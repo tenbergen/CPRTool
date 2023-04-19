@@ -75,7 +75,7 @@ const PeerReviewTile = ({ assignment, submitted }) => {
         const tileLink = submitted
 
             ? role === 'student'
-                ? `/student/${courseId}/${assignment.assignment_id}/${currentTeamId}/submitted`
+                ? `/student/${courseId}/peer-review/${assignment.assignment_id}/${currentTeamId}/pr-list`
                 : `${link}/${assignment.team_name}/submitted`
             : role === 'student'
                 ? assignment.assignment_type === 'peer-review'
