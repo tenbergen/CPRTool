@@ -17,6 +17,8 @@ import javax.ws.rs.core.SecurityContext;
 
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 
+
+//reset
 @Path("professor")
 @DenyAll
 public class CourseManagerResource {
@@ -95,18 +97,18 @@ public class CourseManagerResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("courses/{courseID}/profanity/update")
+    @Path("courses/{course_id}/profanity/update")
     @RolesAllowed("professor")
-    public Response updateBlockedWordsForCourse(@Context SecurityContext securityContext, @PathParam("courseID") String courseID, @RequestBody String payload) {
-        new CourseInterface().updateBlockedWordsForCourse(courseID, payload);
+    public Response updateBlockedWordsForCourse(@Context SecurityContext securityContext, @PathParam("course_id") String course_id, @RequestBody String payload) {
+        new CourseInterface().updateBlockedWordsForCourse(course_id, payload);
         return Response.status(Response.Status.OK).entity("Profanity settings updated.").build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("courses/{courseID}/profanity/view")
+    @Path("courses/{course_id}/profanity/view")
     @RolesAllowed("professor")
-    public Response getBlockedWordsForCourse(@Context SecurityContext securityContext, @PathParam("courseID") String courseID) {
-        return Response.status(Response.Status.OK).entity(new CourseInterface().getBlockedWordsForCourse(courseID)).build();
+    public Response getBlockedWordsForCourse(@Context SecurityContext securityContext, @PathParam("course_id") String course_id) {
+        return Response.status(Response.Status.OK).entity(new CourseInterface().getBlockedWordsForCourse(course_id)).build();
     }
 }
