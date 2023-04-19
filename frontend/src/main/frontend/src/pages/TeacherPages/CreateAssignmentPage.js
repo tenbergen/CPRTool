@@ -103,6 +103,21 @@ const CreateAssignmentPage = () => {
         alert('Peer Review Due Date CANNOT be due before the due date of the Assignment!')
         return
       } else {
+        const givenTestUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/1/peer-reviews-given/12`
+        await axios
+            .get(givenTestUrl)
+            .then((res) => {
+              console.log('submissions for 12 to review')
+              console.log(res.data)
+            })
+        const receivedTestUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/1/peer-reviews-received/12`
+        await axios
+            .get(receivedTestUrl)
+            .then((res) => {
+              console.log('reviews of 12 submissions')
+              console.log(res.data)
+            })
+
         let { points } = data
         points = parseInt(points)
         const course_id = courseId
@@ -118,20 +133,6 @@ const CreateAssignmentPage = () => {
           .catch((e) => {
             console.error(e.response.data)
           })
-        const givenTestUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/1/peer-reviews-given/12`
-        await axios
-            .get(givenTestUrl)
-            .then((res) => {
-              console.log('submissions for 12 to review')
-              console.log(res.data)
-            })
-        const receivedTestUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/1/peer-reviews-received/12`
-        await axios
-            .get(receivedTestUrl)
-            .then((res) => {
-              console.log('reviews of 12 submissions')
-              console.log(res.data)
-            })
         const assignment_id = await axios
           .get(getAssUrl)
           .then((res) => {
