@@ -130,7 +130,7 @@ const CreateAssignmentPage = () => {
         await uploadFiles(assignment_id)
       }
     } else {
-      const givenTestUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/1/peer-reviews-given/12`
+      const givenTestUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/1/peer-reviews-given/1`
       await axios
           .get(givenTestUrl)
           .then((res) => {
@@ -139,7 +139,7 @@ const CreateAssignmentPage = () => {
           }).catch((e) => {
             console.error('givenTestUrl doesn\'t work');
           })
-      const receivedTestUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/1/peer-reviews-received/12`
+      const receivedTestUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/1/peer-reviews-received/1`
       await axios
           .get(receivedTestUrl)
           .then((res) => {
