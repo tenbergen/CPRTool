@@ -16,29 +16,29 @@ const ProfessorTeamComponent = () => {
   const [teams, setTeams] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    async function fetchData () {
-      const allTeams = await axios
-        .get(getTeamsUrl)
-        .then((res) => {
-          if (res.data.length > 0) return res.data
-          return []
-        })
-        .catch((e) => {
-          alert(e.response.data)
-          return []
-        })
-      setTeams(allTeams)
-      setIsLoading(true)
-    }
+  async function fetchData () {
+    const allTeams = await axios
+      .get(getTeamsUrl)
+      .then((res) => {
+        if (res.data.length > 0) return res.data
+        return []
+      })
+      .catch((e) => {
+        alert(e.response.data)
+        return []
+      })
+    setTeams(allTeams)
+    setIsLoading(true)
+  }
 
+  useEffect(() => {
     fetchData()
   }, [getTeamsUrl])
 
   const createTeam = async () => {
     const team_name = prompt('Enter team name: ')
     const lakerId = prompt('Enter student leader email minus the @oswego.edu')
-    const createUrl = `${process.env.REACT_APP_URL}/teams/team/create`
+    const createUrl = `${process.env.REACT_APP_URL}/teams/professor/team`
     const createData = {
       course_id: courseId,
       student_id: lakerId,
@@ -59,10 +59,10 @@ const ProfessorTeamComponent = () => {
     }
 
     await axios
-      .post(createUrl, createData)
+      .post(createUrl + '/' + lakerId + '/create', createData)
       .then((res) => {
         alert('Successfully created team')
-        dispatch(getCurrentCourseTeamAsync({ courseId, lakerId }))
+        fetchData()
       })
       .catch((e) => {
         console.error(e)

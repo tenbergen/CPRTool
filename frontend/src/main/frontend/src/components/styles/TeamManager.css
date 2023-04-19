@@ -43,6 +43,8 @@
     border: 2px solid lightgray;
     border-radius: 10px;
     border-top: none;
+    position: relative;
+    top: -26px;
 }
 
 .crossMarkTeam {

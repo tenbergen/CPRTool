@@ -40,7 +40,7 @@ public class ProfessorTeamResources {
     @RolesAllowed("admin")
     /* Deprecated */
     public Response getAllTeams(@Context SecurityContext securityContext, @PathParam("course_id") String courseID) {
-        return Response.status(Response.Status.OK).entity(new TeamInterface().getAllTeams(securityContext,courseID)).build();
+        return Response.status(Response.Status.OK).entity(new TeamInterface().getAllTeams(securityContext, courseID)).build();
     }
 
     @PUT
@@ -51,7 +51,7 @@ public class ProfessorTeamResources {
     /* Deprecated */
     public Response toggleTeamLock(TeamParam request) {
         new TeamInterface().toggleTeamLock(request);
-        return Response.status(Response.Status.OK).entity("Team status successfully updated.").build(); 
+        return Response.status(Response.Status.OK).entity("Team status successfully updated.").build();
     }
 
     @PUT
@@ -62,7 +62,7 @@ public class ProfessorTeamResources {
     /* Deprecated */
     public Response lockAllTeams(TeamParam request) {
         new TeamInterface().lockAllTeams(request);
-        return Response.status(Response.Status.OK).entity("Successfully lock all teams.").build(); 
+        return Response.status(Response.Status.OK).entity("Successfully lock all teams.").build();
     }
 
     @PUT
@@ -72,7 +72,7 @@ public class ProfessorTeamResources {
     @RolesAllowed("professor")
     public Response addStudent(@Context SecurityContext securityContext, TeamParam request) {
         new TeamInterface().joinTeam(securityContext, request);
-        return Response.status(Response.Status.OK).entity("Student successfully added to team.").build(); 
+        return Response.status(Response.Status.OK).entity("Student successfully added to team.").build();
     }
 
     @PUT
@@ -82,7 +82,7 @@ public class ProfessorTeamResources {
     @RolesAllowed("professor")
     public Response removeTeamMember(@Context SecurityContext securityContext, TeamParam request) {
         new TeamInterface().removeTeamMember(securityContext, request);
-        return Response.status(Response.Status.OK).entity("Student successfully removed from team.").build(); 
+        return Response.status(Response.Status.OK).entity("Student successfully removed from team.").build();
     }
 
     @PUT
@@ -93,7 +93,7 @@ public class ProfessorTeamResources {
     /* Deprecated */
     public Response editTeamName(TeamParam request) {
         new TeamInterface().editTeamName(request);
-        return Response.status(Response.Status.OK).entity("Team name successfully updated.").build(); 
+        return Response.status(Response.Status.OK).entity("Team name successfully updated.").build();
     }
 
     @PUT
@@ -104,7 +104,7 @@ public class ProfessorTeamResources {
     /* Deprecated */
     public Response editTeamSizeInBulk(TeamParam request) {
         new TeamInterface().editTeamSizeInBulk(request);
-        return Response.status(Response.Status.OK).entity("Team size successfully updated.").build(); 
+        return Response.status(Response.Status.OK).entity("Team size successfully updated.").build();
     }
 
     @PUT
@@ -115,7 +115,7 @@ public class ProfessorTeamResources {
     /* Deprecated */
     public Response editTeamSize(TeamParam request) {
         new TeamInterface().editTeamSize(request);
-        return Response.status(Response.Status.OK).entity("Team size successfully updated.").build(); 
+        return Response.status(Response.Status.OK).entity("Team size successfully updated.").build();
     }
 
     @PUT
@@ -126,7 +126,7 @@ public class ProfessorTeamResources {
     /* Deprecated */
     public Response assignTeamLead(TeamParam request) {
         new TeamInterface().assignTeamLead(request);
-        return Response.status(Response.Status.OK).entity("Team lead successfully updated.").build(); 
+        return Response.status(Response.Status.OK).entity("Team lead successfully updated.").build();
     }
 
     @DELETE
@@ -136,6 +136,6 @@ public class ProfessorTeamResources {
     @RolesAllowed("professor")
     public Response deleteTeam(@Context SecurityContext securityContext, TeamParam request) {
         new TeamInterface().deleteTeam(securityContext, request);
-        return Response.status(Response.Status.OK).entity("Team successfully deleted.").build(); 
+        return Response.status(Response.Status.OK).entity("Team successfully deleted.").build();
     }
 }

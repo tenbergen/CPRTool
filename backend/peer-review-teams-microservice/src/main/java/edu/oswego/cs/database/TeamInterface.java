@@ -76,7 +76,7 @@ public class TeamInterface {
 //        teamCollection.insertOne(teamDocument);
 //    }
 
-   public void createTeam(@Context SecurityContext securityContext, TeamParam request) {
+    public void createTeam(@Context SecurityContext securityContext, TeamParam request) {
         Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
         if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Course not found");
         new IdentifyingService().identifyingStudentService(securityContext, request.getStudentID());
@@ -101,9 +101,9 @@ public class TeamInterface {
     }
 
     public void createTeamProffessor(@Context SecurityContext securityContext, TeamParam request, String studentID) {
-        Document courseDocument = courseCollection.find(eq("course_id", request.getCourseID())).first();
+        String courseID = request.getCourseID().replace("%20", " ");
+        Document courseDocument = courseCollection.find(eq("course_id", courseID)).first();
         if (courseDocument == null) throw new CPRException(Response.Status.NOT_FOUND, "Course not found");
-        new IdentifyingService().identifyingProfessorAsStudentService(securityContext, courseCollection, request.getCourseID());
         new SecurityService().generateTeamNameSecurity(securityContext, teamCollection, courseDocument, request);
 
         if (request.getTeamName().length() > 25 || request.getTeamName().length() <= 0) {
@@ -115,7 +115,8 @@ public class TeamInterface {
         }
 
         int teamSize = new TeamService().getTeamSize(courseDocument);
-        TeamDAO newTeam = new TeamDAO(request.getTeamName(), request.getCourseID(), teamSize);
+        TeamDAO newTeam = new TeamDAO(request.getTeamName(), courseID, teamSize, studentID);
+
 
         new IdentifyingService().identifyingStudentService(securityContext, studentID);
         newTeam.getTeamMembers().add(studentID);
