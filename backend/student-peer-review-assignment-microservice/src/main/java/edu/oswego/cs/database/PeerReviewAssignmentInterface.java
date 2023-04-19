@@ -1483,4 +1483,49 @@ public class PeerReviewAssignmentInterface {
         }
         return reviewTeams;
     }
+
+    /**
+     * gets list of submissions to be peer-reviewed by a specified team
+     *
+     * @param courseID course in question
+     * @param assignmentID assignment for which desired submissions are made
+     * @param teamName aforementioned specified team
+     * @return list of submissions to be peer-reviewed by a specified team
+     */
+    public List<Document> peerReviewsGiven(String courseID, int assignmentID, String teamName) {
+        List<String> teams = getReviewTeams(courseID, assignmentID, teamName);
+        List<Document> submissions = new ArrayList<>();
+        for(String team : teams){
+            Document submission = submissionsCollection.find(and(eq("team_name",team),
+                    eq("course_id", courseID), eq("assignment_id", assignmentID),
+                    eq("type", "team_submission"))).first();
+            if(submission != null) {
+                submissions.add(submission);
+            }
+        }
+        return submissions;
+    }
+
+    /**
+     * gets list of submissions to be peer-reviewed by a specified team
+     *
+     * @param courseID course in question
+     * @param assignmentID assignment for which desired submissions are made
+     * @param teamName aforementioned specified team
+     * @return list of submissions to be peer-reviewed by a specified team
+     */
+    public List<Document> peerReviewsReceived(String courseID, int assignmentID, String teamName) {
+        List<String> teams = getAssignedTeams(courseID, assignmentID, teamName);
+        List<Document> submissions = new ArrayList<>();
+        for(String team : teams){
+            Document submission = submissionsCollection.find(and(eq("reviewed_by",team),
+                    eq("course_id", courseID), eq("assignment_id", assignmentID),
+                    eq("type", "peer_review_submission"), eq("reviewed_team", teamName)))
+                    .first();
+            if(submission != null) {
+                submissions.add(submission);
+            }
+        }
+        return submissions;
+    }
 }
