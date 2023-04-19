@@ -1518,6 +1518,9 @@ public class PeerReviewAssignmentInterface {
         List<String> teams = getAssignedTeams(courseID, assignmentID, teamName);
         List<Document> submissions = new ArrayList<>();
         for(String team : teams){
+            if(team == null){
+                continue;
+            }
             Document submission = submissionsCollection.find(and(eq("reviewed_by",team),
                     eq("course_id", courseID), eq("assignment_id", assignmentID),
                     eq("type", "peer_review_submission"), eq("reviewed_team", teamName)))
