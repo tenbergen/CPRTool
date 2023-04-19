@@ -2,11 +2,12 @@ import './HeaderBar.css'
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import jwt_decode from 'jwt-decode'
 
 const HeaderBar = () => {
   const role = useSelector((state) => state.auth.role)
   const alt_role = localStorage.getItem('alt_role')
-  const access_token = JSON.parse(atob(localStorage.getItem('jwt_token').split('.')[1]))['groups'].includes('admin')
+  const admin_access_token = jwt_decode(localStorage.getItem('jwt_token')).groups.includes('admin')
 
   let navigate = useNavigate()
 
@@ -63,7 +64,7 @@ const HeaderBar = () => {
           <div className="admin-dropdown">
             <button id="admin-button" onClick={() => showDropdown()}></button>
             <div id="dropdown-options" className="dropdown-content">
-              {access_token ? <a href="#" onClick={adminView}>Admin</a> : null}
+              {admin_access_token ? <a href="#" onClick={adminView}>Admin</a> : null}
               <a href="#" onClick={professorView}>Instructor</a>
               <a href="#" onClick={studentView}>Student</a>
             </div>
