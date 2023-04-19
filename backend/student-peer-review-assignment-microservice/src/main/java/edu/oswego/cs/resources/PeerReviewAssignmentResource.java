@@ -366,5 +366,42 @@ public class PeerReviewAssignmentResource {
         new PeerReviewAssignmentInterface().makeFinalGrades(courseID, assignmentID);
         return Response.status(Response.Status.OK).entity("Peer reviews have been averaged to make final grades.").build();
     }
+
+    /**
+     * Endpoint to get a list of submissions for which a given team has been assigned to peer-review
+     *
+     * @param courseID course in which this is happening
+     * @param assignmentID assignment for which these peer reviews are assigned
+     * @param teamName team assigned to review these submissions
+     * @return list of assignment submissions assigned to the given team
+     */
+    @GET
+    @RolesAllowed({"professor", "student"})
+    @Path("{courseID}/{assignmentID}/peer-reviews-given/{teamName}")
+    public Response peerReviewsGiven(@PathParam("courseID") String courseID,
+                                     @PathParam("assignmentID") int assignmentID,
+                                     @PathParam("teamName") String teamName){
+        List<Document> submissions = new PeerReviewAssignmentInterface().peerReviewsGiven(courseID, assignmentID, teamName);
+        return Response.status(Response.Status.OK).entity(submissions).build();
+    }
+
+    /**
+     * Endpoint to get a list of peer review submissions made for a specified team's assignment submission
+     *
+     * @param courseID course in which this is happening
+     * @param assignmentID assignment for which these peer reviews are assigned
+     * @param teamName team for whom these reviews are made
+     * @return list of peer-review submissions assigned for the specified team's submission
+     */
+    @GET
+    @RolesAllowed({"professor", "student"})
+    @Path("{courseID}/{assignmentID}/peer-reviews-received/{teamName}")
+    public Response peerReviewsReceived(@PathParam("courseID") String courseID,
+                                     @PathParam("assignmentID") int assignmentID,
+                                     @PathParam("teamName") String teamName){
+        List<Document> submissions = new PeerReviewAssignmentInterface()
+                .peerReviewsReceived(courseID, assignmentID, teamName);
+        return Response.status(Response.Status.OK).entity(submissions).build();
+    }
 }
 
