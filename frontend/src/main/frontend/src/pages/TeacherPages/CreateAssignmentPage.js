@@ -103,20 +103,6 @@ const CreateAssignmentPage = () => {
         alert('Peer Review Due Date CANNOT be due before the due date of the Assignment!')
         return
       } else {
-        const givenTestUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/1/peer-reviews-given/12`
-        await axios
-            .get(givenTestUrl)
-            .then((res) => {
-              console.log('submissions for 12 to review')
-              console.log(res.data)
-            })
-        const receivedTestUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/1/peer-reviews-received/12`
-        await axios
-            .get(receivedTestUrl)
-            .then((res) => {
-              console.log('reviews of 12 submissions')
-              console.log(res.data)
-            })
 
         let { points } = data
         points = parseInt(points)
@@ -144,6 +130,24 @@ const CreateAssignmentPage = () => {
         await uploadFiles(assignment_id)
       }
     } else {
+      const givenTestUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/1/peer-reviews-given/12`
+      await axios
+          .get(givenTestUrl)
+          .then((res) => {
+            console.log('submissions for 12 to review')
+            console.log(res.data)
+          }).catch((e) => {
+            console.error('givenTestUrl doesn\'t work');
+          })
+      const receivedTestUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/1/peer-reviews-received/12`
+      await axios
+          .get(receivedTestUrl)
+          .then((res) => {
+            console.log('reviews of 12 submissions')
+            console.log(res.data)
+          }).catch((e) => {
+            console.error('receivedTestUrl doesn\'t work');
+          })
       //remove keys related to peer review data if it is unchecked and prepare to create assignment with no peer review
       delete data['peer_review_instructions']
       delete data['peer_review_due_date']
