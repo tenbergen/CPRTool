@@ -5,8 +5,11 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.model.Updates;
 import edu.oswego.cs.rest.daos.FileDAO;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.Binary;
 
 import javax.print.Doc;
@@ -20,6 +23,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -37,8 +41,9 @@ public class AssignmentInterface {
     static MongoCollection<Document> teamsCollection;
     static MongoCollection<Document> submissionCollection;
     static MongoCollection<Document> professorCollection;
+    static MongoCollection<Document> studentCollection;
 
-    static ConcurrentHashMap<String, Boolean> assignmentLock = new ConcurrentHashMap();
+    static ConcurrentHashMap<String, Boolean> assignmentLock = new ConcurrentHashMap<>();
 
     static String reg = "/";
 
@@ -52,6 +57,7 @@ public class AssignmentInterface {
             teamsCollection = teamsDatabase.getCollection("teams");
             professorCollection = manager.getProfessorDB().getCollection("professors");
             courseCollection = manager.getCourseDB().getCollection("courses");
+            studentCollection = manager.getStudentDB().getCollection("students");
 
         } catch (WebApplicationException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
@@ -266,6 +272,27 @@ public class AssignmentInterface {
                             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team: " + review + "'s review has no points.").build());
                         } else {
                             total_points += team_review.get("grade", Integer.class);
+
+                            /* Insert the peer review score into each student in the team in the student collection */
+                            List<String> teamMembers = team_review.getList("reviewed_team", String.class);
+                            String teamName = team_review.getString("reviewed_team");
+                            double grade = team_review.getDouble("grade");
+                            String reviewedBy = team_review.getString("reviewed_by");
+                            int assignmentId = team_review.getInteger("assignment_id");
+                            teamMembers.forEach(studentId -> {
+                               Bson studentQuery = eq("student_id", studentId);
+                               Document student = studentCollection.find(studentQuery).first();
+                               List<Document> peerReviewGrades = student.getList("peer_reviews", Document.class);
+                               Document newPeerReview = new Document()
+                                       .append("team_name", teamName)
+                                       .append("grade", grade)
+                                       .append("reviewed_by", reviewedBy)
+                                       .append("assignment_id", assignmentId);
+                                peerReviewGrades.add(newPeerReview);
+                                Bson updateRule = Updates.set("peer_reviews", peerReviewGrades);
+                                UpdateOptions options = new UpdateOptions().upsert(true);
+                                studentCollection.updateOne(studentQuery, updateRule, options);
+                            });
                         }
                     }
                 }
@@ -273,6 +300,21 @@ public class AssignmentInterface {
                 final_grade = ((int) (final_grade * 100) / 100.0); //round to the nearest 10th
                 submissionCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
                 assignmentsCollection.findOneAndUpdate(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), set("grade_finalized", true));
+
+                /* Updating student's grade */
+                for (String member : team_submission.getList("members", String.class)) {
+                    List<Document> grades = new ArrayList<>();
+                    grades.addAll(studentCollection.find(eq("student_id", member)).first().getList("grades", Document.class));
+                    Document newAssignmentGrade = new Document()
+                            .append("assignment_id", assignmentID)
+                            .append("grade", final_grade)
+                            .append("team_name", team_submission.getString("team_name"));
+                    grades.add(newAssignmentGrade);
+                    Bson filter = eq("student_id", member);
+                    UpdateOptions options = new UpdateOptions().upsert(true);
+                    Bson update = Updates.set("team_submissions", grades);
+                    studentCollection.updateOne(filter, update, options);
+                }
             }
         }
     }
@@ -486,5 +528,234 @@ public class AssignmentInterface {
         return tempFile;
     }
 
+    /**
+     * Retrieves all assignments pertaining to a specific course.
+     *
+     * @param courseId id of the course
+     */
+    public List<Document> getAllCourseAssignmentsAndPeerReviews(String courseId) {
 
+        /* Get all individual grades on assignments for students in the course */
+        Document course = courseCollection.find(eq("course_id", courseId)).first();
+        if (course == null) {
+            throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Course does not exist.").toString());
+        }
+        List<String> enrolledStudents = course.getList("students", String.class);
+        List<Document> submissions = new ArrayList<>();
+        for (String studentId : enrolledStudents) {
+            List<Document> subs = submissionCollection.find(
+                    and(
+                            eq("course_id", courseId),
+                            (eq("members", studentId)),
+                            (eq("type", "team_submission"))
+                    )
+            ).into(new ArrayList<>());
+            for (Document sub : subs) {
+                sub.append("student_id", studentId);
+                submissions.add(sub);
+            }
+        }
+
+        /* Get all peer review scores for each team for assignments done by said team */
+        List<Document> peerReviews = submissionCollection.find(
+                                and(
+                                    eq("course_id", courseId),
+                                    (eq("type", "peer_review_submission"))
+                        )
+                ).into(new ArrayList<>());
+        submissions.addAll(peerReviews);
+        return submissions;
+    }
+
+    /**
+     * Updates an individual's score for an assignment or specific peer review.
+     *
+     * @param studentId id of the student whose grade is being updated.
+     * @param submissionId the id of the student's submission to be edited.
+     * @param newGrade the new grade for the student on the given assignment.
+     * @param type indicates if the grade being updated is for an assignment or a peer review.
+     * @throws WebApplicationException if the student does not exist or the student has no grade
+     *         for the assignment.
+     */
+    public void updateIndividualGrade(String studentId, int submissionId, String reviewingTeam, String newGrade, String type) {
+        /* Find the correct student */
+        System.out.println(studentId);
+        Bson studentQuery = eq("student_id", studentId);
+        Document student = studentCollection.find(studentQuery).first();
+
+        /* Throw an exception if no such student exists. */
+        if (student == null) {
+            throw new WebApplicationException("Student could not be found.", 300);
+        }
+
+        /* Find the correct assignment to update for the student. */
+        List<Document> assignmentGrades = student.getList("team_submissions", Document.class);
+        List<Document> peerReviewGrades = student.getList("peer_reviews", Document.class);
+        Document assignment = null;
+
+        if (type.equalsIgnoreCase("teamSubmission")) {
+            for (Document studentAssignment : assignmentGrades) {
+                if (studentAssignment.getInteger("assignment_id") == submissionId) {
+                    assignmentGrades.remove(studentAssignment);
+                    assignment = new Document()
+                            .append("assignment_id", studentAssignment.getInteger("assignment_id"))
+                            .append("grade", Double.valueOf(newGrade))
+                            .append("team_name", studentAssignment.getString("team_name"));
+                    assignmentGrades.add(assignment);
+                    break;
+                }
+            }
+
+            /* Throw an exception if the student does not have a grade for the specified assignment */
+            if (assignment == null) {
+                throw new WebApplicationException("The student does not have a grade for the given assignment.", 402);
+            }
+
+            /* Update the student's grade */
+            Bson replaceStudentQuery = eq("student_id", studentId);
+            UpdateOptions options = new UpdateOptions().upsert(true);
+            Bson update = Updates.set("team_submissions", assignmentGrades);
+        } else if (type.equalsIgnoreCase("peerReview")) {
+            for (Document studentAssignment : peerReviewGrades) {
+                if (studentAssignment.getInteger("assignment_id") == submissionId && studentAssignment.getString("reviewed_by").equals(reviewingTeam)) {
+                    peerReviewGrades.remove(studentAssignment);
+                    assignment = new Document()
+                            .append("assignment_id", studentAssignment.getInteger("assignment_id"))
+                            .append("grade", Double.valueOf(newGrade))
+                            .append("reviewed_by", studentAssignment.getString("reviewed_by"))
+                            .append("reviewed_team", studentAssignment.getString("reviewed_team"));
+                    peerReviewGrades.add(assignment);
+                    break;
+                }
+            }
+
+            /* Throw an exception if the student does not have a grade for the specified assignment */
+            if (assignment == null) {
+                throw new WebApplicationException("The student does not have a grade for the given assignment.", 404);
+            }
+
+            /* Update the student's grade */
+            Bson replaceStudentQuery = eq("student_id", studentId);
+            UpdateOptions options = new UpdateOptions().upsert(true);
+            Bson update = Updates.set("peer_reviews", peerReviewGrades);
+            studentCollection.updateOne(replaceStudentQuery, update, options);
+        } else {
+            throw new WebApplicationException("Invalid type given.", 400);
+        }
+    }
+
+    /**
+     * Updates a team's grade for either an assignment or an individual peer review.
+     *
+     * @param reviewedTeamName the name of the team that was reviewed
+     * @param reviewingTeamName the name of the team who completed the peer review (if applicable)
+     * @param assignmentId id of the assignment whose grade is to be edited
+     * @param newGrade the new grade for the submission
+     * @param type indicating if it is a team submission or peer review to be edited
+     */
+    public void updateTeamGrade(String reviewedTeamName, String reviewingTeamName, int assignmentId, String newGrade, String type) {
+        /* Find the correct submission */
+        Bson assignmentQuery = null;
+        if (type.equalsIgnoreCase("teamSubmission")) {
+            assignmentQuery = and(
+                    eq("team_name", reviewedTeamName),
+                    eq("assignment_id", assignmentId),
+                    eq("type", "team_submission")
+            );
+        } else if (type.equalsIgnoreCase("peerReview")) {
+            assignmentQuery = and(
+                    eq("reviewed_by", reviewingTeamName),
+                    eq("reviewed_team", reviewedTeamName),
+                    eq("assignment_id", assignmentId),
+                    eq("type", "peer_review_submission")
+            );
+        } else {
+            throw new WebApplicationException("Invalid type given.", 400);
+        }
+        Document assignment = submissionCollection.find(assignmentQuery).first();
+
+        /* Throw an exception if the given submission does not exist */
+        if (assignment == null) {
+            throw new WebApplicationException("No such assignment exists.", 303);
+        }
+
+        /* Update the grade in the submissions collection */
+        Bson submissionUpdate = Updates.set("grade", newGrade);
+        submissionCollection.updateOne(assignmentQuery, submissionUpdate, new UpdateOptions().upsert(true));
+
+        /* Update the grade for each student in the students collection */
+        if (type.equalsIgnoreCase("teamSubmission")) {
+            List<String> teamMembers = assignment.getList("members", String.class);
+            teamMembers.forEach(teamMemberId -> {
+                Bson studentQuery = eq("student_id", teamMemberId);
+                Document student = studentCollection.find(studentQuery).first();
+                assert student != null;
+                List<Document> teamSubmissionGrades = student.getList("team_submissions", Document.class);
+                Document teamSubmissionDocument = null;
+                for (Document teamSubmission : teamSubmissionGrades) {
+                    if (teamSubmission.getInteger("assignment_id") == assignmentId && teamSubmission.getString("team_name").equals(reviewedTeamName)) {
+                        teamSubmissionGrades.remove(teamSubmission);
+                        teamSubmissionDocument = new Document()
+                                .append("assignment_id", teamSubmission.getInteger("assignment_id"))
+                                .append("grade", Double.valueOf(newGrade))
+                                .append("team_name", teamSubmission.getString("team_name"));
+                        teamSubmissionGrades.add(teamSubmissionDocument);
+                        break;
+                    }
+                }
+                if (teamSubmissionDocument == null) {
+                    throw new WebApplicationException("This student does not have a grade for the specified assignment", 301);
+                }
+                Bson update = Updates.set("team_submissions", teamSubmissionGrades);
+                UpdateOptions options = new UpdateOptions().upsert(true);
+                studentCollection.updateOne(studentQuery, update, options);
+            });
+        } else {
+            List<String> teamMembers = assignment.getList("reviewed_team_members", String.class);
+            teamMembers.forEach(teamMemberId -> {
+                Bson studentQuery = eq("student_id", teamMemberId);
+                Document student = studentCollection.find(studentQuery).first();
+                assert student != null;
+                List<Document> peerReviewGrades = student.getList("peer_reviews", Document.class);
+                Document peerReviewDocument = null;
+                for (Document peerReview : peerReviewGrades) {
+                    System.out.println("new one");
+                    System.out.println("Student ID: " + teamMemberId);
+
+                    System.out.println("Assignment ID");
+                    System.out.println(peerReview.getInteger("assignment_id") == assignmentId);
+                    System.out.println(assignmentId);
+                    System.out.println(peerReview.getInteger("assignment_id"));
+
+                    System.out.println("Reviewed By");
+                    System.out.println(peerReview.getString("reviewed_by").equalsIgnoreCase(reviewingTeamName));
+                    System.out.println(reviewingTeamName);
+                    System.out.println(peerReview.getString("reviewed_by"));
+
+                    System.out.println("Team name");
+                    System.out.println(peerReview.getString("reviewed_team").equalsIgnoreCase(reviewedTeamName));
+                    System.out.println(reviewedTeamName);
+                    System.out.println(peerReview.getString("reviewed_team"));
+
+                    if ((peerReview.getInteger("assignment_id") == assignmentId) && (peerReview.getString("reviewed_by").equalsIgnoreCase(reviewingTeamName))
+                            && (peerReview.getString("reviewed_team").equalsIgnoreCase(reviewedTeamName))) {
+                        peerReviewGrades.remove(peerReview);
+                        peerReviewDocument = new Document()
+                                .append("assignment_id", peerReview.getInteger("assignment_id"))
+                                .append("grade", Double.valueOf(newGrade))
+                                .append("team_name", peerReview.getString("reviewed_team"))
+                                .append("reviewed_by", reviewingTeamName);
+                        peerReviewGrades.add(peerReviewDocument);
+                        break;
+                    }
+                }
+                if (peerReviewDocument == null) {
+                    throw new WebApplicationException("This student does not have a grade for the specified assignment", 300);
+                }
+             Bson update = Updates.set("peer_reviews", peerReviewGrades);
+                UpdateOptions options = new UpdateOptions().upsert(true);
+                studentCollection.updateOne(studentQuery, update, options);
+            });
+        }
+    }
 }
