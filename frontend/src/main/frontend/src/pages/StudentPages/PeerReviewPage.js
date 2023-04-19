@@ -12,11 +12,13 @@ import { getCurrentCourseTeamAsync } from '../../redux/features/teamSlice';
 import MyTeamComponent from '../../components/StudentComponents/CoursePage/MyTeamComponent';
 import uuid from 'react-uuid';
 import AssBarComponent from "../../components/AssBarComponent";
-import StudentHeaderBar from "../../components/StudentComponents/StudentHeaderBar";
+import StudentHeaderBar from "../../components/HeaderBar/HeaderBar";
 import NavigationContainerComponent
     from "../../components/NavigationComponents/NavigationContainerComponent";
 import PeerReviewComponent from "../../components/StudentComponents/CoursePage/PeerReviewComponent";
 import Breadcrumbs from "../../components/Breadcrumbs";
+import HeaderBar from "../../components/HeaderBar/HeaderBar";
+import CourseAccordionComponent from "../../components/NavigationComponents/CourseAccordionComponent";
 
 /*
 export const getCombinedAssignmentPeerReviews = createAsyncThunk(
@@ -67,14 +69,15 @@ function PeerReviewPage() {
 
     const components = ['Peer Reviews'];
 
-    useEffect(() => {
-        dispatch(getCourseDetailsAsync(courseId));
-        dispatch(getCurrentCourseTeamAsync({ courseId, lakerId }));
-    }, [courseId, lakerId, dispatch]);
+    //just commented out
+    // useEffect(() => {
+    //     dispatch(getCourseDetailsAsync(courseId));
+    //     dispatch(getCurrentCourseTeamAsync({ courseId, lakerId }));
+    // }, [courseId, lakerId, dispatch]);
 
     return (
         <div className="page-container">
-            <StudentHeaderBar/>
+            <HeaderBar/>
             <div className='scp-parent'>
 
                 <div className='scp-container'>

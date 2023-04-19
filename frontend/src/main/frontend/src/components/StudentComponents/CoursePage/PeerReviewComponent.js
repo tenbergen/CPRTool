@@ -23,64 +23,66 @@ const PeerReviewComponent = () => {
     const store = useSelector((state) => state);
     const { combinedAssignmentPeerReviews, assignmentsLoaded } =
         store.assignments;
+    //added
+    const { courseSubmittedAssignments, submittedAssignmentsLoaded } = useSelector(
+        (state) => state.submittedAssignments
+    );
     const { currentTeamId, teamLoaded } = store.teams;
     const { courseId } = useParams();
     const { lakerId } = store.auth;
 
-    const { courseSubmittedAssignments, submittedAssignmentsLoaded } = useSelector(
-        (state) => state.submittedAssignments
-    );
-
-    //grab submitted assignments, then filter for peer review ones
-    useEffect(() => {
-        dispatch(getStudentSubmittedAssignmentsAsync({ courseId, lakerId }));
-    }, [courseId, lakerId, dispatch]);
 
     //need to get the submitted peer-reviews as well***
     useEffect(() => {
         dispatch(
+            //maybe try the getcourseAssignments export thing in the asignment slice?
             getCombinedAssignmentPeerReviews({ courseId, currentTeamId, lakerId })
         );
     }, [courseId, currentTeamId, lakerId, dispatch]);
 
+
+
+    //added
+    useEffect(() => {
+        dispatch(getStudentSubmittedAssignmentsAsync({ courseId, lakerId }));
+    }, [courseId, lakerId, dispatch]);
+
+
+
     //filter for peer-reviews only
     const filteredPeerReviews = combinedAssignmentPeerReviews.filter(checkPeerReview);
-    //const filteredSubmittedAssignments = currentSubmittedAssignment.filter(checkPeerReview);
+
+    console.log("filtered non submitted: " + filteredPeerReviews);
+    const filteredSubmittedReviews = courseSubmittedAssignments.filter(checkPeerReview);
+    console.log("filtered submitted: " + filteredSubmittedReviews);
 
     function checkPeerReview(assignment){
-        return assignment.assignment_type !== 'peer-review';
+        //if the assigment has peer reviews associated w it, then keep them
+        return true;//assignment.has_peer_review;//.assignment_type !== 'peer-review';
     }
 
-    /*{
-    assignmentType === 'peer-review' ? (
-              <StudentPeerReviewComponent />
-            ) : (
-              <RegularAssignmentComponent />
-            )}*/
 
     return (
-        <h3>
+        <div>
             { assignmentsLoaded && teamLoaded ? (
                 <div id='assList'>
                     <div>
-
-                        {filteredPeerReviews.map((assignment) => (
-                            <PeerReviewTile key={uuid()} assignment={assignment} submitted={false}/>
-
+                        {filteredSubmittedReviews.map((assignment) => (
+                            assignment.peer_review_due_date !== null
+                                    ? <PeerReviewTile key={uuid()} assignment={assignment} submitted={true}/>
+                                : console.log("peer review due date was null")
                         ))}
 
-                        {courseSubmittedAssignments.map((assignment) => (
-                            <PeerReviewTile
-                                key={uuid()}
-                                assignment={assignment}
-                                submitted={true}
-                            />
+                        {filteredPeerReviews.map((assignment) => (
+                            assignment.has_peer_review
+                                ? <PeerReviewTile key={uuid()} assignment={assignment} submitted={false}/>
+                                : console.log("does not have a peer review")
                         ))}
                     </div>
 
                 </div>
             ) : null}
-        </h3>
+        </div>
     );
 };
 export default PeerReviewComponent;
