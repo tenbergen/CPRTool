@@ -17,6 +17,7 @@ import ProfessorGradesPage from '../pages/TeacherPages/ProfessorGradesPage'
 import ProfessorRosterComponent from '../components/ProfessorComponents/CoursesPage/ProfessorRosterComponent'
 import StudentGradesPage from '../pages/StudentPages/StudentGradesPage'
 import PeerReviewPage from "../pages/StudentPages/PeerReviewPage";
+import PeerReviewListPage from "../components/StudentComponents/PeerReviewPage/PeerReviewListPage";
 
 const RouterHandler = () => {
   return (
@@ -119,6 +120,14 @@ const RouterHandler = () => {
             <Route
               path="/student/:courseId/assignments"
               element={<StudentCoursePage chosen="To Do"/>}
+            />
+            <Route
+                path="student/:courseId/peer-review"
+                element={<PeerReviewPage />}
+            />
+            <Route
+                path="student/:courseId/peer-review/:assignmentId/:teamId/pr-list"
+                element={<PeerReviewListPage />}
             />
           </Route>
         </Route>
