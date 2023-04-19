@@ -3,8 +3,11 @@ package edu.oswego.cs.database;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.model.Updates;
 import com.mongodb.util.JSON;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.Binary;
 
 import javax.ws.rs.WebApplicationException;
@@ -24,10 +27,10 @@ public class PeerReviewAssignmentInterface {
     private final MongoCollection<Document> teamCollection;
     private final MongoCollection<Document> assignmentCollection;
     private final MongoCollection<Document> submissionsCollection;
+    private final MongoCollection<Document> studentCollection;
     private final MongoCollection<Document> professorCollection;
 
     static ConcurrentHashMap<String, Boolean> peerReviewLock = new ConcurrentHashMap<String, Boolean>();
-
     MongoDatabase assignmentDB;
 
     public PeerReviewAssignmentInterface() {
@@ -38,7 +41,9 @@ public class PeerReviewAssignmentInterface {
             teamCollection = teamDB.getCollection("teams");
             assignmentCollection = assignmentDB.getCollection("assignments");
             submissionsCollection = assignmentDB.getCollection("submissions");
-            professorCollection = assignmentDB.getCollection("professors");
+            professorCollection = databaseManager.getProfessorDB().getCollection("professors");
+            studentCollection = databaseManager.getStudentDB().getCollection("students");
+
         } catch (WebApplicationException e) {
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("Failed to retrieve collections.").build());
         }
@@ -77,7 +82,21 @@ public class PeerReviewAssignmentInterface {
                 .append("reviewed_team_members", reviewedTeam.getList("team_members", String.class))
                 .append("type", "peer_review_submission")
                 .append("grade", grade);
-
+        List<String> teamMembers = reviewedTeam.getList("team_members", String.class);
+        for (String member : teamMembers) {
+            Document newStudentSubmission = new Document()
+                    .append("assignment_id", assignment_id)
+                    .append("reviewed_team", reviewedTeam.getString("team_id"))
+                    .append("reviewed_by", reviewedByTeam.getString("team_id"))
+                    .append("grade", grade);
+            Bson studentQuery = eq("student_id", member);
+            Document student = studentCollection.find(studentQuery).first();
+            List<Document> peerReviews = student.getList("peer_reviews", Document.class);
+            peerReviews.add(newStudentSubmission);
+            Bson update = Updates.set("peer_reviews", peerReviews);
+            UpdateOptions options = new UpdateOptions().upsert(true);
+            studentCollection.updateOne(studentQuery, update, options);
+        }
         //wait for the lock to be dropped.
         //key is assignment_id+reviewed_by_team_id+reviewed_team+"peer_review_submission"
         while (peerReviewLock.containsKey(assignment_id + reviewedByTeam.getString("team_id") + reviewedTeam.getString("team_id") + "peer_review_submission"))
@@ -329,7 +348,6 @@ public class PeerReviewAssignmentInterface {
         }
         return new Document().append("teams", teams);
     }
-
     public Document professorUpdate(String courseID, int assignmentID, String teamName, int grade) {
         Document team = submissionsCollection.findOneAndUpdate(and(
                         eq("course_id", courseID),
@@ -430,7 +448,18 @@ public class PeerReviewAssignmentInterface {
                     throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team: " + review + "'s review has no points.").build());
                 } else {
                     total_points += team_review.get("grade", Integer.class);
-
+                    for (String teamMember : team_review.getList("reviewed_team", String.class)) {
+                        Document newPeerReview = new Document()
+                                .append("course_id", courseID)
+                                .append("grade", team_review.getInteger("grade"))
+                                .append("team_name", teamName);
+                        List<Document> peerReviews = studentCollection.find(eq("student_id", teamMember)).first().getList("peer_reviews", Document.class);
+                        peerReviews.add(newPeerReview);
+                        Bson studentQuery = eq("student_id", teamMember);
+                        Bson update = Updates.set("team_submissions", peerReviews);
+                        UpdateOptions options = new UpdateOptions().upsert(true);
+                        studentCollection.updateOne(studentQuery, update, options);
+                    }
                 }
             }
             currentTeam++;
@@ -438,8 +467,20 @@ public class PeerReviewAssignmentInterface {
         DecimalFormat tenth = new DecimalFormat("0.##");
         double final_grade = Double.parseDouble(tenth.format((((double) total_points / count_of_reviews_submitted) / points) * 100));//round
 
-
         submissionsCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
+        for (String member : team_submission.getList("members", String.class)) {
+            List<Document> grades = new ArrayList<Document>();
+            grades.addAll(studentCollection.find(eq("student_id", member)).first().getList("team_submissions", Document.class));
+            Document newAssignmentGrade = new Document()
+                    .append("assignment_id", assignmentID)
+                    .append("grade", final_grade)
+                    .append("team_name", team_submission.getString("team_name"));
+            grades.add(newAssignmentGrade);
+            Bson filter = eq("student_id", member);
+            UpdateOptions options = new UpdateOptions().upsert(true);
+            Bson update = Updates.set("team_submissions", grades);
+            studentCollection.updateOne(filter, update, options);
+        }
     }
 
     public void makeFinalGrades(String courseID, int assignmentID) {
@@ -507,7 +548,6 @@ public class PeerReviewAssignmentInterface {
         if (result.getInteger("grade") == null) return new Document("grade", -1);
         else return new Document("grade", result.getInteger("grade"));
     }
-
     /**
      * The method gets the team names and their members from teamCollection and gets the final grade from submissionsCollection,
      * then it returns a document object containg individual student and their grade.
@@ -584,6 +624,8 @@ public class PeerReviewAssignmentInterface {
                 totalGrade += gradeReceived;
                 numTeamsReviewed++;
 
+                //then find every team that graded them(should be a base function call already made inside this file)
+                Document matrixOfGrades = new Document();
 
                 String teamThatGraded = respectiveGradesReceived.get("reviewed_by", String.class);
                 //if the value is an outlier, mark true, else false
@@ -654,12 +696,16 @@ public class PeerReviewAssignmentInterface {
             //append to overall grades holder
             gradesGivenHolder.append(teamName, indGradesHolder);
 
-
         }
 
         matrixHolder.append("Average Grades Given", gradesGivenHolder);
+        //   matrixHolder.append("Average Grade Given", gradeHolder);
 
-
+        //create document to then append to the matrix doc(for grades given averages)
+//        for (String key : temp.keySet()) {
+//            //first calculate average
+//            double average = (double) teamsToGradesGiven.get(assignmentNumber).get(key) / (double) teamsToCountOfReviews.get(assignmentNumber).get(key);
+//        }
         return matrixHolder;
     }
 
@@ -789,21 +835,25 @@ public class PeerReviewAssignmentInterface {
                 //append to overall grades holder
                 gradesGivenHolder.append(teamName, indGradesHolder);
 
-
             }
-
-            matrixHolder.append("Average Grades Given", gradesGivenHolder);
-
-
-            allPotentialOutliers.append(String.valueOf(assignmentID), matrixHolder);
-
+            //       matrixOfGrades.append(teamForThisAssignment, gradesToOutliers);
 
         }
 
+        //    matrixHolder.append("Average Grades Given", gradesGivenHolder);
+
+        //to get the grade document we need to go one step further
+        //        Document gradesAndBoolean = (Document) valuesOfEachKey.get(subKeySet);
+
+        //    allPotentialOutliers.append(String.valueOf(assignmentID), matrixHolder);
 
         return allPotentialOutliers;
     }
 
+    //    matrixOfGrades.append("Average Grade Given", gradesHolder);
+
+    //    return matrixOfGrades;
+    //}
 
     /**
      * abstraction method that calls calculate IQR, and uses the values calculated from there
@@ -848,6 +898,8 @@ public class PeerReviewAssignmentInterface {
             return false;
         }
     }
+
+
 
     /**
      * abstraction method that calls calculate IQR, and uses the values calculated from there
@@ -1047,16 +1099,14 @@ public class PeerReviewAssignmentInterface {
 
                 }
 
-
             }
 
         }
 
 
-        if (gradesForAssignment == null || gradeFinalizedCounter == 0) {
+        if (gradesForAssignment == null || gradeFinalizedCounter == 0)
             throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("No grades have been finalized, therefore outlier detection over time will not be accurate").build());
 
-        }
         int IQR = 0;
         //after all of the team grades are obtained,
 
@@ -1085,6 +1135,7 @@ public class PeerReviewAssignmentInterface {
 
         return returnValues;
     }
+
 
     /**
      * This is a method to be used for testing purposes, it will simplify writiing the test cases
@@ -1459,10 +1510,7 @@ public class PeerReviewAssignmentInterface {
          * */
 
     /*public boolean isOutlier(int numberToCompare, int Q1, int Q3, int IQR){
-
-
         return allPotentialOutliers;
-
     }
     */
 

@@ -43,7 +43,7 @@ const ProfessorAssignmentComponent = () => {
       <div className="create-class-container">
         <Link to="create/assignment">
           <button className="create-assignment-btn">
-            Create new assignment
+            Create Assignment
           </button>
         </Link>
       </div>
