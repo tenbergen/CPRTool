@@ -172,8 +172,8 @@ const ProfessorEditCourseComponent = () => {
             <form onSubmit={handleSubmit}>
               <div className="info-container">
                 <div className="info-header"></div>
-                <div className="ecc-input-field">
-                  <label className="required">
+                <div className="ecc-input-field" style={{ marginLeft: '2%' }}>
+                  <label className="required" style={{ height: '2%' }}>
                     <span className="inter-20-bold">Name of course: </span>
                   </label>
                   <Field name="course_name">

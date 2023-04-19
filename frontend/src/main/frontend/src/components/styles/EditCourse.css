@@ -29,6 +29,7 @@
     margin-top: 4%;
     justify-content: center;
     align-items: center;
+    margin-left: 1%;
 }
 
 .ecc-input-field textarea {
@@ -45,6 +46,7 @@
 }
 
 .ecc-input-field label {
+    display: table-row;
     margin-right: 500px;
 }
 
@@ -58,10 +60,24 @@
     font-family: "Inter", sans-serif;
 }
 
+.ecc-input-field input[type='number'] {
+    height: 30px;
+    font-size: 1.2em;
+    width: 97.5%;
+    border: solid;
+    border-color: #000000;
+    border-width: 1px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    outline: none;
+}
+
+
 .ecc-row-multiple {
     display: flex;
     flex-direction: row;
     gap: 30px;
+    margin: 1%;
 }
 
 .ecc-file-upload {
@@ -299,7 +315,6 @@
 
 .info-header {
     padding: 5px;
-    position: sticky;
     top: 0;
     background: #4A7DFC;
     height: 25px;
