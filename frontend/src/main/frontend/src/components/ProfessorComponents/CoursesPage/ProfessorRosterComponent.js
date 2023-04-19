@@ -15,8 +15,8 @@ import { base64StringToBlob } from 'blob-util'
 
 const ProfessorRosterComponent = () => {
   const dispatch = useDispatch()
-  const courseParse = window.location.pathname;
-  const courseId = courseParse.split("/")[2];
+  const courseParse = window.location.pathname
+  const courseId = courseParse.split('/')[2]
   const url = `${process.env.REACT_APP_URL}/manage/professor/courses`
   const { currentCourseStudents } = useSelector((state) => state.courses)
 
@@ -232,6 +232,7 @@ const ProfessorRosterComponent = () => {
                     className="plus-button"
                     size="50px"
                     color="#4a7dfc"
+                    style={{ alignSelf: 'center' }}
                   />
                 </div>
               </div>
