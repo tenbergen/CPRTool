@@ -14,7 +14,7 @@ const assignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/course
 //page to route to
 //PeerReviewGRComponent
 
-const AssignmentTile = ({ assignment, submitted }) => {
+const PeerReviewTile = ({ assignment, submitted }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -25,18 +25,13 @@ const AssignmentTile = ({ assignment, submitted }) => {
 
     const { role } = useSelector((state) => state.auth);
     const { currentTeamId } = useSelector((state) => state.teams);
+    const { assignmentShit } = useSelector((state) => state.assignments);
     const { courseId } = useParams();
     const link = `/${role}/${courseId}/${assignment.assignment_id}`;
+
+
     console.log("assignmentID: " + assID);
     console.log("courseID: " + courseId);
-
-
-    //causing issues
-    useEffect(() => {
-        dispatch(
-            getAssignmentDetailsAsync({ courseId, assID })
-        );
-    }, [courseId, assID, dispatch]);
 
     //added code
     console.log("assignment due date: " + assignment.due_date);//.description);
@@ -78,6 +73,7 @@ const AssignmentTile = ({ assignment, submitted }) => {
 
     const onTileClick = () => {
         const tileLink = submitted
+
             ? role === 'student'
                 ? `/student/${courseId}/${assignment.assignment_id}/${currentTeamId}/submitted`
                 : `${link}/${assignment.team_name}/submitted`
@@ -106,20 +102,18 @@ const AssignmentTile = ({ assignment, submitted }) => {
                 <div className='ass-tile-content' onClick={onTileClick}>
                     <div className='ass-tile-info' >
             <span className='inter-24-bold'>
-                {'Assignment Details: '}
-                {assignment.assignment_name}
-                {console.log(assignment.assignment_name)}
+                {''}
+                {assignment.type === 'team_submission' ?
+                    assignment.assigment_name:
+                    assignment.assignment_name
+                }
                 <br />
-
                 <span className = 'inter-14-medium-black'>
                     {'Due Date: '}
-                    {assignment.due_date}
-                    {console.log(assignment.due_date)}
-                    {submitted
-                        ? assignment.grade === -1
-                            ? 'Pending'
-                            : assignment.grade
-                        : assignment.due_date}
+                    {/*edited*/}
+                    {assignment.type === 'team_submission' ?
+                        assignment.peer_review_due_date :
+                        assignment.due_date}
                 </span>
 
             </span>
@@ -127,9 +121,9 @@ const AssignmentTile = ({ assignment, submitted }) => {
                         <span className='inter-20-medium'>
               {submitted
                   ? assignment.grade === -1
-                      ? 'Assigned'
+                      ? "Pending PR"
                       : "Graded"
-                  : "Pending PR"}
+                  : 'Assigned'}
 
             </span>
 
@@ -149,4 +143,4 @@ const AssignmentTile = ({ assignment, submitted }) => {
     );
 };
 
-export default AssignmentTile;
+export default PeerReviewTile;
