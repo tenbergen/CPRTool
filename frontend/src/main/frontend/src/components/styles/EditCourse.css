@@ -1,205 +1,334 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');
 
 .ecc-form {
-  background-color: white;
-  padding-left: 2%;
-  padding-right: 2%;
-  padding-bottom: 2%;
+    background-color: white;
+    /*border-radius: 50px;*/
+    padding: 1%;
+    overflow-y: scroll;
+    max-height: 80vh;
+}
+
+.ecc-form::-webkit-scrollbar {
+    width: 20px;
+}
+
+.ecc-form::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.ecc-form::-webkit-scrollbar-thumb {
+    background-color: #d6dee1;
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
 }
 
 .ecc-input-field {
-  width: 97.3%;
-  display: flow;
-  margin: 2%;
-  justify-content: center;
-  align-items: center;
+    width: 97.3%;
+    display: flow;
+    margin-top: 4%;
+    justify-content: center;
+    align-items: center;
+}
+
+.ecc-input-field textarea {
+    flex-grow: 1;
+    border: 2px solid #949494;
+    box-sizing: border-box;
+    border-radius: 5px;
+    width: 100%;
+    height: 466px;
+    font-size: 20px;
+    font-weight: 400;
+    font-family: "Inter", sans-serif;
+    line-height: 18px;
 }
 
 .ecc-input-field label {
-  margin-right: 500px;
+    margin-right: 500px;
 }
 
 .ecc-input-field input {
-  flex-grow: 1;
-  padding: 5px 5px 5px 5px;
-  border: 1px solid black;
-  box-sizing: border-box;
-  border-radius: 5px;
-  font-size: 18px;
-  font-family: "Inter", sans-serif;
+    flex-grow: 1;
+    padding: 5px 5px 5px 5px;
+    border: 1px solid black;
+    box-sizing: border-box;
+    border-radius: 5px;
+    font-size: 18px;
+    font-family: "Inter", sans-serif;
 }
 
 .ecc-row-multiple {
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
 }
 
 .ecc-file-upload {
-  display: flex;
-  gap: 10px;
+    display: flex;
+    gap: 10px;
 }
 
 .ecc-file-upload label {
-  margin-top: 2.2%;
+    margin-top: 2.2%;
 }
 
 .ecc-file-upload input::file-selector-button {
-  width: 140px;
-  height: 40px;
-  background-color: #4a7dfc;
-  border-radius: 5px;
-  color: white;
-  border: none;
+    width: 140px;
+    height: 40px;
+    background-color: #4a7dfc;
+    border-radius: 5px;
+    color: white;
+    border: none;
 
-  font-family: "Inter", sans-serif;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 24px;
-  letter-spacing: 0.5px;
-  margin-bottom: 25px;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+    margin-bottom: 25px;
 }
 
 .ecc-file-upload input::file-selector-button:hover {
-  background-color: #1d2f99;
-  cursor: pointer;
+    background-color: #1d2f99;
+    cursor: pointer;
 }
 
 .ecc-file-upload input::file-selector-button:active {
-  background-color: #102080;
+    background-color: #102080;
 }
 
+.check_image {
+    background-image: url("../../assets/icons/Green_Check.svg");
+    height: 52px;
+    width: 53px;
+    margin-bottom: 5%;
+}
+
+.cross {
+    background-image: url("../../assets/icons/Corner_X.svg");
+    height: 21px;
+    width: 21px;
+    align-self: flex-end;
+}
 
 .ecc-anchor {
-  font-family: "Inter", sans-serif;
-  border: solid .5px #F04438;
-  border-radius: 5px;
-  font-size: 20px;
-  color: #F04438;
-  width: 250px;
-  line-height: 24px;
-  letter-spacing: 0.5px;
-  display: flex;
-  justify-content: center;
-  margin-top: 5%;
-  padding: 10px 50px 10px 50px;
-  font-weight: bold;
+    font-family: "Inter", sans-serif;
+    border: solid .5px #F04438;
+    border-radius: 5px;
+    font-size: 20px;
+    color: #F04438;
+    width: 250px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+    padding: 10px 50px 10px 50px;
+    font-weight: bold;
+}
+
+.ecc-anchor-cancel {
+    font-family: "Inter", sans-serif;
+    border: solid .5px #e6e6e6;
+    border-radius: 5px;
+    font-size: 20px;
+    color: #0a0a0a;
+    width: 250px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+    padding: 10px 50px 10px 50px;
+    font-weight: bold;
+}
+
+.profanity-button {
+    background-color: #28a745;
+    border-radius: 5px;
+    color: white;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+    display: flex;
+    justify-content: center;
+    padding: 10px 50px 10px 50px;
+    border: none;
+    vertical-align: middle;
+}
+
+.profanity-button:hover {
+    background-color: #027A48;
+}
+
+.profanity-button:active {
+    background-color: #05603a;
 }
 
 .ecc-button {
-  width: 250px;
-  background-color: #28a745;
-  border-radius: 5px;
-  color: white;
-  font-family: "Inter", sans-serif;
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 24px;
-  letter-spacing: 0.5px;
-  display: flex;
-  justify-content: center;
-  padding: 10px 50px 10px 50px;
-  border: none;
+    width: 250px;
+    background-color: #28a745;
+    border-radius: 5px;
+    color: white;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+    display: flex;
+    justify-content: center;
+    padding: 10px 50px 10px 50px;
+    border: none;
 }
 
 .ecc-button:hover {
-  background-color: #027A48;
+    background-color: #027A48;
 }
 
 .ecc-button:active {
-  background-color: #05603a;
+    background-color: #05603a;
 }
 
 .ecc-delete {
-  display: flex;
-  justify-content: flex-end;
-  margin-right: 5%;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 5%;
 }
 
 .ecc-anchor:hover {
-  background-color: #F04438;
-  color: #fff;
-  text-decoration: none;
-  cursor: pointer;
+    background-color: #F04438;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
 }
 
+.ecc-anchor-cancel:hover {
+    background-color: #948f8f;
+    color: #000000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
 #ecc-delete-button-delete {
-  border: solid .5px #F04438;
-  width: 118px;
-  height: 34px;
-  background-color: white;
-  border-radius: 5px;
-  color: #F04438;
-  margin-right: 30px;
+    border: solid .5px #F04438;
+    width: 118px;
+    height: 34px;
+    background-color: white;
+    border-radius: 5px;
+    color: #F04438;
+    margin-right: 30px;
 }
 
 #ecc-delete-button-cancel {
-  font-family: "Inter", sans-serif;
-  width: 118px;
-  height: 34px;
-  background-color: #4a7dfc;
-  border-radius: 5px;
-  color: white;
-  border: none;
+    font-family: "Inter", sans-serif;
+    width: 118px;
+    height: 34px;
+    background-color: #4a7dfc;
+    border-radius: 5px;
+    color: white;
+    border: none;
 }
 
+.ecc-button-defaults {
+    font-family: "Inter", sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    width: 217px;
+    height: 42px;
+    background-color: #4a7dfc;
+    border-radius: 5px;
+    color: white;
+    border: none;
+}
+
+.ecc-button-defaults:hover {
+    background-color: #1d2f99;
+}
+
+
 #ecc-button-container {
-  display: flex;
-  justify-content: center;
-  gap: 50px;
+    display: flex;
+    justify-content: center;
+    gap: 50px;
 }
 
 .roster-bulk-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
 }
 
 .ecc-bulk-download {
-  display: flex;
-  gap: 10px;
+    display: flex;
+    gap: 10px;
 }
 
 .ecc-bulk-download label {
-  margin-top: 2.5%;
+    margin-top: 2.5%;
 }
 
 .bulk-download-button {
-  width: 140px;
-  height: 40px;
-  background-color: #4a7dfc;
-  border-radius: 5px;
-  color: white;
-  border: none;
+    width: 140px;
+    height: 40px;
+    background-color: #4a7dfc;
+    border-radius: 5px;
+    color: white;
+    border: none;
 
-  font-family: "Inter", sans-serif;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 24px;
-  letter-spacing: 0.5px;
-  margin-bottom: 25px;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+    margin-bottom: 25px;
 }
 
 .bulk-download-button:hover {
-  background-color: #1d2f99;
+    background-color: #1d2f99;
 }
 
 .info-container {
-  border: solid #212529;
-  border-width: 1px;
-  border-radius: 5px;
+    border: solid #212529;
+    border-width: 1px;
+    border-radius: 5px;
 }
 
 .info-header {
-  padding: 5px;
-  position: sticky;
-  top: 0;
-  background: #4A7DFC;
-  height: 25px;
-  border-top-right-radius: 4px;
-  border-top-left-radius: 4px;
+    padding: 5px;
+    position: sticky;
+    top: 0;
+    background: #4A7DFC;
+    height: 25px;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
 }
 
 .course-details-title {
-  padding-left: 2%;
+    padding-left: 2%;
+    padding-right: 2%;
+    display: flex;
+    align-items: center;
+}
+
+.course-profanity-title {
+    display: flex;
+    align-items: center;
+}
+
+
+.course-profanity-details {
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+.course-profanity-details p {
+    font-size: 20px;
+    font-family: "Inter", sans-serif;
+    line-height: 25px;
+    font-style: normal;
+    font-weight: 400;
 }
