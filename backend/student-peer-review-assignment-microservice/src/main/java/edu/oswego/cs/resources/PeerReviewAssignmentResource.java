@@ -382,6 +382,9 @@ public class PeerReviewAssignmentResource {
                                      @PathParam("assignmentID") int assignmentID,
                                      @PathParam("teamName") String teamName){
         List<Document> submissions = new PeerReviewAssignmentInterface().peerReviewsGiven(courseID, assignmentID, teamName);
+        if(submissions == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("That assignment has not been distributed for peer reviews yet!").build();
+        }
         return Response.status(Response.Status.OK).entity(submissions).build();
     }
 
@@ -401,6 +404,9 @@ public class PeerReviewAssignmentResource {
                                      @PathParam("teamName") String teamName){
         List<Document> submissions = new PeerReviewAssignmentInterface()
                 .peerReviewsReceived(courseID, assignmentID, teamName);
+        if(submissions == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("That assignment has not been distributed for peer reviews yet!").build();
+        }
         return Response.status(Response.Status.OK).entity(submissions).build();
     }
 }

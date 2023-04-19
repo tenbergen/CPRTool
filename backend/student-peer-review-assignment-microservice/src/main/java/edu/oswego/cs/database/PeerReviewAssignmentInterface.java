@@ -1474,6 +1474,9 @@ public class PeerReviewAssignmentInterface {
         Document assignment = assignmentCollection.find(and(eq("assignment_id", assignmentID), eq("course_id", courseID))).first();
         Document assignedTeams = (Document) assignment.get("assigned_teams");
         List<String> teams = assignment.getList("all_teams", String.class);
+        if(teams == null){
+            return null;
+        }
         ArrayList<String> reviewTeams = new ArrayList<>();
         for(String team : teams){
             List<String> teamList = assignedTeams.getList(team, String.class);
@@ -1494,6 +1497,9 @@ public class PeerReviewAssignmentInterface {
      */
     public List<Document> peerReviewsGiven(String courseID, int assignmentID, String teamName) {
         List<String> teams = getReviewTeams(courseID, assignmentID, teamName);
+        if(teams == null){
+            return null;
+        }
         List<Document> submissions = new ArrayList<>();
         for(String team : teams){
             Document submission = submissionsCollection.find(and(eq("team_name",team),
@@ -1516,6 +1522,9 @@ public class PeerReviewAssignmentInterface {
      */
     public List<Document> peerReviewsReceived(String courseID, int assignmentID, String teamName) {
         List<String> teams = getAssignedTeams(courseID, assignmentID, teamName);
+        if(teams == null){
+            return null;
+        }
         List<Document> submissions = new ArrayList<>();
         for(String team : teams){
             if(team == null){
