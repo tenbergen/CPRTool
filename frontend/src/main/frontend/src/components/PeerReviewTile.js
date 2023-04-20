@@ -1,89 +1,54 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import './styles/AssignmentTile.css';
-import { useEffect } from 'react';
-import {
-    getAssignmentDetailsAsync,
-    getCombinedAssignmentPeerReviews,
-    getCourseAssignmentsAsync
-} from '../redux/features/assignmentSlice';
 
-const assignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`;
 
 //page to route to
 //PeerReviewGRComponent
 
 const PeerReviewTile = ({ assignment, submitted }) => {
-    const dispatch = useDispatch();
+    //const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const title =
         "Assignment #" + assignment.assignment_id;
 
-    const assID = assignment.assignment_id;
+    //const assID = assignment.assignment_id;
 
-    const { role } = useSelector((state) => state.auth);
+    //const { role } = useSelector((state) => state.auth);
     const { currentTeamId } = useSelector((state) => state.teams);
-    const { assignmentShit } = useSelector((state) => state.assignments);
+    //const { assignmentShit } = useSelector((state) => state.assignments);
     const { courseId } = useParams();
-    const link = `/${role}/${courseId}/${assignment.assignment_id}`;
+    //const link = `/${role}/${courseId}/${assignment.assignment_id}`;
 
-
-    console.log("assignmentID: " + assID);
-    console.log("courseID: " + courseId);
-
-    //added code
-    console.log("assignment due date: " + assignment.due_date);//.description);
-    console.log("assignment name:" + assignment.assignment_name);
-
-    const onFileClick = async () => {
-        const fileName =
-            assignment.assignment_type = 'peer-review';
-        const assignmentId = assignment.assignment_id;
-        const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/download/${fileName}`;
-        await axios
-            .get(url, { responseType: 'blob' })
-            .then((res) => downloadFile(res.data, fileName));
-    };
-
-    const downloadFile = (blob, fileName) => {
-        const fileURL = URL.createObjectURL(blob);
-        const href = document.createElement('a');
-        href.href = fileURL;
-        href.download = fileName;
-        href.click();
-    };
-
-    const confirmDelete = async () => {
-        let confirmAction = window.confirm(
-            'Are you sure to delete this assignment?'
-        );
-        if (confirmAction) {
-            await deleteAssignment();
-        }
-    };
-
-    const deleteAssignment = async () => {
-        const url = `${assignmentUrl}/${courseId}/assignments/${assignment.assignment_id}/remove`;
-        await axios.delete(url);
-        dispatch(getCourseAssignmentsAsync(courseId));
-        alert('Assignment successfully deleted.');
-    };
 
     const onTileClick = () => {
-        const tileLink = submitted
+        //"student/:courseId/peer-review/:assignmentId/:teamId/pr-list"
+        //if the peer reviews have been distrubutes, link to this page, else alert that the peer reviews are not
+        //yet distributed
 
-            ? role === 'student'
-                ? `/student/${courseId}/peer-review/${assignment.assignment_id}/${currentTeamId}/pr-list`
-                : `${link}/${assignment.team_name}/submitted`
-            : role === 'student'
-                ? assignment.assignment_type === 'peer-review'
-                    ? `${link}/peer-review/${assignment.peer_review_team}`
-                    : `${link}/normal`
-                : `${link}`;
 
-        navigate(tileLink);
+        let tileLink;
+        //if the assignment is a peer review(is an assignment that hasnt been submitted)
+        if (assignment.has_peer_review)
+            //if the non submitted assignment has a peer review, there are peer reviews
+            //accessible, route to the correct page(the page w all the peer reviews)
+            if(assignment.reviews_per_team > 0) {
+                tileLink = `student/${courseId}/peer-review/${assignment.assignment_id}/${currentTeamId}/pr-list`;
+                navigate(tileLink);
+            }
+            else
+                alert("peer reviews are not yet completed");
+        //if the assignment is a submitted assignment
+        else{
+            if(assignment.reviews !== null) {
+                tileLink = `/student/${courseId}/peer-review/${assignment.assignment_id}/${currentTeamId}/pr-list`;
+                navigate(tileLink);
+            }
+            else
+                alert("peer reviews are not yet completed");
+        }
+
     };
 
     return (
@@ -99,6 +64,7 @@ const PeerReviewTile = ({ assignment, submitted }) => {
                     {/*{' '}*/}
                     <span> {title} </span>
                 </div>
+
                 <div className='ass-tile-content' onClick={onTileClick}>
                     <div className='ass-tile-info' >
             <span className='inter-24-bold'>
@@ -121,19 +87,22 @@ const PeerReviewTile = ({ assignment, submitted }) => {
                         <span className='inter-20-medium'>
               {submitted
                   ? assignment.grade === -1
-                      ? "Pending PR"
+                      ? "Awaiting PR"
                       : "Graded"
-                  : 'Assigned'}
+                  : 'Assigned(Awaiting Assignment Completion)'}
+
 
             </span>
 
                     </div>
                     {!submitted && (
                         <div className='ass-tile-links'>
-              <span className='inter-16-bold-blue ass-tile-files' onClick={onFileClick}>
-                {assignment.assignment_type === 'peer-review'
-                    ? assignment.peer_review_rubric
-                    : assignment.assignment_instructions}
+                            {/*<span className='inter-16-bold-blue ass-tile-files' onClick={onFileClick}>*/}
+                            {/*  {assignment.assignment_type === 'peer-review'*/}
+                            {/*      ? assignment.peer_review_rubric*/}
+                            {/*      : assignment.assignment_instructions}*/}
+                            {/*</span>*/}
+              <span className='inter-16-bold-blue ass-tile-files' >
               </span>
                         </div>
                     )}
