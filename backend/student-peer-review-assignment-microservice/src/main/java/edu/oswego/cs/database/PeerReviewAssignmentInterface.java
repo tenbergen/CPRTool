@@ -1480,6 +1480,9 @@ public class PeerReviewAssignmentInterface {
         ArrayList<String> reviewTeams = new ArrayList<>();
         for(String team : teams){
             List<String> teamList = assignedTeams.getList(team, String.class);
+            if(teamList == null){
+                continue;
+            }
             if(teamList.contains(teamName)){
                 reviewTeams.add(team);
             }
