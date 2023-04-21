@@ -52,9 +52,7 @@ const PeerReviewComponent = () => {
     //filter for peer-reviews only
     const filteredPeerReviews = combinedAssignmentPeerReviews.filter(checkPeerReview);
 
-    console.log("filtered non submitted: " + filteredPeerReviews);
     const filteredSubmittedReviews = courseSubmittedAssignments.filter(checkPeerReview);
-    console.log("filtered submitted: " + filteredSubmittedReviews);
 
     function checkPeerReview(assignment){
         //if the assigment has peer reviews associated w it, then keep them
@@ -68,15 +66,15 @@ const PeerReviewComponent = () => {
                 <div id='assList'>
                     <div>
                         {filteredSubmittedReviews.map((assignment) => (
-                            assignment.peer_review_due_date !== null
-                                    ? <PeerReviewTile key={uuid()} assignment={assignment} submitted={true}/>
-                                : console.log("peer review due date was null")
+                            assignment.peer_review_due_date !== null && assignment.reviews !== null
+                                ? <PeerReviewTile key={uuid()} assignment={assignment} submitted={true}/>
+                                : console.log("submitted assignment: "+assignment.assignment_id + " was not a peer review ")
                         ))}
 
                         {filteredPeerReviews.map((assignment) => (
-                            assignment.has_peer_review
+                            assignment.has_peer_review && assignment.assignment_type !== 'peer-review'
                                 ? <PeerReviewTile key={uuid()} assignment={assignment} submitted={false}/>
-                                : console.log("does not have a peer review")
+                                : console.log("non-submitted assignment: "+assignment.assignment_id + " was not a peer review ")
                         ))}
                     </div>
 
