@@ -12,11 +12,11 @@ import * as React from "react";
 import {act} from "react-dom/test-utils";
 import uuid from "react-uuid";
 import {base64StringToBlob} from "blob-util";
-
+import { getAssignmentDetailsAsync } from '../../../redux/features/assignmentSlice'
 const PeerReviewListPage = () => {
     const dispatch = useDispatch();
     const { currentTeamId } = useSelector((state) => state.teams);
-    const { assignmentId, courseId } = useParams();
+    const { courseId, assignmentId, teamId } = useParams();
     const { lakerId } = useSelector((state) => state.auth);
     const [givenPeerReviews, setGivenPeerReviews] = useState([]);
     const [receivedPeerReviews, setReceivedPeerReviews] = useState([]);
@@ -27,6 +27,12 @@ const PeerReviewListPage = () => {
     const [activeState, setActiveState] = useState("given")
     const [showDetailsModal, setShowDetailsModal] = useState(false)
     const [assignment, setAssignment] = useState({})
+    const navigate = useNavigate()
+    const { currentAssignment, currentAssignmentLoaded } = useSelector(
+        (state) => state.assignments
+    )
+    const [grade, setGrade] = useState(undefined)
+    const feedbackFileFormData = new FormData()
 
     useEffect(async () => {
         dispatch(
@@ -173,74 +179,141 @@ const PeerReviewListPage = () => {
     };
 
     const DetailsModal = () => {
+        const [isModalOpen, setIsModalOpen] = useState(false);
+        const handleCloseModal = () => {
+            setIsModalOpen(false);
+        };
+
+        const onTemplateClick = async (fileName) => {
+            if(fileName.endsWith(".pdf")){
+                downloadFile(new Blob([Uint8Array.from(currentAssignment.peer_review_template_data.data)], {type: 'application/pdf'}), fileName)
+            }else if(fileName.endsWith(".docx")){
+                downloadFile(new Blob([Uint8Array.from(currentAssignment.peer_review_template_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
+            }else{
+                downloadFile(new Blob([Uint8Array.from(currentAssignment.peer_review_template_data.data)], {type: 'application/zip'}), fileName)
+            }
+        };
+
+        const onRubricFileClick = async (fileName) => {
+            if(fileName.endsWith(".pdf")){
+                downloadFile(new Blob([Uint8Array.from(currentAssignment.rubric_data.data)], {type: 'application/pdf'}), fileName)
+            }else if(fileName.endsWith(".docx")){
+                downloadFile(new Blob([Uint8Array.from(currentAssignment.rubric_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
+            }else{
+                downloadFile(new Blob([Uint8Array.from(currentAssignment.rubric_data.data)], {type: 'application/zip'}), fileName)
+            }
+        };
+
+        const onTeamFileClick = async (fileName) => {
+            if(fileName.endsWith(".pdf")){
+                downloadFile(new Blob([Uint8Array.from(currentAssignment.submission_data.data)], {type: 'application/pdf'}), fileName)
+            }else if(fileName.endsWith(".docx")){
+                downloadFile(new Blob([Uint8Array.from(currentAssignment.submission_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
+            }else{
+                downloadFile(new Blob([Uint8Array.from(currentAssignment.submission_data.data)], {type: 'application/zip'}), fileName)
+            }
+        }
+
+        const uploadFeedback = async (teamGraded) => {
+            const url = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${teamName}/${teamGraded}/download`;
+            await axios
+                .get(url, { responseType: 'blob' })
+                .then((res) => prepareFeedbackFile(res["headers"]["content-disposition"], res.data.text()))
+                .catch((e) => {
+                    alert(`Error : ${e.response.data}`);
+                });
+        }
+        const handleSubmit = async () => {
+            const submitAssUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${currentTeamId}/${teamId}/${grade}/upload`
+
+            await axios
+                .post(submitAssUrl, feedbackFileFormData)
+                .then((res) => {
+                    alert('Successfully uploaded peer review')
+                    navigate(`/student/${courseId}`, {
+                        state: { initialComponent: 'Submitted' },
+                    })
+                })
+                .catch((e) => {
+                    console.error(e.response)
+                    alert('Error uploading peer review')
+                })
+            setGrade(undefined)
+        }
         return (
-            <div id="myModal" className="modal">
-                <div className="modal-content">
-                    <div className='inter-20-medium-white ass-tile-title'> {' '}
-                        <span> {'Assignment Details'} </span>
-                    </div>
-                    <div className='ass-tile-content'>
-                        <span className='inter-24-bold'> {assignment.assignment_name} </span>
-                        <span className='inter-20-medium span1-ap'>
-                                Due: {assignment.due_date}
-                            </span>
-                        <br/> <br/> <br/>
-                        <p className='inter-20-medium'>Instructions:</p>
-                        <p className='inter-16-medium-black'>{assignment.instructions}</p>
-                        <br/>
-                        <br/>
-                        <span className='inter-20-bold'> Rubric: </span>
-                        <span className='inter-16-bold-blue p2'>
-                                <button className='blue-button-small'
-                                        // onClick={onAssignmentClick}
-                                >
-                                    {' '}
-                                    Download{' '}
+            <>
+                {isModalOpen && (
+                    <div id="myModal" className="modal">
+                        <div className="modal-content">
+                            <div className="inter-20-medium-white ass-tile-title">
+                                {" "}
+                                <span> {"Assignment Details"} </span>
+                                <button className="close-modal" onClick={handleCloseModal}>
+                                    X
                                 </button>
-                            </span>
-                        <span className='inter-20-bold'> Template: </span>
-                        <span className='inter-16-bold-blue p2'>
-                                <button className='blue-button-small'
-                                        // onClick={onAssignmentClick}
-                                >
-                                    {' '}
-                                    Download{' '}
-                                </button>
-                            </span>
-                        <span className='inter-20-bold'> Team Files: </span>
-                        <span className='inter-16-bold-blue p2'>
-                                <button className='blue-button-small'
-                                        // onClick={onAssignmentClick}
-                                >
-                                    {' '}
-                                    Download{' '}
-                                </button>
-                            </span>
-                        <div className='ap-assignment-files rubric-button'>
-                            <input
-                                type='file'
-                                name='assignment_files'
-                                accept='.pdf,.docx'
-                                // onChange={(e) => assignmentFileHandler(e)}
-                                required
-                            />
+                            </div>
+                            <div className="ass-tile-content">
+              <span className="inter-24-bold">
+                {assignment.assignment_name}
+              </span>
+                                <span className="inter-20-medium span1-ap">
+                Due: {assignment.due_date}
+              </span>
+                                <br /> <br /> <br />
+                                <p className="inter-20-medium">Instructions:</p>
+                                <p className="inter-16-medium-black">
+                                    {assignment.instructions}
+                                </p>
+                                <br />
+                                <br />
+                                <div className="button-group">
+                                    <button
+                                        className="blue-button-PR"
+                                        onClick={onRubricFileClick}
+                                    >
+                                        Rubric Download
+                                    </button>
+                                    <button
+                                        className="blue-button-PR"
+                                        onClick={onTemplateClick}
+                                    >
+                                        Template: Download
+                                    </button>
+                                    <button
+                                        className="blue-button-PR"
+                                        onClick={onTeamFileClick}
+                                    >
+                                        Team Files : Download
+                                    </button>
+                                </div>
+                                <div className="ap-assignment-files rubric-button">
+                                    <input
+                                        type="file"
+                                        name="assignment_files"
+                                        accept=".pdf,.docx"
+                                        onChange={(e) => handleSubmit(e)}
+                                        required
+                                    />
+                                </div>
+                                <div className="input-field">
+                                    <label> Grade: </label>
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        name="peer_review_grade"
+                                        value={grade}
+                                        required
+                                        onChange={(e) => setGrade(e.target.value)}
+                                    />
+                                </div>
+                            </div>
                         </div>
-                        <div className="input-field">
-                            <label> Grade: </label>
-                            <input
-                                type="number"
-                                min="0"
-                                name="peer_review_grade"
-                                // value={grade}
-                                required
-                                // onChange={(e) => setGrade(e.target.value)}
-                            />
-                        </div>
                     </div>
-                </div>
-            </div>
-        )
-    }
+                )}
+            </>
+        );
+    };
+
 
     return (
         <div className="prl-page-container">
