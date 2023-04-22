@@ -268,25 +268,25 @@ const PeerReviewListPage = () => {
                                 <br />
                                 <div className="button-group">
                                     <button
-                                        className="blue-button-PR"
+                                        className="blue-button-top"
                                         onClick={onRubricFileClick}
                                     >
                                         Rubric Download
                                     </button>
                                     <button
-                                        className="blue-button-PR"
+                                        className="blue-button-top"
                                         onClick={onTemplateClick}
                                     >
                                         Template: Download
                                     </button>
                                     <button
-                                        className="blue-button-PR"
+                                        className="blue-button-top"
                                         onClick={onTeamFileClick}
                                     >
                                         Team Files : Download
                                     </button>
-                                </div>
-                                <div className="ap-assignment-files rubric-button">
+                                
+                                <div className="blue-button-bottom">
                                     <input
                                         type="file"
                                         name="assignment_files"
@@ -295,7 +295,7 @@ const PeerReviewListPage = () => {
                                         required
                                     />
                                 </div>
-                                <div className="input-field">
+                                <div className="grade-input-field">
                                     <label> Grade: </label>
                                     <input
                                         type="number"
@@ -308,6 +308,7 @@ const PeerReviewListPage = () => {
                                 </div>
                             </div>
                         </div>
+                    </div>
                     </div>
                 )}
             </>
