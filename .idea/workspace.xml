@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="32b51248-2e16-47a6-a3fe-004f6ccfd702" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/src/components/PeerReviewTile.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/frontend/src/components/PeerReviewTile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/src/components/StudentComponents/CoursePage/PeerReviewComponent.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/frontend/src/components/StudentComponents/CoursePage/PeerReviewComponent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/src/pages/StudentPages/PeerReviewPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/frontend/src/pages/StudentPages/PeerReviewPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/src/routing/RouterHandler.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/frontend/src/routing/RouterHandler.js" afterDir="false" />
+    <list default="true" id="32b51248-2e16-47a6-a3fe-004f6ccfd702" name="Changes" comment="fixed PRReceived">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/student-peer-review-assignment-microservice/src/main/java/edu/oswego/cs/database/PeerReviewAssignmentInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/student-peer-review-assignment-microservice/src/main/java/edu/oswego/cs/database/PeerReviewAssignmentInterface.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +29,11 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "nodejs_package_manager_path": "npm"
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -42,7 +45,16 @@
       <option name="presentableId" value="Default" />
       <updated>1681943261702</updated>
       <workItem from="1681943265749" duration="8889000" />
+      <workItem from="1682126019063" duration="308000" />
     </task>
+    <task id="LOCAL-00001" summary="fixed PRReceived">
+      <created>1682126325763</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1682126325763</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -58,5 +70,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="fixed PRReceived" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed PRReceived" />
   </component>
 </project>
