@@ -14,8 +14,6 @@ import uuid from "react-uuid";
 
 const PeerReviewListPage = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const { role } = useSelector((state) => state.auth);
     const { currentTeamId } = useSelector((state) => state.teams);
     const { assignmentId, courseId } = useParams();
     const { lakerId } = useSelector((state) => state.auth);
@@ -24,7 +22,6 @@ const PeerReviewListPage = () => {
     const [assignmentName, setAssignmentName] = useState("")
     const getAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`;
     const [assignments, setAssignments] = useState([])
-    const [teamName, setTeamName] = useState("")
     const [activeState, setActiveState] = useState("given")
 
     useEffect(async () => {
@@ -41,6 +38,12 @@ const PeerReviewListPage = () => {
                 console.error(e.response);
             });
 
+        await (assignments).forEach((assignment) => {
+            if(assignment.assignment_id.toString() === assignmentId){
+                setAssignmentName(assignment.assignment_name)
+            }
+        })
+
         const teamUrl = `${process.env.REACT_APP_URL}/teams/team/get/${courseId}/${lakerId}`
         const currentTeam = await axios
             .get(teamUrl)
@@ -51,28 +54,24 @@ const PeerReviewListPage = () => {
                 console.error(e.response.data);
                 return [];
             });
-        await setTeamName(currentTeam.team_id)
-        await console.log("Team Name:")
-        await console.log(currentTeam.team_id)
 
-        const peerReviewUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/reviews-of/${lakerId}`;
         const givenPeerReviewUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/peer-reviews-given/${currentTeam.team_id}`;
         const givenPeerReviewsList = await axios
             .get(givenPeerReviewUrl)
             .then((res) => {
-                return res.data;
+                return res;
             })
             .catch((e) => {
                 console.error(e.response.data);
                 return [];
             });
-        setGivenPeerReviews(givenPeerReviewsList.data);
+        setGivenPeerReviews(Array.from(givenPeerReviewsList.data));
 
         const receivedPeerReviewUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/peer-reviews-received/${currentTeam.team_id}`;
         const receivedPeerReviewsList = await axios
             .get(receivedPeerReviewUrl)
             .then((res) => {
-                return res.data;
+                return res;
             })
             .catch((e) => {
                 console.error(e.response.data);
@@ -80,13 +79,8 @@ const PeerReviewListPage = () => {
             });
         setReceivedPeerReviews(receivedPeerReviewsList.data);
 
-        await (assignments).forEach((assignment) => {
-            if(assignment.assignment_id.toString() === assignmentId){
-                setAssignmentName(assignment.assignment_name)
-                setTeamName(assignment.team_name)
-                setTeamName(assignment.team_name)
-            }
-        })
+        console.log("Data:")
+        console.log(receivedPeerReviews)
 
     }, [courseId, currentTeamId, lakerId, dispatch]);
 
@@ -152,47 +146,113 @@ const PeerReviewListPage = () => {
                     {activeState === "given"
                         ? (
                             <div className="pr-all-tiles-container">
-                                {/*{givenPeerReviews.map(*/}
-                                {/*    (pr) =>*/}
-                                {/*        pr && (*/}
-                                {/*            <div id="REPLACE THIS WITH ACTUAL TILE"/>*/}
-                                {/*        )*/}
-                                {/*)}*/}
-
-                                <div className='pr-individual-tile'>
-                                    <div className="inter-20-medium-white team-tile-title">
-                                        {' '}
-                                        <span>Team</span>
-                                    </div>
-                                    <div className="pr-individual-tile-content">
-                                        <div className="pr-individual-tile-info">
-                                        <span className='inter-24-bold'>
-                                            SomeName
-                                        </span>
-                                            <div className="pr-individual-tile-main-info-container">
-                                                <div className="members-count-container">
-                                                    <span className="members-count inter-24-medium">5/5</span>
-                                                    <span className="inter-12-light-italic">Team Members</span>
+                                {givenPeerReviews.map(
+                                    (pr) =>
+                                        pr && (
+                                            <div className='pr-individual-tile'>
+                                                <div className="inter-20-medium-white team-tile-title">
+                                                    {' '}
+                                                    <span>Team</span>
                                                 </div>
-                                                <button
-                                                    id="joinTeamButton"
-                                                    key={uuid()}
-                                                    onClick={() => {
+                                                <div className="pr-individual-tile-content">
+                                                    <div className="pr-individual-tile-info">
+                                                        <span className='inter-24-bold'>
+                                                            {pr.team_name}
+                                                        </span>
+                                                        {pr.grade >= 0
+                                                            ? (
+                                                                <div className="pr-individual-tile-main-info-container">
+                                                                    <div className="pr-grade-given-container">
+                                                                        <span className="pr-grade-given inter-24-medium">{pr.grade}%</span>
+                                                                        <span className="inter-12-light">PR Grade Given</span>
+                                                                    </div>
+                                                                    <button
+                                                                        id="prDownloadButton"
+                                                                        key={uuid()}
+                                                                        onClick={() => {
 
 
-                                                    }}
-                                                >Join</button>
+                                                                        }}
+                                                                    >
+                                                                        <div id="prTileDownloadIcon"></div>
+                                                                        <p>Download PR</p>
+                                                                    </button>
+                                                                </div>
+                                                            ) : (
+                                                                <div className="pr-individual-tile-main-info-container">
+                                                                    <div className="pr-grade-given-container">
+                                                                        <span className="inter-24-medium">-</span>
+                                                                    </div>
+                                                                    <button
+                                                                        id="prDownloadButton"
+                                                                        className="pr-download-and-details-button"
+                                                                        key={uuid()}
+                                                                        onClick={() => {
+
+
+                                                                        }}
+                                                                    >
+                                                                        <div id="prTileDownloadIcon"></div>
+                                                                        <p>View Details</p>
+                                                                    </button>
+                                                                </div>
+                                                            )
+                                                        }
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                        )
+                                )}
                             </div>
                         ) : (
                             <div className="pr-all-tiles-container">
-                                <h2>Received</h2>
+                                {receivedPeerReviews.map(
+                                    (pr) =>
+                                        pr && (
+                                            <div className='pr-individual-tile'>
+                                                <div className="inter-20-medium-white team-tile-title">
+                                                    {' '}
+                                                    <span>Team</span>
+                                                </div>
+                                                <div className="pr-individual-tile-content">
+                                                    <div className="pr-individual-tile-info">
+                                                        <span className='inter-24-bold'>
+                                                            {pr.reviewed_by}
+                                                        </span>
+                                                        {pr.grade >= 0
+                                                            ? (
+                                                                <div className="pr-individual-tile-main-info-container">
+                                                                    <div className="pr-grade-given-container">
+                                                                        <span className="pr-grade-given inter-24-medium">{pr.grade}%</span>
+                                                                        <span className="inter-12-light">PR Grade Given</span>
+                                                                    </div>
+                                                                    <button
+                                                                        id="prDownloadButton"
+                                                                        key={uuid()}
+                                                                        onClick={() => {
+
+
+                                                                        }}
+                                                                    >
+                                                                        <div id="prTileDownloadIcon"></div>
+                                                                        <p>Download PR</p>
+                                                                    </button>
+                                                                </div>
+                                                            ) : (
+                                                                <div className="pr-individual-tile-main-info-container">
+                                                                    <div className="pr-grade-given-container">
+                                                                        <span className="inter-24-medium">-</span>
+                                                                    </div>
+                                                                    <span className="inter-16-medium-black not-submitted-text">Not Submitted</span>
+                                                                </div>
+                                                            )
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                )}
                             </div>
-
-
                         )
                     }
                 </div>
