@@ -1539,6 +1539,13 @@ public class PeerReviewAssignmentInterface {
                     .first();
             if(submission != null) {
                 submissions.add(submission);
+            }else{
+                submission = submissionsCollection.find(and(eq("team_name", team),
+                        eq("course_id", courseID), eq("assignment_id", assignmentID),
+                        eq("type", "team_submission"))).first();
+                if(submission != null){
+                    submissions.add(submission);
+                }
             }
         }
         return submissions;
