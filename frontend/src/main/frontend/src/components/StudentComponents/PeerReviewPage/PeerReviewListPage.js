@@ -11,9 +11,12 @@ import NavigationContainerComponent from "../../NavigationComponents/NavigationC
 import * as React from "react";
 import {act} from "react-dom/test-utils";
 import uuid from "react-uuid";
+import {base64StringToBlob} from "blob-util";
 
 const PeerReviewListPage = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { role } = useSelector((state) => state.auth);
     const { currentTeamId } = useSelector((state) => state.teams);
     const { assignmentId, courseId } = useParams();
     const { lakerId } = useSelector((state) => state.auth);
@@ -22,6 +25,7 @@ const PeerReviewListPage = () => {
     const [assignmentName, setAssignmentName] = useState("")
     const getAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`;
     const [assignments, setAssignments] = useState([])
+    const [teamName, setTeamName] = useState("")
     const [activeState, setActiveState] = useState("given")
 
     useEffect(async () => {
@@ -41,6 +45,8 @@ const PeerReviewListPage = () => {
         await (assignments).forEach((assignment) => {
             if(assignment.assignment_id.toString() === assignmentId){
                 setAssignmentName(assignment.assignment_name)
+                setTeamName(assignment.team_name)
+                setTeamName(assignment.team_name)
             }
         })
 
@@ -54,6 +60,7 @@ const PeerReviewListPage = () => {
                 console.error(e.response.data);
                 return [];
             });
+        await setTeamName(currentTeam.team_id)
 
         const givenPeerReviewUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/peer-reviews-given/${currentTeam.team_id}`;
         const givenPeerReviewsList = await axios
@@ -78,9 +85,6 @@ const PeerReviewListPage = () => {
                 return [];
             });
         setReceivedPeerReviews(receivedPeerReviewsList.data);
-
-        console.log("Data:")
-        console.log(receivedPeerReviews)
 
     }, [courseId, currentTeamId, lakerId, dispatch]);
 
@@ -130,6 +134,44 @@ const PeerReviewListPage = () => {
         }
     };
 
+    const downloadGivenPeerReview = async (teamGraded) => {
+        const url = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${teamName}/${teamGraded}/download`;
+
+        await axios
+            .get(url, { responseType: 'blob' })
+            .then((res) => prepareFeedbackFile(res["headers"]["content-disposition"], res.data.text()))
+            .catch((e) => {
+                alert(`Error : ${e.response.data}`);
+            });
+    }
+
+    const downloadReceivedPeerReview = async (gradingTeam) => {
+        const url = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${gradingTeam}/${teamName}/download`;
+
+        await axios
+            .get(url, { responseType: 'blob' })
+            .then((res) => prepareFeedbackFile(res["headers"]["content-disposition"], res.data.text()))
+            .catch((e) => {
+                alert(`Error : ${e.response.data}`);
+            });
+    }
+
+    const prepareFeedbackFile = (feedbackDataName, feedbackData) => {
+        let filename = ""
+        const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+        const matches = filenameRegex.exec(feedbackDataName);
+        if (matches != null && matches[1]) {
+            filename = matches[1].replace(/['"]/g, '');
+        }
+        feedbackData.then((res) => {
+            if(filename.endsWith(".pdf")){
+                downloadFile(base64StringToBlob(res, 'application/pdf'), filename)
+            }else{
+                downloadFile(base64StringToBlob(res, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'), filename)
+            }
+        })
+    };
+
     return (
         <div className="prl-page-container">
             <HeaderBar/>
@@ -169,10 +211,7 @@ const PeerReviewListPage = () => {
                                                                     <button
                                                                         id="prDownloadButton"
                                                                         key={uuid()}
-                                                                        onClick={() => {
-
-
-                                                                        }}
+                                                                        onClick={() => downloadGivenPeerReview(pr.team_name)}
                                                                     >
                                                                         <div id="prTileDownloadIcon"></div>
                                                                         <p>Download PR</p>
@@ -229,10 +268,7 @@ const PeerReviewListPage = () => {
                                                                     <button
                                                                         id="prDownloadButton"
                                                                         key={uuid()}
-                                                                        onClick={() => {
-
-
-                                                                        }}
+                                                                        onClick={() => downloadReceivedPeerReview(pr.reviewed_by)}
                                                                     >
                                                                         <div id="prTileDownloadIcon"></div>
                                                                         <p>Download PR</p>
