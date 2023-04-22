@@ -1499,7 +1499,7 @@ public class PeerReviewAssignmentInterface {
      * @return list of submissions to be peer-reviewed by a specified team
      */
     public List<Document> peerReviewsGiven(String courseID, int assignmentID, String teamName) {
-        List<String> teams = getReviewTeams(courseID, assignmentID, teamName);
+        List<String> teams = getAssignedTeams(courseID, assignmentID, teamName);
         if(teams == null){
             return null;
         }
