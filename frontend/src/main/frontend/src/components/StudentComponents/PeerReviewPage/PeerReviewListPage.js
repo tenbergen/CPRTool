@@ -15,8 +15,6 @@ import {base64StringToBlob} from "blob-util";
 
 const PeerReviewListPage = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const { role } = useSelector((state) => state.auth);
     const { currentTeamId } = useSelector((state) => state.teams);
     const { assignmentId, courseId } = useParams();
     const { lakerId } = useSelector((state) => state.auth);
@@ -27,6 +25,8 @@ const PeerReviewListPage = () => {
     const [assignments, setAssignments] = useState([])
     const [teamName, setTeamName] = useState("")
     const [activeState, setActiveState] = useState("given")
+    const [showDetailsModal, setShowDetailsModal] = useState(false)
+    const [assignment, setAssignment] = useState({})
 
     useEffect(async () => {
         dispatch(
@@ -42,11 +42,11 @@ const PeerReviewListPage = () => {
                 console.error(e.response);
             });
 
-        await (assignments).forEach((assignment) => {
-            if(assignment.assignment_id.toString() === assignmentId){
-                setAssignmentName(assignment.assignment_name)
-                setTeamName(assignment.team_name)
-                setTeamName(assignment.team_name)
+        await (assignments).forEach((currentAssignment) => {
+            if(currentAssignment.assignment_id.toString() === assignmentId){
+                setAssignmentName(currentAssignment.assignment_name)
+                setTeamName(currentAssignment.team_name)
+                setAssignment(currentAssignment)
             }
         })
 
@@ -172,6 +172,76 @@ const PeerReviewListPage = () => {
         })
     };
 
+    const DetailsModal = () => {
+        return (
+            <div id="myModal" className="modal">
+                <div className="modal-content">
+                    <div className='inter-20-medium-white ass-tile-title'> {' '}
+                        <span> {'Assignment Details'} </span>
+                    </div>
+                    <div className='ass-tile-content'>
+                        <span className='inter-24-bold'> {assignment.assignment_name} </span>
+                        <span className='inter-20-medium span1-ap'>
+                                Due: {assignment.due_date}
+                            </span>
+                        <br/> <br/> <br/>
+                        <p className='inter-20-medium'>Instructions:</p>
+                        <p className='inter-16-medium-black'>{assignment.instructions}</p>
+                        <br/>
+                        <br/>
+                        <span className='inter-20-bold'> Rubric: </span>
+                        <span className='inter-16-bold-blue p2'>
+                                <button className='blue-button-small'
+                                        // onClick={onAssignmentClick}
+                                >
+                                    {' '}
+                                    Download{' '}
+                                </button>
+                            </span>
+                        <span className='inter-20-bold'> Template: </span>
+                        <span className='inter-16-bold-blue p2'>
+                                <button className='blue-button-small'
+                                        // onClick={onAssignmentClick}
+                                >
+                                    {' '}
+                                    Download{' '}
+                                </button>
+                            </span>
+                        <span className='inter-20-bold'> Team Files: </span>
+                        <span className='inter-16-bold-blue p2'>
+                                <button className='blue-button-small'
+                                        // onClick={onAssignmentClick}
+                                >
+                                    {' '}
+                                    Download{' '}
+                                </button>
+                            </span>
+                        <div className='ap-assignment-files rubric-button'>
+                            <input
+                                type='file'
+                                name='assignment_files'
+                                accept='.pdf,.docx'
+                                // onChange={(e) => assignmentFileHandler(e)}
+                                required
+                            />
+                        </div>
+                        <div className="input-field">
+                            <label> Grade: </label>
+                            <input
+                                type="number"
+                                min="0"
+                                name="peer_review_grade"
+                                // value={grade}
+                                required
+                                // onChange={(e) => setGrade(e.target.value)}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="prl-page-container">
             <HeaderBar/>
@@ -226,10 +296,7 @@ const PeerReviewListPage = () => {
                                                                         id="prDownloadButton"
                                                                         className="pr-download-and-details-button"
                                                                         key={uuid()}
-                                                                        onClick={() => {
-
-
-                                                                        }}
+                                                                        onClick={() => setShowDetailsModal(true)}
                                                                     >
                                                                         <div id="prTileDownloadIcon"></div>
                                                                         <p>View Details</p>
@@ -293,6 +360,7 @@ const PeerReviewListPage = () => {
                     }
                 </div>
             </div>
+            <div>{showDetailsModal ? DetailsModal() : null}</div>
         </div>
     );
 }
