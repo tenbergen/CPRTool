@@ -51,7 +51,7 @@ const RouterHandler = () => {
             />
             <Route
               path={"professor/:courseId/assignments/create/assignment"}
-              element={<ProfessorAssignmentPage/>}
+              element={<CreateAssignmentPage/>}
             />
             <Route
               path="professor/:courseId/:assignmentId/:teamId/submitted"
