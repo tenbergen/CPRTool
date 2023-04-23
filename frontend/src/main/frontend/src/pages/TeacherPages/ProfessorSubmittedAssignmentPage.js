@@ -10,7 +10,7 @@ import {base64StringToBlob} from "blob-util";
 import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 
-async function initializeData() {
+async function initializeData(courseId, teamId, assignmentId) {
   const currentTeam = await axios
       .get(`${process.env.REACT_APP_URL}/teams/team/${courseId}/get/${teamId}`)
       .then(r => {
@@ -39,7 +39,7 @@ function ProfessorSubmittedAssignmentPage() {
     useSelector((state) => state.submittedAssignments);
   const { courseId, assignmentId, teamId } = useParams();
   let {currentTeam, reviewers, reviews} = undefined;
-  initializeData().then(r => {
+  initializeData(courseId, teamId, assignmentId).then(r => {
     currentTeam = r.currentTeam;
     reviewers = r.reviewers;
     reviews = r.reviews;
