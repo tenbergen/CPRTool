@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import '../../components/styles/FinalGrade.css';
+import './styles/ProfessorSubmittedAssignmentPage.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -97,99 +97,74 @@ function ProfessorSubmittedAssignmentPage() {
           <div>
             {currentSubmittedAssignmentLoaded ? (
                 <div className='sac-parent'>
-                  <h2 className='assignment-name'>
-                    {currentSubmittedAssignment.assignment_name}
+                  <h2 className='team-name'>
+                    {currentSubmittedAssignment.all_teams} Submission
                   </h2>
                   <div className='sac-content'>
-                    <div>
-                      <span className='sac-title'> Instructions </span>
-                      <span className='sac-date sac-title'>
-                        Due Date: {currentSubmittedAssignment.due_date}
-                      </span>
-                      <br />
-                      <p>
-                        <span className='sac-text'>
-                          {' '}
-                          {currentSubmittedAssignment.instructions}{' '}
-                        </span>
-                      </p>
+                    <div className='inter-20-medium-white ass-tile-title'> {' '}
+                      <span> {currentSubmittedAssignment.assignment_name} </span>
                     </div>
-                    <br />
-
-                    <div>
-                      <div className='ap-assignment-files'>
-                        <span className='sac-title'> Rubric: </span>
-                        <span
-                            className='sac-filename'
-                            onClick={() =>
-                                onRubricFileClick(currentSubmittedAssignment.rubric_name)
-                            }
-                        >
-                          {currentSubmittedAssignment.rubric_name}
-                        </span>
-                      </div>
-
-                      <div className='ap-assignment-files'>
-                        <span className='sac-title'>Template:</span>
-                        <span
-                            className='sac-filename'
-                            onClick={() =>
-                                onTemplateClick(currentSubmittedAssignment.peer_review_template_name)
-                            }
-                        >
-                          {currentSubmittedAssignment.peer_review_template_name}
-                        </span>
-                      </div>
-
-                      <div className='ap-assignment-files'>
-                        <span className='sac-title'> Team Files: </span>
-                        <span
-                            className='sac-filename'
-                            onClick={() => onTeamFileClick(currentSubmittedAssignment.submission_name)}
-                        >
-                          {currentSubmittedAssignment.submission_name}
-                        </span>
-                      </div>
+                    <div className='ass-tile-content' >
+                      <span className='inter-24-bold'> {currentSubmittedAssignment.assignment_name} </span>
+                      <span className='inter-20-medium span1-ap'>
+                        Due: {currentSubmittedAssignment.due_date}
+                      </span>
+                      <br /> <br /> <br />
+                      <p className='inter-20-medium' >Instructions:</p>
+                      <p className='inter-16-medium-black'>{currentSubmittedAssignment.instructions}</p>
+                      <br />
+                      <br />
+                      <span className='inter-20-bold'> Rubric: </span>
+                      <span className='inter-16-bold-blue p2' >
+                        <button className='blue-button-small-pr' onClick={onRubricFileClick} >
+                          {' '}
+                          Rubric{' '}
+                        </button>
+                      </span>
+                      <span className='inter-16-bold-blue p2' >
+                        <button className='blue-button-small-pr' onClick={onTemplateClick} >
+                          {' '}
+                          Template{' '}
+                        </button>
+                      </span>
+                      <span className='inter-16-bold-blue p2' >
+                        <button className='blue-button-small-pr'>
+                          {' '}
+                          Team Download{' '}
+                        </button>
+                      </span>
                     </div>
                     <br />
                     <div>
                       <div>
                         <span className='sac-title'> Peer reviews: </span>
-                        <div className='peerReviewList'>
-                          {currentSubmittedAssignment.peer_reviews !== null
-                              ? currentSubmittedAssignment.peer_reviews.map(
-                                  (peerReview) =>
-                                      peerReview && (
-                                          <li
-                                              key={uuid()}
-                                              className='psa-peerReviewListItem'
-                                          >
-                                            <b> {peerReview.reviewed_by} </b>
-                                            <div>
-                                        <span>
-                                          {' '}
-                                          {peerReview.grade === -1
-                                              ? 'Pending'
-                                              : peerReview.grade}{' '}
-                                        </span>
-                                              &nbsp;
-                                              <span
-                                                  className='psa-sac-filename'
-                                                  onClick={() =>
-                                                      onFeedBackClick(
-                                                          peerReview.reviewed_by,
-                                                          peerReview.submission_name
-                                                      )
-                                                  }
-                                              >
-                                          View feedback
-                                        </span>
-                                            </div>
-                                          </li>
-                                      )
-                              )
-                              : null}
-                        </div>
+                        <table className="rosterTable">
+                          <thead>
+                            <tr>
+                              <th className="rosterHeader">Team Name</th>
+                              <th className="rosterHeader">Given Score</th>
+                              <th className="rosterHeader">Download Feedback</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {currentSubmittedAssignment.all_teams.map(
+                              (team) =>
+                                team && (
+                                  <tr key={uuid()}>
+                                    <th className="rosterComp">
+                                      {team.team_name}
+                                    </th>
+                                    <th className="rosterComp">grade</th>
+                                    <th className="rosterComp">
+                                      <svg className={'bulk-download-icon-default'} alt={'Bulk Download For Student'}
+                                           style={{ cursor: 'pointer' }} >
+                                      </svg>
+                                    </th>
+                                  </tr>
+                                )
+                          )}
+                          </tbody>
+                        </table>
                       </div>
                     </div>
                     <br />
