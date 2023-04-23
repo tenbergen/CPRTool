@@ -9,11 +9,32 @@ import uuid from 'react-uuid';
 import {base64StringToBlob} from "blob-util";
 import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
-function ProfessorSubmittedAssignmentPage() {
+
+
+
+async function ProfessorSubmittedAssignmentPage() {
   const dispatch = useDispatch();
   const { currentSubmittedAssignment, currentSubmittedAssignmentLoaded } =
     useSelector((state) => state.submittedAssignments);
   const { courseId, assignmentId, teamId } = useParams();
+
+  const currentTeam = await axios
+      .get(`${process.env.REACT_APP_URL}/teams/team/${courseId}/get/${teamId}`)
+      .then(r => {
+        console.log(r.data);
+        return r.data;
+      })
+
+  const reviewers = await axios
+      .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/peer-review-team-reviewers/${teamId}`)
+      .then(r => {
+        return r.data;
+      })
+  const reviews = await axios
+      .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/reviews-of/${currentTeam.team_lead}`)
+      .then(r => {
+        return r.data;
+      })
 
   useEffect(() => {
     dispatch(
@@ -59,6 +80,16 @@ function ProfessorSubmittedAssignmentPage() {
     }
   }
 
+  const getReviewSubmission = team => {
+    reviews.map( (t) => {
+      console.log(t);
+      if(t.key === team){
+        return t;
+      }
+    })
+    console.error(`no match for ${team}`)
+  }
+
   const prepareFeedbackFile = (feedbackDataName, feedbackData) => {
     var filename = ""
     var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
@@ -98,7 +129,7 @@ function ProfessorSubmittedAssignmentPage() {
             {currentSubmittedAssignmentLoaded ? (
                 <div className='sac-parent'>
                   <h2 className='team-name'>
-                    {currentSubmittedAssignment.all_teams} Submission
+                    {teamId} Submission
                   </h2>
                   <div className='sac-content'>
                     <div className='inter-20-medium-white ass-tile-title'> {' '}
@@ -147,14 +178,14 @@ function ProfessorSubmittedAssignmentPage() {
                             </tr>
                           </thead>
                           <tbody>
-                            {currentSubmittedAssignment.all_teams.map(
+                            {reviewers.map(
                               (team) =>
                                 team && (
                                   <tr key={uuid()}>
                                     <th className="rosterComp">
-                                      {team.team_name}
+                                      {team}
                                     </th>
-                                    <th className="rosterComp">grade</th>
+                                    <th className="rosterComp">{getReviewSubmission(team)}</th>
                                     <th className="rosterComp">
                                       <svg className={'bulk-download-icon-default'} alt={'Bulk Download For Student'}
                                            style={{ cursor: 'pointer' }} >
