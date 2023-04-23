@@ -12,11 +12,12 @@ import * as React from "react";
 import {act} from "react-dom/test-utils";
 import uuid from "react-uuid";
 import {base64StringToBlob} from "blob-util";
-
+import { getAssignmentDetailsAsync } from '../../../redux/features/assignmentSlice'
+import '../../../pages/StudentPages/styles/AssignmentPageStyle.css'
 const PeerReviewListPage = () => {
     const dispatch = useDispatch();
     const { currentTeamId } = useSelector((state) => state.teams);
-    const { assignmentId, courseId } = useParams();
+    const { courseId, assignmentId, teamId } = useParams();
     const { lakerId } = useSelector((state) => state.auth);
     const [givenPeerReviews, setGivenPeerReviews] = useState([]);
     const [receivedPeerReviews, setReceivedPeerReviews] = useState([]);
@@ -27,6 +28,12 @@ const PeerReviewListPage = () => {
     const [activeState, setActiveState] = useState("given")
     const [showDetailsModal, setShowDetailsModal] = useState(false)
     const [assignment, setAssignment] = useState({})
+    const navigate = useNavigate()
+    const { currentAssignment, currentAssignmentLoaded } = useSelector(
+        (state) => state.assignments
+    )
+    const [grade, setGrade] = useState(undefined)
+    const feedbackFileFormData = new FormData()
 
     useEffect(async () => {
         dispatch(
@@ -172,6 +179,87 @@ const PeerReviewListPage = () => {
         })
     };
 
+    const onFeedbackFileHandler = (event) => {
+        let file = event.target.files[0]
+        const reader = new FileReader()
+        reader.onloadend = () => {
+            // Use a regex to remove data url part
+            const base64String = reader.result
+                .replace('data:', '')
+                .replace(/^.+,/, '')
+            for (var key of feedbackFileFormData.keys()) {
+                feedbackFileFormData.delete(key)
+            }
+            feedbackFileFormData.set(file.name, base64String)
+        }
+        reader.readAsDataURL(file)
+    }
+
+    useEffect(() => {
+        dispatch(getAssignmentDetailsAsync({ courseId, assignmentId }))
+    }, [courseId, assignmentId, dispatch])
+
+    const prepareTeamFile = (teamDataName, teamData) => {
+        var filename = ''
+        var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
+        var matches = filenameRegex.exec(teamDataName)
+        if (matches != null && matches[1]) {
+            filename = matches[1].replace(/['"]/g, '')
+        }
+        teamData.then((res) => {
+            if (filename.endsWith('.pdf')) {
+                downloadFile(base64StringToBlob(res, 'application/pdf'), filename)
+            } else {
+                downloadFile(base64StringToBlob(res, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'), filename)
+            }
+        })
+    }
+
+    const onTemplateClick = async (fileName) => {
+        if (fileName.endsWith('.pdf')) {
+            downloadFile(new Blob([Uint8Array.from(currentAssignment.peer_review_template_data.data)], { type: 'application/pdf' }), fileName)
+        } else if (fileName.endsWith('.docx')) {
+            downloadFile(new Blob([Uint8Array.from(currentAssignment.peer_review_template_data.data)], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }), fileName)
+        } else {
+            downloadFile(new Blob([Uint8Array.from(currentAssignment.peer_review_template_data.data)], { type: 'application/zip' }), fileName)
+        }
+    }
+
+    const onRubricFileClick = async (fileName) => {
+        if (fileName.endsWith('.pdf')) {
+            downloadFile(new Blob([Uint8Array.from(currentAssignment.rubric_data.data)], { type: 'application/pdf' }), fileName)
+        } else if (fileName.endsWith('.docx')) {
+            downloadFile(new Blob([Uint8Array.from(currentAssignment.rubric_data.data)], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }), fileName)
+        } else {
+            downloadFile(new Blob([Uint8Array.from(currentAssignment.rubric_data.data)], { type: 'application/zip' }), fileName)
+        }
+    }
+
+    const onTeamFileClick = async () => {
+        const url = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${teamId}/download`
+
+        await axios
+            .get(url, { responseType: 'blob' })
+            .then((res) => prepareTeamFile(res['headers']['content-disposition'], res.data.text()))
+    }
+
+    const handleSubmit = async () => {
+        const submitAssUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${currentTeamId}/${teamId}/${grade}/upload`
+
+        await axios
+            .post(submitAssUrl, feedbackFileFormData)
+            .then((res) => {
+                alert('Successfully uploaded peer review')
+                navigate(`/student/${courseId}`, {
+                    state: { initialComponent: 'Submitted' },
+                })
+            })
+            .catch((e) => {
+                console.error(e.response)
+                alert('Error uploading peer review')
+            })
+        setGrade(undefined)
+    }
     const DetailsModal = () => {
         return (
             <div id="myModal" className="modal">
@@ -180,67 +268,86 @@ const PeerReviewListPage = () => {
                         <span> {'Assignment Details'} </span>
                     </div>
                     <div className='ass-tile-content'>
-                        <span className='inter-24-bold'> {assignment.assignment_name} </span>
+                        <span className='inter-24-bold'> {currentAssignment.assignment_name} </span>
                         <span className='inter-20-medium span1-ap'>
-                                Due: {assignment.due_date}
-                            </span>
+                        Due: {currentAssignment.peer_review_due_date}
+                    </span>
                         <br/> <br/> <br/>
                         <p className='inter-20-medium'>Instructions:</p>
-                        <p className='inter-16-medium-black'>{assignment.instructions}</p>
+                        <p className='inter-16-medium-black'>{currentAssignment.peer_review_instructions}</p>
                         <br/>
                         <br/>
-                        <span className='inter-20-bold'> Rubric: </span>
-                        <span className='inter-16-bold-blue p2'>
-                                <button className='blue-button-small'
-                                        // onClick={onAssignmentClick}
-                                >
-                                    {' '}
-                                    Download{' '}
-                                </button>
-                            </span>
-                        <span className='inter-20-bold'> Template: </span>
-                        <span className='inter-16-bold-blue p2'>
-                                <button className='blue-button-small'
-                                        // onClick={onAssignmentClick}
-                                >
-                                    {' '}
-                                    Download{' '}
-                                </button>
-                            </span>
-                        <span className='inter-20-bold'> Team Files: </span>
-                        <span className='inter-16-bold-blue p2'>
-                                <button className='blue-button-small'
-                                        // onClick={onAssignmentClick}
-                                >
-                                    {' '}
-                                    Download{' '}
-                                </button>
-                            </span>
-                        <div className='ap-assignment-files rubric-button'>
-                            <input
-                                type='file'
-                                name='assignment_files'
-                                accept='.pdf,.docx'
-                                // onChange={(e) => assignmentFileHandler(e)}
-                                required
-                            />
+                        <div style={{display: 'flex', flexDirection: 'row'}}>
+                            <span className='inter-20-bold'> Rubric: </span>
+                            <span className='inter-16-bold-blue p2'>
+                            <button className='blue-button-small'
+                                    onClick={() =>
+                                        onRubricFileClick(currentAssignment.rubric_name)
+                                    }
+                            >
+                                {' '}
+                                Download{' '}
+                            </button>
+                        </span>
+                            <span className='inter-20-bold'> Template: </span>
+                            <span className='inter-16-bold-blue p2'>
+                            <button className='blue-button-small'
+                                    onClick={() =>
+                                        onTemplateClick(currentAssignment.peer_review_template_name)
+                                    }                                >
+                                {' '}
+                                Download{' '}
+                            </button>
+                        </span>
+                            <span className='inter-20-bold'> Team Files: </span>
+                            <span className='inter-16-bold-blue p2'>
+                            <button className="blue-button-small" onClick={onTeamFileClick}>
+                                {' '}
+                                Download{' '}
+                            </button>
+                        </span>
                         </div>
-                        <div className="input-field">
-                            <label> Grade: </label>
-                            <input
-                                type="number"
-                                min="0"
-                                name="peer_review_grade"
-                                // value={grade}
-                                required
-                                // onChange={(e) => setGrade(e.target.value)}
-                            />
+                        <div>
+                            <span className='inter-20-bold'>Feedback: </span>
+                            <span className='inter-16-bold-blue p2'>
+                            <button className="blue-button-bottom">
+                                <input
+                                    type="file"
+                                    name="assignment_files"
+                                    accept=".pdf,.docx"
+                                    onChange={onFeedbackFileHandler}
+                                    required
+                                />
+                            </button>
+                        </span>
+                            <div className="input-field">
+                                <label> Grade: </label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    name="peer_review_grade"
+                                    value={grade}
+                                    required
+                                    onChange={(e) => setGrade(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="ap-button">
+                        <div className="ap-button">
+                            <button className="green-button-large" onClick={handleSubmit}>
+                                {' '}
+                                Submit
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         )
     }
+
+
+
 
     return (
         <div className="prl-page-container">
