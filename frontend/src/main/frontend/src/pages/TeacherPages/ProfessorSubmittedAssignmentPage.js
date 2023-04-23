@@ -185,7 +185,7 @@ async function ProfessorSubmittedAssignmentPage() {
                                     <th className="rosterComp">
                                       {team}
                                     </th>
-                                    <th className="rosterComp">{getReviewSubmission(team)}</th>
+                                    <th className="rosterComp">{getReviewSubmission(team).grade}</th>
                                     <th className="rosterComp">
                                       <svg className={'bulk-download-icon-default'} alt={'Bulk Download For Student'}
                                            style={{ cursor: 'pointer' }} >
