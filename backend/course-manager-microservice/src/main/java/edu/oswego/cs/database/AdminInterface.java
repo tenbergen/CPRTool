@@ -8,8 +8,9 @@ import edu.oswego.cs.daos.ProfanitySettings;
 import edu.oswego.cs.daos.UserDAO;
 import edu.oswego.cs.util.CPRException;
 
-   import java.util.List;
+import java.util.List;
 import java.util.ArrayList;
+
 import com.google.gson.Gson;
 import edu.oswego.cs.util.CourseUtil;
 import org.bson.Document;
@@ -19,6 +20,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 import com.mongodb.client.model.Filters;
+
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.set;
 
@@ -96,7 +98,6 @@ public class AdminInterface {
         }
         professorCollection.deleteOne(eq("professor_id", user_id));
     }
-
 
 
     public void deleteStudentUser(String user_id) {
@@ -264,9 +265,9 @@ public class AdminInterface {
 
     private Boolean checkAdmin(String user_id) {
         Document adminDocument = professorCollection.find(
-                Filters.and(
-                        eq("professor_id", user_id),
-                        eq("admin", true)))
+                        Filters.and(
+                                eq("professor_id", user_id),
+                                eq("admin", true)))
                 .first();
         return adminDocument != null;
     }
@@ -293,14 +294,14 @@ public class AdminInterface {
         // iterate through MongoDB CourseDAOs and add to list
         for (Document course : courseCollection.find()) {
             CourseDAO c = new CourseDAO(
-                course.getString("abbreviation"),
-                course.getString("course_name"),
-                course.getString("course_section"),
-                course.getString("crn"),
-                course.getString("semester"),
-                course.getString("year"),
-                course.getString("professor_id")
-                );
+                    course.getString("abbreviation"),
+                    course.getString("course_name"),
+                    course.getString("course_section"),
+                    course.getString("crn"),
+                    course.getString("semester"),
+                    course.getString("year"),
+                    course.getString("professor_id")
+            );
             courses.add(c);
         }
         return courses;
@@ -311,12 +312,12 @@ public class AdminInterface {
         List<UserDAO> users = new ArrayList<UserDAO>();
         // iterate though mongodb users and add to list
         for (Document user : studentCollection.find()) {
-            UserDAO u = new UserDAO(user.getString("student_id"), "student",user.getString("first_name"), user.getString("last_name"));
+            UserDAO u = new UserDAO(user.getString("student_id"), "student", user.getString("first_name"), user.getString("last_name"));
             users.add(u);
         }
 
         for (Document user : professorCollection.find()) {
-            UserDAO u = new UserDAO(user.getString("professor_id"), "professor",user.getString("first_name"), user.getString("last_name"));
+            UserDAO u = new UserDAO(user.getString("professor_id"), "professor", user.getString("first_name"), user.getString("last_name"));
             if (user.getBoolean("admin")) {  // if is true override role to admin
                 u.setRole("admin");
             }
@@ -327,7 +328,7 @@ public class AdminInterface {
     }
 
 
-    public Boolean checkCourse(String crn){
+    public Boolean checkCourse(String crn) {
         Document CourseDAODocument = courseCollection.find(eq("crn", crn)).first();
         if (CourseDAODocument == null) {
             return false;
@@ -338,6 +339,13 @@ public class AdminInterface {
     public String getBlockedWords() {
         // Find the first document in the collection
         Document profanitySettingsDocument = profanitySettings.find().first();
+        if (profanitySettingsDocument == null) {
+            ProfanitySettings initProfanitySettings = new ProfanitySettings(new ArrayList<String>());
+            Document initialProfanitySettings = new Document("words", initProfanitySettings.getWords());
+            profanitySettings.insertOne(initialProfanitySettings);
+            Gson gson = new Gson();
+            return gson.toJson(new ArrayList<String>());
+        }
 
         // Extract the blocked words from the document
         List<String> blockedWords = profanitySettingsDocument.getList("words", String.class);
