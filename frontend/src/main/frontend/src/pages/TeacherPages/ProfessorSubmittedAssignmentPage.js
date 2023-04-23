@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import '../../components/styles/FinalGrade.css';
+import '../../pages/StudentPages/styles/AssignmentPageStyle.css'
+import '../../components/StudentComponents/AssignmentPage/RegularAssignmentComponent.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
