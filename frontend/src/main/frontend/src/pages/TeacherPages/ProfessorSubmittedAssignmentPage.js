@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import './styles/ProfessorSubmittedAssignmentPage.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -38,11 +38,14 @@ function ProfessorSubmittedAssignmentPage() {
   const { currentSubmittedAssignment, currentSubmittedAssignmentLoaded } =
     useSelector((state) => state.submittedAssignments);
   const { courseId, assignmentId, teamId } = useParams();
-  let {currentTeam, reviewers, reviews} = undefined;
+  const [currentTeam, setCurrentTeam] = useState(undefined);
+  const [reviewers, setReviewers] = useState({});
+  const [reviews, setReviews] = useState({});
+
   initializeData(courseId, teamId, assignmentId).then(r => {
-    currentTeam = r.currentTeam;
-    reviewers = r.reviewers;
-    reviews = r.reviews;
+    setCurrentTeam(r.currentTeam);
+    setReviewers(r.reviewers);
+    setReviews(r.reviews);
   });
 
   useEffect(() => {
