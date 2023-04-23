@@ -270,66 +270,68 @@ const PeerReviewListPage = () => {
                     <div className='ass-tile-content'>
                         <span className='inter-24-bold'> {currentAssignment.assignment_name} </span>
                         <span className='inter-20-medium span1-ap'>
-                                Due: {currentAssignment.peer_review_due_date}
-                            </span>
+                        Due: {currentAssignment.peer_review_due_date}
+                    </span>
                         <br/> <br/> <br/>
                         <p className='inter-20-medium'>Instructions:</p>
                         <p className='inter-16-medium-black'>{currentAssignment.peer_review_instructions}</p>
                         <br/>
                         <br/>
-                        <span className='inter-20-bold'> Rubric: </span>
-                        <span className='inter-16-bold-blue p2'>
-                                <button className='blue-button-small'
-                                        onClick={() =>
-                                            onRubricFileClick(currentAssignment.rubric_name)
-                                        }
-                                >
-                                    {' '}
-                                    Download{' '}
-                                </button>
-                            </span>
-                        <span className='inter-20-bold'> Template: </span>
-                        <span className='inter-16-bold-blue p2'>
-                                <button className='blue-button-small'
-                                        onClick={() =>
-                                            onTemplateClick(currentAssignment.peer_review_template_name)
-                                        }                                >
-                                    {' '}
-                                    Download{' '}
-                                </button>
-                            </span>
-                        <span className='inter-20-bold'> Team Files: </span>
-                        <span className='inter-16-bold-blue p2'>
-                        <button className="blue-button-small" onClick={onTeamFileClick}>
-                           {' '}
-                            Download{' '}
-              </button>
+                        <div style={{display: 'flex', flexDirection: 'row'}}>
+                            <span className='inter-20-bold'> Rubric: </span>
+                            <span className='inter-16-bold-blue p2'>
+                            <button className='blue-button-small'
+                                    onClick={() =>
+                                        onRubricFileClick(currentAssignment.rubric_name)
+                                    }
+                            >
+                                {' '}
+                                Download{' '}
+                            </button>
                         </span>
-                        <div>
-                        <span className='inter-20-bold'>Feedback: </span>
-                        <span className='inter-16-bold-blue p2'>
-                        <button className="blue-button-bottom">
-                            <input
-                                type="file"
-                                name="assignment_files"
-                                accept=".pdf,.docx"
-                                onChange={onFeedbackFileHandler}
-                                required
-                            />
-                        </button>
+                            <span className='inter-20-bold'> Template: </span>
+                            <span className='inter-16-bold-blue p2'>
+                            <button className='blue-button-small'
+                                    onClick={() =>
+                                        onTemplateClick(currentAssignment.peer_review_template_name)
+                                    }                                >
+                                {' '}
+                                Download{' '}
+                            </button>
                         </span>
-                        <div className="input-field">
-                            <label> Grade: </label>
-                            <input
-                                type="number"
-                                min="0"
-                                name="peer_review_grade"
-                                 value={grade}
-                                required
-                                 onChange={(e) => setGrade(e.target.value)}
-                            />
+                            <span className='inter-20-bold'> Team Files: </span>
+                            <span className='inter-16-bold-blue p2'>
+                            <button className="blue-button-small" onClick={onTeamFileClick}>
+                                {' '}
+                                Download{' '}
+                            </button>
+                        </span>
                         </div>
-                    </div>
+                        <div>
+                            <span className='inter-20-bold'>Feedback: </span>
+                            <span className='inter-16-bold-blue p2'>
+                            <button className="blue-button-bottom">
+                                <input
+                                    type="file"
+                                    name="assignment_files"
+                                    accept=".pdf,.docx"
+                                    onChange={onFeedbackFileHandler}
+                                    required
+                                />
+                            </button>
+                        </span>
+                            <div className="input-field">
+                                <label> Grade: </label>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    name="peer_review_grade"
+                                    value={grade}
+                                    required
+                                    onChange={(e) => setGrade(e.target.value)}
+                                />
+                            </div>
+                        </div>
                     </div>
                     <div className="ap-button">
                         <div className="ap-button">
@@ -343,6 +345,9 @@ const PeerReviewListPage = () => {
             </div>
         )
     }
+
+
+
 
     return (
         <div className="prl-page-container">
