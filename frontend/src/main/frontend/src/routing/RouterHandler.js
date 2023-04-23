@@ -50,6 +50,10 @@ const RouterHandler = () => {
               element={<ProfessorAssignmentPage/>}
             />
             <Route
+              path={"professor/:courseId/assignments/create/assignment"}
+              element={<ProfessorAssignmentPage/>}
+            />
+            <Route
               path="professor/:courseId/:assignmentId/:teamId/submitted"
               element={<ProfessorSubmittedAssignmentPage/>}
             />
