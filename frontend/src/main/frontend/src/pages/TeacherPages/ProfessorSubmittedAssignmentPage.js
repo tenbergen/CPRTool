@@ -10,31 +10,30 @@ import {base64StringToBlob} from "blob-util";
 import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 
+const currentTeam = await axios
+    .get(`${process.env.REACT_APP_URL}/teams/team/${courseId}/get/${teamId}`)
+    .then(r => {
+      console.log(r.data);
+      return r.data;
+    })
 
+const reviewers = await axios
+    .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/peer-review-team-reviewers/${teamId}`)
+    .then(r => {
+      return r.data;
+    })
 
-async function ProfessorSubmittedAssignmentPage() {
+const reviews = await axios
+    .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/reviews-of/${currentTeam.team_lead}`)
+    .then(r => {
+      return r.data;
+    })
+
+function ProfessorSubmittedAssignmentPage() {
   const dispatch = useDispatch();
   const { currentSubmittedAssignment, currentSubmittedAssignmentLoaded } =
     useSelector((state) => state.submittedAssignments);
   const { courseId, assignmentId, teamId } = useParams();
-
-  const currentTeam = await axios
-      .get(`${process.env.REACT_APP_URL}/teams/team/${courseId}/get/${teamId}`)
-      .then(r => {
-        console.log(r.data);
-        return r.data;
-      })
-
-  const reviewers = await axios
-      .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/peer-review-team-reviewers/${teamId}`)
-      .then(r => {
-        return r.data;
-      })
-  const reviews = await axios
-      .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/reviews-of/${currentTeam.team_lead}`)
-      .then(r => {
-        return r.data;
-      })
 
   useEffect(() => {
     dispatch(
