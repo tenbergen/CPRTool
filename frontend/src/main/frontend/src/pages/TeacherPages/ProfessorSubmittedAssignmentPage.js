@@ -125,7 +125,7 @@ function ProfessorSubmittedAssignmentPage() {
                         </button>
                       </span>
                       <span className='inter-16-bold-blue p2' >
-                        <button className='blue-button-small' onClick={} >
+                        <button className='blue-button-small'>
                           {' '}
                           Team Download{' '}
                         </button>
