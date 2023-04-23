@@ -10,30 +10,40 @@ import {base64StringToBlob} from "blob-util";
 import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 
-const currentTeam = await axios
-    .get(`${process.env.REACT_APP_URL}/teams/team/${courseId}/get/${teamId}`)
-    .then(r => {
-      console.log(r.data);
-      return r.data;
-    })
+async function initializeData() {
+  const currentTeam = await axios
+      .get(`${process.env.REACT_APP_URL}/teams/team/${courseId}/get/${teamId}`)
+      .then(r => {
+        console.log(r.data);
+        return r.data;
+      })
 
-const reviewers = await axios
-    .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/peer-review-team-reviewers/${teamId}`)
-    .then(r => {
-      return r.data;
-    })
+  const reviewers = await axios
+      .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/peer-review-team-reviewers/${teamId}`)
+      .then(r => {
+        return r.data;
+      })
 
-const reviews = await axios
-    .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/reviews-of/${currentTeam.team_lead}`)
-    .then(r => {
-      return r.data;
-    })
+  const reviews = await axios
+      .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/reviews-of/${currentTeam.team_lead}`)
+      .then(r => {
+        return r.data;
+      })
+
+  return {currentTeam, reviewers, reviews}
+}
 
 function ProfessorSubmittedAssignmentPage() {
   const dispatch = useDispatch();
   const { currentSubmittedAssignment, currentSubmittedAssignmentLoaded } =
     useSelector((state) => state.submittedAssignments);
   const { courseId, assignmentId, teamId } = useParams();
+  let {currentTeam, reviewers, reviews} = undefined;
+  initializeData().then(r => {
+    currentTeam = r.currentTeam;
+    reviewers = r.reviewers;
+    reviews = r.reviews;
+  });
 
   useEffect(() => {
     dispatch(
