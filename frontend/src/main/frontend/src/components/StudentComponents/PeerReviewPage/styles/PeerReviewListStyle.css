@@ -212,4 +212,13 @@
     letter-spacing: 0.5px;
 }
 
+.details-section > div {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 20px;
+}
+
+.input-field {
+    margin-top: 20px;
+}
 
