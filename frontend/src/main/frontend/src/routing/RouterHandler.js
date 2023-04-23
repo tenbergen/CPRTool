@@ -17,6 +17,7 @@ import ProfessorGradesPage from '../pages/TeacherPages/ProfessorGradesPage'
 import StudentGradesPage from '../pages/StudentPages/StudentGradesPage'
 import PeerReviewPage from "../pages/StudentPages/PeerReviewPage";
 import PeerReviewListPage from "../components/StudentComponents/PeerReviewPage/PeerReviewListPage";
+import DisplayMatrix from '../pages/TeacherPages/DisplayMatrix'
 
 const RouterHandler = () => {
   return (
