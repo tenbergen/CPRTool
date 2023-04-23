@@ -98,7 +98,7 @@ function ProfessorSubmittedAssignmentPage() {
             {currentSubmittedAssignmentLoaded ? (
                 <div className='sac-parent'>
                   <h2 className='team-name'>
-                    {currentSubmittedAssignment.team_name} Submission
+                    {currentSubmittedAssignment.all_teams} Submission
                   </h2>
                   <div className='sac-content'>
                     <div className='inter-20-medium-white ass-tile-title'> {' '}
@@ -147,7 +147,7 @@ function ProfessorSubmittedAssignmentPage() {
                             </tr>
                           </thead>
                           <tbody>
-                            {currentSubmittedAssignment.peer_reviews.map(
+                            {currentSubmittedAssignment.all_teams.map(
                               (team) =>
                                 team && (
                                   <tr key={uuid()}>
