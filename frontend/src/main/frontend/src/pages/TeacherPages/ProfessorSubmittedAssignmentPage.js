@@ -97,59 +97,39 @@ function ProfessorSubmittedAssignmentPage() {
           <div>
             {currentSubmittedAssignmentLoaded ? (
                 <div className='sac-parent'>
-                  <h2 className='assignment-name'>
-                    {currentSubmittedAssignment.assignment_name}
+                  <h2 className='team-name'>
+                    {currentSubmittedAssignment.team_name} Submission
                   </h2>
                   <div className='sac-content'>
-                    <div>
-                      <span className='sac-title'> Instructions </span>
-                      <span className='sac-date sac-title'>
-                        Due Date: {currentSubmittedAssignment.due_date}
+                    <div className='ass-tile-content' >
+                      <span className='inter-24-bold'> {currentSubmittedAssignment.assignment_name} </span>
+                      <span className='inter-20-medium span1-ap'>
+                        Due: {currentSubmittedAssignment.due_date}
                       </span>
+                      <br /> <br /> <br />
+                      <p className='inter-20-medium' >Instructions:</p>
+                      <p className='inter-16-medium-black'>{currentSubmittedAssignment.instructions}</p>
                       <br />
-                      <p>
-                        <span className='sac-text'>
+                      <br />
+                      <span className='inter-20-bold'> Rubric: </span>
+                      <span className='inter-16-bold-blue p2' >
+                        <button className='blue-button-small' onClick={onRubricFileClick} >
                           {' '}
-                          {currentSubmittedAssignment.instructions}{' '}
-                        </span>
-                      </p>
-                    </div>
-                    <br />
-
-                    <div>
-                      <div className='ap-assignment-files'>
-                        <span className='sac-title'> Rubric: </span>
-                        <span
-                            className='sac-filename'
-                            onClick={() =>
-                                onRubricFileClick(currentSubmittedAssignment.rubric_name)
-                            }
-                        >
-                          {currentSubmittedAssignment.rubric_name}
-                        </span>
-                      </div>
-
-                      <div className='ap-assignment-files'>
-                        <span className='sac-title'>Template:</span>
-                        <span
-                            className='sac-filename'
-                            onClick={() =>
-                                onTemplateClick(currentSubmittedAssignment.peer_review_template_name)
-                            }
-                        >
-                          {currentSubmittedAssignment.peer_review_template_name}
-                        </span>
-                      </div>
-
-                      <div className='ap-assignment-files'>
-                        <span className='sac-title'> Team Files: </span>
-                        <span
-                            className='sac-filename'
-                            onClick={() => onTeamFileClick(currentSubmittedAssignment.submission_name)}
-                        >
-                          {currentSubmittedAssignment.submission_name}
-                        </span>
-                      </div>
+                          Rubric{' '}
+                        </button>
+                      </span>
+                      <span className='inter-16-bold-blue p2' >
+                        <button className='blue-button-small' onClick={onTemplateClick} >
+                          {' '}
+                          Template{' '}
+                        </button>
+                      </span>
+                      <span className='inter-16-bold-blue p2' >
+                        <button className='blue-button-small' onClick={} >
+                          {' '}
+                          Team Download{' '}
+                        </button>
+                      </span>
                     </div>
                     <br />
                     <div>
