@@ -127,7 +127,8 @@ const ProfessorAllSubmissionsComponent = () => {
             <div className="inter-20-medium" style={{
               justifyContent: 'center',
               alignItems: 'center',
-              textAlign: 'center'
+              textAlign: 'center',
+              marginBottom: '5%',
             }}>
               <label style={{ display: 'block', marginBottom: '5%' }}> Bulk download
                 for this
