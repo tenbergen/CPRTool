@@ -1,0 +1,38 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.table {
+    text-align: center;
+    width: 95vw;
+}
+
+
+.tableHeader {
+    text-align: center;
+    background-color: #4A7DFC;
+    color: white;
+    height: 2rem;
+}
+
+.row {
+    padding: 4vw;
+    text-align: center;
+}
+
+.white {
+    background-color: #FFFFFF;
+}
+
+.gray {
+    background-color: #E6E6E6;
+}
+
+td {
+    background-color: #FFFFFF;
+
+}
+
