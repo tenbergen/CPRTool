@@ -90,7 +90,7 @@ public class CreateTeamTest {
         driver.findElement(By.xpath("//*[@id=\"teacher\"]/div[1]/div/button")).click();
         driver.findElement(By.xpath("//*[@id=\"courseList\"]/a[2]/li")).click();
         driver.findElement(By.xpath("//*[@id=\"teamListItem\"]")).click();
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5L));
         Alert alert = wait.until(ExpectedConditions.alertIsPresent());
         alert.accept();
 

@@ -13,11 +13,11 @@ import ProfessorAssignmentPage from '../pages/TeacherPages/ProfessorAssignmentPa
 import StudentSubmittedAssignmentPage from '../pages/StudentPages/StudentSubmittedAssignmentPage'
 import ProfessorSubmittedAssignmentPage from '../pages/TeacherPages/ProfessorSubmittedAssignmentPage'
 import AdminInterface from '../pages/AdminPages/AdminInterface'
-import ProfessorGradesPage from '../pages/TeacherPages/ProfessorGradesPage';
-import ProfessorRosterComponent from "../components/ProfessorComponents/CoursesPage/ProfessorRosterComponent";
-import StudentGradesPage from '../pages/StudentPages/StudentGradesPage';
-import DisplayMatrix from '../pages/TeacherPages/DisplayMatrix';
-
+import ProfessorGradesPage from '../pages/TeacherPages/ProfessorGradesPage'
+import StudentGradesPage from '../pages/StudentPages/StudentGradesPage'
+import PeerReviewPage from "../pages/StudentPages/PeerReviewPage";
+import PeerReviewListPage from "../components/StudentComponents/PeerReviewPage/PeerReviewListPage";
+import DisplayMatrix from '../pages/TeacherPages/DisplayMatrix'
 
 const RouterHandler = () => {
   return (
@@ -48,6 +48,10 @@ const RouterHandler = () => {
             <Route
               path="professor/:courseId/:assignmentId"
               element={<ProfessorAssignmentPage/>}
+            />
+            <Route
+              path={"professor/:courseId/assignments/create/assignment"}
+              element={<CreateAssignmentPage/>}
             />
             <Route
               path="professor/:courseId/:assignmentId/:teamId/submitted"
@@ -113,6 +117,7 @@ const RouterHandler = () => {
               path="student/:courseId/grades"
               element={<StudentGradesPage/>}
             />
+
             <Route
               path="student"
               element={<App/>}
@@ -125,8 +130,14 @@ const RouterHandler = () => {
               path="/student/:courseId/assignments"
               element={<StudentCoursePage chosen="To Do"/>}
             />
-
-
+            <Route
+                path="student/:courseId/peer-review"
+                element={<PeerReviewPage />}
+            />
+            <Route
+                path="student/:courseId/peer-review/:assignmentId/:teamId/pr-list"
+                element={<PeerReviewListPage />}
+            />
           </Route>
         </Route>
       </Route>

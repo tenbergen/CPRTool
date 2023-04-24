@@ -1,5 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');
 
+.inter-12-light{
+  font-family: "Inter", sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 14px;
+  color: #212529;
+}
+
 .inter-12-light-italic{
   font-family: "Inter", sans-serif;
   font-weight: 300;

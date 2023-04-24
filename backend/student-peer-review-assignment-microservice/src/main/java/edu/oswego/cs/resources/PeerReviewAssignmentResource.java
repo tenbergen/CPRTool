@@ -212,6 +212,28 @@ public class PeerReviewAssignmentResource {
         return Response.status(Response.Status.OK).entity(assignedTeams).build();
     }
 
+    /**
+     * Endpoint to get the teams that were assigned to as specific target team to peer-review
+     *
+     * @param courseID course in which team exists
+     * @param assignmentID the peer review assignment
+     * @param teamName the target team
+     * @return all teams assigned to review the target team for this peer review assignment
+     */
+    @GET
+    @RolesAllowed({"professor", "student"})
+    @Path("{courseID}/{assignmentID}/peer-review-team-reviewers/{teamName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTeamReviewers(@PathParam("courseID") String courseID,
+                                       @PathParam("assignmentID") int assignmentID,
+                                       @PathParam("teamName") String teamName) {
+        PeerReviewAssignmentInterface peerReviewAssignmentInterface = new PeerReviewAssignmentInterface();
+        List<String> reviewTeams = peerReviewAssignmentInterface.getReviewTeams(courseID, assignmentID, teamName);
+        if (reviewTeams == null)
+            return Response.status(Response.Status.BAD_REQUEST).entity("Team name does not exist.").build();
+        return Response.status(Response.Status.OK).entity(reviewTeams).build();
+    }
+
     //deprecated so not even going to bother
 
     /**
@@ -343,6 +365,49 @@ public class PeerReviewAssignmentResource {
                                    @PathParam("assignment_id") int assignmentID) {
         new PeerReviewAssignmentInterface().makeFinalGrades(courseID, assignmentID);
         return Response.status(Response.Status.OK).entity("Peer reviews have been averaged to make final grades.").build();
+    }
+
+    /**
+     * Endpoint to get a list of submissions for which a given team has been assigned to peer-review
+     *
+     * @param courseID course in which this is happening
+     * @param assignmentID assignment for which these peer reviews are assigned
+     * @param teamName team assigned to review these submissions
+     * @return list of assignment submissions assigned to the given team
+     */
+    @GET
+    @RolesAllowed({"professor", "student"})
+    @Path("{courseID}/{assignmentID}/peer-reviews-given/{teamName}")
+    public Response peerReviewsGiven(@PathParam("courseID") String courseID,
+                                     @PathParam("assignmentID") int assignmentID,
+                                     @PathParam("teamName") String teamName){
+        List<Document> submissions = new PeerReviewAssignmentInterface().peerReviewsGiven(courseID, assignmentID, teamName);
+        if(submissions == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("That assignment has not been distributed for peer reviews yet!").build();
+        }
+        return Response.status(Response.Status.OK).entity(submissions).build();
+    }
+
+    /**
+     * Endpoint to get a list of peer review submissions made for a specified team's assignment submission
+     *
+     * @param courseID course in which this is happening
+     * @param assignmentID assignment for which these peer reviews are assigned
+     * @param teamName team for whom these reviews are made
+     * @return list of peer-review submissions assigned for the specified team's submission
+     */
+    @GET
+    @RolesAllowed({"professor", "student"})
+    @Path("{courseID}/{assignmentID}/peer-reviews-received/{teamName}")
+    public Response peerReviewsReceived(@PathParam("courseID") String courseID,
+                                     @PathParam("assignmentID") int assignmentID,
+                                     @PathParam("teamName") String teamName){
+        List<Document> submissions = new PeerReviewAssignmentInterface()
+                .peerReviewsReceived(courseID, assignmentID, teamName);
+        if(submissions == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("That assignment has not been distributed for peer reviews yet!").build();
+        }
+        return Response.status(Response.Status.OK).entity(submissions).build();
     }
 }
 
