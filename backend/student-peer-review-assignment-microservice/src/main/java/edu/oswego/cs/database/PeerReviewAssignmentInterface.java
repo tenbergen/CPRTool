@@ -150,7 +150,17 @@ public class PeerReviewAssignmentInterface {
             //makeFinalGrade(courseID, assignmentID, targetTeam);
             redoneMakeFinalGrade(courseID, assignmentID, targetTeam);
         }
-        if (assignmentDocument.get("completed_teams") == assignmentDocument.get("assigned_teams")) {
+
+        //check if all team grades have been finalized
+        int num_of_reviews_needed = completedTeams.keySet().size()*assignmentDocument.getInteger("reviews_per_team");
+        int total_num_of_reviews = 0;
+        for (Map.Entry<String, List<String>> entry : completedTeams.entrySet()) {
+            List<String> list = entry.getValue();
+            total_num_of_reviews+=list.size();
+        }
+
+
+        if (total_num_of_reviews==num_of_reviews_needed) {
             assignmentCollection.findOneAndUpdate(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), set("grade_finalized", true));
         }
     }
