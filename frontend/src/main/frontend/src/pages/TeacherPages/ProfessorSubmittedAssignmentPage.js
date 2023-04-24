@@ -186,7 +186,7 @@ function ProfessorSubmittedAssignmentPage() {
                             </tr>
                           </thead>
                           <tbody>
-                            {getReviewers.map(
+                            {getReviewers(courseId, teamId, assignmentId).map(
                               (team) =>
                                 team && (
                                   <tr key={uuid()}>
