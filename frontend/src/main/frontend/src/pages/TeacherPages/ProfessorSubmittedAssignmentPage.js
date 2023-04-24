@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import './styles/ProfessorSubmittedAssignmentPage.css';
 import {useDispatch, useSelector} from 'react-redux';
 import {useParams} from 'react-router-dom';
@@ -15,6 +15,8 @@ function ProfessorSubmittedAssignmentPage() {
   const { currentSubmittedAssignment, currentSubmittedAssignmentLoaded } =
     useSelector((state) => state.submittedAssignments);
   const { courseId, assignmentId, teamId } = useParams();
+  const [reviewers, setReviewers] = useState([]);
+
   const getReviews = async (courseId, teamId, assignmentId) => {
 
     const currentTeam = await axios
@@ -29,6 +31,15 @@ function ProfessorSubmittedAssignmentPage() {
           return r.data;
         });
   }
+  useEffect(() => {
+    const fetchReviewers = async () => {
+      const data = await getReviewers(courseId, teamId, assignmentId);
+      setReviewers(data);
+    };
+
+    fetchReviewers();
+  }, [courseId, teamId, assignmentId]);
+
 
   const getReviewers = async (courseId, teamId, assignmentId) => {
     return await axios
@@ -36,6 +47,10 @@ function ProfessorSubmittedAssignmentPage() {
         .then(r => {
           console.log(r);
           return r.data;
+        })
+        .catch((e) => {
+          console.error(e)
+          alert('Error getting reviewers')
         });
   }
 
@@ -180,22 +195,21 @@ function ProfessorSubmittedAssignmentPage() {
                             </tr>
                           </thead>
                           <tbody>
-                            {getReviewers(courseId, teamId, assignmentId).map(
-                              (team) =>
-                                team && (
+                          {reviewers.map((team) => (
+                              team && (
                                   <tr key={uuid()}>
-                                    <th className="rosterComp">
-                                      {team}
-                                    </th>
+                                    <th className="rosterComp">{team}</th>
                                     <th className="rosterComp">{getReviewSubmission(team).grade}</th>
                                     <th className="rosterComp">
-                                      <svg className={'bulk-download-icon-default'} alt={'Bulk Download For Student'}
-                                           style={{ cursor: 'pointer' }} >
-                                      </svg>
+                                      <svg
+                                          className={'bulk-download-icon-default'}
+                                          alt={'Bulk Download For Student'}
+                                          style={{ cursor: 'pointer' }}
+                                      ></svg>
                                     </th>
                                   </tr>
-                                )
-                          )}
+                              )))}
+
                           </tbody>
                         </table>
                       </div>
