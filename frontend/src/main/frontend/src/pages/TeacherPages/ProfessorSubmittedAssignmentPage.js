@@ -1,15 +1,13 @@
-import { useEffect, useState } from 'react';
+import {useEffect} from 'react';
 import './styles/ProfessorSubmittedAssignmentPage.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
+import {useParams} from 'react-router-dom';
 import axios from 'axios';
-import SubmittedAssBarComponent from '../../components/SubmittedAssBarComponent';
-import { getSubmittedAssignmentDetailsAsync } from '../../redux/features/submittedAssignmentSlice';
+import {getSubmittedAssignmentDetailsAsync} from '../../redux/features/submittedAssignmentSlice';
 import uuid from 'react-uuid';
 import {base64StringToBlob} from "blob-util";
 import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
-
 
 
 function ProfessorSubmittedAssignmentPage() {
@@ -25,24 +23,20 @@ function ProfessorSubmittedAssignmentPage() {
           return r.data;
         })
 
-    const reviews_ = await axios
+    return await axios
         .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/reviews-of/${currentTeam.team_lead}`)
         .then(r => {
           return r.data;
-        })
-
-    return reviews_;
+        });
   }
 
   const getReviewers = async (courseId, teamId, assignmentId) => {
-    const reviewers_ = await axios
+    return await axios
         .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/peer-review-team-reviewers/${teamId}`)
         .then(r => {
           console.log(r);
           return r.data;
-        })
-
-    return reviewers_;
+        });
   }
 
   useEffect(() => {
