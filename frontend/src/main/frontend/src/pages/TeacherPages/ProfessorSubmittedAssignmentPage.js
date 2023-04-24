@@ -10,34 +10,39 @@ import {base64StringToBlob} from "blob-util";
 import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 
-let reviewers;
-let reviews;
-async function getReviewData(courseId, teamId, assignmentId) {
 
-  reviewers = await axios
-      .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/peer-review-team-reviewers/${teamId}`)
-      .then(r => {
-        return r.data;
-      })
-  const currentTeam = await axios
-      .get(`${process.env.REACT_APP_URL}/teams/team/${courseId}/get/${teamId}`)
-      .then(r => {
-        return r.data;
-      })
-
-   reviews = await axios
-      .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/reviews-of/${currentTeam.team_lead}`)
-      .then(r => {
-        return r.data;
-      })
-}
 
 function ProfessorSubmittedAssignmentPage() {
   const dispatch = useDispatch();
   const { currentSubmittedAssignment, currentSubmittedAssignmentLoaded } =
     useSelector((state) => state.submittedAssignments);
   const { courseId, assignmentId, teamId } = useParams();
-  getReviewData(courseId, teamId, assignmentId);
+  const getReviews = async (courseId, teamId, assignmentId) => {
+
+    const currentTeam = await axios
+        .get(`${process.env.REACT_APP_URL}/teams/team/${courseId}/get/${teamId}`)
+        .then(r => {
+          return r.data;
+        })
+
+    const reviews_ = await axios
+        .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/reviews-of/${currentTeam.team_lead}`)
+        .then(r => {
+          return r.data;
+        })
+
+    return reviews_;
+  }
+
+  const getReviewers = async (courseId, teamId, assignmentId) => {
+    const reviewers_ = await axios
+        .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/peer-review-team-reviewers/${teamId}`)
+        .then(r => {
+          return r.data;
+        })
+
+    return reviewers_;
+  }
 
   useEffect(() => {
     dispatch(
@@ -84,7 +89,7 @@ function ProfessorSubmittedAssignmentPage() {
   }
 
   const getReviewSubmission = team => {
-    reviews.map( (t) => {
+    getReviews.map( (t) => {
       if(t.key === team){
         return t;
       }
@@ -180,7 +185,7 @@ function ProfessorSubmittedAssignmentPage() {
                             </tr>
                           </thead>
                           <tbody>
-                            {reviewers.map(
+                            {getReviewers.map(
                               (team) =>
                                 team && (
                                   <tr key={uuid()}>
