@@ -110,6 +110,7 @@ function ProfessorSubmittedAssignmentPage() {
   const getReviewSubmission = team => {
     reviews.map( (t) => {
       if(t.key === team){
+        console.log(t);
         return t;
       }
     })
