@@ -10,15 +10,20 @@ import {base64StringToBlob} from "blob-util";
 import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 
-async function initializeData(courseId, teamId, assignmentId) {
-  const currentTeam = await axios
-      .get(`${process.env.REACT_APP_URL}/teams/team/${courseId}/get/${teamId}`)
+async function getReviewers(courseId, teamId, assignmentId) {
+
+  const reviewers = await axios
+      .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/peer-review-team-reviewers/${teamId}`)
       .then(r => {
         return r.data;
       })
 
-  const reviewers = await axios
-      .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/peer-review-team-reviewers/${teamId}`)
+  return reviewers;
+}
+
+async function getReviews(teamId, courseId, assignmentId){
+  const currentTeam = await axios
+      .get(`${process.env.REACT_APP_URL}/teams/team/${courseId}/get/${teamId}`)
       .then(r => {
         return r.data;
       })
@@ -29,7 +34,7 @@ async function initializeData(courseId, teamId, assignmentId) {
         return r.data;
       })
 
-  return {currentTeam, reviewers, reviews}
+  return reviews;
 }
 
 function ProfessorSubmittedAssignmentPage() {
@@ -37,15 +42,9 @@ function ProfessorSubmittedAssignmentPage() {
   const { currentSubmittedAssignment, currentSubmittedAssignmentLoaded } =
     useSelector((state) => state.submittedAssignments);
   const { courseId, assignmentId, teamId } = useParams();
-  const [currentTeam, setCurrentTeam] = useState(undefined);
-  var [reviewers, setReviewers] = useState({});
-  var [reviews, setReviews] = useState({});
 
-  initializeData(courseId, teamId, assignmentId).then(r => {
-    setCurrentTeam(r.currentTeam);
-    setReviewers(r.reviewers);
-    setReviews(r.reviews);
-  });
+  const reviewers = getReviewers(courseId, teamId, assignmentId);
+  const reviews = getReviews(teamId, courseId, assignmentId);
   console.log(reviewers);
 
   useEffect(() => {
