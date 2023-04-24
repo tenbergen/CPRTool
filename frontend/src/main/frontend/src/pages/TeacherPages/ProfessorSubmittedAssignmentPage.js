@@ -38,6 +38,7 @@ function ProfessorSubmittedAssignmentPage() {
     const reviewers_ = await axios
         .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/peer-review-team-reviewers/${teamId}`)
         .then(r => {
+          console.log(r);
           return r.data;
         })
 
