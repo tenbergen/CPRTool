@@ -14,7 +14,6 @@ async function initializeData(courseId, teamId, assignmentId) {
   const currentTeam = await axios
       .get(`${process.env.REACT_APP_URL}/teams/team/${courseId}/get/${teamId}`)
       .then(r => {
-        console.log(r.data);
         return r.data;
       })
 
@@ -47,6 +46,7 @@ function ProfessorSubmittedAssignmentPage() {
     setReviewers(r.reviewers);
     setReviews(r.reviews);
   });
+  console.log(reviewers);
 
   useEffect(() => {
     dispatch(
@@ -94,7 +94,6 @@ function ProfessorSubmittedAssignmentPage() {
 
   const getReviewSubmission = team => {
     reviews.map( (t) => {
-      console.log(t);
       if(t.key === team){
         return t;
       }
