@@ -38,8 +38,8 @@ function ProfessorSubmittedAssignmentPage() {
     useSelector((state) => state.submittedAssignments);
   const { courseId, assignmentId, teamId } = useParams();
   const [currentTeam, setCurrentTeam] = useState(undefined);
-  const [reviewers, setReviewers] = useState({});
-  const [reviews, setReviews] = useState({});
+  var [reviewers, setReviewers] = useState({});
+  var [reviews, setReviews] = useState({});
 
   initializeData(courseId, teamId, assignmentId).then(r => {
     setCurrentTeam(r.currentTeam);
