@@ -44,7 +44,7 @@ function ProfessorSubmittedAssignmentPage() {
   const { courseId, assignmentId, teamId } = useParams();
 
   const reviewers = getReviewers(courseId, teamId, assignmentId).then(r => {
-    return r;
+    return r.result;
   });
   const reviews = getReviews(teamId, courseId, assignmentId).then( r => {
     return r;
