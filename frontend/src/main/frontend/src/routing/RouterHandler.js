@@ -14,8 +14,10 @@ import StudentSubmittedAssignmentPage from '../pages/StudentPages/StudentSubmitt
 import ProfessorSubmittedAssignmentPage from '../pages/TeacherPages/ProfessorSubmittedAssignmentPage'
 import AdminInterface from '../pages/AdminPages/AdminInterface'
 import ProfessorGradesPage from '../pages/TeacherPages/ProfessorGradesPage'
-import ProfessorRosterComponent from '../components/ProfessorComponents/CoursesPage/ProfessorRosterComponent'
 import StudentGradesPage from '../pages/StudentPages/StudentGradesPage'
+import PeerReviewPage from "../pages/StudentPages/PeerReviewPage";
+import PeerReviewListPage from "../components/StudentComponents/PeerReviewPage/PeerReviewListPage";
+import DisplayMatrix from '../pages/TeacherPages/DisplayMatrix'
 
 const RouterHandler = () => {
   return (
@@ -40,12 +42,16 @@ const RouterHandler = () => {
               element={<ProfessorGradesPage/>}
             />
             <Route
-              path="professor/:courseId/assignments/create/assignment"
+              path="professor/:courseId/create/assignment"
               element={<CreateAssignmentPage/>}
             />
             <Route
               path="professor/:courseId/:assignmentId"
               element={<ProfessorAssignmentPage/>}
+            />
+            <Route
+              path={"professor/:courseId/assignments/create/assignment"}
+              element={<CreateAssignmentPage/>}
             />
             <Route
               path="professor/:courseId/:assignmentId/:teamId/submitted"
@@ -79,6 +85,10 @@ const RouterHandler = () => {
               path="professor/:courseId/details/Profanity Settings"
               element={<ProfessorCoursePage chosen="Profanity"/>}
             />
+            <Route
+               path='professor/display-matrix/:courseId'
+               element={<DisplayMatrix />}
+            />
           </Route>
 
           {/*student routes*/}
@@ -107,6 +117,7 @@ const RouterHandler = () => {
               path="student/:courseId/grades"
               element={<StudentGradesPage/>}
             />
+
             <Route
               path="student"
               element={<App/>}
@@ -119,8 +130,14 @@ const RouterHandler = () => {
               path="/student/:courseId/assignments"
               element={<StudentCoursePage chosen="To Do"/>}
             />
-
-
+            <Route
+                path="student/:courseId/peer-review"
+                element={<PeerReviewPage />}
+            />
+            <Route
+                path="student/:courseId/peer-review/:assignmentId/:teamId/pr-list"
+                element={<PeerReviewListPage />}
+            />
           </Route>
         </Route>
       </Route>

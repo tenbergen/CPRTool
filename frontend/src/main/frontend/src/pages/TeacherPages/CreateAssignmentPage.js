@@ -103,6 +103,7 @@ const CreateAssignmentPage = () => {
         alert('Peer Review Due Date CANNOT be due before the due date of the Assignment!')
         return
       } else {
+
         let { points } = data
         points = parseInt(points)
         const course_id = courseId

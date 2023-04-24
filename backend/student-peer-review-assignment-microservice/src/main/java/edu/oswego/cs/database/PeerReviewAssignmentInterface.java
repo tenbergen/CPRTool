@@ -150,7 +150,17 @@ public class PeerReviewAssignmentInterface {
             //makeFinalGrade(courseID, assignmentID, targetTeam);
             redoneMakeFinalGrade(courseID, assignmentID, targetTeam);
         }
-        if (assignmentDocument.get("completed_teams") == assignmentDocument.get("assigned_teams")) {
+
+        //check if all team grades have been finalized
+        int num_of_reviews_needed = completedTeams.keySet().size()*assignmentDocument.getInteger("reviews_per_team");
+        int total_num_of_reviews = 0;
+        for (Map.Entry<String, List<String>> entry : completedTeams.entrySet()) {
+            List<String> list = entry.getValue();
+            total_num_of_reviews+=list.size();
+        }
+
+
+        if (total_num_of_reviews==num_of_reviews_needed) {
             assignmentCollection.findOneAndUpdate(and(eq("course_id", courseID), eq("assignment_id", assignmentID)), set("grade_finalized", true));
         }
     }
@@ -1516,5 +1526,86 @@ public class PeerReviewAssignmentInterface {
 
 
         return allPotentialOutliers;
+    }
+
+    public List<String> getReviewTeams(String courseID, int assignmentID, String teamName) {
+        Document assignment = assignmentCollection.find(and(eq("assignment_id", assignmentID), eq("course_id", courseID))).first();
+        Document assignedTeams = (Document) assignment.get("assigned_teams");
+        List<String> teams = assignment.getList("all_teams", String.class);
+        if(teams == null){
+            return null;
+        }
+        ArrayList<String> reviewTeams = new ArrayList<>();
+        for(String team : teams){
+            List<String> teamList = assignedTeams.getList(team, String.class);
+            if(teamList == null){
+                continue;
+            }
+            if(teamList.contains(teamName)){
+                reviewTeams.add(team);
+            }
+        }
+        return reviewTeams;
+    }
+
+    /**
+     * gets list of submissions to be peer-reviewed by a specified team
+     *
+     * @param courseID course in question
+     * @param assignmentID assignment for which desired submissions are made
+     * @param teamName aforementioned specified team
+     * @return list of submissions to be peer-reviewed by a specified team
+     */
+    public List<Document> peerReviewsGiven(String courseID, int assignmentID, String teamName) {
+        List<String> teams = getAssignedTeams(courseID, assignmentID, teamName);
+        if(teams == null){
+            return null;
+        }
+        List<Document> submissions = new ArrayList<>();
+        for(String team : teams){
+            Document submission = submissionsCollection.find(and(eq("team_name",team),
+                    eq("course_id", courseID), eq("assignment_id", assignmentID),
+                    eq("type", "team_submission"))).first();
+            if(submission != null) {
+                submissions.add(submission);
+            }
+        }
+        return submissions;
+    }
+
+    /**
+     * gets list of submissions to be peer-reviewed by a specified team
+     *
+     * @param courseID course in question
+     * @param assignmentID assignment for which desired submissions are made
+     * @param teamName aforementioned specified team
+     * @return list of submissions to be peer-reviewed by a specified team
+     */
+    public List<Document> peerReviewsReceived(String courseID, int assignmentID, String teamName) {
+        List<String> teams = getReviewTeams(courseID, assignmentID, teamName);
+        if(teams == null){
+            return null;
+        }
+        List<Document> submissions = new ArrayList<>();
+        for(String team : teams){
+            if(team == null){
+                continue;
+            }
+            Document submission = submissionsCollection.find(and(eq("reviewed_by",team),
+                    eq("course_id", courseID), eq("assignment_id", assignmentID),
+                    eq("type", "peer_review_submission"), eq("reviewed_team", teamName)))
+                    .first();
+            if(submission != null) {
+                submissions.add(submission);
+            }else{
+                submission = submissionsCollection.find(and(eq("team_name", team),
+                        eq("course_id", courseID), eq("assignment_id", assignmentID),
+                        eq("type", "team_submission"))).first();
+                if(submission != null){
+                    submissions.add(submission);
+                }
+            }
+        }
+        return submissions;
     }
 }
