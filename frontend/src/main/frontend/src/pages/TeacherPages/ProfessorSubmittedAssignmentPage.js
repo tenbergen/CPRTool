@@ -16,6 +16,7 @@ function ProfessorSubmittedAssignmentPage() {
     useSelector((state) => state.submittedAssignments);
   const { courseId, assignmentId, teamId } = useParams();
   const [reviewers, setReviewers] = useState([]);
+  const [reviews, setReviews] = useState([]);
 
   const getReviews = async (courseId, teamId, assignmentId) => {
 
@@ -40,6 +41,14 @@ function ProfessorSubmittedAssignmentPage() {
     fetchReviewers();
   }, [courseId, teamId, assignmentId]);
 
+  useEffect( () => {
+    const fetchReviews = async () => {
+      const data = await getReviews(courseId, teamId, assignmentId);
+      setReviewers(data);
+    }
+
+    fetchReviews();
+  }, [courseId, teamId, assignmentId]);
 
   const getReviewers = async (courseId, teamId, assignmentId) => {
     return await axios
