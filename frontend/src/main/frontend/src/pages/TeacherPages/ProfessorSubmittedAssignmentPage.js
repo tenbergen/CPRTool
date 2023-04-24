@@ -43,8 +43,12 @@ function ProfessorSubmittedAssignmentPage() {
     useSelector((state) => state.submittedAssignments);
   const { courseId, assignmentId, teamId } = useParams();
 
-  const reviewers = getReviewers(courseId, teamId, assignmentId);
-  const reviews = getReviews(teamId, courseId, assignmentId);
+  const reviewers = getReviewers(courseId, teamId, assignmentId).then(r => {
+    return r;
+  });
+  const reviews = getReviews(teamId, courseId, assignmentId).then( r => {
+    return r;
+  });
   console.log(reviewers);
 
   useEffect(() => {
