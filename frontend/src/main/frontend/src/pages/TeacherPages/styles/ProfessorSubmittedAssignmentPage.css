@@ -132,3 +132,18 @@ a {
 .rosterComp {
   align-content: center;
 }
+.inter-24-bold-ass-tile-title {
+  background-color: #4a7dfc;
+  font-family: "Inter", sans-serif;
+  font-weight: 500; /* Change font-weight to 500 to make it less bold */
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: .2px;
+  color: #FFFFFF;
+  padding-left: 10px;
+  padding-top: 5px;
+  height: 40px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
