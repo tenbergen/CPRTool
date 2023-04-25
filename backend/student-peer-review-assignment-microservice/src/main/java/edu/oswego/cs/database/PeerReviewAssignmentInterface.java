@@ -81,6 +81,8 @@ public class PeerReviewAssignmentInterface {
                 .append("reviewed_team", reviewedTeam.getString("team_id"))
                 .append("reviewed_team_members", reviewedTeam.getList("team_members", String.class))
                 .append("type", "peer_review_submission")
+                .append("peer_review_due_date", assignment.get("peer_review_due_date"))
+                .append("due_date", assignment.getString("due_date"))
                 .append("grade", grade);
         List<String> teamMembers = reviewedTeam.getList("team_members", String.class);
         for (String member : teamMembers) {
