@@ -3,15 +3,9 @@ import classes from "./styles/DisplayMatrix.module.css"
 import AssignmentDropdown from "../../components/AssignmentDropdown";
 import axios from "axios";
 import Breadcrumbs from "../../components/Breadcrumbs";
-import SidebarComponent from '../../components/SidebarComponent';
 import { useParams } from 'react-router-dom'
 import HeaderBar from '../../components/HeaderBar/HeaderBar'
 import NavigationContainerComponent from '../../components/NavigationComponents/NavigationContainerComponent'
-import uuid from 'react-uuid'
-import ProfessorAllSubmissionsComponent
-    from '../../components/ProfessorComponents/AssignmentPage/ProfessorAllSubmissionsComponent'
-import ProfessorEditAssignmentComponent
-    from '../../components/ProfessorComponents/AssignmentPage/ProfessorEditAssignmentComponent'
 
 
 const DisplayMatrix = (props) => {
@@ -112,7 +106,7 @@ const DisplayMatrix = (props) => {
         arr.splice(rowNumber, 0, (<td className={classes.emptyBrick}></td>));
         return (
             <tr>
-                 <td className={classes.columnName}>{teamName}</td>
+                 <td className={classes.columnName} style={{backgroundColor: '#4A7DFC'}}>{teamName}</td>
                  { arr }
              </tr>
          );
@@ -163,10 +157,10 @@ const DisplayMatrix = (props) => {
             ++i;
         }
 
-        tableData.unshift(<tr><td className={classes.columnName + " " + classes.topLeft}></td>{courseTeams.map(team => <td className={classes.columnName}>{team}</td>)}<td className={classes.columnName}>Avg. Received</td></tr>)
+        tableData.unshift(<tr><td className={classes.columnName + " " + classes.topLeft} style={{backgroundColor: '#4A7DFC'}}></td>{courseTeams.map(team => <td className={classes.columnName}>{team}</td>)}<td className={classes.columnName}>Avg. Received</td></tr>)
 
         const lastRow = <tr>
-            <td className={classes.columnName}>Avg. Given</td>
+            <td className={classes.columnName} style={{backgroundColor: '#4A7DFC'}}>Avg. Given</td>
             {courseTeams.map(team => {
                 const className = averageReceivedIsOutlier[team] ? classes.red : classes.average;
                 return (
