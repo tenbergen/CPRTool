@@ -15,10 +15,8 @@ function ProfessorSubmittedAssignmentPage() {
   const { currentSubmittedAssignment, currentSubmittedAssignmentLoaded } =
     useSelector((state) => state.submittedAssignments);
   const { courseId, assignmentId, teamId } = useParams();
-  const [reviewers, setReviewers] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [teamSubmission, setTeamSubmission] = useState('')
-  const [reviewSubmission, setReviewSubmission] = useState('')
 
   const getReviews = async (courseId, teamId, assignmentId) => {
 
@@ -44,15 +42,6 @@ function ProfessorSubmittedAssignmentPage() {
         })
   }
 
-  useEffect(() => {
-    const fetchReviewers = async () => {
-      const data = await getReviewers(courseId, teamId, assignmentId);
-      setReviewers(data);
-    };
-
-    fetchReviewers();
-  }, [courseId, teamId, assignmentId]);
-
   useEffect( () => {
     const fetchReviews = async () => {
       const data = await getReviews(courseId, teamId, assignmentId);
@@ -70,18 +59,6 @@ function ProfessorSubmittedAssignmentPage() {
 
     fetchTeamSubmission();
   }, [courseId, teamId, assignmentId]);
-
-  const getReviewers = async (courseId, teamId, assignmentId) => {
-    return await axios
-        .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/peer-review-team-reviewers/${teamId}`)
-        .then(r => {
-          return r.data;
-        })
-        .catch((e) => {
-          console.error(e)
-          alert('Error getting reviewers')
-        });
-  }
 
   useEffect(() => {
     dispatch(
@@ -134,7 +111,7 @@ function ProfessorSubmittedAssignmentPage() {
     }
   }
 
-  const onDownloadButtonClick = async () => {
+  const onDownloadButtonClick = async (reviewSubmission) => {
     if(!reviewSubmission || reviewSubmission === ''){
       console.error('no review submission found!');
       return;
@@ -149,12 +126,6 @@ function ProfessorSubmittedAssignmentPage() {
     }
   }
 
-  function getReviewSubmission(team) {
-    setReviewSubmission(reviews.find(e => e.team_name === team));
-    return reviewSubmission;
-  }
-
-
   return (
     <div className="page-container">
       <HeaderBar/>
@@ -163,87 +134,86 @@ function ProfessorSubmittedAssignmentPage() {
         <div className='scp-component'>
           <div>
             {currentSubmittedAssignmentLoaded ? (
-                <div className='sac-parent'>
-                  <h2 className='team-name'>
-                    {teamId} Submission
-                  </h2>
-                  <div className='sac-content'>
-                    <div className='inter-20-medium-white ass-tile-title'> {' '}
-                      <span> {currentSubmittedAssignment.assignment_name} </span>
-                    </div>
-                    <div className='ass-tile-content' >
-                      <span className='inter-24-bold'> {currentSubmittedAssignment.assignment_name} </span>
-                      <span className='inter-20-medium span1-ap'>
-                        Due: {currentSubmittedAssignment.due_date}
-                      </span>
-                      <br /> <br /> <br />
-                      <p className='inter-20-medium' >Instructions:</p>
-                      <p className='inter-16-medium-black'>{currentSubmittedAssignment.instructions}</p>
-                      <br />
-                      <br />
-                      <span className='inter-20-bold'> Rubric: </span>
-                      <span className='inter-16-bold-blue p2' >
-                        <button className='blue-button-small-pr' onClick={onRubricFileClick} >
-                          {' '}
-                          Rubric{' '}
-                        </button>
-                      </span>
-                      <span className='inter-16-bold-blue p2' >
-                        <button className='blue-button-small-pr' onClick={onTemplateClick} >
-                          {' '}
-                          Template{' '}
-                        </button>
-                      </span>
-                      <span className='inter-16-bold-blue p2' >
-                        <button className='blue-button-small-pr' onClick={onTeamFileClick}>
-                          {' '}
-                          Team Download{' '}
-                        </button>
-                      </span>
-                    </div>
-                    <br />
-                    <div>
-                      <div>
-                        <span className='sac-title'> Peer reviews: </span>
-                        <table className="rosterTable">
-                          <thead>
-                            <tr>
-                              <th className="rosterHeader">Team Name</th>
-                              <th className="rosterHeader">Given Score</th>
-                              <th className="rosterHeader">Download Feedback</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                          {reviewers.map((team) => (
-                              team && (
-                                  <tr key={uuid()}>
-                                    <th className="rosterComp">{team}</th>
-                                    <th className="rosterComp">{getReviewSubmission(team).grade}</th>
-                                    <th className="rosterComp">
-                                      <svg
-                                          className={'bulk-download-icon-default'}
-                                          alt={'Bulk Download For Student'}
-                                          style={{ cursor: 'pointer' }}
-                                      ></svg>
-                                      <button onClick={onDownloadButtonClick}></button>
-                                    </th>
-                                  </tr>
-                              )))}
-
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
+              <div className='sac-parent'>
+                <h2 className='team-name'>
+                  {teamId} Submission
+                </h2>
+                <div className='sac-content'>
+                  <div className='inter-20-medium-white ass-tile-title'> {' '}
+                    <span> {currentSubmittedAssignment.assignment_name} </span>
+                  </div>
+                  <div className='ass-tile-content' >
+                    <span className='inter-24-bold'> {currentSubmittedAssignment.assignment_name} </span>
+                    <span className='inter-20-medium span1-ap'>
+                      Due: {currentSubmittedAssignment.due_date}
+                    </span>
+                    <br /> <br /> <br />
+                    <p className='inter-20-medium' >Instructions:</p>
+                    <p className='inter-16-medium-black'>{currentSubmittedAssignment.instructions}</p>
                     <br />
                     <br />
-                    <div>
-                      <span className='sac-title'>
+                    <span className='inter-20-bold'> Rubric: </span>
+                    <span className='inter-16-bold-blue p2' >
+                      <button className='blue-button-small-pr' onClick={onRubricFileClick} >
                         {' '}
-                        Grade: {currentSubmittedAssignment.grade}
-                      </span>
+                        Rubric{' '}
+                      </button>
+                    </span>
+                    <span className='inter-16-bold-blue p2' >
+                      <button className='blue-button-small-pr' onClick={onTemplateClick} >
+                        {' '}
+                        Template{' '}
+                      </button>
+                    </span>
+                    <span className='inter-16-bold-blue p2' >
+                      <button className='blue-button-small-pr' onClick={onTeamFileClick}>
+                        {' '}
+                        Team Download{' '}
+                      </button>
+                    </span>
+                  </div>
+                  <br />
+                  <div>
+                    <div>
+                      <span className='sac-title'> Peer reviews: </span>
+                      <table className="rosterTable">
+                        <thead>
+                          <tr>
+                            <th className="rosterHeader">Team Name</th>
+                            <th className="rosterHeader">Given Score</th>
+                            <th className="rosterHeader">Download Feedback</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        {reviews.map((review) => (
+                            review && (
+                                <tr key={uuid()}>
+                                  <th className="rosterComp">{review.reviewed_by}</th>
+                                  <th className="rosterComp">{review.grade}</th>
+                                  <th className="rosterComp">
+                                    <svg
+                                        className={'bulk-download-icon-default'}
+                                        alt={'Bulk Download For Student'}
+                                        style={{ cursor: 'pointer' }}
+                                    ></svg>
+                                    <button onClick="onDownloadButtonClick(review)"></button>
+                                  </th>
+                                </tr>
+                            )))}
+                        </tbody>
+                      </table>
                     </div>
                   </div>
+                  <br />
+                  <br />
+                  <div>
+                    <span className='sac-title'>
+                      {' '}
+                      Grade: {currentSubmittedAssignment.grade}
+                    </span>
+                  </div>
                 </div>
+              </div>
             ) : null}
           </div>
         </div>
