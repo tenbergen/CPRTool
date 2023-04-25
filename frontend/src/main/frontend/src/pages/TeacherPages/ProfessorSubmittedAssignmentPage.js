@@ -229,7 +229,7 @@ function ProfessorSubmittedAssignmentPage() {
                               team && (
                                   <tr key={uuid()}>
                                     <th className="rosterComp">{team}</th>
-                                    <th className="rosterComp">{getReviewSubmission(team).grade}</th>
+                                    <th className="rosterComp">{100}</th>
                                     <th className="rosterComp">
                                       <svg
                                           className={'bulk-download-icon-default'}
