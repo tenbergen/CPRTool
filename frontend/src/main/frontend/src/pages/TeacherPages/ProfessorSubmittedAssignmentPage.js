@@ -17,6 +17,8 @@ function ProfessorSubmittedAssignmentPage() {
   const { courseId, assignmentId, teamId } = useParams();
   const [reviewers, setReviewers] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const [teamSubmission, setTeamSubmission] = useState([]);
+
 
   const getReviews = async (courseId, teamId, assignmentId) => {
 
@@ -32,6 +34,16 @@ function ProfessorSubmittedAssignmentPage() {
           return r.data;
         });
   }
+
+  const getTeamSubmission = async (courseId, teamId, assignmentId) => {
+
+    return await axios
+        .get(`${process.env.REACT_APP_URL}/assignments/student/${courseId}/${assignmentId}/submissions`)
+        .then(r => {
+          return r.data.find(e => e.team_name === teamId);
+        })
+  }
+
   useEffect(() => {
     const fetchReviewers = async () => {
       const data = await getReviewers(courseId, teamId, assignmentId);
@@ -48,6 +60,15 @@ function ProfessorSubmittedAssignmentPage() {
     }
 
     fetchReviews();
+  }, [courseId, teamId, assignmentId]);
+
+  useEffect( () => {
+    const fetchTeamSubmission = async () => {
+      const data = await getTeamSubmission(courseId, teamId, assignmentId);
+      setTeamSubmission(data);
+    }
+
+    fetchTeamSubmission();
   }, [courseId, teamId, assignmentId]);
 
   const getReviewers = async (courseId, teamId, assignmentId) => {
@@ -193,7 +214,7 @@ function ProfessorSubmittedAssignmentPage() {
                         </button>
                       </span>
                       <span className='inter-16-bold-blue p2' >
-                        <button className='blue-button-small-pr'>
+                        <button className='blue-button-small-pr' onClick={onTeamFileClick}>
                           {' '}
                           Team Download{' '}
                         </button>
