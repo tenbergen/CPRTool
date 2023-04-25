@@ -40,7 +40,7 @@ const CourseAccordionComponent = ({course, onClick}) => {
                         <div id="accordionAssignments" className="course-accordion-submenu-tile inter-20-medium">Assignments</div>
                     </Link>
 
-                    <Link to={`/${role}/${course.course_id}/peer-review`} onClick={onClick}>
+                    <Link to={`/${role}/${course.course_id}/Peer Review`} onClick={onClick}>
                     <div id="accordionPeerReviews" className="course-accordion-submenu-tile inter-20-medium">Peer Reviews</div>
                     </Link>
 
