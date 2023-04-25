@@ -96,13 +96,14 @@ function ProfessorSubmittedAssignmentPage() {
     href.click();
   };
 
-  const onTemplateClick = async (fileName) => {
-    if(fileName.endsWith(".pdf")){
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/pdf'}), fileName)
-    }else if(fileName.endsWith(".docx")){
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
+  const onTemplateClick = async () => {
+    const templateFileName = currentSubmittedAssignment.peer_review_template_name;
+    if(templateFileName.endsWith(".pdf")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/pdf'}), templateFileName)
+    }else if(templateFileName.endsWith(".docx")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), templateFileName)
     }else{
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/zip'}), fileName)
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/zip'}), templateFileName)
     }
   };
 
@@ -118,7 +119,6 @@ function ProfessorSubmittedAssignmentPage() {
   };
 
   const onTeamFileClick = async () => {
-    console.log(teamSubmission)
     if (!teamSubmission || !teamSubmission.submission_name) {
       console.error('teamSubmission or teamSubmission.submission_name is undefined');
       return;
