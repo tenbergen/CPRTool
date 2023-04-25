@@ -41,19 +41,19 @@ function ProfessorGradesPage() {
     //     { assignment: 'Assignment 6', name: 'Danny Dimes', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
     // ]);
 
-    const [userStatsList, setUserStatsList] = useState([
-        { name: 'Danny Dimes', grade1: '100', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
-        { name: 'Saquads Barkley', grade1: '91', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
-        { name: 'Gardner Minshew', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
-        { name: 'Caleb Williams', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
-        { name: 'Patty Mahomes', grade1: '20', grade2: '93', grade3: '40', grade4: '92', grade5: '95', grade6: '100' },
-        { name: 'Carl Wheezer', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
-        { name: 'Perry P', grade1: '95', grade2: '93', grade3: '100', grade4: '92', grade5: '95', grade6: '100' },
-        { name: 'Larry Lobster', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
-        { name: 'Big Chungus', grade1: '95', grade2: '93', grade3: '100', grade4: '92', grade5: '95', grade6: '100' },
-        { name: 'Dak Prescott', grade1: '13', grade2: '93', grade3: '95', grade4: '92', grade5: '13', grade6: '100' },
-        { name: 'John Bones', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
-    ]);
+    // const [userStatsList, setUserStatsList] = useState([
+    //     { name: 'Danny Dimes', grade1: '100', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
+    //     { name: 'Saquads Barkley', grade1: '91', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
+    //     { name: 'Gardner Minshew', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
+    //     { name: 'Caleb Williams', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
+    //     { name: 'Patty Mahomes', grade1: '20', grade2: '93', grade3: '40', grade4: '92', grade5: '95', grade6: '100' },
+    //     { name: 'Carl Wheezer', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
+    //     { name: 'Perry P', grade1: '95', grade2: '93', grade3: '100', grade4: '92', grade5: '95', grade6: '100' },
+    //     { name: 'Larry Lobster', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
+    //     { name: 'Big Chungus', grade1: '95', grade2: '93', grade3: '100', grade4: '92', grade5: '95', grade6: '100' },
+    //     { name: 'Dak Prescott', grade1: '13', grade2: '93', grade3: '95', grade4: '92', grade5: '13', grade6: '100' },
+    //     { name: 'John Bones', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
+    // ]);
 
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedAssignment, setSelectedAssignment] = useState("all");
@@ -65,6 +65,19 @@ function ProfessorGradesPage() {
     const getAllAssignmentsUrl = `${process.env.REACT_APP_URL}/assignments/student/${course}/all-grades`;
     const getAllStudentsUrl = `${process.env.REACT_APP_URL}/course/professor/courses/${course}/students`;
     const [showEditModal, setShowEditModal] = useState(false);
+    const getAllGradesUrl = `${process.env.REACT_APP_URL}/view/professor/courses/${course}/students`; 
+
+    let [userStatsList, setUserStatsList] = useState([]);
+
+    useEffect(() => {
+        axios.get(getAllGradesUrl)
+            .then(response => {
+                console.log(response.data);
+                console.log(getAllGradesUrl);
+                setUserStatsList(response.data);
+            })
+            .catch(error => console.error(error.message));
+    }, []);
 
     let [userList, setUserList] = useState([]);
 
@@ -116,12 +129,8 @@ function ProfessorGradesPage() {
         (selectedTeam === "all" || user.team_name === selectedTeam)
     );
 
-    const filteredUsersStats = userStatsList.filter((user) =>
-        (selectedStudent === "All" || user.name === selectedStudent)
-    );
-
     const filteredUsersVisualStats = userStatsList.filter((user) =>
-        (selectedVisualStudent === "Select Student" || user.name === selectedVisualStudent)
+        (selectedVisualStudent === "Select Student" || user.student_id === selectedVisualStudent)
     );
 
     const [page, setPage] = useState("roles")
@@ -139,8 +148,8 @@ function ProfessorGradesPage() {
         .map(user => user.student_id);
 
     const uniqueStatsNames = userStatsList
-        .filter((user, index, arr) => arr.findIndex(u => u.name === user.name) === index)
-        .map(user => user.name);
+        .filter((user, index, arr) => arr.findIndex(u => u.student_id === user.student_id) === index)
+        .map(user => user.student_id);
 
     const uniqueTeams = userList
         .filter((user, index, arr) => arr.findIndex(u => u.team_name === user.team_name) === index)
@@ -228,12 +237,8 @@ function ProfessorGradesPage() {
 
             filteredUsersVisualStats.map(user => {
                 const grades = [
-                    parseInt(user.grade1),
-                    parseInt(user.grade2),
-                    parseInt(user.grade3),
-                    parseInt(user.grade4),
-                    parseInt(user.grade5),
-                    parseInt(user.grade6),
+                    user.team_submissions.slice(0, user.team_submissions.length / 2).map(grade => (
+                        grade.grade))
                 ];
                 const mean = grades.reduce((a, b) => a + b, 0) / grades.length;
                 console.log(grades)
@@ -321,6 +326,19 @@ function ProfessorGradesPage() {
             });
         }
 
+    const downloadStudentAssignment = async (assignId, teamName) => {
+        const url = `${process.env.REACT_APP_URL}/assignments/student/courses/${course}/assignments/${assignId}/${teamName}/download`;
+        await axios
+            .post(url)
+            console.log(url)
+            .then((res) => {
+                alert('Succesfully downloaded');
+            })
+            .catch((e) => {
+                alert(e.message);
+            });
+    }
+
     return (
         <div className="page-container">
             <HeaderBar />
@@ -388,7 +406,6 @@ function ProfessorGradesPage() {
                                         <div>Team</div>
                                         <div>Grade</div>
                                         <div>PRs Given To</div>
-                                        <div>PR Received</div>
                                         <div>Submitted</div>
                                         <div>Actions</div>
                                     </div>
@@ -400,7 +417,6 @@ function ProfessorGradesPage() {
                                                 <div className='team-div'>{user.team_name}</div>
                                                 <div className='grade-div'>{user.grade}</div>
                                                 <div>{user.reviews}</div>
-                                                <div></div>
                                                 <div>{convertDate(user._id.date)}</div>
                                                 <div>
                                                     <div className='grades-edit-container'>
@@ -436,8 +452,12 @@ function ProfessorGradesPage() {
                                                         )}
                                                     </div>
                                                     <div className='delete-container'>
-                                                        <button className='delete-button'><img className='download-icon'
-                                                            src={bulkDownloadLogo} /></button>
+                                                        <button className='delete-button' onClick={() => 
+                                                            {getTeamName(user.team_name);
+                                                            getAssignmentID(user.assignment_id);
+                                                            downloadStudentAssignment(assignmentID, teamName) }}>
+                                                            <img className='download-icon'src={bulkDownloadLogo} />
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
