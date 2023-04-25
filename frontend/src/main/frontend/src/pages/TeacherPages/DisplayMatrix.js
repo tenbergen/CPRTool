@@ -189,9 +189,12 @@ const DisplayMatrix = (props) => {
                 return matrix;
             })
             .then(matrix => {
-                return getAssignmentData();
+                getAssignmentData().then(data => {
+                    return data
+                })
             })
             .then(assignmentDatum => {
+                console.log(assignmentDatum)
                 assignments = assignmentDatum;
                 return assignments;
             })
