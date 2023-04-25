@@ -82,7 +82,7 @@ const AssignmentTile = ({ assignment, submitted }) => {
         <div className='ass-tile-content' onClick={onTileClick}>
           <div className='ass-tile-info' >
             <span className='inter-24-bold'>
-                {''}
+                {assignment.team_name}
               {assignment.assignment_name}
               <br />
 
