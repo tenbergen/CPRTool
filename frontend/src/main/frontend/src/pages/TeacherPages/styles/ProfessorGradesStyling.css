@@ -19,12 +19,13 @@
   background-color: #d4eefc;
 }
 
-.user-roles{
-  height: 100%;
+.professor-user-roles{
+  position: relative;
+  flex: 4;
   background-color: #fafdff;
 }
 
-.user-roles h2 {
+.professor-user-roles h2 {
   padding: 0 40px;
   margin-top: 40px;
 }
@@ -46,17 +47,15 @@
   min-width: 175px;
 }
 
-.user-list {
+.professor-user-list {
   position: absolute;
   top: 220px;
   left: 0;
   right: 0;
   bottom: 0;
-  height: calc(100% - 350px);
+  height: calc(90% - 290px);
   padding: 0 40px 80px;
   margin: 0 auto;
-  max-width: 1200px;
-  max-height: 450px;
 }
 
 input[type='text'] {
@@ -81,24 +80,23 @@ input[type='text'] {
   z-index: 1;
 }
 
-.user-item {
+.professor-user-item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 5px;
   border-bottom: 1px solid #ddd;
 }
 
-.user-item:nth-child(even) {
+.professor-user-item:nth-child(even) {
   background-color: #E6E6E6;
 }
 
-.user-item > div {
+.professor-user-item > div {
   width: 25%;
   margin-left: 10px;
 }
 
-.user-item > div:last-child {
+.professor-user-item > div:last-child {
   display: flex;
 }
 
@@ -115,10 +113,8 @@ input[type='text'] {
   border: none;
 }
 
-.all-user-items {
+.professor-all-user-items {
   overflow-y: scroll;
-  max-width: 1200px;
-  max-height: 410px;
   height: calc(120% - 10px);
 }
 
@@ -146,6 +142,36 @@ input[type='text'] {
   background-color: #ffffff;
   border-radius: 5px;
   width: 95%;
+  border: solid;
+  border-color: #000000;
+  border-width: 1px;
+}
+
+#grades-assignment {
+  height: 35px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  min-width: 400px;
+  border: solid;
+  border-color: #000000;
+  border-width: 1px;
+}
+
+#grades-student {
+  height: 35px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  width: 200px;
+  border: solid;
+  border-color: #000000;
+  border-width: 1px;
+}
+
+#grades-team {
+  height: 35px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  width: 200px;
   border: solid;
   border-color: #000000;
   border-width: 1px;
@@ -260,10 +286,10 @@ input[type='text'] {
   flex: 4;
   padding: 0 100px;
 }
-iote
-.edit-container{
+
+.grades-edit-container{
   padding-right: 8px;
-  margin-left: -4px;
+  margin-left: -8px;
   display: grid;
 }
 
@@ -426,29 +452,27 @@ iote
   margin-left: 50px;
 }
 
-.assignment-dropdown{
+.grades-assignment-dropdown{
   display: flex;
   flex-direction: row;
-  width: 100%;
+  width: 80%;
 }
 
-.dropdowns-div{
+.grades-dropdowns-div{
   display: flex;
   flex-direction: row;
 }
 
-.submit-div{
-  max-width: 120px;
-}
-
-.student-dropdown{
-  margin-left: 11px;
-  width: 40%;
-}
-
-.team-dropdown{
+.grades-student-dropdown{
   margin-left: 20px;
-  width: 40%;
+  display: flex;
+  flex-direction: column;
+}
+
+.grades-team-dropdown{
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .csv-download-button-div{
@@ -512,14 +536,13 @@ iote
   max-width: 114px;
 }
 
-.div1 {
-  max-width: 55%;
+.professor-div1 {
+  width: calc(180% - 500px);
   max-height: 70%;
   overflow: scroll;
-  border: 1px solid #777777;
 }
 
-.div1 table {
+.professor-div1 table {
   border-spacing: 0;
 }
 
@@ -591,38 +614,38 @@ iote
   font-weight: normal;
 }
 
-.div1 td {
+.professor-div1 td {
   padding: 5px;
   width: 80px;
   min-width: 80px;
   text-align: center;
 }
 
-.div1 th:first-child,
-.div1 td:first-child {
+.professor-div1 th:first-child,
+.professor-div1 td:first-child {
   position: sticky;
   left: 0;
   width: 150px;
   min-width: 150px;
 }
 
-.div1 th:first-child {
+.professor-div1 th:first-child {
   z-index: 2;
 }
 
-.div1 th:last-child,
-.div1 td:last-child {
+.professor-div1 th:last-child,
+.professor-div1 td:last-child {
   position: sticky;
   right: 0;
   width: 150px;
   min-width: 150px;
 }
 
-.div1 td:last-child, td:first-child {
+.professor-div1 td:last-child, td:first-child {
   background-color: #D4EEFC;
 }
 
-.div1 th:last-child {
+.professor-div1 th:last-child {
   z-index: 2;
 }
 
@@ -647,7 +670,7 @@ iote
   background: #555;
 }
 
-.user-table{
+.professor-user-table{
   position: absolute;
   top: 220px;
   left: 0;
@@ -656,7 +679,6 @@ iote
   padding: 0 40px 80px;
   margin: 0 auto;
   width: calc(180% - 200px);
-  height: calc(120% - 220px);
 }
 
 .line-chart{
@@ -725,4 +747,10 @@ iote
 
 .purple {
   background-color: purple;
+}
+
+.edit-grade-container{
+  padding: 20px;
+  justify-content: center;
+  margin-left: 100px;
 }

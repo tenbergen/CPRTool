@@ -4,22 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="32b51248-2e16-47a6-a3fe-004f6ccfd702" name="Changes" comment="fixed PRReceived">
+    <list default="true" id="50cb875f-6e97-4422-a2e7-199a4315b180" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/build/asset-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/frontend/build/asset-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/build/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/frontend/build/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/build/static/css/main.66ead543.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/build/static/css/main.66ead543.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/build/static/css/main.f3207470.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/build/static/css/main.f3207470.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/build/static/js/main.05cf045c.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/build/static/js/main.05cf045c.js.LICENSE.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/build/static/js/main.05cf045c.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/build/static/js/main.8f021d49.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/build/static/js/main.8f021d49.js.LICENSE.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/build/static/js/main.8f021d49.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/src/routing/RouterHandler.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/frontend/src/routing/RouterHandler.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/frontend/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,74 +18,55 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
   </component>
-  <component name="ProjectId" id="2OfEVNjGj1YHgN00s5S8YlhxIUt" />
+  <component name="ProjectId" id="2Otwp42kT8bO2xLuBHGS6IP3cQX" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "Testing",
-    "last_opened_file_path": "/home/dominic/IdeaProjects/480-Main-Repo/CSC480-22S/frontend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Student-Assignment&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/dominic/IdeaProjects/CSC480-22S/frontend/src/main/frontend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/frontend/src/main/frontend" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="32b51248-2e16-47a6-a3fe-004f6ccfd702" name="Changes" comment="" />
-      <created>1681943261702</created>
+      <changelist id="50cb875f-6e97-4422-a2e7-199a4315b180" name="Changes" comment="" />
+      <created>1682393365666</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1681943261702</updated>
-      <workItem from="1681943265749" duration="8889000" />
-      <workItem from="1682126019063" duration="969000" />
-      <workItem from="1682138304357" duration="677000" />
-      <workItem from="1682274939858" duration="29000" />
+      <updated>1682393365666</updated>
+      <workItem from="1682393366933" duration="4338000" />
+      <workItem from="1682401119198" duration="72000" />
     </task>
-    <task id="LOCAL-00001" summary="fixed PRReceived">
-      <created>1682126325763</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1682126325763</updated>
-    </task>
-    <task id="LOCAL-00002" summary="fixed PRReceived">
-      <created>1682126387541</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1682126387541</updated>
-    </task>
-    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="fixed PRReceived" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed PRReceived" />
   </component>
 </project>
