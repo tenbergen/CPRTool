@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="32b51248-2e16-47a6-a3fe-004f6ccfd702" name="Changes" comment="putting in dummy data for now">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="32b51248-2e16-47a6-a3fe-004f6ccfd702" name="Changes" comment="Trying to get download button in table to work">
       <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/src/pages/TeacherPages/ProfessorSubmittedAssignmentPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/frontend/src/pages/TeacherPages/ProfessorSubmittedAssignmentPage.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -54,7 +53,7 @@
       <workItem from="1682138304357" duration="677000" />
       <workItem from="1682274939858" duration="29000" />
       <workItem from="1682368641099" duration="8689000" />
-      <workItem from="1682382431135" duration="5971000" />
+      <workItem from="1682382431135" duration="12771000" />
     </task>
     <task id="LOCAL-00001" summary="fixed PRReceived">
       <created>1682126325763</created>
@@ -126,7 +125,56 @@
       <option name="project" value="LOCAL" />
       <updated>1682388049719</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="most of it works except the individual grades &amp; download buttons on the table">
+      <created>1682388931813</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1682388931813</updated>
+    </task>
+    <task id="LOCAL-00012" summary="most of it works except the individual grades &amp; download buttons on the table">
+      <created>1682390895968</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1682390895968</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Trying to get grades on table &amp; table download buttons to work">
+      <created>1682392083460</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1682392083460</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Trying to get download button in table to work">
+      <created>1682393470139</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1682393470139</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Trying to get download button in table to work">
+      <created>1682394366204</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1682394366205</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Trying to get download button in table to work">
+      <created>1682395060249</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1682395060250</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Trying to get download button in table to work">
+      <created>1682395937556</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1682395937556</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -150,6 +198,9 @@
     <MESSAGE value="fixing small issues" />
     <MESSAGE value="trying to get the page to build" />
     <MESSAGE value="putting in dummy data for now" />
-    <option name="LAST_COMMIT_MESSAGE" value="putting in dummy data for now" />
+    <MESSAGE value="most of it works except the individual grades &amp; download buttons on the table" />
+    <MESSAGE value="Trying to get grades on table &amp; table download buttons to work" />
+    <MESSAGE value="Trying to get download button in table to work" />
+    <option name="LAST_COMMIT_MESSAGE" value="Trying to get download button in table to work" />
   </component>
 </project>

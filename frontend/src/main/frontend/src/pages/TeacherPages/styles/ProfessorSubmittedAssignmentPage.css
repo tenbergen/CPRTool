@@ -128,3 +128,7 @@ a {
 .blue-button-small-pr:active {
   background-color: #102080;
 }
+
+.rosterComp {
+  align-content: center;
+}
