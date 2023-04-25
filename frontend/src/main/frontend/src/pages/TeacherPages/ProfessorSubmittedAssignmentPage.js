@@ -18,6 +18,7 @@ function ProfessorSubmittedAssignmentPage() {
   const [reviewers, setReviewers] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [teamSubmission, setTeamSubmission] = useState('')
+  const [reviewSubmission, setReviewSubmission] = useState('')
 
   const getReviews = async (courseId, teamId, assignmentId) => {
 
@@ -133,37 +134,25 @@ function ProfessorSubmittedAssignmentPage() {
     }
   }
 
-  function getReviewSubmission(team) {
-    return reviews.find(e => e.team_name === team);
+  const onDownloadButtonClick = async () => {
+    if(!reviewSubmission || reviewSubmission === ''){
+      console.error('no review submission found!');
+      return;
+    }
+    const reviewFileName = reviewSubmission.submission_name;
+    if(reviewFileName.endsWith(".pdf")){
+      downloadFile(new Blob([Uint8Array.from(reviewSubmission.submission_data.data)], {type: 'application/pdf'}), reviewFileName)
+    }else if(reviewFileName.endsWith(".docx")){
+      downloadFile(new Blob([Uint8Array.from(reviewSubmission.submission_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), reviewFileName)
+    }else{
+      downloadFile(new Blob([Uint8Array.from(reviewSubmission.submission_data.data)], {type: 'application/zip'}), reviewFileName)
+    }
   }
 
-  const prepareFeedbackFile = (feedbackDataName, feedbackData) => {
-    var filename = ""
-    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-    var matches = filenameRegex.exec(feedbackDataName);
-    if (matches != null && matches[1]) {
-      filename = matches[1].replace(/['"]/g, '');
-    }
-    feedbackData.then((res) => {
-      if(filename.endsWith(".pdf")){
-        downloadFile(base64StringToBlob(res, 'application/pdf'), filename)
-      }else{
-        downloadFile(base64StringToBlob(res, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'), filename)
-      }
-    })
-  };
-
-
-  const onFeedBackClick = async (teamName) => {
-    const url = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${teamName}/${teamId}/download`;
-
-    await axios
-        .get(url, { responseType: 'blob' })
-        .then((res) => prepareFeedbackFile(res["headers"]["content-disposition"], res.data.text()))
-        .catch((e) => {
-          alert(`Error : ${e.response.data}`);
-        });
-  };
+  function getReviewSubmission(team) {
+    setReviewSubmission(reviews.find(e => e.team_name === team));
+    return reviewSubmission;
+  }
 
 
   return (
@@ -229,13 +218,14 @@ function ProfessorSubmittedAssignmentPage() {
                               team && (
                                   <tr key={uuid()}>
                                     <th className="rosterComp">{team}</th>
-                                    <th className="rosterComp">{100}</th>
+                                    <th className="rosterComp">{getReviewSubmission(team).grade}</th>
                                     <th className="rosterComp">
                                       <svg
                                           className={'bulk-download-icon-default'}
                                           alt={'Bulk Download For Student'}
                                           style={{ cursor: 'pointer' }}
                                       ></svg>
+                                      <button onClick={onDownloadButtonClick}></button>
                                     </th>
                                   </tr>
                               )))}
