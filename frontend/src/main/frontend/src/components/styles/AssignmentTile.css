@@ -33,7 +33,8 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-bottom: 3%;
+    align-items: center;
+    margin: 2% 0;
 }
 
 .ass-tile-files {
