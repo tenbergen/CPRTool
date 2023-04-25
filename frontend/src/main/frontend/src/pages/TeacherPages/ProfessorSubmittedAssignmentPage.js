@@ -17,6 +17,7 @@ function ProfessorSubmittedAssignmentPage() {
   const { courseId, assignmentId, teamId } = useParams();
   const [reviewers, setReviewers] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const [teamSubmission, setTeamSubmission] = useState(undefined)
 
   const getReviews = async (courseId, teamId, assignmentId) => {
 
@@ -54,7 +55,6 @@ function ProfessorSubmittedAssignmentPage() {
     return await axios
         .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/peer-review-team-reviewers/${teamId}`)
         .then(r => {
-          console.log(r);
           return r.data;
         })
         .catch((e) => {
@@ -62,6 +62,30 @@ function ProfessorSubmittedAssignmentPage() {
           alert('Error getting reviewers')
         });
   }
+
+  const getTeamSubmission = async (courseId, assignmentId, teamId) => {
+    return await axios
+        .get(`${process.env.REACT_APP_URL}/assignments/student/${courseId}/${assignmentId}/submissions`)
+        .then(r => {
+          r.data.map((sub) => {
+            if(sub.team_name === teamId){
+              console.log(sub)
+              return sub;
+            }
+                })
+          return 'end of the line';
+        })
+  }
+
+  useEffect(() => {
+    const fetchTeamSubmission = async () => {
+      const data = await getTeamSubmission(courseId, assignmentId, teamId);
+      console.log(data)
+      setTeamSubmission(data);
+    }
+
+    fetchTeamSubmission();
+  }, [courseId, assignmentId, teamId]);
 
   useEffect(() => {
     dispatch(
@@ -77,13 +101,14 @@ function ProfessorSubmittedAssignmentPage() {
     href.click();
   };
 
-  const onTemplateClick = async (fileName) => {
-    if(fileName.endsWith(".pdf")){
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/pdf'}), fileName)
-    }else if(fileName.endsWith(".docx")){
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
+  const onTemplateClick = async () => {
+    const templateFileName = currentSubmittedAssignment.peer_review_template_name;
+    if(templateFileName.endsWith(".pdf")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/pdf'}), templateFileName)
+    }else if(templateFileName.endsWith(".docx")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), templateFileName)
     }else{
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/zip'}), fileName)
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/zip'}), templateFileName)
     }
   };
 
@@ -193,7 +218,7 @@ function ProfessorSubmittedAssignmentPage() {
                         </button>
                       </span>
                       <span className='inter-16-bold-blue p2' >
-                        <button className='blue-button-small-pr'>
+                        <button className='blue-button-small-pr' onClick={onTeamFileClick} >
                           {' '}
                           Team Download{' '}
                         </button>
