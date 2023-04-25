@@ -111,7 +111,7 @@ function ProfessorSubmittedAssignmentPage() {
     }
   }
 
-  const onDownloadButtonClick = async (reviewSubmission) => {
+  function onDownloadButtonClick(reviewSubmission){
     console.log('bonjour');
     if(!reviewSubmission || reviewSubmission === ''){
       console.error('no review submission found!');
