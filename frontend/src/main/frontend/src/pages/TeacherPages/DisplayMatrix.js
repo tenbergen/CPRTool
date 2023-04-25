@@ -4,13 +4,15 @@ import AssignmentDropdown from "../../components/AssignmentDropdown";
 import axios from "axios";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import SidebarComponent from '../../components/SidebarComponent';
+import { useParams } from 'react-router-dom'
 
 
 const DisplayMatrix = (props) => {
+    const {courseId} = useParams()
     const [matrixData, setMatrixData] = useState([]);
     const [trueMatrix, setTrueMatrix] = useState(undefined);
     const [lastUpdated, setLastUpdates] = useState(new Date().getTime());
-    const [assignmentData, setAssignmentData] = useState([]);
+    const [assignmentData, setAssignmentData] = useState({});
     const [chosenAssignment, setChosenAssignment] = useState(``);
     const [chosenAssignmentIndex, setChosenAssignmentIndex] = useState(0);
     const [courseTeams, setCourseTeams] = useState([]);
@@ -25,7 +27,6 @@ const DisplayMatrix = (props) => {
      * @returns an array containing objects that represent the information that will populate the matrix.
      */
     const getMatrixData = async () => {
-        const courseId = window.location.href.split("/")[-1];
         const requestUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${chosenAssignmentIndex + 1}/matrix`;
         try {
             const response = await axios.get(requestUrl);
@@ -52,6 +53,8 @@ const DisplayMatrix = (props) => {
             }
             arr.pop();
             setMatrixData(arr);
+            console.log('mother')
+            console.log(matrixData)
             return arr;
         } catch (err) {
             console.log(err);
@@ -64,13 +67,15 @@ const DisplayMatrix = (props) => {
      * @returns an array containing objects representing the data for each assignment in the course
      */
     const getAssignmentData = async () => {
-        const courseId = window.location.href.split("/")[-1];
         // const requestUrl = `http://localhost:3000/assignments/professor/courses/${courseName}/assignments`;
         const requestUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments`;
         try {
             const response = await axios.get(requestUrl);
             const data = response.data;
-            setAssignmentData(data);
+            setAssignmentData({'test':5});
+            console.log('hello')
+            console.log(data[0])
+            console.log(assignmentData)
             return data;
         } catch (err) {
             console.log(err);
@@ -212,7 +217,8 @@ const DisplayMatrix = (props) => {
             return 5
         })
             .catch(err => console.log(err));
-    }, []);
+    }, [lastUpdated]);
+
 
     
     return (
@@ -222,7 +228,11 @@ const DisplayMatrix = (props) => {
         {matrixData && assignmentData && trueMatrix &&
             <>
                 <h1>Peer Review Distribution</h1>
-                <AssignmentDropdown setMatrixState={() => setLastUpdates(new Date().getTime())} assignmentObjects={assignmentData} />
+                <AssignmentDropdown setMatrixState={(x) => {
+                    setChosenAssignment(x);
+                    setChosenAssignmentIndex(assignmentData.map(ele => ele.assignment_name).indexOf(x));
+                    setLastUpdates(new Date().getTime());
+                }} assignmentObjects={assignmentData} />
                 <h1>{chosenAssignment}</h1>
                 <table className={classes.table} cellSpacing={0}>
                     {dataToMatrix()}
