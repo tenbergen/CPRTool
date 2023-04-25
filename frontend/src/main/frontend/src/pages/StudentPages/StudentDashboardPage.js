@@ -73,7 +73,7 @@ function StudentDashboardPage () {
                   {courses.map((course) => (
                     <Link
                       key={uuid()}
-                      to={'/student/' + course.course_id}
+                      to={`/student/${course.course_id}/assignments`}
                       onClick={() => courseClickHandler(course)}
                     >
                       <li className="courseListItem">
