@@ -17,7 +17,7 @@ function ProfessorSubmittedAssignmentPage() {
   const { courseId, assignmentId, teamId } = useParams();
   const [reviewers, setReviewers] = useState([]);
   const [reviews, setReviews] = useState([]);
-  const [teamSubmission, setTeamSubmission] = useState(undefined)
+  const [teamSubmission, setTeamSubmission] = useState('')
 
   const getReviews = async (courseId, teamId, assignmentId) => {
 
@@ -33,6 +33,16 @@ function ProfessorSubmittedAssignmentPage() {
           return r.data;
         });
   }
+
+  const getTeamSubmission = async (courseId, teamId, assignmentId) => {
+
+    return await axios
+        .get(`${process.env.REACT_APP_URL}/assignments/student/${courseId}/${assignmentId}/submissions`)
+        .then(r => {
+          return r.data.find(e => e.team_name === teamId);
+        })
+  }
+
   useEffect(() => {
     const fetchReviewers = async () => {
       const data = await getReviewers(courseId, teamId, assignmentId);
@@ -45,10 +55,19 @@ function ProfessorSubmittedAssignmentPage() {
   useEffect( () => {
     const fetchReviews = async () => {
       const data = await getReviews(courseId, teamId, assignmentId);
-      setReviewers(data);
+      setReviews(data);
     }
 
     fetchReviews();
+  }, [courseId, teamId, assignmentId]);
+
+  useEffect( () => {
+    const fetchTeamSubmission = async () => {
+      const data = await getTeamSubmission(courseId, teamId, assignmentId);
+      setTeamSubmission(data);
+    }
+
+    fetchTeamSubmission();
   }, [courseId, teamId, assignmentId]);
 
   const getReviewers = async (courseId, teamId, assignmentId) => {
@@ -62,30 +81,6 @@ function ProfessorSubmittedAssignmentPage() {
           alert('Error getting reviewers')
         });
   }
-
-  const getTeamSubmission = async (courseId, assignmentId, teamId) => {
-    return await axios
-        .get(`${process.env.REACT_APP_URL}/assignments/student/${courseId}/${assignmentId}/submissions`)
-        .then(r => {
-          r.data.map((sub) => {
-            if(sub.team_name === teamId){
-              console.log(sub)
-              return sub;
-            }
-                })
-          return 'end of the line';
-        })
-  }
-
-  useEffect(() => {
-    const fetchTeamSubmission = async () => {
-      const data = await getTeamSubmission(courseId, assignmentId, teamId);
-      console.log(data)
-      setTeamSubmission(data);
-    }
-
-    fetchTeamSubmission();
-  }, [courseId, assignmentId, teamId]);
 
   useEffect(() => {
     dispatch(
@@ -124,7 +119,6 @@ function ProfessorSubmittedAssignmentPage() {
   };
 
   const onTeamFileClick = async () => {
-    console.log(teamSubmission)
     if (!teamSubmission || !teamSubmission.submission_name) {
       console.error('teamSubmission or teamSubmission.submission_name is undefined');
       return;
@@ -139,14 +133,8 @@ function ProfessorSubmittedAssignmentPage() {
     }
   }
 
-  const getReviewSubmission = team => {
-    reviews.map( (t) => {
-      if(t.key === team){
-        console.log(t);
-        return t;
-      }
-    })
-    console.error(`no match for ${team}`)
+  function getReviewSubmission(team) {
+    return reviews.find(e => e.team_name === team);
   }
 
   const prepareFeedbackFile = (feedbackDataName, feedbackData) => {
@@ -218,7 +206,7 @@ function ProfessorSubmittedAssignmentPage() {
                         </button>
                       </span>
                       <span className='inter-16-bold-blue p2' >
-                        <button className='blue-button-small-pr' onClick={onTeamFileClick} >
+                        <button className='blue-button-small-pr' onClick={onTeamFileClick}>
                           {' '}
                           Team Download{' '}
                         </button>
@@ -241,7 +229,7 @@ function ProfessorSubmittedAssignmentPage() {
                               team && (
                                   <tr key={uuid()}>
                                     <th className="rosterComp">{team}</th>
-                                    <th className="rosterComp">{getReviewSubmission(team).data.grade}</th>
+                                    <th className="rosterComp">{100}</th>
                                     <th className="rosterComp">
                                       <svg
                                           className={'bulk-download-icon-default'}
