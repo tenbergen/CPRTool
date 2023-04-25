@@ -17,22 +17,22 @@ const StudentPeerReviewComponent = () => {
   const { currentTeamId, teamLoaded } = useSelector((state) => state.teams)
 
   const [grade, setGrade] = useState(undefined)
-  const feedbackFileFormData = new FormData()
+  let feedbackFileFormData = new FormData()
 
   const onFeedbackFileHandler = (event) => {
-    let file = event.target.files[0]
-    const reader = new FileReader()
+    let file = event.target.files[0];
+    const reader = new FileReader();
     reader.onloadend = () => {
       // Use a regex to remove data url part
       const base64String = reader.result
         .replace('data:', '')
-        .replace(/^.+,/, '')
-      for (var key of feedbackFileFormData.keys()) {
-        feedbackFileFormData.delete(key)
+        .replace(/^.+,/, '');
+      for(var pair of feedbackFileFormData.entries()){
+        feedbackFileFormData.delete(pair[0])
       }
-      feedbackFileFormData.set(file.name, base64String)
-    }
-    reader.readAsDataURL(file)
+      feedbackFileFormData.set(file.name, base64String);
+    };
+    reader.readAsDataURL(file);
   }
 
   useEffect(() => {
@@ -93,7 +93,6 @@ const StudentPeerReviewComponent = () => {
 
   const handleSubmit = async () => {
     const submitAssUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${currentTeamId}/${teamId}/${grade}/upload`
-
     await axios
       .post(submitAssUrl, feedbackFileFormData)
       .then((res) => {
