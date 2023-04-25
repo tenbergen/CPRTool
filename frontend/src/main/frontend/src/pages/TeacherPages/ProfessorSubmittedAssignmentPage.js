@@ -8,6 +8,7 @@ import uuid from 'react-uuid';
 import {base64StringToBlob} from "blob-util";
 import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
+import Breadcrumbs from "../../components/Breadcrumbs";
 
 
 function ProfessorSubmittedAssignmentPage() {
@@ -132,6 +133,7 @@ function ProfessorSubmittedAssignmentPage() {
       <div className='scp-container'>
         <NavigationContainerComponent/>
         <div className='scp-component'>
+          <Breadcrumbs/>
           <div>
             {currentSubmittedAssignmentLoaded ? (
               <div className='sac-parent'>
@@ -139,38 +141,40 @@ function ProfessorSubmittedAssignmentPage() {
                   {teamId} Submission
                 </h2>
                 <div className='sac-content'>
-                  <div className='inter-20-medium-white ass-tile-title'> {' '}
-                    <span> {currentSubmittedAssignment.assignment_name} </span>
+                  <div className='inter-24-bold-ass-tile-title '>
+                    <span> {'  '}{currentSubmittedAssignment.assignment_name} </span>
                   </div>
                   <div className='ass-tile-content' >
-                    <span className='inter-24-bold'> {currentSubmittedAssignment.assignment_name} </span>
                     <span className='inter-20-medium span1-ap'>
                       Due: {currentSubmittedAssignment.due_date}
                     </span>
-                    <br /> <br /> <br />
+                    <br />
                     <p className='inter-20-medium' >Instructions:</p>
                     <p className='inter-16-medium-black'>{currentSubmittedAssignment.instructions}</p>
-                    <br />
-                    <br />
-                    <span className='inter-20-bold'> Rubric: </span>
-                    <span className='inter-16-bold-blue p2' >
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span className='inter-20-bold'> Rubric: </span>
+                      <span className='inter-16-bold-blue p2' >
                       <button className='blue-button-small-pr' onClick={onRubricFileClick} >
                         {' '}
-                        Rubric{' '}
+                        Download{' '}
                       </button>
                     </span>
-                    <span className='inter-16-bold-blue p2' >
+                      <span className='inter-20-bold'> Template: </span>
+                      <span className='inter-16-bold-blue p2' >
                       <button className='blue-button-small-pr' onClick={onTemplateClick} >
                         {' '}
-                        Template{' '}
+                        Download{' '}
                       </button>
                     </span>
-                    <span className='inter-16-bold-blue p2' >
+                      <span className='inter-20-bold'> Team Files: </span>
+                      <span className='inter-16-bold-blue p2' >
                       <button className='blue-button-small-pr' onClick={onTeamFileClick}>
                         {' '}
-                        Team Download{' '}
+                        Download{' '}
                       </button>
                     </span>
+                    </div>
+
                   </div>
                   <br />
                   <div>
