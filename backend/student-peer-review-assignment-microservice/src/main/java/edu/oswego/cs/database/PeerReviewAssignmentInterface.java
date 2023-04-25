@@ -428,7 +428,7 @@ public class PeerReviewAssignmentInterface {
                     throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team: " + review + "'s review has no points.").build());
                 } else {
                     total_points += team_review.get("grade", Integer.class);
-                    for (String teamMember : team_review.getList("reviewed_team", String.class)) {
+                    for (String teamMember : team_review.getList("reviewed_team_members", String.class)) {
                         Document newPeerReview = new Document()
                                 .append("course_id", courseID)
                                 .append("grade", team_review.getInteger("grade"))
