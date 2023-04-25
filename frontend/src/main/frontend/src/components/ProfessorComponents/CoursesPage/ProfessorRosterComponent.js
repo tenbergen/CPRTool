@@ -482,7 +482,7 @@ function ProfessorRosterComponent() {
                   required
                   onChange={(e) => OnChange(e)}
               />
-              <button id="addStudentButton" onClick={() => editStudent(user.student_id)}>
+              <button id="addStudentButton" onClick={ () => {deleteStudent(user); handleSubmit(); }}>
                 Confirm Edit Student
               </button>
               <button id="ecc-delete-button-cancel" className="inter-16-medium-white"
