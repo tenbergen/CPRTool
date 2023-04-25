@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from 'react-router-dom'
 import styles from "./styles/AssignmentDropdown.module.css";
 
 const AssignmentDropdown = (props) => {
@@ -7,9 +8,12 @@ const AssignmentDropdown = (props) => {
             assignmentObject.name = assignmentObject.assignment_name.substring(0, 35) + "...";
         }
     }
+
+
+    console.log(props)
     
     // const [selectedAssignment, setSelectedAssignment] = useState(props.assignmentObjects[0].name);
-    const [selectedAssignment, setSelectedAssignment] = useState();
+    const [selectedAssignment, setSelectedAssignment] =useState(props.assignmentObjects[0].assignment_name);
 
        // const [assignmentObjects, setAssignmentObjects] = useState(props.assignmentObjects);
 

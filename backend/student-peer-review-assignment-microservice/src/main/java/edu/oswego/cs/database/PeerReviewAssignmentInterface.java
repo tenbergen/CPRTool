@@ -411,7 +411,18 @@ public class PeerReviewAssignmentInterface {
                 eq("team_name", teamName),
                 eq("type", "team_submission"))).first();
 
-
+        for (String teamMember : team_submission.getList("reviewed_team", String.class)) {
+            Document newPeerReview = new Document()
+                    .append("course_id", courseID)
+                    .append("grade", team_submission.getInteger("grade"))
+                    .append("team_name", teamName);
+            List<Document> peerReviews = studentCollection.find(eq("student_id", teamMember)).first().getList("peer_reviews", Document.class);
+            peerReviews.add(newPeerReview);
+            Bson studentQuery = eq("student_id", teamMember);
+            Bson update = Updates.set("team_submissions", peerReviews);
+            UpdateOptions options = new UpdateOptions().upsert(true);
+            studentCollection.updateOne(studentQuery, update, options);
+        }
         submissionsCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
     }
 
