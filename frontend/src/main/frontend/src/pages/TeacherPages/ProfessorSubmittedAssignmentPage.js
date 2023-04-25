@@ -111,7 +111,7 @@ function ProfessorSubmittedAssignmentPage() {
     }
   }
 
-  const onDownloadButtonClick = async (reviewSubmission) => () => {
+  const onDownloadButtonClick = async (reviewSubmission) => {
     if(!reviewSubmission || reviewSubmission === ''){
       console.error('no review submission found!');
       return;
@@ -196,7 +196,7 @@ function ProfessorSubmittedAssignmentPage() {
                                         alt={'Bulk Download For Student'}
                                         style={{ cursor: 'pointer' }}
                                     ></svg>
-                                    <button onClick={onDownloadButtonClick(review)}></button>
+                                    <button onClick={() => onDownloadButtonClick(review)}></button>
                                   </th>
                                 </tr>
                             )))}
