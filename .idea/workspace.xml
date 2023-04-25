@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="32b51248-2e16-47a6-a3fe-004f6ccfd702" name="Changes" comment="trying to get the data on the table correctly">
+    <list default="true" id="32b51248-2e16-47a6-a3fe-004f6ccfd702" name="Changes" comment="fixing small issues">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/src/pages/TeacherPages/ProfessorSubmittedAssignmentPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/frontend/src/pages/TeacherPages/ProfessorSubmittedAssignmentPage.js" afterDir="false" />
     </list>
@@ -54,7 +54,7 @@
       <workItem from="1682138304357" duration="677000" />
       <workItem from="1682274939858" duration="29000" />
       <workItem from="1682368641099" duration="8689000" />
-      <workItem from="1682382431135" duration="1544000" />
+      <workItem from="1682382431135" duration="4502000" />
     </task>
     <task id="LOCAL-00001" summary="fixed PRReceived">
       <created>1682126325763</created>
@@ -98,7 +98,21 @@
       <option name="project" value="LOCAL" />
       <updated>1682378403477</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="fixed merge issues">
+      <created>1682384001856</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1682384001856</updated>
+    </task>
+    <task id="LOCAL-00008" summary="fixing small issues">
+      <created>1682384629191</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1682384629191</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -118,6 +132,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fixed PRReceived" />
     <MESSAGE value="trying to get the data on the table correctly" />
-    <option name="LAST_COMMIT_MESSAGE" value="trying to get the data on the table correctly" />
+    <MESSAGE value="fixed merge issues" />
+    <MESSAGE value="fixing small issues" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixing small issues" />
   </component>
 </project>

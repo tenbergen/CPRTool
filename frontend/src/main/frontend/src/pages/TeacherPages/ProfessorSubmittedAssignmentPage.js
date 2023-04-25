@@ -17,7 +17,7 @@ function ProfessorSubmittedAssignmentPage() {
   const { courseId, assignmentId, teamId } = useParams();
   const [reviewers, setReviewers] = useState([]);
   const [reviews, setReviews] = useState([]);
-  const [teamSubmission, setTeamSubmission] = useState(undefined)
+  const [teamSubmission, setTeamSubmission] = useState('')
 
   const getReviews = async (courseId, teamId, assignmentId) => {
 
@@ -55,7 +55,7 @@ function ProfessorSubmittedAssignmentPage() {
   useEffect( () => {
     const fetchReviews = async () => {
       const data = await getReviews(courseId, teamId, assignmentId);
-      setReviewers(data);
+      setReviews(data);
     }
 
     fetchReviews();
@@ -74,7 +74,6 @@ function ProfessorSubmittedAssignmentPage() {
     return await axios
         .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/peer-review-team-reviewers/${teamId}`)
         .then(r => {
-          console.log(r);
           return r.data;
         })
         .catch((e) => {
@@ -97,14 +96,13 @@ function ProfessorSubmittedAssignmentPage() {
     href.click();
   };
 
-  const onTemplateClick = async () => {
-    const templateFileName = currentSubmittedAssignment.peer_review_template_name;
-    if(templateFileName.endsWith(".pdf")){
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/pdf'}), templateFileName)
-    }else if(templateFileName.endsWith(".docx")){
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), templateFileName)
+  const onTemplateClick = async (fileName) => {
+    if(fileName.endsWith(".pdf")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/pdf'}), fileName)
+    }else if(fileName.endsWith(".docx")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
     }else{
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/zip'}), templateFileName)
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/zip'}), fileName)
     }
   };
 
@@ -135,14 +133,8 @@ function ProfessorSubmittedAssignmentPage() {
     }
   }
 
-  const getReviewSubmission = team => {
-    reviews.map( (t) => {
-      if(t.key === team){
-        console.log(t);
-        return t;
-      }
-    })
-    console.error(`no match for ${team}`)
+  function getReviewSubmission(team) {
+    return reviews.find(e => e.team_name === team);
   }
 
   const prepareFeedbackFile = (feedbackDataName, feedbackData) => {
