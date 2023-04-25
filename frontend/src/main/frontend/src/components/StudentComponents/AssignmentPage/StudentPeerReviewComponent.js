@@ -20,7 +20,6 @@ const StudentPeerReviewComponent = () => {
   let feedbackFileFormData = new FormData()
 
   const onFeedbackFileHandler = (event) => {
-    feedbackFileFormData = new FormData()
     let file = event.target.files[0];
     const reader = new FileReader();
     reader.onloadend = () => {

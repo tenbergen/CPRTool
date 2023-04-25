@@ -5,6 +5,13 @@ import axios from "axios";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import SidebarComponent from '../../components/SidebarComponent';
 import { useParams } from 'react-router-dom'
+import HeaderBar from '../../components/HeaderBar/HeaderBar'
+import NavigationContainerComponent from '../../components/NavigationComponents/NavigationContainerComponent'
+import uuid from 'react-uuid'
+import ProfessorAllSubmissionsComponent
+    from '../../components/ProfessorComponents/AssignmentPage/ProfessorAllSubmissionsComponent'
+import ProfessorEditAssignmentComponent
+    from '../../components/ProfessorComponents/AssignmentPage/ProfessorEditAssignmentComponent'
 
 
 const DisplayMatrix = (props) => {
@@ -35,7 +42,7 @@ const DisplayMatrix = (props) => {
             const arr = [];
             for (const prop in data) {
                 const reviewedTeam = prop;
-                const actualData = data[prop]; 
+                const actualData = data[prop];
                 const reviewingTeam = Object.keys(actualData)[0];
                 const grade = Object.keys(actualData[reviewingTeam])[0];
                 const isOutlier = actualData[reviewingTeam][grade];
@@ -124,6 +131,7 @@ const DisplayMatrix = (props) => {
         const averageGivenIsOutlier = {};
 
         /* Populate the above maps */
+         console.log(matrixData)
         for (const peerReview of matrixData) {
             const reviewingTeam = peerReview["reviewingTeam"];
             const reviewedTeam = peerReview["reviewedTeam"];
@@ -176,7 +184,6 @@ const DisplayMatrix = (props) => {
         let matrixDatum = undefined;
         let assignments = undefined;
         let teamList = undefined;
-
         getMatrixData()
             .then(matrix => {
                 matrixDatum = matrix;
@@ -220,29 +227,47 @@ const DisplayMatrix = (props) => {
 
     
     return (
-        <div className={classes.container}>
-            <Breadcrumbs />
-            <SidebarComponent />
-        {matrixData && assignmentData && trueMatrix &&
-            <>
-                <h1>Peer Review Distribution</h1>
-                <AssignmentDropdown setMatrixState={(x) => {
-                    setChosenAssignment(x);
-                    setChosenAssignmentIndex(assignmentData.map(ele => ele.assignment_name).indexOf(x));
-                    setLastUpdates(new Date().getTime());
-                }} assignmentObjects={assignmentData} />
-                <h1>{chosenAssignment}</h1>
-                <table className={classes.table} cellSpacing={0}>
-                    {dataToMatrix()}
-                </table>
-              <a className={classes.box + " " + classes.red}> </a>
-            <p className={classes.outlier_desc}>Outliers Detected</p>
-            <div className={classes.warningDiv}>
-            <p><strong>{outlierCount} Outliers Detected </strong> <br></br><a className={classes.review}>Click here to review</a></p>
-            </div>
-         </>
-        }
-        </div>
+      <div className="page-container">
+          <HeaderBar/>
+          <div className='scp-container'>
+              <NavigationContainerComponent/>
+              <div className='scp-component' style={{overflowY: 'auto'}}>
+                   <div className={classes.container}>
+                       <Breadcrumbs />
+                  {matrixData.length>0 && assignmentData.length>0 && trueMatrix!==undefined?
+                    <div>
+                          <h1 className="inter-28-bold">Peer Review Distribution</h1>
+                          <AssignmentDropdown setMatrixState={(x) => {
+                              console.log('asdfsad',chosenAssignment[chosenAssignment])
+                              console.log(assignmentData[chosenAssignment])
+                              console.log(x)
+                              setChosenAssignment(x);
+                              setChosenAssignmentIndex(()=>{
+                                  for (const assignment of assignmentData){
+                                      if(assignment.assignment_id===x){
+                                          return assignmentData.indexOf(assignment)
+                                      }
+                                  }
+                              });
+                              console.log(chosenAssignmentIndex)
+                              setLastUpdates(new Date().getTime());
+                          }} assignmentObjects={assignmentData}/>
+
+                        <h1 className="inter-24-medium">Assignment {chosenAssignmentIndex+1}: {assignmentData[chosenAssignmentIndex].assignment_name}</h1>
+                          <table className={classes.table} cellSpacing={0} style={{marginTop: '2%'}}>
+                              {dataToMatrix()}
+                          </table>
+                        <a className={classes.box + " " + classes.red}> </a>
+                      <p className={classes.outlier_desc}>Outliers Detected</p>
+                      <div className={classes.warningDiv}>
+                      <p><strong>{outlierCount} Outliers Detected </strong> <br></br><a className={classes.review}>Click here to review</a></p>
+                      </div>
+                   </div>:null
+                  }
+                  </div>
+              </div>
+          </div>
+      </div>
     )
 }
 
