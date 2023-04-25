@@ -87,23 +87,30 @@ function ProfessorSubmittedAssignmentPage() {
     }
   };
 
-  const onRubricFileClick = async (fileName) => {
-    if(fileName.endsWith(".pdf")){
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.rubric_data.data)], {type: 'application/pdf'}), fileName)
-    }else if(fileName.endsWith(".docx")){
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.rubric_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
+  const onRubricFileClick = async () => {
+    const rubricFileName = currentSubmittedAssignment.rubric_name;
+    if(rubricFileName.endsWith(".pdf")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.rubric_data.data)], {type: 'application/pdf'}), rubricFileName)
+    }else if(rubricFileName.endsWith(".docx")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.rubric_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), rubricFileName)
     }else{
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.rubric_data.data)], {type: 'application/zip'}), fileName)
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.rubric_data.data)], {type: 'application/zip'}), rubricFileName)
     }
   };
 
-  const onTeamFileClick = async (fileName) => {
-    if(fileName.endsWith(".pdf")){
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.submission_data.data)], {type: 'application/pdf'}), fileName)
-    }else if(fileName.endsWith(".docx")){
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.submission_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
+  const onTeamFileClick = async () => {
+    console.log(teamSubmission)
+    if (!teamSubmission || !teamSubmission.submission_name) {
+      console.error('teamSubmission or teamSubmission.submission_name is undefined');
+      return;
+    }
+    const teamFileName = teamSubmission.submission_name;
+    if(teamFileName.endsWith(".pdf")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.submission_data.data)], {type: 'application/pdf'}), teamFileName)
+    }else if(teamFileName.endsWith(".docx")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.submission_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), teamFileName)
     }else{
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.submission_data.data)], {type: 'application/zip'}), fileName)
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.submission_data.data)], {type: 'application/zip'}), teamFileName)
     }
   }
 
@@ -209,7 +216,7 @@ function ProfessorSubmittedAssignmentPage() {
                               team && (
                                   <tr key={uuid()}>
                                     <th className="rosterComp">{team}</th>
-                                    <th className="rosterComp">{getReviewSubmission(team).grade}</th>
+                                    <th className="rosterComp">{getReviewSubmission(team).data.grade}</th>
                                     <th className="rosterComp">
                                       <svg
                                           className={'bulk-download-icon-default'}
