@@ -9,7 +9,11 @@ const assignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/course
 const AssignmentTile = ({ assignment, submitted }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const title = "Assignment #" + assignment.assignment_id;
+  let title = "";
+  {assignment.assignment_type === "Peer-Review" ?
+   title = assignment.assignment_type
+  : title = "Assignment #" + assignment.assignment_id}
+  // const title = "Assignment #" + assignment.assignment_id;
   const { role } = useSelector((state) => state.auth);
   const { currentTeamId } = useSelector((state) => state.teams);
   const course = window.location.pathname;
@@ -72,7 +76,7 @@ const AssignmentTile = ({ assignment, submitted }) => {
       <div
           className={
             assignment.assignment_type === 'peer-review'
-                ? 'ass-tile'
+                ? 'ass-tile-yellow'
                 : 'ass-tile'
           }
       >

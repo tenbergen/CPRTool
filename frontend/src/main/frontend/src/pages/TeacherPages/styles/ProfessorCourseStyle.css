@@ -19,6 +19,7 @@
 }
 
 .pcp-components {
+    overflow-x: hidden;
     border-radius: 0 10px 10px 0;
     flex-grow: 1;
     padding: 2%;
