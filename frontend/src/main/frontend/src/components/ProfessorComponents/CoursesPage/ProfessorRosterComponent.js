@@ -19,6 +19,7 @@ const ProfessorRosterComponent = () => {
   const courseId = courseParse.split("/")[2];
   const url = `${process.env.REACT_APP_URL}/manage/professor/courses`
   const { currentCourseStudents } = useSelector((state) => state.courses)
+  const [showModal, setShowModal] = useState(false)
 
   useEffect(() => {
     dispatch(getCurrentCourseStudentsAsync(courseId))
@@ -183,17 +184,38 @@ const ProfessorRosterComponent = () => {
                           </th>
                           <th className="rosterComp">
                             <svg className={'bulk-download-icon-default'} alt={'Bulk Download For Student'}
-                                 style={{ cursor: 'pointer' }} onClick={() => onRosterClick(student.student_id)}>>
+                                 style={{ cursor: 'pointer' }} onClick={() => onRosterClick(student.student_id)}>
                             </svg>
                           </th>
                           <th className="rosterComp">
                             <div className="crossMark-wrapper">
                               <div
-                                onClick={() => deleteStudent(student)}
+                                onClick={() => setShowModal(true)}
                                 className="crossMark"
                               >
                                 X
                               </div>
+                              {showModal && (
+                              <div className="roster-delete-modal">
+                                <div className="roster-modal-content">
+                                  <h2 className="roster-modal-head">Confirm</h2>
+                                  <form>
+                                    <label className="roster-confirm-remove">Are you sure you want to
+                                      remove {student.first_name} {student.last_name}?</label>
+                                  </form>
+                                  <div className="roster-remove-user-buttons">
+                                    <button className="roster-remove-user-popup-button" onClick={() => {
+                                      setShowModal(false)
+                                      deleteStudent(student)
+                                    }}>Yes
+                                    </button>
+                                    <button className="roster-cancel-user-delete-button"
+                                            onClick={() => setShowModal(false)}>No
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
                             </div>
                           </th>
                         </tr>
