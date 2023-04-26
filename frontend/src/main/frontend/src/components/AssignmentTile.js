@@ -10,8 +10,8 @@ const AssignmentTile = ({ assignment, submitted }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let title = "";
-  {assignment.assignment_type === "Peer-Review" ?
-   title = assignment.assignment_type
+  {assignment.assignment_type === "peer-review" ?
+   title = "Peer-Review"
   : title = "Assignment #" + assignment.assignment_id}
   // const title = "Assignment #" + assignment.assignment_id;
   const { role } = useSelector((state) => state.auth);

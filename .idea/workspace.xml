@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a5be8d9c-44d2-4e22-9bb3-628671fe5265" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/src/components/AssignmentTile.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/frontend/src/components/AssignmentTile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/src/components/StudentComponents/AssignmentPage/RegularAssignmentComponent.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/frontend/src/components/StudentComponents/AssignmentPage/RegularAssignmentComponent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/src/components/styles/EditCourse.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/frontend/src/components/styles/EditCourse.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/src/pages/TeacherPages/styles/ProfessorCourseStyle.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/frontend/src/pages/TeacherPages/styles/ProfessorCourseStyle.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/professor-list.txt" beforeDir="false" afterPath="$PROJECT_DIR$/professor-list.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +38,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1682466745301</updated>
-      <workItem from="1682466749624" duration="5555000" />
+      <workItem from="1682466749624" duration="5832000" />
     </task>
     <servers />
   </component>
