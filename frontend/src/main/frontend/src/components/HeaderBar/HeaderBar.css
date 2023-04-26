@@ -41,7 +41,7 @@
 
 .headerBar{
     background-color: #4a7dfc;
-    height: 52px;
+    height: 5vh;
     width: 100vw;
     display: flex;
     flex-direction: row;

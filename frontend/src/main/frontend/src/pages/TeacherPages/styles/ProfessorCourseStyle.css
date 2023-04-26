@@ -24,6 +24,7 @@
     flex-grow: 1;
     padding: 2%;
     background-color: white;
+    height: 87vh;
 }
 
 .pcp-components::-webkit-scrollbar {
