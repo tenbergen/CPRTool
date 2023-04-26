@@ -8,7 +8,6 @@ import CourseBarComponent from '../../components/CourseBarComponent'
 import Loader from '../../components/LoaderComponenets/Loader'
 import * as React from 'react'
 import HeaderBar from '../../components/HeaderBar/HeaderBar'
-import NavigationContainerComponent from '../../components/NavigationComponents/NavigationContainerComponent'
 
 const profAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`
 const assignmentFileFormData = new FormData()
@@ -374,6 +373,8 @@ const CreateAssignmentPage = () => {
                                 <Field name="points">
                                   {({ input }) => (
                                     <input
+                                      defaultValue={0}
+                                      min={0}
                                       type="number"
                                       name="points"
                                       {...input}
