@@ -129,7 +129,7 @@ const RegularAssignmentComponent = () => {
           {' '}
           Submit{' '}
         </button>
-        <button className='cancel-button'>
+        <button className='cancel-button' onClick={() => {navigate(-1)}}>
           Cancel
         </button>
       </div>
