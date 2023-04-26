@@ -166,7 +166,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 56.5%;
+  padding-left: 30%;
   position: absolute;
   top: 85%;
 }
