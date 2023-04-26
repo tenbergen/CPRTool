@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');
 
+.edit-course-input-fields-container{
+    padding-left: 2%;
+}
+
 .ecc-form {
     background-color: white;
     /*border-radius: 50px;*/
@@ -68,6 +72,7 @@
 .ecc-file-upload {
     display: flex;
     gap: 10px;
+    margin-right: 5%;
 }
 
 .ecc-file-upload label {
@@ -260,7 +265,9 @@
 .roster-bulk-container {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
+    margin-top: 4%;
+    margin-bottom: 2%;
 }
 
 .ecc-bulk-download {

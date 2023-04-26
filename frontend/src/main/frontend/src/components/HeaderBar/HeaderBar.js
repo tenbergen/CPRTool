@@ -53,11 +53,13 @@ const HeaderBar = () => {
   return (
     <div className="headerBar">
       <div className="header-bar-left">
-        <Link to={`/${role}`}>
-          <div>
-            <button id="logo"></button>
-          </div>
-        </Link>
+        <div id="homeButtonDiv">
+          <Link to={`/${role}`}>
+            <div>
+              <button id="logo"></button>
+            </div>
+          </Link>
+        </div>
       </div>
       {role === 'professor' || (alt_role && alt_role === 'student')
         ? (
