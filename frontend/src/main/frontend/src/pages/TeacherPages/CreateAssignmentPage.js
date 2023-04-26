@@ -429,9 +429,12 @@ const CreateAssignmentPage = () => {
                         </div>
 
                         <div className="cap-button">
-                          <button className="green-button-large" type="submit">
+                          <button className="green-button-large" type="submit" style={{marginRight:'3vw'}}>
                             {' '}
                             Create Assignment{' '}
+                          </button>
+                          <button className='cancel-button' onClick={() => {navigate(`/professor/${courseId}`)}}>
+                            Cancel
                           </button>
                         </div>
                       </form>
