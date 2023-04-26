@@ -6,6 +6,7 @@
     padding: 1%;
     overflow-y: scroll;
     max-height: 80vh;
+    overflow-x: hidden;
 }
 
 .ecc-form::-webkit-scrollbar {
@@ -292,6 +293,7 @@
 }
 
 .info-container {
+    overflow-x: hidden;
     border: solid #212529;
     border-width: 1px;
     border-radius: 5px;
@@ -319,6 +321,16 @@
     align-items: center;
 }
 
+input[type=text] {
+    border: solid !important;
+    border-bottom-left-radius: 5px;
+    border-color: #000;
+    border-width: 1px;
+    font-size: 1.2em;
+    height: 30px !important;
+    outline: none;
+    width: 70% !important;
+}
 
 .course-profanity-details {
     padding-left: 1%;

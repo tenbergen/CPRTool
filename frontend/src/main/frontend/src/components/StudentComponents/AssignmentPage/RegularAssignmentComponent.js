@@ -7,6 +7,7 @@ import { getAssignmentDetailsAsync } from '../../../redux/features/assignmentSli
 import { getCurrentCourseTeamAsync } from '../../../redux/features/teamSlice';
 import '../../styles/StudentAss.css';
 import './RegularAssignmentComponent.css'
+
 import SidebarComponent from '../../../components/SidebarComponent';
 import StudentTeamComponent from '../../../components/StudentComponents/CoursePage/StudentTeamComponent';
 import StudentToDoComponent from '../../../components/StudentComponents/CoursePage/StudentToDoComponent';
@@ -65,6 +66,11 @@ const RegularAssignmentComponent = () => {
     href.download = fileName;
     href.click();
   };
+
+  const routeChange = () => {
+    let path = `/student/${courseId}/assignments`
+    navigate(path)
+  }
 
   const handleSubmit = async () => {
     const submitAssUrl = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${currentTeamId}/upload`;
@@ -129,7 +135,7 @@ const RegularAssignmentComponent = () => {
           {' '}
           Submit{' '}
         </button>
-        <button className='cancel-button'>
+        <button className='cancel-button' onClick={routeChange}>
           Cancel
         </button>
       </div>
