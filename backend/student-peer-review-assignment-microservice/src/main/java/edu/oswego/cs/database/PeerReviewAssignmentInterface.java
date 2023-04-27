@@ -412,20 +412,54 @@ public class PeerReviewAssignmentInterface {
                 eq("assignment_id", assignmentID),
                 eq("team_name", teamName),
                 eq("type", "team_submission"))).first();
-
-        for (String teamMember : team_submission.getList("reviewed_team", String.class)) {
-            Document newPeerReview = new Document()
-                    .append("course_id", courseID)
-                    .append("grade", team_submission.getInteger("grade"))
-                    .append("team_name", teamName);
-            List<Document> peerReviews = studentCollection.find(eq("student_id", teamMember)).first().getList("peer_reviews", Document.class);
-            peerReviews.add(newPeerReview);
-            Bson studentQuery = eq("student_id", teamMember);
-            Bson update = Updates.set("team_submissions", peerReviews);
-            UpdateOptions options = new UpdateOptions().upsert(true);
-            studentCollection.updateOne(studentQuery, update, options);
-        }
         submissionsCollection.findOneAndUpdate(team_submission, set("grade", final_grade));
+
+        //set the peer review grades for the student.
+        List<String> teams_that_graded = team_submission.getList("reviews", String.class);
+        for (String review : teams_that_graded) {
+            Document team_review = submissionsCollection.find(and(
+                    eq("course_id", courseID),
+                    eq("assignment_id", assignmentID),
+                    eq("reviewed_by", review),
+                    eq("reviewed_team", teamName),
+                    eq("type", "peer_review_submission"))).first();
+            if (team_review == null) {
+                count_of_reviews_submitted--;
+            } else {
+                if (team_review.get("grade", Integer.class) == null) {
+                    throw new WebApplicationException(Response.status(Response.Status.BAD_REQUEST).entity("team: " + review + "'s review has no points.").build());
+                } else {
+                    total_points += team_review.get("grade", Integer.class);
+                    for (String teamMember : team_review.getList("reviewed_team_members", String.class)) {
+                        Document newPeerReview = new Document()
+                                .append("course_id", courseID)
+                                .append("grade", team_review.getInteger("grade"))
+                                .append("team_name", teamName);
+                        List<Document> peerReviews = studentCollection.find(eq("student_id", teamMember)).first().getList("peer_reviews", Document.class);
+                        peerReviews.add(newPeerReview);
+                        Bson studentQuery = eq("student_id", teamMember);
+                        Bson update = Updates.set("team_submissions", peerReviews);
+                        UpdateOptions options = new UpdateOptions().upsert(true);
+                        studentCollection.updateOne(studentQuery, update, options);
+                    }
+                }
+            }
+        }
+
+        //set the final grade
+        for (String member : team_submission.getList("members", String.class)) {
+            List<Document> grades = new ArrayList<Document>();
+            grades.addAll(studentCollection.find(eq("student_id", member)).first().getList("team_submissions", Document.class));
+            Document newAssignmentGrade = new Document()
+                    .append("assignment_id", assignmentID)
+                    .append("grade", final_grade)
+                    .append("team_name", team_submission.getString("team_name"));
+            grades.add(newAssignmentGrade);
+            Bson filter = eq("student_id", member);
+            UpdateOptions options = new UpdateOptions().upsert(true);
+            Bson update = Updates.set("team_submissions", grades);
+            studentCollection.updateOne(filter, update, options);
+        }
     }
 
 

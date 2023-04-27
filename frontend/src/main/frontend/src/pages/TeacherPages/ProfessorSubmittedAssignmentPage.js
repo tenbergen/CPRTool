@@ -1,19 +1,65 @@
-import { useEffect } from 'react';
-import '../../components/styles/FinalGrade.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import './styles/ProfessorSubmittedAssignmentPage.css';
+import {useDispatch, useSelector} from 'react-redux';
+import {useParams} from 'react-router-dom';
 import axios from 'axios';
-import SubmittedAssBarComponent from '../../components/SubmittedAssBarComponent';
-import { getSubmittedAssignmentDetailsAsync } from '../../redux/features/submittedAssignmentSlice';
+import {getSubmittedAssignmentDetailsAsync} from '../../redux/features/submittedAssignmentSlice';
 import uuid from 'react-uuid';
 import {base64StringToBlob} from "blob-util";
 import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
+import Breadcrumbs from "../../components/Breadcrumbs";
+
+
 function ProfessorSubmittedAssignmentPage() {
   const dispatch = useDispatch();
   const { currentSubmittedAssignment, currentSubmittedAssignmentLoaded } =
     useSelector((state) => state.submittedAssignments);
   const { courseId, assignmentId, teamId } = useParams();
+  const [reviews, setReviews] = useState([]);
+  const [teamSubmission, setTeamSubmission] = useState('')
+
+  const getReviews = async (courseId, teamId, assignmentId) => {
+
+    const currentTeam = await axios
+        .get(`${process.env.REACT_APP_URL}/teams/team/${courseId}/get/${teamId}`)
+        .then(r => {
+          return r.data;
+        })
+
+    return await axios
+        .get(`${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/reviews-of/${currentTeam.team_lead}`)
+        .then(r => {
+          return r.data;
+        });
+  }
+
+  const getTeamSubmission = async (courseId, teamId, assignmentId) => {
+
+    return await axios
+        .get(`${process.env.REACT_APP_URL}/assignments/student/${courseId}/${assignmentId}/submissions`)
+        .then(r => {
+          return r.data.find(e => e.team_name === teamId);
+        })
+  }
+
+  useEffect( () => {
+    const fetchReviews = async () => {
+      const data = await getReviews(courseId, teamId, assignmentId);
+      setReviews(data);
+    }
+
+    fetchReviews();
+  }, [courseId, teamId, assignmentId]);
+
+  useEffect( () => {
+    const fetchTeamSubmission = async () => {
+      const data = await getTeamSubmission(courseId, teamId, assignmentId);
+      setTeamSubmission(data);
+    }
+
+    fetchTeamSubmission();
+  }, [courseId, teamId, assignmentId]);
 
   useEffect(() => {
     dispatch(
@@ -29,64 +75,57 @@ function ProfessorSubmittedAssignmentPage() {
     href.click();
   };
 
-  const onTemplateClick = async (fileName) => {
-    if(fileName.endsWith(".pdf")){
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/pdf'}), fileName)
-    }else if(fileName.endsWith(".docx")){
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
+  const onTemplateClick = async () => {
+    const templateFileName = currentSubmittedAssignment.peer_review_template_name;
+    if(templateFileName.endsWith(".pdf")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/pdf'}), templateFileName)
+    }else if(templateFileName.endsWith(".docx")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), templateFileName)
     }else{
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/zip'}), fileName)
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.peer_review_template_data.data)], {type: 'application/zip'}), templateFileName)
     }
   };
 
-  const onRubricFileClick = async (fileName) => {
-    if(fileName.endsWith(".pdf")){
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.rubric_data.data)], {type: 'application/pdf'}), fileName)
-    }else if(fileName.endsWith(".docx")){
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.rubric_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
+  const onRubricFileClick = async () => {
+    const rubricFileName = currentSubmittedAssignment.rubric_name;
+    if(rubricFileName.endsWith(".pdf")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.rubric_data.data)], {type: 'application/pdf'}), rubricFileName)
+    }else if(rubricFileName.endsWith(".docx")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.rubric_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), rubricFileName)
     }else{
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.rubric_data.data)], {type: 'application/zip'}), fileName)
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.rubric_data.data)], {type: 'application/zip'}), rubricFileName)
     }
   };
 
-  const onTeamFileClick = async (fileName) => {
-    if(fileName.endsWith(".pdf")){
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.submission_data.data)], {type: 'application/pdf'}), fileName)
-    }else if(fileName.endsWith(".docx")){
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.submission_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), fileName)
+  const onTeamFileClick = async () => {
+    if (!teamSubmission || !teamSubmission.submission_name) {
+      console.error('teamSubmission or teamSubmission.submission_name is undefined');
+      return;
+    }
+    const teamFileName = teamSubmission.submission_name;
+    if(teamFileName.endsWith(".pdf")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.submission_data.data)], {type: 'application/pdf'}), teamFileName)
+    }else if(teamFileName.endsWith(".docx")){
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.submission_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), teamFileName)
     }else{
-      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.submission_data.data)], {type: 'application/zip'}), fileName)
+      downloadFile(new Blob([Uint8Array.from(currentSubmittedAssignment.submission_data.data)], {type: 'application/zip'}), teamFileName)
     }
   }
 
-  const prepareFeedbackFile = (feedbackDataName, feedbackData) => {
-    var filename = ""
-    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-    var matches = filenameRegex.exec(feedbackDataName);
-    if (matches != null && matches[1]) {
-      filename = matches[1].replace(/['"]/g, '');
+  function onDownloadButtonClick(reviewSubmission){
+    if(!reviewSubmission || reviewSubmission === ''){
+      console.error('no review submission found!');
+      return;
     }
-    feedbackData.then((res) => {
-      if(filename.endsWith(".pdf")){
-        downloadFile(base64StringToBlob(res, 'application/pdf'), filename)
-      }else{
-        downloadFile(base64StringToBlob(res, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'), filename)
-      }
-    })
-  };
-
-
-  const onFeedBackClick = async (teamName) => {
-    const url = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${teamName}/${teamId}/download`;
-
-    await axios
-        .get(url, { responseType: 'blob' })
-        .then((res) => prepareFeedbackFile(res["headers"]["content-disposition"], res.data.text()))
-        .catch((e) => {
-          alert(`Error : ${e.response.data}`);
-        });
-  };
-
+    const reviewFileName = reviewSubmission.submission_name;
+    if(reviewFileName.endsWith(".pdf")){
+      downloadFile(new Blob([Uint8Array.from(reviewSubmission.submission_data.data)], {type: 'application/pdf'}), reviewFileName)
+    }else if(reviewFileName.endsWith(".docx")){
+      downloadFile(new Blob([Uint8Array.from(reviewSubmission.submission_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), reviewFileName)
+    }else{
+      downloadFile(new Blob([Uint8Array.from(reviewSubmission.submission_data.data)], {type: 'application/zip'}), reviewFileName)
+    }
+  }
 
   return (
     <div className="page-container">
@@ -94,114 +133,91 @@ function ProfessorSubmittedAssignmentPage() {
       <div className='scp-container'>
         <NavigationContainerComponent/>
         <div className='scp-component'>
+          <Breadcrumbs/>
           <div>
             {currentSubmittedAssignmentLoaded ? (
-                <div className='sac-parent'>
-                  <h2 className='assignment-name'>
-                    {currentSubmittedAssignment.assignment_name}
-                  </h2>
-                  <div className='sac-content'>
-                    <div>
-                      <span className='sac-title'> Instructions </span>
-                      <span className='sac-date sac-title'>
-                        Due Date: {currentSubmittedAssignment.due_date}
-                      </span>
-                      <br />
-                      <p>
-                        <span className='sac-text'>
-                          {' '}
-                          {currentSubmittedAssignment.instructions}{' '}
-                        </span>
-                      </p>
-                    </div>
+              <div className='sac-parent'>
+                <h2 className='team-name'>
+                  {teamId} Submission
+                </h2>
+                <div className='sac-content'>
+                  <div className='inter-24-bold-ass-tile-title '>
+                    <span> {'  '}{currentSubmittedAssignment.assignment_name} </span>
+                  </div>
+                  <div className='ass-tile-content' >
+                    <span className='inter-20-medium span1-ap'>
+                      Due: {currentSubmittedAssignment.due_date}
+                    </span>
                     <br />
-
-                    <div>
-                      <div className='ap-assignment-files'>
-                        <span className='sac-title'> Rubric: </span>
-                        <span
-                            className='sac-filename'
-                            onClick={() =>
-                                onRubricFileClick(currentSubmittedAssignment.rubric_name)
-                            }
-                        >
-                          {currentSubmittedAssignment.rubric_name}
-                        </span>
-                      </div>
-
-                      <div className='ap-assignment-files'>
-                        <span className='sac-title'>Template:</span>
-                        <span
-                            className='sac-filename'
-                            onClick={() =>
-                                onTemplateClick(currentSubmittedAssignment.peer_review_template_name)
-                            }
-                        >
-                          {currentSubmittedAssignment.peer_review_template_name}
-                        </span>
-                      </div>
-
-                      <div className='ap-assignment-files'>
-                        <span className='sac-title'> Team Files: </span>
-                        <span
-                            className='sac-filename'
-                            onClick={() => onTeamFileClick(currentSubmittedAssignment.submission_name)}
-                        >
-                          {currentSubmittedAssignment.submission_name}
-                        </span>
-                      </div>
-                    </div>
-                    <br />
-                    <div>
-                      <div>
-                        <span className='sac-title'> Peer reviews: </span>
-                        <div className='peerReviewList'>
-                          {currentSubmittedAssignment.peer_reviews !== null
-                              ? currentSubmittedAssignment.peer_reviews.map(
-                                  (peerReview) =>
-                                      peerReview && (
-                                          <li
-                                              key={uuid()}
-                                              className='psa-peerReviewListItem'
-                                          >
-                                            <b> {peerReview.reviewed_by} </b>
-                                            <div>
-                                        <span>
-                                          {' '}
-                                          {peerReview.grade === -1
-                                              ? 'Pending'
-                                              : peerReview.grade}{' '}
-                                        </span>
-                                              &nbsp;
-                                              <span
-                                                  className='psa-sac-filename'
-                                                  onClick={() =>
-                                                      onFeedBackClick(
-                                                          peerReview.reviewed_by,
-                                                          peerReview.submission_name
-                                                      )
-                                                  }
-                                              >
-                                          View feedback
-                                        </span>
-                                            </div>
-                                          </li>
-                                      )
-                              )
-                              : null}
-                        </div>
-                      </div>
-                    </div>
-                    <br />
-                    <br />
-                    <div>
-                      <span className='sac-title'>
+                    <p className='inter-20-medium' >Instructions:</p>
+                    <p className='inter-16-medium-black'>{currentSubmittedAssignment.instructions}</p>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span className='inter-20-bold'> Rubric: </span>
+                      <span className='inter-16-bold-blue p2' >
+                      <button className='blue-button-small-pr' onClick={onRubricFileClick} >
                         {' '}
-                        Grade: {currentSubmittedAssignment.grade}
-                      </span>
+                        Download{' '}
+                      </button>
+                    </span>
+                      <span className='inter-20-bold'> Template: </span>
+                      <span className='inter-16-bold-blue p2' >
+                      <button className='blue-button-small-pr' onClick={onTemplateClick} >
+                        {' '}
+                        Download{' '}
+                      </button>
+                    </span>
+                      <span className='inter-20-bold'> Team Files: </span>
+                      <span className='inter-16-bold-blue p2' >
+                      <button className='blue-button-small-pr' onClick={onTeamFileClick}>
+                        {' '}
+                        Download{' '}
+                      </button>
+                    </span>
+                    </div>
+
+                  </div>
+                  <br />
+                  <div>
+                    <div>
+                      <span className='sac-title'> Peer reviews: </span>
+                      <table className="rosterTable">
+                        <thead>
+                          <tr>
+                            <th className="rosterHeader">Team Name</th>
+                            <th className="rosterHeader">Given Score</th>
+                            <th className="rosterHeader">Download Feedback</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        {reviews.map((review) => (
+                            review && (
+                                <tr key={uuid()}>
+                                  <th className="rosterComp">{review.reviewed_by}</th>
+                                  <th className="rosterComp">{review.grade}</th>
+                                  <th className="rosterComp">
+                                    <svg
+                                        className={'bulk-download-icon-default'}
+                                        alt={'Bulk Download For Student'}
+                                        style={{ cursor: 'pointer' }}
+                                    ></svg>
+                                    <button onClick={() => onDownloadButtonClick(review)}></button>
+                                  </th>
+                                </tr>
+                            )))}
+                        </tbody>
+                      </table>
                     </div>
                   </div>
+                  <br />
+                  <br />
+                  <div>
+                    <span className='sac-title'>
+                      {' '}
+                      Grade: {currentSubmittedAssignment.grade}
+                    </span>
+                  </div>
                 </div>
+              </div>
             ) : null}
           </div>
         </div>

@@ -52,9 +52,7 @@ function PeerReviewPage() {
                                     {components}
                                 </div>
                                 <div>
-
                                     <PeerReviewComponent />
-
                                 </div>
                             </div>
                         )}
