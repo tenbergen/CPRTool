@@ -114,7 +114,12 @@ const ProfessorTeamAccordion = ({ team, teams, setTeams }) => {
               {/*{isActive.includes(team) ? "-" : "+"}*/}
               <div className="accordionTeamTitle inter-24-bold">{team.team_id}</div>
             </div>
+
             <div>
+              <div className= "teamMembersItem">
+                <span style={{ fontSize: '22px', fontWeight: 'bold' }}> {members.length}/4 </span>
+                <div style={{ fontSize: '12px' }}>Team Members</div>
+              </div>
               <button  className="modify-button" >
                 Modify
               </button>
@@ -124,10 +129,10 @@ const ProfessorTeamAccordion = ({ team, teams, setTeams }) => {
         </div>
         {isActive.includes(team) && (
             <div className="accordionContent">
-              <div>
-                <button onClick={handleSetAdd} alt="plus-button" className={"add-button"}> Add</button>
+              <div className= "add-remove">
+                <button onClick={handleSetAdd} alt="plus-button" className={"add-button"}> Add +</button>
                 <button onClick={() => handleDeleteTeam(team.team_id)} className="remove-button" >
-                  Remove
+                  Delete X
                 </button>
               </div>
               {members.map(

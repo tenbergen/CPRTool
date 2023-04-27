@@ -1,4 +1,5 @@
 .accordion {
+    padding-top: 20px;
     overflow: auto;
     max-height: 70vh;
 }
@@ -53,6 +54,13 @@
     border-top: none;
     margin-bottom: 2%;
 }
+
+.teamMembersItem {
+    padding-right: 25px;
+    margin-top: 10px;
+    display: inline-block;
+}
+
 
 .crossMarkTeam {
     float: right;
@@ -166,8 +174,9 @@
     font-weight: 500;
     font-size: 16px;
     line-height: 24px;
+    margin-left: 10px;
+    vertical-align: middle;
     margin-right: 10px;
-    content: "Modify";
 }
 
 .modify-button:hover {
@@ -184,9 +193,7 @@
     background-color: #f04438;
     color: white;
     border-radius: 5px;
-    margin-top: 10px;
-    margin-right: 5px;
-    margin-bottom: 10px;
+    margin-left: 10px;
 }
 
 .remove-button:hover {
@@ -204,10 +211,7 @@
     background-color: #28a745;
     color: white;
     border-radius: 5px;
-    margin-top: 10px;
-    margin-right: 5px;
-    margin-left: 1000px;
-    margin-bottom: 10px;
+    padding: 10px;
 
 }
 
@@ -217,5 +221,10 @@
 
 .add-button:active {
     background-color: #05603a;
+}
+.add-remove {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
 }
 
