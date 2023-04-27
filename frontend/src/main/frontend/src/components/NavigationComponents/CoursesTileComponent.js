@@ -7,11 +7,13 @@ import {getCourseDetailsAsync, getCurrentCourseStudentsAsync} from "../../redux/
 import {getCombinedAssignmentPeerReviews, getCourseAssignmentsAsync} from "../../redux/features/assignmentSlice";
 import {getCurrentCourseTeamAsync} from "../../redux/features/teamSlice";
 import {useParams} from "react-router-dom";
+import axios from 'axios';
+
 
 const CoursesTileComponent = ({trigger, homeActive, deactivateHome}) => {
 
     const dispatch = useDispatch();
-    const { courses } = useSelector((state) => state.courses);
+    const { courses , setCourses} = useSelector((state) => state.courses);
     const [open, setOPen] = useState(false)
     const [year, setYear] = useState((new Date()).getFullYear().toString() + " \u2304")
     const [semester, setSemester] = useState((new Date).getMonth() < 2 ? "Winter" : (new Date).getMonth() < 5 ? "Spring" : (new Date).getMonth() < 8 ? "Summer" : "Fall")
@@ -19,6 +21,7 @@ const CoursesTileComponent = ({trigger, homeActive, deactivateHome}) => {
     const { courseId } = useParams();
     const [chosen, setChosen] = useState(courseId);
     const teamId = '1';
+    const [selectedYear, setSelectedYear] = useState("");
 
     useEffect(() => {
         if(homeActive){
@@ -36,7 +39,23 @@ const CoursesTileComponent = ({trigger, homeActive, deactivateHome}) => {
             coursesTile.classList.remove("courses-tile-active")
             coursesTile.classList.add("courses-tile-inactive")
         }
-    })
+        axios.get(`${process.env.REACT_APP_URL}/view/professor/courses/`)
+            .then(response => {
+                const coursesData = response.data;
+                const years = coursesData.map(course => course.year);
+                // remove duplicates from years array
+                const uniqueYears = [...new Set(years)];
+                setCourses(coursesData);
+                setSelectedYear(uniqueYears[0]); // set the default selected year to the first year in the array
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }, []);
+
+    const handleYearChange = (event) => {
+        setSelectedYear(event.target.value);
+    };
 
     const onCourseClick = (course) => {
         const courseId = course.course_id;
@@ -203,15 +222,15 @@ const CoursesTileComponent = ({trigger, homeActive, deactivateHome}) => {
                             : "semester-selection-inactive inter-14-medium-black"}
                              id="spring-button"
                              onClick={() => {
-                            let button = document.getElementById("spring-button")
-                            let buttonsToDeactivate = [
-                                document.getElementById("summer-button"),
-                                document.getElementById("fall-button"),
-                                document.getElementById("winter-button")
-                            ]
-                            selectSemester(button, buttonsToDeactivate)
-                            setSemester("Spring")
-                        }}>SP</div>
+                                 let button = document.getElementById("spring-button")
+                                 let buttonsToDeactivate = [
+                                     document.getElementById("summer-button"),
+                                     document.getElementById("fall-button"),
+                                     document.getElementById("winter-button")
+                                 ]
+                                 selectSemester(button, buttonsToDeactivate)
+                                 setSemester("Spring")
+                             }}>SP</div>
                         <div className={(new Date()).getMonth() > 4 && (new Date()).getMonth() < 8 ? "semester-selection-active inter-14-medium-white" : "semester-selection-inactive inter-14-medium-black"} id="summer-button" onClick={() => {
                             let button = document.getElementById("summer-button")
                             let buttonsToDeactivate = [
@@ -268,6 +287,10 @@ const CoursesTileComponent = ({trigger, homeActive, deactivateHome}) => {
                                     {/*<input type="checkbox"/>*/}
                                     <span className="inter-14-medium-black">{new Date().getFullYear() - 4}</span>
                                 </div>
+                                {/*<div className="year-individual-selection" onClick={() => setYear(`${courses[0].year} \u2304`)}>*/}
+                                {/*    /!*<input type="checkbox"/>*!/*/}
+                                {/*    {courses && courses.length > 0 && <span className="inter-14-medium-black">{courses[0].year}</span>}*/}
+                                {/*</div>*/}
                             </div>
                         </div>
                     </div>
