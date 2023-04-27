@@ -135,7 +135,7 @@ const RouterHandler = () => {
               element={<StudentCoursePage chosen="To Do"/>}
             />
             <Route
-                path="student/:courseId/Peer Review"
+                path="student/:courseId/peer-review"
                 element={<PeerReviewPage />}
             />
             <Route
