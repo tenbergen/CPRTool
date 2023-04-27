@@ -29,7 +29,6 @@ const StudentPeerReviewComponent = () => {
       fileData = reader.result
         .replace('data:', '')
         .replace(/^.+,/, '');
-    };
     reader.readAsDataURL(file);
     for(var pair of feedbackFileFormData.entries()){
       feedbackFileFormData.delete(pair[0])
