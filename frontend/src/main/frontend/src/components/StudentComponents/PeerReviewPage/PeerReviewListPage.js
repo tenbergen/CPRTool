@@ -16,7 +16,7 @@ import { getAssignmentDetailsAsync } from '../../../redux/features/assignmentSli
 import '../../../pages/StudentPages/styles/AssignmentPageStyle.css'
 const PeerReviewListPage = () => {
     const dispatch = useDispatch();
-    const { currentTeamId } = useSelector((state) => state.teams);
+    const [currentTeamId, setCurrentTeamId] = useState('');
     const { courseId, assignmentId, teamId } = useParams();
     const { lakerId } = useSelector((state) => state.auth);
     const [givenPeerReviews, setGivenPeerReviews] = useState([]);
@@ -33,7 +33,7 @@ const PeerReviewListPage = () => {
         (state) => state.assignments
     )
     const [grade, setGrade] = useState(undefined)
-    const feedbackFileFormData = new FormData()
+    const [feedbackFileFormData, setFeedbackFileFormData] = useState(new FormData())
 
     useEffect(async () => {
         dispatch(
@@ -180,19 +180,19 @@ const PeerReviewListPage = () => {
     };
 
     const onFeedbackFileHandler = (event) => {
-        let file = event.target.files[0]
-        const reader = new FileReader()
+        let file = event.target.files[0];
+        const reader = new FileReader();
         reader.onloadend = () => {
             // Use a regex to remove data url part
             const base64String = reader.result
-                .replace('data:', '')
-                .replace(/^.+,/, '')
-            for (var key of feedbackFileFormData.keys()) {
-                feedbackFileFormData.delete(key)
+              .replace('data:', '')
+              .replace(/^.+,/, '');
+            for(var pair of feedbackFileFormData.entries()){
+                feedbackFileFormData.delete(pair[0])
             }
-            feedbackFileFormData.set(file.name, base64String)
-        }
-        reader.readAsDataURL(file)
+            feedbackFileFormData.append(file.name, base64String);
+        };
+        reader.readAsDataURL(file);
     }
 
     useEffect(() => {
@@ -245,7 +245,6 @@ const PeerReviewListPage = () => {
 
     const handleSubmit = async () => {
         const submitAssUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${currentTeamId}/${teamId}/${grade}/upload`
-
         await axios
             .post(submitAssUrl, feedbackFileFormData)
             .then((res) => {
@@ -315,7 +314,7 @@ const PeerReviewListPage = () => {
                                     type="file"
                                     name="assignment_files"
                                     accept=".pdf,.docx"
-                                    onChange={onFeedbackFileHandler}
+                                    onChange={(e)=>onFeedbackFileHandler(e)}
                                     required
                                 />
                             </button>
@@ -403,7 +402,11 @@ const PeerReviewListPage = () => {
                                                                         id="prDownloadButton"
                                                                         className="pr-download-and-details-button"
                                                                         key={uuid()}
-                                                                        onClick={() => setShowDetailsModal(true)}
+                                                                        onClick={() => {
+                                                                                setShowDetailsModal(true);
+                                                                                setCurrentTeamId(pr.team_name);
+                                                                            }
+                                                                        }
                                                                     >
                                                                         <div id="prTileDownloadIcon"></div>
                                                                         <p>View Details</p>
