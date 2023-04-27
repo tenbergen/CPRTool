@@ -20,19 +20,20 @@ const StudentPeerReviewComponent = () => {
   let feedbackFileFormData = new FormData()
 
   const onFeedbackFileHandler = (event) => {
+    feedbackFileFormData = new FormData()
     let file = event.target.files[0];
+    let fileData=''
     const reader = new FileReader();
     reader.onloadend = () => {
       // Use a regex to remove data url part
-      const base64String = reader.result
+      fileData = reader.result
         .replace('data:', '')
         .replace(/^.+,/, '');
-      for(var pair of feedbackFileFormData.entries()){
-        feedbackFileFormData.delete(pair[0])
-      }
-      feedbackFileFormData.set(file.name, base64String);
-    };
     reader.readAsDataURL(file);
+    for(var pair of feedbackFileFormData.entries()){
+      feedbackFileFormData.delete(pair[0])
+    }
+    feedbackFileFormData.set(file.name, fileData);
   }
 
   useEffect(() => {

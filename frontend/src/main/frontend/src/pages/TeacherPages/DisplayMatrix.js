@@ -13,7 +13,7 @@ const DisplayMatrix = (props) => {
     const [matrixData, setMatrixData] = useState([]);
     const [trueMatrix, setTrueMatrix] = useState(undefined);
     const [lastUpdated, setLastUpdates] = useState(new Date().getTime());
-    const [assignmentData, setAssignmentData] = useState([]);
+    const [assignmentData, setAssignmentData] = useState({});
     const [chosenAssignment, setChosenAssignment] = useState(``);
     const [chosenAssignmentIndex, setChosenAssignmentIndex] = useState(0);
     const [courseTeams, setCourseTeams] = useState([]);
@@ -54,6 +54,8 @@ const DisplayMatrix = (props) => {
             }
             arr.pop();
             setMatrixData(arr);
+            console.log('mother')
+            console.log(matrixData)
             return arr;
         } catch (err) {
             console.log(err);
@@ -71,7 +73,10 @@ const DisplayMatrix = (props) => {
         try {
             const response = await axios.get(requestUrl);
             const data = response.data;
-            setAssignmentData(data);
+            setAssignmentData({'test':5});
+            console.log('hello')
+            console.log(data[0])
+            console.log(assignmentData)
             return data;
         } catch (err) {
             console.log(err);
