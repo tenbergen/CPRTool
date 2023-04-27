@@ -9,7 +9,7 @@ import ProfessorAssignmentComponent
 import ProfessorProfanitySettingsComponent
   from '../../components/ProfessorComponents/CoursesPage/ProfessorProfanitySettingsComponent'
 import { useDispatch } from 'react-redux'
-import { getCourseDetailsAsync } from '../../redux/features/courseSlice'
+import {getCourseDetailsAsync, getCoursesAsync} from '../../redux/features/courseSlice'
 import ProfessorTeamComponent from '../../components/ProfessorComponents/CoursesPage/ProfessorTeamComponent'
 import Loader from '../../components/LoaderComponenets/Loader'
 import NavigationContainerComponent from '../../components/NavigationComponents/NavigationContainerComponent'
@@ -41,6 +41,7 @@ function ProfessorCoursePage ({ chosen }) {
 
   useEffect(() => {
     setIsLoading(true)
+    dispatch(getCoursesAsync());
     dispatch(getCourseDetailsAsync(courseId))
     setTimeout(() => setIsLoading(false), 200)
   }, [dispatch, courseId])
