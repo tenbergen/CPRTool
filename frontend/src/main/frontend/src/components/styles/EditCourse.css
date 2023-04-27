@@ -329,7 +329,6 @@
 }
 
 input[type=text] {
-    border: solid !important;
     border-bottom-left-radius: 5px;
     border-color: #000;
     border-width: 1px;
@@ -351,3 +350,16 @@ input[type=text] {
     font-style: normal;
     font-weight: 400;
 }
+
+#edit-semester {
+    height: 35px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    width: 80%;
+    border: solid;
+    border-color: #000000;
+    border-width: 1px;
+    font-weight: 500;
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+  }

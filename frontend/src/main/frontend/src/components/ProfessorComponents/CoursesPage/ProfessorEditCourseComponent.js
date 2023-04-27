@@ -27,6 +27,7 @@ const ProfessorEditCourseComponent = () => {
   const csvFormData = new FormData()
   const courseParse = window.location.pathname
   const course = courseParse.split('/')[2]
+  const courseSemester = course.split('-')[3]
 
   const fileChangeHandler = (event) => {
     let file = event.target.files[0]
@@ -227,7 +228,12 @@ const ProfessorEditCourseComponent = () => {
                       </label>
                       <Field name="semester">
                         {({ input }) => (
-                            <input type="text" name="semester" className="inter-16-medium-black" {...input} required/>
+                            <select name="semester" id="edit-semester" defaultValue={courseSemester} {...input}>
+                            <option value="Spring">Spring</option>
+                            <option value="Summer">Summer</option>
+                            <option value="Fall">Fall</option>
+                            <option value="Winter">Winter</option>
+                          </select>
                         )}
                       </Field>
                     </div>

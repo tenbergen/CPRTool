@@ -155,18 +155,17 @@ const CreateCoursePage = () => {
                         <div className='input-field ccp-input-field'>
                           <label className='inter-20-medium'>
                         <span className='required'>
-                          Semester:
-                        </span>
-                          </label>
-                          <input
-                              type='text'
-                              name='semester'
-                              value={semester}
-                              required
-                              onChange={(e) => OnChange(e)}
-                          />
-                        </div>
-
+                            Semester:
+                          </span>
+                        </label>
+                        <select name="semester" id="semester" defaultValue="Select Semester" onChange={(e) => OnChange(e)}>
+                          <option disabled={true} value="Select Semester">--Select Semester--</option>
+                          <option value="Spring">Spring</option>
+                          <option value="Summer">Summer</option>
+                          <option value="Fall">Fall</option>
+                          <option value="Winter">Winter</option>
+                        </select>
+                      </div>
                         <div className='input-field ccp-input-field'>
                           <label className='inter-20-medium'>
                         <span className='required'>
