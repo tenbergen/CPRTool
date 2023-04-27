@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="50cb875f-6e97-4422-a2e7-199a4315b180" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="32b51248-2e16-47a6-a3fe-004f6ccfd702" name="Changes" comment="Trying to get download button in table to work">
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/src/pages/TeacherPages/ProfessorSubmittedAssignmentPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/frontend/src/pages/TeacherPages/ProfessorSubmittedAssignmentPage.js" afterDir="false" />
+
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,12 +36,13 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Student-Assignment&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/dominic/IdeaProjects/CSC480-22S/frontend/src/main/frontend&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Testing&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/dominic/IdeaProjects/480-Main-Repo/CSC480-22S/frontend&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
@@ -53,6 +55,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
+
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -60,13 +63,164 @@
       <created>1682393365666</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1682393365666</updated>
-      <workItem from="1682393366933" duration="4338000" />
-      <workItem from="1682401119198" duration="72000" />
+
+      <updated>1681943261702</updated>
+      <workItem from="1681943265749" duration="8889000" />
+      <workItem from="1682126019063" duration="969000" />
+      <workItem from="1682138304357" duration="677000" />
+      <workItem from="1682274939858" duration="29000" />
+      <workItem from="1682368641099" duration="8689000" />
+      <workItem from="1682382431135" duration="12771000" />
     </task>
+    <task id="LOCAL-00001" summary="fixed PRReceived">
+      <created>1682126325763</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1682126325763</updated>
+    </task>
+    <task id="LOCAL-00002" summary="fixed PRReceived">
+      <created>1682126387541</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1682126387541</updated>
+    </task>
+    <task id="LOCAL-00003" summary="trying to get the data on the table correctly">
+      <created>1682368870958</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1682368870958</updated>
+    </task>
+    <task id="LOCAL-00004" summary="trying to get the data on the table correctly">
+      <created>1682377678990</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1682377678991</updated>
+    </task>
+    <task id="LOCAL-00005" summary="trying to get the data on the table correctly">
+      <created>1682377982921</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1682377982921</updated>
+    </task>
+    <task id="LOCAL-00006" summary="trying to get the data on the table correctly">
+      <created>1682378403477</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1682378403477</updated>
+    </task>
+    <task id="LOCAL-00007" summary="fixed merge issues">
+      <created>1682384001856</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1682384001856</updated>
+    </task>
+    <task id="LOCAL-00008" summary="fixing small issues">
+      <created>1682384629191</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1682384629191</updated>
+    </task>
+    <task id="LOCAL-00009" summary="trying to get the page to build">
+      <created>1682387089911</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1682387089911</updated>
+    </task>
+    <task id="LOCAL-00010" summary="putting in dummy data for now">
+      <created>1682388049719</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1682388049719</updated>
+    </task>
+    <task id="LOCAL-00011" summary="most of it works except the individual grades &amp; download buttons on the table">
+      <created>1682388931813</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1682388931813</updated>
+    </task>
+    <task id="LOCAL-00012" summary="most of it works except the individual grades &amp; download buttons on the table">
+      <created>1682390895968</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1682390895968</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Trying to get grades on table &amp; table download buttons to work">
+      <created>1682392083460</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1682392083460</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Trying to get download button in table to work">
+      <created>1682393470139</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1682393470139</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Trying to get download button in table to work">
+      <created>1682394366204</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1682394366205</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Trying to get download button in table to work">
+      <created>1682395060249</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1682395060250</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Trying to get download button in table to work">
+      <created>1682395937556</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1682395937556</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
+
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="fixed PRReceived" />
+    <MESSAGE value="trying to get the data on the table correctly" />
+    <MESSAGE value="fixed merge issues" />
+    <MESSAGE value="fixing small issues" />
+    <MESSAGE value="trying to get the page to build" />
+    <MESSAGE value="putting in dummy data for now" />
+    <MESSAGE value="most of it works except the individual grades &amp; download buttons on the table" />
+    <MESSAGE value="Trying to get grades on table &amp; table download buttons to work" />
+    <MESSAGE value="Trying to get download button in table to work" />
+    <option name="LAST_COMMIT_MESSAGE" value="Trying to get download button in table to work" />
+  </component>
+
 </project>
