@@ -6,6 +6,8 @@ import Breadcrumbs from "../../components/Breadcrumbs";
 import { useParams } from 'react-router-dom'
 import HeaderBar from '../../components/HeaderBar/HeaderBar'
 import NavigationContainerComponent from '../../components/NavigationComponents/NavigationContainerComponent'
+import {useDispatch} from "react-redux";
+import {getCoursesAsync} from "../../redux/features/courseSlice";
 
 
 const DisplayMatrix = (props) => {
@@ -18,6 +20,11 @@ const DisplayMatrix = (props) => {
     const [chosenAssignmentIndex, setChosenAssignmentIndex] = useState(0);
     const [courseTeams, setCourseTeams] = useState([]);
     const [outlierCount, setOutlierCount] = useState(0);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getCoursesAsync());
+    }, [dispatch]);
 
 
     axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("jwt_token")}`;
