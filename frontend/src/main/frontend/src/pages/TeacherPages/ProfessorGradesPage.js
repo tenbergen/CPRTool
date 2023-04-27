@@ -11,6 +11,7 @@ import { LineElement, PointElement } from "chart.js";
 import axios from 'axios';
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 import HeaderBar from "../../components/HeaderBar/HeaderBar";
+import bulkDownloadLogo from "../../assets/icons/navigation/default/Bulk Download.svg";
 
 Chart.register(LineElement);
 Chart.register(PointElement);
@@ -18,41 +19,41 @@ Chart.register(CategoryScale);
 Chart.register(LinearScale);
 
 function ProfessorGradesPage() {
-    const [userList, setUserList] = useState([
-        { assignment: 'Assignment 1', name: 'Danny Dimes', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-        { assignment: 'Assignment 1', name: 'Saquads Barkley', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-        { assignment: 'Assignment 1', name: 'Gardner Minshew', team: 'Indianapolis Colts', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-        { assignment: 'Assignment 2', name: 'Danny Dimes', team: 'New York Giants', grade: '93', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-        { assignment: 'Assignment 2', name: 'Saquads Barkley', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-        { assignment: 'Assignment 2', name: 'Gardner Minshew', team: 'Indianapolis Colts', grade: '6', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-        { assignment: 'Assignment 2', name: 'Caleb Williams', team: 'Indianapolis Colts', grade: '100', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-        { assignment: 'Assignment 2', name: 'Patty Mahomes', team: 'Kansas City Chiefs', grade: '100', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-        { assignment: 'Assignment 3', name: 'Carl Wheezer', team: 'New York Jets', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-        { assignment: 'Assignment 3', name: 'Perry P', team: 'New York Jets', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-        { assignment: 'Assignment 3', name: 'Larry Lobster', team: 'Baltimore Ravens', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-        { assignment: 'Assignment 3', name: 'Danny Dimes', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-        { assignment: 'Assignment 4', name: 'Jimmy Neut', team: 'Tennessee Titans', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-        { assignment: 'Assignment 4', name: 'Big Chungus', team: 'Tennessee Titans', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-        { assignment: 'Assignment 4', name: 'Dak Prescott', team: 'Syracuse BenchWarmers', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-        { assignment: 'Assignment 4', name: 'Danny Dimes', team: 'New York Giants', grade: '92', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-        { assignment: 'Assignment 5', name: 'John Bones', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-        { assignment: 'Assignment 5', name: 'Danny Dimes', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-        { assignment: 'Assignment 6', name: 'Danny Dimes', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-    ]);
+    // const [userList, setUserList] = useState([
+    //     { assignment: 'Assignment 1', name: 'Danny Dimes', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
+    //     { assignment: 'Assignment 1', name: 'Saquads Barkley', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
+    //     { assignment: 'Assignment 1', name: 'Gardner Minshew', team: 'Indianapolis Colts', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
+    //     { assignment: 'Assignment 2', name: 'Danny Dimes', team: 'New York Giants', grade: '93', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
+    //     { assignment: 'Assignment 2', name: 'Saquads Barkley', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
+    //     { assignment: 'Assignment 2', name: 'Gardner Minshew', team: 'Indianapolis Colts', grade: '6', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
+    //     { assignment: 'Assignment 2', name: 'Caleb Williams', team: 'Indianapolis Colts', grade: '100', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
+    //     { assignment: 'Assignment 2', name: 'Patty Mahomes', team: 'Kansas City Chiefs', grade: '100', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
+    //     { assignment: 'Assignment 3', name: 'Carl Wheezer', team: 'New York Jets', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
+    //     { assignment: 'Assignment 3', name: 'Perry P', team: 'New York Jets', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
+    //     { assignment: 'Assignment 3', name: 'Larry Lobster', team: 'Baltimore Ravens', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
+    //     { assignment: 'Assignment 3', name: 'Danny Dimes', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
+    //     { assignment: 'Assignment 4', name: 'Jimmy Neut', team: 'Tennessee Titans', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
+    //     { assignment: 'Assignment 4', name: 'Big Chungus', team: 'Tennessee Titans', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
+    //     { assignment: 'Assignment 4', name: 'Dak Prescott', team: 'Syracuse BenchWarmers', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
+    //     { assignment: 'Assignment 4', name: 'Danny Dimes', team: 'New York Giants', grade: '92', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
+    //     { assignment: 'Assignment 5', name: 'John Bones', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
+    //     { assignment: 'Assignment 5', name: 'Danny Dimes', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
+    //     { assignment: 'Assignment 6', name: 'Danny Dimes', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
+    // ]);
 
-    const [userStatsList, setUserStatsList] = useState([
-        { name: 'Danny Dimes', grade1: '30', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
-        { name: 'Saquads Barkley', grade1: '91', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
-        { name: 'Gardner Minshew', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
-        { name: 'Caleb Williams', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
-        { name: 'Patty Mahomes', grade1: '20', grade2: '93', grade3: '40', grade4: '92', grade5: '95', grade6: '100' },
-        { name: 'Carl Wheezer', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
-        { name: 'Perry P', grade1: '95', grade2: '93', grade3: '100', grade4: '92', grade5: '95', grade6: '100' },
-        { name: 'Larry Lobster', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
-        { name: 'Big Chungus', grade1: '95', grade2: '93', grade3: '100', grade4: '92', grade5: '95', grade6: '100' },
-        { name: 'Dak Prescott', grade1: '13', grade2: '93', grade3: '95', grade4: '92', grade5: '13', grade6: '100' },
-        { name: 'John Bones', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
-    ]);
+    // const [userStatsList, setUserStatsList] = useState([
+    //     { name: 'Danny Dimes', grade1: '100', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
+    //     { name: 'Saquads Barkley', grade1: '91', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
+    //     { name: 'Gardner Minshew', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
+    //     { name: 'Caleb Williams', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
+    //     { name: 'Patty Mahomes', grade1: '20', grade2: '93', grade3: '40', grade4: '92', grade5: '95', grade6: '100' },
+    //     { name: 'Carl Wheezer', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
+    //     { name: 'Perry P', grade1: '95', grade2: '93', grade3: '100', grade4: '92', grade5: '95', grade6: '100' },
+    //     { name: 'Larry Lobster', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
+    //     { name: 'Big Chungus', grade1: '95', grade2: '93', grade3: '100', grade4: '92', grade5: '95', grade6: '100' },
+    //     { name: 'Dak Prescott', grade1: '13', grade2: '93', grade3: '95', grade4: '92', grade5: '13', grade6: '100' },
+    //     { name: 'John Bones', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
+    // ]);
 
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedAssignment, setSelectedAssignment] = useState("all");
@@ -61,21 +62,75 @@ function ProfessorGradesPage() {
     const [selectedTeam, setSelectedTeam] = useState("all");
     const courseId = window.location.pathname;
     const course = courseId.split("/")[2];
-    const getAllAssignmentsUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses/${course}/assignments`;
+    const getAllAssignmentsUrl = `${process.env.REACT_APP_URL}/assignments/student/${course}/all-grades`;
     const getAllStudentsUrl = `${process.env.REACT_APP_URL}/course/professor/courses/${course}/students`;
+    const [showEditModal, setShowEditModal] = useState(false);
+    const getAllGradesUrl = `${process.env.REACT_APP_URL}/view/professor/courses/${course}/students`; 
+
+    let [userStatsList, setUserStatsList] = useState([]);
+
+    useEffect(() => {
+        axios.get(getAllGradesUrl)
+            .then(response => {
+                console.log(response.data);
+                console.log(getAllGradesUrl);
+                setUserStatsList(response.data);
+            })
+            .catch(error => console.error(error.message));
+    }, []);
+
+    let [userList, setUserList] = useState([]);
+
+    useEffect(() => {
+        axios.get(getAllAssignmentsUrl)
+            .then(response => {
+                console.log(response.data);
+                console.log(getAllAssignmentsUrl);
+                setUserList(response.data);
+            })
+            .catch(error => console.error(error.message));
+    }, []);
+
+    for (let i = 0; i < userList.length; i++) {
+        if (userList[i].type == "peer_review_submission") {
+            // for (let j = 0; j < userList.length; j++) {
+            //     //userList[j].submission_name = "";
+            //     if (userList[i].reviewed_by == userList[j].team_name && userList[j].type == "team_submission") {
+            //         userList[j].submission_name = userList[i].reviewed_team;
+            //     }
+            // }
+            userList.splice(i, 2);
+        }
+    }
+
+    function refreshPage() {
+        window.location.reload(false);
+      }
+
+    const convertDate = (dateString) => {
+        const utcDate = dateString.slice(0, 19);
+        const utcTime = utcDate.replace('T', ' ');
+
+        const date = new Date(utcTime);
+
+        date.setHours(date.getHours() - 4);
+
+        const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}/${date.getFullYear().toString().slice(-2)} | ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+
+
+        return (
+            <div>{formattedDate}</div>
+        )
+    }
 
     const filteredUsers = userList.filter((user) =>
-        (selectedAssignment === "all" || user.assignment === selectedAssignment) &&
-        (selectedStudent === "all" || user.name === selectedStudent) &&
-        (selectedTeam === "all" || user.team === selectedTeam)
-    );
-
-    const filteredUsersStats = userStatsList.filter((user) =>
-        (selectedStudent === "All" || user.name === selectedStudent)
+        (selectedAssignment === "all" || user.assigment_name === selectedAssignment) &&
+        (selectedStudent === "all" || user.student_id === selectedStudent) &&
+        (selectedTeam === "all" || user.team_name === selectedTeam)
     );
 
     const filteredUsersVisualStats = userStatsList.filter((user) =>
-        (selectedVisualStudent === "Select Student" || user.name === selectedVisualStudent)
+        (selectedVisualStudent === "Select Student" || user.student_id === selectedVisualStudent)
     );
 
     const [page, setPage] = useState("roles")
@@ -85,20 +140,20 @@ function ProfessorGradesPage() {
     }
 
     const uniqueAssignments = userList
-        .filter((user, index, arr) => arr.findIndex(u => u.assignment === user.assignment) === index)
-        .map(user => user.assignment);
+        .filter((user, index, arr) => arr.findIndex(u => u.assigment_name === user.assigment_name) === index)
+        .map(user => user.assigment_name);
 
     const uniqueNames = userList
-        .filter((user, index, arr) => arr.findIndex(u => u.name === user.name) === index)
-        .map(user => user.name);
+        .filter((user, index, arr) => arr.findIndex(u => u.student_id === user.student_id) === index)
+        .map(user => user.student_id);
 
     const uniqueStatsNames = userStatsList
-        .filter((user, index, arr) => arr.findIndex(u => u.name === user.name) === index)
-        .map(user => user.name);
+        .filter((user, index, arr) => arr.findIndex(u => u.student_id === user.student_id) === index)
+        .map(user => user.student_id);
 
     const uniqueTeams = userList
-        .filter((user, index, arr) => arr.findIndex(u => u.team === user.team) === index)
-        .map(user => user.team);
+        .filter((user, index, arr) => arr.findIndex(u => u.team_name === user.team_name) === index)
+        .map(user => user.team_name);
 
     // const [students, setStudents] = useState([]);
 
@@ -112,22 +167,22 @@ function ProfessorGradesPage() {
     //     fetchData();
     // }, []);
 
-    axios.get(getAllStudentsUrl)
-        .then(response => console.log(response.data))
-        .catch(error => console.error("Uh oh"));
+    // axios.get(getAllStudentsUrl)
+    //     .then(response => console.log(response.data))
+    //     .catch(error => console.error("Uh oh"));
 
-    axios.get(getAllAssignmentsUrl)
-        .then(response => {
-            //console.log(response.data); 
-            const getAllSubmissions = response.data;
-            for (let i = 1; i <= response.data.length; i++) {
-                axios.get(`${process.env.REACT_APP_URL}/assignments/professor/courses/${course}/assignments/${i}`)
-                    .then(response2 => {
-                        console.log(response2.data)
-                    })
-            }
-        })
-        .catch(error => console.error("Uh oh"));
+    // axios.get(getAllAssignmentsUrl)
+    //     .then(response => {
+    //         //console.log(response.data); 
+    //         const getAllSubmissions = response.data;
+    //         for (let i = 1; i <= response.data.length; i++) {
+    //             axios.get(`${process.env.REACT_APP_URL}/assignments/professor/courses/${course}/assignments/${i}`)
+    //                 .then(response2 => {
+    //                     console.log(response2.data)
+    //                 })
+    //         }
+    //     })
+    //     .catch(error => console.error("Uh oh"));
 
 
     const getChartData = () => {
@@ -182,12 +237,8 @@ function ProfessorGradesPage() {
 
             filteredUsersVisualStats.map(user => {
                 const grades = [
-                    parseInt(user.grade1),
-                    parseInt(user.grade2),
-                    parseInt(user.grade3),
-                    parseInt(user.grade4),
-                    parseInt(user.grade5),
-                    parseInt(user.grade6),
+                    user.team_submissions.slice(0, user.team_submissions.length / 2).map(grade => (
+                        grade.grade))
                 ];
                 const mean = grades.reduce((a, b) => a + b, 0) / grades.length;
                 console.log(grades)
@@ -213,26 +264,88 @@ function ProfessorGradesPage() {
         // compute the mean of each assignment grade and push it to the data array
         for (let i = 0; i < grades2.length; i++) {
             const mean2 = grades2[i].reduce((a, b) => a + b, 0) / grades2[i].length;
-            data.datasets[2].data.push(...grades2[i]);
+            data.datasets[2].data.push(mean2);
             data.datasets[2].pointStyle.push('circle');
-            data.datasets[3].data.push(mean2);
-        }
 
-        // compute the mean of all grades and push it to the data array
-        const allGrades = grades2.flat(); // get all grades in a flat array
-        const meanSum2 = allGrades.reduce((a, b) => a + b, 0) / allGrades.length;
-        data.datasets[3].data.push(meanSum2);
+            // compute the mean of all grades and push it to the data array
+            const allGrades = grades2.flat(); // get all grades in a flat array
+            const meanSum2 = allGrades.reduce((a, b) => a + b, 0) / allGrades.length;
+            data.datasets[3].data.push(meanSum2);
+        }
 
         return data;
     };
 
+    const [editName, setEditName] = useState("");
+
+    const getEditUser = (userId) => {
+        setEditName(userId);
+    }
+
+    const [assignmentName, setAssignmentName] = useState("");
+
+    const getAssignmentName = (assignmentName) => {
+        setAssignmentName(assignmentName);
+    }
+
+    const [studentGrade, setStudentGrade] = useState("");
+
+    const getStudentGrade = (studentGrade) => {
+        setStudentGrade(studentGrade);
+    }
+
+    const [assignmentID, setAssignmentID] = useState();
+
+    const getAssignmentID= (assignmentID) => {
+        setAssignmentID(assignmentID);
+    }
+
+    const [teamName, setTeamName] = useState();
+
+    const getTeamName= (teamName) => {
+        setTeamName(teamName);
+    }
+
+    const [newGrade, setNewGrade] = useState('');
+
+    const handleGradeEdit = (event) => {
+        setNewGrade(event.target.value);
+    }
+
+    const editGrade = async (studentId, assignmentId,teamName, newGrade) => {
+        const url = `${process.env.REACT_APP_URL}/assignments/student/edit/${studentId}/${assignmentId}/${teamName}/teamSubmission/${newGrade}`;
+        await axios
+            .post(url)
+            .then((res) => {
+                alert('Succesfully edited grade');
+                refreshPage();
+                console.log(res.data);
+            })
+            .catch((e) => {
+                alert(e.message);
+            });
+        }
+
+    const downloadStudentAssignment = async (assignId, teamName) => {
+        const url = `${process.env.REACT_APP_URL}/assignments/student/courses/${course}/assignments/${assignId}/${teamName}/download`;
+        await axios
+            .post(url)
+            console.log(url)
+            .then((res) => {
+                alert('Succesfully downloaded');
+            })
+            .catch((e) => {
+                alert(e.message);
+            });
+    }
+
     return (
         <div className="page-container">
-            <HeaderBar/>
+            <HeaderBar />
             <div className='admin-container'>
-                <NavigationContainerComponent/>
-                <div className='user-roles'>
-                    <h2>Grades Overview for {}</h2>
+                <NavigationContainerComponent />
+                <div className='professor-user-roles'>
+                    <h2>Grades Overview for {course}</h2>
                     <div className='admin-tabs'>
                         <button className='user-roles-tab' onClick={() => changePage('roles')} style={{
                             backgroundColor: page === "roles" ? "#4a7dfc" : "#E6E6E6",
@@ -253,11 +366,11 @@ function ProfessorGradesPage() {
                     {page === "roles" && (
                         <>
                             <div className='search-filter-add'>
-                                <div className='search-bar'>
+                                <div className='assignment-filter'>
                                     <label>Assignment</label>
-                                    <div className='assignment-dropdown'>
-                                        <select name="assignment" id="role"
-                                                onChange={(e) => setSelectedAssignment(e.target.value)}>
+                                    <div className='grades-assignment-dropdown'>
+                                        <select name="assignment" id="grades-assignment"
+                                            onChange={(e) => setSelectedAssignment(e.target.value)}>
                                             <option value="all">All</option>
                                             {uniqueAssignments.map(item => {
                                                 return (<option key={item} value={item}>{item}</option>);
@@ -265,60 +378,86 @@ function ProfessorGradesPage() {
                                         </select>
                                     </div>
                                 </div>
-                                <div className='dropdowns-div'>
-                                    <div className="student-dropdown">
+                                    <div className="grades-student-dropdown">
                                         <label htmlFor="role-filter">Student</label>
-                                        <select name="student" id="role"
-                                                onChange={(e) => setSelectedStudent(e.target.value)}>
+                                        <select name="student" id="grades-student"
+                                            onChange={(e) => setSelectedStudent(e.target.value)}>
                                             <option value="all">All</option>
                                             {uniqueNames.map(item => {
                                                 return (<option key={item} value={item}>{item}</option>);
                                             })}
                                         </select>
                                     </div>
-                                    <div className="team-dropdown">
+                                    <div className="grades-team-dropdown">
                                         <label htmlFor="role-filter">Team</label>
-                                        <select name="team" id="role" onChange={(e) => setSelectedTeam(e.target.value)}>
+                                        <select name="team" id="grades-team" onChange={(e) => setSelectedTeam(e.target.value)}>
                                             <option value="all">All</option>
                                             {uniqueTeams.map(item => {
                                                 return (<option key={item} value={item}>{item}</option>);
                                             })}
                                         </select>
                                     </div>
-                                </div>
-                                <div className='csv-download-button-div'>
-                                    <button className='csv-download-button'>CSV Download</button>
-                                </div>
                             </div>
                             <div>
-                                <div className='user-list'>
+                                <div className='professor-user-list'>
                                     <div className='user-item header'>
                                         <div>Assignment</div>
                                         <div>Name</div>
                                         <div>Team</div>
                                         <div>Grade</div>
-                                        <div>PR Given</div>
-                                        <div>PR Received</div>
+                                        <div>PRs Given To</div>
                                         <div>Submitted</div>
                                         <div>Actions</div>
                                     </div>
-                                    <div className='all-user-items'>
+                                    <div className='professor-all-user-items'>
                                         {filteredUsers.map((user) => (
-                                            <div key={user.id} className='user-item'>
-                                                <div>{user.assignment}</div>
-                                                <div className='name-div'>{user.name}</div>
-                                                <div className='team-div'>{user.team}</div>
+                                            <div key={user.id} className='professor-user-item'>
+                                                <div>{user.assigment_name}</div>
+                                                <div className='name-div'>{user.student_id}</div>
+                                                <div className='team-div'>{user.team_name}</div>
                                                 <div className='grade-div'>{user.grade}</div>
-                                                <div>{user.prGiven}</div>
-                                                <div>{user.prReceived}</div>
-                                                <div className='submit-div'>{user.submitted}</div>
+                                                <div>{user.reviews}</div>
+                                                <div>{convertDate(user._id.date)}</div>
                                                 <div>
-                                                    <div className='edit-container'>
-                                                        <button className='edit-button'><img className='edit-icon'
-                                                                                             src={editIcon}/></button>
+                                                    <div className='grades-edit-container'>
+                                                        <button className='edit-button' onClick={() => {
+                                                            setShowEditModal(true);
+                                                            getEditUser(user.student_id);
+                                                            getAssignmentName(user.assigment_name);
+                                                            getStudentGrade(user.grade);
+                                                            getTeamName(user.team_name);
+                                                            getAssignmentID(user.assignment_id)}}>
+                                                            <img className='edit-icon' src={editIcon} />
+                                                        </button>
+                                                        {showEditModal && (
+                                                            <div className="edit-modal">
+                                                                <div className="modal-content">
+                                                                    <h2 className='modal-head'>Edit {editName}'s {assignmentName} Grade</h2>
+                                                                    <form>
+                                                                        <div className='edit-grade-container'>
+                                                                            <input className='edit-student-grade'
+                                                                                type="number"
+                                                                                id="gradeEdit"
+                                                                                name="gradeEdit"
+                                                                                placeholder={studentGrade}
+                                                                                onChange={handleGradeEdit} />
+                                                                        </div>
+                                                                    </form>
+                                                                    <div className='add-user-buttons'>
+                                                                        <button className='add-user-popup-button' onClick={() => { setShowEditModal(false); editGrade(editName, assignmentID, teamName, newGrade) }}>Save Changes</button>
+                                                                        <button className='cancel-user-button' onClick={() => setShowEditModal(false)}>Cancel</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                     <div className='delete-container'>
-                                                        <button className='delete-button'>X</button>
+                                                        <button className='delete-button' onClick={() => 
+                                                            {getTeamName(user.team_name);
+                                                            getAssignmentID(user.assignment_id);
+                                                            downloadStudentAssignment(assignmentID, teamName) }}>
+                                                            <img className='download-icon'src={bulkDownloadLogo} />
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -336,15 +475,15 @@ function ProfessorGradesPage() {
                             <div className="stats-student-dropdown">
                                 <label htmlFor="role-filter">Student</label>
                                 <select name="student" id="role" defaultValue="Select Student"
-                                        onChange={(e) => setSelectedVisualStudent(e.target.value)}>
+                                    onChange={(e) => setSelectedVisualStudent(e.target.value)}>
                                     <option disabled={true} value="Select Student">--Select Student--</option>
                                     {uniqueStatsNames.map(item => {
                                         return (<option key={item} value={item}>{item}</option>);
                                     })}
                                 </select>
                             </div>
-                            <div style={{height: '350px', width: '800px'}}>
-                                <Line className='line-chart' data={getChartData()}/>
+                            <div style={{ height: '350px', width: '800px' }}>
+                                <Line className='line-chart' data={getChartData()} />
                             </div>
                             <div className='key-container'>
                                 <label className='key'>Key</label>
