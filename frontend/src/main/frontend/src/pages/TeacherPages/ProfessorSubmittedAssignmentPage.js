@@ -9,6 +9,7 @@ import {base64StringToBlob} from "blob-util";
 import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 import Breadcrumbs from "../../components/Breadcrumbs";
+import {getCoursesAsync} from "../../redux/features/courseSlice";
 
 
 function ProfessorSubmittedAssignmentPage() {
@@ -18,6 +19,7 @@ function ProfessorSubmittedAssignmentPage() {
   const { courseId, assignmentId, teamId } = useParams();
   const [reviews, setReviews] = useState([]);
   const [teamSubmission, setTeamSubmission] = useState('')
+
 
   const getReviews = async (courseId, teamId, assignmentId) => {
 
@@ -44,6 +46,7 @@ function ProfessorSubmittedAssignmentPage() {
   }
 
   useEffect( () => {
+    dispatch(getCoursesAsync());
     const fetchReviews = async () => {
       const data = await getReviews(courseId, teamId, assignmentId);
       setReviews(data);

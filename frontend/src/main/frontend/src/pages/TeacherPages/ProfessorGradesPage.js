@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './styles/ProfessorGradesStyling.css';
 import editIcon from '../AdminPages/edit.png';
-import { setCurrentCourse } from '../../redux/features/courseSlice';
+import {getCoursesAsync, setCurrentCourse} from '../../redux/features/courseSlice';
 import { current } from '@reduxjs/toolkit';
 import { Line } from 'react-chartjs-2';
 import Table from './Table';
@@ -12,6 +12,7 @@ import axios from 'axios';
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import bulkDownloadLogo from "../../assets/icons/navigation/default/Bulk Download.svg";
+import {useDispatch} from "react-redux";
 
 Chart.register(LineElement);
 Chart.register(PointElement);
@@ -65,11 +66,13 @@ function ProfessorGradesPage() {
     const getAllAssignmentsUrl = `${process.env.REACT_APP_URL}/assignments/student/${course}/all-grades`;
     const getAllStudentsUrl = `${process.env.REACT_APP_URL}/course/professor/courses/${course}/students`;
     const [showEditModal, setShowEditModal] = useState(false);
-    const getAllGradesUrl = `${process.env.REACT_APP_URL}/view/professor/courses/${course}/students`; 
+    const getAllGradesUrl = `${process.env.REACT_APP_URL}/view/professor/courses/${course}/students`;
+    const dispatch = useDispatch();
 
     let [userStatsList, setUserStatsList] = useState([]);
 
     useEffect(() => {
+        dispatch(getCoursesAsync());
         axios.get(getAllGradesUrl)
             .then(response => {
                 console.log(response.data);
