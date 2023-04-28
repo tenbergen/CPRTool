@@ -58,6 +58,10 @@
     margin-left: -1px;
 }
 
+.about-page-dependencies-tab:hover {
+    cursor: pointer;
+}
+
 .about-page-description {
     margin: 44px 0;
 }
@@ -67,6 +71,10 @@
     height: 40px;
     border-radius: 5px 0 0 5px;
     border: solid 1px #4b5563;
+}
+
+.about-page-description-tab:hover {
+    cursor: pointer;
 }
 
 .about-page-inactive-tab {
@@ -117,4 +125,5 @@
     align-items: center;
     width: 100%;
     margin-top: 30px;
+    user-select: none;
 }
