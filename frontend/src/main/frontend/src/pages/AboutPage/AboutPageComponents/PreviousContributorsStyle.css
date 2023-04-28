@@ -1,0 +1,8 @@
+.previous-contributors-component-container {
+    width: 60%;
+    height: 100%;
+    padding-top: 36px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
