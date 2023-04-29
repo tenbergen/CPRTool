@@ -27,13 +27,12 @@
     display: flex;
     flex-direction: column;
     width: 100vw;
-    height: 100vh;
+    height: calc(100vh - 52px);
 }
 
 .about-page-content-container {
     display: flex;
     flex-direction: column;
-    height: 100%;
     width: 100%;
     align-items: center;
     overflow-y: scroll;
@@ -58,6 +57,10 @@
     margin-left: -1px;
 }
 
+.about-page-dependencies-tab:hover {
+    cursor: pointer;
+}
+
 .about-page-description {
     margin: 44px 0;
 }
@@ -67,6 +70,10 @@
     height: 40px;
     border-radius: 5px 0 0 5px;
     border: solid 1px #4b5563;
+}
+
+.about-page-description-tab:hover {
+    cursor: pointer;
 }
 
 .about-page-inactive-tab {
@@ -117,4 +124,5 @@
     align-items: center;
     width: 100%;
     margin-top: 30px;
+    user-select: none;
 }
