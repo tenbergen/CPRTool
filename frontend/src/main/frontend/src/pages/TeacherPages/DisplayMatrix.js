@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react";
-import classes from "./styles/DisplayMatrix.module.css"
-import AssignmentDropdown from "../../components/AssignmentDropdown";
-import axios from "axios";
-import Breadcrumbs from "../../components/Breadcrumbs";
+import React, { useEffect, useState } from 'react'
+import classes from './styles/DisplayMatrix.module.css'
+import AssignmentDropdown from '../../components/AssignmentDropdown'
+import axios from 'axios'
+import Breadcrumbs from '../../components/Breadcrumbs'
 import { useParams } from 'react-router-dom'
 import HeaderBar from '../../components/HeaderBar/HeaderBar'
 import NavigationContainerComponent from '../../components/NavigationComponents/NavigationContainerComponent'
-import {useDispatch} from "react-redux";
-import {getCoursesAsync} from "../../redux/features/courseSlice";
-
+import { useDispatch } from 'react-redux'
+import { getCoursesAsync } from '../../redux/features/courseSlice'
 
 const DisplayMatrix = (props) => {
     const {courseId} = useParams()
@@ -34,8 +33,8 @@ const DisplayMatrix = (props) => {
      *
      * @returns an array containing objects that represent the information that will populate the matrix.
      */
-    const getMatrixData = async () => {
-        const requestUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${chosenAssignmentIndex + 1}/matrix`;
+    const getMatrixData = async (assignment_id) => {
+        const requestUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignment_id}/matrix`;
         try {
             const response = await axios.get(requestUrl);
             const data = response.data;
@@ -61,8 +60,6 @@ const DisplayMatrix = (props) => {
             }
             arr.pop();
             setMatrixData(arr);
-            console.log('mother')
-            console.log(matrixData)
             return arr;
         } catch (err) {
             console.log(err);
@@ -79,12 +76,8 @@ const DisplayMatrix = (props) => {
         const requestUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments`;
         try {
             const response = await axios.get(requestUrl);
-            const data = response.data;
-            setAssignmentData({'test':5});
-            console.log('hello')
-            console.log(data[0])
-            console.log(assignmentData)
-            return data;
+            setAssignmentData(response.data.filter(data => data.grade_finalized===true))
+            return response.data;
         } catch (err) {
             console.log(err);
         }
@@ -97,7 +90,7 @@ const DisplayMatrix = (props) => {
      */
     const sum = (iterable) => {
         let sum = 0;
-        iterable.forEach(element => sum += element["grade"]);
+        iterable.forEach(element => sum += Number(element["grade"]));
         return sum;
     };
 
@@ -105,17 +98,40 @@ const DisplayMatrix = (props) => {
      * @returns an array of JSX elements representing one row in the matrix
      */
     const gradesToJSX = (gradesReceived, averageReceived, teamName, rowNumber, color, receivedOutlier) => {
-        let arr = gradesReceived.map(grade => {
+        let arr=[]
+        for (const team in courseTeams){
+            const curReviewedByTeam=courseTeams[team]
+            if(team===courseTeams){
+                arr.push (
+                  <td className={classes.emptyBrick}></td>
+                    )
+                continue
+            }
+            //if the curReviewed team is in the current team's list of reviewers, add it
+            //otherwise add a blank block
+            const reviewerTeam = gradesReceived.filter(teamGrade => teamGrade.team===curReviewedByTeam)
+            if(reviewerTeam.length === 0){
+                arr.push (
+                  <td className={classes.emptyBrick}></td>
+                )
+                continue
+            }
             let className = color === 'gray' ? classes.gray : classes.white;
-            if (grade.isOutlier) className = classes.red;
-            return (
-            <td className={className}> {grade.grade} </td>
-            )
-        });
+            if (reviewerTeam[0].isOutlier) className = classes.red;
+            arr.push(<td className={className}> {reviewerTeam[0].grade} </td>)
+        }
+
+        //James' old code, keeping it for later reference if needed.
+        // let arr = gradesReceived.map(grade => {
+        //     let className = color === 'gray' ? classes.gray : classes.white;
+        //     if (grade.isOutlier) className = classes.red;
+        //     return (
+        //     <td className={className}> {grade.grade} </td>
+        //     )
+        // });
         let className = color === 'gray' ? classes.gray : classes.white;
         if (receivedOutlier[teamName]) className = classes.red;
         arr.push(<td className={className}>{averageReceived[teamName]}</td>)
-        arr.splice(rowNumber, 0, (<td className={classes.emptyBrick}></td>));
         return (
             <tr>
                  <td className={classes.columnName} style={{backgroundColor: '#4A7DFC'}}>{teamName}</td>
@@ -137,7 +153,6 @@ const DisplayMatrix = (props) => {
         const averageGivenIsOutlier = {};
 
         /* Populate the above maps */
-         console.log(matrixData)
         for (const peerReview of matrixData) {
             const reviewingTeam = peerReview["reviewingTeam"];
             const reviewedTeam = peerReview["reviewedTeam"];
@@ -190,47 +205,41 @@ const DisplayMatrix = (props) => {
         let matrixDatum = undefined;
         let assignments = undefined;
         let teamList = undefined;
-        getMatrixData()
-            .then(matrix => {
-                matrixDatum = matrix;
-                console.log(matrixDatum, "matrix datum");
-                return matrix;
-            })
-            .then(matrix => {
-                getAssignmentData().then(data => {
+        getAssignmentData().then(data => {
                     return data
                 })
-            })
             .then(assignmentDatum => {
-                console.log(assignmentDatum)
                 assignments = assignmentDatum;
                 return assignments;
             })
             .then(assignmentDatum => {
                 const teams = [];
-                for (const entry of matrixDatum) {
-                    teams.push(entry["reviewedTeam"]);
+                getMatrixData(assignmentDatum[0].assignment_id)
+                  .then(matrix => {
+                      matrixDatum = matrix;
+                      return matrix;
+                  }).then(() => {
+                    for (const entry of matrixDatum) {
+                        teams.push(entry["reviewedTeam"]);
                     }
-            teamList = teams;
-            setCourseTeams(teams);
+                    teamList = teams;
+                    setCourseTeams(teams);
 
-            let outliers = 0;
-            for (const prop in matrixDatum) {
-                for (const propProp in prop) {
-                    if (propProp === "Average Grade Received") continue;
-                    for (const propPropProp in propProp) {
-                        if (propProp[propPropProp] === true) {
-                            outliers += 1;
+                    let outliers = 0;
+                    for (const prop in matrixDatum) {
+                        for (const propProp in prop) {
+                            if (propProp === "Average Grade Received") continue;
+                            for (const propPropProp in propProp) {
+                                if (propProp[propPropProp] === true) {
+                                    outliers += 1;
+                                }
+                            }
                         }
                     }
-                }
-            }
-            return 5
+                })
         })
             .catch(err => console.log(err));
     }, [lastUpdated]);
-
-
     
     return (
       <div className="page-container">
@@ -244,9 +253,6 @@ const DisplayMatrix = (props) => {
                     <div>
                           <h1 className="inter-28-bold">Peer Review Distribution</h1>
                           <AssignmentDropdown setMatrixState={(x) => {
-                              console.log('asdfsad',chosenAssignment[chosenAssignment])
-                              console.log(assignmentData[chosenAssignment])
-                              console.log(x)
                               setChosenAssignment(x);
                               setChosenAssignmentIndex(()=>{
                                   for (const assignment of assignmentData){
@@ -255,7 +261,6 @@ const DisplayMatrix = (props) => {
                                       }
                                   }
                               });
-                              console.log(chosenAssignmentIndex)
                               setLastUpdates(new Date().getTime());
                           }} assignmentObjects={assignmentData}/>
 
