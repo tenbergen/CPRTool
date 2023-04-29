@@ -1,10 +1,13 @@
-.student-container{
-    margin: auto;
+.page-container{
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+  }
+
+.student-container{
+    display: flex;
+    flex-direction: row;
     height: 100vh;
-    width: 80%;
+    width: 100vw;
 }
 
 .sidebar{
@@ -19,9 +22,6 @@
 .user-roles{
     position: relative;
     flex: 4;
-    height: 75%;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
     background-color: #fafdff;
 }
 
@@ -49,15 +49,13 @@
 
 .user-list {
     position: absolute;
-    top: 145px; /*220*/
+    top: 95px;
     left: 0;
     right: 0;
     bottom: 0;
-    height: calc(100% - 275px); /*350*/
+    height: calc(90% - 290px);
     padding: 0 40px 80px;
     margin: 0 auto;
-    max-width: 1200px;
-    max-height: 450px;
 }
 
 input[type='text'] {
@@ -85,7 +83,6 @@ input[type='text'] {
 .user-item {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding: 5px;
     border-bottom: 1px solid #ddd;
 }
@@ -118,9 +115,7 @@ input[type='text'] {
 
 .all-user-items {
     overflow-y: scroll;
-    max-width: 1200px;
-    max-height: 410px;
-    height: calc(120% - 10px);
+    height: calc(140% - 10px);
 }
 
 .dropdown{
@@ -729,3 +724,9 @@ iote
 .purple {
     background-color: purple;
 }
+
+.grades-overview-breadcrumbs{
+    position: absolute;
+    top: 10px;
+    left: 20px;
+  }
