@@ -1,9 +1,23 @@
+.about-and-admin-buttons-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 40px;
+}
+
+#aboutPageLinkIcon{
+    background-color: rgb(0,0,0,0);
+    background-image: url("../../assets/icons/aboutPage/White I Icon.svg");
+    width: 26px;
+    height: 26px;
+}
+
 #admin-button{
     background-color: rgb(0,0,0,0);
     background-image: url("../../assets/icons/Admin_Header.svg");
     width: 29px;
     height: 25px;
-    margin: 12px 40px 0 0;
+    margin-left: 25px;
 }
 
 .admin-dropdown {
