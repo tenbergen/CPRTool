@@ -1,12 +1,13 @@
 import './_ProfessorNavigationComponents.css'
 import React, {useState} from 'react';
-import {Link} from "react-router-dom";
+import { Link, useNavigate } from 'react-router-dom'
 import {useSelector} from "react-redux";
 import professorAssignmentPage from "../../pages/TeacherPages/ProfessorAssignmentPage";
 import { Navigate } from "react-router-dom";
 const CourseAccordionComponent = ({course, onClick}) => {
     const role = useSelector((state) => state.auth.role);
     const [open, setOpen] = useState(false)
+    const navigate = useNavigate()
 
     const toggleActive = () => {
         setOpen(!open)
@@ -42,7 +43,10 @@ const CourseAccordionComponent = ({course, onClick}) => {
 
                     {role === 'professor'
                         ? (
-                            <Link to={`/${role}/${course.course_id}/Peer Review`} onClick={onClick}>
+                          //Note from Dom here, the way the display matrix page is set up causes the matrix to not update properly
+                            //so I had to make the page renavigate to the peer review page and then completely reload.
+                            <Link to={`/${role}/${course.course_id}/Peer Review`} onClick={() => {navigate(`/${role}/${course.course_id}/Peer Review`)
+                                                                                                            window.location.reload(false)}}>
                             <div id="accordionPeerReviews" className="course-accordion-submenu-tile inter-20-medium">Peer Reviews</div>
                             </Link>
                         ) : (
