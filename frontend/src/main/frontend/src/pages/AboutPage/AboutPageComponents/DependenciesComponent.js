@@ -118,6 +118,7 @@ const DependenciesComponent = () => {
                     </div>
                     <div className='dependencies-list-columns-container inter-20-medium'>
                         <ul style={{ listStyleType: 'disc', marginRight: 60 }}>
+                            <li>Adobe Illustrator</li>
                             <li>Axios</li>
                             <li>Chart.js</li>
                             <li>CSS</li>
