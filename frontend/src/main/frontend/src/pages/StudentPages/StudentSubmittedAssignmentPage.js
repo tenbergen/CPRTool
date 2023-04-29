@@ -6,18 +6,22 @@ import { getSubmittedAssignmentDetailsAsync } from '../../redux/features/submitt
 import SubmittedAssignmentComponent from '../../components/StudentComponents/AssignmentPage/SubmittedAssignmentComponent';
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 import HeaderBar from "../../components/HeaderBar/HeaderBar";
+import {getStudentCoursesAsync} from "../../redux/features/courseSlice";
 
 function StudentSubmittedAssignmentPage() {
   const dispatch = useDispatch();
   const { currentSubmittedAssignment, currentSubmittedAssignmentLoaded } =
     useSelector((state) => state.submittedAssignments);
   const { courseId, assignmentId, teamId } = useParams();
+  const {lakerId } = useSelector((state) => state.auth)
 
   useEffect(() => {
+    dispatch(getStudentCoursesAsync(lakerId))
     dispatch(
       getSubmittedAssignmentDetailsAsync({ courseId, assignmentId, teamId })
     );
-  }, [courseId, assignmentId, teamId, dispatch]);
+  }, [lakerId,courseId, assignmentId, teamId, dispatch]);
+
 
   return (
     <div className="page-container">

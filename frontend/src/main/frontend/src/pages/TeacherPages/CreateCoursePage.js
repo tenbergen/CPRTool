@@ -4,14 +4,15 @@ import './styles/CreateCourseStyle.css';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../../components/LoaderComponenets/Loader';
 import CourseBarComponent from '../../components/CourseBarComponent';
-import { useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Breadcrumbs from "../../components/Breadcrumbs";
 import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
+import {getCoursesAsync} from "../../redux/features/courseSlice";
 
 const CreateCoursePage = () => {
   const submitCourseUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/create`;
-
+  const dispatch = useDispatch();
   const { user_given_name } = useSelector((state) => state.auth);
   let navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -31,6 +32,10 @@ const CreateCoursePage = () => {
     year: 0,
     crn: 0,
   });
+
+  useEffect(() => {
+    dispatch(getCoursesAsync());
+  }, [dispatch]);
 
   const fileChangeHandler = (event) => {
     let file = event.target.files[0];

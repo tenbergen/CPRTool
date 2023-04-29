@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import './styles/ProfessorCourseStyle.css';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCourseDetailsAsync } from '../../redux/features/courseSlice';
+import {getCourseDetailsAsync, getCoursesAsync} from '../../redux/features/courseSlice';
 import GradeAssBarComponent from '../../components/GradeAssBarComponent';
 import ProfessorAllSubmissionsComponent from '../../components/ProfessorComponents/AssignmentPage/ProfessorAllSubmissionsComponent';
 import ProfessorEditAssignmentComponent from '../../components/ProfessorComponents/AssignmentPage/ProfessorEditAssignmentComponent';
@@ -27,6 +27,8 @@ const AssComponent = ({ active, component, onClick }) => {
   );
 };
 
+
+
 function ProfessorAssignmentPage() {
   let dispatch = useDispatch();
 
@@ -40,9 +42,9 @@ function ProfessorAssignmentPage() {
   const [chosen, setChosen] = useState('All Submissions');
 
   useEffect(() => {
+    dispatch(getCoursesAsync());
     dispatch(getCourseDetailsAsync(courseId));
   }, [courseId, dispatch]);
-
   const onComponentClick = (component) => {
     dispatch(getAssignmentDetailsAsync({ courseId, assignmentId }));
     setChosen(component);
