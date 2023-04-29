@@ -1,5 +1,6 @@
 import * as React from 'react';
 import './DescriptionStyle.css';
+import { Link } from 'react-router-dom';
 
 const DescriptionComponent = () => {
     return (
@@ -83,17 +84,19 @@ const DescriptionComponent = () => {
                 </div>
                 <div className='description-block-4-end-block'>
                     <div className='description-block-4-icons-container'>
-                        <img src={require('../../../assets/icons/aboutPage/SUNY_Oswego_seal.svg.png')} alt=''
-                             width={180} height={180} />
+                        <Link to='https://ww1.oswego.edu/'>
+                            <img src={require('../../../assets/icons/aboutPage/SUNY_Oswego_seal.svg.png')} alt=''
+                                 width={180} height={180} />
+                        </Link>
                         <p className='inter-18-bold'>
                             In association with...
                         </p>
-                        <img src={require('../../../assets/icons/aboutPage/ibm 1.png')} alt=''
-                             width={150} height={60} />
+                        <Link to='https://www.ibm.com/us-en/'>
+                            <img src={require('../../../assets/icons/aboutPage/ibm 1.png')} alt=''
+                                 width={150} height={60} />
+                        </Link>
                     </div>
                 </div>
-
-
             </div>
         </div>
     );
