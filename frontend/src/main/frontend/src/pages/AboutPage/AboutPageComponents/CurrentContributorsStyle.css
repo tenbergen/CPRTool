@@ -76,3 +76,7 @@
 .current-contributors-column > div > ul > Link {
     color: #4A7DFC;
 }
+
+.current-contributors-name-container {
+    margin-bottom: 7px;
+}

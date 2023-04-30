@@ -28,7 +28,7 @@ const DependenciesComponent = () => {
                     </Link>
                     <Link to='https://www.docker.com/'>
                         <div className='dependencies-icon-box'>
-                            <img src={require('../../../assets/icons/aboutPage/docker.webp')} alt=''
+                            <img src={require('../../../assets/icons/aboutPage/docker.png')} alt=''
                                  width={134} height={115}
                             />
                         </div>
