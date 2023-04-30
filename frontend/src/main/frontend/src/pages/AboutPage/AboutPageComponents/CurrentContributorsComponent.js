@@ -281,8 +281,10 @@ const CurrentContributorsComponent = () => {
                                 <li>Clara Tribunella</li>
                             </Link>
                         </div>
-                        <div className='current-contributors-name-container inter-20-bold-blue'>
-                            <li>Sarah Wong</li>
+                        <div className='current-contributors-name-container'>
+                            <Link to='https://github.com/Eiskwean' className='inter-20-bold-blue'>
+                                <li>Sarah Wong</li>
+                            </Link>
                         </div>
                     </ul>
                 </div>
