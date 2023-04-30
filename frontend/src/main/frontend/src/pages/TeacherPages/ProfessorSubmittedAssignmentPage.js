@@ -199,11 +199,10 @@ function ProfessorSubmittedAssignmentPage() {
                                   <th className="rosterComp">{review.grade}</th>
                                   <th className="rosterComp">
                                     <svg
+                                        onClick={() => onDownloadButtonClick(review)}
                                         className={'bulk-download-icon-default'}
-                                        alt={'Bulk Download For Student'}
                                         style={{ cursor: 'pointer' }}
                                     ></svg>
-                                    <button onClick={() => onDownloadButtonClick(review)}></button>
                                   </th>
                                 </tr>
                             )))}
