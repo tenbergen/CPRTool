@@ -59,7 +59,9 @@ const CurrentContributorsComponent = () => {
                               className='inter-20-bold-blue'>
                             <li>Cameron Francios</li>
                         </Link>
-                        <li>Manasa Muthyala</li>
+                        <Link to='https://www.linkedin.com/in/manasa-muthyala-72aa1974/' className='inter-20-bold-blue'>
+                            <li>Manasa Muthyala</li>
+                        </Link>
                         <Link to='https://github.com/Kayyali78' className='inter-20-bold-blue'>
                             <li>Scarlett Weeks</li>
                         </Link>
@@ -87,7 +89,9 @@ const CurrentContributorsComponent = () => {
                         <Link to='https://www.linkedin.com/in/snigbehara/' className='inter-20-bold-blue'>
                             <li>Snigdha Behara</li>
                         </Link>
-                        <li>Joel Betancourt</li>
+                        <Link to='https://www.linkedin.com/in/jbetanco' className='inter-20-bold-blue'>
+                            <li>Joel Betancourt</li>
+                        </Link>
                         <Link to='https://github.com/MatthewDBrown50' className='inter-20-bold-blue'>
                             <li>Matthew D Brown</li>
                         </Link>
@@ -114,7 +118,9 @@ const CurrentContributorsComponent = () => {
                         <Link to='https://www.linkedin.com/in/snigbehara/' className='inter-20-bold-blue'>
                             <li>Snigdha Behara</li>
                         </Link>
-                        <li>Joel Betancourt</li>
+                        <Link to='https://www.linkedin.com/in/jbetanco' className='inter-20-bold-blue'>
+                            <li>Joel Betancourt</li>
+                        </Link>
                         <Link to='https://uxfol.io/83234f5b' className='inter-20-bold-blue'>
                             <li>Andjela Djapa</li>
                         </Link>
@@ -127,7 +133,9 @@ const CurrentContributorsComponent = () => {
                         <Link to='https://www.linkedin.com/in/dennislelic' className='inter-20-bold-blue'>
                             <li>Dennis Lelic</li>
                         </Link>
-                        <li>Manasa Muthyala</li>
+                        <Link to='https://www.linkedin.com/in/manasa-muthyala-72aa1974/' className='inter-20-bold-blue'>
+                            <li>Manasa Muthyala</li>
+                        </Link>
                         <li>Bahareh Nejati</li>
                         <Link to='https://www.linkedin.com/in/fatemehalsadat-shojaei' className='inter-20-bold-blue'>
                             <li>Fatemehalsadat Shojaei</li>
