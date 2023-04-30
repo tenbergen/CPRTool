@@ -244,7 +244,8 @@ const PeerReviewListPage = () => {
     }
 
     const handleSubmit = async () => {
-        const submitAssUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${currentTeamId}/${teamId}/${grade}/upload`
+        const submitAssUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignmentId}/${teamId}/${currentTeamId}/${grade}/upload`
+        console.log(submitAssUrl)
         await axios
             .post(submitAssUrl, feedbackFileFormData)
             .then((res) => {
