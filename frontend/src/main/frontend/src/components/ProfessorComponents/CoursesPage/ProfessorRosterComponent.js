@@ -432,10 +432,10 @@ function ProfessorRosterComponent() {
                         <label>Filter</label>
                         {/*<div className='assignment-dropdown'>*/}
                         <select name="assignment" id="role"
-                                onChange={(e) => setSelectedAssignment(e.target.value)}>
+                                onChange={(e) => setSearchTerm(e.target.value)}>
                           <option value="all">All</option>
-                          {uniqueAssignments.map(item => {
-                            return (<option key={item} value={item}>{item}</option>);
+                          {currentCourseStudents.map(item => {
+                            return (<option value = {item.name}>{item.first_name + item.last_name}</option>);
                           })}
                         </select>
                         {/*</div>*/}
