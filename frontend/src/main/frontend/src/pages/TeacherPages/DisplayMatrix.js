@@ -35,14 +35,17 @@ const DisplayMatrix = (props) => {
      */
     const getMatrixData = async (assignment_id) => {
         const requestUrl = `${process.env.REACT_APP_URL}/peer-review/assignments/${courseId}/${assignment_id}/matrix`;
+
         try {
             const response = await axios.get(requestUrl);
             const data = response.data;
+            console.log(data);
             setTrueMatrix(data);
             const arr = [];
             for (const prop in data) {
                 const reviewedTeam = prop;
                 const actualData = data[prop];
+                console.log(actualData);
                 const reviewingTeam = Object.keys(actualData)[0];
                 const grade = Object.keys(actualData[reviewingTeam])[0];
                 const isOutlier = actualData[reviewingTeam][grade];

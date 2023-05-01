@@ -59,9 +59,21 @@
     top: 230px !important;
 }
 
+.professor-roster-search-button {
+    flex: 1;
+    background-color: #E6E6E6;
+    border: solid;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-width: 1px;
+    border-color: #000000;
+    border-left-width: 0;
+    max-width: 50px;
+}
+
 
 input[type='text'] {
-    height: 30px;
+    height: 36px !important;
     font-size: 1.2em;
     width: 97.5%;
     border: solid;
@@ -160,7 +172,8 @@ input[type='text'] {
 .search-bar{
     display: flex !important;
     flex-direction: column;
-    flex: 2;
+    /*changed from flex: 2 to current;*/
+    flex: 2 1 100% !important;
 }
 
 .search-bar-courses{
