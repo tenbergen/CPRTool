@@ -68,6 +68,10 @@ public class AssignmentInterface {
         makeSubmission(fileDAO.getCourseID(), fileDAO.getAssignmentID(), fileDAO.getFilename(), fileDAO.getTeamName(), fileDAO.getFile());
     }
 
+    public List<String> getCourseProfanityWords(String courseID) {
+        return courseCollection.find(eq("course_id", courseID)).first().getList("blocked_words", String.class);
+    }
+
     public List<Document> getAllUserAssignments(String courseID, String studentID) {
         MongoCursor<Document> query = submissionCollection.find(and(eq("course_id", courseID),
                 eq("members", studentID),
