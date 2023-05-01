@@ -5,7 +5,7 @@
   "dependencies": {
     "@react-oauth/google": "^0.6.1",
     "@reduxjs/toolkit": "^1.8.0",
-    "final-form": "^4.20.6",
+    "final-form": "^4.20.9",
     "jwt-decode": "^3.1.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
