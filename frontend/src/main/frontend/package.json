@@ -14,7 +14,7 @@
     "react-icons": "^4.3.1",
     "react-pro-sidebar": "^0.7.1",
     "react-redux": "^7.2.6",
-    "react-scripts": "5.0.0",
+    "react-scripts": "5.0.1",
     "react-uuid": "^1.0.3"
   },
   "scripts": {
