@@ -1,16 +1,31 @@
-import { useEffect, useState } from 'react'
+
 // import axios from 'axios'
 //import '../../styles/Roster.css'
 import '../../../components/NavigationComponents/_ProfessorNavigationComponents.css'
 import '../../../pages/TeacherPages/styles/ProfessorRosterStyle.css' //ProfessorGradesStyling.css'
 import { useDispatch, useSelector } from 'react-redux'
-
-// import { useParams } from 'react-router-dom'
-// import noStudent from '../../../assets/no-student.png'
-// import { CgAdd } from 'react-icons/cg'
-// import uuid from 'react-uuid'
 import { base64StringToBlob } from 'blob-util'
-// import editIcon from "../../../pages/AdminPages/edit.png";
+import { useParams } from 'react-router-dom'
+import noStudent from '../../../assets/no-student.png'
+import { CgAdd } from 'react-icons/cg'
+import uuid from 'react-uuid'
+//import { useState, useEffect } from 'react';
+import downloadIcon from '../../../../src/assets/icons/White_Download.svg'
+import {
+  getCourseDetailsAsync,
+  getCurrentCourseStudentsAsync,
+  setCurrentCourse
+} from '../../../redux/features/courseSlice';
+import { current } from '@reduxjs/toolkit';
+import { Line } from 'react-chartjs-2';
+import Table from './Table';
+import axios from 'axios';
+import Modal from "../../../pages/AdminPages/Modal";
+import editIcon from "../../../pages/AdminPages/edit.png";
+import { useEffect, useState } from 'react'
+
+
+
 /*
 const ProfessorRosterComponent = () => {
   const dispatch = useDispatch()
@@ -18,8 +33,8 @@ const ProfessorRosterComponent = () => {
   const courseId = courseParse.split("/")[2];
   const url = `${process.env.REACT_APP_URL}/manage/professor/courses`
   const { currentCourseStudents } = useSelector((state) => state.courses)
-  const [showModal, setShowModal] = useState(false)
-  const [studentToRemove, setStudentToRemove] = useState(undefined)
+
+
 
   useEffect(() => {
     dispatch(getCurrentCourseStudentsAsync(courseId))
@@ -274,26 +289,16 @@ const ProfessorRosterComponent = () => {
 //   )
 // }
 
-//import { useState, useEffect } from 'react';
-import editIcon from '../../../pages/AdminPages/edit.png';
-import downloadIcon from '../../../../src/assets/icons/White_Download.svg'
-import {
-  getCourseDetailsAsync,
-  getCurrentCourseStudentsAsync,
-  setCurrentCourse
-} from '../../../redux/features/courseSlice';
-import { current } from '@reduxjs/toolkit';
-import { Line } from 'react-chartjs-2';
-import Table from './Table';
-import axios from 'axios';
-import Modal from "../../../pages/AdminPages/Modal";
+
+
 
 function ProfessorRosterComponent() {
   const dispatch = useDispatch()
   const courseParse = window.location.pathname;
   const courseId = courseParse.split("/")[2];
   const url = `${process.env.REACT_APP_URL}/manage/professor/courses`
-
+  const [showModal, setShowModal] = useState(false)
+  const [studentToRemove, setStudentToRemove] = useState(undefined)
   const { currentCourseStudents } = useSelector((state) => state.courses)
 
   useEffect(() => {
