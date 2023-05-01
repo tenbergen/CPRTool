@@ -368,15 +368,15 @@ function ProfessorRosterComponent() {
   const deleteStudent = async (Email) => {
     const deleteStudentUrl = `${url}/${courseId}/students/${Email.student_id}/delete`
     await axios
-        .delete(deleteStudentUrl)
-        .then((res) => {
-          alert('Successfully deleted student.')
-          dispatch(getCurrentCourseStudentsAsync(courseId))
-        })
-        .catch((e) => {
-          console.error(e)
-          alert('Error deleting student.')
-        })
+      .delete(deleteStudentUrl)
+      .then((res) => {
+        alert('Successfully deleted student.')
+        dispatch(getCurrentCourseStudentsAsync(courseId))
+      })
+      .catch((e) => {
+        console.error(e)
+        alert('Error deleting student.')
+      })
     dispatch(getCourseDetailsAsync(courseId))
   }
 
