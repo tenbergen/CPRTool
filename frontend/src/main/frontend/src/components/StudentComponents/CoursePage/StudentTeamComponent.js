@@ -21,6 +21,12 @@ const StudentTeamComponent = () => {
   const [teamName, setTeamName] = useState('')
   let navigate = useNavigate()
 
+  const setBackToTeams = () =>{
+      //let path = `${process.env.REACT_APP_URL}/student/${courseId}/teams`
+      let path = `/student/${courseId}/teams`
+      navigate(path)
+    }
+
   const createTeam = async () => {
     const createUrl = `${process.env.REACT_APP_URL}/teams/team/create`
     const createData = {
@@ -123,7 +129,8 @@ const StudentTeamComponent = () => {
         }}>
           <svg className="cross" style={{}} onClick={async () => {
             setShowCreateTeamSuccessModal(false)
-            navigate(-1)
+            //navigate(-1)
+            setBackToTeams()
             await dispatch(getCurrentCourseTeamAsync({ courseId, lakerId }))
           }}></svg>
           <span
@@ -217,7 +224,9 @@ const StudentTeamComponent = () => {
         }}>
           <svg className="cross" style={{}} onClick={async () => {
             setShowJoinTeamSuccessModal(false)
-            navigate(-1)
+              console.log("X clicked, leaving to teams page...")
+              //setBackToTeams()
+              navigate(-1)
             await dispatch(getCurrentCourseTeamAsync({ courseId, lakerId }))
           }}></svg>
           <span

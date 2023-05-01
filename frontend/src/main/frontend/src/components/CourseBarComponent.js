@@ -108,11 +108,6 @@ const CourseBarComponent = ({ title }) => {
           )}
         </div>
       </div>
-        <div className='admin-button'>
-          <Link to={`/professor/admin`}>
-            <button className='admin-button-style'>ADMIN INTERFACE</button>
-          </Link>
-        </div>
       <LogoutButton/>
     </div>
   );

@@ -6,7 +6,7 @@ import StudentToDoComponent from '../../components/StudentComponents/CoursePage/
 import StudentSubmittedComponent from '../../components/StudentComponents/CoursePage/StudentSubmittedComponent';
 import { useLocation, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCourseDetailsAsync } from '../../redux/features/courseSlice';
+import {getCourseDetailsAsync, getStudentCoursesAsync} from '../../redux/features/courseSlice';
 import { getCurrentCourseTeamAsync } from '../../redux/features/teamSlice';
 import MyTeamComponent from '../../components/StudentComponents/CoursePage/MyTeamComponent';
 import uuid from 'react-uuid';
@@ -43,6 +43,7 @@ function StudentCoursePage({chosen}) {
   useEffect(() => {
     dispatch(getCourseDetailsAsync(courseId));
     dispatch(getCurrentCourseTeamAsync({ courseId, lakerId }));
+    dispatch(getStudentCoursesAsync(lakerId))
   }, [courseId, lakerId, dispatch]);
 
   useEffect(() => {

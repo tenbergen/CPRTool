@@ -1,6 +1,5 @@
 .eac-form {
     background-color: white;
-    border-radius: 50px;
     padding: 1%;
     overflow-y: scroll;
     max-height: 58vh;
@@ -65,8 +64,8 @@
     flex-direction: row;
     justify-content: space-between;
     margin-top: 3%;
-    margin-left: 25%;
-    margin-right: 25%;
+    width: 95%;
+
 }
 
 .eac-assignment-info-group {

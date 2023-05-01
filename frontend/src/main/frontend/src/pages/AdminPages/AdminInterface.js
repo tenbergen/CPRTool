@@ -406,7 +406,7 @@ function AdminInterface () {
                       type="text"
                       value={searchTerm}
                       onChange={handleSearch}/>
-                    <button className="search-button"><img className="search-icon" src={searchIcon}/></button>
+                    <button className="admin-search-button"><img className="search-icon" src={searchIcon}/></button>
                   </div>
                 </div>
                 <div className="dropdown">
@@ -584,7 +584,7 @@ function AdminInterface () {
                       type="text"
                       value={searchTerm}
                       onChange={handleSearch}/>
-                    <button className="search-button"><img className="search-icon" src={searchIcon}/></button>
+                    <button className="admin-search-button"><img className="search-icon" src={searchIcon}/></button>
                   </div>
                 </div>
                 <div className="dropdown-year">

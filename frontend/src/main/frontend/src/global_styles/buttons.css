@@ -6,6 +6,18 @@ button:hover {
     cursor: pointer;
 }
 
+.eac-file-name:hover {
+    cursor: pointer;
+}
+
+.eac-crossmark:hover {
+    cursor: pointer;
+}
+
+.crossMarkTeam:hover {
+    cursor: pointer;
+}
+
 .blue-button-small {
     width: 118px;
     height: 34px;

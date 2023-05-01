@@ -18,6 +18,7 @@ import StudentGradesPage from '../pages/StudentPages/StudentGradesPage'
 import PeerReviewPage from "../pages/StudentPages/PeerReviewPage";
 import PeerReviewListPage from "../components/StudentComponents/PeerReviewPage/PeerReviewListPage";
 import DisplayMatrix from '../pages/TeacherPages/DisplayMatrix'
+import AboutPage from "../pages/AboutPage/AboutPage";
 
 const RouterHandler = () => {
   return (
@@ -30,6 +31,11 @@ const RouterHandler = () => {
         <Route element={<AuthRouteHandler/>}>
           <Route path="/" element={<App/>}/>
 
+          <Route
+              path="/about"
+              element={<AboutPage />}
+          />
+
           {/*professor-only routes*/}
           <Route element={<RoleRouteHandler allowedRoles={['professor']}/>}>
             <Route path="create" element={<CreateCoursePage/>}/>
@@ -40,6 +46,10 @@ const RouterHandler = () => {
             <Route
               path="professor/:courseId/grades"
               element={<ProfessorGradesPage/>}
+            />
+            <Route
+              path="professor/:courseId/Peer Review"
+              element={<DisplayMatrix/>}
             />
             <Route
               path="professor/:courseId/create/assignment"
@@ -99,7 +109,7 @@ const RouterHandler = () => {
           >
             <Route
               path="student/:courseId"
-              element={<StudentCoursePage/>}
+              element={<StudentCoursePage chosen="To Do"/>}
             />
             <Route
               path="student/:courseId/:assignmentId/:assignmentType"

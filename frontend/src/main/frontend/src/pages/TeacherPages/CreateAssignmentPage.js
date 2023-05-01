@@ -8,7 +8,8 @@ import CourseBarComponent from '../../components/CourseBarComponent'
 import Loader from '../../components/LoaderComponenets/Loader'
 import * as React from 'react'
 import HeaderBar from '../../components/HeaderBar/HeaderBar'
-import NavigationContainerComponent from '../../components/NavigationComponents/NavigationContainerComponent'
+import {getCoursesAsync} from "../../redux/features/courseSlice";
+import {useDispatch} from "react-redux";
 
 const profAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`
 const assignmentFileFormData = new FormData()
@@ -21,6 +22,7 @@ let templateFileName = ''
 const CreateAssignmentPage = () => {
   let navigate = useNavigate()
   let { courseId } = useParams()
+  const dispatch = useDispatch();
 
   const submitCourseUrl = `${profAssignmentUrl}/create-assignment`
   const submitCourseNoPeerReviewURL = `${profAssignmentUrl}/create-assignment-no-peer-review`
@@ -64,6 +66,9 @@ const CreateAssignmentPage = () => {
     }
     reader.readAsDataURL(file)
   }
+  useEffect(() => {
+    dispatch(getCoursesAsync());
+  }, [dispatch]);
 
   const uploadFiles = async (assignmentId) => {
     const assignmentFileUrl = `${getAssUrl}/${assignmentId}/upload`
@@ -374,6 +379,8 @@ const CreateAssignmentPage = () => {
                                 <Field name="points">
                                   {({ input }) => (
                                     <input
+                                      defaultValue={0}
+                                      min={0}
                                       type="number"
                                       name="points"
                                       {...input}
@@ -428,9 +435,12 @@ const CreateAssignmentPage = () => {
                         </div>
 
                         <div className="cap-button">
-                          <button className="green-button-large" type="submit">
+                          <button className="green-button-large" type="submit" style={{marginRight:'3vw'}}>
                             {' '}
                             Create Assignment{' '}
+                          </button>
+                          <button className='cancel-button' onClick={() => {navigate(`/professor/${courseId}`)}}>
+                            Cancel
                           </button>
                         </div>
                       </form>

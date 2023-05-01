@@ -280,7 +280,7 @@ input[type='text'] {
     width: 98.75%;
 }
 
-.search-button {
+.admin-search-button {
     flex: 1;
     background-color: #E6E6E6;
     border: solid;
@@ -289,6 +289,7 @@ input[type='text'] {
     border-width: 1px;
     border-color: #000000;
     border-left-width: 0;
+    max-width: 50px;
 }
 
 .search-icon {

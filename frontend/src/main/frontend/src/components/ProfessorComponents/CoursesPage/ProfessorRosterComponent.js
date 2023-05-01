@@ -18,6 +18,8 @@ const ProfessorRosterComponent = () => {
   const courseId = courseParse.split("/")[2];
   const url = `${process.env.REACT_APP_URL}/manage/professor/courses`
   const { currentCourseStudents } = useSelector((state) => state.courses)
+  const [showModal, setShowModal] = useState(false)
+  const [studentToRemove, setStudentToRemove] = useState(undefined)
 
   useEffect(() => {
     dispatch(getCurrentCourseStudentsAsync(courseId))
@@ -739,6 +741,27 @@ function ProfessorRosterComponent() {
                                   <button className='delete-button' onClick={()=> deleteStudent(user)}>X</button>
                                 </div>
                               </div>
+                              {showModal && (
+                              <div className="roster-delete-modal">
+                                <div className="roster-modal-content">
+                                  <h2 className="roster-modal-head">Confirm</h2>
+                                  <form>
+                                    <label className="roster-confirm-remove">Are you sure you want to
+                                      remove {studentToRemove.first_name} {studentToRemove.last_name}?</label>
+                                  </form>
+                                  <div className="roster-remove-user-buttons">
+                                    <button className="roster-remove-user-popup-button" onClick={() => {
+                                      setShowModal(false)
+                                      deleteStudent(studentToRemove)
+                                    }}>Yes
+                                    </button>
+                                    <button className="roster-cancel-user-delete-button"
+                                            onClick={() => setShowModal(false)}>No
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
                             </div>
                         ))}
                       </div>
