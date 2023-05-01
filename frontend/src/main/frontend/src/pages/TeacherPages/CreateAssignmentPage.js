@@ -10,6 +10,8 @@ import * as React from 'react'
 import HeaderBar from '../../components/HeaderBar/HeaderBar'
 import {getCoursesAsync} from "../../redux/features/courseSlice";
 import {useDispatch} from "react-redux";
+import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
+import Breadcrumbs from "../../components/Breadcrumbs";
 
 const profAssignmentUrl = `${process.env.REACT_APP_URL}/assignments/professor/courses`
 const assignmentFileFormData = new FormData()
@@ -301,8 +303,9 @@ const CreateAssignmentPage = () => {
               <HeaderBar/>
               <div className="pcp-parent">
                 <div className="ccp-container">
-                  <CourseBarComponent title={'Courses'}/>
+                  <NavigationContainerComponent />
                   <div className="pcp-components">
+                    <Breadcrumbs />
                     <h2 className="inter-28-bold"> New Assignment </h2>
                     <div className="cap-form">
                       <form onSubmit={handleSubmit}>
