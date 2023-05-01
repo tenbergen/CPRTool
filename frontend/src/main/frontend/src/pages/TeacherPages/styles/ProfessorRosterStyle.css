@@ -1,9 +1,9 @@
 .page-container{
     display: flex;
     flex-direction: column;
-  }
+}
 
-.student-container{
+.admin-container{
     display: flex;
     flex-direction: row;
     height: 100vh;
@@ -20,8 +20,7 @@
 }
 
 .user-roles{
-    position: relative;
-    flex: 4;
+    height: 100%;
     background-color: #fafdff;
 }
 
@@ -48,15 +47,18 @@
 }
 
 .user-list {
-    position: absolute;
-    top: 95px;
-    left: 0;
-    right: 0;
     bottom: 0;
-    height: calc(90% - 290px);
-    padding: 0 40px 80px;
-    margin: 0 auto;
+    height: calc(100% - 275px) !important;
+    left: 0;
+    margin: 0 !important;
+    max-height: 450px;
+    max-width: 950px !important;
+    padding: 0 0px 80px !important;
+    position: absolute;
+    right: 0;
+    top: 230px !important;
 }
+
 
 input[type='text'] {
     height: 30px;
@@ -77,12 +79,13 @@ input[type='text'] {
     border-top-left-radius: 5px;
     position: sticky;
     top: 0;
-    z-index: 1;
+    z-index: 0 !important;
 }
 
 .user-item {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 5px;
     border-bottom: 1px solid #ddd;
 }
@@ -101,6 +104,8 @@ input[type='text'] {
 }
 
 .edit-button {
+    height: 100% !important;
+    width: 40px !important;
     background: none;
     border: none;
 }
@@ -111,11 +116,14 @@ input[type='text'] {
     cursor: pointer;
     background: none;
     border: none;
+    height: 100% !important;
 }
 
 .all-user-items {
     overflow-y: scroll;
-    height: calc(140% - 10px);
+    max-width: 1200px;
+    max-height: 410px;
+    height: calc(120% - 10px);
 }
 
 .dropdown{
@@ -138,7 +146,9 @@ input[type='text'] {
 }
 
 #role {
-    height: 35px;
+    min-height: 43px !important;
+    max-width: 150px !important;
+    /*height: 35px;*/
     background-color: #ffffff;
     border-radius: 5px;
     width: 95%;
@@ -148,19 +158,19 @@ input[type='text'] {
 }
 
 .search-bar{
-    display: flex;
+    display: flex !important;
     flex-direction: column;
     flex: 2;
 }
 
 .search-bar-courses{
-    display: flex;
+    display: flex !important;
     flex-direction: column;
     flex: 4;
 }
 
 .search-filter-add {
-    display: flex;
+    display: flex!important;
     padding: 25px 40px;
 }
 
@@ -258,21 +268,35 @@ input[type='text'] {
 }
 iote
 .edit-container{
-    padding-right: 8px;
-    margin-left: -4px;
+    margin-left: 9px;
+    padding-right: 9px;
     display: grid;
-    align-self: left;
 }
 
 .delete-container{
     display: grid;
-    align-self: left;
 }
 
 .search-icon-div{
     display: flex;
     flex-direction: row;
     width: 98.75%;
+}
+
+.bulk-download-button {
+    background-color: black !important;
+    border: none !important;
+    border-radius: 5px !important;
+    color: black !important;
+    font-family: Inter,sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    height: 100% !important;
+    letter-spacing: .5px !important;
+    line-height: 24px !important;
+    margin-bottom: 10px !important;
+    width: 40px !important;
+    filter: invert(1) !important;
 }
 
 .search-button{
@@ -425,7 +449,7 @@ iote
 }
 
 .assignment-dropdown{
-    display: flex;
+    display: flex !important;
     flex-direction: row;
     width: 100%;
 }
@@ -442,11 +466,13 @@ iote
 .student-dropdown{
     margin-left: 11px;
     width: 40%;
+    display: flex !important;
 }
 
 .team-dropdown{
     margin-left: 20px;
     width: 40%;
+    display: flex !important;
 }
 
 .csv-download-button-div{
@@ -457,14 +483,39 @@ iote
     align-self: flex-end;
 }
 
-.csv-download-button{
-    background-color: #556AEB;
-    color: #fff;
+#mySearch {
+    width: 100%;
+    font-size: 15px;
+    padding: 11px;
+    border: 1px solid #ddd;
+    display: flex;
+    max-height: 20px;
+    min-width: 400px;
     border-radius: 5px;
-    padding: 8px 40px;
-    font-size: 12px;
+    border-width: 1px;
+    /*border-color: black;*/
+}
+
+.csv-download-button{
     align-self: flex-end;
-    min-width: 160px;
+    background-color: #4a7dfc !important;
+    border-radius: 5px;
+    min-height: 44px !important;
+    color: #fff;
+    font-size: 17px !important;
+    min-width: 180px !important;
+    padding: 8px 40px;
+}
+
+.add-student-button{
+    align-self: flex-end;
+    background-color: #28A745 !important;
+    border-radius: 5px;
+    min-height: 44px !important;
+    color: #fff;
+    font-size: 17px !important;
+    min-width: 180px !important;
+    padding: 8px 40px;
 }
 
 .stats-student-dropdown{
@@ -724,9 +775,3 @@ iote
 .purple {
     background-color: purple;
 }
-
-.grades-overview-breadcrumbs{
-    position: absolute;
-    top: 10px;
-    left: 20px;
-  }

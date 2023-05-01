@@ -754,3 +754,9 @@ input[type='text'] {
   justify-content: center;
   margin-left: 100px;
 }
+
+.grades-overview-breadcrumbs{
+  position: absolute;
+  top: 10px;
+  left: 20px;
+}
