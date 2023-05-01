@@ -180,37 +180,6 @@ function ProfessorSubmittedAssignmentPage() {
 
                   </div>
                   <br />
-                  <div>
-                    <div>
-                      <span className='sac-title'> Peer reviews: </span>
-                      <table className="rosterTable">
-                        <thead>
-                          <tr>
-                            <th className="rosterHeader">Team Name</th>
-                            <th className="rosterHeader">Given Score</th>
-                            <th className="rosterHeader">Download Feedback</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                        {reviews.map((review) => (
-                            review && (
-                                <tr key={uuid()}>
-                                  <th className="rosterComp">{review.reviewed_by}</th>
-                                  <th className="rosterComp">{review.grade}</th>
-                                  <th className="rosterComp">
-                                    <svg
-                                        onClick={() => onDownloadButtonClick(review)}
-                                        className={'bulk-download-icon-default'}
-                                        style={{ cursor: 'pointer' }}
-                                    ></svg>
-                                  </th>
-                                </tr>
-                            )))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                  <br />
                   <br />
                   <div>
                     <span className='sac-title'>
