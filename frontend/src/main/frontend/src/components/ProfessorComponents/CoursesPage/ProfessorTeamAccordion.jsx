@@ -117,7 +117,7 @@ const ProfessorTeamAccordion = ({ team, teams, setTeams }) => {
 
             <div>
               <div className= "teamMembersItem">
-                <span style={{ fontSize: '22px', fontWeight: 'bold' }}> {members.length}/4 </span>
+                <span style={{ fontSize: '22px', fontWeight: 'bold' }}> {members.length}/{team.team_size} </span>
                 <div style={{ fontSize: '12px' }}>Team Members</div>
               </div>
               <button  className="modify-button" >

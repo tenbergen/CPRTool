@@ -1,16 +1,27 @@
+<<<<<<< HEAD
+=======
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+>>>>>>> 564e4bbd3d768a4eb3a4d9f4e79980db3e6f6c8e
 import '../../../components/NavigationComponents/_ProfessorNavigationComponents.css'
-import '../../../pages/TeacherPages/styles/ProfessorRosterStyle.css' //ProfessorGradesStyling.css'
+import '../../../pages/TeacherPages/styles/ProfessorRosterStyle.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { base64StringToBlob } from 'blob-util'
+<<<<<<< HEAD
 import { useParams } from 'react-router-dom'
 import noStudent from '../../../assets/no-student.png'
 import { CgAdd } from 'react-icons/cg'
 import uuid from 'react-uuid'
 import searchIcon from '../../../pages/AdminPages/search.svg'
 //import { useState, useEffect } from 'react';
+=======
+import editIcon from '../../../pages/AdminPages/edit.png';
+>>>>>>> 564e4bbd3d768a4eb3a4d9f4e79980db3e6f6c8e
 import downloadIcon from '../../../../src/assets/icons/White_Download.svg'
+import '../../styles/EditCourse.css'
+import '../../styles/DeleteModal.css'
 import {
-  getCourseDetailsAsync,
+  getCourseDetailsAsync, getCoursesAsync,
   getCurrentCourseStudentsAsync,
   setCurrentCourse
 } from '../../../redux/features/courseSlice';
@@ -19,18 +30,30 @@ import { Line } from 'react-chartjs-2';
 import Table from './Table';
 import axios from 'axios';
 import Modal from "../../../pages/AdminPages/Modal";
+<<<<<<< HEAD
 import editIcon from "../../../pages/AdminPages/edit.png";
 import { useEffect, useState } from 'react'
+=======
+>>>>>>> 564e4bbd3d768a4eb3a4d9f4e79980db3e6f6c8e
 
 function ProfessorRosterComponent() {
   const dispatch = useDispatch()
+  let navigate = useNavigate()
   const courseParse = window.location.pathname;
-  const courseId = courseParse.split("/")[2];
+  // const courseId = courseParse.split("/")[2];
   const url = `${process.env.REACT_APP_URL}/manage/professor/courses`
+<<<<<<< HEAD
   const [showModal, setShowModal] = useState(false)
   const [studentToRemove, setStudentToRemove] = useState(undefined)
   const [searchTerm, setSearchTerm] = useState('')
+=======
+  const uploadCsvUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/student/mass-add`
+  const csvFormData = new FormData()
+  let { courseId } = useParams()
+  const { currentCourse } = useSelector((state) => state.courses)
+>>>>>>> 564e4bbd3d768a4eb3a4d9f4e79980db3e6f6c8e
   const { currentCourseStudents } = useSelector((state) => state.courses)
+  const updateUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/update`
 
   //search shit
   const handleSearch = (event) => {
@@ -53,17 +76,36 @@ function ProfessorRosterComponent() {
     alert("you pressed me");
   }
 
-
   const [formData, setFormData] = useState({
     Name: '',
     Email: '',
   })
 
-
   const { Name, Email } = formData
 
   const OnChange = (e) =>
       setFormData({ ...formData, [e.target.name]: e.target.value })
+
+  const fileUploadHandler = async (event) => {
+    let file = event.target.files[0]
+    const renamedFile = new File([file], currentCourse.course_id + '.csv', {
+      type: file.type,
+    })
+    csvFormData.set('csv_file', renamedFile)
+    await axios
+        .post(uploadCsvUrl, csvFormData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
+        .then((res) => {
+          window.alert('CSV successfully uploaded!')
+        })
+        .catch((e) => {
+          console.error(e.response.data)
+          window.alert('Error uploading CSV. Please try again.')
+        })
+    dispatch(getCourseDetailsAsync(courseId))
+    navigate('/professor/' + courseId)
+  }
 
 
   const handleSubmit = async () => {
@@ -443,7 +485,19 @@ function ProfessorRosterComponent() {
                     </div>
                     <div className="team-dropdown">
                       {/*Test to see if i can just toss this component in instead of calling const onClick*/}
-                      <button className='csv-download-button' >Upload CSV</button>
+                      <div className="csv-download-button">
+                        <label>
+                          {' '}
+                          <span className="inter-20-bold"> Roster Upload </span>{' '}
+                        </label>
+                        <input
+                            onChange={(event) => {
+                              fileUploadHandler(event);
+                            }}
+                            type="file"
+                            name="course_csv"
+                            accept=".csv"/>
+                      </div>
                     </div>
 
                     <div className="team-dropdown">
@@ -492,27 +546,6 @@ function ProfessorRosterComponent() {
                                   <button className='delete-button' onClick={()=> deleteStudent(user)}>X</button>
                                 </div>
                               </div>
-                              {showModal && (
-                              <div className="roster-delete-modal">
-                                <div className="roster-modal-content">
-                                  <h2 className="roster-modal-head">Confirm</h2>
-                                  <form>
-                                    <label className="roster-confirm-remove">Are you sure you want to
-                                      remove {studentToRemove.first_name} {studentToRemove.last_name}?</label>
-                                  </form>
-                                  <div className="roster-remove-user-buttons">
-                                    <button className="roster-remove-user-popup-button" onClick={() => {
-                                      setShowModal(false)
-                                      deleteStudent(studentToRemove)
-                                    }}>Yes
-                                    </button>
-                                    <button className="roster-cancel-user-delete-button"
-                                            onClick={() => setShowModal(false)}>No
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
                             </div>
                         ))}
                       </div>
@@ -527,3 +560,7 @@ function ProfessorRosterComponent() {
 }
 
 export default ProfessorRosterComponent
+<<<<<<< HEAD
+=======
+
+>>>>>>> 564e4bbd3d768a4eb3a4d9f4e79980db3e6f6c8e
