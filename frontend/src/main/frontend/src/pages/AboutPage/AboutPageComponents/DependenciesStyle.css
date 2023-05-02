@@ -54,8 +54,12 @@
     flex-direction: row;
 }
 
+.dependencies-list-columns-container > ul {
+    margin-right: 0!important;
+}
+
 .dependencies-lists-container {
-    width: 100%;
+    width: 1100px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
