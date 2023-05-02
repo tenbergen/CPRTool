@@ -71,25 +71,6 @@ function ProfessorRosterComponent() {
     navigate('/professor/' + courseId)
   }
 
-  // const fileUploadHandler = async (event) => {
-  //   try {
-  //     let file = event.target.files[0]
-  //     const renamedFile = new File([file], currentCourse.course_id + '.csv', {
-  //       type: file.type,
-  //     })
-  //     const formData = new FormData()
-  //     formData.append('csv_file', renamedFile)
-  //     await axios.post(uploadCsvUrl, formData, {
-  //       headers: { 'Content-Type': 'multipart/form-data' },
-  //     })
-  //     window.alert('CSV successfully uploaded!')
-  //     dispatch(getCourseDetailsAsync(courseId))
-  //     navigate('/professor/' + courseId)
-  //   } catch (error) {
-  //     console.error(error.response?.data)
-  //     window.alert('Error uploading CSV. Please try again.')
-  //   }
-  // }
 
   const handleSubmit = async () => {
     const nameArray = Name.split(' ')
