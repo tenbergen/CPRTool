@@ -434,11 +434,12 @@ const ProfessorEditAssignmentComponent = () => {
             </label>
             <Field name="assignment_name">
               {({ input }) => (<input
+                className="inter-16-medium-black"
                 type="text"
                 name="assignment_name"
                 {...input}
                 required
-                style={{ width: '75%', height: '43px' }}
+                style={{ width: '75%', height: '43px', fontSize: 16, paddingLeft: 16 }}
               />)}
             </Field>
           </div>
@@ -446,8 +447,8 @@ const ProfessorEditAssignmentComponent = () => {
                <div>
                   <div className="inter-20-medium-black eac-instructions">
                     <label className="required"> Instructions: </label>
-                    <Field name="instructions">
-                    {({ input }) => (<textarea name="instructions" {...input} required/>)}
+                    <Field name="instructions" >
+                    {({ input }) => (<textarea name="instructions" className="inter-16-medium-black" {...input} required/>)}
                      </Field>
                   </div>
                  <div className="eac-assignment-info-group">
@@ -455,12 +456,13 @@ const ProfessorEditAssignmentComponent = () => {
                      <label className="required">Due Date:</label>
                     <Field name="due_date">
                       {({ input }) => (<input
+                        className="inter-16-medium-black"
                         type="date"
                         name="due_date"
                         {...input}
                         required
                         min={new Date().toISOString().split('T')[0]}
-                        style={{ width: '100%' }}
+                        style={{ width: '100%', paddingLeft: 16 }}
                       />)}
                     </Field>
                   </div>
@@ -469,12 +471,13 @@ const ProfessorEditAssignmentComponent = () => {
                     <label className="required"> Points: </label>
                     <Field name="points">
                     {({ input }) => (<input
+                      className="inter-16-medium-black"
                       type="number"
                       name="points"
                       {...input}
                       required
                       onWheel={(e) => e.target.blur()}
-                      style={{ width: '100%' }}
+                      style={{ width: '100%', paddingLeft: 16 }}
                     />)}
                     </Field>
                   </div>

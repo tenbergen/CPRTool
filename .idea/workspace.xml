@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
-  </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
+    <list default="true" id="a5be8d9c-44d2-4e22-9bb3-628671fe5265" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/src/components/StudentComponents/CoursePage/StudentTeamComponent.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/frontend/src/components/StudentComponents/CoursePage/StudentTeamComponent.js" afterDir="false" />
+=======
     <list default="true" id="32b51248-2e16-47a6-a3fe-004f6ccfd702" name="Changes" comment="Trying to get download button in table to work">
       <change beforePath="$PROJECT_DIR$/frontend/src/main/frontend/src/pages/TeacherPages/ProfessorSubmittedAssignmentPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/main/frontend/src/pages/TeacherPages/ProfessorSubmittedAssignmentPage.js" afterDir="false" />
 
+>>>>>>> Testing
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,6 +22,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+<<<<<<< HEAD
+  <component name="ProjectId" id="2OwLY33tw4Ya3n3uIDbMQ3kXCiT" />
+=======
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -30,10 +36,21 @@
     <option name="version" value="2" />
   </component>
   <component name="ProjectId" id="2Otwp42kT8bO2xLuBHGS6IP3cQX" />
+>>>>>>> Testing
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+    <option name="showVisibilityIcons" value="true" />
   </component>
+<<<<<<< HEAD
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "nodejs_package_manager_path": "npm"
+=======
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
@@ -47,6 +64,7 @@
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+>>>>>>> Testing
   }
 }</component>
   <component name="RecentsManager">
@@ -59,6 +77,15 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
+<<<<<<< HEAD
+      <changelist id="a5be8d9c-44d2-4e22-9bb3-628671fe5265" name="Changes" comment="" />
+      <created>1682466745301</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1682466745301</updated>
+      <workItem from="1682466749624" duration="8822000" />
+    </task>
+=======
       <changelist id="50cb875f-6e97-4422-a2e7-199a4315b180" name="Changes" comment="" />
       <created>1682393365666</created>
       <option name="number" value="Default" />
@@ -193,6 +220,7 @@
     </task>
     <option name="localTasksCounter" value="18" />
 
+>>>>>>> Testing
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -210,6 +238,8 @@
       </map>
     </option>
   </component>
+<<<<<<< HEAD
+=======
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fixed PRReceived" />
     <MESSAGE value="trying to get the data on the table correctly" />
@@ -223,4 +253,5 @@
     <option name="LAST_COMMIT_MESSAGE" value="Trying to get download button in table to work" />
   </component>
 
+>>>>>>> Testing
 </project>

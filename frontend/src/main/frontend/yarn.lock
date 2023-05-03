@@ -8577,7 +8577,7 @@ thunky@^1.0.2:
 
 timers@^0.1.1:
   version "0.1.1"
-  resolved "https://registry.yarnpkg.com/timers/-/timers-0.1.1.tgz#86ac5c78c1ee419694f35a58de4fd4183cfb9c1e"
+  resolved "https://registry.npmjs.org/timers/-/timers-0.1.1.tgz"
   integrity sha512-pkJC8uIP/gxDHxNQUBUbjHyl6oZfT+ofn7tbaHW+CFIUjI+Q2MBbHcx1JSBQfhDaTcO9bNg328q0i7Vk5PismQ==
 
 tiny-warning@^1.0.3:
