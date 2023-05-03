@@ -41,7 +41,7 @@
     margin: 0;
 }
 
-.add-user-button {
+.admin-add-user-button {
     background-color: #28A745;
     color: #fff;
     border-radius: 5px;
@@ -49,6 +49,7 @@
     font-size: 1.2em;
     align-self: flex-end;
     min-width: 175px;
+    height: 40px;
 }
 
 .admin-user-list {
@@ -104,12 +105,12 @@ input[type='text'] {
     display: flex;
 }
 
-.edit-button {
+.admin-edit-button {
     background: none;
     border: none;
 }
 
-.delete-button {
+.admin-delete-button {
     color: rgb(0, 0, 0);
     align-self: flex-end;
     font-size: 1.2em;
@@ -123,10 +124,7 @@ input[type='text'] {
     height: calc(120% - 10px);
 }
 
-.dropdown {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
+.admin-page-dropdown {
     padding: 0 40px;
 }
 
@@ -142,8 +140,19 @@ input[type='text'] {
     flex: 1;
 }
 
-#role {
-    height: 35px;
+#admin-role {
+    height: 40px;
+    max-width: 190px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    width: 175px;
+    border: solid;
+    border-color: #000000;
+    border-width: 1px;
+}
+
+#admin-courses-role {
+    height: 40px;
     background-color: #ffffff;
     border-radius: 5px;
     width: 95%;
@@ -169,8 +178,8 @@ input[type='text'] {
     padding: 25px 40px;
 }
 
-.add-user-button-div {
-    padding: 0 40px;
+.admin-add-user-button-div {
+    padding: 0 15px;
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -226,7 +235,7 @@ input[type='text'] {
     height: 50%;
 }
 
-.edit-icon {
+.admin-edit-icon {
     width: 75%;
     height: 75%;
 }
@@ -262,14 +271,14 @@ input[type='text'] {
     padding: 0 100px;
 }
 
-.edit-container {
+.admin-edit-container {
     padding-right: 8px;
     margin-left: -4px;
     display: grid;
     align-self: left;
 }
 
-.delete-container {
+.admin-delete-container {
     display: grid;
     align-self: left;
 }
@@ -496,10 +505,14 @@ input[type='text'] {
 
 .add-user-name {
     padding: 10px;
+    display: flex; 
+    flex-direction: column;
 }
 
 .add-user-email {
     padding: 10px;
+    display: flex; 
+    flex-direction: column;
 }
 
 #add-user-role {

@@ -409,17 +409,17 @@ function AdminInterface () {
                     <button className="admin-search-button"><img className="search-icon" src={searchIcon}/></button>
                   </div>
                 </div>
-                <div className="dropdown">
+                <div className="admin-page-dropdown">
                   <label for="role-filter">Role Filter</label>
-                  <select name="role" id="role" onChange={(e) => setSelectedRole(e.target.value)}>
+                  <select name="admin-role" id="admin-role" onChange={(e) => setSelectedRole(e.target.value)}>
                     <option value="all">All</option>
                     <option value="admin">Admin</option>
                     <option value="professor">Professor</option>
                     <option value="student">Student</option>
                   </select>
                 </div>
-                <div className="add-user-button-div">
-                  <button className="add-user-button" onClick={() => setShowModal(true)}>Add User +</button>
+                <div className="admin-add-user-button-div">
+                  <button className="admin-add-user-button" onClick={() => setShowModal(true)}>Add User +</button>
 
                   {showModal && (
                     <div className="modal">
@@ -493,14 +493,14 @@ function AdminInterface () {
                         <div>{user.user_id}</div>
                         <div>{user.role}</div>
                         <div>
-                          <div className="edit-container">
-                            <button className="edit-button" onClick={() => {
+                          <div className="admin-edit-container">
+                            <button className="admin-edit-button" onClick={() => {
                               setShowEditModal(true)
                               getEditUser(user.first_name, user.last_name)
                               getCurrentID(user.user_id)
                               getCurrentRole(user.role)
                             }}>
-                              <img className="edit-icon" src={editIcon}/>
+                              <img className="admin-edit-icon" src={editIcon}/>
                             </button>
 
                             {showEditModal && (
@@ -534,8 +534,8 @@ function AdminInterface () {
                             )}
 
                           </div>
-                          <div className="delete-container">
-                            <button className="delete-button" onClick={() => {
+                          <div className="admin-delete-container">
+                            <button className="admin-delete-button" onClick={() => {
                               setShowDeleteModal(true)
                               getDeleteUser(user.first_name, user.last_name)
                               getCurrentID(user.user_id)
@@ -589,7 +589,7 @@ function AdminInterface () {
                 </div>
                 <div className="dropdown-year">
                   <label for="role-filter">Year</label>
-                  <select name="role" id="role" onChange={(e) => setSelectedYear(e.target.value)}>
+                  <select name="role" id="admin-courses-role" onChange={(e) => setSelectedYear(e.target.value)}>
                     <option value="all">All</option>
                     {uniqueYears.map(item => {
                       return (<option key={item} value={item}>{item}</option>)
@@ -598,7 +598,7 @@ function AdminInterface () {
                 </div>
                 <div className="dropdown-semester">
                   <label for="role-filter">Semester</label>
-                  <select name="role" id="role" onChange={(e) => setSelectedSemester(e.target.value)}>
+                  <select name="role" id="admin-courses-role" onChange={(e) => setSelectedSemester(e.target.value)}>
                     <option value="all">All</option>
                     <option value="Spring">Spring</option>
                     <option value="Summer">Summer</option>

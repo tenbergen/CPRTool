@@ -13,6 +13,7 @@ import editIcon from '../../../pages/AdminPages/edit.png';
 import downloadIcon from '../../../../src/assets/icons/White_Download.svg'
 import '../../styles/EditCourse.css'
 import '../../styles/DeleteModal.css'
+import '../../styles/Roster.css'
 import {
   getCourseDetailsAsync, getCoursesAsync,
   getCurrentCourseStudentsAsync,
@@ -40,6 +41,7 @@ function ProfessorRosterComponent() {
   const { currentCourse } = useSelector((state) => state.courses)
   const { currentCourseStudents } = useSelector((state) => state.courses)
   const updateUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/update`
+
 
   //search shit
   const handleSearch = (event) => {
@@ -551,13 +553,34 @@ function ProfessorRosterComponent() {
 
                                 <div className='edit-container'>
                                   <button className='edit-button' onClick={() => setEditStudentShow(true)}><img className='edit-icon' src={editIcon} /></button>
-                                  <div>{showEditStudentModal ? editStudentModal(user) : null}</div>
-                                </div>
-                                <div className='delete-container'>
-                                  <button className='delete-button' onClick={()=> deleteStudent(user)}>X</button>
-                                </div>
+                                <div>{showEditStudentModal ? editStudentModal(user) : null}</div>
+                              </div>
+                              <div className='delete-container'>
+                                <button className='delete-button' onClick={() => {setShowModal(true); setStudentToRemove(user)}}>X</button>
+                                {showModal && (
+                                  <div className="roster-delete-modal">
+                                    <div className="roster-modal-content">
+                                      <h2 className="roster-modal-head">Confirm</h2>
+                                      <form>
+                                        <label className="roster-confirm-remove">Are you sure you want to
+                                          remove {studentToRemove.first_name} {studentToRemove.last_name}?</label>
+                                      </form>
+                                      <div className="roster-remove-user-buttons">
+                                        <button className="roster-remove-user-popup-button" onClick={() => {
+                                          setShowModal(false)
+                                          deleteStudent(studentToRemove)
+                                        }}>Yes
+                                        </button>
+                                        <button className="roster-cancel-user-delete-button"
+                                          onClick={() => setShowModal(false)}>No
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
                               </div>
                             </div>
+                          </div>
                         ))}
                       </div>
                     </div>

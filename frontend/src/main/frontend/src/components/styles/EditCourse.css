@@ -336,7 +336,6 @@ input[type=text] {
     /*took out !important as it was overriding the professorRosterStyle search bar size*/
     height: 30px ;
     outline: none;
-    width: 70% !important;
 }
 
 .course-profanity-details {

@@ -297,7 +297,7 @@ function ProfessorGradesPage() {
     const downloadStudentAssignment = async (assignId, teamName) => {
         const url = `${process.env.REACT_APP_URL}/assignments/student/courses/${course}/assignments/${assignId}/${teamName}/download`;
         await axios
-            .post(url)
+            .get(url)
             console.log(url)
             .then((res) => {
                 alert('Succesfully downloaded');
@@ -426,14 +426,7 @@ function ProfessorGradesPage() {
                                                             </div>
                                                         )}
                                                     </div>
-                                                    <div className='professor-grades-delete-container'>
-                                                        <button className='professor-grades-delete-button' onClick={() => 
-                                                            {getTeamName(user.team_name);
-                                                            getAssignmentID(user.assignment_id);
-                                                            downloadStudentAssignment(assignmentID, teamName) }}>
-                                                            <img className='download-icon'src={bulkDownloadLogo} />
-                                                        </button>
-                                                    </div>
+                                                    
                                                 </div>
                                             </div>
                                         ))}
