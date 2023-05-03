@@ -9,6 +9,7 @@ import {base64StringToBlob} from "blob-util";
 import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 import Breadcrumbs from "../../components/Breadcrumbs";
+import {getCoursesAsync} from "../../redux/features/courseSlice";
 
 
 function ProfessorSubmittedAssignmentPage() {
@@ -18,6 +19,7 @@ function ProfessorSubmittedAssignmentPage() {
   const { courseId, assignmentId, teamId } = useParams();
   const [reviews, setReviews] = useState([]);
   const [teamSubmission, setTeamSubmission] = useState('')
+
 
   const getReviews = async (courseId, teamId, assignmentId) => {
 
@@ -44,6 +46,7 @@ function ProfessorSubmittedAssignmentPage() {
   }
 
   useEffect( () => {
+    dispatch(getCoursesAsync());
     const fetchReviews = async () => {
       const data = await getReviews(courseId, teamId, assignmentId);
       setReviews(data);
@@ -175,38 +178,6 @@ function ProfessorSubmittedAssignmentPage() {
                     </span>
                     </div>
 
-                  </div>
-                  <br />
-                  <div>
-                    <div>
-                      <span className='sac-title'> Peer reviews: </span>
-                      <table className="rosterTable">
-                        <thead>
-                          <tr>
-                            <th className="rosterHeader">Team Name</th>
-                            <th className="rosterHeader">Given Score</th>
-                            <th className="rosterHeader">Download Feedback</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                        {reviews.map((review) => (
-                            review && (
-                                <tr key={uuid()}>
-                                  <th className="rosterComp">{review.reviewed_by}</th>
-                                  <th className="rosterComp">{review.grade}</th>
-                                  <th className="rosterComp">
-                                    <svg
-                                        className={'bulk-download-icon-default'}
-                                        alt={'Bulk Download For Student'}
-                                        style={{ cursor: 'pointer' }}
-                                    ></svg>
-                                    <button onClick={() => onDownloadButtonClick(review)}></button>
-                                  </th>
-                                </tr>
-                            )))}
-                        </tbody>
-                      </table>
-                    </div>
                   </div>
                   <br />
                   <br />

@@ -27,6 +27,7 @@ const ProfessorEditCourseComponent = () => {
   const csvFormData = new FormData()
   const courseParse = window.location.pathname
   const course = courseParse.split('/')[2]
+  const courseSemester = course.split('-')[3]
 
   const fileChangeHandler = (event) => {
     let file = event.target.files[0]
@@ -172,128 +173,139 @@ const ProfessorEditCourseComponent = () => {
             <form onSubmit={handleSubmit}>
               <div className="info-container">
                 <div className="info-header"></div>
-                <div className="ecc-input-field">
-                  <label className="required">
-                    <span className="inter-20-bold">Name of course: </span>
-                  </label>
-                  <Field name="course_name">
-                    {({ input }) => (
-                      <input type="text" name="course_name" {...input} required/>
-                    )}
-                  </Field>
-                </div>
-
-                <div className="ecc-row-multiple">
+                <div className="edit-course-input-fields-container">
                   <div className="ecc-input-field">
                     <label className="required">
-                      {' '}
-                      <span className="inter-20-bold"> Course abbreviation: </span>{' '}
+                      <span className="inter-20-bold">Name of course: </span>
                     </label>
-                    <Field name="abbreviation">
+                    <Field name="course_name">
                       {({ input }) => (
-                        <input
-                          type="text"
-                          name="abbreviation"
-                          {...input}
-                          required/>
+                          <input type="text" name="course_name" className="inter-16-medium-black" {...input} required/>
                       )}
                     </Field>
                   </div>
 
-                  <div className="ecc-input-field">
-                    <label className="required">
-                      {' '}
-                      <span className="inter-20-bold"> Course section : </span>{' '}
-                    </label>
-                    <Field name="course_section">
-                      {({ input }) => (
-                        <input
-                          type="text"
-                          name="course_section"
-                          {...input}
-                          required/>
-                      )}
-                    </Field>
-                  </div>
-                </div>
+                  <div className="ecc-row-multiple">
+                    <div className="ecc-input-field">
+                      <label className="required">
+                        {' '}
+                        <span className="inter-20-bold"> Course abbreviation: </span>{' '}
+                      </label>
+                      <Field name="abbreviation">
+                        {({ input }) => (
+                            <input
+                                className="inter-16-medium-black"
+                                type="text"
+                                name="abbreviation"
+                                {...input}
+                                required/>
+                        )}
+                      </Field>
+                    </div>
 
-                <div className="ecc-row-multiple">
-                  <div className="ecc-input-field">
-                    <label className="required">
-                      <span className="inter-20-bold">Semester: </span>
-                    </label>
-                    <Field name="semester">
-                      {({ input }) => (
-                        <input type="text" name="semester" {...input} required/>
-                      )}
-                    </Field>
-                  </div>
-                  <div className="ecc-input-field">
-                    <label className="required">
-                      <span className="inter-20-bold">Year: </span>{' '}
-                    </label>
-                    <Field name="year">
-                      {({ input }) => (
-                        <input type="text" name="year" {...input} required/>
-                      )}
-                    </Field>
-                  </div>
-                </div>
-
-                <div className="ecc-row-multiple">
-                  <div className="ecc-input-field">
-                    <label className="required">
-                      <span className="inter-20-bold">CRN: </span>{' '}
-                    </label>
-                    <Field name="crn">
-                      {({ input }) => <input type="text" name="crn" {...input} />}
-                    </Field>
+                    <div className="ecc-input-field">
+                      <label className="required">
+                        {' '}
+                        <span className="inter-20-bold"> Course section : </span>{' '}
+                      </label>
+                      <Field name="course_section">
+                        {({ input }) => (
+                            <input
+                                className="inter-16-medium-black"
+                                type="text"
+                                name="course_section"
+                                {...input}
+                                required/>
+                        )}
+                      </Field>
+                    </div>
                   </div>
 
-                  <div className="ecc-input-field">
-                    <label className="required">
-                      <span className="inter-20-bold">Team size: </span>{' '}
-                    </label>
-                    <Field name="team_size">
-                      {({ input }) => (
-                        <input type="number" min="1" name="team_size" {...input} />
-                      )}
-                    </Field>
+                  <div className="ecc-row-multiple">
+                    <div className="ecc-input-field">
+                      <label className="required">
+                        <span className="inter-20-bold">Semester: </span>
+                      </label>
+                      <Field name="semester">
+                        {({ input }) => (
+                            <select name="semester" id="edit-semester" defaultValue={courseSemester} {...input}>
+                            <option value="Spring">Spring</option>
+                            <option value="Summer">Summer</option>
+                            <option value="Fall">Fall</option>
+                            <option value="Winter">Winter</option>
+                          </select>
+                        )}
+                      </Field>
+                    </div>
+                    <div className="ecc-input-field">
+                      <label className="required">
+                        <span className="inter-20-bold">Year: </span>{' '}
+                      </label>
+                      <Field name="year">
+                        {({ input }) => (
+                            <input type="text" name="year" className="inter-16-medium-black" {...input} required/>
+                        )}
+                      </Field>
+                    </div>
                   </div>
-                </div>
 
-                <div className="roster-bulk-container">
-                  <div className="ecc-bulk-download">
-                    <label>
-                      <span className="inter-20-bold"> Bulk Download for Course </span>
-                    </label>
-                    <button className="bulk-download-button" type="button" onClick={onCourseClick}
-                            style={{ width: '150px', height: '40px' }}>Download
-                      <div style={{ display: 'inline-block', verticalAlign: 'middle', margin: '0 auto' }}>
-                      </div>
-                    </button>
+                  <div className="ecc-row-multiple">
+                    <div className="ecc-input-field">
+                      <label className="required">
+                        <span className="inter-20-bold">CRN: </span>{' '}
+                      </label>
+                      <Field name="crn">
+                        {({ input }) => <input type="text" name="crn" className="inter-16-medium-black" {...input} />}
+                      </Field>
+                    </div>
+
+                    <div className="ecc-input-field">
+                      <label className="required">
+                        <span className="inter-20-bold">Team size: </span>{' '}
+                      </label>
+                      <Field name="team_size">
+                        {({ input }) => (
+                            <input type="number" min="1" name="team_size" className="inter-16-medium-black" {...input} />
+                        )}
+                      </Field>
+                    </div>
                   </div>
 
-                  <div className="ecc-file-upload">
-                    <label>
-                      {' '}
-                      <span className="inter-20-bold"> Roster Upload </span>{' '}
-                    </label>
-                    <input
-                      onChange={fileChangeHandler}
-                      type="file"
-                      name="course_csv"
-                      accept=".csv"/>
-                  </div>
-                </div>
+                  <div className="roster-bulk-container">
+                    <div className="ecc-bulk-download">
+                      <label>
+                        <span className="inter-20-bold"> Bulk Download for Course </span>
+                      </label>
+                      <button className="bulk-download-button" type="button" onClick={onCourseClick}
+                              style={{ width: '150px', height: '40px' }}>Download
+                        <div style={{ display: 'inline-block', verticalAlign: 'middle', margin: '0 auto' }}>
+                        </div>
+                      </button>
+                    </div>
 
-                <div>
-                  <label className="inter-20-medium">
+                    <div className="ecc-file-upload">
+                      <label>
+                        {' '}
+                        <span className="inter-20-bold"> Roster Upload </span>{' '}
+                      </label>
+                      <input
+                          onChange={fileChangeHandler}
+                          type="file"
+                          name="course_csv"
+                          accept=".csv"/>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="inter-20-medium">
                     <span className="required-alt">
                       Indicates Required Field
                     </span>
-                  </label>
+                    </label>
+                  </div>
                 </div>
+
+
               </div>
 
             </form>

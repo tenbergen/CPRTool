@@ -1,11 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');
 
+.edit-course-input-fields-container{
+    padding-left: 2%;
+}
+
 .ecc-form {
     background-color: white;
     /*border-radius: 50px;*/
     padding: 1%;
     overflow-y: scroll;
     max-height: 80vh;
+    overflow-x: hidden;
 }
 
 .ecc-form::-webkit-scrollbar {
@@ -67,6 +72,7 @@
 .ecc-file-upload {
     display: flex;
     gap: 10px;
+    margin-right: 5%;
 }
 
 .ecc-file-upload label {
@@ -259,7 +265,9 @@
 .roster-bulk-container {
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
+    margin-top: 4%;
+    margin-bottom: 2%;
 }
 
 .ecc-bulk-download {
@@ -292,6 +300,7 @@
 }
 
 .info-container {
+    overflow-x: hidden;
     border: solid #212529;
     border-width: 1px;
     border-radius: 5px;
@@ -319,6 +328,15 @@
     align-items: center;
 }
 
+input[type=text] {
+    border-bottom-left-radius: 5px;
+    border-color: #000;
+    border-width: 1px;
+    font-size: 1.2em;
+    /*took out !important as it was overriding the professorRosterStyle search bar size*/
+    height: 30px ;
+    outline: none;
+}
 
 .course-profanity-details {
     padding-left: 1%;
@@ -332,3 +350,16 @@
     font-style: normal;
     font-weight: 400;
 }
+
+#edit-semester {
+    height: 35px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    width: 80%;
+    border: solid;
+    border-color: #000000;
+    border-width: 1px;
+    font-weight: 500;
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+  }

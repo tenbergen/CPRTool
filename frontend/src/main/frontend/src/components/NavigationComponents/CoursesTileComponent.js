@@ -69,69 +69,6 @@ const CoursesTileComponent = ({trigger, homeActive, deactivateHome}) => {
         ToggleSecondLine()
     }
 
-    // async function deselectSemesters(){
-    //     document.getElementById("all-button").innerHTML = "All"
-    //     document.getElementById("all-button").classList.remove("inter-20-medium-white")
-    //
-    //     document.getElementById("all-button").classList.remove("semester-selection-active")
-    //     document.getElementById("all-button").classList.add("semester-selection-inactive")
-    //     document.getElementById("all-button").classList.add("inter-14-medium-black")
-    //
-    //     document.getElementById("spring-button").classList.remove("semester-selection-active")
-    //     document.getElementById("spring-button").classList.add("semester-selection-inactive")
-    //     document.getElementById("spring-button").classList.remove("inter-14-medium-white")
-    //     document.getElementById("spring-button").classList.add("inter-14-medium-black")
-    //
-    //     document.getElementById("summer-button").classList.remove("semester-selection-active")
-    //     document.getElementById("summer-button").classList.add("semester-selection-inactive")
-    //     document.getElementById("summer-button").classList.remove("inter-14-medium-white")
-    //     document.getElementById("summer-button").classList.add("inter-14-medium-black")
-    //
-    //     document.getElementById("fall-button").classList.remove("semester-selection-active")
-    //     document.getElementById("fall-button").classList.add("semester-selection-inactive")
-    //     document.getElementById("fall-button").classList.remove("inter-14-medium-white")
-    //     document.getElementById("fall-button").classList.add("inter-14-medium-black")
-    //
-    //     document.getElementById("winter-button").classList.remove("semester-selection-active")
-    //     document.getElementById("winter-button").classList.add("semester-selection-inactive")
-    //     document.getElementById("winter-button").classList.remove("inter-14-medium-white")
-    //     document.getElementById("winter-button").classList.add("inter-14-medium-black")
-    // }
-    //
-    // const selectAllSemesters = () => {
-    //     if(document.getElementById("all-button").classList.contains("semester-selection-active")){
-    //         deselectSemesters()
-    //     } else {
-    //         document.getElementById("all-button").classList.remove("semester-selection-inactive")
-    //         document.getElementById("all-button").classList.add("semester-selection-active")
-    //         document.getElementById("all-button").classList.remove("inter-14-medium-black")
-    //
-    //         document.getElementById("spring-button").classList.remove("semester-selection-inactive")
-    //         document.getElementById("spring-button").classList.add("semester-selection-active")
-    //         document.getElementById("spring-button").classList.remove("inter-14-medium-black")
-    //         document.getElementById("spring-button").classList.add("inter-14-medium-white")
-    //
-    //         document.getElementById("summer-button").classList.remove("semester-selection-inactive")
-    //         document.getElementById("summer-button").classList.add("semester-selection-active")
-    //         document.getElementById("summer-button").classList.remove("inter-14-medium-black")
-    //         document.getElementById("summer-button").classList.add("inter-14-medium-white")
-    //
-    //         document.getElementById("fall-button").classList.remove("semester-selection-inactive")
-    //         document.getElementById("fall-button").classList.add("semester-selection-active")
-    //         document.getElementById("fall-button").classList.remove("inter-14-medium-black")
-    //         document.getElementById("fall-button").classList.add("inter-14-medium-white")
-    //
-    //         document.getElementById("winter-button").classList.remove("semester-selection-inactive")
-    //         document.getElementById("winter-button").classList.add("semester-selection-active")
-    //         document.getElementById("winter-button").classList.remove("inter-14-medium-black")
-    //         document.getElementById("winter-button").classList.add("inter-14-medium-white")
-    //
-    //         document.getElementById("all-button").classList.remove("inter-14-medium-white")
-    //         document.getElementById("all-button").classList.add("inter-20-medium-white")
-    //         document.getElementById("all-button").innerHTML = '&#10003;'
-    //     }
-    // }
-
     const ToggleSecondLine = () => {
         setOPen(!open);
 

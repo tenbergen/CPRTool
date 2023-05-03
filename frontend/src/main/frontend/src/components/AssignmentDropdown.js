@@ -8,9 +8,6 @@ const AssignmentDropdown = (props) => {
             assignmentObject.name = assignmentObject.assignment_name.substring(0, 35) + "...";
         }
     }
-
-
-    console.log(props)
     
     // const [selectedAssignment, setSelectedAssignment] = useState(props.assignmentObjects[0].name);
     const [selectedAssignment, setSelectedAssignment] =useState(props.assignmentObjects[0].assignment_name);

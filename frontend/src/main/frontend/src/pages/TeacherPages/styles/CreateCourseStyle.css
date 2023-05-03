@@ -108,3 +108,13 @@
 .browse-button{
   margin-top: 3%;
 }
+
+#semester {
+  height: 35px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  width: 80%;
+  border: solid;
+  border-color: #000000;
+  border-width: 1px;
+}
