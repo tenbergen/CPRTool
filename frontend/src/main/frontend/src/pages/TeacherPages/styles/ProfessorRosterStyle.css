@@ -249,38 +249,6 @@ input[type='text'] {
     height: 75%;
 }
 
-
-input[type='file'] {
-
-    /*min-width: 180px !important;*/
-    /*max-width: 181px !important;*/
-    /*align-self: flex-end;*/
-    /*background-color: #2c67fa!important;*/
-    /*border-radius: 5px;*/
-    /*color: #fff;*/
-    /*padding: 8px 40px;*/
-    /*probably what it should be*/
-
-    align-self: flex-end;
-    background-color: #2c67fa !important;
-    border-radius: 5px !important;
-    min-height: 44px !important;
-    color: #fff !important;
-    font-size: 17px !important;
-    min-width: 180px !important;
-    padding: 8px 40px !important;
-
-    /*height: 36px !important;*/
-    /*font-size: 1.2em;*/
-    /*width: 97.5%;*/
-    /*border: solid;*/
-    /*border-color: #000000;*/
-    /*border-width: 1px;*/
-    /*border-top-left-radius: 5px;*/
-    /*border-bottom-left-radius: 5px;*/
-    /*outline: none;*/
-}
-
 .search-year-semester {
     display: flex;
     padding: 25px 40px;
