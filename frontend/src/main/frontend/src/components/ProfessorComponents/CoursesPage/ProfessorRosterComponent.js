@@ -1,22 +1,15 @@
-<<<<<<< HEAD
-=======
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
->>>>>>> 564e4bbd3d768a4eb3a4d9f4e79980db3e6f6c8e
 import '../../../components/NavigationComponents/_ProfessorNavigationComponents.css'
 import '../../../pages/TeacherPages/styles/ProfessorRosterStyle.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { base64StringToBlob } from 'blob-util'
-<<<<<<< HEAD
-import { useParams } from 'react-router-dom'
 import noStudent from '../../../assets/no-student.png'
 import { CgAdd } from 'react-icons/cg'
 import uuid from 'react-uuid'
 import searchIcon from '../../../pages/AdminPages/search.svg'
 //import { useState, useEffect } from 'react';
-=======
 import editIcon from '../../../pages/AdminPages/edit.png';
->>>>>>> 564e4bbd3d768a4eb3a4d9f4e79980db3e6f6c8e
 import downloadIcon from '../../../../src/assets/icons/White_Download.svg'
 import '../../styles/EditCourse.css'
 import '../../styles/DeleteModal.css'
@@ -30,11 +23,6 @@ import { Line } from 'react-chartjs-2';
 import Table from './Table';
 import axios from 'axios';
 import Modal from "../../../pages/AdminPages/Modal";
-<<<<<<< HEAD
-import editIcon from "../../../pages/AdminPages/edit.png";
-import { useEffect, useState } from 'react'
-=======
->>>>>>> 564e4bbd3d768a4eb3a4d9f4e79980db3e6f6c8e
 
 function ProfessorRosterComponent() {
   const dispatch = useDispatch()
@@ -42,16 +30,14 @@ function ProfessorRosterComponent() {
   const courseParse = window.location.pathname;
   // const courseId = courseParse.split("/")[2];
   const url = `${process.env.REACT_APP_URL}/manage/professor/courses`
-<<<<<<< HEAD
+
   const [showModal, setShowModal] = useState(false)
   const [studentToRemove, setStudentToRemove] = useState(undefined)
   const [searchTerm, setSearchTerm] = useState('')
-=======
   const uploadCsvUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/student/mass-add`
   const csvFormData = new FormData()
   let { courseId } = useParams()
   const { currentCourse } = useSelector((state) => state.courses)
->>>>>>> 564e4bbd3d768a4eb3a4d9f4e79980db3e6f6c8e
   const { currentCourseStudents } = useSelector((state) => state.courses)
   const updateUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/update`
 
@@ -477,7 +463,7 @@ function ProfessorRosterComponent() {
                                 onChange={(e) => setSearchTerm(e.target.value)}>
                           <option value="all">All</option>
                           {currentCourseStudents.map(item => {
-                            return (<option value = {item.name}>{item.first_name + item.last_name}</option>);
+                            return (<option value = {item.student_id}>{item.first_name + item.last_name}</option>);
                           })}
                         </select>
                         {/*</div>*/}
@@ -485,19 +471,38 @@ function ProfessorRosterComponent() {
                     </div>
                     <div className="team-dropdown">
                       {/*Test to see if i can just toss this component in instead of calling const onClick*/}
-                      <div className="csv-download-button">
-                        <label>
-                          {' '}
-                          <span className="inter-20-bold"> Roster Upload </span>{' '}
-                        </label>
-                        <input
-                            onChange={(event) => {
-                              fileUploadHandler(event);
-                            }}
-                            type="file"
-                            name="course_csv"
-                            accept=".csv"/>
+                      {/*  <label>*/}
+                      {/*    Roster Upload*/}
+                      {/*  </label>*/}
+
+                      {/*  <button className='csv-download-button'  onClick={(event) => {*/}
+                      {/*    fileUploadHandler(event);}}>Roster Upload</button>*/}
+                      <div className='professor-roster-csv-download-button'>
+                      <input
+                          type="button"
+                          className="professor-roster-csv-download-button"
+                          value="Upload CSV"
+                      />
+                      <input
+                          onChange={(event) => {
+                            fileUploadHandler(event);
+                          }}
+                                  type="file"
+                                  name="course_csv"
+                                  accept=".csv"
+                      />
                       </div>
+
+
+                      {/*<input className='professor-roster-csv-download-button'*/}
+                        {/*    onChange={(event) => {*/}
+                        {/*      fileUploadHandler(event);*/}
+                        {/*    }}*/}
+                        {/*     type="file"*/}
+                        {/*     name="course_csv"*/}
+                        {/*     accept=".csv"*/}
+
+                        {/*/>*/}
                     </div>
 
                     <div className="team-dropdown">
@@ -560,7 +565,3 @@ function ProfessorRosterComponent() {
 }
 
 export default ProfessorRosterComponent
-<<<<<<< HEAD
-=======
-
->>>>>>> 564e4bbd3d768a4eb3a4d9f4e79980db3e6f6c8e
