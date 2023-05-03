@@ -4,6 +4,11 @@ import '../../../components/NavigationComponents/_ProfessorNavigationComponents.
 import '../../../pages/TeacherPages/styles/ProfessorRosterStyle.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { base64StringToBlob } from 'blob-util'
+import noStudent from '../../../assets/no-student.png'
+import { CgAdd } from 'react-icons/cg'
+import uuid from 'react-uuid'
+import searchIcon from '../../../pages/AdminPages/search.svg'
+//import { useState, useEffect } from 'react';
 import editIcon from '../../../pages/AdminPages/edit.png';
 import downloadIcon from '../../../../src/assets/icons/White_Download.svg'
 import '../../styles/EditCourse.css'
@@ -25,12 +30,29 @@ function ProfessorRosterComponent() {
   const courseParse = window.location.pathname;
   // const courseId = courseParse.split("/")[2];
   const url = `${process.env.REACT_APP_URL}/manage/professor/courses`
+
+  const [showModal, setShowModal] = useState(false)
+  const [studentToRemove, setStudentToRemove] = useState(undefined)
+  const [searchTerm, setSearchTerm] = useState('')
   const uploadCsvUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/student/mass-add`
   const csvFormData = new FormData()
   let { courseId } = useParams()
   const { currentCourse } = useSelector((state) => state.courses)
   const { currentCourseStudents } = useSelector((state) => state.courses)
   const updateUrl = `${process.env.REACT_APP_URL}/manage/professor/courses/course/update`
+
+  //search shit
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value)
+  }
+
+  const filteredUsers = currentCourseStudents.filter((user) =>
+      (user.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.student_id.toLowerCase().includes(searchTerm.toLowerCase()))
+  )
+
+
 
   useEffect(() => {
     dispatch(getCurrentCourseStudentsAsync(courseId))
@@ -75,10 +97,8 @@ function ProfessorRosterComponent() {
   const handleSubmit = async () => {
     const nameArray = Name.split(' ')
     const first = nameArray[0]
-    console.log("firstName: "+first)
 
     const last = nameArray[1]
-    console.log("lastName: " + last)
     if (Name === '' || Email === '') {
       alert('Please enter both name and email for the student!')
       return
@@ -93,12 +113,9 @@ function ProfessorRosterComponent() {
     // }
 
     const firstLastEmail = first + '-' + last + '-' + Email
-    console.log("email: " + firstLastEmail)
 
     const addStudentUrl = `${url}/${courseId}/students/${firstLastEmail}/add`
-    console.log("courseID: "+ courseId)
 
-    console.log("url in header: " + url + ", generated url after adding email: " +  addStudentUrl)
 
     await axios
         .post(addStudentUrl)
@@ -200,7 +217,6 @@ function ProfessorRosterComponent() {
     { name: 'John Bones', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
   ]);
 
-  const [searchTerm, setSearchTerm] = useState('');
   const [selectedAssignment, setSelectedAssignment] = useState("all");
   const [selectedStudent, setSelectedStudent] = useState("all");
   const [selectedVisualStudent, setSelectedVisualStudent] = useState("all");
@@ -262,6 +278,7 @@ function ProfessorRosterComponent() {
             Enter the students name and email.
                 </span>
               <div className="add-student-wrapper">
+              <div>
                 <label>Name:</label>
                 <input
                     type="text"
@@ -271,6 +288,8 @@ function ProfessorRosterComponent() {
                     required
                     onChange={(e) => OnChange(e)}
                 />
+               </div>
+                <div>
                 <label>Email:</label>
                 <input
                     type="text"
@@ -280,12 +299,15 @@ function ProfessorRosterComponent() {
                     required
                     onChange={(e) => OnChange(e)}
                 />
-                <button id="addStudentButton" onClick={handleSubmit}>
+              </div>
+                <div>
+                <button id="add-student-button" onClick={handleSubmit}>
                   Add Student
                 </button>
                 <button id="ecc-delete-button-cancel" className="inter-16-medium-white"
                         onClick={() => setAddStudentShow(false)}>Cancel
                 </button>
+                </div>
               </div>
             </div>
 
@@ -341,10 +363,8 @@ function ProfessorRosterComponent() {
   const editStudent = async (studentId) => {
     const nameArray = Name.split(' ')
     const first = nameArray[0]
-    console.log("firstName: "+first)
 
     const last = nameArray[1]
-    console.log("lastName: " + last)
     if (Name === '' || Email === '') {
       alert('Please enter both name and email for the student!')
       return
@@ -353,7 +373,6 @@ function ProfessorRosterComponent() {
       alert('Please enter first and last name!')
       return
     }
-    console.log("Student ID: " + studentId)
     const deleteStudentUrl = `${url}/${courseId}/students/${studentId}/delete`
     await axios
         .delete(deleteStudentUrl)
@@ -402,7 +421,6 @@ function ProfessorRosterComponent() {
 
   axios.get(getAllAssignmentsUrl)
       .then(response => {
-        //console.log(response.data);
         const getAllSubmissions = response.data;
         for (let i = 1; i <= response.data.length; i++) {
           axios.get(`${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${i}`)
@@ -428,9 +446,18 @@ function ProfessorRosterComponent() {
                       {/**!/*/}
                       <label>Search</label>
                       <div className='assignment-dropdown'>
-                        <input type="text" id="mySearch" onKeyUp={searchStudent} placeholder="Search.."
-                               title="Type in a category">
-                        </input>
+                        <input
+                            type="text"
+                            value={searchTerm}
+                            onChange={handleSearch}
+                            placeholder="Search.."
+                            title="Search"
+                        />
+                        <button className="professor-roster-search-button"><img className="search-icon" src={searchIcon}/></button>
+
+                        {/*<input type="text" id="mySearch" onKeyUp={searchStudent} placeholder="Search.."*/}
+                        {/*       title="Type in a category">*/}
+                        {/*</input>*/}
                       </div>
                     </div>
                     <div className="student-dropdown">
@@ -439,10 +466,10 @@ function ProfessorRosterComponent() {
                         <label>Filter</label>
                         {/*<div className='assignment-dropdown'>*/}
                         <select name="assignment" id="role"
-                                onChange={(e) => setSelectedAssignment(e.target.value)}>
+                                onChange={(e) => setSearchTerm(e.target.value)}>
                           <option value="all">All</option>
-                          {uniqueAssignments.map(item => {
-                            return (<option key={item} value={item}>{item}</option>);
+                          {currentCourseStudents.map(item => {
+                            return (<option value = {item.student_id}>{item.first_name + item.last_name}</option>);
                           })}
                         </select>
                         {/*</div>*/}
@@ -450,19 +477,38 @@ function ProfessorRosterComponent() {
                     </div>
                     <div className="team-dropdown">
                       {/*Test to see if i can just toss this component in instead of calling const onClick*/}
-                      <div className="csv-download-button">
-                        <label>
-                          {' '}
-                          <span className="inter-20-bold"> Roster Upload </span>{' '}
-                        </label>
-                        <input
-                            onChange={(event) => {
-                              fileUploadHandler(event);
-                            }}
-                            type="file"
-                            name="course_csv"
-                            accept=".csv"/>
+                      {/*  <label>*/}
+                      {/*    Roster Upload*/}
+                      {/*  </label>*/}
+
+                      {/*  <button className='csv-download-button'  onClick={(event) => {*/}
+                      {/*    fileUploadHandler(event);}}>Roster Upload</button>*/}
+                      <div className='professor-roster-csv-download-button'>
+                      <input
+                          type="button"
+                          className="professor-roster-csv-download-button"
+                          value="Upload CSV"
+                      />
+                      <input
+                          onChange={(event) => {
+                            fileUploadHandler(event);
+                          }}
+                                  type="file"
+                                  name="course_csv"
+                                  accept=".csv"
+                      />
                       </div>
+
+
+                      {/*<input className='professor-roster-csv-download-button'*/}
+                        {/*    onChange={(event) => {*/}
+                        {/*      fileUploadHandler(event);*/}
+                        {/*    }}*/}
+                        {/*     type="file"*/}
+                        {/*     name="course_csv"*/}
+                        {/*     accept=".csv"*/}
+
+                        {/*/>*/}
                     </div>
 
                     <div className="team-dropdown">
@@ -486,7 +532,9 @@ function ProfessorRosterComponent() {
                         <div>Actions</div>
                       </div>
                       <div className='all-user-items'>
-                        {currentCourseStudents.map((user) => (
+
+                        {filteredUsers.map((user) => (
+
                             <div key={user.id} className='user-item'>
                               <div className='name-div'>{user.first_name} {" "} {user.last_name}</div>
                               {/*<div className='studentID-div'>{user.team}</div>*/}
@@ -494,6 +542,7 @@ function ProfessorRosterComponent() {
                               <div className='student-div'>{"Computer Science"}</div>
                               <div className='team-div'>{user.team}</div>
                               <div className='action-div'>
+
                                 <div className='edit-container'>
                                   <button className='bulk-download-button' onClick={() => onRosterClick(user.student_id)}>
                                     <img className='edit-icon' src={downloadIcon} />
@@ -522,4 +571,3 @@ function ProfessorRosterComponent() {
 }
 
 export default ProfessorRosterComponent
-

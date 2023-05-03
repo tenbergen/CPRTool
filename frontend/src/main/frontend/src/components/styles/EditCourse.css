@@ -333,7 +333,8 @@ input[type=text] {
     border-color: #000;
     border-width: 1px;
     font-size: 1.2em;
-    height: 30px !important;
+    /*took out !important as it was overriding the professorRosterStyle search bar size*/
+    height: 30px ;
     outline: none;
     width: 70% !important;
 }
