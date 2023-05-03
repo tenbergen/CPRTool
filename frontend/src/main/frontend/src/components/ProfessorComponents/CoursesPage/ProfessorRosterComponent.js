@@ -278,6 +278,7 @@ function ProfessorRosterComponent() {
             Enter the students name and email.
                 </span>
               <div className="add-student-wrapper">
+              <div>
                 <label>Name:</label>
                 <input
                     type="text"
@@ -287,6 +288,8 @@ function ProfessorRosterComponent() {
                     required
                     onChange={(e) => OnChange(e)}
                 />
+               </div>
+                <div>
                 <label>Email:</label>
                 <input
                     type="text"
@@ -296,12 +299,15 @@ function ProfessorRosterComponent() {
                     required
                     onChange={(e) => OnChange(e)}
                 />
-                <button id="addStudentButton" onClick={handleSubmit}>
+              </div>
+                <div>
+                <button id="add-student-button" onClick={handleSubmit}>
                   Add Student
                 </button>
                 <button id="ecc-delete-button-cancel" className="inter-16-medium-white"
                         onClick={() => setAddStudentShow(false)}>Cancel
                 </button>
+                </div>
               </div>
             </div>
 
