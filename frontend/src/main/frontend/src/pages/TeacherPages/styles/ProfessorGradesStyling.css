@@ -100,12 +100,12 @@ input[type='text'] {
   display: flex;
 }
 
-.edit-button {
+.professor-grades-edit-button {
   background: none;
   border: none;
 }
 
-.delete-button {
+.professor-grades-delete-button {
   color: rgb(0, 0, 0);  align-self: flex-end;
   font-size: 1.2em;
   cursor: pointer;
@@ -293,7 +293,7 @@ input[type='text'] {
   display: grid;
 }
 
-.delete-container{
+.professor-grades-delete-container{
   display: grid;
 }
 
@@ -475,8 +475,8 @@ input[type='text'] {
   flex-direction: column;
 }
 
-.csv-download-button-div{
-  padding: 0 30px;
+.professor-csv-download-button-div{
+  margin-left: 25%;
   display: flex;
   flex-direction: row;
   flex: 1;
@@ -753,4 +753,10 @@ input[type='text'] {
   padding: 20px;
   justify-content: center;
   margin-left: 100px;
+}
+
+.grades-overview-breadcrumbs{
+  position: absolute;
+  top: 10px;
+  left: 20px;
 }

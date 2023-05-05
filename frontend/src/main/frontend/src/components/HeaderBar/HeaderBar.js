@@ -53,26 +53,35 @@ const HeaderBar = () => {
   return (
     <div className="headerBar">
       <div className="header-bar-left">
-        <Link to={`/${role}`}>
+        <div id="homeButtonDiv">
+          <Link to={`/${role}`}>
+            <div>
+              <button id="logo"></button>
+            </div>
+          </Link>
+        </div>
+      </div>
+      <div className="about-and-admin-buttons-container">
+        <Link to={`/about`}>
           <div>
-            <button id="logo"></button>
+            <button id="aboutPageLinkIcon"></button>
           </div>
         </Link>
+        {role === 'professor' || (alt_role && alt_role === 'student')
+            ? (
+                <div className="admin-dropdown">
+                  <button id="admin-button" onClick={() => showDropdown()}></button>
+                  <div id="dropdown-options" className="dropdown-content">
+                    {admin_access_token ? <a href="#" onClick={adminView}>Admin</a> : null}
+                    <a href="#" onClick={professorView}>Instructor</a>
+                    <a href="#" onClick={studentView}>Student</a>
+                  </div>
+                </div>
+            ) : (
+                <div/>
+            )
+        }
       </div>
-      {role === 'professor' || (alt_role && alt_role === 'student')
-        ? (
-          <div className="admin-dropdown">
-            <button id="admin-button" onClick={() => showDropdown()}></button>
-            <div id="dropdown-options" className="dropdown-content">
-              {admin_access_token ? <a href="#" onClick={adminView}>Admin</a> : null}
-              <a href="#" onClick={professorView}>Instructor</a>
-              <a href="#" onClick={studentView}>Student</a>
-            </div>
-          </div>
-        ) : (
-          <div/>
-        )
-      }
     </div>
   )
 }

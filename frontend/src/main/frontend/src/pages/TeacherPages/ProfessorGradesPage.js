@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './styles/ProfessorGradesStyling.css';
 import editIcon from '../AdminPages/edit.png';
-import { setCurrentCourse } from '../../redux/features/courseSlice';
+import {getCoursesAsync, setCurrentCourse} from '../../redux/features/courseSlice';
 import { current } from '@reduxjs/toolkit';
 import { Line } from 'react-chartjs-2';
 import Table from './Table';
@@ -12,6 +12,8 @@ import axios from 'axios';
 import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 import HeaderBar from "../../components/HeaderBar/HeaderBar";
 import bulkDownloadLogo from "../../assets/icons/navigation/default/Bulk Download.svg";
+import {useDispatch} from "react-redux";
+import Breadcrumbs from '../../components/Breadcrumbs';
 
 Chart.register(LineElement);
 Chart.register(PointElement);
@@ -19,42 +21,6 @@ Chart.register(CategoryScale);
 Chart.register(LinearScale);
 
 function ProfessorGradesPage() {
-    // const [userList, setUserList] = useState([
-    //     { assignment: 'Assignment 1', name: 'Danny Dimes', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-    //     { assignment: 'Assignment 1', name: 'Saquads Barkley', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-    //     { assignment: 'Assignment 1', name: 'Gardner Minshew', team: 'Indianapolis Colts', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-    //     { assignment: 'Assignment 2', name: 'Danny Dimes', team: 'New York Giants', grade: '93', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-    //     { assignment: 'Assignment 2', name: 'Saquads Barkley', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-    //     { assignment: 'Assignment 2', name: 'Gardner Minshew', team: 'Indianapolis Colts', grade: '6', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-    //     { assignment: 'Assignment 2', name: 'Caleb Williams', team: 'Indianapolis Colts', grade: '100', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-    //     { assignment: 'Assignment 2', name: 'Patty Mahomes', team: 'Kansas City Chiefs', grade: '100', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-    //     { assignment: 'Assignment 3', name: 'Carl Wheezer', team: 'New York Jets', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-    //     { assignment: 'Assignment 3', name: 'Perry P', team: 'New York Jets', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-    //     { assignment: 'Assignment 3', name: 'Larry Lobster', team: 'Baltimore Ravens', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-    //     { assignment: 'Assignment 3', name: 'Danny Dimes', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-    //     { assignment: 'Assignment 4', name: 'Jimmy Neut', team: 'Tennessee Titans', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-    //     { assignment: 'Assignment 4', name: 'Big Chungus', team: 'Tennessee Titans', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-    //     { assignment: 'Assignment 4', name: 'Dak Prescott', team: 'Syracuse BenchWarmers', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-    //     { assignment: 'Assignment 4', name: 'Danny Dimes', team: 'New York Giants', grade: '92', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-    //     { assignment: 'Assignment 5', name: 'John Bones', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-    //     { assignment: 'Assignment 5', name: 'Danny Dimes', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-    //     { assignment: 'Assignment 6', name: 'Danny Dimes', team: 'New York Giants', grade: '95', prGiven: '75', prReceived: '60', submitted: '3/25/23 | 8:19am' },
-    // ]);
-
-    // const [userStatsList, setUserStatsList] = useState([
-    //     { name: 'Danny Dimes', grade1: '100', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
-    //     { name: 'Saquads Barkley', grade1: '91', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
-    //     { name: 'Gardner Minshew', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
-    //     { name: 'Caleb Williams', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
-    //     { name: 'Patty Mahomes', grade1: '20', grade2: '93', grade3: '40', grade4: '92', grade5: '95', grade6: '100' },
-    //     { name: 'Carl Wheezer', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
-    //     { name: 'Perry P', grade1: '95', grade2: '93', grade3: '100', grade4: '92', grade5: '95', grade6: '100' },
-    //     { name: 'Larry Lobster', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
-    //     { name: 'Big Chungus', grade1: '95', grade2: '93', grade3: '100', grade4: '92', grade5: '95', grade6: '100' },
-    //     { name: 'Dak Prescott', grade1: '13', grade2: '93', grade3: '95', grade4: '92', grade5: '13', grade6: '100' },
-    //     { name: 'John Bones', grade1: '95', grade2: '93', grade3: '95', grade4: '92', grade5: '95', grade6: '100' },
-    // ]);
-
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedAssignment, setSelectedAssignment] = useState("all");
     const [selectedStudent, setSelectedStudent] = useState("all");
@@ -65,11 +31,13 @@ function ProfessorGradesPage() {
     const getAllAssignmentsUrl = `${process.env.REACT_APP_URL}/assignments/student/${course}/all-grades`;
     const getAllStudentsUrl = `${process.env.REACT_APP_URL}/course/professor/courses/${course}/students`;
     const [showEditModal, setShowEditModal] = useState(false);
-    const getAllGradesUrl = `${process.env.REACT_APP_URL}/view/professor/courses/${course}/students`; 
+    const getAllGradesUrl = `${process.env.REACT_APP_URL}/view/professor/courses/${course}/students`;
+    const dispatch = useDispatch();
 
     let [userStatsList, setUserStatsList] = useState([]);
 
     useEffect(() => {
+        dispatch(getCoursesAsync());
         axios.get(getAllGradesUrl)
             .then(response => {
                 console.log(response.data);
@@ -87,6 +55,7 @@ function ProfessorGradesPage() {
                 console.log(response.data);
                 console.log(getAllAssignmentsUrl);
                 setUserList(response.data);
+                console.log(response.data);
             })
             .catch(error => console.error(error.message));
     }, []);
@@ -106,6 +75,34 @@ function ProfessorGradesPage() {
     function refreshPage() {
         window.location.reload(false);
       }
+
+    function convertToCSV(userList) {
+        const header = ['course_id', 'members', 'type', 'student_id', 'grade'].join(',');
+        // Map to a string of comma-separated values
+        // Join the members array into a single string with semicolons as separators
+        const rows = userList.map(obj => {
+            return [
+                obj.course_id,
+                obj.members.join(';'),
+                obj.type,
+                obj.student_id,
+                obj.grade,
+            ].join(',');
+        });
+
+        // Combine the header row and data rows into a single CSV string
+        return [header, ...rows].join('\n');
+    }
+
+    function downloadCSV(userList) {
+        const csv = convertToCSV(userList);
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `grades.csv`;
+        document.body.appendChild(link);
+        link.click();
+    }
 
     const convertDate = (dateString) => {
         const utcDate = dateString.slice(0, 19);
@@ -154,36 +151,6 @@ function ProfessorGradesPage() {
     const uniqueTeams = userList
         .filter((user, index, arr) => arr.findIndex(u => u.team_name === user.team_name) === index)
         .map(user => user.team_name);
-
-    // const [students, setStudents] = useState([]);
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //     const response = await fetch(`${process.env.REACT_APP_URL}/course/professor/courses/${course}/students`);
-    //     const data = await response.json();
-    //     setStudents(data);
-    //     console.log(students)
-    //     };
-    //     fetchData();
-    // }, []);
-
-    // axios.get(getAllStudentsUrl)
-    //     .then(response => console.log(response.data))
-    //     .catch(error => console.error("Uh oh"));
-
-    // axios.get(getAllAssignmentsUrl)
-    //     .then(response => {
-    //         //console.log(response.data); 
-    //         const getAllSubmissions = response.data;
-    //         for (let i = 1; i <= response.data.length; i++) {
-    //             axios.get(`${process.env.REACT_APP_URL}/assignments/professor/courses/${course}/assignments/${i}`)
-    //                 .then(response2 => {
-    //                     console.log(response2.data)
-    //                 })
-    //         }
-    //     })
-    //     .catch(error => console.error("Uh oh"));
-
 
     const getChartData = () => {
         const data = {
@@ -288,7 +255,7 @@ function ProfessorGradesPage() {
         setAssignmentName(assignmentName);
     }
 
-    const [studentGrade, setStudentGrade] = useState("");
+    const [studentGrade, setStudentGrade] = useState(0);
 
     const getStudentGrade = (studentGrade) => {
         setStudentGrade(studentGrade);
@@ -306,30 +273,31 @@ function ProfessorGradesPage() {
         setTeamName(teamName);
     }
 
-    const [newGrade, setNewGrade] = useState('');
+    const [newGrade, setNewGrade] = useState(0);
 
     const handleGradeEdit = (event) => {
         setNewGrade(event.target.value);
     }
 
     const editGrade = async (studentId, assignmentId,teamName, newGrade) => {
-        const url = `${process.env.REACT_APP_URL}/assignments/student/edit/${studentId}/${assignmentId}/${teamName}/teamSubmission/${newGrade}`;
+        const url = `${process.env.REACT_APP_URL}/assignments/student/edit/${assignmentId}/${teamName}/teamSubmission/blah/${newGrade}`;
         await axios
             .post(url)
             .then((res) => {
                 alert('Succesfully edited grade');
                 refreshPage();
                 console.log(res.data);
+                console.log(url);
             })
             .catch((e) => {
-                alert(e.message);
+                refreshPage();
             });
         }
 
     const downloadStudentAssignment = async (assignId, teamName) => {
         const url = `${process.env.REACT_APP_URL}/assignments/student/courses/${course}/assignments/${assignId}/${teamName}/download`;
         await axios
-            .post(url)
+            .get(url)
             console.log(url)
             .then((res) => {
                 alert('Succesfully downloaded');
@@ -345,6 +313,9 @@ function ProfessorGradesPage() {
             <div className='admin-container'>
                 <NavigationContainerComponent />
                 <div className='professor-user-roles'>
+                    <div className='grades-overview-breadcrumbs'>
+                        <Breadcrumbs></Breadcrumbs>
+                    </div>
                     <h2>Grades Overview for {course}</h2>
                     <div className='admin-tabs'>
                         <button className='user-roles-tab' onClick={() => changePage('roles')} style={{
@@ -397,14 +368,18 @@ function ProfessorGradesPage() {
                                             })}
                                         </select>
                                     </div>
+                                    <div className='professor-csv-download-button-div'>
+                                        <button className='csv-download-button' onClick={() => downloadCSV(userList)}>CSV Download</button>
+                                    </div>
                             </div>
+
                             <div>
                                 <div className='professor-user-list'>
                                     <div className='user-item header'>
                                         <div>Assignment</div>
                                         <div>Name</div>
                                         <div>Team</div>
-                                        <div>Grade</div>
+                                        <div>Grade (%)</div>
                                         <div>PRs Given To</div>
                                         <div>Submitted</div>
                                         <div>Actions</div>
@@ -420,7 +395,7 @@ function ProfessorGradesPage() {
                                                 <div>{convertDate(user._id.date)}</div>
                                                 <div>
                                                     <div className='grades-edit-container'>
-                                                        <button className='edit-button' onClick={() => {
+                                                        <button className='professor-grades-edit-button' onClick={() => {
                                                             setShowEditModal(true);
                                                             getEditUser(user.student_id);
                                                             getAssignmentName(user.assigment_name);
@@ -436,10 +411,10 @@ function ProfessorGradesPage() {
                                                                     <form>
                                                                         <div className='edit-grade-container'>
                                                                             <input className='edit-student-grade'
-                                                                                type="number"
+                                                                                type='number'
                                                                                 id="gradeEdit"
                                                                                 name="gradeEdit"
-                                                                                placeholder={studentGrade}
+                                                                                defaultValue={studentGrade}
                                                                                 onChange={handleGradeEdit} />
                                                                         </div>
                                                                     </form>
@@ -451,14 +426,7 @@ function ProfessorGradesPage() {
                                                             </div>
                                                         )}
                                                     </div>
-                                                    <div className='delete-container'>
-                                                        <button className='delete-button' onClick={() => 
-                                                            {getTeamName(user.team_name);
-                                                            getAssignmentID(user.assignment_id);
-                                                            downloadStudentAssignment(assignmentID, teamName) }}>
-                                                            <img className='download-icon'src={bulkDownloadLogo} />
-                                                        </button>
-                                                    </div>
+                                                    
                                                 </div>
                                             </div>
                                         ))}

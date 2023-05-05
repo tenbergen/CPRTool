@@ -1,0 +1,14 @@
+.previous-contributors-component-container {
+    width: 700px;
+    height: 100vh;
+    padding-top: 36px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: -50px;
+    margin-top: 10px;
+}
+
+.previous-contributors-column > ul > li {
+    margin-bottom: 12px;
+}

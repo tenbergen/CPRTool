@@ -8,6 +8,7 @@ import NavigationContainerComponent
 import PeerReviewComponent from "../../components/StudentComponents/CoursePage/PeerReviewComponent";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import HeaderBar from "../../components/HeaderBar/HeaderBar";
+import {getStudentCoursesAsync} from "../../redux/features/courseSlice";
 
 function PeerReviewPage() {
     const dispatch = useDispatch();
@@ -15,6 +16,10 @@ function PeerReviewPage() {
     const { courseId } = useParams();
     const { lakerId } = useSelector((state) => state.auth);
     const { currentTeamId, teamLoaded } = useSelector((state) => state.teams);
+
+    useEffect(() => {
+        dispatch(getStudentCoursesAsync(lakerId))
+    }, [dispatch, lakerId])
 
 
     // dispatch(getCombinedAssignmentPeerReviews(courseId, currentTeamId, lakerId));
@@ -52,9 +57,7 @@ function PeerReviewPage() {
                                     {components}
                                 </div>
                                 <div>
-
                                     <PeerReviewComponent />
-
                                 </div>
                             </div>
                         )}

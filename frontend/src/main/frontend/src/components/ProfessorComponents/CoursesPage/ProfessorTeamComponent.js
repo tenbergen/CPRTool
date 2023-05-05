@@ -72,10 +72,7 @@ const ProfessorTeamComponent = () => {
 
   return (
     <div className="team-container">
-      <div id="createTeamButton">
-        <button className="green-button-large" onClick={createTeam} style={{ marginBottom: '3%' }}> Create New Team
-        </button>
-      </div>
+
       {isLoading
         ? <div> {teams.length > 0 ? (
           <div className="acordion-wrapper">
@@ -94,6 +91,7 @@ const ProfessorTeamComponent = () => {
               )}
             </div>
           </div>
+
         ) : (
           <>
             <div className="no-team-wrapper">
@@ -112,6 +110,10 @@ const ProfessorTeamComponent = () => {
           </div>
         </>
       }
+      <div id="createTeamButton">
+        <button className="green-button-large" onClick={createTeam} style={{ marginBottom: '3%' }}> Create Team
+        </button>
+      </div>
     </div>
   )
 }

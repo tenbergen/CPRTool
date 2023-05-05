@@ -68,6 +68,10 @@ public class AssignmentInterface {
         makeSubmission(fileDAO.getCourseID(), fileDAO.getAssignmentID(), fileDAO.getFilename(), fileDAO.getTeamName(), fileDAO.getFile());
     }
 
+    public List<String> getCourseProfanityWords(String courseID) {
+        return courseCollection.find(eq("course_id", courseID)).first().getList("blocked_words", String.class);
+    }
+
     public List<Document> getAllUserAssignments(String courseID, String studentID) {
         MongoCursor<Document> query = submissionCollection.find(and(eq("course_id", courseID),
                 eq("members", studentID),
@@ -149,7 +153,8 @@ public class AssignmentInterface {
                 .append("members", team.getList("team_members", String.class))
                 .append("type", "team_submission")
                 .append("grade", -1)
-                .append("peer_review_due_date", assignment.get("peer_review_due_date"));
+                .append("peer_review_due_date", assignment.get("peer_review_due_date"))
+                .append("due_date", assignment.get("due_date"));
 
         boolean submissionCheck = submissionCollection.find(and(eq("course_id", course_id), eq("assignment_id", assignment_id), eq("team_name", team.getString("team_id")))).iterator().hasNext();
         // do some sort of spinning lock here so that only one teammate at a time is submitting an assignment at a time
