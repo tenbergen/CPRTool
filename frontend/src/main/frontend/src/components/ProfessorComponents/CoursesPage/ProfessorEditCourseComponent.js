@@ -267,11 +267,8 @@ const ProfessorEditCourseComponent = () => {
                     <label>
                       <span className="inter-20-bold"> Bulk Download for Course </span>
                     </label>
-                    <button className="bulk-download-button" type="button" onClick={onCourseClick}
-                            style={{ width: '150px', height: '40px' }}>Download
-                      <div style={{ display: 'inline-block', verticalAlign: 'middle', margin: '0 auto' }}>
-                      </div>
-                    </button>
+                    <div className='pecc-bulk-download-button' type="button" onClick={onCourseClick}>Download
+                       </div>
                   </div>
 
                   <div className="ecc-file-upload">
