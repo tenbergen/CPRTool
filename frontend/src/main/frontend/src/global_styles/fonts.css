@@ -81,6 +81,14 @@
   color: #212529;
 }
 
+.inter-18-medium-blue{
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  color: #4A7DFC;
+}
+
 .inter-20-extralight{
   font-family: "Inter", sans-serif;
   font-weight: 200;

@@ -184,7 +184,6 @@ const ProfessorEditCourseComponent = () => {
                       )}
                     </Field>
                   </div>
-
                   <div className="ecc-row-multiple">
                     <div className="ecc-input-field">
                       <label className="required">

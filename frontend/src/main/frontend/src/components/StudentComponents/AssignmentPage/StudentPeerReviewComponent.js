@@ -112,7 +112,7 @@ const StudentPeerReviewComponent = () => {
       <div>
         {currentAssignmentLoaded && teamLoaded ? (
           <div>
-            <h2 className="kumba-30">Team {teamId} Peer Review</h2>
+            <h2 className="inter-28-bold">Team {teamId} Peer Review</h2>
             <div className="ap-assignmentArea">
               <h3>
                 <span className="outfit-25"> Instructions: </span>
@@ -120,14 +120,14 @@ const StudentPeerReviewComponent = () => {
                 Due: {currentAssignment.peer_review_due_date}
               </span>
                 <br/>
-                <p className="outfit-18">
+                <p className="inter-20-bold">
                   {currentAssignment.peer_review_instructions}
                 </p>
                 <br/>
 
-                <span className="outfit-25"> Rubric: </span>
+                <span className="inter-20-bold"> Rubric: </span>
                 <span
-                  className="outfit-18 p2"
+                  className="inter-18-medium"
                   onClick={() =>
                     onRubricFileClick(currentAssignment.rubric_name)
                   }
@@ -137,9 +137,9 @@ const StudentPeerReviewComponent = () => {
                 <br/>
                 <br/>
 
-                <span className="outfit-25"> Template: </span>
+                <span className="inter-20-bold"> Template: </span>
                 <span
-                  className="outfit-18 p2"
+                  className="inter-18-medium"
                   onClick={() =>
                     onTemplateClick(currentAssignment.peer_review_template_name)
                   }
@@ -149,8 +149,8 @@ const StudentPeerReviewComponent = () => {
                 <br/>
                 <br/>
 
-                <span className="outfit-25"> Team Files: </span>
-                <span className="outfit-18 p2" onClick={onTeamFileClick}>
+                <span className="inter-20-bold"> Team Files: </span>
+                <span className="inter-18-medium-blue" onClick={onTeamFileClick}>
                 {teamId} Files
               </span>
                 <br/>
@@ -158,7 +158,7 @@ const StudentPeerReviewComponent = () => {
                 <br/>
 
                 <div className="input-field">
-                  <label> Grade: </label>
+                  <label className="inter-20-bold"> Grade: </label>
                   <input
                     type="number"
                     min="0"
@@ -170,8 +170,8 @@ const StudentPeerReviewComponent = () => {
                 </div>
                 <br/>
 
-                <div className="ap-assignment-files">
-                  <label className="outfit-25"> Feedback: </label>
+                <div className="ap-assignment-files" style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                  <label className="inter-20-bold" style={{marginRight: '12px', marginBottom: '0'}}> Feedback: </label>
                   <input
                     type="file"
                     name="assignment_files"
@@ -182,7 +182,7 @@ const StudentPeerReviewComponent = () => {
                 </div>
                 <div className="ap-button">
                   <div className="ap-button">
-                    <button className="green-button" onClick={handleSubmit}>
+                    <button className="green-button-large" onClick={handleSubmit}>
                       {' '}
                       Submit
                     </button>

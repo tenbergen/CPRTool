@@ -49,18 +49,20 @@ function PeerReviewPage() {
                     <div className='scp-component'>
                         <Breadcrumbs />
 
-                        {teamLoaded && currentTeamId === null && <StudentTeamComponent />}
+                        <div style={{paddingTop: '25px'}}>
+                            {teamLoaded && currentTeamId === null && <StudentTeamComponent />}
 
-                        {teamLoaded && currentTeamId !== null && (
-                            <div>
-                                <div className='scp-component-links'>
-                                    {components}
-                                </div>
+                            {teamLoaded && currentTeamId !== null && (
                                 <div>
-                                    <PeerReviewComponent />
+                                    <div className='inter-28-bold' style={{marginBottom: '20px'}}>
+                                        {components}
+                                    </div>
+                                    <div>
+                                        <PeerReviewComponent />
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

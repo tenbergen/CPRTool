@@ -61,7 +61,7 @@ function ProfessorCoursePage ({ chosen }) {
             <NavigationContainerComponent/>
             <div className="pcp-components">
               <Breadcrumbs/>
-              <div>
+              <div style={{paddingTop: '2%'}}>
                 {chosenComponent === 'Assignments' && <ProfessorAssignmentComponent/>}
                 {chosenComponent === 'Roster' && <ProfessorRosterComponent/>}
                 {chosenComponent === 'Teams' && <ProfessorTeamComponent/>}

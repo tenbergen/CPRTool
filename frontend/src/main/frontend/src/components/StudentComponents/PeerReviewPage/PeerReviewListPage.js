@@ -263,33 +263,33 @@ const PeerReviewListPage = () => {
     const DetailsModal = () => {
         return (
             <div id="myModal" className="modal">
-                <div className="modal-content">
+                <div className="modal-content" >
                     <div className='inter-20-medium-white ass-tile-title'> {' '}
                         <span> {'Assignment Details'} </span>
                     </div>
-                    <div className='ass-tile-content'>
+                    <div className='ass-tile-content' style={{border: 'none'}}>
                         <span className='inter-24-bold'> {currentAssignment.assignment_name} </span>
                         <span className='inter-20-medium span1-ap'>
                         Due: {currentAssignment.peer_review_due_date}
                     </span>
                         <br/> <br/> <br/>
-                        <p className='inter-20-medium'>Instructions:</p>
+                        <p className='inter-20-bold'>Instructions:</p>
                         <p className='inter-16-medium-black'>{currentAssignment.peer_review_instructions}</p>
                         <br/>
                         <br/>
-                        <div style={{display: 'flex', flexDirection: 'row'}}>
-                            <span className='inter-20-bold'> Rubric: </span>
+                        <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                            <span className='inter-20-bold' style={{marginRight: '15px'}}> Rubric: </span>
                             <span className='inter-16-bold-blue p2'>
-                            <button className='blue-button-small'
-                                    onClick={() =>
-                                        onRubricFileClick(currentAssignment.rubric_name)
-                                    }
-                            >
-                                {' '}
-                                Download{' '}
+                                <button className='blue-button-small'
+                                        onClick={() =>
+                                            onRubricFileClick(currentAssignment.rubric_name)
+                                        }
+                                >
+                                    {' '}
+                                    Download{' '}
                             </button>
                         </span>
-                            <span className='inter-20-bold'> Template: </span>
+                            <span className='inter-20-bold' style={{marginRight: '15px'}}> Template: </span>
                             <span className='inter-16-bold-blue p2'>
                             <button className='blue-button-small'
                                     onClick={() =>
@@ -299,7 +299,7 @@ const PeerReviewListPage = () => {
                                 Download{' '}
                             </button>
                         </span>
-                            <span className='inter-20-bold'> Team Files: </span>
+                            <span className='inter-20-bold' style={{marginRight: '15px', width: '177px'}}> Team Files: </span>
                             <span className='inter-16-bold-blue p2'>
                             <button className="blue-button-small" onClick={onTeamFileClick}>
                                 {' '}
@@ -307,21 +307,17 @@ const PeerReviewListPage = () => {
                             </button>
                         </span>
                         </div>
-                        <div>
+                        <div style={{marginTop: '50px'}}>
                             <span className='inter-20-bold'>Feedback: </span>
-                            <span className='inter-16-bold-blue p2'>
-                            <button className="blue-button-bottom">
-                                <input
-                                    type="file"
-                                    name="assignment_files"
-                                    accept=".pdf,.docx"
-                                    onChange={(e)=>onFeedbackFileHandler(e)}
-                                    required
-                                />
-                            </button>
-                        </span>
-                            <div className="input-field">
-                                <label> Grade: </label>
+                            <input
+                                   type="file"
+                                   name="assignment_files"
+                                   accept=".pdf,.docx"
+                                   onChange={(e)=>onFeedbackFileHandler(e)}
+                                   required
+                            />
+                            <div className="input-field" style={{marginTop: '50px'}}>
+                                <label className='inter-20-bold'> Grade: </label>
                                 <input
                                     type="number"
                                     min="0"

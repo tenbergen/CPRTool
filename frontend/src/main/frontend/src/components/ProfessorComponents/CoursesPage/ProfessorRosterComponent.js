@@ -10,7 +10,7 @@ import uuid from 'react-uuid'
 import searchIcon from '../../../pages/AdminPages/search.svg'
 //import { useState, useEffect } from 'react';
 import editIcon from '../../../pages/AdminPages/edit.png';
-import downloadIcon from '../../../../src/assets/icons/White_Download.svg'
+import downloadIcon from '../../../../src/assets/icons/navigation/default/Bulk Download.svg'
 import '../../styles/EditCourse.css'
 import '../../styles/DeleteModal.css'
 import '../../styles/Roster.css'
@@ -236,8 +236,8 @@ function ProfessorRosterComponent() {
         <div id="deleteModal">
           <div id="modalContent">
                <span id="deleteSpan">
-            Enter the students name and email.
-                </span>
+                  Enter the student's name and email.
+               </span>
             <div className="add-student-wrapper">
               <label>Name:</label>
               <input
@@ -276,11 +276,11 @@ function ProfessorRosterComponent() {
 
         <div id="deleteModal">
           <div id="modalContent">
-               <span id="deleteSpan">
-            Enter the students name and email.
-                </span>
-              <div className="add-student-wrapper">
-              <div>
+            <span id="deleteSpan" style={{height: '25px'}}>
+              Enter the student's name and email.
+            </span>
+            <div className="pecc-add-student-wrapper">
+              <div style={{marginBottom: '6%'}}>
                 <label>Name:</label>
                 <input
                     type="text"
@@ -290,8 +290,8 @@ function ProfessorRosterComponent() {
                     required
                     onChange={(e) => OnChange(e)}
                 />
-               </div>
-                <div>
+              </div>
+              <div>
                 <label>Email:</label>
                 <input
                     type="text"
@@ -302,18 +302,17 @@ function ProfessorRosterComponent() {
                     onChange={(e) => OnChange(e)}
                 />
               </div>
-                <div>
-                <button id="add-student-button" onClick={handleSubmit}>
-                  Add Student
-                </button>
-                <button id="ecc-delete-button-cancel" className="inter-16-medium-white"
-                        onClick={() => setAddStudentShow(false)}>Cancel
-                </button>
-                </div>
-              </div>
             </div>
-
+            <div>
+              <button id="addStudentButton" onClick={handleSubmit}>
+                Add Student
+              </button>
+              <button id="ecc-delete-button-cancel" className="inter-16-medium-white" style={{}}
+                      onClick={() => setAddStudentShow(false)}>Cancel
+              </button>
+            </div>
           </div>
+        </div>
 
     )
   }
@@ -342,9 +341,9 @@ function ProfessorRosterComponent() {
                 required
                 onChange={(e) => OnChange(e)}
             />
-            <button id="addStudentButton" onClick={handleSubmit}>
+            <div id="addStudentButton" onClick={handleSubmit}>
               Add Student
-            </button>
+            </div>
           </div>
         </div>
 
@@ -541,13 +540,13 @@ function ProfessorRosterComponent() {
                               <div className='name-div'>{user.first_name} {" "} {user.last_name}</div>
                               {/*<div className='studentID-div'>{user.team}</div>*/}
                               <div className='laker-div'>{user.student_id}</div>
-                              <div className='student-div'>{"Computer Science"}</div>
+                              <div>{"Computer Science"}</div>
                               <div className='team-div'>{user.team}</div>
                               <div className='action-div'>
 
-                                <div className='edit-container'>
-                                  <button className='bulk-download-button' onClick={() => onRosterClick(user.student_id)}>
-                                    <img className='edit-icon' src={downloadIcon} />
+                                <div>
+                                  <button style={{backgroundColor: 'transparent'}} onClick={() => onRosterClick(user.student_id)}>
+                                    <img src={downloadIcon} />
                                   </button>
                                 </div>
 
