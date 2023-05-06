@@ -1,10 +1,21 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import '../../../pages/StudentPages/styles/AssignmentPageStyle.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { getAssignmentDetailsAsync } from '../../../redux/features/assignmentSlice';
 import { getCurrentCourseTeamAsync } from '../../../redux/features/teamSlice';
+import '../../styles/StudentAss.css';
+import './RegularAssignmentComponent.css'
+
+import SidebarComponent from '../../../components/SidebarComponent';
+import StudentTeamComponent from '../../../components/StudentComponents/CoursePage/StudentTeamComponent';
+import StudentToDoComponent from '../../../components/StudentComponents/CoursePage/StudentToDoComponent';
+import CourseBarComponent from '../../../components/CourseBarComponent';
+import StudentSubmittedComponent from '../../../components/StudentComponents/CoursePage/StudentSubmittedComponent';
+import { getCourseDetailsAsync } from '../../../redux/features/courseSlice';
+import MyTeamComponent from '../../../components/StudentComponents/CoursePage/MyTeamComponent';
+import uuid from 'react-uuid';
 
 const RegularAssignmentComponent = () => {
   const dispatch = useDispatch();
@@ -24,15 +35,28 @@ const RegularAssignmentComponent = () => {
 
   const assignmentFileHandler = (event) => {
     let file = event.target.files[0];
-    assignmentFileFormData.set('file', file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      // Use a regex to remove data url part
+      const base64String = reader.result
+          .replace('data:', '')
+          .replace(/^.+,/, '');
+      for(var pair of assignmentFileFormData.entries()){
+        assignmentFileFormData.delete(pair[0])
+      }
+      assignmentFileFormData.set(file.name, base64String);
+    };
+    reader.readAsDataURL(file);
   };
 
   const onAssignmentClick = async () => {
-    const fileName = currentAssignment.assignment_instructions;
-    const url = `${process.env.REACT_APP_URL}/assignments/professor/courses/${courseId}/assignments/${assignmentId}/download/${fileName}`;
-    await axios
-      .get(url, { responseType: 'blob' })
-      .then((res) => downloadFile(res.data, fileName));
+    if(currentAssignment.assignment_instructions_name.endsWith(".pdf")){
+      downloadFile(new Blob([Uint8Array.from(currentAssignment.assignment_instructions_data.data)], {type: 'application/pdf'}), currentAssignment.assignment_instructions_name)
+    }else if(currentAssignment.assignment_instructions_name.endsWith(".docx")){
+      downloadFile(new Blob([Uint8Array.from(currentAssignment.assignment_instructions_data.data)], {type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}), currentAssignment.assignment_instructions_name)
+    }else{
+      downloadFile(new Blob([Uint8Array.from(currentAssignment.assignment_instructions_data.data)], {type: 'application/zip'}), currentAssignment.assignment_instructions_name)
+    }
   };
 
   const downloadFile = (blob, fileName) => {
@@ -43,6 +67,11 @@ const RegularAssignmentComponent = () => {
     href.click();
   };
 
+  const routeChange = () => {
+    let path = `/student/${courseId}/assignments`
+    navigate(path)
+  }
+
   const handleSubmit = async () => {
     const submitAssUrl = `${process.env.REACT_APP_URL}/assignments/student/courses/${courseId}/assignments/${assignmentId}/${currentTeamId}/upload`;
 
@@ -50,7 +79,7 @@ const RegularAssignmentComponent = () => {
       .post(submitAssUrl, assignmentFileFormData)
       .then((res) => {
         alert('Successfully uploaded assignment');
-        navigate(`/details/student/${courseId}`, {
+        navigate(`/student/${courseId}`, {
           state: { initialComponent: 'Submitted' },
         });
       })
@@ -63,25 +92,34 @@ const RegularAssignmentComponent = () => {
   return (
     <div>
       {currentAssignmentLoaded && (
-        <div>
-          <h2 className='kumba-30'>{currentAssignment.assignment_name}</h2>
-          <div className='ap-assignmentArea'>
-            <h3>
-              <span className='outfit-25'> Instructions: </span>
-              <span className='outfit-25 span1-ap'>
+          <div
+              className={
+                currentAssignment.assignment_type === 'peer-review'
+                    ? 'ass-tile ass-tile-yellow'
+                    : 'ass-tile'
+              }
+          >
+        <div className='inter-20-medium-white ass-tile-title'> {' '}
+          <span> {'Assignment Details'} </span>
+        </div>
+          <div className='ass-tile-content' >
+              <span className='inter-24-bold'> {currentAssignment.assignment_name} </span>
+              <span className='inter-20-medium span1-ap'>
                 Due: {currentAssignment.due_date}
               </span>
+              <br /> <br /> <br />
+              <p className='inter-20-medium' >Instructions:</p>
+              <p className='inter-16-medium-black'>{currentAssignment.instructions}</p>
               <br />
-              <p className='outfit-18'>{currentAssignment.instructions}</p>
               <br />
-              <br />
-              <span className='outfit-25'> Files: </span>
-              <span className='outfit-18 p2' onClick={onAssignmentClick}>
-                {currentAssignment.assignment_instructions}
+              <span className='inter-20-bold'> Rubric: </span>
+              <span className='inter-16-bold-blue p2' >
+                <button className='blue-button-small' onClick={onAssignmentClick} >
+                  {' '}
+                  Download{' '}
+              </button>
               </span>
-              <br />
-              <br />
-              <div className='ap-assignment-files'>
+              <div className='ap-assignment-files rubric-button'>
                 <input
                   type='file'
                   name='assignment_files'
@@ -89,17 +127,18 @@ const RegularAssignmentComponent = () => {
                   onChange={(e) => assignmentFileHandler(e)}
                   required
                 />
-              </div>
-              <div className='ap-button'>
-                <button className='green-button' onClick={handleSubmit}>
-                  {' '}
-                  Submit{' '}
-                </button>
-              </div>
-            </h3>
+            </div>
           </div>
-        </div>
-      )}
+    </div>)}
+      <div className='ap-button'>
+        <button className='green-button-large submit-button' onClick={handleSubmit} >
+          {' '}
+          Submit{' '}
+        </button>
+        <button className='cancel-button' onClick={routeChange}>
+          Cancel
+        </button>
+      </div>
     </div>
   );
 };

@@ -3,6 +3,7 @@ package edu.oswego.cs.resources;
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -20,6 +21,18 @@ import edu.oswego.cs.requests.TeamParam;
 @Path("teams/professor/team")
 @DenyAll
 public class ProfessorTeamResources {
+    /**
+     * Endpoint to create course by proffessor
+     */
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{student_id}/create")
+    @RolesAllowed("professor")
+    public Response createTeamProffessor(@Context SecurityContext securityContext, TeamParam request, @PathParam("student_id") String studentID) {
+        new TeamInterface().createTeamProffessor(securityContext, request, studentID);
+        return Response.status(Response.Status.CREATED).entity("Team successfully created.").build();
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

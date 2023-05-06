@@ -1,185 +1,231 @@
 .cap-parent {
-  display: flex;
-  flex-direction: row;
-  background: conic-gradient(
-    from 180deg at 50% 50%,
-    #7398ff -128.84deg,
-    #57e1b2 25.81deg,
-    #7398ff 231.16deg,
-    #57e1b2 385.81deg
-  );
+    display: flex;
+    flex-direction: row;
 }
 
 .cap-container {
-  padding: 0 2% 2% 2%;
-  flex-grow: 1;
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 50px;
-  margin: 1% 1%;
+    padding: 0 2% 2% 2%;
+    flex-grow: 1;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50px;
+    margin: 1% 1%;
 }
 
 .field-container {
-  border: 3px solid #9cf0d3;
-  box-sizing: border-box;
-  border-radius: 25px;
-  background-color: #9cf0d3;
-  margin-bottom: 3%;
+    box-sizing: border-box;
+    border-radius: 5px;
+    background-color: #4a7dfc;
+    margin: 20px 30px 40px 0;
+}
+
+
+.field-container-alt {
+    box-sizing: border-box;
+    border-radius: 5px;
+    background-color: #152188;
+    margin: 20px 30px 40px 0;
 }
 
 .field-title {
-  display: flex;
-  justify-content: right;
-  margin-right: 3%;
-  padding-top: 2%;
-  padding-bottom: 2%;
+    display: flex;
+    justify-content: left;
+    padding: 10px 0 10px 40px;
 }
 
 .field-content {
-  padding: 4%;
-  background-color: white;
-  border-bottom-left-radius: 25px;
-  border-bottom-right-radius: 25px;
+    padding: 30px;
+    background-color: white;
+    border-radius: 0 0 5px 5px;
+    border: 0.5px solid #212529;
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }
 
 .cap-form {
-  border-radius: 25px;
-  overflow-y: scroll;
-  height: 65vh;
+    border-radius: 5px;
+    overflow-y: scroll;
+    height: 78vh;
 }
 
 .cap-form form {
-  border-radius: 25px;
-  padding: 0 0 5% 0;
-  background-color: white;
+    border-radius: 5px;
+    padding: 0 0 5% 0;
+    background-color: white;
 }
+
+/*.cap-form::-webkit-scrollbar {*/
+/*  width: 20px;*/
+/*}*/
+
+/*.cap-form::-webkit-scrollbar-track {*/
+/*  background-color: white;*/
+/*  border-radius: 20px;*/
+/*}*/
+
+/*.cap-form::-webkit-scrollbar-thumb {*/
+/*  background: rgba(168, 168, 168, 0.5);*/
+/*  background-clip: content-box;*/
+/*}*/
 
 .cap-form::-webkit-scrollbar {
-  width: 20px;
-  background-color: transparent;
+    height: 100%;
+    width: 16px;
+    background-color: transparent;
 }
 
-.cap-form::-webkit-scrollbar-track {
-  background-color: transparent;
+.cap-form::-webkit-scrollbar-corner {
+    background: black;
 }
 
 .cap-form::-webkit-scrollbar-thumb {
-  background-color: #d6dee1;
-  border-radius: 20px;
-  border: 6px solid transparent;
-  background-clip: content-box;
+    background: rgba(168, 168, 168, 0.5);
+    border: 1px solid rgba(168, 168, 168, 0.5);
 }
 
+.cap-form::-webkit-scrollbar-thumb:hover {
+    background: rgba(140, 140, 140, 0.5);
+}
+
+.cap-form::-webkit-scrollbar-thumb:active {
+    background: rgba(200, 200, 200, 0.5);
+}
+
+
+/*		&:hover*/
+/*@if $variation == 'lighten'*/
+/*background: lighten($thumb-color, 15)*/
+/*@if $variation == 'darken'*/
+/*background: desaturate(darken($thumb-color, 40), 20)*/
+
+/*// &:active*/
+/*// 	@if $variation == 'lighten'*/
+/*// 		background: lighten($thumb-color, 30)*/
+/*// 	@if $variation == 'darken'*/
+/*// 		background: desaturate(darken($thumb-color, 50), 20)*/
+
+.cap-form::-webkit-scrollbar-track {
+    border: 1px solid rgba(168, 168, 168, 0.5);
+    background-color: white;
+}
+
+
 .cap-input-field {
-  width: 100%;
-  margin-bottom: 5%;
-  display: flex;
+    width: 100%;
+    margin-bottom: 5%;
+    display: flex;
+    flex-direction: column;
+}
+
+.cap-assignment-info-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .cap-input-field label {
-  margin-right: 2%;
+    margin-right: 2%;
 }
 
 .cap-input-field input {
-  flex-grow: 1;
-  padding: 5px 5px 5px 5px;
-  border: 2px solid #949494;
-  box-sizing: border-box;
-  border-radius: 30px;
+    flex-grow: 1;
+    padding: 5px 5px 5px 5px;
+    border: 2px solid #949494;
+    box-sizing: border-box;
+    border-radius: 5px;
+    height: 43px;
 }
 
 .cap-instructions {
-  display: flex;
-  width: 100%;
-  margin-bottom: 5%;
-  flex-direction: column;
+    display: flex;
+    width: 100%;
+    margin-bottom: 5%;
+    flex-direction: column;
 }
 
 .cap-instructions label {
-  margin-right: 2%;
+    margin-right: 2%;
 }
 
 .cap-instructions textarea {
-  flex-grow: 1;
-  border: 2px solid #949494;
-  box-sizing: border-box;
-  border-radius: 30px;
-  padding: 10px 15px 80px 15px;
-  width: 100%;
+    flex-grow: 1;
+    border: 2px solid #949494;
+    box-sizing: border-box;
+    border-radius: 5px;
+    padding: 10px 15px 80px 15px;
+    width: 100%;
 }
 
 .cap-assignment-files {
-  display: flex;
-  flex-grow: 1;
-  margin-bottom: 5%;
+    display: flex;
+    flex-grow: 1;
+    margin-bottom: 5%;
+    align-items: center;
 }
 
 .cap-assignment-files label {
-  margin-bottom: 1%;
+    margin-bottom: 1%;
 }
 
 .cap-assignment-files input {
-  flex-grow: 1;
+    flex-grow: 1;
 }
 
-.cap-assignment-files input[type='file']::file-selector-button {
-  background: #82dfe8;
-  color: #393939;
-  font-family: 'Outfit', sans-serif;
-  font-size: 15px;
-  margin-left: 10px;
-  border-radius: 50px;
-  padding: 8px 35px 8px 35px;
-  border: none;
-  font-weight: bold;
+.cap-assignment-files input[type="file"]::file-selector-button {
+    width: 118px;
+    height: 34px;
+    background-color: #4a7dfc;
+    border-radius: 5px;
+    color: white;
+    border: none;
+    margin-left: 10px;
 }
 
 .cap-assignment-info {
-  display: flex;
-  margin-bottom: 3%;
-  gap: 2%;
+    margin-bottom: 5%;
+    flex-direction: column;
+    display: inline-block;
+    width: 48%;
 }
 
 .cap-assignment-info label {
-  margin-bottom: 1%;
-  margin-right: 1%;
+    margin-bottom: 1%;
+    margin-right: 1%;
+    margin-left: 0;
+    width: 100%;
 }
 
-.cap-assignment-info input[type='date'] {
-  padding: 5px 5px 5px 5px;
-  flex-grow: 0.75;
-  border: 2px solid #949494;
-  box-sizing: border-box;
-  border-radius: 50px;
+.cap-assignment-info input[type="date"] {
+    flex-grow: 0.75;
+    border: 2px solid #949494;
+    box-sizing: border-box;
+    border-radius: 5px;
+    height: 43px;
 }
 
-.cap-assignment-info input[type='number'] {
-  padding: 5px 5px 5px 5px;
-  flex-grow: 0.75;
-  border: 2px solid #949494;
-  box-sizing: border-box;
-  border-radius: 50px;
+.cap-assignment-info input[type="number"] {
+    flex-grow: 0.75;
+    border: 2px solid #949494;
+    box-sizing: border-box;
+    border-radius: 5px;
+    height: 43px;
 }
 
 .cap-button {
-  display: flex;
-  justify-content: center;
+    display: flex;
+    justify-content: center;
 }
 
-.cap-button button {
-  background: #9cf0d3;
-  color: #393939;
-  border-radius: 50px;
-  padding: 13px 55px 13px 55px;
-  border: none;
-  font-weight: bold;
-}
 
 .cap-altbutton {
-  display: flex;
-  justify-content: center;
-  margin-top: 1%;
+    display: flex;
+    justify-content: center;
+    margin-top: 1%;
 }
 
 .cap-altbutton a {
-  color: #5267a3;
+    color: #5267a3;
 }

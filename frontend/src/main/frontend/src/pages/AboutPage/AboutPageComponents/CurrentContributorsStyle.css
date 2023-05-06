@@ -1,0 +1,98 @@
+.current-contributors-component-container {
+    width: 70%;
+    height: 100vh;
+    padding-top: 36px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.current-contributors-engine-icon {
+    background-color: rgb(0, 0, 0, 0);
+    background-image: url("../../../assets/icons/aboutPage/Engine.svg");
+    width: 80px;
+    height: 80px;
+    margin-top: -8px;
+}
+
+.current-contributors-db-icon {
+    background-color: rgb(0, 0, 0, 0);
+    background-image: url("../../../assets/icons/aboutPage/DB.svg");
+    width: 60px;
+    height: 60px;
+}
+
+.current-contributors-project-lead-icon {
+    background-color: rgb(0, 0, 0, 0);
+    background-image: url("../../../assets/icons/aboutPage/project-lead.svg");
+    width: 50px;
+    height: 56px;
+}
+
+.current-contributors-gui-icon {
+    background-color: rgb(0, 0, 0, 0);
+    background-image: url("../../../assets/icons/aboutPage/Gui.svg");
+    width: 60px;
+    height: 52px;
+}
+
+.current-contributors-qa-icon {
+    background-color: rgb(0, 0, 0, 0);
+    background-image: url("../../../assets/icons/aboutPage/QA.svg");
+    width: 60px;
+    height: 60px;
+}
+
+.current-contributors-product-owners-icon {
+    background-color: rgb(0, 0, 0, 0);
+    background-image: url("../../../assets/icons/aboutPage/product-owners.svg");
+    width: 60px;
+    height: 60px;
+    margin-top: 9px;
+}
+
+.current-contributors-req-icon {
+    background-color: rgb(0, 0, 0, 0);
+    background-image: url("../../../assets/icons/aboutPage/Req.svg");
+    width: 46px;
+    height: 58px;
+}
+
+.current-contributors-usability-icon {
+    background-color: rgb(0, 0, 0, 0);
+    background-image: url("../../../assets/icons/aboutPage/Usability.svg");
+    width: 66px;
+    height: 66px;
+}
+
+.current-contributors-ibm-icon {
+    background-color: rgb(0, 0, 0, 0);
+    background-image: url("../../../assets/icons/aboutPage/IBM.svg");
+    width: 129px;
+    height: 54px;
+}
+
+.current-contributors-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.current-contributors-column > div > ul {
+    margin-top: 0;
+    margin-bottom: 50px;
+}
+
+.current-contributors-icon-container {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    align-items: center;
+}
+
+.current-contributors-column > div > ul > Link {
+    color: #4A7DFC;
+}
+
+.current-contributors-name-container {
+    margin-bottom: 7px;
+}

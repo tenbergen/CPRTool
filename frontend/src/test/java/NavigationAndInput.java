@@ -7,6 +7,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -25,13 +26,14 @@ public class NavigationAndInput {
         // driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
 
-        driver.get("http://moxie.cs.oswego.edu:13125/");
+        //driver.get("http://moxie.cs.oswego.edu:13125/");
+        driver.get("http://localhost:3000/");
 
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#box > button")));
         driver.findElement(By.cssSelector("#box > button")).click();
 
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
 //Get all the window handles in a set
         Set<String> handles = driver.getWindowHandles();
@@ -43,7 +45,7 @@ public class NavigationAndInput {
             driver.switchTo().window(newwin);
 //perform actions on new window
             driver.findElement(By.xpath("//*[@id=\"identifierId\"]")).sendKeys("id");
-            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
             driver.findElement(By.cssSelector("#identifierNext > div > button > span")).click();
 
             driver.findElement(By.xpath("//*[@id=\"password\"]/div[1]/div/div[1]/input")).sendKeys("password");
@@ -55,7 +57,7 @@ public class NavigationAndInput {
 
     @AfterAll
     public static void teardown() {
-       //  driver.quit();
+        driver.quit();
     }
 
 
@@ -87,13 +89,15 @@ public class NavigationAndInput {
 
     @Test
     public void loginTest() {
-        driver.get("http://moxie.cs.oswego.edu:13125/");
 
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        //driver.get("http://moxie.cs.oswego.edu:13125/");
+        driver.get("http://localhost:3000/");
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#box > button")));
         driver.findElement(By.cssSelector("#box > button")).click();
 
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
 //Get all the window handles in a set
         Set<String> handles = driver.getWindowHandles();
@@ -105,20 +109,20 @@ public class NavigationAndInput {
             driver.switchTo().window(newwin);
 //perform actions on new window
             driver.findElement(By.xpath("//*[@id=\"identifierId\"]")).sendKeys("id");
-            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
             driver.findElement(By.cssSelector("#identifierNext > div > button > span")).click();
 
             driver.findElement(By.xpath("//*[@id=\"password\"]/div[1]/div/div[1]/input")).sendKeys("password");
             driver.findElement(By.cssSelector("#passwordNext > div > button > span")).click();
             // driver.close();
             driver.switchTo().window(parent);
-            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         }
     }
 
     @Test
     public void CreateCourseTest() {
-        // driver.get("http://moxie.cs.oswego.edu:13125/create/course");
+        // driver.get("http://moxie.cs.oswego.edu:13125/create");
 
         // WebDriverWait wait = new WebDriverWait(driver, 5);
 
@@ -170,14 +174,16 @@ public class NavigationAndInput {
 
         driver.findElement(By.xpath("//*[@id=\"deleteButtons\"]/button[1]")).click();
 
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         Alert alert = wait.until(ExpectedConditions.alertIsPresent());
 
         // simpleAlert.accept();
 
         Assertions.assertEquals("Course successfully updated!", alert.getText());
         alert.accept();
-        driver.navigate().to("http://moxie.cs.oswego.edu:13125/");
+
+        //driver.navigate().to("http://moxie.cs.oswego.edu:13125/");
+        driver.navigate().to("http://localhost:3000");
 
         try{
             if (driver.findElement(By.cssSelector("#courseList > a:nth-child(6) > li")).getText().contains("Math")){
@@ -209,9 +215,9 @@ public class NavigationAndInput {
 
 //            driver.findElement(By.xpath("//*[@id=\"courseList\"]/a[4]/li")).click();
 //            String strUrl = driver.getCurrentUrl();
-//            if(strUrl.contains("http://moxie.cs.oswego.edu:13125/details/student"))
+//            if(strUrl.contains("http://moxie.cs.oswego.edu:13125/student"))
 //            {
-//                String newUrl = strUrl.replace("http://moxie.cs.oswego.edu:13125/details/student","http://moxie.cs.oswego.edu:13125/details/professor");
+//                String newUrl = strUrl.replace("http://moxie.cs.oswego.edu:13125/student","http://moxie.cs.oswego.edu:13125/details/professor");
 //                driver.get(newUrl);
 //            }
 //
@@ -247,7 +253,7 @@ public class NavigationAndInput {
 
 
 
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         Alert alert = wait.until(ExpectedConditions.alertIsPresent());
         Assertions.assertEquals("Course successfully updated!", alert.getText());
         alert.accept();
@@ -274,7 +280,7 @@ public class NavigationAndInput {
         int retries = 2;
 
         while (retries > 0) {
-            WebDriverWait wait = new WebDriverWait(driver, 5);
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
             Alert alert = wait.until(ExpectedConditions.alertIsPresent());
             if(alert.getText() == "Course successfully updated!") {
                 Assertions.assertEquals("Course successfully updated!", alert.getText());

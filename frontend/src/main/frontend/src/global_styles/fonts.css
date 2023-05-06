@@ -1,73 +1,234 @@
-.kumba-40 {
-  font-family: 'Kumbh Sans', sans-serif;
-  font-style: normal;
-  font-weight: 900;
-  font-size: 40px;
-  color: #393939;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');
+
+.inter-12-light{
+  font-family: "Inter", sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 14px;
+  color: #212529;
 }
 
-.kumba-35 {
-  font-family: 'Kumbh Sans', sans-serif;
-  font-style: normal;
-  font-weight: 900;
-  font-size: 30px;
-  color: #393939;
+.inter-12-light-italic{
+  font-family: "Inter", sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 14px;
+  color: #212529;
+  font-style: italic;
 }
 
-.kumba-30 {
-  font-family: 'Kumbh Sans', sans-serif;
-  font-style: normal;
-  font-weight: 900;
-  font-size: 25px;
-  color: #393939;
+.inter-14-medium-black{
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  color: #212529;
 }
 
-.kumba-27 {
-  font-family: 'Kumbh Sans', sans-serif;
-  font-style: normal;
-  font-weight: 900;
-  font-size: 20px;
-  color: #393939;
+.inter-14-medium-white{
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  color: #f6f6f6;
 }
 
-.kumba-25 {
-  font-family: 'Kumbh Sans', sans-serif;
-  font-style: normal;
-  font-weight: 900;
-  font-size: 18px;
-  color: #393939;
-}
-
-.outfit-18 {
-  font-family: 'Outfit', sans-serif;
-  font-style: normal;
-  font-weight: 400;
+.inter-16-medium-white {
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
   font-size: 16px;
+  line-height: 24px;
+  color: #FFFFFF;
 }
 
-.outfit-16 {
-  font-family: 'Outfit', sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 13px;
+.inter-16-medium-red{
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #F04438;
 }
 
-.outfit-25 {
-  font-family: 'Outfit', sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 20px;
+.inter-16-medium-black{
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #212529;
 }
 
-.outfit-20 {
-  font-family: 'Outfit', sans-serif;
-  font-style: normal;
-  font-weight: 400;
+.inter-16-bold-blue{
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  color: #4a7dfc;
+}
+
+.inter-18-bold{
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
   font-size: 18px;
+  line-height: 24px;
+  color: #212529;
 }
 
-.link {
-  color: #5267a3;
-  text-decoration: underline;
-  cursor: pointer;
+.inter-18-medium{
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  color: #212529;
+}
+
+.inter-18-medium-blue{
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  color: #4A7DFC;
+}
+
+.inter-20-extralight{
+  font-family: "Inter", sans-serif;
+  font-weight: 200;
+  font-size: 20px;
+  line-height: 24px;
+  color: #212529;
+}
+
+.inter-20-light{
+  font-family: "Inter", sans-serif;
+  font-weight: 300;
+  font-size: 20px;
+  line-height: 24px;
+  color: #212529;
+}
+
+.inter-20-medium {
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  color: #212529;
+}
+
+.inter-20-medium-white{
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  color: #ffffff;
+}
+
+.inter-20-bold-blue{
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  color: #4a7dfc;
+}
+
+.inter-20-bold {
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  color: #212529;
+}
+
+.inter-24-medium{
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 24px;
+  letter-spacing: .2px;
+  color: #212529;
+}
+
+.inter-24-bold-blue{
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 24px;
+  letter-spacing: .2px;
+  color: #4a7dfc;
+}
+
+.inter-24-medium-white{
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 24px;
+  letter-spacing: .5px;
+  color: #ffffff;
+}
+
+.inter-24-medium-green{
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 24px;
+  letter-spacing: .5px;
+  color: #28A745;
+}
+
+.inter-24-bold{
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 24px;
+  letter-spacing: 0.3px;
+  color: #212529;
+}
+
+.inter-28-light{
+  font-family: "Inter", sans-serif;
+  font-weight: 300;
+  font-size: 28px;
+  line-height: 24px;
+  letter-spacing: 1px;
+  color: #212529;
+}
+
+.inter-28-medium{
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 24px;
+  letter-spacing: 1px;
+  color: #212529;
+}
+
+.inter-28-bold{
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 24px;
+  letter-spacing: 1px;
+  color: #212529;
+}
+
+.inter-36-bold {
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 24px;
+  color: #212529;
+}
+
+.inter-36-bold-white {
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 24px;
+  color: #FFFFFF;
+}
+
+.inter-44-bold {
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 44px;
+  line-height: 24px;
+  color: #212529;
 }

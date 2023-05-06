@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/CSC480-22S.iml" filepath="$PROJECT_DIR$/.idea/CSC480-22S.iml" />
+      <module fileurl="file://$PROJECT_DIR$/frontend/Frontend.iml" filepath="$PROJECT_DIR$/frontend/Frontend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/backend/course-manager-microservice/course-manager-microservice.iml" filepath="$PROJECT_DIR$/backend/course-manager-microservice/course-manager-microservice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/backend/course-viewer-microservice/course-viewer-microservice.iml" filepath="$PROJECT_DIR$/backend/course-viewer-microservice/course-viewer-microservice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/backend/login-microservice/login-microservice.iml" filepath="$PROJECT_DIR$/backend/login-microservice/login-microservice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/backend/professor-assignment-microservice/professor-assignment-microservice.iml" filepath="$PROJECT_DIR$/backend/professor-assignment-microservice/professor-assignment-microservice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/backend/student-peer-review-assignment-microservice/student-peer-review-assignment-microservice.iml" filepath="$PROJECT_DIR$/backend/student-peer-review-assignment-microservice/student-peer-review-assignment-microservice.iml" />
+    </modules>
+  </component>
+</project>

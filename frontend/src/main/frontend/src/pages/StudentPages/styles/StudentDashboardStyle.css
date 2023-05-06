@@ -1,128 +1,131 @@
 .welcome-banner-st {
-  display: flex;
-  justify-content: left;
-  font-weight: bold;
-  font-size: small;
-  padding-left: 2%;
-  padding-top: 2%;
-  flex-direction: column;
-  margin: 15px 0 5px 0;
-  width: 100%;
+    display: flex;
+    justify-content: left;
+    font-weight: bold;
+    font-size: small;
+    padding-top: 2%;
+    flex-direction: column;
+    margin: 15px 0 5px 46px;
+    width: 100%;
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
 }
 
 .student-welcome {
-  padding-bottom: 2%;
+    padding-bottom: 2%;
 }
 
 .btn-wrapper {
-  display: flex;
-  justify-content: left;
-  width: 100%;
+    display: flex;
+    justify-content: left;
+    width: 100%;
+    margin-bottom: 25px;
+    margin-top: 10px;
+}
+
+#back-to-prof-btn {
+    width: 300px;
 }
 
 .prof-view-btn {
-  border: 1px solid #a8bbbf;
-  transition: all 0.2s ease-out;
-  border-radius: 8px;
-  font-family: 'Kumbh Sans', sans-serif;
+    border: 1px solid #a8bbbf;
+    transition: all 0.2s ease-out;
+    border-radius: 8px;
+    font-family: "Kumbh Sans", sans-serif;
 }
 
 .prof-view-btn:hover {
-  cursor: pointer;
-  color: #000;
-  filter: brightness(110%);
+    cursor: pointer;
+    color: #000;
+    filter: brightness(110%);
 }
 
 .StudentDashboard {
-  display: flex;
+    display: flex;
+    flex-direction: row;
 }
 
 #student {
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 50px;
-  margin-top: 3%;
-  margin-bottom: 3%;
-  padding-right: 3%;
-  padding-left: 3%;
-  margin-right: 5%;
-  height: 90vh;
-  width: 100vw;
+    background-color: white;
+    /*padding-right: 3%;*/
+    /*padding-left: 3%;*/
+    flex-grow: 1;
+    height: 100%;
+    width: 100vw;
 }
 
 #courseList {
-  overflow-y: scroll;
-  overflow-x: hidden;
-  height: 65vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 65vh;
+    margin: 5px 30px 0 30px;
 }
 
 #courseList::-webkit-scrollbar {
-  width: 20px;
+    width: 20px;
 }
 
 #courseList::-webkit-scrollbar-track {
-  background-color: transparent;
+    background-color: transparent;
 }
 
 #courseList::-webkit-scrollbar-thumb {
-  background-color: #d6dee1;
-  border-radius: 20px;
-  border: 6px solid transparent;
-  background-clip: content-box;
+    background-color: #d6dee1;
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
 }
 
 #courseList::-webkit-scrollbar-thumb:hover {
-  background-color: #a8bbbf;
+    background-color: #a8bbbf;
 }
 
 .courseListItem {
-  height: 10vh;
-  text-align: left;
-  background: linear-gradient(
-    to right,
-    #7398ff 0%,
-    #7398ff 2%,
-    #eeeeee 2%,
-    #eeeeee 100%
-  );
-  list-style-type: none;
-  font-size: 15px;
-  padding: 10px;
-  margin: 10px;
-  padding-top: 17px;
-  white-space: pre-line;
-  font-weight: bold;
-  padding-left: 50px;
+    height: 10vh;
+    text-align: left;
+    list-style-type: none;
+    font-size: 15px;
+    padding: 5px;
+    margin: 10px 0 10px 16px;
+    white-space: pre-line;
+    font-weight: bold;
+    padding-left: 50px;
+    background-color: #d4eefc;
+    justify-content: center;
 }
 
 .courseListItem:hover {
-  transform: scale(1.02);
+    transform: scale(1.02);
 }
 
 a {
-  text-decoration-line: none;
-  color: black;
+    text-decoration-line: none;
+    color: black;
 }
 
 .no-course-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .no-course-img {
-  height: 350px;
-  width: 350px;
+    height: 350px;
+    width: 350px;
 }
 
 .no-course-head {
-  color: #6c63ff;
-  font-weight: bold;
-  font-size: 1.4em;
-  margin-top: 2%;
+    color: #6c63ff;
+    font-weight: bold;
+    font-size: 1.4em;
+    margin-top: 2%;
 }
 
 .no-course-description {
-  font-size: 1.2em;
-  margin-top: 5px;
+    font-size: 1.2em;
+    margin-top: 5px;
 }

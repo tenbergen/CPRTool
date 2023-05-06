@@ -1,13 +1,12 @@
 .ccp-parent {
   display: flex;
   flex-direction: row;
-  background: conic-gradient(
-    from 180deg at 50% 50%,
-    #7398ff -128.84deg,
-    #57e1b2 25.81deg,
-    #7398ff 231.16deg,
-    #57e1b2 385.81deg
-  );
+}
+
+.course-page-container{
+  display: flex;
+  flex-direction: column;
+  background-color: #d4eefc;
 }
 
 .cpp-title {
@@ -16,38 +15,42 @@
 
 .ccp-container {
   background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 50px;
-  margin: 3% 2% 0 1%;
   flex-grow: 1;
   display: flex;
   flex-direction: row;
-  height: 90vh;
+  height: 100%;
   width: 100vw;
 }
 
 .ccp-form {
   background-color: white;
-  border-radius: 50px;
   margin-top: 1%;
-  padding: 5%;
+  background-color: white;
+  padding-left: 2%;
+  padding-right: 2%;
+  padding-bottom: 5%;
 }
 
 .ccp-input-field {
-  width: 100%;
-  margin-bottom: 7%;
-  display: flex;
+  width: 95%;
+  margin: 3%;
+  display: flow;
   justify-content: center;
   align-items: center;
 }
 
 .ccp-input-field label {
-  margin-right: 2%;
+  margin-right: 70%;
 }
 
 .ccp-input-field input {
-  flex-grow: 1;
   padding: 5px 5px 5px 5px;
-  margin-left: 1%;
+  border: 1px solid black;
+  box-sizing: border-box;
+  border-radius: 5px;
+  font-size: 18px;
+  font-family: "Inter", sans-serif;
+  height: 30px;
 }
 
 .cpp-row-multiple {
@@ -59,5 +62,59 @@
 .ccp-button {
   display: flex;
   justify-content: center;
-  margin-top: 1%;
+  margin-top: 5%;
+}
+
+.crn-csv-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.ccp-file-upload{
+  display: flex;
+  gap: 10px;
+  margin: 3.7%;
+}
+
+.ccp-file-upload label {
+  margin-top: 5%;
+  width: 150px;
+}
+
+.ccp-file-upload input::file-selector-button {
+  width: 140px;
+  height: 40px;
+  background-color: #4a7dfc;
+  border-radius: 5px;
+  color: white;
+  border: none;
+
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  margin-bottom: 25px;
+}
+.ccp-file-upload input::file-selector-button:hover {
+  background-color: #1d2f99;
+  cursor: pointer;
+}
+.ccp-file-upload input::file-selector-button:active {
+  background-color: #102080;
+}
+
+.browse-button{
+  margin-top: 3%;
+}
+
+#semester {
+  height: 35px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  width: 80%;
+  border: solid;
+  border-color: #000000;
+  border-width: 1px;
 }

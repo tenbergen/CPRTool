@@ -1,0 +1,90 @@
+.description-component-container {
+    width: 1018px;
+    height: 100%;
+    padding-top: 36px;
+    display: flex;
+    flex-direction: column;
+}
+
+.description-block-1-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.description-block-1-paragraphs-container {
+    width: 720px;
+}
+
+.description-block-2-container {
+    width: 100%;
+}
+
+.description-block-2-container > ul {
+    margin-top: 12px;
+}
+
+.description-block-2-container > ul > li {
+    margin-bottom: 8px;
+}
+
+.description-block-3-container {
+    padding-left: 8px;
+    margin-bottom: 24px;
+}
+
+.description-block-4-container {
+    padding-left: 8px;
+    margin-top: 18px;
+    display: flex;
+    flex-direction: row;
+}
+
+.description-block-4-end-block {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 20px 0 0 0;
+}
+
+.description-block-4-ibm-icon {
+    background-color: rgb(0, 0, 0, 0);
+    background-image: url("../../../assets/icons/aboutPage/ibm 1.png");
+    width: 200px;
+    height: 192px;
+}
+
+.description-block-4-icons-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 200px;
+}
+
+.description-block-4-paragraphs-container {
+    width: 690px;
+}
+
+.description-block-4-suny-oswego-icon {
+    background-color: rgb(0, 0, 0, 0);
+    background-image: url("../../../assets/icons/aboutPage/SUNY_Oswego_seal.svg.png");
+    width: 200px;
+    height: 192px;
+}
+
+.description-cpr-icon {
+    background-color: rgb(0, 0, 0, 0);
+    background-image: url("../../../assets/icons/aboutPage/Copy of CPR logo final-01.svg");
+    width: 200px;
+    height: 192px;
+}
+
+.description-cpr-icon-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    padding-left: 40px;
+}

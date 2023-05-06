@@ -1,65 +1,138 @@
 .ass-tile {
-  border: 3px solid #9cf0d3;
-  box-sizing: border-box;
-  border-radius: 25px;
-  background-color: #9cf0d3;
-  margin-bottom: 2%;
-  margin-left: 3%;
-  margin-right: 3%;
+    box-sizing: border-box;
+    border-radius: 5px;
+    background-color: #4a7dfc;
+    margin-bottom: 2%;
+    margin-left: 3%;
+    margin-right: 3%;
 }
 
 .ass-tile-yellow {
-  border: 3px solid #f8d377;
-  background-color: #f8d377;
+    border: 3px solid #f8d377;
+    background-color: #f8d377;
+    margin-bottom: 30px;
+    border-radius: 5px;
 }
 
 .ass-tile-title {
-  display: flex;
-  justify-content: right;
-  margin-right: 4%;
-  padding-top: 1%;
-  padding-bottom: 2%;
+    display: flex;
+    justify-content: left;
+    margin-left: 3%;
+    padding: 15px 0;
 }
 
 .ass-tile-content {
-  cursor: pointer;
-  padding: 2% 4%;
-  background-color: white;
-  border-bottom-left-radius: 25px;
-  border-bottom-right-radius: 25px;
+    cursor: pointer;
+    padding: 2% 4%;
+    background-color: white;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border: 0.5px solid #212529;
+    border-top: none;
 }
 
 .ass-tile-info {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-bottom: 3%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2% 0;
 }
 
 .ass-tile-files {
-  width: fit-content;
-  text-decoration-line: underline;
+    width: fit-content;
+    text-decoration-line: underline;
 }
 
 .ass-tile-links {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .ass-tile-delete {
-  margin-top: 2%;
-  color: #f07371;
-  padding: 5px 3px;
-  border-radius: 5px;
-  text-decoration: underline;
-  transition: all 0.2s ease-out;
+    font-family: "Inter", sans-serif;
+    border: solid .5px #F04438;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #F04438;
+    padding: 12px;
+    width: 150px;
+    padding-left: 26px;
 }
 
 .ass-tile-delete:hover {
-  cursor: pointer;
-  background-color: #ff0000;
-  color: #fff;
-  opacity: 0.8;
-  text-decoration: none;
+    cursor: pointer;
+    background-color: #F04438;
+    color: #fff;
+    opacity: 0.8;
+    text-decoration: none;
+}
+
+.ass-tile-alt {
+    box-sizing: border-box;
+    border-radius: 5px;
+    background-color: #152188;
+    margin-bottom: 2%;
+    margin-left: 3%;
+    margin-right: 3%;
+}
+
+.ass-tile-alt-yellow {
+    border: 3px solid #f8d377;
+    background-color: #f8d377;
+}
+
+.ass-tile-alt-title {
+    display: flex;
+    justify-content: left;
+    margin-left: 3%;
+    padding: 15px 0;
+}
+
+.ass-tile-alt-content {
+    cursor: pointer;
+    padding: 2% 4%;
+    background-color: white;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border: 0.5px solid #212529;
+    border-top: none;
+}
+
+.ass-tile-alt-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 3%;
+}
+
+.ass-tile-alt-files {
+    width: fit-content;
+    text-decoration-line: underline;
+}
+
+.ass-tile-alt-links {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.ass-tile-alt-delete {
+    font-family: "Inter", sans-serif;
+    border: solid .5px #F04438;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #F04438;
+    padding: 12px;
+    width: 150px;
+    padding-left: 26px;
+}
+
+.ass-tile-alt-delete:hover {
+    cursor: pointer;
+    background-color: #F04438;
+    color: #fff;
+    opacity: 0.8;
+    text-decoration: none;
 }

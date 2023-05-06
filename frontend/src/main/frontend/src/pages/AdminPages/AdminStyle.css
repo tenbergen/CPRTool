@@ -1,0 +1,592 @@
+.admin-page-container {
+    background-color: #d4eefc;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    /*height: 100vh;*/
+    width: 100vw;
+}
+
+.admin-sidebar {
+    position: relative;
+    flex: 1.2;
+    height: 100vh;
+    background-color: #d4eefc;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.admin-user-roles {
+    position: relative;
+    flex: 4;
+    background-color: #fafdff;
+}
+
+.admin-user-roles h2 {
+    padding: 0 40px;
+    margin-top: 40px;
+}
+
+.admin-sidebar h1 {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    margin: 0;
+}
+
+.admin-logout {
+    position: absolute;
+    top: 800px;
+    margin: 0;
+}
+
+.admin-add-user-button {
+    background-color: #28A745;
+    color: #fff;
+    border-radius: 5px;
+    padding: 8px 40px;
+    font-size: 1.2em;
+    align-self: flex-end;
+    min-width: 175px;
+    height: 40px;
+}
+
+.admin-user-list {
+    position: absolute;
+    top: 220px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(100% - 450px);
+    padding: 0 40px 80px;
+    margin: 0 auto;
+}
+
+input[type='text'] {
+    height: 31px;
+    font-size: 1.2em;
+    width: 97.5%;
+    border: solid;
+    border-color: #000000;
+    border-width: 1px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    outline: none;
+}
+
+.header {
+    background-color: #4a7dfc !important;
+    color: white;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.user-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+.user-item:nth-child(even) {
+    background-color: #E6E6E6;
+}
+
+.user-item > div {
+    width: 25%;
+}
+
+.user-item > div:last-child {
+    display: flex;
+}
+
+.admin-edit-button {
+    background: none;
+    border: none;
+}
+
+.admin-delete-button {
+    color: rgb(0, 0, 0);
+    align-self: flex-end;
+    font-size: 1.2em;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+.admin-all-user-items {
+    overflow-y: scroll;
+    height: calc(120% - 10px);
+}
+
+.admin-page-dropdown {
+    padding: 0 40px;
+}
+
+.dropdown-year {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.dropdown-semester {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+#admin-role {
+    height: 40px;
+    max-width: 190px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    width: 175px;
+    border: solid;
+    border-color: #000000;
+    border-width: 1px;
+}
+
+#admin-courses-role {
+    height: 40px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    width: 95%;
+    border: solid;
+    border-color: #000000;
+    border-width: 1px;
+}
+
+.search-bar {
+    display: flex;
+    flex-direction: column;
+    flex: 2;
+}
+
+.search-bar-courses {
+    display: flex;
+    flex-direction: column;
+    flex: 4;
+}
+
+.search-filter-add {
+    display: flex;
+    padding: 25px 40px;
+}
+
+.admin-add-user-button-div {
+    padding: 0 15px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    align-self: flex-end;
+}
+
+.admin-tabs {
+    display: flex;
+    width: 60%;
+    padding: 0px 40px;
+    min-width: 700px;
+}
+
+.user-roles-tab {
+    background-color: #E6E6E6;
+    color: #000000;
+    border: solid;
+    border-width: 1px;
+    border-color: #000000;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding: 8px 40px;
+    font-size: 1em;
+    flex: 1;
+    height: 50%;
+}
+
+.courses-tab {
+    background-color: #E6E6E6;
+    color: #000000;
+    border: solid;
+    border-width: 1px;
+    border-color: #000000;
+    border-left-width: 0;
+    border-right-width: 0;
+    padding: 8px 40px;
+    font-size: 1em;
+    flex: 1;
+    height: 50%;
+}
+
+.profanity-settings-tab {
+    background-color: #E6E6E6;
+    color: #000000;
+    border: solid;
+    border-width: 1px;
+    border-color: #000000;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: 8px 40px;
+    font-size: 1em;
+    flex: 1;
+    height: 50%;
+}
+
+.admin-edit-icon {
+    width: 75%;
+    height: 75%;
+}
+
+.search-year-semester {
+    display: flex;
+    padding: 25px 40px;
+}
+
+.profanity-settings {
+    display: flex;
+    flex-direction: column;
+    padding: 0 40px;
+}
+
+.profanity-text-field {
+    width: 80%;
+}
+
+.save-changes {
+    background-color: #28A745;
+    color: #fff;
+    border-radius: 5px;
+    padding: 8px 40px;
+    font-size: 1.2em;
+    align-self: center;
+}
+
+.add-profanity {
+    display: flex;
+    flex-direction: column;
+    flex: 4;
+    padding: 0 100px;
+}
+
+.admin-edit-container {
+    padding-right: 8px;
+    margin-left: -4px;
+    display: grid;
+    align-self: left;
+}
+
+.admin-delete-container {
+    display: grid;
+    align-self: left;
+}
+
+.search-icon-div {
+    display: flex;
+    flex-direction: row;
+    width: 98.75%;
+}
+
+.admin-search-button {
+    flex: 1;
+    background-color: #E6E6E6;
+    border: solid;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-width: 1px;
+    border-color: #000000;
+    border-left-width: 0;
+    max-width: 50px;
+}
+
+.search-icon {
+    padding: 0px 10px;
+    height: 20px;
+    width: 20px;
+}
+
+.profanity-icon-div {
+    display: flex;
+    flex-direction: row;
+    width: 98.75%;
+}
+
+.plus-profanity-button {
+    flex: 1;
+    background-color: #E6E6E6;
+    border: solid;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-width: 1px;
+    border-color: #000000;
+    border-left-width: 0;
+}
+
+.plus-icon {
+    padding: 0px 10px;
+    height: 20px;
+    width: 20px;
+}
+
+.excluded-courses-button {
+    background: none;
+    color: #2c67fa;
+    text-decoration: underline;
+    font-size: 17px;
+}
+
+.courses-list {
+    padding-right: 40px;
+}
+
+.abbreviation-section-container {
+    display: flex;
+}
+
+.name-list {
+    display: flex;
+    gap: 6px;
+}
+
+.overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+}
+
+.modalContainer {
+    max-width: 600px;
+    width: 100%;
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    background-color: #F2F4F7;
+    box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, 0.75);
+    z-index: 5;
+    border-radius: 5px;
+    border: solid;
+}
+
+.modalRight {
+    width: 100%;
+}
+
+.closeBtn {
+    position: fixed;
+    cursor: pointer;
+    top: 8px;
+    right: 8px;
+}
+
+.closeBtn:hover {
+    color: white;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 1rem 2rem;
+}
+
+.courses-title {
+    text-align: center;
+}
+
+.modal-header {
+    border-bottom: solid black;
+    color: white;
+    text-align: center;
+    background-color: #4a7dfc;
+    font-size: 1.5em;
+}
+
+.add-course {
+    border-top: solid black;
+    display: flex;
+    flex-direction: column;
+    flex: 4;
+    padding: 0 150px;
+    padding-bottom: 10px;
+    padding-top: 8px;
+    align-items: center;
+}
+
+.courses-excluded-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.delete-course-button {
+    color: rgb(0, 0, 0);
+    align-self: flex-end;
+    font-size: 1.2em;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+.delete-course-container {
+    display: grid;
+    margin-left: 30px;
+}
+
+.delete-course-button:hover {
+    color: rgb(255, 56, 56);
+}
+
+.course-item {
+    margin-left: 50px;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.delete-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.edit-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    border: solid #212529;
+    border-width: 1px;
+}
+
+.modal-head {
+    text-align: center;
+}
+
+.add-user-fields {
+    border-radius: 5px;
+}
+
+.add-user-name {
+    padding: 10px;
+    display: flex; 
+    flex-direction: column;
+}
+
+.add-user-email {
+    padding: 10px;
+    display: flex; 
+    flex-direction: column;
+}
+
+#add-user-role {
+    height: 35px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    border: solid;
+    border-color: #000000;
+    border-width: 1px;
+}
+
+.add-user-dropdown {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 10px;
+}
+
+.add-user-buttons {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    justify-content: space-between;
+}
+
+.add-user-popup-button {
+    background-color: #28A745;
+    color: #fff;
+    border-radius: 5px;
+    padding: 8px 40px;
+    font-size: 1.2em;
+    align-self: flex-end;
+    min-width: 175px;
+}
+
+.cancel-user-button {
+    background-color: #E4E7EC;
+    color: #C60D00;
+    border-radius: 5px;
+    padding: 7px 40px;
+    font-size: 1.2em;
+    align-self: flex-end;
+    min-width: 175px;
+    border: solid #C60D00;
+    border-width: 1px;
+}
+
+.remove-user-buttons {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    justify-content: space-between;
+}
+
+.remove-user-popup-button {
+    background-color: #4a7dfc;
+    color: #fff;
+    border-radius: 5px;
+    padding: 8px 40px;
+    font-size: 1.2em;
+    align-self: flex-end;
+}
+
+.cancel-user-delete-button {
+    background-color: #E4E7EC;
+    color: #C60D00;
+    border-radius: 5px;
+    padding: 7px 40px;
+    font-size: 1.2em;
+    align-self: flex-end;
+    border: solid #C60D00;
+    border-width: 1px;
+}
+
+.confrim-remove {
+    text-align: center;
+}

@@ -4,43 +4,149 @@
   padding-left: 5%;
   padding-top: 2%;
   height: 70vh;
+  overflow-y: auto;
 }
 
 .team-header {
   padding-top: 2%;
+  padding-left: 1%;
+  margin-bottom: 40px;
   font-size: x-large;
 }
 
 .team-name-container {
-  border-radius: 50px;
-  height: 10vh;
-  background-image: linear-gradient(to right, #82dfe8, rgba(130, 223, 232, 0));
+  border-radius: 5px;
+  color: #4a7dfc;
 }
 
 .team-name {
   position: relative;
   top: 50%;
-  padding-left: 5%;
-  font-size: x-large;
-  font-weight: bold;
+
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 24px;
+  letter-spacing: 1px;
+
   -webkit-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
 
 .members-name-container {
-  border-radius: 50px;
-  height: 7vh;
-  background-image: linear-gradient(to right, #57e1b2, rgba(130, 223, 232, 0));
+  border: solid 2px lightgrey;
+  margin-bottom: 5px;
+  height: 64px;
+}
+
+.members-name-container > p{
+  padding: 20px 0;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #000;
 }
 
 .my-team-members {
   position: relative;
   top: 50%;
-  padding-left: 5%;
+  padding-left: 20px;
   font-size: large;
   font-weight: normal;
   -webkit-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+}
+
+.my-team-tile{
+  border-radius: 5px;
+  background-color: #4a7dfc;
+  margin-bottom: 2%;
+  margin-right: 3%;
+}
+
+.my-team-tile-content{
+  margin-bottom: 40px;
+}
+
+.my-team-tile-info{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
+
+.my-team-tile-title{
+  display: flex;
+  justify-content: left;
+  margin-left: 4%;
+  padding: 5px 0;
+  user-select: none;
+}
+
+.my-members-count{
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+
+.my-members-count-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#myTeamTileContentAndTableContainer{
+  display: flex;
+  flex-direction: column;
+  padding: 1% 4% 5% 4%;
+  background-color: white;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border: 1px solid #212529;
+  border-top: none;
+  user-select: none;
+}
+
+#myMembersTable{
+  margin-top: 16px;
+  border-radius: 5px 5px 0 0;
+  border: 1px solid rgba(16, 24, 40, 0.2);
+  border-collapse: separate;
+}
+#myMembersTable > thead {
+  border-radius: 5px 5px 0 0;
+}
+#myMembersTable > thead > tr {
+  background-color: #e6e6e6;
+  height: 39px;
+  border-radius: 5px 5px 0 0;
+}
+#myMembersTable > thead > tr > th {
+  padding-left: 3%;
+}
+#myMembersTable > thead > tr > th:first-child{
+  border-top-left-radius: 5px;
+}
+#myMembersTable > thead > tr > th:last-child{
+  padding-left: 3%;
+  border-top-right-radius: 5px;
+}
+#myMembersTable > tbody > tr {
+  height: 50px;
+  border-collapse: collapse!important;
+  border: 1px solid rgba(16, 24, 40, 0.2);
+  border-spacing: 0;
+}
+#myMembersTable > tbody > tr > td {
+  padding-left: 3%;
+}
+#myMembersTable > tbody > tr:nth-child(even) > td {
+  background-color: #e6e6e6;
+}
+#myMembersTable > tbody > tr:nth-child(odd) > td {
+  background-color: white;
 }

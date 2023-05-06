@@ -8,22 +8,23 @@ import {
   getCourseAssignmentsAsync,
 } from '../redux/features/assignmentSlice';
 import uuid from 'react-uuid';
+import LogoutButton from "./GlobalComponents/LogoutButton";
 
 const GradeAssBarLink = ({ active, assignment, onClick }) => {
   const { role } = useSelector((state) => state.auth);
-  const normalStyle = { backgroundColor: 'rgba(255, 255, 255, 0.25)' };
-  const clickedStyle = { backgroundColor: 'white' };
+  const normalStyle = { backgroundColor: '#f6f6f6', border: '1px solid lightgrey' };
+  const clickedStyle = { backgroundColor: 'white', border: '1px solid lightgrey' };
   const { courseId } = useParams();
 
   return (
     <Link
-      to={`/details/${role}/${courseId}/${assignment.assignment_id}`}
+      to={`/${role}/${courseId}/${assignment.assignment_id}`}
       onClick={onClick}
     >
       <tr>
         <td style={active ? clickedStyle : normalStyle}>
           <div className='colorForTable' />
-          <p className='courseText kumba-25'> {assignment.assignment_name} </p>
+          <p className='courseText inter-18-bold'> {assignment.assignment_name} </p>
         </td>
       </tr>
     </Link>
@@ -50,22 +51,15 @@ const GradeAssBarComponent = () => {
   };
 
   const onCourseClick = () => {
-    navigate(`/details/professor/${courseId}`);
+    navigate(`/professor/${courseId}`);
   };
 
   return (
     <div className='abc-parent'>
       <div className='abc-title'>
-        <span
-          className='outfit-16 link'
-          style={{ fontSize: '11px' }}
-          onClick={onCourseClick}
-        >
-          {courseId}
-        </span>
-        <h2 className='kumba-30'> Assignments </h2>
+        <h2 className='inter-28-bold'> Assignment </h2>
       </div>
-      <div className='abc-assignments'>
+      <div className='inter-18-bold abc-assignments'>
         {courseAssignments.map(
           (assignment) =>
             assignment && (
@@ -78,6 +72,7 @@ const GradeAssBarComponent = () => {
             )
         )}
       </div>
+      <LogoutButton/>
     </div>
   );
 };

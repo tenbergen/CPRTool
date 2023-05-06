@@ -1,115 +1,401 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');
+
+.pecc-bulk-download-button{
+    background-color: #4A7DFC;
+    height: 40px;
+    width: 130px;
+    border-radius: 5px;
+    color: white;
+    font-family: "Inter", sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.pecc-bulk-download-button:hover{
+    cursor: pointer;
+}
+
+.edit-course-input-fields-container{
+    padding-left: 2%;
+}
+
 .ecc-form {
-  background-color: white;
-  border-radius: 50px;
-  margin-top: 0;
-  padding: 5%;
-  height: 57vh;
+    background-color: white;
+    /*border-radius: 50px;*/
+    padding: 1%;
+    overflow-y: scroll;
+    max-height: 80vh;
+    overflow-x: hidden;
+}
+
+.ecc-form::-webkit-scrollbar {
+    width: 20px;
+}
+
+.ecc-form::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.ecc-form::-webkit-scrollbar-thumb {
+    background-color: #d6dee1;
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
 }
 
 .ecc-input-field {
-  width: 100%;
-  margin-bottom: 5%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    width: 97.3%;
+    display: flow;
+    margin-top: 4%;
+    justify-content: center;
+    align-items: center;
+}
+
+.ecc-input-field textarea {
+    flex-grow: 1;
+    border: 2px solid #949494;
+    box-sizing: border-box;
+    border-radius: 5px;
+    width: 100%;
+    height: 466px;
+    font-size: 20px;
+    font-weight: 400;
+    font-family: "Inter", sans-serif;
+    line-height: 18px;
 }
 
 .ecc-input-field label {
-  margin-right: 2%;
-}
-
-.ecc-input-field label b,
-.ecc-file-upload label b {
-  font-weight: 500;
+    margin-right: 500px;
 }
 
 .ecc-input-field input {
-  flex-grow: 1;
-  padding: 5px 5px 5px 5px;
-  border: 2px solid #949494;
-  box-sizing: border-box;
-  border-radius: 50px;
+    flex-grow: 1;
+    padding: 5px 5px 5px 5px;
+    border: 1px solid black;
+    box-sizing: border-box;
+    border-radius: 5px;
+    font-size: 18px;
+    font-family: "Inter", sans-serif;
 }
 
 .ecc-row-multiple {
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.ecc-file-upload {
+    display: flex;
+    gap: 10px;
+    margin-right: 5%;
 }
 
 .ecc-file-upload label {
-  margin-right: 1%;
+    margin-top: 2.2%;
 }
 
 .ecc-file-upload input::file-selector-button {
-  background: #82dfe8;
-  border-radius: 50px;
-  padding: 10px 45px 10px 45px;
-  border: none;
-  font-size: medium;
-  font-weight: bold;
-  transition: all 0.2s ease-out;
+    width: 140px;
+    height: 40px;
+    background-color: #4a7dfc;
+    border-radius: 5px;
+    color: white;
+    border: none;
+
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+    margin-bottom: 25px;
 }
 
 .ecc-file-upload input::file-selector-button:hover {
-  cursor: pointer;
-  background-color: #58d5e1;
+    background-color: #1d2f99;
+    cursor: pointer;
 }
 
-.ecc-button {
-  display: flex;
-  justify-content: center;
-  margin-top: 7%;
-  padding: 10px 45px 10px 45px;
-  border: none;
-  font-size: medium;
-  font-weight: bold;
+.ecc-file-upload input::file-selector-button:active {
+    background-color: #102080;
 }
 
-.ecc-button button {
-  background: #9cf0d3;
-  border-radius: 50px;
-  padding: 10px 45px 10px 45px;
-  border: none;
-  font-size: medium;
-  font-weight: bold;
-  transition: all 0.2s ease-out;
+.check_image {
+    background-image: url("../../assets/icons/Green_Check.svg");
+    height: 52px;
+    width: 53px;
+    margin-bottom: 5%;
 }
 
-.ecc-button button:hover {
-  cursor: pointer;
-  background-color: #58eeba;
-}
-
-.ecc-delete {
-  display: flex;
-  justify-content: flex-end;
-  margin-right: 5%;
+.cross {
+    background-image: url("../../assets/icons/Corner_X.svg");
+    height: 21px;
+    width: 21px;
+    align-self: flex-end;
 }
 
 .ecc-anchor {
-  color: #f07371;
-  font-weight: bold;
-  text-decoration: underline;
-  transition: all 0.2s ease-out;
-  border-radius: 5px;
-  padding: 3px 5px;
+    font-family: "Inter", sans-serif;
+    border: solid .5px #F04438;
+    border-radius: 5px;
+    font-size: 20px;
+    color: #F04438;
+    width: 250px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+    padding: 10px 50px 10px 50px;
+    font-weight: bold;
 }
 
-.ecc-delete button {
-  background: #9cf0d3;
-  border-radius: 50px;
-  padding: 10px 45px 10px 45px;
-  border: none;
-  font-size: medium;
-  font-weight: bold;
-  margin-right: 2%;
+.ecc-anchor-cancel {
+    font-family: "Inter", sans-serif;
+    border: solid .5px #e6e6e6;
+    border-radius: 5px;
+    font-size: 20px;
+    color: #0a0a0a;
+    width: 250px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+    padding: 10px 50px 10px 50px;
+    font-weight: bold;
+}
+
+.profanity-button {
+    background-color: #28a745;
+    border-radius: 5px;
+    color: white;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+    display: flex;
+    justify-content: center;
+    padding: 10px 50px 10px 50px;
+    border: none;
+    vertical-align: middle;
+}
+
+.profanity-button:hover {
+    background-color: #027A48;
+}
+
+.profanity-button:active {
+    background-color: #05603a;
+}
+
+.ecc-button {
+    width: 250px;
+    background-color: #28a745;
+    border-radius: 5px;
+    color: white;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+    display: flex;
+    justify-content: center;
+    padding: 10px 50px 10px 50px;
+    border: none;
+}
+
+.ecc-button:hover {
+    background-color: #027A48;
+}
+
+.ecc-button:active {
+    background-color: #05603a;
+}
+
+.ecc-delete {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 5%;
 }
 
 .ecc-anchor:hover {
-  cursor: pointer;
-  background-color: #ff0000;
-  color: #fff;
-  opacity: 0.8;
-  text-decoration: none;
+    background-color: #F04438;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
 }
+
+.ecc-anchor-cancel:hover {
+    background-color: #948f8f;
+    color: #000000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+#ecc-delete-button-delete {
+    border: solid .5px #F04438;
+    width: 118px;
+    height: 34px;
+    background-color: white;
+    border-radius: 5px;
+    color: #F04438;
+    margin-right: 30px;
+}
+
+#ecc-delete-button-cancel {
+    font-family: "Inter", sans-serif;
+    width: 118px;
+    height: 34px;
+    background-color: #4a7dfc;
+    border-radius: 5px;
+    color: white;
+    border: none;
+}
+
+.ecc-button-defaults {
+    font-family: "Inter", sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    width: 217px;
+    height: 42px;
+    background-color: #4a7dfc;
+    border-radius: 5px;
+    color: white;
+    border: none;
+}
+
+.ecc-button-defaults:hover {
+    background-color: #1d2f99;
+}
+
+
+#ecc-button-container {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+}
+
+.roster-bulk-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 4%;
+    margin-bottom: 2%;
+}
+
+.ecc-bulk-download {
+    display: flex;
+    gap: 10px;
+}
+
+.ecc-bulk-download label {
+    margin-top: 2.5%;
+}
+
+.pecc-bulk-download-button{
+    background-color: #4A7DFC;
+    height: 40px;
+    width: 130px;
+    border-radius: 5px;
+    color: white;
+    font-family: "Inter", sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.pecc-bulk-download-button:hover{
+    cursor: pointer;
+}
+
+.bulk-download-button {
+    width: 140px;
+    height: 40px;
+    background-color: #4a7dfc;
+    border-radius: 5px;
+    color: white;
+    border: none;
+
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+    margin-bottom: 25px;
+}
+
+.bulk-download-button:hover {
+    background-color: #1d2f99;
+}
+
+.info-container {
+    overflow-x: hidden;
+    border: solid #212529;
+    border-width: 1px;
+    border-radius: 5px;
+}
+
+.info-header {
+    padding: 5px;
+    position: sticky;
+    top: 0;
+    background: #4A7DFC;
+    height: 25px;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+}
+
+.course-details-title {
+    padding-left: 2%;
+    padding-right: 2%;
+    display: flex;
+    align-items: center;
+}
+
+.course-profanity-title {
+    display: flex;
+    align-items: center;
+}
+
+input[type=text] {
+    border-bottom-left-radius: 5px;
+    border-color: #000;
+    border-width: 1px;
+    font-size: 1.2em;
+    /*took out !important as it was overriding the professorRosterStyle search bar size*/
+    height: 30px ;
+    outline: none;
+}
+
+.course-profanity-details {
+    padding-left: 1%;
+    padding-right: 1%;
+}
+
+.course-profanity-details p {
+    font-size: 20px;
+    font-family: "Inter", sans-serif;
+    line-height: 25px;
+    font-style: normal;
+    font-weight: 400;
+}
+
+#edit-semester {
+    height: 35px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    width: 80%;
+    border: solid;
+    border-color: #000000;
+    border-width: 1px;
+    font-weight: 500;
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+  }

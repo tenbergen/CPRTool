@@ -1,0 +1,259 @@
+version: "3.8"
+services:
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        URL: ${URL}
+        CLIENT_ID: ${CLIENT_ID}
+    image: cpr-frontend
+    container_name: cpr-frontend
+    restart: unless-stopped
+
+  login:
+    build:
+      context: ./backend/login-microservice
+    image: cpr-login
+    container_name: cpr-login
+    restart: unless-stopped
+    volumes:
+      - ./professor-list.txt:/opt/ol/wlp/output/defaultServer/professor-list.txt:rw
+    environment:
+      JWK_ACCESS_URL: ${JWK_ACCESS_URL}
+      JWK_REFRESH_URL: ${JWK_REFRESH_URL}
+      MONGO_HOSTNAME: ${MONGO_HOSTNAME}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO2_PORT: ${MONGO2_PORT}
+      MONGO3_PORT: ${MONGO3_PORT}
+      MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
+      MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
+
+  course-manager:
+    build:
+      context: ./backend/course-manager-microservice
+    image: cpr-course-manager
+    container_name: cpr-course-manager
+    restart: unless-stopped
+    environment:
+      JWK_ACCESS_URL: ${JWK_ACCESS_URL}
+      JWK_REFRESH_URL: ${JWK_REFRESH_URL}
+      MONGO_HOSTNAME: ${MONGO_HOSTNAME}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO2_PORT: ${MONGO2_PORT}
+      MONGO3_PORT: ${MONGO3_PORT}
+      MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
+      MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+
+  course-viewer:
+    build:
+      context: ./backend/course-viewer-microservice
+    image: cpr-course-viewer
+    container_name: cpr-course-viewer
+    restart: unless-stopped
+    environment:
+      JWK_ACCESS_URL: ${JWK_ACCESS_URL}
+      JWK_REFRESH_URL: ${JWK_REFRESH_URL}
+      MONGO_HOSTNAME: ${MONGO_HOSTNAME}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO2_PORT: ${MONGO2_PORT}
+      MONGO3_PORT: ${MONGO3_PORT}
+      MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
+      MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+
+  peer-review-teams:
+    build:
+      context: ./backend/peer-review-teams-microservice
+    image: cpr-peer-review-teams
+    container_name: cpr-peer-review-teams
+    restart: unless-stopped
+    environment:
+      JWK_ACCESS_URL: ${JWK_ACCESS_URL}
+      JWK_REFRESH_URL: ${JWK_REFRESH_URL}
+      MONGO_HOSTNAME: ${MONGO_HOSTNAME}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO2_PORT: ${MONGO2_PORT}
+      MONGO3_PORT: ${MONGO3_PORT}
+      MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
+      MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+
+  professor-assignment:
+    build:
+      context: ./backend/professor-assignment-microservice
+    image: cpr-professor-assignment
+    container_name: cpr-professor-assignment
+    restart: unless-stopped
+    volumes:
+      - ./assignments:/opt/ol/wlp/output/defaultServer/assignments
+    environment:
+      JWK_ACCESS_URL: ${JWK_ACCESS_URL}
+      JWK_REFRESH_URL: ${JWK_REFRESH_URL}
+      MONGO_HOSTNAME: ${MONGO_HOSTNAME}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO2_PORT: ${MONGO2_PORT}
+      MONGO3_PORT: ${MONGO3_PORT}
+      MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
+      MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+
+  student-assignment:
+    build:
+      context: ./backend/student-assignment-microservice
+    image: cpr-student-assignment
+    container_name: cpr-student-assignment
+    restart: unless-stopped
+    volumes:
+      - ./assignments:/opt/ol/wlp/output/defaultServer/assignments
+    environment:
+      JWK_ACCESS_URL: ${JWK_ACCESS_URL}
+      JWK_REFRESH_URL: ${JWK_REFRESH_URL}
+      MONGO_HOSTNAME: ${MONGO_HOSTNAME}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO2_PORT: ${MONGO2_PORT}
+      MONGO3_PORT: ${MONGO3_PORT}
+      MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
+      MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+
+  student-peer-review-assignment:
+    build:
+      context: ./backend/student-peer-review-assignment-microservice
+    image: cpr-student-peer-review-assignment
+    container_name: cpr-student-peer-review-assignment
+    restart: unless-stopped
+    volumes:
+      - ./assignments:/opt/ol/wlp/output/defaultServer/assignments
+    environment:
+      JWK_ACCESS_URL: ${JWK_ACCESS_URL}
+      JWK_REFRESH_URL: ${JWK_REFRESH_URL}
+      MONGO_HOSTNAME: ${MONGO_HOSTNAME}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO2_PORT: ${MONGO2_PORT}
+      MONGO3_PORT: ${MONGO3_PORT}
+      MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
+      MONGO_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+
+  mongo:
+    image: mongo:5.0.6
+    command: mongod --port ${MONGO_PORT}
+    container_name: cpr-mongo
+    restart: unless-stopped
+    volumes:
+      - ./db:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO2_PORT: ${MONGO2_PORT}
+      MONGO3_PORT: ${MONGO3_PORT}
+      MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - "127.0.0.1:${MONGO_PORT}:${MONGO_PORT}"
+
+  mongo2:
+    image: mongo:5.0.6
+    command: mongod --port ${MONGO2_PORT}
+    container_name: cpr-mongo2
+    restart: unless-stopped
+    volumes:
+      - ./db2:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO2_PORT: ${MONGO2_PORT}
+      MONGO3_PORT: ${MONGO3_PORT}
+      MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - "127.0.0.1:${MONGO2_PORT}:${MONGO2_PORT}"
+
+  mongo3:
+    image: mongo:5.0.6
+    command: mongod --port ${MONGO3_PORT}
+    container_name: cpr-mongo3
+    restart: unless-stopped
+    volumes:
+      - ./db3:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO2_PORT: ${MONGO2_PORT}
+      MONGO3_PORT: ${MONGO3_PORT}
+      MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - "127.0.0.1:${MONGO3_PORT}:${MONGO3_PORT}"
+
+  mongo4:
+    image: mongo:5.0.6
+    command: mongod --port ${MONGO4_PORT}
+    container_name: cpr-mongo4
+    restart: unless-stopped
+    volumes:
+      - ./db4:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO2_PORT: ${MONGO2_PORT}
+      MONGO3_PORT: ${MONGO3_PORT}
+      MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - "127.0.0.1:${MONGO4_PORT}:${MONGO4_PORT}"
+
+  mongo5:
+    image: mongo:5.0.6
+    command: mongod --port ${MONGO5_PORT}
+    container_name: cpr-mongo5
+    restart: unless-stopped
+    volumes:
+      - ./db5:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO2_PORT: ${MONGO2_PORT}
+      MONGO3_PORT: ${MONGO3_PORT}
+      MONGO4_PORT: ${MONGO4_PORT}
+      MONGO5_PORT: ${MONGO5_PORT}
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - "127.0.0.1:${MONGO5_PORT}:${MONGO5_PORT}"

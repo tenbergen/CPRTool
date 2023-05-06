@@ -1,104 +1,230 @@
 .accordion {
-  overflow: auto;
-  max-height: 70vh;
+    padding-top: 20px;
+    overflow: auto;
+    max-height: 70vh;
 }
 
 .accordionTitle {
-  background-color: #82dfe8;
-  font-size: 20px;
-  padding-left: 12px;
-  padding-bottom: 20px;
-  padding-top: 20px;
+
+    border: 2px solid lightgray;
+    border-top: 30px solid #4a7dfc;
+    background-color: white;
+    font-size: 20px;
+    padding-left: 12px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    border-radius: 5px 5px 0 5px;
+}
+
+.team-container{
+    overflow-y: scroll;
+    max-width: 100%;
 }
 
 .accordionTitle:hover {
-  cursor: pointer;
+    cursor: pointer;
+}
+
+.accordionItem{
+    margin-bottom: 2%;
 }
 
 .accordionWrapper {
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
 }
 
 .memberWrapper {
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
 }
 
 .accordionHead {
-  display: flex;
+    display: flex;
 }
 
 .accordionTeamTitle {
-  margin-left: 12px;
+    margin-left: 30px;
 }
 
 .accordionContent {
-  background-color: rgba(130, 223, 232, 0.5);
+    background-color: white;
+    border: 2px solid lightgray;
+    border-radius: 8px;
+    border-top: none;
+    margin-bottom: 2%;
 }
 
+.teamMembersItem {
+    padding-right: 25px;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+
 .crossMarkTeam {
-  float: right;
-  margin-right: 10px;
+    float: right;
+    margin-right: 10px;
 }
 
 .plusMinusTeam:hover {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .memberItem {
-  padding-bottom: 12px;
+    padding-bottom: 12px;
 }
 
 .teamMember {
-  margin-left: 7.5%;
-  padding: 5px;
+    margin-left: 7.5%;
+    padding: 5px;
 }
 
 .buttonPlusTeam {
-  width: 3%;
-  height: 3%;
-  margin-left: 40%;
+    width: 3%;
+    height: 3%;
+    margin-left: 40%;
 }
 
 .emailInput {
-  border-radius: 30px;
-  margin-left: 8px;
+    border-radius: 5px;
+    margin-left: 8px;
 }
 
 .teamA {
-  margin-left: 8px;
-  text-decoration: underline;
-  transition: ease-in-out 0.5s;
-  border-radius: 10px;
+    margin-left: 10px;
+    margin-top: 10px;
+
+    width: 140px;
+    height: 30px;
+    background-color: #28a745;
+    border-radius: 5px;
+    color: white;
+
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
 }
 
 .teamA:hover {
-  cursor: pointer;
-  background-color: #6c63ff;
-  color: #fff;
-  border-radius: 10px;
+    cursor: pointer;
+    background-color: #027A48;
+    color: #fff;
+    border-radius: 5px;
 }
 
 .no-team-wrapper {
-  margin-top: 5%;
+    margin-top: 5%;
 }
 
 .no-team-img-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .no-team-img {
-  height: 300px;
-  width: 400px;
+    height: 300px;
+    width: 400px;
 }
 
 .no-team-description {
-  color: #6c63ff;
-  font-weight: bold;
-  font-size: 1.5em;
-  margin-top: 30px;
+    color: #4a7dfc;
+    font-weight: bold;
+    font-size: 1.5em;
+    margin-top: 30px;
 }
+
+#load {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 8000;
+}
+
+#loadImage {
+    width: 10%;
+    height: 10%;
+    position: fixed;
+    z-index: 8000;
+}
+
+.loading-wrapper {
+    margin-top: 30%;
+}
+
+.loading-img-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.modify-button {
+    width: 118px;
+    height: 34px;
+    background-color: #4a7dfc;
+    border-radius: 5px;
+    color: white;
+    border: none;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    margin-left: 10px;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+.modify-button:hover {
+    background-color: #1d2f99;
+}
+
+.modify-button:active {
+    background-color: #102080;
+}
+
+.remove-button {
+    width: 118px;
+    height: 34px;
+    background-color: #f04438;
+    color: white;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+.remove-button:hover {
+    background-color: #D30E00;
+
+}
+
+.remove-button:active {
+    background-color: #C60D00;
+}
+
+.add-button {
+    width: 118px;
+    height: 34px;
+    background-color: #28a745;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+
+}
+
+.add-button:hover {
+    background-color: #027A48;
+}
+
+.add-button:active {
+    background-color: #05603a;
+}
+.add-remove {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+}
+

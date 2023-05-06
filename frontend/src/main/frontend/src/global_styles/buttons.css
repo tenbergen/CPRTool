@@ -1,64 +1,148 @@
 button {
-  padding: 10px 45px 10px 45px;
-  border: none;
-  font-size: medium;
-  font-weight: bold;
-  cursor: pointer;
+    border: none;
 }
 
-input::file-selector-button {
-  cursor: pointer;
-  background: #9cf0d3;
-  border-radius: 50px;
-  color: #393939;
-  font-family: 'Outfit', sans-serif;
-  font-size: 20px;
+button:hover {
+    cursor: pointer;
 }
 
-.yellow-button {
-  padding: 15px 45px 15px 45px;
-  margin-top: 3%;
-  background: #f8d377;
-  border-radius: 50px;
-  transition: all 0.2s ease-out;
+.eac-file-name:hover {
+    cursor: pointer;
 }
 
-.yellow-button:hover {
-  background: #deb140;
-  border-radius: 50px;
+.eac-crossmark:hover {
+    cursor: pointer;
 }
 
-.green-button {
-  padding: 15px 45px 15px 45px;
-  margin-top: 3%;
-  background: #9cf0d3;
-  border-radius: 50px;
-  color: #393939;
-  font-family: 'Outfit', sans-serif;
-  font-size: 20px;
-  transition: all 0.2s ease-out;
+.crossMarkTeam:hover {
+    cursor: pointer;
 }
 
-.green-button:hover {
-  background: #66c9a3;
-  border-radius: 50px;
+.blue-button-small {
+    width: 118px;
+    height: 34px;
+    background-color: #4a7dfc;
+    border-radius: 5px;
+    color: white;
+    border: none;
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
 }
 
-.blue-button-filled {
-  background: #7398ff;
-  color: white;
-  border-radius: 50px;
+.blue-button-small:hover {
+    background-color: #1d2ff9;
 }
 
-.blue-button-filled:hover {
-  background: #4976f3;
-  color: white;
-  border-radius: 50px;
+.blue-button-small:active {
+    background-color: #102080;
 }
 
-.teal-button {
-  background: #82dfe8;
-  color: #393939;
-  font-family: 'Outfit', sans-serif;
-  font-size: 20px;
+.blue-button-large {
+    width: 233px;
+    height: 50px;
+    background-color: #4a7dfc;
+    border-radius: 5px;
+    color: white;
+
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+}
+
+.blue-button-large:hover {
+    background-color: #1d2ff9;
+}
+
+.blue-button-large:active {
+    background-color: #102080;
+}
+
+.green-button-large {
+    width: 300px;
+    height: 60px;
+    background-color: #28a745;
+    border-radius: 5px;
+    color: white;
+
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+}
+
+.green-button-large:hover {
+    background-color: #027A48;
+}
+
+.green-button-large:active {
+    background-color: #05603a;
+}
+
+.red-button-large {
+    width: 300px;
+    height: 60px;
+    background-color: #c60d00;
+    border-radius: 5px;
+    color: white;
+
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+}
+
+.red-button-large:hover {
+    background-color: #950d04;
+}
+
+.red-button-large:active {
+    background-color: #950d04;
+}
+
+
+.green-button-medium {
+    width: 140px;
+    height: 40px;
+    background-color: #28a745;
+    border-radius: 5px;
+    color: white;
+
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0.5px;
+}
+
+.green-button-medium:hover {
+    background-color: #027A48;
+}
+
+.green-button-medium:active {
+    background-color: #05603a;
+}
+
+.cancel-button {
+    font-family: "Inter", sans-serif;
+    border: solid .5px #F04438;
+    border-radius: 5px;
+    font-size: 24px;
+    color: #F04438;
+    padding: 12px;
+    width: 300px;
+    padding-left: 12px;
+}
+
+.cancel-button:hover {
+    cursor: pointer;
+    background-color: #F04438;
+    color: #fff;
+    opacity: 0.8;
+    text-decoration: none;
 }

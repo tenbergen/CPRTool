@@ -8,7 +8,6 @@ import com.ibm.websphere.security.jwt.JwtException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import edu.oswego.cs.database.DatabaseManager;
-import edu.oswego.cs.database.ProfessorCheck;
 import edu.oswego.cs.util.CPRException;
 import org.bson.Document;
 import org.eclipse.microprofile.jwt.JsonWebToken;
@@ -19,7 +18,6 @@ import javax.ws.rs.core.SecurityContext;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
-
 import static com.mongodb.client.model.Filters.eq;
 
 public class AuthServices {
@@ -34,17 +32,21 @@ public class AuthServices {
         } catch (WebApplicationException e) {
             throw new CPRException(Response.Status.BAD_REQUEST, "Failed to retrieve collections.");
         }
-        new ProfessorCheck().addProfessors();
     }
 
     public Map<String, String> generateNewToken(String token) {
         Payload payload = googleService.validateToken(token);
         if (payload == null)
-            throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token.").build());
+            throw new WebApplicationException(
+                    Response.status(Response.Status.UNAUTHORIZED).entity("Invalid token.").build());
 
         Map<String, String> tokens = new HashMap<>();
 
         String lakerID = payload.getEmail().split("@")[0];
+        CheckForDefaultAdmin(lakerID, payload.get("given_name").toString(), payload.get("family_name").toString());
+
+
+        System.out.println("lakerID: " + lakerID);
         Set<String> roles = getRoles(lakerID);
 
         try {
@@ -66,6 +68,7 @@ public class AuthServices {
                     .claim("aud", "cpr")
                     .claim("iss", "cpr")
                     .buildJwt().compact();
+            System.out.println("access token: " + access_token);
 
             tokens.put("access_token", access_token);
             tokens.put("refresh_token", refresh_token);
@@ -74,19 +77,24 @@ public class AuthServices {
 
         } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
             e.printStackTrace();
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Unable to find token.").build());
+            throw new WebApplicationException(
+                    Response.status(Response.Status.NOT_FOUND).entity("Unable to find token.").build());
         }
     }
 
     public Map<String, String> refreshToken(SecurityContext securityContext) {
+        System.out.println("refreshing token");
         Principal user = securityContext.getUserPrincipal();
         JsonWebToken payload = (JsonWebToken) user;
         if (payload == null)
-            throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).entity("JWT is not available.").build());
+            throw new WebApplicationException(
+                    Response.status(Response.Status.UNAUTHORIZED).entity("JWT is not available.").build());
 
         Map<String, String> tokens = new HashMap<>();
 
         String lakerID = payload.getName().split("@")[0];
+
+        // CheckForDefaultAdmin(lakerID, payload.getClaim(), payload.getLastname());
         Set<String> roles = getRoles(lakerID);
 
         try {
@@ -102,24 +110,43 @@ public class AuthServices {
             tokens.put("access_token", access_token);
         } catch (JwtException | InvalidBuilderException | InvalidClaimException e) {
             e.printStackTrace();
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity("Unable to find token.").build());
+            throw new WebApplicationException(
+                    Response.status(Response.Status.NOT_FOUND).entity("Unable to find token.").build());
         }
 
         return tokens;
     }
 
     public Set<String> getRoles(String lakerID) {
+
         Set<String> roles = new HashSet<>();
 
         if (professorCollection.find(eq("professor_id", lakerID)).first() != null) {
             roles.add("professor");
+            Document professorDoc = professorCollection.find(eq("professor_id", lakerID)).first();
+            if (professorDoc != null && professorDoc.containsKey("admin") && professorDoc.getBoolean("admin")) {
+                roles.add("admin");
+            }
         } else {
             roles.add("student");
         }
-        if (roles.size() == 0)
-            throw new WebApplicationException(Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Can't connect to database.").build());
 
         return roles;
+        
     }
 
+    // Checks if professor database is empty
+    // if so assign admin status to first professor
+    protected void CheckForDefaultAdmin(String user_id, String first_name, String last_name) {
+        System.out.println("Checking for default admin");
+        if (professorCollection.countDocuments() == 0) {
+            System.out.println("Adding default admin" + user_id);
+            Document professor = new Document("professor_id", user_id)
+                    .append("admin", true)
+                    .append("first_name", first_name)
+                    .append("last_name", last_name)
+                    .append("courses", new ArrayList<String>());
+            professorCollection.insertOne(professor);
+        }
+    }
 }

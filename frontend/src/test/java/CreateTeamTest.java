@@ -8,6 +8,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -23,13 +24,14 @@ public class CreateTeamTest {
         // driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
 
-        driver.get("http://moxie.cs.oswego.edu:13125/");
+        //driver.get("http://moxie.cs.oswego.edu:13125/");
+        driver.get("http://localhost:3000/");
 
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#box > button")));
         driver.findElement(By.cssSelector("#box > button")).click();
 
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
 //Get all the window handles in a set
         Set<String> handles = driver.getWindowHandles();
@@ -41,14 +43,14 @@ public class CreateTeamTest {
             driver.switchTo().window(newwin);
 //perform actions on new window
             driver.findElement(By.xpath("//*[@id=\"identifierId\"]")).sendKeys("id");
-            driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
             driver.findElement(By.cssSelector("#identifierNext > div > button > span")).click();
 
             driver.findElement(By.xpath("//*[@id=\"password\"]/div[1]/div/div[1]/input")).sendKeys("password");
             driver.findElement(By.cssSelector("#passwordNext > div > button > span")).click();
             // driver.close();
             driver.switchTo().window(parent);
-            driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         }
     }
 
@@ -63,7 +65,7 @@ public class CreateTeamTest {
         int retries = 2;
 
         while (retries > 0) {
-            WebDriverWait wait = new WebDriverWait(driver, 5);
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
             Alert alert = wait.until(ExpectedConditions.alertIsPresent());
 
             if (alert.getText().contains("Enter team name: ")) {
@@ -88,7 +90,7 @@ public class CreateTeamTest {
         driver.findElement(By.xpath("//*[@id=\"teacher\"]/div[1]/div/button")).click();
         driver.findElement(By.xpath("//*[@id=\"courseList\"]/a[2]/li")).click();
         driver.findElement(By.xpath("//*[@id=\"teamListItem\"]")).click();
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5L));
         Alert alert = wait.until(ExpectedConditions.alertIsPresent());
         alert.accept();
 
@@ -113,7 +115,7 @@ public class CreateTeamTest {
         driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/div/div[2]/div[2]/div[1]/p[4]")).click();
         driver.findElement(By.cssSelector("#root > div > div > div > div > div.pcp-container > div.pcp-components > div:nth-child(2) > div > div > div > div > div.accordionTitle > div > text")).click();
         driver.findElement(By.cssSelector("#root > div > div > div > div > div.pcp-container > div.pcp-components > div:nth-child(2) > div > div > div > div > div.accordionContent > div:nth-child(3) > span")).click();
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         Alert alert = wait.until(ExpectedConditions.alertIsPresent());
         alert.accept();
         driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/div/div[2]/div[2]/div[1]/p[4]")).click();
@@ -140,7 +142,7 @@ public class CreateTeamTest {
         driver.findElement(By.xpath("//*[@id=\"proCourseList\"]/a[1]/li")).click();
         driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/div/div[2]/div[2]/div[1]/p[4]")).click();
         driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/div/div[2]/div[2]/div[2]/div/div/div/div/div/div/span")).click();
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         Alert alert = wait.until(ExpectedConditions.alertIsPresent());
 
         if(alert.getText().contains("Successfully removed team.")){
@@ -165,7 +167,7 @@ public class CreateTeamTest {
         driver.findElement(By.xpath("//*[@id=\"root\"]/div/div/div/div/div[2]/div[2]/div[2]/div/div/div/div/div[2]/input")).click();
         driver.findElement(By.cssSelector("#root > div > div > div > div > div.pcp-container > div.pcp-components > div:nth-child(2) > div > div > div > div > div.accordionContent > div.teamMember > input")).sendKeys("tpark");
         driver.findElement(By.cssSelector("#root > div > div > div > div > div.pcp-container > div.pcp-components > div:nth-child(2) > div > div > div > div > div.accordionContent > div.teamMember > a")).click();
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         Alert alert = wait.until(ExpectedConditions.alertIsPresent());
 
         if(alert.getText().contains("Successfully added student.")) {

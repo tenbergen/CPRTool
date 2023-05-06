@@ -1,33 +1,27 @@
+.page-container{
+  display: flex;
+  flex-direction: column;
+}
+
 .scp-parent {
   display: flex;
   flex-direction: row;
   overflow: auto;
-  background: conic-gradient(
-    from 180deg at 50% 50%,
-    #7398ff -128.84deg,
-    #57e1b2 25.81deg,
-    #7398ff 231.16deg,
-    #57e1b2 385.81deg
-  );
-  font-family: 'Kumbh Sans', sans-serif;
+  font-family: "Kumbh Sans", sans-serif;
 }
 
 .scp-container {
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 50px;
-  margin: 3% 5% 3% 2%;
   flex-grow: 1;
   display: flex;
   flex-direction: row;
-  height: 90vh;
   width: 100vw;
+  height: 85vh;
 }
 
 .scp-component {
-  border-radius: 50px;
   flex-grow: 1;
   padding: 2%;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: white;
   overflow-y: hidden;
 }
 
@@ -53,11 +47,16 @@
 .scp-component-links {
   display: flex;
   flex-direction: row;
-  font-weight: bold;
   text-align: center;
   justify-content: left;
   padding: 0 5% 0 2%;
   gap: 15%;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 24px;
+  letter-spacing: 1px;
+  color: #212529;
 }
 
 .scp-component-links p:hover {
@@ -73,16 +72,7 @@
   font-size: 24px;
   padding-left: 24px;
   text-decoration: underline;
+  font-weight: 900;
   color: #5267a3;
 }
 
-/*.assSubTodo {*/
-/*    margin-left: 10%;*/
-/*    font-size: 24px;*/
-/*    padding-left: 24px;*/
-/*}*/
-
-/*.scs-container h1 {*/
-/*    margin-left: 1%;*/
-/*    margin-bottom: 1%;*/
-/*}*/

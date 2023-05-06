@@ -52,7 +52,7 @@
 }
 
 .rosterInput {
-  border-radius: 50px;
+  border-radius: 5px;
   padding: 5px;
   margin: 10px;
 }
@@ -80,12 +80,23 @@
 }
 
 #addStudentButton {
-  border-radius: 30px;
-  transition: ease-in-out 0.3s;
+  width: 140px;
+  height: 33px;
+  background-color: #28a745;
+  border-radius: 5px;
+  color: white;
+
+  margin-left: 10px;
+
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 18px;
+  letter-spacing: 0.5px;
+  margin-right: 40px;
 }
 
 #addStudentButton:hover {
-  cursor: pointer;
   background-color: #6c63ff;
   color: #fff;
 }
@@ -131,7 +142,7 @@
 .no-student-header {
   font-weight: bold;
   font-size: 1.5em;
-  color: #6c63ff;
+  color: #4a7dfc;
 }
 .no-student-description {
   font-weight: thin;
@@ -151,12 +162,17 @@
   align-items: center;
 }
 
+.pecc-add-student-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .plus-button-container {
   height: 70px;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 56.5%;
+  padding-left: 30%;
   position: absolute;
   top: 85%;
 }
@@ -168,4 +184,60 @@
 .plus-button:hover {
   cursor: pointer;
   transform: scale(1.1);
+}
+
+.roster-delete-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+.roster-modal-content {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  border: solid #212529;
+  border-width: 1px;
+}
+
+.roster-modal-head {
+  text-align: center;
+}
+
+.roster-confrim-remove {
+  text-align: center;
+}
+
+.roster-remove-user-buttons {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  justify-content: space-between;
+}
+
+.roster-remove-user-popup-button {
+  background-color: #4a7dfc;
+  color: #fff;
+  border-radius: 5px;
+  padding: 8px 40px;
+  font-size: 1.2em;
+  align-self: flex-end;
+}
+
+.roster-cancel-user-delete-button {
+  background-color: #E4E7EC;
+  color: #C60D00;
+  border-radius: 5px;
+  padding: 7px 40px;
+  font-size: 1.2em;
+  align-self: flex-end;
+  border: solid #C60D00;
+  border-width: 1px;
 }

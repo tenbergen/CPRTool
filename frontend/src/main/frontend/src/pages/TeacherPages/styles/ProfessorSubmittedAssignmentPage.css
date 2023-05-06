@@ -1,0 +1,149 @@
+.page-container{
+  display: flex;
+  flex-direction: column;
+}
+
+.sac-parent {
+  padding-left: 2%;
+  padding-right: 2%;
+}
+
+.sac-content {
+  padding: 4% 5% 5% 5%;
+  text-align: left;
+  background-color: #ffffff;
+  margin-top: 3%;
+  border-radius: 50px;
+  flex-grow: 1;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  max-height: 60vh;
+}
+
+.sac-content::-webkit-scrollbar {
+  width: 20px;
+}
+
+.sac-content::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.sac-content::-webkit-scrollbar-thumb {
+  background-color: #d6dee1;
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+}
+
+.sac-content::-webkit-scrollbar-thumb:hover {
+  background-color: #a8bbbf;
+}
+
+.sac-date {
+  float: right;
+  padding-right: 11px;
+}
+
+.assignment-name {
+  font-family: 'Kumbh Sans', sans-serif;
+  font-size: 30px;
+  color: #393939;
+}
+
+.sac-title {
+  font-family: 'Outfit', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  color: #000000;
+}
+
+.sac-text {
+  font-family: 'Outfit', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.psa-peerReviewListItem {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background: linear-gradient(
+    to right,
+    #7398ff 0%,
+    #7398ff 2%,
+    #eeeeee 2%,
+    #eeeeee 100%
+  );
+  list-style-type: none;
+  font-size: 15px;
+  padding: 10px 10px 10px 30px;
+  margin: 10px;
+  white-space: pre-line;
+}
+
+.ap-assignmentArea {
+  text-align: left;
+  padding: 2%;
+  background-color: #ffffff;
+  margin-top: 3%;
+  border-radius: 50px;
+  flex-grow: 1;
+  height: 70vh;
+}
+
+a {
+  text-decoration-line: none;
+  color: black;
+}
+
+.psa-sac-filename {
+  text-decoration: underline;
+  color: #5267a3;
+  cursor: pointer;
+}
+
+.sac-filename:hover {
+  cursor: pointer;
+}
+
+.blue-button-small-pr {
+  width: 118px;
+  height: 34px;
+  background-color: #4a7dfc;
+  border-radius: 5px;
+  color: white;
+  border: none;
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.blue-button-small-pr:hover {
+  background-color: #1d2ff9;
+}
+
+.blue-button-small-pr:active {
+  background-color: #102080;
+}
+
+.rosterComp {
+  align-content: center;
+}
+.inter-24-bold-ass-tile-title {
+  background-color: #4a7dfc;
+  font-family: "Inter", sans-serif;
+  font-weight: 500; /* Change font-weight to 500 to make it less bold */
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: .2px;
+  color: #FFFFFF;
+  padding-left: 10px;
+  padding-top: 5px;
+  height: 40px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+

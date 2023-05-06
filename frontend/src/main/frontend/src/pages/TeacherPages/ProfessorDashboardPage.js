@@ -1,14 +1,17 @@
-import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import SidebarComponent from '../../components/SidebarComponent';
-import './styles/ProfessorDashboardStyle.css';
-import Loader from '../../components/LoaderComponenets/Loader';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import SidebarComponent from "../../components/SidebarComponent";
+import "./styles/ProfessorDashboardStyle.css";
+import Loader from "../../components/LoaderComponenets/Loader";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getCourseDetailsAsync,
   getCoursesAsync,
-} from '../../redux/features/courseSlice';
-import uuid from 'react-uuid';
+} from "../../redux/features/courseSlice";
+import uuid from "react-uuid";
+import HeaderBar from "../../components/HeaderBar/HeaderBar";
+import LogoutButton from "../../components/GlobalComponents/LogoutButton";
+import NavigationContainerComponent from "../../components/NavigationComponents/NavigationContainerComponent";
 
 function ProfessorDashboardPage() {
   const navigate = useNavigate();
@@ -21,7 +24,7 @@ function ProfessorDashboardPage() {
   }, [dispatch]);
 
   const studentView = () => {
-    localStorage.setItem('alt_role', 'student');
+    localStorage.setItem("alt_role", "student");
     window.location.reload(false);
   };
 
@@ -30,54 +33,55 @@ function ProfessorDashboardPage() {
   };
 
   return (
-    <div>
-      {!coursesLoaded ? (
-        <Loader />
-      ) : courses.length < 1 ? (
-        navigate('/create/course')
-      ) : (
-        <div className={'TeacherDashboard'}>
-          <SidebarComponent />
-          <div id='teacher'>
-            <div className='welcome-banner'>
-              <h1 className='kumba-35'>Hello, {user}!</h1>
-              <div className='views'>
-                <button className='kumba-25 student-view' onClick={studentView}>
+      <div className="page-container">
+        <HeaderBar/>
+        <div className="pdp-container">
+          <NavigationContainerComponent/>
+          <div id="teacher">
+            <div className="welcome-banner">
+              <h1 className="inter-36-bold" id="welcome-message">
+                Hello, {user}!
+              </h1>
+              <div className="views">
+                <button
+                    className="blue-button-large student-view"
+                    onClick={studentView}
+                >
                   Student View
                 </button>
               </div>
             </div>
-
-            <div id='proCourseList'>
+            <div id="proCourseList">
               {courses.map(
-                (course) =>
-                  course && (
-                    <Link
-                      key={uuid()}
-                      to={'/details/professor/' + course.course_id}
-                      onClick={() => onCourseClick(course)}
-                    >
-                      <li className='courseListItem'>
-                        <span className='outfit-16 pdp-coursename'>
+                  (course) =>
+                      course && (
+                          <Link
+                              key={uuid()}
+                              to={"/professor/" + course.course_id}
+                              onClick={() => onCourseClick(course)}
+                          >
+                            <li className="courseListItem">
+                        <span className="inter-20-extralight pdp-coursename">
                           {course.course_id}
                         </span>
-                        <span className='kumba-25'>{course.course_name}</span>
-                      </li>
-                    </Link>
-                  )
+                              <span className="inter-24-bold">{course.course_name}</span>
+                            </li>
+                          </Link>
+                      )
               )}
             </div>
-            <div id='addClass'>
-              <Link to='/create/course'>
-                <button className='yellow-button' id='addButton'>
-                  Create new course
-                </button>
-              </Link>
+            <div className="create-course">
+              <div id="addClass">
+                <Link to="/create">
+                  <button className="green-button-large">
+                    Create new course
+                  </button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
-      )}
-    </div>
+      </div>
   );
 }
 

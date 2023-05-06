@@ -1,0 +1,32 @@
+{
+  "files": {
+    "main.css": "/static/css/main.f5324125.css",
+    "main.js": "/static/js/main.88fd373a.js",
+    "static/media/no-team-no-bg.png": "/static/media/no-team-no-bg.36f1a86caf0cc8c89ae0.png",
+    "static/media/loading.gif": "/static/media/loading.803f24369a085e35482e.gif",
+    "static/media/no-course.png": "/static/media/no-course.19f64cc5d34c49ed290f.png",
+    "static/media/no-student.png": "/static/media/no-student.6f16574f79805afcc04b.png",
+    "static/media/no-data.png": "/static/media/no-data.67c4f2678d27d329dbc6.png",
+    "static/media/Courses.svg": "/static/media/Courses.6fda0fcfd145845126b4.svg",
+    "static/media/CPR logo final-02.svg": "/static/media/CPR logo final-02.e1771c10368e86f15334.svg",
+    "static/media/Home.svg": "/static/media/Home.35e7d66eca98d5e0f21b.svg",
+    "static/media/White I Icon.svg": "/static/media/White I Icon.479f2d83ca7f5e8a1f05.svg",
+    "static/media/Bulk Download.svg": "/static/media/Bulk Download.3eb521e713406be59080.svg",
+    "static/media/Logout.svg": "/static/media/Logout.dfcf8b594b902195566d.svg",
+    "static/media/Admin_Header.svg": "/static/media/Admin_Header.ac40a935ef40bc49e4bb.svg",
+    "static/media/White_Download.svg": "/static/media/White_Download.6831d8a241209b2c94a9f1a8d5053a0c.svg",
+    "static/media/white_bulk_download.svg": "/static/media/white_bulk_download.aab566bb3002cba7939d.svg",
+    "index.html": "/index.html",
+    "static/media/Green_Check.svg": "/static/media/Green_Check.fae579a1adb7ea43ec13.svg",
+    "static/media/Corner_X.svg": "/static/media/Corner_X.05ec184f39d77de37755.svg",
+    "static/media/search.svg": "/static/media/search.83bf22fea51e5d789840c7ebeff532fe.svg",
+    "static/media/Arrow_Default.svg": "/static/media/Arrow_Default.a6b2e888a50521367fd4.svg",
+    "static/media/Arrow_Active.svg": "/static/media/Arrow_Active.3a543f19aaeb33588a5f.svg",
+    "main.f5324125.css.map": "/static/css/main.f5324125.css.map",
+    "main.88fd373a.js.map": "/static/js/main.88fd373a.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f5324125.css",
+    "static/js/main.88fd373a.js"
+  ]
+}

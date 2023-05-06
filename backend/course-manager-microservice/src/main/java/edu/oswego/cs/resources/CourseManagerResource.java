@@ -15,6 +15,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+
+
+//reset
 @Path("professor")
 @DenyAll
 public class CourseManagerResource {
@@ -59,7 +63,8 @@ public class CourseManagerResource {
             @PathParam("courseID") String courseID,
             @PathParam("studentInfo") String studentInfo) {
         String[] parsedStudentInfo = studentInfo.split("-");
-        if (parsedStudentInfo.length < 3) throw new CPRException(Response.Status.BAD_REQUEST, "Add student field was not filled out properly.");
+        if (parsedStudentInfo.length < 3)
+            throw new CPRException(Response.Status.BAD_REQUEST, "Add student field was not filled out properly.");
         StudentDAO studentDAO = new StudentDAO(parsedStudentInfo[0], parsedStudentInfo[1], parsedStudentInfo[2]);
         new CourseInterface().addStudent(securityContext, studentDAO, courseID);
         return Response.status(Response.Status.OK).entity("Student successfully added.").build();
@@ -88,5 +93,22 @@ public class CourseManagerResource {
         fileDAO = FileDAO.FileFactory(body.getAllAttachments());
         new CourseInterface().addStudentsFromCSV(securityContext, fileDAO);
         return Response.status(Response.Status.OK).entity("Student(s) successfully added.").build();
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("courses/{course_id}/profanity/update")
+    @RolesAllowed("professor")
+    public Response updateBlockedWordsForCourse(@Context SecurityContext securityContext, @PathParam("course_id") String course_id, @RequestBody String payload) {
+        new CourseInterface().updateBlockedWordsForCourse(course_id, payload);
+        return Response.status(Response.Status.OK).entity("Profanity settings updated.").build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("courses/{course_id}/profanity/view")
+    @RolesAllowed("professor")
+    public Response getBlockedWordsForCourse(@Context SecurityContext securityContext, @PathParam("course_id") String course_id) {
+        return Response.status(Response.Status.OK).entity(new CourseInterface().getBlockedWordsForCourse(course_id)).build();
     }
 }

@@ -5,6 +5,7 @@ import assignmentReducer from './features/assignmentSlice';
 import submittedAssignmentReducer from './features/submittedAssignmentSlice';
 import peerReviewReducer from './features/peerReviewSlice';
 import teamReducer from './features/teamSlice';
+import coursesTileReducer from './features/coursesTileSlice';
 
 export default configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export default configureStore({
     submittedAssignments: submittedAssignmentReducer,
     peerReviews: peerReviewReducer,
     teams: teamReducer,
+    coursesTile: coursesTileReducer,
   },
 });

@@ -1,12 +1,12 @@
-import { useEffect } from 'react';
-import '../../styles/TeacherAss.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
-import { getCourseAssignmentsAsync } from '../../../redux/features/assignmentSlice';
-import AssignmentTile from '../../AssignmentTile';
-import noAssignment from '../../../assets/no-course.png';
+import { useEffect } from "react";
+import "../../styles/TeacherAss.css";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
+import { getCourseAssignmentsAsync } from "../../../redux/features/assignmentSlice";
+import AssignmentTile from "../../AssignmentTile";
+import noAssignment from "../../../assets/no-course.png";
 
-import uuid from 'react-uuid';
+import uuid from "react-uuid";
 
 const ProfessorAssignmentComponent = () => {
   const dispatch = useDispatch();
@@ -18,18 +18,18 @@ const ProfessorAssignmentComponent = () => {
   }, [dispatch, courseId]);
 
   return (
-    <div className='assignment-container'>
-      <div className='assignment-list-wrapper'>
+    <div className="assignment-container">
+      <div className="assignment-list-wrapper">
         {courseAssignments.length === 0 ? (
-          <div className='no-assigment-wrapper'>
+          <div className="no-assigment-wrapper">
             <img
-              className='no-assignment-img'
+              className="no-assignment-img"
               src={noAssignment}
-              alt='No assignment'
+              alt="No assignment"
             />
           </div>
         ) : (
-          <div id='assignment-list'>
+          <div id="assignment-list">
             {courseAssignments.map(
               (assignment) =>
                 assignment && (
@@ -40,10 +40,10 @@ const ProfessorAssignmentComponent = () => {
         )}
       </div>
 
-      <div className='create-class-container'>
-        <Link to='create/assignment'>
-          <button className='create-assignment-btn'>
-            Create new assignment
+      <div className="create-class-container">
+        <Link to="create/assignment">
+          <button className="create-assignment-btn">
+            Create Assignment
           </button>
         </Link>
       </div>
