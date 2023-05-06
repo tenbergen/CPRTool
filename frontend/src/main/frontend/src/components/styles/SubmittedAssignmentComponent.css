@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');
+
 .sac-parent {
   padding-left: 2%;
   padding-right: 2%;
@@ -24,9 +26,9 @@
 }
 
 .sac-title {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-style: normal;
-  font-weight: 400;
+  font-weight: 700;
   font-size: 20px;
   color: #000000;
 }

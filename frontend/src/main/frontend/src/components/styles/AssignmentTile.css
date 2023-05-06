@@ -10,6 +10,8 @@
 .ass-tile-yellow {
     border: 3px solid #f8d377;
     background-color: #f8d377;
+    margin-bottom: 30px;
+    border-radius: 5px;
 }
 
 .ass-tile-title {

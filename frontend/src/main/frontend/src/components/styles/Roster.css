@@ -81,7 +81,7 @@
 
 #addStudentButton {
   width: 140px;
-  /*height: 50px;*/
+  height: 33px;
   background-color: #28a745;
   border-radius: 5px;
   color: white;
@@ -93,6 +93,7 @@
   font-size: 16px;
   line-height: 18px;
   letter-spacing: 0.5px;
+  margin-right: 40px;
 }
 
 #addStudentButton:hover {
@@ -159,6 +160,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.pecc-add-student-wrapper {
+  display: flex;
+  flex-direction: column;
 }
 
 .plus-button-container {
