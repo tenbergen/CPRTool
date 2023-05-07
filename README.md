@@ -4,6 +4,10 @@ A highly scalable web application that assists the process of coordinating and e
 
 **Before contributing, see our [Contribution Guidelines](#Contributing).**
 
+**NOTE: The purpose of this ReadMe is to get you started with running the application. It does not provide specific information
+about how the deployment process of this application works. For deeper information on deployment of this application, read the
+PDF found in the `startUpDocumentation` folder.**
+
 ## Running the Project
 
 First things, first, **clone this repository**.
@@ -11,7 +15,7 @@ First things, first, **clone this repository**.
 There are multiple conifigurations for running the application in different environments to make the application
 machine and OS agnostic. The possible configurations are:
 - [Production](#Running-In-a-Production-Environment): For when you want the app out for full use
-- [Local Development](#Running-In-a-Local-Development-Environment): The production app but running only on a localhost network for testing
+- [Local](#Running-In-a-Local-Environment): The production app but running only on a localhost network for testing
 - [Run Each Backend Microservice Individually](#Running-Backend-Microservices-Individually): Run each backend service independently of eachother for testing on specific microservices
 - [Run The Frontend Microservice Individually](#Running-Frontend-Microservice-Individually): Test the frontend service with a subset of the backend microservices
 
@@ -53,8 +57,11 @@ All environments will need Google Cloud Console Credentials.
 
 **Step 1:** Clone the repository.
 
-**Step 2:** Go the the `docker-compose.yml` file found in root. At the bottom of the file under the **nginx** container, make the docker host port equal to whatever port you have listed in the URL environment variable. So if I was running the app with the URL **https://example.com:443**, the configuration at the bottom of the file would look like this:
+**Step 2a:** Go to the `docker-compose.yml` file found in root. At the bottom of the file under the **nginx** container, make the docker host port equal to whatever port you have listed in the URL environment variable. So if I was running the app with the URL **https://example.com:443**, the configuration at the bottom of the file would look like this:
 ![image](https://user-images.githubusercontent.com/60359581/216736629-d31a2768-4b55-41c3-9997-08f983ea7dcc.png)
+
+**Step 2b:** Copy the location of the PEM keys to the **nginx** container found here:
+![img.png](img.png)
 
 **Step 3:** In the `.env` file, make the **JWK_ACCESS_URL** equal to whatever your URL variable is followed by **/jwt/ibm/api/cpr_access/jwk**. So if the URL is **https://example.com:443**, **JWK_ACCESS_URL** should be `https://example.com:443/jwt/ibm/api/cpr_access/jwk`
 
@@ -66,11 +73,13 @@ All environments will need Google Cloud Console Credentials.
 
 The web application should be running on the specified domain in your `.env` file.
 
-**Step 7:** To add users with elevated privileges (a.k.a professors), include the user's email on separate lines in `professor-list.txt`.
+**Step 7:** To add users with elevated privileges (a.k.a professors), an Admin must add their email handle and name in the list
+of users in the admin interface. Note that the first person who ever logs into the application
+is granted admin privileges and can demote and promote other users as needed.
 
 
 
-### Running In a Local Development Environment
+### Running In a Local Environment
 **Step 1:** Clone the repository.
 
 **Step 2:** Go the the `docker-compose-local.yml` file found in root. If running on an Apple Silicon Mac (M1 or M2) go to the docker-compose-local-m1.yml file instead. At the bottom of the file under the **nginx** container, make the docker host port equal to whatever port you have listed in the URL environment variable. So if I was running the app with the URL **http://localhost.com:443**, the configuration at the bottom of the file would look like this:
@@ -90,7 +99,9 @@ The web application should be running on the specified domain in your `.env` fil
 
 The web application should be running on the specified domain in your `.env` file.
 
-**Step 7:** To add users with elevated privileges (a.k.a professors), include the user's email on separate lines in `professor-list.txt`.
+**Step 7:** To add users with elevated privileges (a.k.a professors), an Admin must add their email handle and name in the list
+of users in the admin interface. Note that the first person who ever logs into the application
+is granted admin privileges and can demote and promote other users as needed.
 
 ### Running Backend Microservices Individually 
 **Before running anything individually, you will need:**
@@ -116,6 +127,7 @@ The web application should be running on the specified domain in your `.env` fil
 **Step 2:** Go to the `scripts` folder in the root directory and run the `independently-run-db.sh` shell script. If running on an Apple Silicon Mac (M1 or M2) run the `independently-run-db-m1.sh` shell script. If you haven't already, also run the `mongo-init.sh` shell script afterwards. 
 
 **Step 3:** You can now run the backend microservices separately. Simply go to the root of each microservice where the `pom.xml` file is located and run `mvn liberty:dev` to start the microservice. The web app should be running on http://localhost:xxxxx - the port depends on which microservice you are running as following:
+
 | Microservice                     | Port    |
 |----------------------------------|---------|
 | `login`                          | `13126` |
@@ -128,7 +140,7 @@ The web application should be running on the specified domain in your `.env` fil
 
 ### Running Frontend Microservice Individually
 
-To run the frontend outside of the docker-compose network, we will only run the databases and nginx webserver with docker such that the webserver reroutes any traffic to the microservices that will be running outside of the docker-compose network.
+To run the frontend outside of the docker-compose network, we will only run the databases and nginx webserver with docker.
 
 **Before running anything individually, you will need:**
 - [Maven](https://maven.apache.org/install.html) >= 3.8.4
@@ -138,17 +150,17 @@ To run the frontend outside of the docker-compose network, we will only run the 
 
 | Variable          | Value                                                |
 |-------------------|------------------------------------------------------|
-| `LOCALHOST`       |  `true`                                              |
-|  `MONGO_PORT`     |  `27037`                                             |
-|  `MONGO2_PORT`    |  `27038`                                             |
-|  `MONGO3_PORT`    |  `27039`                                             |
-|  `MONGO4_PORT`    |  `27040`                                             |
-|  `MONGO5_PORT`    |  `27041`                                             |
-|  `MONGO5_DATABASE`|  `cpr`                                               |
-|  `MONGO_USERNAME` |  <whatever you set it to in the .env file>           |
-|  `MONGO_PASSWORD` |  <whatever you set it to in the .env file>           |
-|`JWK_ACCESS_URL`   |  `http://localhost:13126/jwt/ibm/api/cpr_access/jwk` |
-|`JWK_REFRESH_URL`  |  `http://localhost:13126/jwt/ibm/api/cpr_refresh/jwk`|
+| `LOCALHOST`       | `false`                                              |
+|  `MONGO_PORT`     | `27037`                                              |
+|  `MONGO2_PORT`    | `27038`                                              |
+|  `MONGO3_PORT`    | `27039`                                              |
+|  `MONGO4_PORT`    | `27040`                                              |
+|  `MONGO5_PORT`    | `27041`                                              |
+|  `MONGO5_DATABASE`| `cpr`                                                |
+|  `MONGO_USERNAME` | <whatever you set it to in the .env file>            |
+|  `MONGO_PASSWORD` | <whatever you set it to in the .env file>            |
+|`JWK_ACCESS_URL`   | `http://172.17.0.1:3000/jwt/ibm/api/cpr_refresh/jwk`  |
+|`JWK_REFRESH_URL`  | `http://172.17.0.1:3000/jwt/ibm/api/cpr_refresh/jwk` |
 
 **Step 2:** Go inside the folder `CSC480-22S/frontend/src/main/frontend` and create a .env file. Add the following lines to the file:
 `export REACT_APP_URL=http://localhost:3000/`
@@ -160,9 +172,10 @@ To run the frontend outside of the docker-compose network, we will only run the 
 
 **Step 4:** Go to the `scripts` folder in the root directory and run the `run-frontend-proxy.sh` shell script. If running on an Apple Silicon Mac, run the `run-frontend-proxy-m1.sh` script instead. If you haven't already, also run the `mongo-init.sh` shell script afterwards. 
 
-**Step 5:** You can now run microservices independently. Simply go to the root of each backend microservice where the `pom.xml` file is located and run `mvn liberty:dev` to start the microservice. To run the frontend service, go to the folder located at `CSC480-22S/frontend` and run `mvn process-resources liberty:dev` to start the frontend service. You will be able to reach the front end at `http://localhost:3000`.
+**Step 5:** You can now run microservices independently. Simply go to the root of each backend microservice where the `pom.xml` file is located and run `mvn liberty:dev` to start the microservice. To run the frontend service, go to the folder located at `CSC480-22S/frontend/src/main/frontend` and run `PORT=<whatever port you want> npm run start` to start the frontend service. Ensure the port you pick does not conflict with any other applications. You will be able to reach the front end at `http://localhost:<The port you specified>`.
 
-The backend microservices should be running on http://localhost:xxxxx - the port depends on which microservice you are running as following:
+The backend microservices should be running on http://localhost:xxxxx - the port depends on which microservice you are running:
+
 | Microservice                     | Port    |
 |----------------------------------|---------|
 | `login`                          | `13126` |
