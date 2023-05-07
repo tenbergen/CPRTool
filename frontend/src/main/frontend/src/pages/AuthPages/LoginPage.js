@@ -17,14 +17,14 @@ function LoginPage() {
   }
 
   const handleLogin = async (googleData) => {
-    console.log(googleData.credential)
+    // console.log(googleData.credential)
     localStorage.setItem('google_token', googleData.credential);
     dispatch(getTokenAsync());
   };
 
   useEffect(() => {
     setIsLoading(true);
-    console.log(REACT_APP_CLIENT_ID)
+    // console.log(REACT_APP_CLIENT_ID)
     setTimeout(() => setIsLoading(false), 775);
     return () => {
       setIsLoading(false);

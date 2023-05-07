@@ -224,7 +224,7 @@ const StudentTeamComponent = () => {
         }}>
           <svg className="cross" style={{}} onClick={async () => {
             setShowJoinTeamSuccessModal(false)
-              console.log("X clicked, leaving to teams page...")
+              // console.log("X clicked, leaving to teams page...")
               //setBackToTeams()
               navigate(-1)
             await dispatch(getCurrentCourseTeamAsync({ courseId, lakerId }))
