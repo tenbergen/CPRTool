@@ -27,7 +27,7 @@ const ProfessorEditAssignmentComponent = () => {
       return checked
     }
     if (currentAssignmentLoaded) {
-      console.log(currentAssignment)
+      // console.log(currentAssignment)
       setChecked(currentAssignment.has_peer_review)
       if (!alreadySetInitialCheckState) {
         setAlreadySetInitialCheckState(true)
@@ -55,7 +55,7 @@ const ProfessorEditAssignmentComponent = () => {
 
   useEffect(() => {
     dispatch(getAssignmentDetailsAsync({ courseId, assignmentId }))
-    console.log(checked)
+    // console.log(checked)
   }, [courseId, assignmentId, dispatch])
 
   const confirmDelete = async () => {
@@ -145,14 +145,14 @@ const ProfessorEditAssignmentComponent = () => {
       delete formObj['peer_review_instructions']
       delete formObj['peer_review_due_date']
       delete formObj['peer_review_points']
-      console.log(formObj)
+      // console.log(formObj)
       //update the assignment data
       await axios.put(editUrl, { ...formObj, course_id: courseId }).catch((e) => {
         console.error(e.response)
       })
       //only submit the assignment instruction file (if any changes were even made)
       if (assignmentFileFormData.get(assignmentFileName)) {
-        console.log(assignmentFileFormData.get('file'))
+        // console.log(assignmentFileFormData.get('file'))
         await axios.post(assignmentFileUrl, assignmentFileFormData).catch((e) => {
           console.error(e)
           alert('Error uploading assignment file.')
@@ -187,7 +187,7 @@ const ProfessorEditAssignmentComponent = () => {
       })
       //only submit the assignment instruction file (if any changes were even made)
       if (assignmentFileFormData.get(assignmentFileName)) {
-        console.log(assignmentFileFormData.get('file'))
+        // console.log(assignmentFileFormData.get('file'))
         await axios.post(assignmentFileUrl, assignmentFileFormData).catch((e) => {
           console.error(e)
           alert('Error uploading assignment file.')
@@ -223,7 +223,7 @@ const ProfessorEditAssignmentComponent = () => {
     const templateUrl = `${getAssUrl}/${assignmentId}/peer-review/template/upload`
 
     if (assignmentFileFormData.get(assignmentFileName)) {
-      console.log(assignmentFileFormData.get('file'))
+      // console.log(assignmentFileFormData.get('file'))
       await axios.post(assignmentFileUrl, assignmentFileFormData).catch((e) => {
         console.error(e)
         alert('Error uploading assignment file.')

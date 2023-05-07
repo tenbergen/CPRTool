@@ -9,7 +9,7 @@ export const getTokenAsync = createAsyncThunk(
   'auth/getTokenAsync',
   async () => {
     const url = `${authURL}/token/generate`;
-    console.log(url);
+    // console.log(url);
     const google_token = localStorage.getItem('google_token');
     const axiosAuthInstance = axios.create({
       headers: {
